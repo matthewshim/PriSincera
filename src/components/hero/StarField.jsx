@@ -221,8 +221,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       const LERP_IN = 0.06;
       const LERP_OUT = 0.03;
 
-      // Sequential pulse: each constellation takes a turn to glow
+      // Time-based effects
       const now = performance.now() / 1000; // seconds
+
+      // Sequential pulse: each constellation takes a turn to glow
       const PULSE_CYCLE = 4;     // seconds per constellation
       const TOTAL_CYCLE = PULSE_CYCLE * 12; // full cycle ~48s
       const cycleTime = now % TOTAL_CYCLE;
@@ -231,17 +233,38 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         const c = constellations[ci];
         // Calculate distance from mouse to constellation center
         const dist = Math.hypot(mx - c.centerX, my - c.centerY);
-        const target = (zodiacShowAllRef.current || dist < REVEAL_RADIUS) ? 1 : 0;
+
+        // When showAll: reveal to a softer level (0.5) for subtlety
+        // Mouse proximity or direct reveal still goes to full 1.0
+        let target;
+        if (dist < REVEAL_RADIUS) {
+          target = 1; // mouse proximity = full reveal
+        } else if (zodiacShowAllRef.current) {
+          target = 0.5; // scroll-triggered = soft reveal
+        } else {
+          target = 0;
+        }
         c.revealAmount += (target - c.revealAmount) * (target > c.revealAmount ? LERP_IN : LERP_OUT);
 
         const reveal = c.revealAmount;
 
-        // Pulse: this constellation's turn to glow
+        // Sequential pulse: this constellation's turn to glow
         const pulseStart = ci * PULSE_CYCLE;
         const pulseProgress = (cycleTime - pulseStart + TOTAL_CYCLE) % TOTAL_CYCLE;
-        const pulse = pulseProgress < PULSE_CYCLE
+        const seqPulse = pulseProgress < PULSE_CYCLE
           ? Math.sin((pulseProgress / PULSE_CYCLE) * Math.PI) * 0.45
           : 0;
+
+        // Random highlight pulse: unique per-constellation organic breathing
+        // Each constellation has a different frequency and phase for natural feel
+        const randFreqs = [0.37, 0.53, 0.29, 0.41, 0.61, 0.47, 0.31, 0.59, 0.43, 0.67, 0.39, 0.51];
+        const randPhases = [0, 2.1, 4.3, 1.5, 3.7, 5.2, 0.8, 2.9, 4.6, 1.2, 3.3, 5.8];
+        const randIntensity = zodiacShowAllRef.current
+          ? Math.max(0, Math.sin(now * randFreqs[ci] + randPhases[ci])) * 0.4
+          : 0;
+
+        // Combined pulse: pick the stronger of sequential and random
+        const pulse = Math.max(seqPulse, randIntensity);
 
         // --- Hint lines (always visible, pulse adds brightness on turn) ---
         const hintAlpha = (0.15 + pulse + reveal * 0.35) * zodiacFade;

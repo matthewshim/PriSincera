@@ -5,14 +5,13 @@ import './Home.css';
 
 /**
  * Home page — orchestrates the scroll-driven transition
- * from Hero (sticky) to content sections with overlay.
+ * from Hero (sticky) to content sections.
  *
  * Scroll Sequence:
  *   1. Hero fills viewport (sticky)
  *   2. User scrolls → scroll progress tracked
- *   3. At ~30% progress: all constellations activate
- *   4. At ~40% progress: dark overlay rises from bottom
- *   5. Content sections slide in on top of overlay
+ *   3. At ~30% progress: all constellations activate softly
+ *   4. Content sections slide in over the hero with glassmorphic backgrounds
  */
 function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -37,10 +36,6 @@ function Home() {
 
   // Constellation all-on triggers at 30% scroll progress
   const constellationsAllOn = scrollProgress > 0.3;
-  // Overlay opacity: starts at 40% progress, fully opaque at 90%
-  const overlayOpacity = Math.min(1, Math.max(0, (scrollProgress - 0.4) / 0.5));
-  // Overlay Y translate: slides up from 60px to 0
-  const overlayTranslateY = (1 - overlayOpacity) * 60;
 
   return (
     <div className="home-wrapper" ref={wrapperRef}>
@@ -55,18 +50,8 @@ function Home() {
       {/* Scroll spacer — creates scroll distance for the transition */}
       <div className="scroll-transition-spacer" />
 
-      {/* Content overlay + sections */}
+      {/* Content sections — glassmorphic backgrounds handle readability */}
       <div className="content-layer">
-        {/* Dark overlay — rises from bottom */}
-        <div
-          className="content-overlay"
-          style={{
-            opacity: overlayOpacity,
-            transform: `translateY(${overlayTranslateY}px)`,
-          }}
-        />
-
-        {/* Actual content sections */}
         <div className="content-sections">
           <PhilosophySection />
           {/* Future sections: Services, Contact, etc. */}

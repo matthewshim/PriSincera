@@ -15,11 +15,17 @@ import './HeroSection.css';
  * Props:
  * - forceShowAllConstellations: scroll-driven signal to reveal all zodiac constellations
  * - scrollProgress: 0-1 value representing the hero-to-content scroll transition
+ *
+ * Constellation toggle logic:
+ * - Scroll triggers auto-ON (forceShowAllConstellations = true)
+ * - User can manually toggle OFF via atlas button (userHidden = true)
+ * - User clicks again to toggle back ON (userHidden = false)
+ * - effectiveShowAll = forceShowAll AND NOT userHidden
  */
 export default function HeroSection({ forceShowAllConstellations = false, scrollProgress = 0 }) {
   const { raw: rawMouseRef } = useMousePosition();
   const [assemblyDone, setAssemblyDone] = useState(false);
-  const [zodiacShowAll, setZodiacShowAll] = useState(false);
+  const [userHiddenConstellations, setUserHiddenConstellations] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(true);
   const audioRef = useRef(null);
   const musicIntentRef = useRef(true); // user wants music ON
@@ -77,9 +83,17 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
     }
   }, [musicPlaying, getAudio]);
 
-  // Combine: user toggle OR scroll-driven force
-  const effectiveShowAll = zodiacShowAll || forceShowAllConstellations;
+  // Toggle constellation visibility:
+  // - scroll triggers forceShowAll → auto ON
+  // - user click hides/shows (overrides scroll)
+  const toggleConstellations = useCallback(() => {
+    setUserHiddenConstellations(prev => !prev);
+  }, []);
 
+  // Effective state: scroll-triggered ON, unless user manually hid them
+  const effectiveShowAll = forceShowAllConstellations && !userHiddenConstellations;
+  // Show as active in button UI
+  const constellationsActive = effectiveShowAll;
 
   return (
     <section className="hero" id="hero">
@@ -98,7 +112,7 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
       </div>
       <EnergyCirculation rawMouseRef={rawMouseRef} active={assemblyDone} />
 
-      {/* Celestial Controls — left-bottom vertical */}
+      {/* Celestial Controls — left-bottom vertical, always on top */}
       {assemblyDone && (
         <div className="celestial-controls" id="celestialControls">
           {/* BGM — Waveform bars */}
@@ -123,12 +137,12 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
 
           {/* Constellation — Celestial Atlas */}
           <button
-            className={`celestial-btn atlas-btn ${effectiveShowAll ? 'active' : ''}`}
-            onClick={() => setZodiacShowAll(p => !p)}
+            className={`celestial-btn atlas-btn ${constellationsActive ? 'active' : ''}`}
+            onClick={toggleConstellations}
             aria-label="Toggle constellations"
             id="atlasToggle"
           >
-            <div className={`atlas-icon ${effectiveShowAll ? 'on' : 'off'}`}>
+            <div className={`atlas-icon ${constellationsActive ? 'on' : 'off'}`}>
               <svg viewBox="0 0 26 26" fill="none">
                 {/* Outer ring — celestial frame */}
                 <circle cx="13" cy="13" r="11.5" fill="none" className="atlas-ring" />
