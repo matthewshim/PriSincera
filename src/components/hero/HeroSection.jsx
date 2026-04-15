@@ -11,8 +11,12 @@ import './HeroSection.css';
  * Hero Section — orchestrates all layers:
  * StarField canvas → Constellation Assembly SVG → Energy Circulation canvas → Text content
  * Floating control panel with music + zodiac toggles.
+ *
+ * Props:
+ * - forceShowAllConstellations: scroll-driven signal to reveal all zodiac constellations
+ * - scrollProgress: 0-1 value representing the hero-to-content scroll transition
  */
-export default function HeroSection() {
+export default function HeroSection({ forceShowAllConstellations = false, scrollProgress = 0 }) {
   const { raw: rawMouseRef } = useMousePosition();
   const [assemblyDone, setAssemblyDone] = useState(false);
   const [zodiacShowAll, setZodiacShowAll] = useState(false);
@@ -73,13 +77,17 @@ export default function HeroSection() {
     }
   }, [musicPlaying, getAudio]);
 
+  // Combine: user toggle OR scroll-driven force
+  const effectiveShowAll = zodiacShowAll || forceShowAllConstellations;
+
+
   return (
     <section className="hero" id="hero">
       <SvgDefs />
       <StarField
         rawMouseRef={rawMouseRef}
         zodiacActive={assemblyDone}
-        zodiacShowAll={zodiacShowAll}
+        zodiacShowAll={effectiveShowAll}
       />
       <div className="hero-center">
         <ConstellationAssembly
@@ -115,12 +123,12 @@ export default function HeroSection() {
 
           {/* Constellation — Celestial Atlas */}
           <button
-            className={`celestial-btn atlas-btn ${zodiacShowAll ? 'active' : ''}`}
+            className={`celestial-btn atlas-btn ${effectiveShowAll ? 'active' : ''}`}
             onClick={() => setZodiacShowAll(p => !p)}
             aria-label="Toggle constellations"
             id="atlasToggle"
           >
-            <div className={`atlas-icon ${zodiacShowAll ? 'on' : 'off'}`}>
+            <div className={`atlas-icon ${effectiveShowAll ? 'on' : 'off'}`}>
               <svg viewBox="0 0 26 26" fill="none">
                 {/* Outer ring — celestial frame */}
                 <circle cx="13" cy="13" r="11.5" fill="none" className="atlas-ring" />
@@ -172,7 +180,12 @@ export default function HeroSection() {
         </div>
       )}
 
-      <div className="scroll-indicator" id="scrollIndicator">
+      {/* Scroll indicator — fades out as user scrolls */}
+      <div
+        className="scroll-indicator"
+        id="scrollIndicator"
+        style={{ opacity: Math.max(0, 1 - scrollProgress * 5) }}
+      >
         <div className="scroll-line"></div>
         <span className="scroll-text">SCROLL</span>
       </div>
