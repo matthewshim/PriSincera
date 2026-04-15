@@ -250,126 +250,303 @@
 }
 
 /* ============================================
-   Floating Control Panel (bottom-right)
+   Celestial Controls — Left-bottom vertical
    ============================================ */
-.control-panel {
+.celestial-controls {
     position: fixed;
-    bottom: 32px;
-    right: 32px;
+    bottom: 40px;
+    left: 32px;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    padding: 12px 14px;
-    gap: 0;
-    background: rgba(26, 16, 53, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(196, 181, 253, 0.1);
-    border-radius: 18px;
-    animation: panelFadeIn 1.5s ease forwards;
+    align-items: center;
+    gap: 6px;
+    animation: controlsSlideIn 1.5s var(--ease-out) forwards;
     opacity: 0;
 }
 
-@keyframes panelFadeIn {
-    from { opacity: 0; transform: translateY(16px) scale(0.95); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes controlsSlideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
 }
 
-/* --- Row --- */
-.control-row {
+/* --- Control Button Base --- */
+.celestial-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(26, 16, 53, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(196, 181, 253, 0.08);
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 4px;
-    border-radius: 12px;
+    justify-content: center;
     cursor: pointer;
-    transition: background 0.3s var(--ease-out);
-}
-
-.control-row:hover {
-    background: rgba(124, 58, 237, 0.08);
-}
-
-/* --- Divider --- */
-.control-divider {
-    height: 1px;
-    margin: 4px 2px;
-    background: linear-gradient(90deg, transparent, rgba(196, 181, 253, 0.12), transparent);
-}
-
-/* --- Icon --- */
-.control-icon {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    color: var(--text-muted);
     transition: all 0.4s var(--ease-out);
+    outline: none;
 }
 
-.control-icon.active {
-    filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.35));
+.celestial-btn:hover {
+    background: rgba(26, 16, 53, 0.7);
+    border-color: rgba(196, 181, 253, 0.2);
+    transform: scale(1.08);
 }
 
-/* --- Switch Track --- */
-.switch-track {
-    position: relative;
-    width: 32px;
-    height: 16px;
-    border-radius: 10px;
-    background: rgba(196, 181, 253, 0.08);
-    border: 1px solid rgba(196, 181, 253, 0.12);
-    transition: all 0.35s var(--ease-out);
-    flex-shrink: 0;
+.celestial-btn:active {
+    transform: scale(0.95);
 }
 
-.switch-track.on {
-    background: rgba(124, 58, 237, 0.3);
-    border-color: rgba(196, 181, 253, 0.3);
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.2) inset;
-}
-
-/* --- Switch Thumb --- */
-.switch-thumb {
+/* --- Ripple on click --- */
+.celestial-btn::after {
+    content: '';
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(196, 181, 253, 0.3);
-    transition: all 0.35s var(--ease-spring);
+    inset: -4px;
+    border-radius: 18px;
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    opacity: 0;
+    transition: all 0.5s var(--ease-out);
+    pointer-events: none;
 }
 
-.switch-track.on .switch-thumb {
-    left: 18px;
-    background: var(--crystal-light);
+.celestial-btn.active::after {
+    animation: btnRipple 2s ease-in-out infinite;
+}
+
+@keyframes btnRipple {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.1); }
+}
+
+/* --- Thin divider --- */
+.celestial-divider {
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 181, 253, 0.15), transparent);
+    margin: 2px 0;
+}
+
+/* --- Tooltip --- */
+.celestial-btn .ctrl-tooltip {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+    transform: translateY(-50%) translateX(-4px);
+}
+
+.celestial-btn:hover .ctrl-tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* ============================================
+   BGM — Celestial Waveform (5 bars)
+   ============================================ */
+.waveform-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+    height: 22px;
+    width: 26px;
+}
+
+.waveform-bar {
+    width: 3px;
+    border-radius: 1.5px;
+    transition: all 0.35s var(--ease-out);
+    transform-origin: bottom;
+}
+
+/* OFF state — flat, dim */
+.waveform-bars.off .waveform-bar {
+    height: 3px;
+    background: rgba(109, 91, 163, 0.35);
+}
+
+/* ON state — animated individual bars */
+.waveform-bars.on .waveform-bar {
+    background: linear-gradient(to top, #7C3AED, #C4B5FD);
+    box-shadow: 0 0 6px rgba(124, 58, 237, 0.4);
+}
+
+.waveform-bars.on .waveform-bar:nth-child(1) {
+    animation: wave1 1.2s ease-in-out infinite;
+}
+.waveform-bars.on .waveform-bar:nth-child(2) {
+    animation: wave2 0.9s ease-in-out infinite 0.15s;
+}
+.waveform-bars.on .waveform-bar:nth-child(3) {
+    animation: wave3 1.1s ease-in-out infinite 0.05s;
+}
+.waveform-bars.on .waveform-bar:nth-child(4) {
+    animation: wave4 0.85s ease-in-out infinite 0.25s;
+}
+.waveform-bars.on .waveform-bar:nth-child(5) {
+    animation: wave5 1.05s ease-in-out infinite 0.1s;
+}
+
+@keyframes wave1 {
+    0%, 100% { height: 6px; }
+    50% { height: 16px; }
+}
+@keyframes wave2 {
+    0%, 100% { height: 10px; }
+    50% { height: 20px; }
+}
+@keyframes wave3 {
+    0%, 100% { height: 14px; }
+    50% { height: 8px; }
+}
+@keyframes wave4 {
+    0%, 100% { height: 8px; }
+    50% { height: 18px; }
+}
+@keyframes wave5 {
+    0%, 100% { height: 5px; }
+    50% { height: 13px; }
+}
+
+/* Glow halo behind the bars when active */
+.celestial-btn.waveform-btn.active {
+    border-color: rgba(124, 58, 237, 0.25);
     box-shadow:
-        0 0 8px rgba(196, 181, 253, 0.5),
-        0 0 16px rgba(124, 58, 237, 0.3);
+        0 0 12px rgba(124, 58, 237, 0.12),
+        inset 0 0 12px rgba(124, 58, 237, 0.06);
 }
 
-/* --- Responsive --- */
+/* ============================================
+   Constellation — Celestial Atlas (mini map)
+   ============================================ */
+.atlas-icon {
+    position: relative;
+    width: 26px;
+    height: 26px;
+}
+
+.atlas-icon svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Outer ring */
+.atlas-ring {
+    transition: all 0.5s var(--ease-out);
+}
+
+.atlas-icon.off .atlas-ring {
+    stroke: rgba(109, 91, 163, 0.3);
+    stroke-width: 1;
+    stroke-dasharray: 4 3;
+}
+
+.atlas-icon.on .atlas-ring {
+    stroke: url(#g-orbit);
+    stroke-width: 1.2;
+    stroke-dasharray: none;
+    animation: orbitSpin 30s linear infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+/* Grid lines (cross-hair / celestial equator) */
+.atlas-grid {
+    transition: all 0.5s var(--ease-out);
+}
+
+.atlas-icon.off .atlas-grid {
+    opacity: 0;
+}
+
+.atlas-icon.on .atlas-grid {
+    opacity: 0.35;
+}
+
+/* Star dots */
+.atlas-star {
+    transition: all 0.5s var(--ease-out);
+    fill: rgba(109, 91, 163, 0.3);
+}
+
+.atlas-icon.on .atlas-star {
+    fill: #C4B5FD;
+    filter: drop-shadow(0 0 2px rgba(196, 181, 253, 0.6));
+}
+
+/* Constellation lines */
+.atlas-line {
+    transition: all 0.5s var(--ease-out);
+    stroke: transparent;
+    stroke-width: 0.5;
+}
+
+.atlas-icon.on .atlas-line {
+    stroke: rgba(196, 181, 253, 0.4);
+    stroke-width: 0.6;
+}
+
+/* Degree ticks around the rim */
+.atlas-tick {
+    transition: all 0.5s var(--ease-out);
+    opacity: 0;
+    stroke: rgba(103, 232, 249, 0.3);
+}
+
+.atlas-icon.on .atlas-tick {
+    opacity: 1;
+}
+
+/* Active glow */
+.celestial-btn.atlas-btn.active {
+    border-color: rgba(34, 211, 238, 0.2);
+    box-shadow:
+        0 0 12px rgba(34, 211, 238, 0.1),
+        inset 0 0 12px rgba(34, 211, 238, 0.04);
+}
+
+/* Focus lens effect on click */
+.celestial-btn.atlas-btn.active::after {
+    border-color: rgba(34, 211, 238, 0.25);
+}
+
+/* ============================================
+   Responsive — Celestial Controls
+   ============================================ */
 @media (max-width: 768px) {
-    .control-panel {
-        bottom: 20px;
-        right: 16px;
-        padding: 10px 12px;
-        border-radius: 14px;
-    }
-    .control-icon {
-        width: 20px;
-        height: 20px;
-    }
-    .switch-track {
-        width: 28px;
-        height: 14px;
-    }
-    .switch-thumb {
-        width: 8px;
-        height: 8px;
-    }
-    .switch-track.on .switch-thumb {
+    .celestial-controls {
+        bottom: 24px;
         left: 16px;
+    }
+    .celestial-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+    .waveform-bars {
+        height: 18px;
+        width: 22px;
+        gap: 2.5px;
+    }
+    .waveform-bar {
+        width: 2.5px;
+    }
+    .atlas-icon {
+        width: 22px;
+        height: 22px;
+    }
+    .celestial-btn .ctrl-tooltip {
+        display: none;
     }
 }
 

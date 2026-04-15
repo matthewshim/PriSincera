@@ -90,90 +90,85 @@ export default function HeroSection() {
       </div>
       <EnergyCirculation rawMouseRef={rawMouseRef} active={assemblyDone} />
 
-      {/* Floating control panel — bottom-right */}
+      {/* Celestial Controls — left-bottom vertical */}
       {assemblyDone && (
-        <div className="control-panel" id="controlPanel">
-          {/* Music row */}
-          <div className="control-row" onClick={toggleMusic} role="button" tabIndex={0} aria-label="Toggle music">
-            <svg viewBox="0 0 28 28" fill="none" className={`control-icon ${musicPlaying ? 'active' : ''}`}>
-              {musicPlaying ? (
-                <>
-                  <path d="M10 10 C8 12.5, 8 15.5, 10 18" stroke="url(#g-edge)" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.9" />
-                  <path d="M7 7.5 C4 11, 4 17, 7 20.5" stroke="url(#g-edge)" strokeWidth="1.0" strokeLinecap="round" fill="none" opacity="0.55" />
-                  <path d="M18 10 C20 12.5, 20 15.5, 18 18" stroke="url(#g-edge)" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.9" />
-                  <path d="M21 7.5 C24 11, 24 17, 21 20.5" stroke="url(#g-edge)" strokeWidth="1.0" strokeLinecap="round" fill="none" opacity="0.55" />
-                  <circle cx="14" cy="14" r="2" fill="#FFFFFF" opacity="0.8" />
-                </>
-              ) : (
-                <>
-                  <path d="M10 10 C8 12.5, 8 15.5, 10 18" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" fill="none" opacity="0.35" />
-                  <path d="M18 10 C20 12.5, 20 15.5, 18 18" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" fill="none" opacity="0.35" />
-                  <line x1="8" y1="8" x2="20" y2="20" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" opacity="0.35" />
-                  <circle cx="14" cy="14" r="1.5" fill="currentColor" opacity="0.25" />
-                </>
-              )}
-            </svg>
-            <div className={`switch-track ${musicPlaying ? 'on' : ''}`}>
-              <div className="switch-thumb" />
+        <div className="celestial-controls" id="celestialControls">
+          {/* BGM — Waveform bars */}
+          <button
+            className={`celestial-btn waveform-btn ${musicPlaying ? 'active' : ''}`}
+            onClick={toggleMusic}
+            aria-label="Toggle music"
+            id="bgmToggle"
+          >
+            <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
             </div>
-          </div>
+            <span className="ctrl-tooltip">BGM</span>
+          </button>
 
           {/* Divider */}
-          <div className="control-divider" />
+          <div className="celestial-divider" />
 
-          {/* Zodiac row */}
-          <div className="control-row" onClick={() => setZodiacShowAll(p => !p)} role="button" tabIndex={0} aria-label="Toggle constellations">
-            <svg viewBox="0 0 44 44" fill="none" className={`control-icon ${zodiacShowAll ? 'active' : ''}`}>
-              {/* Orbit circle */}
-              <circle
-                cx="22" cy="22" r="19"
-                fill="none"
-                stroke={zodiacShowAll ? 'url(#g-orbit)' : 'currentColor'}
-                strokeWidth={zodiacShowAll ? '1.2' : '0.8'}
-                strokeDasharray={zodiacShowAll ? '115 4' : '8 6'}
-                strokeLinecap="round"
-                opacity={zodiacShowAll ? '0.8' : '0.3'}
-                className={zodiacShowAll ? 'orbit-spin-slow' : ''}
-                style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
-              />
-              {/* Up triangle △ */}
-              <path
-                d="M22 7 L35 29 L9 29 Z"
-                fill={zodiacShowAll ? 'url(#g-up)' : 'none'}
-                stroke={zodiacShowAll ? 'url(#g-edge)' : 'currentColor'}
-                strokeWidth={zodiacShowAll ? '0.8' : '0.6'}
-                strokeLinejoin="round"
-                opacity={zodiacShowAll ? '1' : '0.35'}
-              />
-              {/* Down triangle ▽ */}
-              <path
-                d="M22 37 L9 15 L35 15 Z"
-                fill={zodiacShowAll ? 'url(#g-down)' : 'none'}
-                stroke={zodiacShowAll ? 'url(#g-edge)' : 'currentColor'}
-                strokeWidth={zodiacShowAll ? '0.8' : '0.6'}
-                strokeLinejoin="round"
-                opacity={zodiacShowAll ? '1' : '0.35'}
-              />
-              {/* Amber accent */}
-              {zodiacShowAll && (
-                <path d="M28.5 24 L35 29 L30 29 Z" fill="url(#g-amber)" opacity="0.7" />
-              )}
-              {/* Core light */}
-              <circle
-                cx="22" cy="22"
-                r={zodiacShowAll ? '2.5' : '1.5'}
-                fill={zodiacShowAll ? '#FFFFFF' : 'currentColor'}
-                opacity={zodiacShowAll ? '0.9' : '0.25'}
-              />
-              {/* Core glow */}
-              {zodiacShowAll && (
-                <circle cx="22" cy="22" r="5" fill="url(#g-core-glow)" opacity="0.4" />
-              )}
-            </svg>
-            <div className={`switch-track ${zodiacShowAll ? 'on' : ''}`}>
-              <div className="switch-thumb" />
+          {/* Constellation — Celestial Atlas */}
+          <button
+            className={`celestial-btn atlas-btn ${zodiacShowAll ? 'active' : ''}`}
+            onClick={() => setZodiacShowAll(p => !p)}
+            aria-label="Toggle constellations"
+            id="atlasToggle"
+          >
+            <div className={`atlas-icon ${zodiacShowAll ? 'on' : 'off'}`}>
+              <svg viewBox="0 0 26 26" fill="none">
+                {/* Outer ring — celestial frame */}
+                <circle cx="13" cy="13" r="11.5" fill="none" className="atlas-ring" />
+
+                {/* Degree ticks — 12 marks around the rim */}
+                {[...Array(12)].map((_, i) => {
+                  const angle = (i * 30) * Math.PI / 180;
+                  const x1 = 13 + 10.2 * Math.cos(angle);
+                  const y1 = 13 + 10.2 * Math.sin(angle);
+                  const x2 = 13 + 11.5 * Math.cos(angle);
+                  const y2 = 13 + 11.5 * Math.sin(angle);
+                  return (
+                    <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                      className="atlas-tick" strokeWidth="0.5" />
+                  );
+                })}
+
+                {/* Grid lines — celestial equator + meridian */}
+                <line x1="3" y1="13" x2="23" y2="13" className="atlas-grid"
+                  stroke="rgba(103, 232, 249, 0.3)" strokeWidth="0.4" strokeDasharray="1.5 1.5" />
+                <line x1="13" y1="3" x2="13" y2="23" className="atlas-grid"
+                  stroke="rgba(103, 232, 249, 0.3)" strokeWidth="0.4" strokeDasharray="1.5 1.5" />
+
+                {/* Ecliptic arc */}
+                <ellipse cx="13" cy="13" rx="8" ry="4" className="atlas-grid"
+                  stroke="rgba(196, 181, 253, 0.2)" strokeWidth="0.4" fill="none"
+                  transform="rotate(-25 13 13)" />
+
+                {/* Star dots — mini constellation pattern */}
+                <circle cx="8" cy="8" r="0.8" className="atlas-star" />
+                <circle cx="16" cy="7" r="1" className="atlas-star" />
+                <circle cx="19" cy="11" r="0.7" className="atlas-star" />
+                <circle cx="10" cy="13" r="0.6" className="atlas-star" />
+                <circle cx="15" cy="15" r="0.9" className="atlas-star" />
+                <circle cx="7" cy="17" r="0.7" className="atlas-star" />
+                <circle cx="18" cy="18" r="0.6" className="atlas-star" />
+
+                {/* Constellation lines — connecting stars */}
+                <line x1="8" y1="8" x2="16" y2="7" className="atlas-line" />
+                <line x1="16" y1="7" x2="19" y2="11" className="atlas-line" />
+                <line x1="19" y1="11" x2="15" y2="15" className="atlas-line" />
+                <line x1="10" y1="13" x2="15" y2="15" className="atlas-line" />
+                <line x1="7" y1="17" x2="10" y2="13" className="atlas-line" />
+                <line x1="15" y1="15" x2="18" y2="18" className="atlas-line" />
+              </svg>
             </div>
-          </div>
+            <span className="ctrl-tooltip">STAR MAP</span>
+          </button>
         </div>
       )}
 
