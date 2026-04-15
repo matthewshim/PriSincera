@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriSincera — The Star Prism</title>
+    <meta name="description" content="PriSincera CI Guide. 진심의 별 — 두 개의 프리즘이 만나 별이 되고, 순환의 원이 조화를 이루다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Ambient Light Canvas -->
+    <canvas id="ambientCanvas" class="ambient-canvas"></canvas>
+
+    <!-- ====== Shared SVG Defs ====== -->
+    <svg style="position:absolute;width:0;height:0;" aria-hidden="true">
+        <defs>
+            <!-- Up triangle gradient (Pri — aspiration) -->
+            <linearGradient id="g-up" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#C4B5FD" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.3"/>
+            </linearGradient>
+            <!-- Down triangle gradient (Sincera — grounding) -->
+            <linearGradient id="g-down" x1="50%" y1="100%" x2="50%" y2="0%">
+                <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.75"/>
+                <stop offset="100%" stop-color="#6D28D9" stop-opacity="0.2"/>
+            </linearGradient>
+            <!-- Edge glow -->
+            <linearGradient id="g-edge" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#E9D5FF" stop-opacity="0.85"/>
+                <stop offset="50%" stop-color="#C4B5FD" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#FDE68A" stop-opacity="0.35"/>
+            </linearGradient>
+            <!-- Amber accent -->
+            <linearGradient id="g-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FDE68A"/>
+                <stop offset="100%" stop-color="#F59E0B"/>
+            </linearGradient>
+            <!-- Brand gradient -->
+            <linearGradient id="g-brand" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#C4B5FD"/>
+                <stop offset="40%" stop-color="#F0ABFC"/>
+                <stop offset="100%" stop-color="#FDE68A"/>
+            </linearGradient>
+            <!-- Orbit circle gradient (circulation) -->
+            <linearGradient id="g-orbit" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#67E8F9" stop-opacity="0.9"/>
+                <stop offset="50%" stop-color="#22D3EE" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#A5F3FC" stop-opacity="0.8"/>
+            </linearGradient>
+            <!-- Orbit circle - dark variant -->
+            <linearGradient id="g-orbit-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#164E63"/>
+                <stop offset="100%" stop-color="#0E7490"/>
+            </linearGradient>
+            <!-- Glow filters -->
+            <filter id="glow-sm">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="glow-lg">
+                <feGaussianBlur stdDeviation="10" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <!-- Core glow -->
+            <radialGradient id="g-core-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+                <stop offset="50%" stop-color="#C4B5FD" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+            </radialGradient>
+        </defs>
+    </svg>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#hero" class="nav-logo" id="navLogo">
+                <div class="nav-symbol">
+                    <svg viewBox="0 0 44 44" fill="none">
+                        <!-- Orbit circle -->
+                        <circle cx="22" cy="22" r="20" fill="none" stroke="url(#g-orbit)" stroke-width="1.2"
+                                stroke-dasharray="120 6" stroke-linecap="round" class="orbit-ring orbit-spin-slow"/>
+                        <!-- Down triangle (behind) -->
+                        <path d="M22 38 L8 14 L36 14 Z" fill="url(#g-down)" stroke="url(#g-edge)" stroke-width="1" stroke-linejoin="round"/>
+                        <!-- Up triangle -->
+                        <path d="M22 6 L36 30 L8 30 Z" fill="url(#g-up)" stroke="url(#g-edge)" stroke-width="1" stroke-linejoin="round"/>
+                        <!-- Amber accent -->
+                        <path d="M29 24 L36 30 L30 30 Z" fill="url(#g-amber)" opacity="0.7"/>
+                        <!-- Core -->
+                        <circle cx="22" cy="22" r="2" fill="#FFFFFF" opacity="0.9"/>
+                    </svg>
+                </div>
+                <span>PriSincera</span>
+            </a>
+            <div class="nav-links">
+                <a href="#philosophy" class="nav-link">Philosophy</a>
+                <a href="#identity" class="nav-link">Identity</a>
+                <a href="#system" class="nav-link">System</a>
+                <a href="#palette" class="nav-link">Palette</a>
+            </div>
+            <button class="nav-menu-btn" id="navMenuBtn" aria-label="메뉴 열기">
+                <span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-inner">
+            <a href="#philosophy" class="mobile-link">Philosophy</a>
+            <a href="#identity" class="mobile-link">Identity</a>
+            <a href="#system" class="mobile-link">System</a>
+            <a href="#palette" class="mobile-link">Palette</a>
+        </div>
+    </div>
+
+    <main>
+        <!-- ============================================
+             HERO — The Star Prism
+             ============================================ -->
+        <section class="hero" id="hero">
+            <div class="hero-depth-layer"></div>
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Corporate Identity v4.0
+                </div>
+
+                <!-- THE STAR PRISM — Core Symbol -->
+                <div class="star-stage" id="starStage">
+                    <!-- Floating particles -->
+                    <div class="star-particles" id="starParticles"></div>
+
+                    <svg class="star-svg" viewBox="0 0 400 400" fill="none" id="starSvg">
+                        <!-- Subtle aura -->
+                        <circle cx="200" cy="200" r="170" fill="url(#g-core-glow)" opacity="0.08"/>
+
+                        <!-- === ORBIT CIRCLE — Harmony & Circulation === -->
+                        <g class="orbit-group">
+                            <!-- Orbit — nearly solid ring with one subtle gap for circulation -->
+                            <circle class="orbit-ring orbit-spin"
+                                    cx="200" cy="200" r="175"
+                                    fill="none" stroke="url(#g-orbit)" stroke-width="1.2"
+                                    stroke-dasharray="1060 40"
+                                    stroke-linecap="round"/>
+                        </g>
+
+                        <!-- === THE HEXAGRAM STAR === -->
+                        <g class="star-body" id="starBody">
+
+                            <!-- Downward triangle (Sincera — grounding, foundation) -->
+                            <path class="tri-down"
+                                  d="M200 340 L75 123 L325 123 Z"
+                                  fill="url(#g-down)"
+                                  stroke="url(#g-edge)" stroke-width="1.5" stroke-linejoin="round"/>
+
+                            <!-- Upward triangle (Pri — aspiration, priority) -->
+                            <path class="tri-up"
+                                  d="M200 60 L325 277 L75 277 Z"
+                                  fill="url(#g-up)"
+                                  stroke="url(#g-edge)" stroke-width="1.5" stroke-linejoin="round"/>
+
+                            <!-- Amber accent triangle (direction indicator) at bottom-right -->
+                            <path class="tri-amber"
+                                  d="M263 235 L325 277 L275 277 Z"
+                                  fill="url(#g-amber)" opacity="0.75"/>
+
+                            <!-- Inner hexagonal intersection glow -->
+                            <path class="hex-inner"
+                                  d="M138 165 L200 123 L262 165 L262 235 L200 277 L138 235 Z"
+                                  fill="rgba(124,58,237,0.06)"
+                                  stroke="rgba(196,181,253,0.15)" stroke-width="0.8"/>
+
+                            <!-- Cross-light refraction lines through center -->
+                            <g class="refraction-lines" opacity="0.3">
+                                <line x1="200" y1="123" x2="200" y2="277" stroke="#E9D5FF" stroke-width="0.6"/>
+                                <line x1="138" y1="165" x2="262" y2="235" stroke="#C4B5FD" stroke-width="0.5"/>
+                                <line x1="262" y1="165" x2="138" y2="235" stroke="#FDE68A" stroke-width="0.5"/>
+                            </g>
+
+                            <!-- Core light point — Sincera's heart -->
+                            <circle class="core-glow" cx="200" cy="200" r="14" fill="url(#g-core-glow)" filter="url(#glow-lg)" opacity="0.5"/>
+                            <circle class="core-light" cx="200" cy="200" r="6" fill="#FFFFFF" filter="url(#glow-sm)" opacity="0.9"/>
+                            <circle class="core-dot" cx="200" cy="200" r="3" fill="#FFFFFF"/>
+
+                            <!-- Vertex nodes (6 star points) -->
+                            <g class="vertex-nodes">
+                                <circle cx="200" cy="60" r="3" fill="#C4B5FD" class="vertex v1"/>
+                                <circle cx="325" cy="277" r="3" fill="#C4B5FD" class="vertex v2"/>
+                                <circle cx="75" cy="277" r="3" fill="#C4B5FD" class="vertex v3"/>
+                                <circle cx="200" cy="340" r="3" fill="#A78BFA" class="vertex v4"/>
+                                <circle cx="75" cy="123" r="3" fill="#A78BFA" class="vertex v5"/>
+                                <circle cx="325" cy="123" r="3" fill="#A78BFA" class="vertex v6"/>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="hero-text">
+                    <h1 class="hero-title" id="heroTitle">
+                        <span class="title-line">The <em class="gradient-text">Star</em></span>
+                        <span class="title-line">Prism</span>
+                    </h1>
+                    <p class="hero-brand">PriSincera</p>
+                    <p class="hero-tagline">두 개의 프리즘이 만나 별이 되고, 순환의 원이 조화를 이루다</p>
+                </div>
+
+                <div class="scroll-indicator" id="scrollIndicator">
+                    <span>Scroll</span>
+                    <div class="scroll-line"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             01 — PHILOSOPHY
+             ============================================ -->
+        <section class="section" id="philosophy">
+            <div class="container">
+                <div class="section-label">01 — Core Philosophy</div>
+
+                <div class="philosophy-layout">
+                    <div class="philosophy-text">
+                        <h2 class="section-title reveal-up">
+                            <span class="line">두 프리즘이 만나</span>
+                            <span class="line"><em class="gradient-text">하나의 별</em>이 되는 순간,</span>
+                            <span class="line">방향이 보입니다.</span>
+                        </h2>
+                        <p class="philosophy-lead reveal-up" style="--delay:0.2s">
+                            비즈니스 현장에는 수많은 정보와 가능성이 <strong>하나의 방향 없이 난반사</strong>하고 있습니다.
+                            마치 사방으로 흩어지는 빛처럼, 각각은 빛나지만 모이지 않으면 어둠 속에 묻힙니다.
+                        </p>
+                        <p class="philosophy-lead reveal-up" style="--delay:0.35s">
+                            PriSincera는 두 개의 프리즘 — <strong>우선순위(Pri)</strong>와 <strong>진심(Sincera)</strong> — 을 겹쳐
+                            하나의 별을 만듭니다. 그리고 이 별을 감싸는 <strong>순환의 원(Orbit)</strong>이
+                            위와 아래, 비전과 신뢰를 끊임없이 순환시키며 진정한 조화를 이룹니다.
+                        </p>
+                    </div>
+
+                    <div class="philosophy-cards">
+                        <div class="concept-card reveal-up" style="--delay:0.1s">
+                            <div class="concept-icon">
+                                <svg viewBox="0 0 48 48" fill="none">
+                                    <path d="M24 8 L38 32 L10 32 Z" stroke="#C4B5FD" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                                    <line x1="24" y1="16" x2="24" y2="28" stroke="#E9D5FF" stroke-width="0.8" opacity="0.5"/>
+                                </svg>
+                            </div>
+                            <h3>△ Priority Prism <span class="kr-sub">우선순위의 프리즘</span></h3>
+                            <p>위를 향한 삼각형. 비전, 목표, 우선순위를 정돈하는 상승의 프리즘. 흩어진 과제들 속에서 핵심을 끌어올립니다.</p>
+                        </div>
+
+                        <div class="concept-card reveal-up" style="--delay:0.2s">
+                            <div class="concept-icon">
+                                <svg viewBox="0 0 48 48" fill="none">
+                                    <path d="M24 40 L10 16 L38 16 Z" stroke="#A78BFA" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                                    <circle cx="24" cy="26" r="3" fill="#F0ABFC" opacity="0.3"/>
+                                </svg>
+                            </div>
+                            <h3>▽ Sincera Prism <span class="kr-sub">진심의 프리즘</span></h3>
+                            <p>아래를 향한 삼각형. 진정성, 신뢰, 솔직함의 토대. 본질을 왜곡하지 않고 있는 그대로 비춥니다.</p>
+                        </div>
+
+                        <div class="concept-card reveal-up" style="--delay:0.3s">
+                            <div class="concept-icon">
+                                <svg viewBox="0 0 48 48" fill="none">
+                                    <circle cx="24" cy="24" r="18" fill="none" stroke="#22D3EE" stroke-width="1" stroke-dasharray="108 5" stroke-linecap="round" opacity="0.7"/>
+                                    <path d="M24 8 L36 30 L12 30 Z" stroke="#C4B5FD" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                                    <path d="M24 40 L12 18 L36 18 Z" stroke="#A78BFA" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                                    <path d="M30 25 L36 30 L30 30 Z" fill="#FDE68A" opacity="0.6"/>
+                                    <circle cx="24" cy="24" r="2.5" fill="#FFFFFF" opacity="0.9"/>
+                                </svg>
+                            </div>
+                            <h3>○ The Orbit <span class="kr-sub">순환의 원</span></h3>
+                            <p>별을 감싸는 순환의 원. △과 ▽를 쉬지 않고 연결하며, 비전과 신뢰가 균형 있게 순환하도록 합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             02 — THE IDENTITY
+             ============================================ -->
+        <section class="section section-dark" id="identity">
+            <div class="container">
+                <div class="section-label">02 — The Identity</div>
+                <h2 class="section-title reveal-up">
+                    <span class="line">두 프리즘, 하나의 별,</span>
+                    <span class="line"><em class="gradient-text">순환하는 원.</em></span>
+                </h2>
+                <p class="section-desc reveal-up">
+                    헥사그램 심볼은 △(우선순위)와 ▽(진심)가 교차하여 별이 되고,
+                    이 별을 감싸는 순환의 원(Orbit)이 양 요소의 끊임없는 조화와 균형을 표현합니다.
+                    중심의 광점은 진심의 핵, 앰버 삼각형은 발견된 최선의 방향입니다.
+                </p>
+
+                <!-- Main Logo Display -->
+                <div class="logo-stage reveal-up">
+                    <div class="logo-display-main" id="logoDisplayMain">
+                        <div class="logo-lockup-main">
+                            <svg class="logo-star-large" viewBox="0 0 200 200" fill="none">
+                                <!-- Orbit circle -->
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="url(#g-orbit)" stroke-width="1"
+                                        stroke-dasharray="545 20" stroke-linecap="round"
+                                        class="orbit-ring orbit-spin"/>
+                                <!-- Up triangle -->
+                                <path d="M100 15 L175 148 L25 148 Z"
+                                      fill="url(#g-up)" stroke="url(#g-edge)" stroke-width="1.2" stroke-linejoin="round"/>
+                                <!-- Down triangle -->
+                                <path d="M100 185 L25 52 L175 52 Z"
+                                      fill="url(#g-down)" stroke="url(#g-edge)" stroke-width="1.2" stroke-linejoin="round"/>
+                                <!-- Amber accent -->
+                                <path d="M138 123 L175 148 L145 148 Z" fill="url(#g-amber)" opacity="0.65"/>
+                                <!-- Inner hex -->
+                                <path d="M63 75 L100 52 L137 75 L137 125 L100 148 L63 125 Z"
+                                      fill="rgba(124,58,237,0.05)" stroke="rgba(196,181,253,0.12)" stroke-width="0.5"/>
+                                <!-- Refraction lines -->
+                                <line x1="100" y1="52" x2="100" y2="148" stroke="#E9D5FF" stroke-width="0.35" opacity="0.25"/>
+                                <line x1="63" y1="75" x2="137" y2="125" stroke="#C4B5FD" stroke-width="0.3" opacity="0.2"/>
+                                <line x1="137" y1="75" x2="63" y2="125" stroke="#FDE68A" stroke-width="0.3" opacity="0.2"/>
+                                <!-- Core -->
+                                <circle cx="100" cy="100" r="5" fill="#FFFFFF" opacity="0.8" filter="url(#glow-sm)"/>
+                                <circle cx="100" cy="100" r="2.5" fill="#FFFFFF"/>
+                            </svg>
+                            <div class="logo-wordmark-main">
+                                <span class="wm-pri">Pri</span><span class="wm-sincera">Sincera</span>
+                            </div>
+                        </div>
+                        <p class="logo-caption">Primary — Dark Background</p>
+                    </div>
+                </div>
+
+                <!-- Logo Variants Grid -->
+                <div class="logo-variants-grid reveal-up" style="--delay:0.15s">
+                    <!-- Light variant -->
+                    <div class="variant-card variant-light">
+                        <span class="variant-label">Light Background</span>
+                        <div class="variant-lockup">
+                            <svg class="variant-star" viewBox="0 0 200 200" fill="none">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="url(#g-orbit-dark)" stroke-width="1.5"
+                                        stroke-dasharray="545 20" stroke-linecap="round" class="orbit-ring orbit-spin"/>
+                                <path d="M100 15 L175 148 L25 148 Z" fill="rgba(124,58,237,0.08)" stroke="#1E1B4B" stroke-width="1.8" stroke-linejoin="round"/>
+                                <path d="M100 185 L25 52 L175 52 Z" fill="rgba(76,29,149,0.12)" stroke="#1E1B4B" stroke-width="1.8" stroke-linejoin="round"/>
+                                <path d="M138 123 L175 148 L145 148 Z" fill="#F59E0B" opacity="0.45"/>
+                                <circle cx="100" cy="100" r="4" fill="#1E1B4B" opacity="0.8"/>
+                            </svg>
+                            <div class="variant-wordmark light-wm">
+                                <span>Pri</span><span>Sincera</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mono variant -->
+                    <div class="variant-card variant-mono">
+                        <span class="variant-label">Monochrome</span>
+                        <div class="variant-lockup">
+                            <svg class="variant-star" viewBox="0 0 200 200" fill="none">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#E9D5FF" stroke-width="1"
+                                        stroke-dasharray="545 20" stroke-linecap="round" opacity="0.5" class="orbit-ring orbit-spin"/>
+                                <path d="M100 15 L175 148 L25 148 Z" fill="rgba(255,255,255,0.04)" stroke="#E9D5FF" stroke-width="1.8" stroke-linejoin="round"/>
+                                <path d="M100 185 L25 52 L175 52 Z" fill="rgba(255,255,255,0.07)" stroke="#E9D5FF" stroke-width="1.8" stroke-linejoin="round"/>
+                                <circle cx="100" cy="100" r="4" fill="#E9D5FF"/>
+                            </svg>
+                            <div class="variant-wordmark mono-wm">
+                                <span>PriSincera</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compact variant -->
+                    <div class="variant-card variant-compact">
+                        <span class="variant-label">Favicon / Icon</span>
+                        <div class="variant-lockup variant-icons-row">
+                            <div class="icon-size-demo">
+                                <svg viewBox="0 0 200 200" fill="none" class="icon-64">
+                                    <circle cx="100" cy="100" r="90" fill="none" stroke="#22D3EE" stroke-width="3" stroke-dasharray="545 20" stroke-linecap="round" opacity="0.5"/>
+                                    <path d="M100 15 L175 148 L25 148 Z" fill="#7C3AED" opacity="0.5"/>
+                                    <path d="M100 185 L25 52 L175 52 Z" fill="#4C1D95" opacity="0.6"/>
+                                    <path d="M138 123 L175 148 L145 148 Z" fill="#FDE68A" opacity="0.8"/>
+                                    <circle cx="100" cy="100" r="6" fill="#FFFFFF"/>
+                                </svg>
+                                <span>64px</span>
+                            </div>
+                            <div class="icon-size-demo">
+                                <svg viewBox="0 0 200 200" fill="none" class="icon-32">
+                                    <circle cx="100" cy="100" r="90" fill="none" stroke="#22D3EE" stroke-width="5" opacity="0.5"/>
+                                    <path d="M100 15 L175 148 L25 148 Z" fill="#7C3AED" opacity="0.6"/>
+                                    <path d="M100 185 L25 52 L175 52 Z" fill="#4C1D95" opacity="0.7"/>
+                                    <path d="M138 123 L175 148 L145 148 Z" fill="#FDE68A"/>
+                                    <circle cx="100" cy="100" r="8" fill="#FFFFFF"/>
+                                </svg>
+                                <span>32px</span>
+                            </div>
+                            <div class="icon-size-demo">
+                                <svg viewBox="0 0 200 200" fill="none" class="icon-16">
+                                    <circle cx="100" cy="100" r="88" fill="none" stroke="#22D3EE" stroke-width="8" opacity="0.5"/>
+                                    <path d="M100 20 L170 145 L30 145 Z" fill="#7C3AED"/>
+                                    <path d="M100 180 L30 55 L170 55 Z" fill="#4C1D95"/>
+                                    <circle cx="100" cy="100" r="14" fill="#FFFFFF"/>
+                                </svg>
+                                <span>16px</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anatomy -->
+                <div class="anatomy-section reveal-up" style="--delay:0.1s">
+                    <h3 class="anatomy-title">Symbol Anatomy</h3>
+                    <div class="anatomy-layout">
+                        <div class="anatomy-visual">
+                            <svg viewBox="0 0 300 300" fill="none" class="anatomy-svg">
+                                <!-- Orbit -->
+                                <circle cx="150" cy="150" r="135" fill="none" stroke="#22D3EE" stroke-width="1"
+                                        stroke-dasharray="820 28" stroke-linecap="round" opacity="0.5"
+                                        class="orbit-ring orbit-spin"/>
+                                <!-- Down triangle (behind) -->
+                                <path d="M150 262 L48 90 L252 90 Z"
+                                      fill="rgba(109,40,217,0.15)" stroke="#A78BFA" stroke-width="1.2" stroke-linejoin="round" opacity="0.7"/>
+                                <!-- Up triangle -->
+                                <path d="M150 38 L252 210 L48 210 Z"
+                                      fill="rgba(196,181,253,0.12)" stroke="#C4B5FD" stroke-width="1.2" stroke-linejoin="round"/>
+                                <!-- Amber accent -->
+                                <path d="M201 178 L252 210 L214 210 Z" fill="#FDE68A" opacity="0.6"/>
+                                <!-- Inner hex -->
+                                <path d="M99 118 L150 90 L201 118 L201 182 L150 210 L99 182 Z"
+                                      fill="rgba(124,58,237,0.04)" stroke="rgba(196,181,253,0.15)" stroke-width="0.6"/>
+                                <!-- Refraction lines -->
+                                <line x1="150" y1="90" x2="150" y2="210" stroke="#E9D5FF" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="99" y1="118" x2="201" y2="182" stroke="#C4B5FD" stroke-width="0.4" opacity="0.3"/>
+                                <line x1="201" y1="118" x2="99" y2="182" stroke="#FDE68A" stroke-width="0.4" opacity="0.3"/>
+                                <!-- Core -->
+                                <circle cx="150" cy="150" r="5" fill="#FFFFFF" opacity="0.85"/>
+                                <circle cx="150" cy="150" r="2.5" fill="#FFFFFF"/>
+
+                                <!-- Annotation lines -->
+                                <line x1="150" y1="38" x2="275" y2="38" stroke="#C4B5FD" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.5"/>
+                                <circle cx="150" cy="38" r="3" fill="#C4B5FD" opacity="0.5"/>
+                                <!-- Orbit annotation -->
+                                <line x1="250" y1="68" x2="275" y2="68" stroke="#22D3EE" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.5"/>
+                                <circle cx="246" cy="68" r="3" fill="#22D3EE" opacity="0.5"/>
+                                <!-- Core -->
+                                <line x1="160" y1="150" x2="275" y2="150" stroke="#F0ABFC" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.5"/>
+                                <circle cx="150" cy="150" r="9" fill="none" stroke="#F0ABFC" stroke-width="0.6" opacity="0.4"/>
+                                <!-- Amber -->
+                                <line x1="235" y1="200" x2="275" y2="200" stroke="#FDE68A" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.5"/>
+                                <circle cx="225" cy="200" r="3" fill="#FDE68A" opacity="0.5"/>
+                                <!-- Down apex -->
+                                <line x1="150" y1="262" x2="275" y2="262" stroke="#A78BFA" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.5"/>
+                                <circle cx="150" cy="262" r="3" fill="#A78BFA" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div class="anatomy-descriptions">
+                            <div class="anat-item">
+                                <div class="anat-marker" style="--marker-color: #C4B5FD;"></div>
+                                <div>
+                                    <strong>△ Priority Apex — 우선순위의 정점</strong>
+                                    <p>위를 향한 삼각형의 꼭짓점. 비전과 목표를 향해 상승하는 에너지, '우선순위(Pri)'의 상징.</p>
+                                </div>
+                            </div>
+                            <div class="anat-item">
+                                <div class="anat-marker" style="--marker-color: #22D3EE;"></div>
+                                <div>
+                                    <strong>○ Orbit — 순환의 원</strong>
+                                    <p>별을 감싸며 천천히 순환하는 궤도. △과 ▽의 에너지가 끊임없이 교환되는 조화와 균형의 상징.</p>
+                                </div>
+                            </div>
+                            <div class="anat-item">
+                                <div class="anat-marker" style="--marker-color: #F0ABFC;"></div>
+                                <div>
+                                    <strong>Core Light — 진심의 핵</strong>
+                                    <p>두 프리즘이 교차하는 중심의 광점. 왜곡 없이 빛을 투과하는 진심(Sincera) 자체.</p>
+                                </div>
+                            </div>
+                            <div class="anat-item">
+                                <div class="anat-marker" style="--marker-color: #FDE68A;"></div>
+                                <div>
+                                    <strong>Amber Direction — 방향의 빛</strong>
+                                    <p>별의 한 귀퉁이를 강조하는 앰버 삼각형. 진심을 통해 발견된 '최선의 방향'을 가리키는 표식.</p>
+                                </div>
+                            </div>
+                            <div class="anat-item">
+                                <div class="anat-marker" style="--marker-color: #A78BFA;"></div>
+                                <div>
+                                    <strong>▽ Sincera Base — 진심의 토대</strong>
+                                    <p>아래를 향한 삼각형의 꼭짓점. 진정성과 신뢰라는 단단한 받침, 모든 것의 기반.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             03 — SYSTEM
+             ============================================ -->
+        <section class="section" id="system">
+            <div class="container">
+                <div class="section-label">03 — Business Applications</div>
+                <h2 class="section-title reveal-up">
+                    <span class="line">Illuminating</span>
+                    <span class="line"><em class="gradient-text">Solutions.</em></span>
+                </h2>
+
+                <div class="services-grid reveal-up">
+                    <div class="service-card" id="service1">
+                        <div class="service-number">01</div>
+                        <div class="service-star-accent">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="20" fill="none" stroke="#22D3EE" stroke-width="0.8" stroke-dasharray="120 6" stroke-linecap="round" opacity="0.4"/>
+                                <path d="M24 6 L38 32 L10 32 Z" stroke="#C4B5FD" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                                <path d="M24 42 L10 16 L38 16 Z" stroke="#A78BFA" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h4>Fractional CPO</h4>
+                        <span class="service-tag">자문 & 디렉팅</span>
+                        <p>개발과 기획 사이에서 흩어진 빛을 별의 구조로 정렬하여, 조직의 로드맵에 명확한 방향을 부여하는 파트타임 CPO 자문.</p>
+                    </div>
+
+                    <div class="service-card" id="service2">
+                        <div class="service-number">02</div>
+                        <div class="service-star-accent">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="20" fill="none" stroke="#22D3EE" stroke-width="0.8" stroke-dasharray="120 6" stroke-linecap="round" opacity="0.4"/>
+                                <path d="M24 6 L38 32 L10 32 Z" stroke="#C4B5FD" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                                <path d="M24 42 L10 16 L38 16 Z" stroke="#A78BFA" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h4>Planning Agency</h4>
+                        <span class="service-tag">실무 수행</span>
+                        <p>PRD, 와이어프레임, 사양서 — 흩어진 요구사항을 별처럼 선명한 기획 결과물로 결정(結晶)화하는 에이전시 서비스.</p>
+                    </div>
+
+                    <div class="service-card" id="service3">
+                        <div class="service-number">03</div>
+                        <div class="service-star-accent">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="20" fill="none" stroke="#22D3EE" stroke-width="0.8" stroke-dasharray="120 6" stroke-linecap="round" opacity="0.4"/>
+                                <path d="M24 6 L38 32 L10 32 Z" stroke="#C4B5FD" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                                <path d="M24 42 L10 16 L38 16 Z" stroke="#A78BFA" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h4>Global Launching</h4>
+                        <span class="service-tag">검증 및 관리</span>
+                        <p>글로벌 UX 품질 검수와 런칭 전 리스크를 별의 6면으로 분석 — 숨겨진 결함까지 빛으로 드러냅니다.</p>
+                    </div>
+
+                    <div class="service-card" id="service4">
+                        <div class="service-number">04</div>
+                        <div class="service-star-accent">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="20" fill="none" stroke="#22D3EE" stroke-width="0.8" stroke-dasharray="120 6" stroke-linecap="round" opacity="0.4"/>
+                                <path d="M24 6 L38 32 L10 32 Z" stroke="#C4B5FD" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                                <path d="M24 42 L10 16 L38 16 Z" stroke="#A78BFA" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h4>Leadership Coaching</h4>
+                        <span class="service-tag">멘토링</span>
+                        <p>방향을 잃은 실무자에게 진심의 별을 건네는 일. PM 역량 강화와 의사결정 프레임워크 코칭.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             04 — COLOR PALETTE
+             ============================================ -->
+        <section class="section section-dark" id="palette">
+            <div class="container">
+                <div class="section-label">04 — Color Palette</div>
+                <h2 class="section-title reveal-up">
+                    <span class="line">Colors of the</span>
+                    <span class="line"><em class="gradient-text">Star Prism</em></span>
+                </h2>
+                <p class="section-desc reveal-up">
+                    두 프리즘과 순환의 원이 만들어내는 빛의 팔레트. 딥 바이올렛에서 앰버 골드, 그리고 순환을 상징하는 시안까지
+                    <strong>'진심을 통해 발견된 방향'</strong>을 시각적으로 표현합니다.
+                </p>
+
+                <div class="palette-grid reveal-up">
+                    <div class="palette-card">
+                        <div class="palette-swatch" style="background: linear-gradient(135deg, #7C3AED, #6D28D9);"></div>
+                        <div class="palette-info">
+                            <h4>Star Violet</h4>
+                            <code>#7C3AED</code>
+                            <span class="palette-role">Primary — 핵심 브랜드 컬러</span>
+                        </div>
+                    </div>
+                    <div class="palette-card">
+                        <div class="palette-swatch" style="background: linear-gradient(135deg, #C4B5FD, #A78BFA);"></div>
+                        <div class="palette-info">
+                            <h4>Crystal Lavender</h4>
+                            <code>#C4B5FD</code>
+                            <span class="palette-role">△ Pri — 상승 프리즘의 빛</span>
+                        </div>
+                    </div>
+                    <div class="palette-card">
+                        <div class="palette-swatch" style="background: linear-gradient(135deg, #22D3EE, #67E8F9);"></div>
+                        <div class="palette-info">
+                            <h4>Orbit Cyan</h4>
+                            <code>#22D3EE</code>
+                            <span class="palette-role">○ Orbit — 순환의 궤도</span>
+                        </div>
+                    </div>
+                    <div class="palette-card">
+                        <div class="palette-swatch" style="background: linear-gradient(135deg, #FDE68A, #F59E0B);"></div>
+                        <div class="palette-info">
+                            <h4>Amber Focus</h4>
+                            <code>#FDE68A</code>
+                            <span class="palette-role">Direction — 방향성의 빛</span>
+                        </div>
+                    </div>
+                    <div class="palette-card">
+                        <div class="palette-swatch" style="background: linear-gradient(135deg, #E9D5FF, #C4B5FD);"></div>
+                        <div class="palette-info">
+                            <h4>Crystal White</h4>
+                            <code>#E9D5FF</code>
+                            <span class="palette-role">Light — 텍스트 및 엣지</span>
+                        </div>
+                    </div>
+                    <div class="palette-card">
+                        <div class="palette-swatch" style="background: linear-gradient(135deg, #0F0A1E, #1A1035);"></div>
+                        <div class="palette-info">
+                            <h4>Deep Void</h4>
+                            <code>#0F0A1E</code>
+                            <span class="palette-role">Background — 심연의 배경</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spectrum-band reveal-up" style="--delay:0.2s">
+                    <div class="spectrum-bar"></div>
+                    <p class="spectrum-caption">The star prism spectrum — violet · cyan orbit · amber direction</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             BRAND PERSONA
+             ============================================ -->
+        <section class="section">
+            <div class="container">
+                <div class="section-label">05 — Brand Persona</div>
+                <div class="persona-block reveal-up">
+                    <blockquote class="persona-quote">
+                        "두 개의 프리즘이 겹쳐 별이 되고,<br>
+                        순환의 원이 감싸는 — <em class="gradient-text">조화의 빛.</em>"
+                    </blockquote>
+                    <p class="persona-desc">
+                        외국계 게임사 웹 총괄 경험을 바탕으로,
+                        우선순위(△)와 진심(▽)이라는 두 프리즘을 겹쳐 별을 만들고,
+                        순환의 원(○)으로 비전과 신뢰의 균형을 유지하며
+                        가장 밝은 방향을 비춰주는 전문가.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-inner">
+                    <div class="footer-brand">
+                        <svg class="footer-star" viewBox="0 0 44 44" fill="none">
+                            <!-- Orbit circle -->
+                            <circle cx="22" cy="22" r="20" fill="none" stroke="url(#g-orbit)" stroke-width="1.2"
+                                    stroke-dasharray="120 6" stroke-linecap="round" class="orbit-ring orbit-spin-slow"/>
+                            <!-- Down triangle (behind) -->
+                            <path d="M22 38 L8 14 L36 14 Z" fill="url(#g-down)" stroke="url(#g-edge)" stroke-width="1" stroke-linejoin="round"/>
+                            <!-- Up triangle -->
+                            <path d="M22 6 L36 30 L8 30 Z" fill="url(#g-up)" stroke="url(#g-edge)" stroke-width="1" stroke-linejoin="round"/>
+                            <!-- Amber accent -->
+                            <path d="M29 24 L36 30 L30 30 Z" fill="url(#g-amber)" opacity="0.7"/>
+                            <!-- Core -->
+                            <circle cx="22" cy="22" r="2" fill="#FFFFFF" opacity="0.9"/>
+                        </svg>
+                        <p class="footer-name">PriSincera</p>
+                    </div>
+                    <div class="footer-copy">
+                        <p>&copy; 2026 PriSincera. All rights reserved.</p>
+                        <p>The Star Prism — CI Guide v4.0</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

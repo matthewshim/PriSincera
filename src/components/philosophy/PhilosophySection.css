@@ -1,0 +1,281 @@
+/* ============================================
+   Philosophy Section
+   ============================================ */
+.philosophy {
+    position: relative;
+    z-index: 2;
+    padding: var(--space-3xl) var(--space-xl);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; /* Starfield shows through */
+}
+
+.philosophy-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* --- Section Label --- */
+.section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--space-2xl);
+    padding-left: 28px;
+    position: relative;
+    opacity: 0.6;
+}
+
+.section-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 18px;
+    height: 1px;
+    background: var(--gradient-subtle);
+}
+
+/* --- Layout --- */
+.philosophy-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3xl);
+    align-items: start;
+}
+
+/* --- Philosophy Text (Left) --- */
+.philosophy-text {
+    padding-right: var(--space-xl);
+}
+
+.philosophy-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: var(--space-xl);
+}
+
+.title-line {
+    display: block;
+}
+
+.title-line.accent {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.philosophy-lead {
+    font-size: clamp(0.9rem, 1.3vw, 1rem);
+    color: var(--text-muted);
+    line-height: 1.9;
+    margin-bottom: var(--space-md);
+}
+
+.philosophy-lead strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.philosophy-lead:first-of-type {
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* --- Concept Cards (Right) --- */
+.concept-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.concept-card {
+    position: relative;
+    padding: var(--space-lg) var(--space-xl);
+    background: rgba(26, 16, 53, 0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(196, 181, 253, 0.06);
+    border-radius: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    transition: all var(--duration-normal) var(--ease-out);
+    cursor: default;
+    overflow: hidden;
+}
+
+/* Card accent line (left border) */
+.concept-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 2px;
+    background: var(--card-accent, #C4B5FD);
+    opacity: 0.3;
+    transition: all var(--duration-normal) var(--ease-out);
+    border-radius: 1px;
+}
+
+.concept-card:hover {
+    border-color: rgba(196, 181, 253, 0.15);
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 40px rgba(124, 58, 237, 0.12),
+        0 0 1px rgba(196, 181, 253, 0.2);
+}
+
+.concept-card:hover::before {
+    top: 10%;
+    bottom: 10%;
+    opacity: 0.6;
+}
+
+/* --- Card Icon --- */
+.concept-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    padding: 6px;
+    border-radius: 12px;
+    background: rgba(124, 58, 237, 0.08);
+    border: 1px solid rgba(196, 181, 253, 0.06);
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.concept-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.concept-card:hover .concept-icon {
+    background: rgba(124, 58, 237, 0.15);
+    border-color: rgba(196, 181, 253, 0.12);
+    transform: scale(1.05);
+}
+
+/* --- Card Body --- */
+.concept-body {
+    flex: 1;
+}
+
+.concept-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: baseline;
+    gap: 0.4em;
+    flex-wrap: wrap;
+}
+
+.concept-symbol {
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.concept-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+}
+
+.concept-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+/* ============================================
+   Scroll Reveal Animations
+   ============================================ */
+.reveal-section .reveal-item {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--reveal-delay, 0s),
+        transform 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--reveal-delay, 0s);
+}
+
+.reveal-section.revealed .reveal-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Section label fade */
+.reveal-section .section-label {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.8s ease 0.05s, transform 0.8s ease 0.05s;
+}
+
+.reveal-section.revealed .section-label {
+    opacity: 0.6;
+    transform: translateX(0);
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 1024px) {
+    .philosophy-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+    }
+
+    .philosophy-text {
+        padding-right: 0;
+    }
+
+    .concept-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-md);
+    }
+
+    /* Third card spans full width on tablet */
+    .concept-card:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .philosophy {
+        padding: var(--space-2xl) var(--space-md);
+        min-height: auto;
+    }
+
+    .concept-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .concept-card:last-child {
+        grid-column: auto;
+    }
+
+    .concept-card {
+        padding: var(--space-md) var(--space-lg);
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .philosophy-title {
+        margin-bottom: var(--space-lg);
+    }
+}

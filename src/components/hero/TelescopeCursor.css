@@ -1,0 +1,80 @@
+/* ============================================
+   Telescope Cursor
+   ============================================ */
+.telescope-cursor {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.telescope-cursor.visible { opacity: 1; }
+
+.telescope-cursor.hovering-interactive .telescope-ring { transform: scale(0.6); }
+.telescope-cursor.hovering-interactive .telescope-glow {
+    width: 30px; height: 30px; opacity: 0.8;
+    background: radial-gradient(circle, rgba(253,230,138,0.3), transparent 70%);
+}
+
+.telescope-ring {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.telescope-ring svg {
+    width: 100%; height: 100%;
+    animation: telescopeRotate 20s linear infinite;
+}
+
+@keyframes telescopeRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.telescope-glow {
+    position: absolute;
+    width: 90px; height: 90px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(253,230,138,0.06) 0%,
+        rgba(245,158,11,0.03) 40%,
+        transparent 70%);
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.telescope-info {
+    position: absolute;
+    bottom: -24px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: rgba(253, 230, 138, 0.65);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.telescope-cursor.near-star .telescope-ring svg { animation-duration: 8s; }
+
+.telescope-cursor.near-star .telescope-glow {
+    width: 110px; height: 110px;
+    background: radial-gradient(circle,
+        rgba(253,230,138,0.12) 0%,
+        rgba(245,158,11,0.05) 40%,
+        transparent 70%);
+}
+
+.telescope-cursor.near-star .telescope-info { opacity: 1; }
+
+@media (max-width: 768px) {
+    .telescope-cursor { display: none; }
+}
