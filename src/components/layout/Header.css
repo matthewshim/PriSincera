@@ -5,6 +5,17 @@
     z-index: 1000;
     padding: var(--space-md) var(--space-xl);
     transition: all var(--duration-fast) var(--ease-smooth);
+    /* Hidden during hero animation, fades in when hero-ready */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease, padding var(--duration-fast) var(--ease-smooth),
+                background var(--duration-fast) var(--ease-smooth);
+}
+
+/* Fade in GNB when hero intro completes */
+.hero-ready .nav {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .nav.scrolled {

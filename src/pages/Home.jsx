@@ -25,9 +25,15 @@ function Home() {
     return () => { document.body.style.overflow = ''; };
   }, [scrollLocked]);
 
-  // Unlock scroll when hero intro is complete
+  // Unlock scroll and show GNB when hero intro is complete
   const onHeroIntroComplete = useCallback(() => {
     setScrollLocked(false);
+    document.body.classList.add('hero-ready');
+  }, []);
+
+  // Clean up body class on unmount
+  useEffect(() => {
+    return () => document.body.classList.remove('hero-ready');
   }, []);
 
   useEffect(() => {
