@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import useMousePosition from '../../hooks/useMousePosition';
 import StarField from './StarField';
 import ConstellationAssembly from './ConstellationAssembly';
@@ -112,8 +113,8 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
       </div>
       <EnergyCirculation rawMouseRef={rawMouseRef} active={assemblyDone} />
 
-      {/* Celestial Controls — left-bottom vertical, always on top */}
-      {assemblyDone && (
+      {/* Celestial Controls — rendered via portal to escape stacking context */}
+      {assemblyDone && createPortal(
         <div className="celestial-controls" id="celestialControls">
           {/* BGM — Waveform bars */}
           <button
@@ -191,7 +192,8 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
             </div>
             <span className="ctrl-tooltip">STAR MAP</span>
           </button>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Scroll indicator — fades out as user scrolls */}
