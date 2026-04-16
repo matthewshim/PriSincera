@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+.firebase
+.firebaserc
+scripts
+sound
+docs
+ci
+*.md
+*.log
+.env
+.env.*
+.vscode
+.idea
