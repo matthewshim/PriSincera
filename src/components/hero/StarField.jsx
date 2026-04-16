@@ -252,11 +252,11 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       const my = rawMy;
 
       // Telescope lens parameters
-      const LENS_RADIUS = 160;       // lens field of view
-      const LENS_MAGNIFY = 0.35;     // how much points get pushed outward (0 = none, 1 = max)
-      const LENS_SIZE_SCALE = 1.6;   // max size multiplier at lens center
+      const LENS_RADIUS = 240;       // wider telescope field of view
+      const LENS_MAGNIFY = 0.06;     // minimal position push (preserves constellation shapes)
+      const LENS_SIZE_SCALE = 1.5;   // zoom-in magnification at lens center
 
-      // Reusable lens distortion function
+      // Reusable lens transform — primarily scales up, minimal position shift
       // Returns { x, y, strength, sizeScale } for any input point
       function lensTransform(px, py) {
         const dx = px - mx, dy = py - my;
@@ -266,6 +266,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         }
         const t = 1 - dist / LENS_RADIUS;
         const strength = t * t; // quadratic falloff
+        // Very subtle outward push — just enough for spatial depth, not enough to deform
         const pushAmount = strength * LENS_MAGNIFY * LENS_RADIUS;
         const angle = Math.atan2(dy, dx);
         return {
