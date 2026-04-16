@@ -3,8 +3,9 @@ import { useEffect, useRef } from 'react';
 /**
  * Hero text content — label, title, subtitle, CTAs.
  * Animates in sequentially after assembly completes.
+ * Calls onIntroComplete when all elements (including SCROLL indicator) are visible.
  */
-export default function HeroContent({ visible }) {
+export default function HeroContent({ visible, onIntroComplete }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -27,8 +28,12 @@ export default function HeroContent({ visible }) {
     }, 600);
     setTimeout(() => sub?.classList.add('visible'), 1600);
     setTimeout(() => cta?.classList.add('visible'), 2000);
-    setTimeout(() => scroll?.classList.add('visible'), 2600);
-  }, [visible]);
+    setTimeout(() => {
+      scroll?.classList.add('visible');
+      // All hero content is now visible — unlock scrolling
+      onIntroComplete?.();
+    }, 2600);
+  }, [visible, onIntroComplete]);
 
   return (
     <div className="hero-content" ref={containerRef}>
@@ -51,3 +56,4 @@ export default function HeroContent({ visible }) {
     </div>
   );
 }
+

@@ -23,7 +23,7 @@ import './HeroSection.css';
  * - User clicks again to toggle back ON (userHidden = false)
  * - effectiveShowAll = forceShowAll AND NOT userHidden
  */
-export default function HeroSection({ forceShowAllConstellations = false, scrollProgress = 0 }) {
+export default function HeroSection({ forceShowAllConstellations = false, scrollProgress = 0, onIntroComplete }) {
   const { raw: rawMouseRef } = useMousePosition();
   const [assemblyDone, setAssemblyDone] = useState(false);
   const [userHiddenConstellations, setUserHiddenConstellations] = useState(false);
@@ -109,7 +109,7 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
           rawMouseRef={rawMouseRef}
           onAssemblyComplete={onAssemblyComplete}
         />
-        <HeroContent visible={assemblyDone} />
+        <HeroContent visible={assemblyDone} onIntroComplete={onIntroComplete} />
       </div>
       <EnergyCirculation rawMouseRef={rawMouseRef} active={assemblyDone} />
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import HeroSection from '../components/hero/HeroSection';
 import PhilosophySection from '../components/philosophy/PhilosophySection';
 import './Home.css';
@@ -7,15 +7,28 @@ import './Home.css';
  * Home page — orchestrates the scroll-driven transition
  * from Hero (sticky) to content sections.
  *
- * Scroll Sequence:
- *   1. Hero fills viewport (sticky)
- *   2. User scrolls → scroll progress tracked
- *   3. At ~30% progress: all constellations activate softly
- *   4. Content sections slide in over the hero with glassmorphic backgrounds
+ * Scroll is locked during hero animation. Once the SCROLL indicator
+ * appears (all hero content revealed), scrolling is unlocked.
  */
 function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrollLocked, setScrollLocked] = useState(true);
   const wrapperRef = useRef(null);
+
+  // Lock body scroll while hero is animating
+  useEffect(() => {
+    if (scrollLocked) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [scrollLocked]);
+
+  // Unlock scroll when hero intro is complete
+  const onHeroIntroComplete = useCallback(() => {
+    setScrollLocked(false);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,6 +57,7 @@ function Home() {
         <HeroSection
           forceShowAllConstellations={constellationsAllOn}
           scrollProgress={scrollProgress}
+          onIntroComplete={onHeroIntroComplete}
         />
       </div>
 
