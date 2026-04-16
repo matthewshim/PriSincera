@@ -253,28 +253,27 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
 
       // Telescope lens parameters
       const LENS_RADIUS = 160;       // lens field of view
-      const LENS_MAGNIFY = 0.35;     // how much stars get pushed outward (0 = none, 1 = max)
+      const LENS_MAGNIFY = 0.35;     // how much points get pushed outward (0 = none, 1 = max)
       const LENS_SIZE_SCALE = 1.6;   // max size multiplier at lens center
 
-      // --- Lens boundary ring (subtle glass edge indicator) ---
-      if (mx > 0 && my > 0 && mx < w && my < h) {
-        // Outer ring — faint glass edge
-        ctx.globalAlpha = 0.06;
-        ctx.strokeStyle = '#C4B5FD';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(mx, my, LENS_RADIUS, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Inner soft glow
-        const lensGlow = ctx.createRadialGradient(mx, my, LENS_RADIUS * 0.7, mx, my, LENS_RADIUS);
-        lensGlow.addColorStop(0, 'rgba(196, 181, 253, 0)');
-        lensGlow.addColorStop(1, 'rgba(196, 181, 253, 0.03)');
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = lensGlow;
-        ctx.beginPath();
-        ctx.arc(mx, my, LENS_RADIUS, 0, Math.PI * 2);
-        ctx.fill();
+      // Reusable lens distortion function
+      // Returns { x, y, strength, sizeScale } for any input point
+      function lensTransform(px, py) {
+        const dx = px - mx, dy = py - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist >= LENS_RADIUS || dist === 0) {
+          return { x: px, y: py, strength: 0, sizeScale: 1 };
+        }
+        const t = 1 - dist / LENS_RADIUS;
+        const strength = t * t; // quadratic falloff
+        const pushAmount = strength * LENS_MAGNIFY * LENS_RADIUS;
+        const angle = Math.atan2(dy, dx);
+        return {
+          x: px + Math.cos(angle) * pushAmount,
+          y: py + Math.sin(angle) * pushAmount,
+          strength,
+          sizeScale: 1 + strength * (LENS_SIZE_SCALE - 1),
+        };
       }
 
       // --- Regular Stars (depth-layered with parallax + lens distortion) ---
@@ -291,29 +290,16 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         let alpha = s.baseOpacity + Math.sin(s.twinklePhase) * (0.1 + s.depth * 0.2);
 
         // --- Telescope lens distortion ---
-        // Stars within lens radius get pushed outward from cursor center (magnification)
-        const dx = drawX - mx, dy = drawY - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        let lensSizeMultiplier = 1;
+        const lens = lensTransform(drawX, drawY);
+        drawX = lens.x;
+        drawY = lens.y;
+        let lensSizeMultiplier = lens.sizeScale;
         let sizeBonus = 0;
 
-        if (dist < LENS_RADIUS && dist > 0) {
-          // Smooth falloff: strongest at center, zero at edge
-          const t = 1 - dist / LENS_RADIUS; // 1 at center, 0 at edge
-          const strength = t * t; // quadratic falloff for natural lens curve
-
-          // Push star outward from mouse center (convex lens magnification)
-          const pushAmount = strength * LENS_MAGNIFY * LENS_RADIUS;
-          const angle = Math.atan2(dy, dx);
-          drawX += Math.cos(angle) * pushAmount;
-          drawY += Math.sin(angle) * pushAmount;
-
-          // Scale up star size (magnification)
-          lensSizeMultiplier = 1 + strength * (LENS_SIZE_SCALE - 1);
-
+        if (lens.strength > 0) {
           // Brighten within lens
-          alpha += strength * 0.5;
-          sizeBonus = strength * (1.5 + s.depth);
+          alpha += lens.strength * 0.5;
+          sizeBonus = lens.strength * (1.5 + s.depth);
         }
 
         // Core star
@@ -407,26 +393,30 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         ctx.setLineDash(reveal < 0.5 ? [3, 5] : [4 + reveal * 4, 3 - reveal * 2]);
         for (const [a, b] of c.lines) {
           const sa = c.starPositions[a], sb = c.starPositions[b];
-          ctx.beginPath(); ctx.moveTo(sa.x, sa.y); ctx.lineTo(sb.x, sb.y); ctx.stroke();
+          // Apply lens distortion to constellation line endpoints
+          const la = lensTransform(sa.x, sa.y);
+          const lb = lensTransform(sb.x, sb.y);
+          ctx.beginPath(); ctx.moveTo(la.x, la.y); ctx.lineTo(lb.x, lb.y); ctx.stroke();
         }
         ctx.setLineDash([]);
 
-        // --- Constellation stars ---
+        // --- Constellation stars (with lens magnification) ---
         for (const sp of c.starPositions) {
+          const lsp = lensTransform(sp.x, sp.y);
           const baseR = 1.2;
-          const starR = baseR + pulse * 0.8 + reveal * 1.5;
+          const starR = (baseR + pulse * 0.8 + reveal * 1.5) * lsp.sizeScale;
 
           // Glow (during pulse or reveal)
           if (pulse > 0.1 || reveal > 0.05) {
             ctx.globalAlpha = Math.max(pulse * 0.3, reveal * 0.25) * zodiacFade;
             ctx.fillStyle = '#C4B5FD';
-            ctx.beginPath(); ctx.arc(sp.x, sp.y, starR + 4, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR + 4 * lsp.sizeScale, 0, Math.PI * 2); ctx.fill();
           }
 
           // Core star — always visible, brighter on reveal and pulse
-          ctx.globalAlpha = (0.35 + pulse + reveal * 0.55) * zodiacFade;
+          ctx.globalAlpha = (0.35 + pulse + reveal * 0.55 + lsp.strength * 0.3) * zodiacFade;
           ctx.fillStyle = (reveal > 0.3 || pulse > 0.2) ? '#E9D5FF' : '#C4B5FD';
-          ctx.beginPath(); ctx.arc(sp.x, sp.y, starR, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR, 0, Math.PI * 2); ctx.fill();
         }
 
         // --- Label (appears on telescope reveal OR during pulse peak) ---
@@ -438,26 +428,30 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           const pulseAlpha = showByPulse ? (pulse - 0.15) / 0.30 : 0;
           const labelAlpha = Math.min(1, Math.max(revealAlpha, pulseAlpha)) * zodiacFade;
 
+          // Apply lens to label position
+          const lCenter = lensTransform(c.centerX, c.centerY);
+          const labelScale = lCenter.sizeScale;
+
           // Name
           ctx.globalAlpha = labelAlpha * (showByReveal ? 0.85 : 0.55);
-          ctx.font = `500 ${11}px 'Inter', sans-serif`;
+          ctx.font = `500 ${Math.round(11 * labelScale)}px 'Inter', sans-serif`;
           ctx.fillStyle = '#E9D5FF';
           ctx.textAlign = 'center';
-          ctx.fillText(c.name, c.centerX, c.centerY + 44);
+          ctx.fillText(c.name, lCenter.x, lCenter.y + 44 * labelScale);
 
           // Subtitle (only on full reveal, not pulse)
           if (showByReveal) {
             ctx.globalAlpha = revealAlpha * 0.45;
-            ctx.font = `400 ${9}px 'Inter', sans-serif`;
+            ctx.font = `400 ${Math.round(9 * labelScale)}px 'Inter', sans-serif`;
             ctx.fillStyle = '#A78BFA';
-            ctx.fillText(c.sub, c.centerX, c.centerY + 57);
+            ctx.fillText(c.sub, lCenter.x, lCenter.y + 57 * labelScale);
           }
 
           // Symbol
           ctx.globalAlpha = labelAlpha * (showByReveal ? 0.2 : 0.12);
-          ctx.font = `${16}px sans-serif`;
+          ctx.font = `${Math.round(16 * labelScale)}px sans-serif`;
           ctx.fillStyle = '#C4B5FD';
-          ctx.fillText(c.symbol, c.centerX, c.centerY - 38);
+          ctx.fillText(c.symbol, lCenter.x, lCenter.y - 38 * labelScale);
         }
       }
       } // end zodiacFade > 0.005
