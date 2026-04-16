@@ -247,54 +247,97 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         ctx.beginPath(); ctx.arc(drawNx, drawNy, n.r, 0, Math.PI * 2); ctx.fill();
       }
 
-      // --- Mouse position for telescope effect ---
+      // --- Mouse position for telescope lens effect ---
       const mx = rawMx;
       const my = rawMy;
 
-      // --- Regular Stars (depth-layered with parallax) ---
+      // Telescope lens parameters
+      const LENS_RADIUS = 160;       // lens field of view
+      const LENS_MAGNIFY = 0.35;     // how much stars get pushed outward (0 = none, 1 = max)
+      const LENS_SIZE_SCALE = 1.6;   // max size multiplier at lens center
+
+      // --- Lens boundary ring (subtle glass edge indicator) ---
+      if (mx > 0 && my > 0 && mx < w && my < h) {
+        // Outer ring — faint glass edge
+        ctx.globalAlpha = 0.06;
+        ctx.strokeStyle = '#C4B5FD';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(mx, my, LENS_RADIUS, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Inner soft glow
+        const lensGlow = ctx.createRadialGradient(mx, my, LENS_RADIUS * 0.7, mx, my, LENS_RADIUS);
+        lensGlow.addColorStop(0, 'rgba(196, 181, 253, 0)');
+        lensGlow.addColorStop(1, 'rgba(196, 181, 253, 0.03)');
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = lensGlow;
+        ctx.beginPath();
+        ctx.arc(mx, my, LENS_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // --- Regular Stars (depth-layered with parallax + lens distortion) ---
       for (const s of stars) {
         s.twinklePhase += s.twinkleSpeed;
 
         // Parallax offset: near stars move more
         const pox = parallaxBaseX * s.parallaxFactor;
         const poy = parallaxBaseY * s.parallaxFactor;
-        const drawX = s.x + pox;
-        const drawY = s.y + poy;
+        let drawX = s.x + pox;
+        let drawY = s.y + poy;
 
         // Twinkle alpha
         let alpha = s.baseOpacity + Math.sin(s.twinklePhase) * (0.1 + s.depth * 0.2);
 
-        // Telescope spotlight effect (mouse proximity)
+        // --- Telescope lens distortion ---
+        // Stars within lens radius get pushed outward from cursor center (magnification)
         const dx = drawX - mx, dy = drawY - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const spotR = 150;
+        let lensSizeMultiplier = 1;
         let sizeBonus = 0;
-        if (dist < spotR) {
-          const proximity = 1 - dist / spotR;
-          alpha += proximity * 0.5;
-          sizeBonus = proximity * (1 + s.depth);
+
+        if (dist < LENS_RADIUS && dist > 0) {
+          // Smooth falloff: strongest at center, zero at edge
+          const t = 1 - dist / LENS_RADIUS; // 1 at center, 0 at edge
+          const strength = t * t; // quadratic falloff for natural lens curve
+
+          // Push star outward from mouse center (convex lens magnification)
+          const pushAmount = strength * LENS_MAGNIFY * LENS_RADIUS;
+          const angle = Math.atan2(dy, dx);
+          drawX += Math.cos(angle) * pushAmount;
+          drawY += Math.sin(angle) * pushAmount;
+
+          // Scale up star size (magnification)
+          lensSizeMultiplier = 1 + strength * (LENS_SIZE_SCALE - 1);
+
+          // Brighten within lens
+          alpha += strength * 0.5;
+          sizeBonus = strength * (1.5 + s.depth);
         }
 
         // Core star
+        const finalR = (s.r + sizeBonus) * lensSizeMultiplier;
         ctx.globalAlpha = Math.max(0.02, Math.min(1, alpha));
         ctx.fillStyle = s.color;
         ctx.beginPath();
-        ctx.arc(drawX, drawY, s.r + sizeBonus, 0, Math.PI * 2);
+        ctx.arc(drawX, drawY, finalR, 0, Math.PI * 2);
         ctx.fill();
 
         // Glow halo for near stars (depth > 0.7)
         if (s.glowRadius > 0) {
-          ctx.globalAlpha = s.depth * 0.06 + (sizeBonus > 0.3 ? sizeBonus * 0.08 : 0);
+          const glowAlpha = s.depth * 0.06 + (sizeBonus > 0.3 ? sizeBonus * 0.08 : 0);
+          ctx.globalAlpha = glowAlpha;
           ctx.beginPath();
-          ctx.arc(drawX, drawY, s.r + s.glowRadius + sizeBonus, 0, Math.PI * 2);
+          ctx.arc(drawX, drawY, (s.r + s.glowRadius + sizeBonus) * lensSizeMultiplier, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        // Telescope proximity glow (existing behavior, enhanced)
+        // Telescope proximity glow (enhanced)
         if (sizeBonus > 0.8) {
           ctx.globalAlpha = (sizeBonus / 1.5) * 0.15;
           ctx.beginPath();
-          ctx.arc(drawX, drawY, s.r + sizeBonus + 3, 0, Math.PI * 2);
+          ctx.arc(drawX, drawY, finalR + 3, 0, Math.PI * 2);
           ctx.fill();
         }
       }
