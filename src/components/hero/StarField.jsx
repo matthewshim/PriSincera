@@ -113,39 +113,84 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     let w, h, stars = [], nebulae = [], shootingStars = [], constellations = [], frameId;
     let zodiacFade = 0; // 0 = hidden, 1 = fully visible
 
+    // Smoothed mouse position for parallax (avoids jitter)
+    let smoothMx = 0, smoothMy = 0;
+
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
+      smoothMx = w / 2;
+      smoothMy = h / 2;
       createStars();
       createNebulae();
       createConstellations();
     }
 
+    /**
+     * Create stars with depth-based properties:
+     * - depth: 0 (farthest) → 1 (nearest)
+     * - Size, opacity, color temperature, parallax all scale with depth
+     * - Cubic distribution: most stars are far (small/dim), few are near (bright)
+     */
     function createStars() {
       stars = [];
-      const density = Math.floor((w * h) / 3200);
-      const colors = ['#FFFFFF', '#E9D5FF', '#C4B5FD', '#A78BFA', '#FDE68A', '#67E8F9'];
+      const density = Math.floor((w * h) / 2800); // slightly more stars for layered richness
+
+      // Depth-based color palettes (atmospheric perspective)
+      // Far = cool blue/cyan, Mid = neutral lavender/white, Near = warm white/gold
+      const colorsByDepth = {
+        far:  ['#5B8FB9', '#67E8F9', '#7DD3FC', '#93C5FD'],  // cool blues
+        mid:  ['#C4B5FD', '#E9D5FF', '#DDD6FE', '#FFFFFF'],  // neutral lavender/white
+        near: ['#FFFFFF', '#FEF3C7', '#FDE68A', '#F0ABFC'],   // warm whites/golds
+      };
+
       for (let i = 0; i < density; i++) {
+        // Cubic distribution: depth³ makes most stars far, few near
+        const rawDepth = Math.random();
+        const depth = rawDepth * rawDepth * rawDepth; // 0~1, skewed toward 0
+
+        // Select color palette based on depth
+        let palette;
+        if (depth < 0.15) {
+          palette = colorsByDepth.far;
+        } else if (depth < 0.55) {
+          palette = colorsByDepth.mid;
+        } else {
+          palette = colorsByDepth.near;
+        }
+        const color = palette[Math.floor(Math.random() * palette.length)];
+
         stars.push({
-          x: Math.random() * w, y: Math.random() * h,
-          r: Math.random() * 1.5 + 0.2,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          twinkleSpeed: Math.random() * 0.025 + 0.005,
+          x: Math.random() * w,
+          y: Math.random() * h,
+          depth,
+          r: 0.15 + depth * 1.8,                        // far: tiny, near: big
+          color,
+          twinkleSpeed: 0.003 + (1 - depth) * 0.025,    // far: slow twinkle, near: faster
           twinklePhase: Math.random() * Math.PI * 2,
-          baseOpacity: Math.random() * 0.45 + 0.08,
+          baseOpacity: 0.04 + depth * 0.55,              // far: very dim, near: bright
+          parallaxFactor: depth * 0.045,                 // far: almost static, near: moves a lot
+          glowRadius: depth > 0.7 ? 2 + depth * 4 : 0,  // only near stars get glow
         });
       }
+
+      // Sort by depth so far stars draw first (painter's algorithm)
+      stars.sort((a, b) => a.depth - b.depth);
     }
 
     function createNebulae() {
       nebulae = [];
       const colors = [{ r:124,g:58,b:237 }, { r:167,g:139,b:250 }, { r:240,g:171,b:252 }, { r:34,g:211,b:238 }];
+      // Each nebula at a different depth for parallax layering
+      const depths = [0.05, 0.15, 0.08, 0.12];
       for (let i = 0; i < 4; i++) {
         nebulae.push({
           x: Math.random() * w, y: Math.random() * h,
           r: Math.random() * 250 + 120, color: colors[i],
           speedX: (Math.random() - 0.5) * 0.12, speedY: (Math.random() - 0.5) * 0.08,
           opacity: 0.012 + Math.random() * 0.015, phase: Math.random() * Math.PI * 2,
+          depth: depths[i],
+          parallaxFactor: depths[i] * 0.03,
         });
       }
     }
@@ -171,42 +216,86 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     function draw() {
       ctx.clearRect(0, 0, w, h);
 
-      // --- Nebulae ---
+      // --- Mouse position & smooth parallax ---
+      const rawMx = rawMouseRef?.current?.x ?? w / 2;
+      const rawMy = rawMouseRef?.current?.y ?? h / 2;
+      // Smooth lerp toward actual mouse for fluid parallax
+      smoothMx += (rawMx - smoothMx) * 0.06;
+      smoothMy += (rawMy - smoothMy) * 0.06;
+      // Parallax offset base: distance from viewport center
+      const centerX = w / 2, centerY = h / 2;
+      const parallaxBaseX = smoothMx - centerX;
+      const parallaxBaseY = smoothMy - centerY;
+
+      // --- Nebulae (with subtle parallax) ---
       for (const n of nebulae) {
         n.x += n.speedX; n.y += n.speedY; n.phase += 0.003;
         if (n.x < -n.r) n.x = w + n.r; if (n.x > w + n.r) n.x = -n.r;
         if (n.y < -n.r) n.y = h + n.r; if (n.y > h + n.r) n.y = -n.r;
+
+        // Parallax offset for nebula
+        const nox = parallaxBaseX * n.parallaxFactor;
+        const noy = parallaxBaseY * n.parallaxFactor;
+        const drawNx = n.x + nox;
+        const drawNy = n.y + noy;
+
         const alpha = n.opacity + Math.sin(n.phase) * 0.006;
-        const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
+        const grad = ctx.createRadialGradient(drawNx, drawNy, 0, drawNx, drawNy, n.r);
         grad.addColorStop(0, `rgba(${n.color.r},${n.color.g},${n.color.b},${alpha})`);
         grad.addColorStop(1, `rgba(${n.color.r},${n.color.g},${n.color.b},0)`);
         ctx.globalAlpha = 1; ctx.fillStyle = grad;
-        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(drawNx, drawNy, n.r, 0, Math.PI * 2); ctx.fill();
       }
 
-      // --- Mouse position ---
-      const mx = rawMouseRef?.current?.x ?? -200;
-      const my = rawMouseRef?.current?.y ?? -200;
+      // --- Mouse position for telescope effect ---
+      const mx = rawMx;
+      const my = rawMy;
 
-      // --- Regular Stars ---
+      // --- Regular Stars (depth-layered with parallax) ---
       for (const s of stars) {
         s.twinklePhase += s.twinkleSpeed;
-        let alpha = s.baseOpacity + Math.sin(s.twinklePhase) * 0.25;
-        const dx = s.x - mx, dy = s.y - my;
+
+        // Parallax offset: near stars move more
+        const pox = parallaxBaseX * s.parallaxFactor;
+        const poy = parallaxBaseY * s.parallaxFactor;
+        const drawX = s.x + pox;
+        const drawY = s.y + poy;
+
+        // Twinkle alpha
+        let alpha = s.baseOpacity + Math.sin(s.twinklePhase) * (0.1 + s.depth * 0.2);
+
+        // Telescope spotlight effect (mouse proximity)
+        const dx = drawX - mx, dy = drawY - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
         const spotR = 150;
         let sizeBonus = 0;
         if (dist < spotR) {
           const proximity = 1 - dist / spotR;
           alpha += proximity * 0.5;
-          sizeBonus = proximity * 1.5;
+          sizeBonus = proximity * (1 + s.depth);
         }
+
+        // Core star
         ctx.globalAlpha = Math.max(0.02, Math.min(1, alpha));
         ctx.fillStyle = s.color;
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.r + sizeBonus, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(drawX, drawY, s.r + sizeBonus, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glow halo for near stars (depth > 0.7)
+        if (s.glowRadius > 0) {
+          ctx.globalAlpha = s.depth * 0.06 + (sizeBonus > 0.3 ? sizeBonus * 0.08 : 0);
+          ctx.beginPath();
+          ctx.arc(drawX, drawY, s.r + s.glowRadius + sizeBonus, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Telescope proximity glow (existing behavior, enhanced)
         if (sizeBonus > 0.8) {
           ctx.globalAlpha = (sizeBonus / 1.5) * 0.15;
-          ctx.beginPath(); ctx.arc(s.x, s.y, s.r + sizeBonus + 3, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath();
+          ctx.arc(drawX, drawY, s.r + sizeBonus + 3, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
 
