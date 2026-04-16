@@ -78,3 +78,18 @@
 @media (max-width: 768px) {
     .telescope-cursor { display: none; }
 }
+
+/* --- Hide default browser cursor (telescope replaces it) --- */
+@media (min-width: 769px) {
+    *,
+    *::before,
+    *::after {
+        cursor: none !important;
+    }
+
+    /* Restore pointer on interactive elements for usability */
+    a, button, input, textarea, select, label,
+    [role="button"], [tabindex] {
+        cursor: none !important;
+    }
+}
