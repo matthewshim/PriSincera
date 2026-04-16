@@ -13,7 +13,9 @@ import './Home.css';
 function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [scrollLocked, setScrollLocked] = useState(true);
+  const [contentVisible, setContentVisible] = useState(false);
   const wrapperRef = useRef(null);
+  const philosophyRef = useRef(null);
 
   // Lock body scroll while hero is animating
   useEffect(() => {
@@ -53,15 +55,28 @@ function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Constellation all-on triggers at 30% scroll progress
-  const constellationsAllOn = scrollProgress > 0.3;
+  // Constellation auto-ON when Philosophy content section enters viewport
+  useEffect(() => {
+    const el = philosophyRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setContentVisible(entry.isIntersecting);
+      },
+      { threshold: 0.05 } // trigger as soon as ~5% of the section is visible
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="home-wrapper" ref={wrapperRef}>
       {/* Sticky hero — stays fixed while content scrolls over it */}
       <div className="hero-sticky-container">
         <HeroSection
-          forceShowAllConstellations={constellationsAllOn}
+          forceShowAllConstellations={contentVisible}
           scrollProgress={scrollProgress}
           onIntroComplete={onHeroIntroComplete}
         />
@@ -73,7 +88,9 @@ function Home() {
       {/* Content sections — glassmorphic backgrounds handle readability */}
       <div className="content-layer">
         <div className="content-sections">
-          <PhilosophySection />
+          <div ref={philosophyRef}>
+            <PhilosophySection />
+          </div>
           {/* Future sections: Services, Contact, etc. */}
         </div>
       </div>
