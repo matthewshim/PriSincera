@@ -18,15 +18,14 @@ import './HeroSection.css';
  * - scrollProgress: 0-1 value representing the hero-to-content scroll transition
  *
  * Constellation toggle logic:
- * - Scroll triggers auto-ON (forceShowAllConstellations = true)
- * - User can manually toggle OFF via atlas button (userHidden = true)
- * - User clicks again to toggle back ON (userHidden = false)
- * - effectiveShowAll = forceShowAll AND NOT userHidden
+ * - User can toggle constellations ON/OFF at any time via the STAR MAP button
+ * - Scroll past 30% also triggers constellations ON automatically
+ * - effectiveShowAll = forceShowAll OR userToggledOn
  */
 export default function HeroSection({ forceShowAllConstellations = false, scrollProgress = 0, onIntroComplete }) {
   const { raw: rawMouseRef } = useMousePosition();
   const [assemblyDone, setAssemblyDone] = useState(false);
-  const [userHiddenConstellations, setUserHiddenConstellations] = useState(false);
+  const [userToggledConstellations, setUserToggledConstellations] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(true);
   const audioRef = useRef(null);
   const musicIntentRef = useRef(true); // user wants music ON
@@ -85,14 +84,15 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
   }, [musicPlaying, getAudio]);
 
   // Toggle constellation visibility:
-  // - scroll triggers forceShowAll → auto ON
-  // - user click hides/shows (overrides scroll)
+  // - User click directly toggles on/off (works at any scroll position)
+  // - Scroll triggers forceShowAll → auto ON (additive)
+  // - effectiveShowAll = scroll-triggered OR user-toggled-on
   const toggleConstellations = useCallback(() => {
-    setUserHiddenConstellations(prev => !prev);
+    setUserToggledConstellations(prev => !prev);
   }, []);
 
-  // Effective state: scroll-triggered ON, unless user manually hid them
-  const effectiveShowAll = forceShowAllConstellations && !userHiddenConstellations;
+  // Effective state: user toggled ON, or scroll triggered ON
+  const effectiveShowAll = forceShowAllConstellations || userToggledConstellations;
   // Show as active in button UI
   const constellationsActive = effectiveShowAll;
 
