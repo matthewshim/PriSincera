@@ -106,27 +106,25 @@
 ```mermaid
 graph TD
     A["🎬 Navigation Bar<br/>(Fixed, Glassmorphism)"] --> B["🌟 Hero Section<br/>'Sincerity, Prioritized.'"]
-    B --> C["💎 Philosophy Section<br/>'복잡함 속에서 별은 만들어집니다'"]
+    B --> C["💎 Belief Section<br/>'복잡함 속에서 별은 만들어집니다'<br/>+ Note A · Priority · Sincera"]
     C --> D["🛤️ Journey Section<br/>'기술은 변해도, 태도는 남습니다'"]
-    D --> E["💡 Belief Section<br/>'내가 믿는 세 가지'"]
-    E --> F["🔨 Work Section<br/>'말보다 만든 것으로'"]
-    F --> G["🤝 Connect Section<br/>'함께 이야기합시다'"]
-    G --> H["🔗 Footer"]
+    D --> E["🔨 Work Section<br/>'말보다 만든 것으로'"]
+    E --> F["🤝 Connect Section<br/>'함께 이야기합시다'"]
+    F --> G["🔗 Footer"]
 
     style A fill:#1A1A26,stroke:#6C63FF,color:#E8E6F0
     style B fill:#0A0A0F,stroke:#C4B5FD,color:#E8E6F0
     style C fill:#12121A,stroke:#A78BFA,color:#E8E6F0
     style D fill:#0A0A0F,stroke:#22D3EE,color:#E8E6F0
-    style E fill:#12121A,stroke:#FDE68A,color:#E8E6F0
-    style F fill:#0A0A0F,stroke:#C4B5FD,color:#E8E6F0
-    style G fill:#12121A,stroke:#22D3EE,color:#E8E6F0
-    style H fill:#0A0A0F,stroke:#5A5870,color:#E8E6F0
+    style E fill:#0A0A0F,stroke:#C4B5FD,color:#E8E6F0
+    style F fill:#12121A,stroke:#22D3EE,color:#E8E6F0
+    style G fill:#0A0A0F,stroke:#5A5870,color:#E8E6F0
 ```
 
 **스크롤 심리 흐름:**
 ```
-선언 → 철학 → 경험 → 가치관 → 결과물 → 연결
-"무엇을 추구하는가" → "어디서 왔는가" → "무엇을 믿는가" → "무엇을 만들었는가" → "이야기하자"
+선언 → 가치관 → 경험 → 결과물 → 연결
+"무엇을 추구하는가" → "무엇을 믿는가" → "어떤 길을 걸어왔는가" → "무엇을 만들었는가" → "이야기하자"
 ```
 
 ---
@@ -150,14 +148,27 @@ graph TD
 | **비주얼** | Star Prism CI 심볼 조립 애니메이션 + 별자리 Star Map + BGM |
 | **인터랙션** | Telescope 커서 + 별자리 reveal + Celestial Controls (BGM/Star Map 토글) |
 
-### 4-3. Philosophy Section — "복잡함 속에서 별은 만들어집니다" ✅ 구현 완료
+### 4-3. Belief Section — "복잡함 속에서 별은 만들어집니다" ✅ 구현 완료
+
+> **참고**: 기존 Philosophy(CI 스토리)와 Belief(개인 가치관)를 하나의 섹션으로 통합.
+> CI 해설 톤 → 개인 철학 도입부로 전환. 하단에 브랜드 선언문 추가.
 
 | 요소 | 상세 |
 |------|------|
+| **섹션 라벨** | `Belief` |
 | **타이틀** | `복잡함 속에서, 별은 만들어집니다.` |
-| **내러티브** | PriSincera = 우선순위(Pri) + 진심(Sincera) → 하나의 별 |
-| **Concept Cards** | Priority Prism (△) · Sincera Prism (▽) · The Orbit (○) |
+| **도입 내러티브** | 흩어진 빛 → 방향을 찾는 순간 별이 됨 → 20년 여정에서 발견한 본질 |
+| **Belief Cards** | Note A (태도) · Priority (우선순위) · Sincera (진심) — 각각 인용문 + 설명 |
+| **마무리 선언** | `진심을 우선순위에 둔다 — 이것이 PriSincera입니다.` |
 | **디자인** | Glassmorphism 카드, 스크롤 순차 등장 |
+
+**3가지 신념:**
+
+| 신념 | 키워드 | 인용문 | 설명 |
+|------|--------|--------|------|
+| **Note A** | Attitude | "기술은 변해도 태도는 남는다" | 20년을 지탱해 온 힘은 도구가 아니라 업을 대하는 단단한 태도 |
+| **Priority** | Focus | "혼돈 속에서도 핵심을 찾는다" | 수많은 과제 사이에서 비전의 방향을 정돈하는 것, 그것이 우선순위 |
+| **Sincera** | Trust | "진심은 결국 도달한다" | 투명하게 본질에 집중하면 신뢰는 반드시 따라온다 |
 
 ### 4-4. Journey Section — "걸어온 길"
 
@@ -186,28 +197,7 @@ graph TD
 | 2021 | 글로벌을 리딩하다 | 그라비티 | 웹서비스개발그룹장, LATAM 진출 | Global |
 | Now | AI와 함께 새로운 장 | Vibe Studio | 바이브 코딩으로 프로덕트 직접 제작 | Innovation |
 
-### 4-5. Belief Section — "내가 믿는 것"
-
-> **목적**: 단순 경력 나열이 아닌, "이 사람이 가진 관점과 가치관" 전달
-
-| 요소 | 상세 |
-|------|------|
-| **섹션 라벨** | `Belief` |
-| **타이틀** | `내가 믿는 것` |
-| **서브 카피** | 20년의 현장에서 발견한, 변하지 않는 세 가지 |
-| **레이아웃** | 3-column 카드 (모바일: 세로 스택) |
-| **카드 구성** | 상단: 대형 인용문 (accent gradient) / 하단: 설명 |
-| **마무리** | `"진심을 우선순위에 둔다 — 이것이 PriSincera입니다."` (full-width 선언문) |
-
-**3가지 신념:**
-
-| 신념 | 인용문 | 설명 |
-|------|--------|------|
-| **Note A** | "기술은 변해도 태도는 남는다" | 20년을 지탱해 온 힘은 도구가 아니라 업을 대하는 단단한 태도 |
-| **Priority** | "혼돈 속에서도 핵심을 찾는다" | 수많은 과제 사이에서 비전의 방향을 정돈하는 것, 그것이 우선순위 |
-| **Sincera** | "진심은 결국 도달한다" | 투명하게 본질에 집중하면 신뢰는 반드시 따라온다 |
-
-### 4-6. Work Section — "만들어온 것들"
+### 4-5. Work Section — "만들어온 것들"
 
 > **목적**: 결과물로 경험을 증명
 
@@ -222,7 +212,7 @@ graph TD
 | **Coming Soon** | **Noto A** — 인사이트 매거진 "정답에 가까운 태도와 민첩함을 기록하다" |
 | **호버** | 스크린샷 프리뷰 + glow border |
 
-### 4-7. Connect Section — "함께 이야기합시다"
+### 4-6. Connect Section — "함께 이야기합시다"
 
 | 요소 | 상세 |
 |------|------|
@@ -232,7 +222,7 @@ graph TD
 | **CTA** | LinkedIn 버튼 + Email 버튼 |
 | **톤** | 영업적 톤 배제 — 대화 초대 |
 
-### 4-8. Footer
+### 4-7. Footer
 
 | 요소 | 상세 |
 |------|------|
