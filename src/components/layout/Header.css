@@ -95,6 +95,67 @@
 .nav-link.active::after {
     width: 100%;
 }
+/* --- BGM toggle in GNB --- */
+.nav-bgm-slot {
+    margin-left: var(--space-md);
+    display: flex;
+    align-items: center;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.gnb-bgm-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(196, 181, 253, 0.06);
+    border: 1px solid rgba(196, 181, 253, 0.1);
+    cursor: none;
+    transition: all 0.3s var(--ease-out);
+}
+
+.gnb-bgm-btn:hover {
+    background: rgba(196, 181, 253, 0.12);
+    border-color: rgba(196, 181, 253, 0.2);
+}
+
+.gnb-bgm-btn.active {
+    border-color: rgba(34, 211, 238, 0.25);
+}
+
+.gnb-bgm-btn .waveform-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+}
+
+.gnb-bgm-btn .waveform-bar {
+    width: 2px;
+    background: var(--text-muted);
+    border-radius: 1px;
+    transition: background 0.3s ease;
+}
+
+.gnb-bgm-btn.active .waveform-bar {
+    background: var(--orbit-cyan);
+}
+
+.gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(1) { height: 40%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0s; }
+.gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(2) { height: 70%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.15s; }
+.gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(3) { height: 100%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.3s; }
+.gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(4) { height: 55%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.1s; }
+.gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(5) { height: 30%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.25s; }
+
+.gnb-bgm-btn .waveform-bars.off .waveform-bar { height: 3px; }
+
+@keyframes gnbWave {
+    0% { transform: scaleY(0.4); }
+    100% { transform: scaleY(1); }
+}
 
 @media (max-width: 768px) {
     .nav { padding: var(--space-sm) var(--space-md); }
@@ -102,4 +163,6 @@
     .nav-link { font-size: 0.8rem; }
     .nav-symbol { width: 28px; height: 28px; }
     .nav-wordmark { font-size: 0.95rem; }
+    .nav-bgm-slot { margin-left: var(--space-sm); }
+    .gnb-bgm-btn { width: 28px; height: 28px; }
 }

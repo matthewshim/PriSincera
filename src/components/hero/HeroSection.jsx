@@ -22,7 +22,7 @@ import './HeroSection.css';
  * - Scroll past 30% also triggers constellations ON automatically
  * - effectiveShowAll = forceShowAll OR userToggledOn
  */
-export default function HeroSection({ forceShowAllConstellations = false, scrollProgress = 0, onIntroComplete }) {
+export default function HeroSection({ forceShowAllConstellations = false, contentVisible = false, scrollProgress = 0, onIntroComplete }) {
   const { raw: rawMouseRef } = useMousePosition();
   const [assemblyDone, setAssemblyDone] = useState(false);
   const [userToggledConstellations, setUserToggledConstellations] = useState(false);
@@ -104,7 +104,11 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
         zodiacActive={assemblyDone}
         zodiacShowAll={effectiveShowAll}
       />
-      <div className="hero-center">
+      <div className="hero-center" style={{
+        opacity: contentVisible ? 0 : 1,
+        transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        pointerEvents: contentVisible ? 'none' : 'auto',
+      }}>
         <ConstellationAssembly
           rawMouseRef={rawMouseRef}
           onAssemblyComplete={onAssemblyComplete}
@@ -113,29 +117,28 @@ export default function HeroSection({ forceShowAllConstellations = false, scroll
       </div>
       <EnergyCirculation rawMouseRef={rawMouseRef} active={assemblyDone} />
 
-      {/* Celestial Controls — rendered via portal to escape stacking context */}
+      {/* BGM toggle — rendered into GNB via portal */}
+      {assemblyDone && document.getElementById('gnbBgmSlot') && createPortal(
+        <button
+          className={`gnb-bgm-btn ${musicPlaying ? 'active' : ''}`}
+          onClick={toggleMusic}
+          aria-label="Toggle music"
+          id="bgmToggle"
+        >
+          <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+            <div className="waveform-bar" />
+          </div>
+        </button>,
+        document.getElementById('gnbBgmSlot')
+      )}
+
+      {/* Celestial Controls — Star Map toggle only */}
       {assemblyDone && createPortal(
         <div className="celestial-controls" id="celestialControls">
-          {/* BGM — Waveform bars */}
-          <button
-            className={`celestial-btn waveform-btn ${musicPlaying ? 'active' : ''}`}
-            onClick={toggleMusic}
-            aria-label="Toggle music"
-            id="bgmToggle"
-          >
-            <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-            </div>
-            <span className="ctrl-tooltip">BGM</span>
-          </button>
-
-          {/* Divider */}
-          <div className="celestial-divider" />
-
           {/* Constellation — Celestial Atlas */}
           <button
             className={`celestial-btn atlas-btn ${constellationsActive ? 'active' : ''}`}

@@ -56,6 +56,8 @@ function Header() {
           <NavLink to="/services" className="nav-link" id="navServices">서비스</NavLink>
           <NavLink to="/contact" className="nav-link" id="navContact">연락처</NavLink>
         </div>
+        {/* BGM toggle portal target — filled by HeroSection */}
+        <div className="nav-bgm-slot" id="gnbBgmSlot" />
       </div>
     </nav>
   );

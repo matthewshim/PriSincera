@@ -56,16 +56,19 @@ function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Constellation auto-ON when Belief content section enters viewport
+  // Constellation auto-ON when Belief content section enters viewport (once-on: stays visible)
   useEffect(() => {
     const el = beliefRef.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setContentVisible(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setContentVisible(true);
+          observer.unobserve(el);
+        }
       },
-      { threshold: 0.05 } // trigger as soon as ~5% of the section is visible
+      { threshold: 0.05 }
     );
 
     observer.observe(el);
@@ -78,6 +81,7 @@ function Home() {
       <div className="hero-sticky-container">
         <HeroSection
           forceShowAllConstellations={contentVisible}
+          contentVisible={contentVisible}
           scrollProgress={scrollProgress}
           onIntroComplete={onHeroIntroComplete}
         />
