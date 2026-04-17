@@ -4,7 +4,7 @@
 .philosophy {
     position: relative;
     z-index: 2;
-    padding: var(--space-2xl) var(--space-xl);
+    padding: 0 var(--space-xl) var(--space-2xl);
     min-height: 100vh;
     display: flex;
     align-items: center;
