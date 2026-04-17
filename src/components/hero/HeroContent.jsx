@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Hero text content — label, title, subtitle, CTAs.
+ * Hero text content — label, title, subtitle.
  * Animates in sequentially after assembly completes.
  * Calls onIntroComplete when all elements (including SCROLL indicator) are visible.
  */
@@ -16,7 +16,6 @@ export default function HeroContent({ visible, onIntroComplete }) {
     const label = el.querySelector('.hero-label');
     const words = el.querySelectorAll('.word');
     const sub = el.querySelector('.hero-sub');
-    const cta = el.querySelector('.hero-cta-group');
     const scroll = document.getElementById('scrollIndicator');
 
     setTimeout(() => label?.classList.add('visible'), 200);
@@ -27,12 +26,11 @@ export default function HeroContent({ visible, onIntroComplete }) {
       });
     }, 600);
     setTimeout(() => sub?.classList.add('visible'), 1600);
-    setTimeout(() => cta?.classList.add('visible'), 2000);
     setTimeout(() => {
       scroll?.classList.add('visible');
       // All hero content is now visible — unlock scrolling
       onIntroComplete?.();
-    }, 2600);
+    }, 2200);
   }, [visible, onIntroComplete]);
 
   return (
@@ -49,10 +47,6 @@ export default function HeroContent({ visible, onIntroComplete }) {
         <br/>
         그것이 가장 올바른 길이라 확신합니다.
       </p>
-      <div className="hero-cta-group">
-        <button className="cta-primary" id="ctaPrimary">자세히 알아보기</button>
-        <button className="cta-secondary" id="ctaSecondary">서비스 둘러보기</button>
-      </div>
     </div>
   );
 }
