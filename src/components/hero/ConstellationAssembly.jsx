@@ -433,10 +433,12 @@ export default function ConstellationAssembly({ rawMouseRef, onAssemblyComplete 
     const body = starBodyRef.current;
     if (!body) return;
     let curX = 0, curY = 0, frameId;
+    let lastFrameTime = 0;
+    const FPS_INTERVAL = 1000 / 30;
 
-    function animate() {
+    function animateFrame() {
       const stage = svgRef.current?.closest('.star-constellation');
-      if (!stage) { frameId = requestAnimationFrame(animate); return; }
+      if (!stage) return;
       const rect = stage.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
@@ -447,7 +449,13 @@ export default function ConstellationAssembly({ rawMouseRef, onAssemblyComplete 
       curX += (dx * 18 - curX) * 0.06;
       curY += (dy * 14 - curY) * 0.06;
       body.style.transform = `translate(${curX}px, ${curY}px)`;
+    }
+
+    function animate(now) {
       frameId = requestAnimationFrame(animate);
+      if (now - lastFrameTime < FPS_INTERVAL) return;
+      lastFrameTime = now;
+      animateFrame();
     }
     frameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frameId);

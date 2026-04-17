@@ -27,6 +27,8 @@ export default function EnergyCirculation({ rawMouseRef, active }) {
     if (!stage) return;
 
     let cw, ch, offsetX, offsetY, frameId;
+    let lastFrameTime = 0;
+    const FPS_INTERVAL = 1000 / 30;
 
     function resize() {
       const rect = stage.getBoundingClientRect();
@@ -72,7 +74,7 @@ export default function EnergyCirculation({ rawMouseRef, active }) {
       return { x: f.x + (to.x - f.x) * t, y: f.y + (to.y - f.y) * t };
     }
 
-    function draw() {
+    function drawFrame() {
       ctx.clearRect(0, 0, cw, ch);
       const sr = stage.getBoundingClientRect();
       const scx = sr.left + sr.width / 2, scy = sr.top + sr.height / 2;
@@ -137,7 +139,13 @@ export default function EnergyCirculation({ rawMouseRef, active }) {
       }
 
       ctx.globalAlpha = 1;
+    }
+
+    function draw(now) {
       frameId = requestAnimationFrame(draw);
+      if (now - lastFrameTime < FPS_INTERVAL) return;
+      lastFrameTime = now;
+      drawFrame();
     }
 
     frameId = requestAnimationFrame(draw);

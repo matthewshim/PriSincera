@@ -112,6 +112,8 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
 
     let w, h, stars = [], nebulae = [], shootingStars = [], constellations = [], frameId;
     let zodiacFade = 0; // 0 = hidden, 1 = fully visible
+    let lastFrameTime = 0;
+    const FPS_INTERVAL = 1000 / 30; // 30fps cap
 
     // Smoothed mouse position for parallax (avoids jitter)
     let smoothMx = 0, smoothMy = 0;
@@ -213,7 +215,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       });
     }
 
-    function draw() {
+    function drawFrame() {
       ctx.clearRect(0, 0, w, h);
 
       // --- Mouse position & smooth parallax ---
@@ -494,7 +496,13 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       }
 
       ctx.globalAlpha = 1;
+    }
+
+    function draw(now) {
       frameId = requestAnimationFrame(draw);
+      if (now - lastFrameTime < FPS_INTERVAL) return;
+      lastFrameTime = now;
+      drawFrame();
     }
 
     window.addEventListener('resize', resize);
