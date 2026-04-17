@@ -1,6 +1,6 @@
 /**
- * Belief intro — narrative title and lead copy (left column).
- * Personal philosophy opener, not CI symbol documentation.
+ * Belief intro — narrative title, lead copy, and brand declaration (left column).
+ * Personal philosophy opener with concluding brand statement.
  */
 export default function BeliefIntro() {
   return (
@@ -21,6 +21,12 @@ export default function BeliefIntro() {
         강산이 두 번 변하는 동안 도구는 끊임없이 변했지만,
         20년의 여정에서 발견한 본질은 결국 하나였습니다.
       </p>
+      <div className="belief-declaration reveal-item" style={{ '--reveal-delay': '0.8s' }}>
+        <p className="declaration-text">
+          진심을 우선순위에 둔다 —<br/>
+          이것이 <strong>PriSincera</strong>입니다.
+        </p>
+      </div>
     </div>
   );
 }
