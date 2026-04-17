@@ -1,6 +1,6 @@
 # 📘 PriSincera — 개발 관리 & 운영 가이드
 
-> **최종 업데이트**: 2026-04-16  
+> **최종 업데이트**: 2026-04-17  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
 > CI/CD 파이프라인, 커스텀 도메인 연결까지의 전체 개발 운영 프로세스를 기록합니다.
 
@@ -87,9 +87,10 @@ d:\prisincera\www\
 │   ├── main.jsx                # 엔트리 포인트
 │   ├── 📁 components/          # 재사용 가능한 UI 컴포넌트
 │   │   ├── 📁 common/          #   공통 컴포넌트
-│   │   ├── 📁 hero/            #   히어로 섹션
+│   │   ├── 📁 hero/            #   히어로 섹션 (Canvas 30fps 제한 적용)
 │   │   ├── 📁 layout/          #   레이아웃 (헤더, 푸터 등)
-│   │   └── 📁 philosophy/      #   철학 섹션
+│   │   ├── 📁 philosophy/      #   Belief 섹션 (철학 + 신념 카드)
+│   │   └── 📁 journey/         #   Journey 섹션 (커리어 타임라인)
 │   ├── 📁 hooks/               # 커스텀 React 훅
 │   ├── 📁 pages/               # 페이지 컴포넌트
 │   └── 📁 styles/              # 글로벌 CSS 스타일

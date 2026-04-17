@@ -146,7 +146,9 @@ graph TD
 | **메인 카피** | `Sincerity, Prioritized.` |
 | **서브 카피** | 가장 중요한 것을, 가장 먼저. / 멀리 있어도, 흐려져도, 본질은 반드시 찾아냅니다. |
 | **비주얼** | Star Prism CI 심볼 조립 애니메이션 + 별자리 Star Map + BGM |
-| **인터랙션** | Telescope 커서 + 별자리 reveal + Celestial Controls (BGM/Star Map 토글) |
+| **인터랙션** | Telescope 커서 + 별자리 reveal + BGM 토글 (GNB 우측 waveform 버튼) |
+| **스크롤 연동** | scrollProgress > 0.75 시 CI + 카피 fade out (되돌리면 재등장) |
+| **별자리 지속** | Belief 섹션 진입 시 once-on 활성화, Journey까지 유지 |
 
 ### 4-3. Belief Section — "복잡함 속에서 별은 만들어집니다" ✅ 구현 완료
 
@@ -170,7 +172,7 @@ graph TD
 | **Priority** | Focus | "혼돈 속에서도 핵심을 찾는다" | 수많은 과제 사이에서 비전의 방향을 정돈하는 것, 그것이 우선순위 |
 | **Sincera** | Trust | "진심은 결국 도달한다" | 투명하게 본질에 집중하면 신뢰는 반드시 따라온다 |
 
-### 4-4. Journey Section — "걸어온 길"
+### 4-4. Journey Section — "걸어온 길" ✅ 구현 완료
 
 > **목적**: "이 사람이 20년간 무엇을 해왔는지"를 감성적 타임라인으로 전달
 
@@ -182,7 +184,7 @@ graph TD
 | **레이아웃** | 수직 타임라인 — 중앙 라인 + 좌우 교차 카드 (모바일: 단일 열) |
 | **타임라인 라인** | CI cyan 그라디언트, 스크롤 연동 성장 |
 | **마일스톤** | 7개 — 각각 연도 + 헤드라인 + 회사 + 한 줄 요약 + 키워드 |
-| **하단 서머리** | `20+ Years · 50+ Projects · 5+ Countries` (카운트업 애니메이션) |
+| **헤더 통계** | `20+ Years · 50+ Projects · 5+ Countries` (헤더 직하 배치, 카운트업) |
 | **애니메이션** | IntersectionObserver → 스크롤 시 마일스톤 순차 등장 |
 
 **타임라인 데이터:**
@@ -320,14 +322,22 @@ graph TD
 - [x] Favicon (CI 기반)
 - [x] GCP Cloud Run 배포
 
-### Phase 2: Journey + Belief
-- [ ] Journey Section — 수직 타임라인 + 마일스톤 카드
-- [ ] Journey 하단 숫자 카운트업 (20+ / 50+ / 5+)
-- [ ] Belief Section — 3가지 신념 카드 + 브랜드 선언문
+### Phase 2: Belief + Journey ✅ 완료
+- [x] Belief Section — 3가지 신념 카드 (태도/우선순위/진심) + 브랜드 선언문
+- [x] Journey Section — 수직 타임라인 + 7개 마일스톤 카드
+- [x] Journey 헤더 통계 (20+ / 50+ / 5+) — 헤더 직하 배치
+- [x] 섹션 간 여백 최적화 (Belief→Journey→Footer 통일)
+- [x] Hero CI + 카피 스크롤 fade-out / 재등장 (scrollProgress 기반)
+- [x] 별자리 once-on 패턴 (Journey까지 유지)
+- [x] BGM 토글 GNB 우측 이전 (React Portal, waveform 바)
+- [x] scrollbar-gutter: stable (레이아웃 시프트 방지)
+- [x] Canvas 30fps 제한 (StarField, EnergyCirculation, ConstellationAssembly)
+- [x] BGM 압축 (4.1MB → 1.3MB, 64kbps mono)
 
-### Phase 3: Work + Connect
+### Phase 3: Work + Connect ← 다음 진행
 - [ ] Work Section — 프로젝트 쇼케이스 그리드
-- [ ] Vibe Studio, PriSincera CI 카드
+- [ ] Vibe Studio 카드 (대형, 스크린샷 프리뷰)
+- [ ] PriSincera CI 카드 (이 사이트 자체)
 - [ ] Noto A Coming Soon 배너
 - [ ] Connect Section — LinkedIn + Email CTA
 - [ ] Footer 링크 업데이트
