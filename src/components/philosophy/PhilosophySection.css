@@ -192,12 +192,10 @@
     flex-wrap: wrap;
 }
 
-.concept-keyword {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 500;
+.concept-symbol {
+    font-size: 0.9rem;
+    opacity: 0.5;
+    line-height: 1;
 }
 
 .concept-subtitle {
