@@ -5,7 +5,7 @@
     position: relative;
     z-index: 2;
     padding: 0 var(--space-xl) var(--space-xl);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-2xl);
     display: flex;
     align-items: center;
     justify-content: center;
