@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import HeroSection from '../components/hero/HeroSection';
-import PhilosophySection from '../components/philosophy/PhilosophySection';
+import BeliefSection from '../components/philosophy/PhilosophySection';
 import './Home.css';
 
 /**
@@ -15,7 +15,7 @@ function Home() {
   const [scrollLocked, setScrollLocked] = useState(true);
   const [contentVisible, setContentVisible] = useState(false);
   const wrapperRef = useRef(null);
-  const philosophyRef = useRef(null);
+  const beliefRef = useRef(null);
 
   // Lock body scroll while hero is animating
   useEffect(() => {
@@ -55,9 +55,9 @@ function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Constellation auto-ON when Philosophy content section enters viewport
+  // Constellation auto-ON when Belief content section enters viewport
   useEffect(() => {
-    const el = philosophyRef.current;
+    const el = beliefRef.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
@@ -88,10 +88,10 @@ function Home() {
       {/* Content sections — glassmorphic backgrounds handle readability */}
       <div className="content-layer">
         <div className="content-sections">
-          <div ref={philosophyRef}>
-            <PhilosophySection />
+          <div ref={beliefRef}>
+            <BeliefSection />
           </div>
-          {/* Future sections: Services, Contact, etc. */}
+          {/* Future sections: Journey, Work, Connect */}
         </div>
       </div>
     </div>

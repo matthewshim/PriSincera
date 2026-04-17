@@ -1,54 +1,59 @@
 /**
- * Concept Cards — three glass cards explaining Priority Prism, Sincera Prism, The Orbit.
- * Each card has an SVG icon, title, and description.
+ * Belief Cards — three personal conviction cards: Note A, Priority, Sincera.
+ * Each card has a large quote, description, and accent color.
  */
 
 const CARDS = [
   {
     icon: (
       <svg viewBox="0 0 48 48" fill="none">
-        <path d="M24 8 L38 32 L10 32 Z" stroke="#C4B5FD" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
-        <line x1="24" y1="16" x2="24" y2="28" stroke="#E9D5FF" strokeWidth="0.8" opacity="0.5"/>
+        {/* Tuning fork / metronome — the standard pitch "A" */}
+        <line x1="24" y1="8" x2="24" y2="36" stroke="#FDE68A" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M18 8 Q24 16 30 8" stroke="#FDE68A" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        <circle cx="24" cy="38" r="3" fill="#FDE68A" opacity="0.3"/>
       </svg>
     ),
-    symbol: '△',
-    title: 'Priority Prism',
-    subtitle: '우선순위의 프리즘',
-    description: '위를 향하는 시선. 흩어진 과제 속에서 핵심을 끌어올리고, 비전의 방향을 정돈합니다.',
+    keyword: 'Attitude',
+    title: 'Note A',
+    subtitle: '태도',
+    quote: '기술은 변해도 태도는 남는다',
+    description: '20년을 지탱해 온 힘은 도구가 아니라, 업(業)을 대하는 단단한 태도였습니다.',
+    color: '#FDE68A',
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none">
+        {/* Upward triangle — rising, finding direction */}
+        <path d="M24 8 L38 34 L10 34 Z" stroke="#C4B5FD" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+        <line x1="24" y1="16" x2="24" y2="30" stroke="#E9D5FF" strokeWidth="0.8" opacity="0.5"/>
+      </svg>
+    ),
+    keyword: 'Focus',
+    title: 'Priority',
+    subtitle: '우선순위',
+    quote: '혼돈 속에서도 핵심을 찾는다',
+    description: '수많은 과제 사이에서 비전의 방향을 정돈하는 것, 그것이 우선순위입니다.',
     color: '#C4B5FD',
   },
   {
     icon: (
       <svg viewBox="0 0 48 48" fill="none">
-        <path d="M24 40 L10 16 L38 16 Z" stroke="#A78BFA" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
-        <circle cx="24" cy="26" r="3" fill="#F0ABFC" opacity="0.3"/>
+        {/* Heart-like core glow — sincerity, trust */}
+        <circle cx="24" cy="24" r="14" stroke="#A78BFA" strokeWidth="1.2" fill="none" strokeDasharray="80 8" strokeLinecap="round"/>
+        <circle cx="24" cy="24" r="5" fill="#F0ABFC" opacity="0.25"/>
+        <circle cx="24" cy="24" r="2" fill="#FFFFFF" opacity="0.9"/>
       </svg>
     ),
-    symbol: '▽',
-    title: 'Sincera Prism',
-    subtitle: '진심의 프리즘',
-    description: '아래를 지탱하는 토대. 본질을 왜곡하지 않는 투명함으로, 신뢰의 기반을 세웁니다.',
+    keyword: 'Trust',
+    title: 'Sincera',
+    subtitle: '진심',
+    quote: '진심은 결국 도달한다',
+    description: '투명하게 본질에 집중하면, 신뢰는 반드시 따라옵니다.',
     color: '#A78BFA',
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="18" fill="none" stroke="#22D3EE" strokeWidth="1" strokeDasharray="108 5" strokeLinecap="round" opacity="0.7"/>
-        <path d="M24 8 L36 30 L12 30 Z" stroke="#C4B5FD" strokeWidth="1" fill="none" strokeLinejoin="round"/>
-        <path d="M24 40 L12 18 L36 18 Z" stroke="#A78BFA" strokeWidth="1" fill="none" strokeLinejoin="round"/>
-        <path d="M30 25 L36 30 L30 30 Z" fill="#FDE68A" opacity="0.6"/>
-        <circle cx="24" cy="24" r="2.5" fill="#FFFFFF" opacity="0.9"/>
-      </svg>
-    ),
-    symbol: '○',
-    title: 'The Orbit',
-    subtitle: '순환의 원',
-    description: '비전과 신뢰를 쉬지 않고 순환시키며, 균형 있는 조화를 만들어냅니다.',
-    color: '#22D3EE',
   },
 ];
 
-export default function ConceptCards() {
+export default function BeliefCards() {
   return (
     <div className="concept-cards">
       {CARDS.map((card, i) => (
@@ -60,10 +65,11 @@ export default function ConceptCards() {
           <div className="concept-icon">{card.icon}</div>
           <div className="concept-body">
             <h3 className="concept-title">
-              <span className="concept-symbol">{card.symbol}</span>
+              <span className="concept-keyword" style={{ color: card.color }}>{card.keyword}</span>
               {card.title}
               <span className="concept-subtitle">{card.subtitle}</span>
             </h3>
+            <p className="concept-quote">"{card.quote}"</p>
             <p className="concept-desc">{card.description}</p>
           </div>
         </div>
