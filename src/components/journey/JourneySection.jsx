@@ -168,6 +168,11 @@ export default function JourneySection() {
             Waterfall에서 Agile로, 웹에서 AI로 —
             강산이 두 번 변하는 동안 변하지 않은 것.
           </p>
+          <div className="journey-stats" ref={statsRef}>
+            {STATS.map((s) => (
+              <StatItem key={s.label} {...s} started={statsVisible} />
+            ))}
+          </div>
         </div>
 
         <div className="timeline">
@@ -186,12 +191,6 @@ export default function JourneySection() {
                 <span className="milestone-keyword">{m.keyword}</span>
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="journey-stats" ref={statsRef}>
-          {STATS.map((s) => (
-            <StatItem key={s.label} {...s} started={statsVisible} />
           ))}
         </div>
       </div>
