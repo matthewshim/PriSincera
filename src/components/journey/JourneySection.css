@@ -4,8 +4,7 @@
 .journey {
     position: relative;
     z-index: 2;
-    padding: 0 var(--space-xl) var(--space-2xl);
-    min-height: 100vh;
+    padding: 0 var(--space-xl) var(--space-xl);
     display: flex;
     align-items: center;
     justify-content: center;
