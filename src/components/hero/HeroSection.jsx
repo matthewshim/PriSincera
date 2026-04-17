@@ -105,9 +105,9 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
         zodiacShowAll={effectiveShowAll}
       />
       <div className="hero-center" style={{
-        opacity: scrollProgress > 0.9 ? 0 : 1,
+        opacity: scrollProgress > 0.95 ? 0 : 1,
         transition: 'opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)',
-        pointerEvents: scrollProgress > 0.9 ? 'none' : 'auto',
+        pointerEvents: scrollProgress > 0.95 ? 'none' : 'auto',
       }}>
         <ConstellationAssembly
           rawMouseRef={rawMouseRef}
