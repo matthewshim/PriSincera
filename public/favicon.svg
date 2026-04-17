@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <!-- Background gradient (dark space) -->
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1035"/>
+      <stop offset="100%" stop-color="#0a0a1a"/>
+    </radialGradient>
+    <!-- Up triangle gradient (Pri — aspiration) -->
+    <linearGradient id="fav-up" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#C4B5FD" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.55"/>
+    </linearGradient>
+    <!-- Down triangle gradient (Sincera — grounding) -->
+    <linearGradient id="fav-down" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#4C1D95" stop-opacity="0.5"/>
+    </linearGradient>
+    <!-- Amber accent -->
+    <linearGradient id="fav-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <!-- Orbit gradient -->
+    <linearGradient id="fav-orbit" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67E8F9" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#22D3EE" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#A5F3FC" stop-opacity="0.7"/>
+    </linearGradient>
+    <!-- Core glow -->
+    <radialGradient id="fav-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.6"/>
+      <stop offset="60%" stop-color="#C4B5FD" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+
+  <!-- Orbit circle -->
+  <circle cx="256" cy="256" r="220" fill="none" stroke="url(#fav-orbit)" stroke-width="6"
+          stroke-dasharray="1330 44" stroke-linecap="round"/>
+
+  <!-- Down triangle (behind) — pointing down -->
+  <path d="M256 450 L68 118 L444 118 Z" fill="url(#fav-down)" stroke="#C4B5FD" stroke-width="1.5" stroke-opacity="0.3" stroke-linejoin="round"/>
+
+  <!-- Up triangle — pointing up -->
+  <path d="M256 62 L444 394 L68 394 Z" fill="url(#fav-up)" stroke="#C4B5FD" stroke-width="1.5" stroke-opacity="0.3" stroke-linejoin="round"/>
+
+  <!-- Amber accent triangle -->
+  <path d="M350 310 L444 394 L374 394 Z" fill="url(#fav-amber)" opacity="0.8"/>
+
+  <!-- Core glow -->
+  <circle cx="256" cy="256" r="40" fill="url(#fav-glow)"/>
+
+  <!-- Core dot -->
+  <circle cx="256" cy="256" r="14" fill="#FFFFFF" opacity="0.95"/>
+</svg>
