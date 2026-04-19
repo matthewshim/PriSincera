@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import './Footer.css';
 
 function Footer() {
@@ -46,15 +45,16 @@ function Footer() {
         </div>
         <div className="footer-links">
           <div className="footer-col">
-            <h4 className="footer-col-title">Company</h4>
-            <Link to="/about" className="footer-link">소개</Link>
-            <Link to="/services" className="footer-link">서비스</Link>
-            <Link to="/contact" className="footer-link">연락처</Link>
+            <h4 className="footer-col-title">Navigate</h4>
+            <a href="#belief" className="footer-link">소개</a>
+            <a href="#journey" className="footer-link">여정</a>
+            <a href="#work" className="footer-link">프로젝트</a>
+            <a href="#connect" className="footer-link">연락처</a>
           </div>
           <div className="footer-col">
-            <h4 className="footer-col-title">Legal</h4>
-            <Link to="/privacy" className="footer-link">개인정보처리방침</Link>
-            <Link to="/terms" className="footer-link">이용약관</Link>
+            <h4 className="footer-col-title">Connect</h4>
+            <a href="https://www.linkedin.com/in/shimks" target="_blank" rel="noopener noreferrer" className="footer-link">LinkedIn</a>
+            <a href="mailto:matthew.shim@prisincera.com" className="footer-link">Email</a>
           </div>
         </div>
         <div className="footer-bottom">

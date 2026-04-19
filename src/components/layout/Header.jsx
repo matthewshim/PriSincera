@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 function Header() {
@@ -51,10 +51,10 @@ function Header() {
           <span className="nav-wordmark">PriSincera</span>
         </Link>
         <div className="nav-links">
-          <NavLink to="/" className="nav-link" id="navHome">홈</NavLink>
-          <NavLink to="/about" className="nav-link" id="navAbout">소개</NavLink>
-          <NavLink to="/services" className="nav-link" id="navServices">서비스</NavLink>
-          <NavLink to="/contact" className="nav-link" id="navContact">연락처</NavLink>
+          <a href="#belief" className="nav-link" id="navBelief">소개</a>
+          <a href="#journey" className="nav-link" id="navJourney">여정</a>
+          <a href="#work" className="nav-link" id="navWork">프로젝트</a>
+          <a href="#connect" className="nav-link" id="navConnect">연락처</a>
         </div>
         {/* BGM toggle portal target — filled by HeroSection */}
         <div className="nav-bgm-slot" id="gnbBgmSlot" />

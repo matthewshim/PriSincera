@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import HeroSection from '../components/hero/HeroSection';
 import BeliefSection from '../components/philosophy/PhilosophySection';
 import JourneySection from '../components/journey/JourneySection';
+import WorkSection from '../components/work/WorkSection';
+import ConnectSection from '../components/connect/ConnectSection';
 import './Home.css';
 
 /**
@@ -97,7 +99,8 @@ function Home() {
             <BeliefSection />
           </div>
           <JourneySection />
-          {/* Future sections: Work, Connect */}
+          <WorkSection />
+          <ConnectSection />
         </div>
       </div>
     </div>
