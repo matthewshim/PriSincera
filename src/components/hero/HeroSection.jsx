@@ -83,16 +83,23 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
     }
   }, [musicPlaying, getAudio]);
 
-  // Toggle constellation visibility:
-  // - User click directly toggles on/off (works at any scroll position)
-  // - Scroll triggers forceShowAll → auto ON (additive)
-  // - effectiveShowAll = scroll-triggered OR user-toggled-on
+  // Auto-ON: when scroll triggers forceShowAll for the first time, set user toggle ON.
+  // After this, user toggle is the single source of truth (can freely turn off/on).
+  const scrollTriggeredRef = useRef(false);
+  useEffect(() => {
+    if (forceShowAllConstellations && !scrollTriggeredRef.current) {
+      scrollTriggeredRef.current = true;
+      setUserToggledConstellations(true);
+    }
+  }, [forceShowAllConstellations]);
+
+  // Toggle constellation visibility: user click directly toggles on/off
   const toggleConstellations = useCallback(() => {
     setUserToggledConstellations(prev => !prev);
   }, []);
 
-  // Effective state: user toggled ON, or scroll triggered ON
-  const effectiveShowAll = forceShowAllConstellations || userToggledConstellations;
+  // User toggle is the single source of truth
+  const effectiveShowAll = userToggledConstellations;
   // Show as active in button UI
   const constellationsActive = effectiveShowAll;
 
