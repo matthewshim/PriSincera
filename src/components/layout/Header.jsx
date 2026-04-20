@@ -51,10 +51,10 @@ function Header() {
           <span className="nav-wordmark">PriSincera</span>
         </Link>
         <div className="nav-links">
-          <a href="#belief" className="nav-link" id="navBelief">소개</a>
-          <a href="#journey" className="nav-link" id="navJourney">여정</a>
-          <a href="#work" className="nav-link" id="navWork">프로젝트</a>
-          <a href="#connect" className="nav-link" id="navConnect">연락처</a>
+          <a href="#belief" className="nav-link" id="navBelief">Belief</a>
+          <a href="#journey" className="nav-link" id="navJourney">Journey</a>
+          <a href="#work" className="nav-link" id="navWork">Work</a>
+          <a href="#connect" className="nav-link" id="navConnect">Connect</a>
         </div>
         {/* BGM toggle portal target — filled by HeroSection */}
         <div className="nav-bgm-slot" id="gnbBgmSlot" />

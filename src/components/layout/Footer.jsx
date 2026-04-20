@@ -46,10 +46,10 @@ function Footer() {
         <div className="footer-links">
           <div className="footer-col">
             <h4 className="footer-col-title">Navigate</h4>
-            <a href="#belief" className="footer-link">소개</a>
-            <a href="#journey" className="footer-link">여정</a>
-            <a href="#work" className="footer-link">프로젝트</a>
-            <a href="#connect" className="footer-link">연락처</a>
+            <a href="#belief" className="footer-link">Belief</a>
+            <a href="#journey" className="footer-link">Journey</a>
+            <a href="#work" className="footer-link">Work</a>
+            <a href="#connect" className="footer-link">Connect</a>
           </div>
           <div className="footer-col">
             <h4 className="footer-col-title">Connect</h4>
