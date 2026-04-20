@@ -1,0 +1,179 @@
+/* ============================================
+   SubscribeForm — PriSignal Subscription
+   ============================================ */
+.subscribe-form {
+    width: 100%;
+}
+
+/* --- Inline variant (horizontal) --- */
+.subscribe-form.inline .subscribe-input-wrap {
+    display: flex;
+    gap: 8px;
+    max-width: 460px;
+}
+
+/* --- Stacked variant (vertical) --- */
+.subscribe-form.stacked .subscribe-input-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 360px;
+}
+
+/* --- Input --- */
+.subscribe-input {
+    flex: 1;
+    padding: 12px 18px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background: rgba(26, 16, 53, 0.6);
+    border: 1px solid rgba(196, 181, 253, 0.12);
+    border-radius: var(--radius-pill);
+    outline: none;
+    transition: all var(--duration-fast) var(--ease-out);
+    -webkit-appearance: none;
+}
+
+.subscribe-input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.subscribe-input:focus {
+    border-color: rgba(196, 181, 253, 0.3);
+    background: rgba(26, 16, 53, 0.8);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.subscribe-input:disabled {
+    opacity: 0.5;
+}
+
+/* --- Submit Button --- */
+.subscribe-btn {
+    flex-shrink: 0;
+    padding: 12px 24px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    background: var(--gradient-cta);
+    border: 1px solid rgba(196, 181, 253, 0.2);
+    border-radius: var(--radius-pill);
+    cursor: none;
+    transition: all var(--duration-fast) var(--ease-out);
+    white-space: nowrap;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subscribe-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 24px rgba(124, 58, 237, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.subscribe-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.subscribe-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* --- Spinner --- */
+.subscribe-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Error --- */
+.subscribe-error {
+    font-size: 0.78rem;
+    color: #F87171;
+    margin-top: 8px;
+    padding-left: 4px;
+}
+
+/* --- Meta (benefits line) --- */
+.subscribe-meta {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    opacity: 0.5;
+    margin-top: 12px;
+}
+
+/* --- Success State --- */
+.subscribe-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: var(--space-md) 0;
+    animation: successFadeIn 0.6s var(--ease-out);
+}
+
+.subscribe-success-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(34, 211, 238, 0.12);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    color: #22D3EE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.subscribe-success-text {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.subscribe-success-sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+@keyframes successFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .subscribe-form.inline .subscribe-input-wrap {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .subscribe-btn {
+        width: 100%;
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 768px) {
+    .subscribe-btn { cursor: pointer; }
+}

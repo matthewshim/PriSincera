@@ -1,9 +1,12 @@
+import { Link } from 'react-router-dom';
 import useScrollReveal from '../../hooks/useScrollReveal';
+import SubscribeForm from '../prisignal/SubscribeForm';
+import '../prisignal/SubscribeForm.css';
 import './WorkSection.css';
 
 /**
  * Work Section — Project showcase.
- * Displays PriSincera as a featured project card + Note A coming soon banner.
+ * Displays PriSincera as a featured project card + PriSignal subscribe banner.
  * Follows the same glassmorphic container pattern as Belief/Journey sections.
  */
 export default function WorkSection() {
@@ -76,17 +79,24 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* Note A — Coming Soon */}
-        <div className="coming-soon-banner reveal-item" style={{ '--reveal-delay': '0.35s' }}>
-          <span className="coming-soon-badge">Coming Soon</span>
-          <div className="coming-soon-body">
-            <div className="coming-soon-name">Note A — 인사이트 매거진</div>
-            <p className="coming-soon-desc">
-              정답에 가까운 태도와 민첩함을 기록하다.
-            </p>
+        {/* PriSignal — Subscribe Banner */}
+        <div className="prisignal-banner reveal-item" style={{ '--reveal-delay': '0.35s' }}>
+          <div className="prisignal-banner-header">
+            <span className="prisignal-banner-icon">📡</span>
+            <div className="prisignal-banner-title-wrap">
+              <div className="prisignal-banner-name">PriSignal</div>
+              <p className="prisignal-banner-desc">
+                노이즈 속에서 시그널을 포착합니다.
+              </p>
+            </div>
           </div>
+          <SubscribeForm variant="inline" />
+          <Link to="/prisignal" className="prisignal-detail-link" id="priSignalDetailLink">
+            자세히 보기 →
+          </Link>
         </div>
       </div>
     </section>
   );
 }
+
