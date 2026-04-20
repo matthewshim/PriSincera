@@ -1,0 +1,365 @@
+/* ============================================
+   PriSignal Landing Page
+   ============================================ */
+.prisignal-page {
+    position: relative;
+    z-index: 2;
+    padding-top: 80px; /* GNB clearance */
+    min-height: 100vh;
+}
+
+/* --- Shared Section Style --- */
+.prisignal-section {
+    position: relative;
+    padding: var(--space-2xl) var(--space-xl);
+    display: flex;
+    justify-content: center;
+}
+
+.prisignal-section-inner {
+    max-width: 900px;
+    width: 100%;
+}
+
+/* --- Hero --- */
+.prisignal-hero {
+    text-align: center;
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-xl);
+}
+
+.prisignal-hero-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    animation: heroPulse 3s ease-in-out infinite;
+}
+
+@keyframes heroPulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.08); opacity: 1; }
+}
+
+.prisignal-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
+}
+
+.prisignal-hero-title .accent {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.prisignal-hero-tagline {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+    line-height: 1.6;
+}
+
+.prisignal-hero-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    opacity: 0.6;
+    margin-bottom: var(--space-2xl);
+}
+
+.prisignal-hero .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.prisignal-hero .subscribe-form.inline .subscribe-input-wrap {
+    max-width: 480px;
+    width: 100%;
+}
+
+.prisignal-hero .subscribe-meta {
+    text-align: center;
+}
+
+/* --- Value Proposition --- */
+.prisignal-value {
+    padding-bottom: 0;
+}
+
+.prisignal-value-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.prisignal-value-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+}
+
+.prisignal-value-card {
+    padding: var(--space-xl);
+    background: rgba(26, 16, 53, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(196, 181, 253, 0.08);
+    border-radius: 16px;
+    text-align: center;
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.prisignal-value-card:hover {
+    border-color: rgba(196, 181, 253, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.1);
+}
+
+.prisignal-value-card-icon {
+    font-size: 2rem;
+    margin-bottom: var(--space-md);
+}
+
+.prisignal-value-card-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.prisignal-value-card-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+/* --- Categories --- */
+.prisignal-categories-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.prisignal-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-md);
+}
+
+.prisignal-category-card {
+    padding: var(--space-lg);
+    background: rgba(26, 16, 53, 0.4);
+    border: 1px solid rgba(196, 181, 253, 0.06);
+    border-radius: 12px;
+    transition: all var(--duration-normal) var(--ease-out);
+    position: relative;
+    overflow: hidden;
+}
+
+.prisignal-category-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 25%;
+    bottom: 25%;
+    width: 2px;
+    background: var(--cat-color, #C4B5FD);
+    opacity: 0.4;
+    border-radius: 1px;
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.prisignal-category-card:hover {
+    border-color: rgba(196, 181, 253, 0.12);
+    transform: translateY(-2px);
+}
+
+.prisignal-category-card:hover::before {
+    top: 15%;
+    bottom: 15%;
+    opacity: 0.7;
+}
+
+.prisignal-category-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.prisignal-category-icon {
+    font-size: 1.2rem;
+}
+
+.prisignal-category-name {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.prisignal-category-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    padding-left: 2rem;
+}
+
+/* --- Subscribe CTA --- */
+.prisignal-cta {
+    text-align: center;
+}
+
+.prisignal-cta-container {
+    background: rgba(10, 7, 20, 0.72);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(196, 181, 253, 0.06);
+    border-radius: 24px;
+    padding: var(--space-2xl);
+    box-shadow:
+        0 4px 60px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(196, 181, 253, 0.04);
+}
+
+.prisignal-cta-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.prisignal-cta-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xl);
+}
+
+.prisignal-cta .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.prisignal-cta .subscribe-form.inline .subscribe-input-wrap {
+    max-width: 480px;
+    width: 100%;
+}
+
+/* --- FAQ --- */
+.prisignal-faq-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.prisignal-faq-list {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.prisignal-faq-item {
+    background: rgba(26, 16, 53, 0.4);
+    border: 1px solid rgba(196, 181, 253, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.prisignal-faq-item.open {
+    border-color: rgba(196, 181, 253, 0.12);
+}
+
+.prisignal-faq-question {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+    transition: color var(--duration-fast) var(--ease-out);
+}
+
+.prisignal-faq-question:hover {
+    color: var(--crystal-light);
+}
+
+.prisignal-faq-chevron {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.prisignal-faq-item.open .prisignal-faq-chevron {
+    transform: rotate(180deg);
+}
+
+.prisignal-faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s var(--ease-out);
+}
+
+.prisignal-faq-item.open .prisignal-faq-answer {
+    max-height: 200px;
+}
+
+.prisignal-faq-answer-inner {
+    padding: 0 var(--space-lg) var(--space-lg);
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+/* ============================================
+   Responsive — PriSignal
+   ============================================ */
+@media (max-width: 768px) {
+    .prisignal-page {
+        padding-top: 60px;
+    }
+
+    .prisignal-section {
+        padding: var(--space-xl) var(--space-md);
+    }
+
+    .prisignal-value-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prisignal-categories-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prisignal-cta-container {
+        padding: var(--space-xl);
+    }
+}
