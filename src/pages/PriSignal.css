@@ -339,6 +339,399 @@
     line-height: 1.7;
 }
 
+/* --- Archive (④ Latest Issues) --- */
+.prisignal-archive-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.prisignal-archive-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.prisignal-archive-card {
+    display: block;
+    padding: var(--space-lg);
+    background: rgba(26, 16, 53, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(196, 181, 253, 0.06);
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--duration-normal) var(--ease-out);
+    position: relative;
+    overflow: hidden;
+}
+
+.prisignal-archive-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(34, 211, 238, 0.03));
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+}
+
+.prisignal-archive-card:hover {
+    border-color: rgba(196, 181, 253, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.1);
+}
+
+.prisignal-archive-card:hover::after {
+    opacity: 1;
+}
+
+.prisignal-archive-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+
+.prisignal-archive-card-number {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.prisignal-archive-card-date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+    white-space: nowrap;
+    padding-top: 3px;
+}
+
+.prisignal-archive-card-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-sm);
+}
+
+.prisignal-archive-card-cat {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    background: rgba(167, 139, 250, 0.08);
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(167, 139, 250, 0.1);
+}
+
+.prisignal-archive-card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.prisignal-archive-card-read {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    color: var(--orbit-cyan);
+    font-weight: 500;
+    opacity: 0.6;
+    transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.prisignal-archive-card:hover .prisignal-archive-card-read {
+    opacity: 1;
+}
+
+/* --- Archive Empty State --- */
+.prisignal-archive-empty {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.prisignal-archive-empty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-xl);
+}
+
+.prisignal-radar-icon {
+    width: 80px;
+    height: 80px;
+}
+
+@keyframes radarPulse1 {
+    0% { r: 16; opacity: 0.4; }
+    50% { r: 22; opacity: 0.15; }
+    100% { r: 16; opacity: 0.4; }
+}
+
+@keyframes radarPulse2 {
+    0% { r: 26; opacity: 0.25; }
+    50% { r: 34; opacity: 0.08; }
+    100% { r: 26; opacity: 0.25; }
+}
+
+.radar-pulse-1 {
+    animation: radarPulse1 3s ease-in-out infinite;
+}
+
+.radar-pulse-2 {
+    animation: radarPulse2 3s ease-in-out infinite 0.5s;
+}
+
+.prisignal-archive-empty-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.prisignal-archive-empty-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+/* --- Archive Loading State --- */
+.prisignal-archive-loading {
+    text-align: center;
+    padding: var(--space-2xl) 0;
+}
+
+.prisignal-archive-loading p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: var(--space-md);
+}
+
+.prisignal-archive-pulse {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 2px solid rgba(196, 181, 253, 0.15);
+    border-top-color: var(--orbit-cyan);
+    animation: archiveSpin 1s linear infinite;
+}
+
+@keyframes archiveSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   PriSignal Issue Detail Page
+   ============================================ */
+.prisignal-issue-page {
+    position: relative;
+    z-index: 2;
+    padding-top: 80px;
+    min-height: 100vh;
+}
+
+.prisignal-issue-article {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
+}
+
+.prisignal-issue-nav {
+    margin-bottom: var(--space-xl);
+}
+
+.prisignal-issue-back {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.prisignal-issue-back:hover {
+    color: var(--orbit-cyan);
+}
+
+.prisignal-issue-header {
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid rgba(196, 181, 253, 0.06);
+}
+
+.prisignal-issue-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: var(--space-md);
+    letter-spacing: -0.02em;
+}
+
+.prisignal-issue-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.prisignal-issue-date {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Issue HTML Content — style injected Buttondown HTML */
+.prisignal-issue-content {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+.prisignal-issue-content h1,
+.prisignal-issue-content h2,
+.prisignal-issue-content h3 {
+    font-family: var(--font-display);
+    color: var(--text-primary);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    line-height: 1.3;
+}
+
+.prisignal-issue-content h1 { font-size: 1.6rem; }
+.prisignal-issue-content h2 { font-size: 1.3rem; }
+.prisignal-issue-content h3 { font-size: 1.1rem; }
+
+.prisignal-issue-content p {
+    margin-bottom: var(--space-md);
+}
+
+.prisignal-issue-content a {
+    color: var(--orbit-cyan);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--duration-fast);
+}
+
+.prisignal-issue-content a:hover {
+    color: var(--orbit-cyan-light);
+}
+
+.prisignal-issue-content blockquote {
+    margin: var(--space-lg) 0;
+    padding: var(--space-md) var(--space-lg);
+    border-left: 3px solid var(--prism-violet);
+    background: rgba(26, 16, 53, 0.4);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--crystal-light);
+}
+
+.prisignal-issue-content ul,
+.prisignal-issue-content ol {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+}
+
+.prisignal-issue-content li {
+    margin-bottom: var(--space-xs);
+}
+
+.prisignal-issue-content img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: var(--space-lg) 0;
+}
+
+.prisignal-issue-content hr {
+    border: none;
+    height: 1px;
+    background: rgba(196, 181, 253, 0.08);
+    margin: var(--space-xl) 0;
+}
+
+/* Issue Footer */
+.prisignal-issue-footer {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid rgba(196, 181, 253, 0.06);
+    text-align: center;
+}
+
+.prisignal-issue-back-btn {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-lg);
+    background: rgba(124, 58, 237, 0.1);
+    border: 1px solid rgba(196, 181, 253, 0.12);
+    border-radius: var(--radius-pill);
+    color: var(--crystal-light);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+.prisignal-issue-back-btn:hover {
+    background: rgba(124, 58, 237, 0.2);
+    border-color: rgba(196, 181, 253, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Issue Loading & Error States */
+.prisignal-issue-loading,
+.prisignal-issue-error {
+    text-align: center;
+    padding: var(--space-3xl) var(--space-xl);
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.prisignal-issue-loading p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: var(--space-md);
+}
+
+.prisignal-issue-error-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-lg);
+    opacity: 0.5;
+}
+
+.prisignal-issue-error-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.prisignal-issue-error-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xl);
+    line-height: 1.6;
+}
+
 /* ============================================
    Responsive — PriSignal
    ============================================ */
@@ -361,5 +754,22 @@
 
     .prisignal-cta-container {
         padding: var(--space-xl);
+    }
+
+    .prisignal-issue-page {
+        padding-top: 60px;
+    }
+
+    .prisignal-issue-article {
+        padding: var(--space-xl) var(--space-md) var(--space-2xl);
+    }
+
+    .prisignal-archive-card {
+        padding: var(--space-md);
+    }
+
+    .prisignal-archive-card-header {
+        flex-direction: column;
+        gap: var(--space-xs);
     }
 }

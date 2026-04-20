@@ -1,0 +1,89 @@
+steps:
+  # Step 1: Build Pipeline Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'pipeline'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '-t'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:latest'
+      - '.'
+
+  # Step 2: Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline'
+
+  # Step 3: Update Cloud Run Jobs
+  # Collector Job (daily)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'prisignal-collector'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/collector.mjs'
+      - '--task-timeout'
+      - '300s'
+      - '--max-retries'
+      - '2'
+
+  # Composer Job (weekly Sunday)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'prisignal-composer'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/composer.mjs'
+      - '--task-timeout'
+      - '600s'
+      - '--max-retries'
+      - '2'
+
+  # Monitor Job (weekly Monday)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'prisignal-monitor'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/monitor.mjs'
+      - '--task-timeout'
+      - '120s'
+      - '--max-retries'
+      - '1'
+
+images:
+  - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+  - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

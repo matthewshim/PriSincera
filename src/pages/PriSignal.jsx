@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import PriSignalHero from '../components/prisignal/PriSignalHero';
 import PriSignalValue from '../components/prisignal/PriSignalValue';
 import PriSignalCategories from '../components/prisignal/PriSignalCategories';
+import PriSignalArchive from '../components/prisignal/PriSignalArchive';
 import PriSignalSubscribe from '../components/prisignal/PriSignalSubscribe';
 import PriSignalFAQ from '../components/prisignal/PriSignalFAQ';
 import './PriSignal.css';
@@ -9,7 +10,7 @@ import './PriSignal.css';
 /**
  * PriSignal Landing Page — /prisignal
  * Dedicated page for the PriSignal weekly newsletter service.
- * Sections: Hero → Value → Categories → Subscribe CTA → FAQ
+ * Sections: Hero → Value → Categories → Archive → Subscribe CTA → FAQ
  */
 export default function PriSignal() {
   useEffect(() => {
@@ -25,8 +26,35 @@ export default function PriSignal() {
     }
     meta.content = '20년차 PO가 매주 골라내는 태도와 트렌드의 교차점. PriSignal은 PriSincera의 주간 인사이트 큐레이션 뉴스레터입니다.';
 
+    // Set OG meta tags
+    const ogTags = {
+      'og:title': 'PriSignal — 노이즈 속에서 시그널을 포착하다',
+      'og:description': '20년차 PO가 매주 골라내는 태도와 트렌드의 교차점. 주간 인사이트 큐레이션 뉴스레터.',
+      'og:image': 'https://www.prisincera.com/prisignal-og.png',
+      'og:url': 'https://www.prisincera.com/prisignal',
+      'og:type': 'website',
+      'twitter:card': 'summary_large_image',
+      'twitter:title': 'PriSignal — 노이즈 속에서 시그널을 포착하다',
+      'twitter:description': '20년차 PO가 매주 골라내는 태도와 트렌드의 교차점.',
+      'twitter:image': 'https://www.prisincera.com/prisignal-og.png',
+    };
+
+    const createdMetas = [];
+    Object.entries(ogTags).forEach(([property, content]) => {
+      const attr = property.startsWith('twitter:') ? 'name' : 'property';
+      let tag = document.querySelector(`meta[${attr}="${property}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute(attr, property);
+        document.head.appendChild(tag);
+        createdMetas.push(tag);
+      }
+      tag.content = content;
+    });
+
     return () => {
       document.title = 'PriSincera — Sincerity, Prioritized.';
+      createdMetas.forEach(t => t.remove());
     };
   }, []);
 
@@ -35,6 +63,7 @@ export default function PriSignal() {
       <PriSignalHero />
       <PriSignalValue />
       <PriSignalCategories />
+      <PriSignalArchive />
       <PriSignalSubscribe />
       <PriSignalFAQ />
     </div>

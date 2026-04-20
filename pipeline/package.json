@@ -1,0 +1,16 @@
+{
+  "name": "prisignal-pipeline",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "collect": "node src/collector.mjs",
+    "compose": "node src/composer.mjs",
+    "monitor": "node src/monitor.mjs"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.15.0",
+    "@google/generative-ai": "^0.24.0",
+    "rss-parser": "^3.13.0"
+  }
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    ═══════════════════════════════════════════════════════════
+    PriSignal — Buttondown Email Template
+    ═══════════════════════════════════════════════════════════
+    PriSincera 브랜딩 이메일 템플릿.
+    Buttondown 관리자 > Settings > Design > Custom Template에 붙여넣기.
+    
+    Buttondown 변수:
+    - {{ subject }}     — 이메일 제목
+    - {{ body }}        — 본문 HTML (Markdown에서 변환)
+    - {{ unsubscribe_url }} — 구독 해지 링크
+    - {{ email_url }}   — 웹에서 보기 링크
+    ═══════════════════════════════════════════════════════════
+  -->
+  <style>
+    /* Reset */
+    body, table, td, p, a, li, blockquote { 
+      -webkit-text-size-adjust: 100%; 
+      -ms-text-size-adjust: 100%; 
+    }
+    table, td { 
+      mso-table-lspace: 0pt; 
+      mso-table-rspace: 0pt; 
+    }
+    img { 
+      -ms-interpolation-mode: bicubic; 
+      border: 0; 
+      outline: none; 
+      text-decoration: none; 
+    }
+    body { 
+      margin: 0; 
+      padding: 0; 
+      width: 100% !important; 
+      height: 100% !important; 
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#0A0714; font-family:'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+
+  <!-- Wrapper -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" 
+         style="background-color:#0A0714;">
+    <tr>
+      <td align="center" style="padding: 40px 16px;">
+
+        <!-- Container -->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" 
+               style="max-width:600px; width:100%;">
+
+          <!-- ═══ Header ═══ -->
+          <tr>
+            <td align="center" style="padding: 32px 24px 24px;">
+              <!-- Logo Symbol -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="padding-bottom: 16px;">
+                    <img src="https://www.prisincera.com/prisignal-og.png" 
+                         alt="PriSignal" width="120" 
+                         style="display:block; width:120px; height:auto;" />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <h1 style="margin:0; font-family:'Outfit', 'Noto Sans KR', sans-serif; font-size:28px; font-weight:700; color:#F5F3FF; letter-spacing:-0.02em;">
+                      📡 Pri<span style="background: linear-gradient(135deg, #7C3AED, #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Signal</span>
+                    </h1>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding-top: 8px;">
+                    <p style="margin:0; font-size:14px; color:#6D5BA3; line-height:1.5;">
+                      {{ subject }}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 0 24px;">
+              <div style="height:1px; background: linear-gradient(90deg, transparent, rgba(196,181,253,0.15), transparent);"></div>
+            </td>
+          </tr>
+
+          <!-- ═══ Body ═══ -->
+          <tr>
+            <td style="padding: 32px 24px;">
+              <!-- Content Container (glassmorphism-inspired) -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                     style="background-color: rgba(26,16,53,0.7); border: 1px solid rgba(196,181,253,0.08); border-radius: 16px;">
+                <tr>
+                  <td style="padding: 32px; font-size:15px; color:#E9D5FF; line-height:1.8;">
+                    <!-- Buttondown renders the markdown body here -->
+                    {{ body }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══ CTA: Read on Web ═══ -->
+          <tr>
+            <td align="center" style="padding: 8px 24px 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" 
+                      style="background: linear-gradient(135deg, #7C3AED, #A855F7); border-radius: 100px; padding: 12px 32px;">
+                    <a href="{{ email_url }}" 
+                       style="font-family:'Outfit', 'Noto Sans KR', sans-serif; font-size:14px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+                      🌐 웹에서 읽기
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 0 24px;">
+              <div style="height:1px; background: linear-gradient(90deg, transparent, rgba(196,181,253,0.1), transparent);"></div>
+            </td>
+          </tr>
+
+          <!-- ═══ Footer ═══ -->
+          <tr>
+            <td style="padding: 32px 24px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <!-- Visit Site -->
+                <tr>
+                  <td align="center" style="padding-bottom: 16px;">
+                    <a href="https://www.prisincera.com" 
+                       style="font-family:'Outfit', 'Noto Sans KR', sans-serif; font-size:13px; color:#A78BFA; text-decoration:none;">
+                      prisincera.com 방문하기 →
+                    </a>
+                  </td>
+                </tr>
+                <!-- Tagline -->
+                <tr>
+                  <td align="center" style="padding-bottom: 20px;">
+                    <p style="margin:0; font-size:12px; color:#6D5BA3; line-height:1.6;">
+                      노이즈 속에서 시그널을 포착하다<br/>
+                      20년차 PO가 매주 골라내는 태도와 트렌드의 교차점
+                    </p>
+                  </td>
+                </tr>
+                <!-- Unsubscribe -->
+                <tr>
+                  <td align="center">
+                    <p style="margin:0; font-size:11px; color:#4A3D6E;">
+                      더 이상 받고 싶지 않으시면
+                      <a href="{{ unsubscribe_url }}" 
+                         style="color:#6D5BA3; text-decoration:underline;">구독을 해지</a>할 수 있습니다.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══ Brand Footer ═══ -->
+          <tr>
+            <td align="center" style="padding: 16px 24px 32px;">
+              <p style="margin:0; font-family:'Outfit', 'Noto Sans KR', sans-serif; font-size:11px; color:#4A3D6E; letter-spacing:0.05em;">
+                © 2026 PriSincera · Sincerity, Prioritized.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Container -->
+
+      </td>
+    </tr>
+  </table>
+  <!-- /Wrapper -->
+
+</body>
+</html>

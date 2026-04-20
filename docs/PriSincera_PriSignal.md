@@ -45,9 +45,12 @@
 
 | 방식 | 설명 | 비중 |
 |------|------|:---:|
-| **RSS 자동 수집** | RSS 리더(Feedly)로 소스를 구독, AI 필터로 1차 선별 | 60% |
-| **뉴스레터 2차 큐레이션** | 우수 뉴스레터를 구독 → 재큐레이션 (출처 명기) | 25% |
-| **수동 발굴** | LinkedIn, X(Twitter), Hacker News 등에서 직접 발견 | 15% |
+| **RSS 자동 수집** | Cloud Run Job이 매일 35+ 소스에서 자동 수집 | 80% |
+| **뉴스레터 2차 큐레이션** | 뉴스레터 RSS를 통한 자동 재큐레이션 (출처 명기) | 20% |
+
+> [!IMPORTANT]
+> **완전 자동화 운영**: 사람의 개입 없이 수집 → 선별 → 작성 → 발송까지 전 과정이 자동화됩니다.
+> 품질은 **채널 신뢰등급(Tier 1/2/3)** 기반으로 사전에 보증됩니다.
 
 ### 3-2. RSS 피드 소스 (카테고리별)
 
@@ -111,45 +114,72 @@
 | **TLDR Product** | `tldr.tech/product` | 일간 PM 뉴스·도구·트렌드 다이제스트 | EN |
 | **Nielsen Norman Group** | `nngroup.com/articles` | UX 리서치·사용성·디자인 원칙 | EN |
 
-### 3-3. 소싱 워크플로우
+### 3-3. 자동화 파이프라인 워크플로우
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Weekly Curation Pipeline (매주 금~일)                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  1. CAPTURE (금요일)                                        │
-│     └── Feedly AI (Leo) 자동 필터링 → 주간 후보 20~30개       │
-│     └── 뉴스레터 수신함 스캔 → 추가 후보 5~10개               │
-│     └── LinkedIn/X 북마크 → 수동 후보 3~5개                   │
-│                                                             │
-│  2. FILTER (토요일)                                         │
-│     └── 후보 → 읽기 → PriSincera 시선으로 평가                │
-│     └── 기준: 실무 적용 가능? 태도/인사이트에 영향?            │
-│     └── 최종 3~4개 선정                                      │
-│                                                             │
-│  3. WRITE (일요일)                                          │
-│     └── 에디터 노트 (이번 주의 맥락) 작성                     │
-│     └── 각 아티클 에디터 코멘트 (2~3줄) 작성                  │
-│     └── "이번 주의 한 마디" 마무리                            │
-│                                                             │
-│  4. SEND (월요일 AM 8:00)                                   │
-│     └── Buttondown 예약 발송                                 │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│  Fully Automated Pipeline (사람 개입 제로)                       │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ⏰ CRON 1 — 매일 06:00 KST (Cloud Run Job: collector)          │
+│     └── 35+ RSS 소스 병렬 수집                                   │
+│     └── 지난 24시간 신규 아티클 추출                              │
+│     └── 채널 Tier 메타데이터 태깅                                │
+│     └── 중복 제거 후 GCS 주간 후보 풀에 적재                      │
+│                                                                  │
+│  ⏰ CRON 2 — 매주 일요일 08:00 KST (Cloud Run Job: composer)    │
+│     └── 주간 후보 풀 로드 (7일치 누적)                            │
+│     └── Gemini Flash AI로 SIGNAL 6항목 스코어링                  │
+│     └── Tier 가중치 적용 → 상위 3~5개 선정                       │
+│     └── 에디터 노트 + 코멘트 AI 자동 생성                        │
+│     └── Markdown 뉴스레터 조립                                   │
+│     └── Buttondown API → 월요일 08:00 KST 예약 발송              │
+│                                                                  │
+│  📡 월요일 AM 8:00 KST — Buttondown 자동 발송                    │
+│     └── 절대 건너뛰지 않음 (공휴일/연휴 무관)                     │
+│                                                                  │
+│  ⏰ CRON 3 — 매주 월요일 08:30 KST (Cloud Run Job: monitor)     │
+│     └── Buttondown API 발송 상태 확인                            │
+│     └── 실패 시 Cloud Monitoring → matthew.shim@prisincera.com   │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-### 3-4. 소싱 도구
+### 3-4. 채널 신뢰등급 체계
+
+> 품질은 "이 글이 좋은가?"가 아니라 **"이 채널이 신뢰할 만한가?"**로 사전에 결정됩니다.
+
+| Tier | 신뢰도 | 기준 | 가중치 | 예시 |
+|:----:|:------:|------|:------:|------|
+| **T1** | 🟢 최고 | 글로벌 레퍼런스, 10년+ 발행 이력 | ×1.5 | HBR, Lenny's, Stratechery, MIT Tech Review |
+| **T2** | 🟡 높음 | 전문가 운영, 꾸준한 발행, 업계 인정 | ×1.0 | First Round Review, SVPG, Ben's Bites, fs.blog |
+| **T3** | 🔵 보통 | 양질이나 발행 불규칙 또는 신규 | ×0.7 | 개인 Substack, 커뮤니티 블로그 |
+
+### 3-5. SIGNAL 선정 기준 (AI 자동 평가)
+
+| 기준 | 질문 | 가중치 |
+|------|------|:------:|
+| **S** — Substance | 깊이 있는 인사이트가 있는가? | ★★★ |
+| **I** — Impact | 독자의 업무에 실제 영향을 줄 수 있는가? | ★★★ |
+| **G** — Gap | 다른 한국어 뉴스레터에서 다루지 않는 시각인가? | ★★ |
+| **N** — Now | 이번 주에 읽어야 의미 있는 글인가? | ★★ |
+| **A** — Actionable | 바로 적용할 수 있는 것이 있는가? | ★ |
+| **L** — Lens | PriSincera의 시선으로 코멘트할 관점이 있는가? | ★★★ |
+
+### 3-6. 자동화 인프라
 
 | 도구 | 용도 | 비용 |
 |------|------|------|
-| **Feedly (Pro+)** | RSS 통합 구독 + AI Leo 자동 필터링 | $12/월 |
-| **Readwise Reader** | 아티클 하이라이트·메모·태깅 | $7.99/월 (대안: 무료 Pocket) |
-| **Buttondown** | 뉴스레터 작성·발송·구독자 관리 | 100명까지 무료, 이후 $9/월 |
+| **Cloud Run Jobs** | Collector / Composer / Monitor 3개 Job | $0 (무료 티어) |
+| **Cloud Scheduler** | 3개 크론 트리거 | $0 (3개 무료) |
+| **Cloud Storage** | 후보 풀, 발행 이력 JSON | $0 (5GB 무료) |
+| **Gemini Flash API** | 스코어링, 코멘트 생성 | $0 (무료 티어) |
+| **Buttondown** | 예약 발송, 구독자 관리 | $0 (100명까지 무료) |
+| **Secret Manager** | API 키 관리 | $0 (6개 무료) |
 
 > [!TIP]
-> **최소 비용 운영**: Feedly 무료 티어 (100 피드) + Pocket (무료) + Buttondown (100명 무료) = **$0/월**로 시작 가능.
-> 구독자가 100명을 넘으면 Buttondown $9/월만 추가.
+> **월 운영비: $0** — 모든 구성 요소가 GCP/Gemini 무료 티어 내에서 운영됩니다.
+> 구독자 100명 초과 시 Buttondown $9/월만 추가됩니다.
 
 ---
 
@@ -192,10 +222,12 @@
 
 ### 핵심 원칙
 
-1. **에디터 코멘트가 핵심** — 링크만 나열하지 않음. 20년차 PO의 시선으로 "왜 이 글을 골랐는지" 코멘트
-2. **읽기 5분 이내** — 바쁜 월요일 아침에도 훑어볼 수 있는 분량
-3. **매주 2~3개 카테고리 로테이션** — 5개 카테고리에서 매주 다른 조합으로 피로감 방지
-4. **CTA는 자연스럽게** — 매 이슈 하단에 prisincera.com 유입 링크
+1. **에디터 코멘트가 핵심** — AI가 PriSincera 톤으로 "왜 이 글을 골랐는지" 코멘트 생성
+2. **읽기 5분 이내** — 바쁜 월요일 아침에도 훑어볼 수 있는 분량 (3~5개 아티클)
+3. **매주 2개 이상 카테고리** — 5개 카테고리에서 최소 2개 이상 포함, T1 소스 최소 1개 보장
+4. **절대 건너뛰지 않는다** — 매주 월요일 08:00 KST 반드시 발송 (공휴일/연휴 무관)
+5. **채널 신뢰등급 기반 품질** — Tier 1/2/3 가중치로 채널 수준이 곧 콘텐츠 수준
+6. **CTA는 자연스럽게** — 매 이슈 하단에 prisincera.com 유입 링크
 
 ---
 
@@ -371,20 +403,22 @@ prisincera.com 유입
 ```
 src/
 ├── pages/
-│   ├── PriSignal.jsx            # ✅ 랜딩 페이지 컨테이너 (SEO 메타 설정)
-│   └── PriSignal.css            # ✅ 랜딩 페이지 전체 스타일
+│   ├── PriSignal.jsx            # ✅ 랜딩 페이지 컨테이너 (SEO + OG 메타 설정)
+│   └── PriSignal.css            # ✅ 랜딩 페이지 + 이슈 상세 전체 스타일
 ├── components/prisignal/
 │   ├── PriSignalHero.jsx        # ✅ ① Hero + 구독 폼
 │   ├── PriSignalValue.jsx       # ✅ ② Value Proposition 3카드
 │   ├── PriSignalCategories.jsx  # ✅ ③ 카테고리 5카드
+│   ├── PriSignalArchive.jsx     # ✅ ④ 최근 이슈 목록 (Buttondown API 연동 + 빈 상태 UI)
 │   ├── PriSignalSubscribe.jsx   # ✅ ⑤ 구독 CTA (SubscribeForm 재사용)
 │   ├── PriSignalFAQ.jsx         # ✅ ⑥ FAQ 5문항 아코디언
+│   ├── PriSignalIssue.jsx       # ✅ 개별 이슈 상세 페이지 (/prisignal/:issueId)
 │   ├── SubscribeForm.jsx        # ✅ 이메일 입력 + API 연동 (공유 컴포넌트)
 │   └── SubscribeForm.css        # ✅ 구독 폼 스타일
-│
-│   # 🔜 Phase C에서 추가 예정:
-│   ├── PriSignalArchive.jsx     # 🔜 ④ 최근 이슈 목록 (API 연동)
-│   └── PriSignalIssue.jsx       # 🔜 개별 이슈 상세 페이지
+├── public/
+│   └── prisignal-og.png         # ✅ OG 이미지 (SNS 공유용)
+├── docs/
+│   └── prisignal-email-template.html  # ✅ Buttondown 이메일 템플릿
 ```
 
 #### 라우팅 (App.jsx) — ✅ 적용 완료
@@ -392,7 +426,7 @@ src/
 ```jsx
 <Route index element={<Home />} />
 <Route path="prisignal" element={<PriSignal />} />
-// 🔜 Phase C: <Route path="prisignal/:issueId" element={<PriSignalIssue />} />
+<Route path="prisignal/:issueId" element={<PriSignalIssue />} />  // ✅ 개별 이슈 상세
 ```
 
 #### Buttondown API 연동 현황
@@ -400,8 +434,8 @@ src/
 | API | 엔드포인트 | 용도 | 상태 |
 |-----|-----------|------|:---:|
 | **구독 등록** | `POST /api/subscribe` | 구독 폼 → 신규 구독자 등록 | ✅ |
-| **아카이브 조회** | `GET /api/archive` | 최근 발행 이슈 목록 조회 | 🔜 |
-| **이슈 상세** | `GET /api/archive/:id` | 개별 이슈 HTML 본문 조회 | 🔜 |
+| **아카이브 조회** | `GET /api/archive` | 최근 발행 이슈 목록 조회 | ✅ |
+| **이슈 상세** | `GET /api/archive/:id` | 개별 이슈 HTML 본문 조회 | ✅ |
 
 ### 6-5. GNB 통합
 
@@ -485,35 +519,46 @@ Footer:  Belief / Journey / Work / PriSignal / Connect
 
 ### Phase B: 랜딩 페이지 구축 — ✅ 완료 (2026-04-20)
 - [x] `/prisignal` 라우트 추가 (App.jsx)
-- [x] PriSignal 랜딩 페이지 5개 섹션 구현
+- [x] PriSignal 랜딩 페이지 6개 섹션 구현
   - [x] ① Hero (타이틀 + 태그라인 + 구독 폼)
   - [x] ② Value Proposition (3카드: 시그널만 포착 / PO의 시선 / 5분)
   - [x] ③ Categories (5카드: Attitude, Priority, AI & Future, Global Lens, Product Craft)
+  - [x] ④ Latest Issues 아카이브 섹션 (Buttondown API 연동 + 빈 상태 UI)
   - [x] ⑤ Subscribe CTA (글라스모피즘 컨테이너 + 반복 구독 폼)
   - [x] ⑥ FAQ (5문항 아코디언)
 - [x] GNB + Footer에 PriSignal 메뉴 추가
 - [x] SEO 메타데이터 설정 (title, description)
-- [ ] ④ Latest Issues 아카이브 섹션 → Phase C로 이동
-- [ ] `/prisignal/:issueId` 상세 페이지 → Phase C로 이동
-- [ ] OG 이미지 제작 (공유용 프리뷰) → Phase C로 이동
+- [x] `/prisignal/:issueId` 상세 페이지 (개별 이슈 렌더링)
+- [x] OG 이미지 제작 (SNS 공유용 프리뷰 `prisignal-og.png`)
+- [x] OG/Twitter 메타 태그 설정
 
-### Phase C: 콘텐츠 파이프라인 + 아카이브 구축 ← 🔜 다음 단계
+### Phase C: 콘텐츠 파이프라인 + 아카이브 구축 — ✅ 기술 구현 완료 (2026-04-21)
 
-#### C-1. 아카이브 기능 (기술)
-- [ ] `PriSignalArchive.jsx` — Buttondown `GET /api/archive` 연동, 최근 이슈 카드 렌더링
-- [ ] `PriSignalIssue.jsx` — 개별 이슈 상세 페이지 (`/prisignal/:issueId`)
-- [ ] PriSignal 랜딩 페이지에 ④ Latest Issues 섹션 추가
-- [ ] Nginx SPA fallback 설정 (`/prisignal/*` 직접 URL 접근 시 404 방지)
+#### C-1. 아카이브 기능 (기술) — ✅ 완료
+- [x] `PriSignalArchive.jsx` — Buttondown `GET /api/archive` 연동, 최근 이슈 카드 렌더링 + 빈 상태 UI
+- [x] `PriSignalIssue.jsx` — 개별 이슈 상세 페이지 (`/prisignal/:issueId`) + 에러 상태 UI
+- [x] PriSignal 랜딩 페이지에 ④ Latest Issues 섹션 추가
+- [x] Nginx `/api/archive/:id` 개별 이슈 프록시 엔드포인트 추가
+- [x] SPA fallback 확인 (`try_files $uri $uri/ /index.html` — 기존 설정으로 커버)
 
-#### C-2. 이메일 템플릿
-- [ ] Buttondown 이메일 템플릿 디자인 (PriSincera 브랜딩)
-- [ ] OG 이미지 제작 (SNS 공유용)
+#### C-2. 이메일 템플릿 — ✅ 완료
+- [x] Buttondown 이메일 템플릿 디자인 (`docs/prisignal-email-template.html`)
+- [x] OG 이미지 제작 (`public/prisignal-og.png`)
+- [x] OG/Twitter 메타 태그 설정 (PriSignal.jsx에서 동적 주입)
 
-#### C-3. 콘텐츠 파이프라인
-- [ ] Feedly 계정 설정 + RSS 피드 소스 등록 (섹션 3-2 기반)
-- [ ] 큐레이션 워크플로우 루틴화 (섹션 3-3 기반)
-- [ ] 파일럿 이슈 발행 (#001 ~ #003, 내부 테스트)
-- [ ] 피드백 반영 후 포맷 확정
+#### C-3. 자동화 파이프라인 구축 — ✅ 완료 (2026-04-21)
+- [x] `pipeline/` 디렉토리 구조 생성 (Collector / Composer / Monitor)
+- [x] RSS 수집 자동화 (`collector.mjs` — 35+ 소스 병렬 수집 + 중복 제거)
+- [x] AI 스코어링 (`gemini.mjs` — Gemini Flash, SIGNAL 6항목 자동 평가)
+- [x] 선정 + 코멘트 생성 (`composer.mjs` — Tier 가중치, 다양성 보장, 자동 예약 발송)
+- [x] 발송 모니터링 (`monitor.mjs` — Buttondown 상태 확인 + 알림)
+- [x] 채널 소스 설정 (`config/sources.json` — 35개 소스, Tier 1/2/3 배정)
+- [x] Cloud Build CI/CD (`cloudbuild-pipeline.yaml`)
+- [x] GCP 인프라 설정 스크립트 (`setup-infra.sh`)
+- [x] Buttondown 이메일 템플릿 제작 (`docs/prisignal-email-template.html`)
+- [x] 기획서 정책 전면 업데이트 (자동화 체제, SIGNAL 기준, 채널 신뢰등급)
+
+> **다음 단계**: GCP 인프라 프로비저닝 (`bash pipeline/setup-infra.sh`) → 자동 운영 시작
 
 ### Phase D: 공개 런칭 (1주)
 - [ ] 런칭 이슈 발행 (#001 공식)
