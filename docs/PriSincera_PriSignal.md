@@ -12,7 +12,7 @@
 |------|------|
 | **서비스명** | PriSignal |
 | **네이밍 의미** | Pri(Priority) + Signal — 정보 과잉 시대, 노이즈 속에서 의미 있는 시그널만 포착 |
-| **서비스 형태** | 주 1회 이메일 뉴스레터 (큐레이션형) |
+| **서비스 형태** | **데일리 콘텐츠 포털** + DM 선별 발송 (큐레이션형) |
 | **핵심 가치** | 업무 태도 + AI/Tech 트렌드를 20년차 PO의 시선으로 큐레이션 |
 | **차별점** | 단순 링크 모음이 아닌, **에디터 코멘트**가 붙는 아티클 큐레이션 |
 | **타겟** | PM/PO, 기획자, 주니어~미드레벨 리더, AI 전환기의 IT 실무자 |
@@ -22,7 +22,7 @@
 ### 구독 → 유입 → 신뢰 플라이휠
 
 ```
-아티클 수집 → 에디터 코멘트 → 뉴스레터 발송 → prisincera.com 유입 → 신뢰 축적 → 구독자 확산 → (반복)
+RSS 수집(매일) → AI SIGNAL 스코어링 → 데일리 포털 게시 → DM 선별 발송 → prisincera.com 유입 → 신뢰 축적 → 구독자 확산 → (반복)
 ```
 
 ---
@@ -118,27 +118,27 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  Fully Automated Pipeline (사람 개입 제로)                       │
+│  Fully Automated Daily Pipeline (사람 개입 제로)                 │
 ├──────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  ⏰ CRON 1 — 매일 06:00 KST (Cloud Run Job: collector)          │
 │     └── 35+ RSS 소스 병렬 수집                                   │
 │     └── 지난 24시간 신규 아티클 추출                              │
 │     └── 채널 Tier 메타데이터 태깅                                │
-│     └── 중복 제거 후 GCS 주간 후보 풀에 적재                      │
+│     └── 중복 제거 후 GCS 데일리 JSON에 적재                      │
 │                                                                  │
-│  ⏰ CRON 2 — 매주 일요일 08:00 KST (Cloud Run Job: composer)    │
-│     └── 주간 후보 풀 로드 (7일치 누적)                            │
+│  ⏰ CRON 2 — 매일 07:00 KST (Cloud Run Job: composer)           │
+│     └── 오늘 데일리 JSON 로드                                    │
 │     └── Gemini Flash AI로 SIGNAL 6항목 스코어링                  │
-│     └── Tier 가중치 적용 → 상위 3~5개 선정                       │
-│     └── 에디터 노트 + 코멘트 AI 자동 생성                        │
-│     └── Markdown 뉴스레터 조립                                   │
-│     └── Buttondown API → 월요일 08:00 KST 예약 발송              │
+│     └── Tier 가중치 적용 → 상위 5개 DM 픽 선정                   │
+│     └── 에디터 코멘트 AI 자동 생성                                │
+│     └── 스코어링된 데일리 JSON 갱신 (dm_picks 포함)               │
+│     └── Buttondown API → DM 선별 발송                            │
 │                                                                  │
-│  📡 월요일 AM 8:00 KST — Buttondown 자동 발송                    │
+│  📡 매일 AM — Buttondown DM 발송                                 │
 │     └── 절대 건너뛰지 않음 (공휴일/연휴 무관)                     │
 │                                                                  │
-│  ⏰ CRON 3 — 매주 월요일 08:30 KST (Cloud Run Job: monitor)     │
+│  ⏰ CRON 3 — 매일 08:30 KST (Cloud Run Job: monitor)            │
 │     └── Buttondown API 발송 상태 확인                            │
 │     └── 실패 시 Cloud Monitoring → matthew.shim@prisincera.com   │
 │                                                                  │
@@ -233,7 +233,7 @@
 
 ## 5. 기술 구현 — 현재 상태
 
-> ✅ **Phase A + B 구현 완료** (2026-04-20)
+> ✅ **Phase A~D 구현 완료** (2026-04-22)
 
 ### 5-1. 구독 수집 (프론트엔드) — ✅ 완료
 
@@ -242,7 +242,7 @@
 | **구독 폼 위치** | Work 섹션 PriSignal 배너 + `/prisignal` 랜딩 페이지 (Hero, CTA 섹션) | ✅ |
 | **수집 필드** | 이메일 (필수) | ✅ |
 | **UX** | 인라인 폼 + 성공/에러 피드백 애니메이션, glassmorphism 디자인 | ✅ |
-| **API 연동** | `POST /api/subscribe` → Nginx 프록시 → Buttondown API | ✅ |
+| **API 연동** | `POST /api/subscribe` → Express 프록시 → Buttondown API | ✅ |
 | **컴포넌트** | `src/components/prisignal/SubscribeForm.jsx` (공유 컴포넌트) | ✅ |
 
 ### 5-2. 이메일 플랫폼: Buttondown — ✅ 연동 완료
@@ -250,46 +250,51 @@
 | 항목 | 내용 | 상태 |
 |------|------|:---:|
 | **계정** | Buttondown 계정 생성 완료, 뉴스레터명 "PriSignal" 설정 | ✅ |
-| **API Key** | Cloud Run 환경변수 `BUTTONDOWN_API_KEY`로 관리 | ✅ |
+| **API Key** | Cloud Run 환경변수 + Secret Manager `BUTTONDOWN_API_KEY` | ✅ |
 | **무료 티어** | 구독자 100명까지 (현재 사용 중) | ✅ |
 | **커스텀 도메인** | 미사용 (선택사항 — 구독자 500명+ 시 검토) | ⏸️ |
-| **아카이브** | Phase C에서 API 연동 예정 | 🔜 |
+| **아카이브** | API 연동 완료 | ✅ |
 
-### 5-3. API Key 보호 — Nginx 리버스 프록시 ✅ 완료
+### 5-3. 웹 서버 — Express.js ✅ 완료 (2026-04-22 전환)
 
-```nginx
-# nginx.conf (실제 적용 중)
-location /api/subscribe {
-    proxy_pass https://api.buttondown.email/v1/subscribers;
-    proxy_set_header Authorization "Token $BUTTONDOWN_API_KEY";
-    proxy_set_header Content-Type "application/json";
-    proxy_method POST;
-}
+> [!IMPORTANT]
+> **Nginx → Express.js 전환 (2026-04-22)**
+> GCP 조직 정책(`iam.allowedPolicyMemberDomains`)이 GCS `allUsers` 공개 접근을 차단하여,
+> Cloud Run 서비스 계정으로 GCS를 인증 접근하는 Express 서버로 전환했습니다.
 
-location /api/archive {
-    proxy_pass https://api.buttondown.email/v1/emails;
-    proxy_set_header Authorization "Token $BUTTONDOWN_API_KEY";
-}
+| 항목 | Before | After |
+|------|--------|-------|
+| **서버** | Nginx (정적 파일 + envsubst) | **Express.js** (API 프록시 + 정적 파일) |
+| **GCS 접근** | 공개 URL 프록시 (조직 정책 차단) | **서비스 계정 인증 프록시** |
+| **Dockerfile** | 2-stage: build → nginx:alpine | 2-stage: build → **node:20-alpine** |
+| **API Key 보호** | envsubst 런타임 주입 | **process.env 직접 참조 + .trim()** |
+
+```javascript
+// server.mjs (실제 적용 중) — 주요 엔드포인트
+app.post('/api/subscribe', ...)   // → Buttondown API 프록시
+app.get('/api/archive', ...)      // → Buttondown API 프록시
+app.get('/api/archive/:id', ...)  // → Buttondown API 프록시
+app.get('/api/daily/index', ...)  // → GCS 인증 프록시 (서비스 계정)
+app.get('/api/daily/:date', ...)  // → GCS 인증 프록시 (서비스 계정)
+app.use(express.static('dist'))   // → 정적 파일 서빙
+app.use((req, res) => ...)        // → SPA 폴백
 ```
-
-> [!NOTE]
-> `$BUTTONDOWN_API_KEY`는 Dockerfile에서 `envsubst`를 통해 런타임 시 주입됩니다.
-> Cloud Run 환경변수로 관리되어 소스코드에 노출되지 않습니다.
 
 ### 5-4. 아키텍처 (실제 운영 중)
 
 ```
-prisincera.com (구독 폼)
+prisincera.com (구독 폼 / 데일리 페이지)
     ↓ POST /api/subscribe { email }
-Nginx 리버스 프록시 (Cloud Run 컨테이너)
-    ↓ Authorization: Token $BUTTONDOWN_API_KEY
-    ↓ POST https://api.buttondown.email/v1/subscribers
+    ↓ GET /api/daily/2026-04-21
+Express.js 서버 (Cloud Run 컨테이너)
+    ├── Buttondown API 프록시 (Authorization: Token)
+    └── GCS 인증 프록시 (@google-cloud/storage, SA 자동 인증)
 Buttondown
-    ↓ 구독자 등록 완료
-    ↓ 주 1회 예약 발송 (월요일 AM 8:00)
-구독자 이메일 수신
-    ↓ CTA 클릭
-prisincera.com 유입
+    ↓ 구독자 등록 / DM 발송
+GCS (prisincera-prisignal-data)
+    ↓ daily/{date}.json → 데일리 페이지 데이터
+prisincera.com/prisignal/{date}
+    ↓ 데일리 포털 페이지 표시
 ```
 
 ---
@@ -400,19 +405,33 @@ prisincera.com 유입
 src/
 ├── pages/
 │   ├── PriSignal.jsx            # ✅ 랜딩 페이지 컨테이너 (SEO + OG 메타 설정)
-│   └── PriSignal.css            # ✅ 랜딩 페이지 + 이슈 상세 전체 스타일
+│   ├── PriSignal.css            # ✅ 랜딩 페이지 + 이슈 상세 전체 스타일
+│   ├── PriSignalDaily.jsx       # ✅ 데일리 뷰 페이지 (/prisignal/:date)
+│   └── PriSignalDaily.css       # ✅ 데일리 뷰 스타일
 ├── components/prisignal/
 │   ├── PriSignalHero.jsx        # ✅ ① Hero + 구독 폼
 │   ├── PriSignalValue.jsx       # ✅ ② Value Proposition 3카드
 │   ├── PriSignalCategories.jsx  # ✅ ③ 카테고리 5카드
-│   ├── PriSignalArchive.jsx     # ✅ ④ 최근 이슈 목록 (Buttondown API 연동 + 빈 상태 UI)
-│   ├── PriSignalSubscribe.jsx   # ✅ ⑤ 구독 CTA (SubscribeForm 재사용)
-│   ├── PriSignalFAQ.jsx         # ✅ ⑥ FAQ 5문항 아코디언
+│   ├── PriSignalSignal.jsx      # ✅ ④ SIGNAL 선정 기준 6카드
+│   ├── PriSignalArchive.jsx     # ✅ ⑤ 최근 이슈 목록 (Buttondown API 연동 + 빈 상태 UI)
+│   ├── PriSignalSubscribe.jsx   # ✅ ⑥ 구독 CTA (SubscribeForm 재사용)
+│   ├── PriSignalFAQ.jsx         # ✅ ⑦ FAQ 6문항 아코디언
 │   ├── PriSignalIssue.jsx       # ✅ 개별 이슈 상세 페이지 (/prisignal/:issueId)
 │   ├── SubscribeForm.jsx        # ✅ 이메일 입력 + API 연동 (공유 컴포넌트)
 │   └── SubscribeForm.css        # ✅ 구독 폼 스타일
 ├── public/
 │   └── prisignal-og.png         # ✅ OG 이미지 (SNS 공유용)
+├── server.mjs                   # ✅ Express 웹 서버 (API 프록시 + 정적 파일 + SPA 폴백)
+├── pipeline/
+│   ├── src/collector.mjs        # ✅ RSS 수집 Job
+│   ├── src/composer.mjs         # ✅ AI 스코어링 + DM 발송 Job
+│   ├── src/monitor.mjs          # ✅ 발송 모니터링 Job
+│   ├── src/lib/gemini.mjs       # ✅ Gemini Flash API 클라이언트
+│   ├── src/lib/buttondown.mjs   # ✅ Buttondown API 클라이언트
+│   ├── src/lib/scoring.mjs      # ✅ Tier 가중치 + DM 선정 로직
+│   ├── src/lib/rss.mjs          # ✅ RSS 피드 파서
+│   ├── src/lib/storage.mjs      # ✅ GCS 읽기/쓰기
+│   └── config/sources.json      # ✅ 35개 RSS 소스 설정
 ├── docs/
 │   └── prisignal-email-template.html  # ✅ Buttondown 이메일 템플릿
 ```
@@ -422,7 +441,8 @@ src/
 ```jsx
 <Route index element={<Home />} />
 <Route path="prisignal" element={<PriSignal />} />
-<Route path="prisignal/:issueId" element={<PriSignalIssue />} />  // ✅ 개별 이슈 상세
+<Route path="prisignal/:date" element={<PriSignalDaily />} />    // ✅ 데일리 뷰
+<Route path="prisignal/:issueId" element={<PriSignalIssue />} /> // ✅ 개별 이슈 상세
 ```
 
 #### Buttondown API 연동 현황
@@ -432,6 +452,8 @@ src/
 | **구독 등록** | `POST /api/subscribe` | 구독 폼 → 신규 구독자 등록 | ✅ |
 | **아카이브 조회** | `GET /api/archive` | 최근 발행 이슈 목록 조회 | ✅ |
 | **이슈 상세** | `GET /api/archive/:id` | 개별 이슈 HTML 본문 조회 | ✅ |
+| **데일리 인덱스** | `GET /api/daily/index` | 최근 데일리 목록 (GCS) | ✅ |
+| **데일리 데이터** | `GET /api/daily/:date` | 특정 날짜 스코어링된 아티클 (GCS) | ✅ |
 
 ### 6-5. GNB 통합 — ✅ 현행화 (2026-04-21)
 
@@ -579,9 +601,10 @@ Footer:  Home / PriSignal / PriStudy(준비중 얼럿)
 
 | 항목 | 주기 |
 |------|------|
-| 뉴스레터 발행 | 주 1회 (월요일 AM 8:00) |
+| 데일리 포털 업데이트 | 매일 (자동: 06:00 수집 → 07:00 스코어링) |
+| DM 발송 | 매일 (자동) |
 | 구독자 분석 (오픈율, 클릭율) | 월 1회 |
-| 아카이브 페이지 UX 개선 | 분기 1회 |
+| 데일리 페이지 UX 개선 | 분기 1회 |
 | 카테고리 검토 | 분기 1회 |
 | 프리미엄 티어 검토 | 구독자 500명+ 도달 시 |
 | 커스텀 도메인 검토 | 구독자 500명+ 도달 시 |
@@ -610,6 +633,10 @@ Footer:  Home / PriSignal / PriStudy(준비중 얼럿)
 |--------|-----|
 | **메인 (Work 섹션 배너)** | https://www.prisincera.com/#work |
 | **PriSignal 랜딩 페이지** | https://www.prisincera.com/prisignal |
+| **데일리 뷰 (예시)** | https://www.prisincera.com/prisignal/2026-04-21 |
+| **데일리 API (예시)** | https://www.prisincera.com/api/daily/2026-04-21 |
 | **Buttondown 관리자** | https://buttondown.com/home |
 | **API Key 관리** | https://buttondown.com/keys |
+| **Cloud Run 콘솔** | https://console.cloud.google.com/run?project=prisincera |
+| **Cloud Run Jobs** | https://console.cloud.google.com/run/jobs?project=prisincera |
 
