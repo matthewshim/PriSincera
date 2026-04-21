@@ -461,8 +461,40 @@ export default function ConstellationAssembly({ rawMouseRef, onAssemblyComplete 
     return () => cancelAnimationFrame(frameId);
   }, [rawMouseRef]);
 
-  // Start assembly on mount
-  useEffect(() => { runAssembly(); }, [runAssembly]);
+  // Start assembly on mount — only animate on first visit per session
+  useEffect(() => {
+    const PLAYED_KEY = 'prisincera_ci_played';
+    if (sessionStorage.getItem(PLAYED_KEY)) {
+      // Skip animation: show final state immediately
+      const body = starBodyRef.current;
+      if (body) {
+        const triDown = body.querySelector('#triDown');
+        const triUp = body.querySelector('#triUp');
+        const hexInner = body.querySelector('#hexInner');
+        const refrLines = body.querySelector('#refractionLines');
+        const triAmber = body.querySelector('#triAmber');
+        const dot = body.querySelector('#coreDot');
+        const light = body.querySelector('#coreLight');
+        const glow = body.querySelector('#coreGlow');
+        [triDown, triUp].forEach(el => el?.setAttribute('opacity', '1'));
+        hexInner?.setAttribute('opacity', '1');
+        refrLines?.setAttribute('opacity', '0.3');
+        triAmber?.setAttribute('opacity', '0.75');
+        dot?.setAttribute('opacity', '1');
+        light?.setAttribute('opacity', '0.85');
+        glow?.setAttribute('opacity', '0.5');
+      }
+      const orbit = svgRef.current?.querySelector('#orbitGroup');
+      if (orbit) orbit.classList.add('visible');
+      const heroGlow = document.getElementById('heroGlow');
+      if (heroGlow) heroGlow.classList.add('active');
+      // Fire completion callback immediately
+      onAssemblyComplete?.();
+    } else {
+      runAssembly();
+      sessionStorage.setItem(PLAYED_KEY, '1');
+    }
+  }, [runAssembly, onAssemblyComplete]);
 
   return (
     <div className="star-constellation" id="starConstellation">

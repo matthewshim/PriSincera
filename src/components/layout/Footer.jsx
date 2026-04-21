@@ -47,11 +47,9 @@ function Footer() {
         <div className="footer-links">
           <div className="footer-col">
             <h4 className="footer-col-title">Navigate</h4>
-            <a href="/#belief" className="footer-link">Belief</a>
-            <a href="/#journey" className="footer-link">Journey</a>
-            <a href="/#work" className="footer-link">Work</a>
+            <Link to="/" className="footer-link">Home</Link>
             <Link to="/prisignal" className="footer-link">PriSignal</Link>
-            <a href="/#connect" className="footer-link">Connect</a>
+            <a href="#" className="footer-link" onClick={(e) => { e.preventDefault(); alert('PriStudy는 준비중입니다.'); }}>PriStudy</a>
           </div>
           <div className="footer-col">
             <h4 className="footer-col-title">Connect</h4>
