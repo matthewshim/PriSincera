@@ -558,12 +558,21 @@ Footer:  Belief / Journey / Work / PriSignal / Connect
 - [x] Buttondown 이메일 템플릿 제작 (`docs/prisignal-email-template.html`)
 - [x] 기획서 정책 전면 업데이트 (자동화 체제, SIGNAL 기준, 채널 신뢰등급)
 
-> **다음 단계**: GCP 인프라 프로비저닝 (`bash pipeline/setup-infra.sh`) → 자동 운영 시작
+> **인프라 프로비저닝 완료** (2026-04-21): GCS 버킷, Cloud Run Jobs 3개, Cloud Scheduler 3개, Secret Manager 등록, 첫 Collector 실행 성공 (119개 아티클 수집)
 
-### Phase D: 공개 런칭 (1주)
-- [ ] 런칭 이슈 발행 (#001 공식)
-- [ ] LinkedIn 발표 포스트
-- [ ] 아카이브 페이지에 파일럿 이슈 표시
+### Phase D: 공개 런칭 — 🔄 진행 중
+
+#### D-1. Buttondown 설정 — ✅ 완료 (2026-04-21)
+- [x] Accent Color `#a78bfa` (PriSincera 브랜드 컬러) 적용
+- [x] Modern 이메일 템플릿 선택
+- [x] Description: "Capturing signals in noise — 20-year PO curation of attitude and trends"
+- [x] Author: PriSincera
+- [ ] Custom CSS (Basic 플랜 $9/월 필요 — 구독자 100명+ 시 함께 업그레이드)
+
+#### D-2. 런칭 대기 — ⏰ 자동 진행 예정
+- [ ] 첫 뉴스레터 자동 발송 확인 (4/28 월요일 08:00 KST)
+- [ ] LinkedIn 런칭 포스트
+- [ ] 아카이브 페이지에 첫 이슈 표시 확인
 - [ ] 성과 트래킹 설정 (오픈율, 클릭율, 구독자 수)
 
 ### Phase E: 운영 및 확장 (지속)
