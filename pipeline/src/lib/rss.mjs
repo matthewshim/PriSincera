@@ -14,7 +14,7 @@ const parser = new Parser({
  * @param {Object} source - sources.json의 소스 객체
  * @returns {Promise<Array>} 정규화된 아티클 배열
  */
-export async function fetchFeed(source) {
+export async function fetchFeed(source, maxPerSource = 5) {
   try {
     const feed = await parser.parseURL(source.rss);
     const now = new Date();
@@ -27,6 +27,7 @@ export async function fetchFeed(source) {
         // 날짜 정보가 없으면 포함 (최신으로 간주)
         return !pubDate || pubDate >= oneDayAgo;
       })
+      .slice(0, maxPerSource) // 소스당 최대 N개만 수집 (최신순)
       .map(item => ({
         id: hashUrl(item.link),
         title: (item.title || '').trim(),

@@ -83,11 +83,27 @@ async function main() {
   const dmWithComments = await generateComments(dmPicks);
   const dmPickIds = dmWithComments.map(a => a.id);
 
-  // 6. 스코어링된 데일리 JSON 갱신
+  // 6. 품질 필터링 — 최소 점수 + 카테고리별 캡
+  const MIN_WEIGHTED_SCORE = 14;  // 가중 점수 14점 미만 제외
+  const MAX_PER_CATEGORY = 8;     // 카테고리당 최대 8개
+
+  const qualityFiltered = weighted
+    .sort((a, b) => b.weightedScore - a.weightedScore)
+    .filter(a => a.weightedScore >= MIN_WEIGHTED_SCORE || dmPickIds.includes(a.id)); // DM 픽은 항상 포함
+
+  // 카테고리별 캡 적용
+  const catCounts = {};
+  const cappedArticles = qualityFiltered.filter(a => {
+    catCounts[a.category] = (catCounts[a.category] || 0) + 1;
+    return catCounts[a.category] <= MAX_PER_CATEGORY || dmPickIds.includes(a.id);
+  });
+
+  console.log(`[Composer] 품질 필터: ${weighted.length}개 → ${cappedArticles.length}개 (점수 ${MIN_WEIGHTED_SCORE}+, 카테고리당 ${MAX_PER_CATEGORY}개)`);
+
+  // 7. 스코어링된 데일리 JSON 갱신
   // 전체 아티클에 점수 반영 + DM 픽 코멘트 반영
   const commentMap = new Map(dmWithComments.map(a => [a.id, a.editorComment]));
-  const finalArticles = weighted
-    .sort((a, b) => b.weightedScore - a.weightedScore)
+  const finalArticles = cappedArticles
     .map(a => ({
       ...a,
       isDmPick: dmPickIds.includes(a.id),
