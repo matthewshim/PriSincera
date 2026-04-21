@@ -52,8 +52,12 @@ export default function PriSignal() {
       tag.content = content;
     });
 
+    // PriSignal 페이지에는 Hero 인트로가 없으므로 GNB를 즉시 표시
+    document.body.classList.add('hero-ready');
+
     return () => {
       document.title = 'PriSincera — Sincerity, Prioritized.';
+      document.body.classList.remove('hero-ready');
       createdMetas.forEach(t => t.remove());
     };
   }, []);
