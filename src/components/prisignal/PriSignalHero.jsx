@@ -16,7 +16,7 @@ export default function PriSignalHero() {
           노이즈 속에서 시그널을 포착하다
         </p>
         <p className="prisignal-hero-sub">
-          20년차 PO가 매주 골라내는 태도와 트렌드의 교차점
+          20년차 PO의 기준으로 설계된, AI 큐레이션 뉴스레터
         </p>
         <SubscribeForm variant="inline" />
       </div>

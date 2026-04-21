@@ -216,6 +216,128 @@
     padding-left: 2rem;
 }
 
+/* --- SIGNAL Selection Criteria --- */
+.prisignal-signal-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-sm);
+}
+
+.prisignal-signal-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: var(--space-2xl);
+}
+
+.prisignal-signal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.prisignal-signal-card {
+    padding: var(--space-lg);
+    background: rgba(26, 16, 53, 0.5);
+    border: 1px solid rgba(196, 181, 253, 0.06);
+    border-radius: 16px;
+    text-align: center;
+    transition: all var(--duration-normal) var(--ease-out);
+    position: relative;
+    overflow: hidden;
+    animation: signalFadeIn 0.5s ease-out both;
+    animation-delay: var(--signal-delay, 0s);
+}
+
+@keyframes signalFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.prisignal-signal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: var(--signal-color, #C4B5FD);
+    opacity: 0.5;
+    border-radius: 0 0 2px 2px;
+    transition: width var(--duration-normal) var(--ease-out), opacity var(--duration-normal) var(--ease-out);
+}
+
+.prisignal-signal-card:hover {
+    border-color: rgba(196, 181, 253, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.08);
+}
+
+.prisignal-signal-card:hover::before {
+    width: 80px;
+    opacity: 0.8;
+}
+
+.prisignal-signal-letter {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--signal-color, #C4B5FD);
+    margin-bottom: var(--space-xs);
+    line-height: 1;
+    text-shadow: 0 0 20px color-mix(in srgb, var(--signal-color, #C4B5FD) 30%, transparent);
+}
+
+.prisignal-signal-word {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.prisignal-signal-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: var(--space-sm);
+}
+
+.prisignal-signal-weight {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}
+
+.prisignal-signal-star {
+    font-size: 0.7rem;
+    color: rgba(196, 181, 253, 0.15);
+    transition: color var(--duration-fast) var(--ease-out);
+}
+
+.prisignal-signal-star.filled {
+    color: var(--signal-color, #C4B5FD);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--signal-color, #C4B5FD) 40%, transparent);
+}
+
+.prisignal-signal-footnote {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.7;
+    opacity: 0.7;
+    padding: var(--space-md) 0;
+    border-top: 1px solid rgba(196, 181, 253, 0.04);
+}
+
 /* --- Subscribe CTA --- */
 .prisignal-cta {
     text-align: center;
@@ -750,6 +872,10 @@
 
     .prisignal-categories-grid {
         grid-template-columns: 1fr;
+    }
+
+    .prisignal-signal-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .prisignal-cta-container {

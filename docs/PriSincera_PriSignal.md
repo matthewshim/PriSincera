@@ -327,13 +327,13 @@ prisincera.com 유입
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  GNB: PriSincera  Belief  Journey  Work  PriSignal  Connect │
+│  GNB: PriSincera  Home  PriSignal  PriStudy             │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
 │  ① Hero                                                │
 │  📡 PriSignal                                           │
 │  "노이즈 속에서 시그널을 포착하다"                         │
-│  20년차 PO가 매주 골라내는 태도와 트렌드의 교차점           │
+│  20년차 PO의 기준으로 설계된, AI 큐레이션 뉴스레터         │
 │                                                         │
 │  [이메일 입력] [구독하기]                                 │
 │  ✓ 매주 월요일 · ✓ 무료 · ✓ 언제든 해지                   │
@@ -343,11 +343,10 @@ prisincera.com 유입
 │  ② Value Proposition — "왜 PriSignal인가?"              │
 │                                                         │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐                 │
-│  │ 📡 Signal│ │ ✍️ 시선  │ │ ⏱️ 5분   │                 │
-│  │ 노이즈   │ │ 20년차   │ │ 읽기     │                 │
-│  │ 속에서   │ │ PO의     │ │ 5분이면  │                 │
-│  │ 시그널만 │ │ 에디터   │ │ 충분     │                 │
-│  │ 포착     │ │ 코멘트   │ │          │                 │
+│  │ 📡 시그널│ │ ✍️ PO의  │ │ ⏱️ 5분   │                 │
+│  │ 만 포착  │ │ 시선     │ │ 이면     │                 │
+│  │ SIGNAL AI│ │ 20년의   │ │ 충분     │                 │
+│  │ 평가 기반│ │ 기준     │ │          │                 │
 │  └──────────┘ └──────────┘ └──────────┘                 │
 │                                                         │
 ├─────────────────────────────────────────────────────────┤
@@ -360,39 +359,36 @@ prisincera.com 유입
 │                                                         │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
-│  ④ Latest Issues — "최근 시그널"                         │
-│  (Buttondown API로 최근 3~5개 이슈 카드 렌더링)           │
+│  ④ SIGNAL 선정 기준 — "시그널을 고르는 기준" ★ NEW       │
 │                                                         │
-│  ┌─ PriSignal #005 ──────────────────────┐              │
-│  │ 🤖 AI Agent가 PM을 대체할 수 있을까?   │              │
-│  │ 🎯 리더가 먼저 변해야 조직이 변한다     │              │
-│  │ 2026.05.19 · 읽기 5분                  │              │
-│  └────────────────────────── [읽기 →] ───┘              │
-│                                                         │
-│  ┌─ PriSignal #004 ──────────────────────┐              │
-│  │ ⚡ 우선순위의 마법: 5가지 프레임워크    │              │
-│  │ 🌍 실리콘밸리가 아시아에서 배우는 것    │              │
-│  │ 2026.05.12 · 읽기 4분                  │              │
-│  └────────────────────────── [읽기 →] ───┘              │
-│                                                         │
-│  [전체 아카이브 보기 →]                                   │
+│  ┌─S─┐ ┌─I─┐ ┌─G─┐ ┌─N─┐ ┌─A─┐ ┌─L─┐                │
+│  │Sub│ │Imp│ │Gap│ │Now│ │Act│ │Len│                │
+│  └───┘ └───┘ └───┘ └───┘ └───┘ └───┘                │
+│  + AI 자동 평가 + 채널 Tier 가중치 설명                  │
 │                                                         │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
-│  ⑤ Subscribe CTA (반복)                                │
+│  ⑤ Latest Issues — "최근 시그널"                         │
+│  (Buttondown API로 최근 3~5개 이슈 카드 렌더링)           │
+│                                                         │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ⑥ Subscribe CTA (반복)                                │
 │  "시그널을 놓치지 마세요."                                │
 │  [이메일 입력] [구독하기]                                 │
 │                                                         │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
-│  ⑥ FAQ                                                 │
+│  ⑦ FAQ (6문항)                                         │
 │  - PriSignal은 무엇인가요?                               │
+│  - 시그널은 어떻게 선정되나요? ★ NEW                     │
 │  - 얼마나 자주 발송되나요?                                │
 │  - 구독은 무료인가요?                                    │
 │  - 해지는 어떻게 하나요?                                  │
+│  - 어떤 주제를 다루나요?                                  │
 │                                                         │
 ├─────────────────────────────────────────────────────────┤
-│  Footer                                                 │
+│  Footer: Navigate(Home·PriSignal·PriStudy) / Connect    │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -437,15 +433,17 @@ src/
 | **아카이브 조회** | `GET /api/archive` | 최근 발행 이슈 목록 조회 | ✅ |
 | **이슈 상세** | `GET /api/archive/:id` | 개별 이슈 HTML 본문 조회 | ✅ |
 
-### 6-5. GNB 통합
+### 6-5. GNB 통합 — ✅ 현행화 (2026-04-21)
 
 | 방식 | Before | After |
 |------|--------|-------|
-| **GNB 메뉴** | Belief · Journey · Work · Connect | Belief · Journey · Work · **PriSignal** · Connect |
-| **Footer Navigate** | Belief · Journey · Work · Connect | Belief · Journey · Work · **PriSignal** · Connect |
-| **Footer Connect** | LinkedIn · Email | LinkedIn · Email · ~~PriSignal~~ (Navigate로 이동) |
+| **GNB 메뉴** | Belief · Journey · Work · PriSignal · Connect | **Home · PriSignal · PriStudy** |
+| **Footer Navigate** | Belief · Journey · Work · PriSignal · Connect | **Home · PriSignal · PriStudy** |
+| **Footer Connect** | LinkedIn · Email | LinkedIn · Email |
 
-> PriSignal은 앵커 링크(`#prisignal`)가 아닌 **페이지 라우트**(`/prisignal`)로 연결됩니다.
+> - PriSignal은 페이지 라우트(`/prisignal`)로 연결됩니다.
+> - PriStudy는 준비중 얼럿으로 동작합니다.
+> - BGM 토글은 Header에 내장되어 전 페이지에서 동작합니다.
 
 ### 6-6. 사용자 플로우
 
@@ -493,15 +491,17 @@ src/
    [자세히 보기 →]  → /prisignal 랜딩 페이지
 ```
 
-### GNB / Footer ✅
+### GNB / Footer ✅ — 현행화 (2026-04-21)
 
 ```
-GNB:     Belief  Journey  Work  PriSignal  Connect
-Footer:  Belief / Journey / Work / PriSignal / Connect
+GNB:     Home  PriSignal  PriStudy(준비중 얼럿)  [BGM 토글]
+Footer:  Home / PriSignal / PriStudy(준비중 얼럿)
 ```
 
-> GNB/Footer의 기존 앵커 링크(`#belief`)는 `/#belief`로 변경하여
-> PriSignal 페이지에서도 홈으로 정상 이동합니다.
+> - 섹션 앵커 링크(Belief/Journey/Work/Connect) 제거
+> - 페이지 레벨 네비게이션으로 전환
+> - BGM 플레이어: Header 내장 (전 페이지 공통)
+> - CI 그리기 효과: sessionStorage 기반 최초 방문 시에만 실행
 
 ---
 
@@ -597,7 +597,7 @@ Footer:  Belief / Journey / Work / PriSignal / Connect
 | 3 | **이메일 플랫폼** | Buttondown (무료 티어) | ✅ |
 | 4 | **커스텀 도메인** | 미사용 (기본 도메인 운영, 500명+ 시 재검토) | ✅ |
 | 5 | **랜딩 페이지 URL** | `/prisignal` (서브 라우트) | ✅ |
-| 6 | **GNB 메뉴** | Work ↔ Connect 사이 PriSignal 추가 | ✅ |
+| 6 | **GNB 메뉴** | Home · PriSignal · PriStudy 3메뉴 구조 | ✅ |
 | 7 | **런칭 시기** | 즉시 착수 (Phase A~B 완료) | ✅ |
 | 8 | **에디터 코멘트 언어** | 한국어 | ✅ |
 | 9 | **카테고리 구성** | 5개 (Attitude, Priority, AI & Future, Global Lens, Product Craft) | ✅ |

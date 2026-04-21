@@ -1,12 +1,16 @@
 import { useState, useCallback } from 'react';
 
 /**
- * PriSignal FAQ — ⑥ Frequently asked questions accordion.
+ * PriSignal FAQ — ⑦ Frequently asked questions accordion.
  */
 const faqs = [
   {
     q: 'PriSignal은 무엇인가요?',
-    a: 'PriSignal은 PriSincera가 운영하는 주간 인사이트 큐레이션 뉴스레터입니다. 20년차 프로덕트 오너가 매주 글로벌 소스에서 의미 있는 시그널을 골라, 에디터 코멘트와 함께 전합니다.',
+    a: 'PriSignal은 PriSincera가 운영하는 주간 인사이트 큐레이션 뉴스레터입니다. 20년차 프로덕트 오너의 기준으로 설계된 AI 시스템이, 매주 글로벌 소스에서 의미 있는 시그널을 포착하고 코멘트와 함께 전합니다.',
+  },
+  {
+    q: '시그널은 어떻게 선정되나요?',
+    a: '매일 35개 글로벌 소스에서 자동 수집된 아티클을 SIGNAL 6가지 기준(Substance, Impact, Gap, Now, Actionable, Lens)으로 AI가 평가합니다. 여기에 채널 신뢰등급(Tier 1/2/3) 가중치를 적용하여 매주 3~5개의 핵심 시그널만 최종 선정됩니다.',
   },
   {
     q: '얼마나 자주 발송되나요?',
