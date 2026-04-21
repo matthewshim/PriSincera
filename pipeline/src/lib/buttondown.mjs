@@ -2,7 +2,7 @@
  * Buttondown API 클라이언트 — 뉴스레터 생성, 예약 발송, 상태 확인
  */
 
-const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY;
+const BUTTONDOWN_API_KEY = (process.env.BUTTONDOWN_API_KEY || '').trim();
 const BASE_URL = 'https://api.buttondown.com/v1';
 
 if (!BUTTONDOWN_API_KEY) throw new Error('BUTTONDOWN_API_KEY 환경변수가 설정되지 않았습니다.');
