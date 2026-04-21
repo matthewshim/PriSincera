@@ -4,7 +4,7 @@
 import { Storage } from '@google-cloud/storage';
 
 const storage = new Storage();
-const BUCKET = process.env.GCS_BUCKET || 'prisignal-pipeline-data';
+const BUCKET = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
 
 /**
  * GCS에서 JSON 파일을 읽습니다.
