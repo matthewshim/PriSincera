@@ -14,7 +14,7 @@
     { "name": "McKinsey Insights", "rss": "https://www.mckinsey.com/insights/rss", "category": "attitude", "tier": 1, "lang": "en", "active": true },
     { "name": "Gallup Workplace", "rss": "https://www.gallup.com/workplace/feed", "category": "attitude", "tier": 2, "lang": "en", "active": true },
     { "name": "Charter", "rss": "https://www.charterworks.com/feed/", "category": "attitude", "tier": 2, "lang": "en", "active": true },
-    { "name": "eo planet", "rss": "https://blog.eonetwork.org/feed/", "category": "attitude", "tier": 3, "lang": "en", "active": true },
+    { "name": "eo planet", "rss": "https://www.eonetwork.org/blog/feed/", "category": "attitude", "tier": 3, "lang": "en", "active": true },
 
     { "name": "Farnam Street", "rss": "https://fs.blog/feed/", "category": "priority", "tier": 2, "lang": "en", "active": true },
     { "name": "Sahil Bloom", "rss": "https://sahilbloom.substack.com/feed", "category": "priority", "tier": 2, "lang": "en", "active": true },
@@ -23,21 +23,21 @@
     { "name": "The Profile", "rss": "https://theprofile.substack.com/feed", "category": "priority", "tier": 3, "lang": "en", "active": true },
 
     { "name": "TLDR AI", "rss": "https://tldr.tech/ai/rss", "category": "ai", "tier": 2, "lang": "en", "active": true },
-    { "name": "The Rundown AI", "rss": "https://www.therundown.ai/feed", "category": "ai", "tier": 2, "lang": "en", "active": true },
+    { "name": "AI Snake Oil", "rss": "https://www.aisnakeoil.com/feed", "category": "ai", "tier": 2, "lang": "en", "active": true },
     { "name": "Import AI", "rss": "https://importai.substack.com/feed", "category": "ai", "tier": 2, "lang": "en", "active": true },
-    { "name": "Ben's Bites", "rss": "https://bensbites.beehiiv.com/feed", "category": "ai", "tier": 2, "lang": "en", "active": true },
+    { "name": "Anthropic Blog", "rss": "https://www.anthropic.com/feed.xml", "category": "ai", "tier": 1, "lang": "en", "active": true },
     { "name": "Superhuman AI", "rss": "https://superhumanai.beehiiv.com/feed", "category": "ai", "tier": 3, "lang": "en", "active": true },
     { "name": "MIT Tech Review AI", "rss": "https://www.technologyreview.com/topic/artificial-intelligence/feed", "category": "ai", "tier": 1, "lang": "en", "active": true },
     { "name": "OpenAI Blog", "rss": "https://openai.com/blog/rss.xml", "category": "ai", "tier": 1, "lang": "en", "active": true },
     { "name": "Google DeepMind Blog", "rss": "https://deepmind.google/blog/rss.xml", "category": "ai", "tier": 1, "lang": "en", "active": true },
     { "name": "TechCrunch AI", "rss": "https://techcrunch.com/category/artificial-intelligence/feed/", "category": "ai", "tier": 2, "lang": "en", "active": true },
-    { "name": "GeekNews", "rss": "https://news.hada.io/rss", "category": "ai", "tier": 2, "lang": "kr", "active": true },
+    { "name": "GeekNews", "rss": "https://news.hada.io/rss/news", "category": "ai", "tier": 2, "lang": "kr", "active": true },
     { "name": "요즘IT", "rss": "https://yozm.wishket.com/magazine/feed/", "category": "ai", "tier": 2, "lang": "kr", "active": true },
 
     { "name": "Rest of World", "rss": "https://restofworld.org/feed/latest/", "category": "global", "tier": 2, "lang": "en", "active": true },
     { "name": "The Economist Business", "rss": "https://www.economist.com/business/rss.xml", "category": "global", "tier": 1, "lang": "en", "active": true },
     { "name": "WIRED", "rss": "https://www.wired.com/feed/rss", "category": "global", "tier": 1, "lang": "en", "active": true },
-    { "name": "Nikkei Asia", "rss": "https://asia.nikkei.com/rss", "category": "global", "tier": 2, "lang": "en", "active": true },
+    { "name": "Nikkei Asia", "rss": "https://asia.nikkei.com/rss/feed/nar", "category": "global", "tier": 2, "lang": "en", "active": true },
     { "name": "TIME", "rss": "https://time.com/feed/", "category": "global", "tier": 1, "lang": "en", "active": true },
 
     { "name": "Lenny's Newsletter", "rss": "https://www.lennysnewsletter.com/feed", "category": "product", "tier": 1, "lang": "en", "active": true },
@@ -45,8 +45,8 @@
     { "name": "Product Growth", "rss": "https://productgrowth.substack.com/feed", "category": "product", "tier": 2, "lang": "en", "active": true },
     { "name": "The Beautiful Mess", "rss": "https://cutlefish.substack.com/feed", "category": "product", "tier": 2, "lang": "en", "active": true },
     { "name": "Product Talk", "rss": "https://www.producttalk.org/feed/", "category": "product", "tier": 2, "lang": "en", "active": true },
-    { "name": "Mind the Product", "rss": "https://www.mindtheproduct.com/feed/", "category": "product", "tier": 2, "lang": "en", "active": true },
-    { "name": "TLDR Product", "rss": "https://tldr.tech/product/rss", "category": "product", "tier": 2, "lang": "en", "active": true },
+    { "name": "Mind the Product", "rss": "https://www.mindtheproduct.com/blog/feed/", "category": "product", "tier": 2, "lang": "en", "active": true },
+    { "name": "Reforge", "rss": "https://www.reforge.com/blog/rss.xml", "category": "product", "tier": 2, "lang": "en", "active": true },
     { "name": "Nielsen Norman Group", "rss": "https://www.nngroup.com/feed/rss/", "category": "product", "tier": 1, "lang": "en", "active": true }
   ]
 }
