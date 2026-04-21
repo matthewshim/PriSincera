@@ -1,32 +1,36 @@
 #!/usr/bin/env node
 /**
- * PriSignal Composer — 매주 일요일 08:00 KST 실행
+ * PriSignal Composer — 매일 07:00 KST 실행
  *
- * 1. 주간 후보 풀 로드 (7일치 누적)
- * 2. Gemini Flash로 SIGNAL 스코어링
- * 3. Tier 가중치 적용 + 다양성 보장 선정 (3~5개)
- * 4. 에디터 코멘트 + 에디터 노트 자동 생성
- * 5. Markdown 뉴스레터 조립
- * 6. Buttondown API로 예약 발송 생성 (월요일 08:00 KST)
- * 7. 발행 이력 GCS 저장
+ * [Daily Model v2]
+ * 1. 오늘의 데일리 JSON 로드 (Collector 결과)
+ * 2. Gemini Flash로 전체 아티클 SIGNAL 스코어링
+ * 3. Tier 가중치 적용
+ * 4. 상위 5개 DM 픽 선정
+ * 5. DM 픽에 에디터 코멘트 생성
+ * 6. 스코어링된 데일리 JSON 갱신 (dm_picks 포함)
+ * 7. DM 발송 (Buttondown — 즉시 or 08:00 예약)
  */
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { scoreArticles, generateComments, generateEditorNote } from './lib/gemini.mjs';
-import { applyTierWeights, selectArticles, assembleNewsletter } from './lib/scoring.mjs';
+import { scoreArticles, generateComments } from './lib/gemini.mjs';
+import { applyTierWeights, selectTopN, assembleDailyDM } from './lib/scoring.mjs';
 import {
-  readJSON, writeJSON, getCandidatesPath, getIssuePath,
-  getLastIssueNumber, setLastIssueNumber, getNextMondaySendTime,
+  readJSON, getTodayKST, getDailyPath,
+  writeDailyJSON, getDailySendTime,
 } from './lib/storage.mjs';
-import { scheduleEmail } from './lib/buttondown.mjs';
+import { sendEmail, scheduleEmail } from './lib/buttondown.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function main() {
   const startTime = Date.now();
+  const todayStr = getTodayKST();
+
   console.log('═══════════════════════════════════════');
-  console.log('🤖 PriSignal Composer 시작');
+  console.log('🤖 PriSignal Composer v2 (Daily) 시작');
+  console.log(`   날짜: ${todayStr}`);
   console.log(`   시각: ${new Date().toISOString()}`);
   console.log('═══════════════════════════════════════');
 
@@ -35,128 +39,125 @@ async function main() {
   const config = JSON.parse(readFileSync(configPath, 'utf-8'));
   const settings = config.settings;
 
-  // 1. 주간 후보 풀 로드
-  const candidatesPath = getCandidatesPath();
-  const candidatesData = await readJSON(candidatesPath);
+  // 1. 오늘 데일리 JSON 로드
+  const dailyPath = getDailyPath(todayStr);
+  const dailyData = await readJSON(dailyPath);
 
-  if (!candidatesData || !candidatesData.articles || candidatesData.articles.length === 0) {
-    console.error('❌ 후보 풀이 비어있습니다. Collector가 정상 실행되었는지 확인하세요.');
-    // 이전 주 후보에서 보충 시도 (Backfill)
-    console.log('[Composer] 이전 주 후보 풀에서 보충을 시도합니다...');
-    // 간단한 backfill: 현재는 빈 상태로 기본 뉴스레터 발송
-    await sendFallbackNewsletter(settings);
+  if (!dailyData || !dailyData.articles || dailyData.articles.length === 0) {
+    console.log('[Composer] 오늘 수집된 아티클이 없습니다.');
+    // 빈 데일리를 scored 상태로 업데이트 (페이지에서 빈 상태 표시)
+    await writeDailyJSON(todayStr, {
+      date: todayStr,
+      status: 'scored',
+      total: 0,
+      articles: [],
+      dm_picks: [],
+      scoredAt: new Date().toISOString(),
+    });
+    console.log('[Composer] 빈 데일리 상태 갱신. DM 발송 스킵. 종료.');
     return;
   }
 
-  const candidates = candidatesData.articles;
-  console.log(`[Composer] 후보 풀 로드: ${candidates.length}개 아티클`);
+  const candidates = dailyData.articles;
+  console.log(`[Composer] 오늘 아티클: ${candidates.length}개`);
 
-  // 2. AI 스코어링
+  // 2. AI 스코어링 (전체 아티클)
   console.log('\n--- Phase 1: SIGNAL 스코어링 ---');
   const scored = await scoreArticles(candidates);
 
-  // 3. Tier 가중치 적용 + 선정
-  console.log('\n--- Phase 2: 선정 ---');
+  // 3. Tier 가중치 적용
+  console.log('\n--- Phase 2: 가중치 + 선정 ---');
   const weighted = applyTierWeights(scored);
-  const selected = selectArticles(weighted, settings);
 
-  if (selected.length === 0) {
-    console.error('❌ 선정된 아티클이 없습니다.');
-    await sendFallbackNewsletter(settings);
+  // 4. 상위 5개 DM 픽 선정
+  const dmPicks = selectTopN(weighted, settings.dmPickCount || 5);
+
+  if (dmPicks.length === 0) {
+    console.error('❌ DM 픽 선정 실패.');
+    await saveAndExit(todayStr, weighted, []);
     return;
   }
 
-  // 4. 에디터 코멘트 생성
-  console.log('\n--- Phase 3: 에디터 코멘트 생성 ---');
-  const withComments = await generateComments(selected);
+  // 5. DM 픽에 에디터 코멘트 생성
+  console.log('\n--- Phase 3: 에디터 코멘트 ---');
+  const dmWithComments = await generateComments(dmPicks);
+  const dmPickIds = dmWithComments.map(a => a.id);
 
-  // 5. 에디터 노트 + 제목 생성
-  console.log('\n--- Phase 4: 에디터 노트 생성 ---');
-  const { editorNote, closingRemark, subject } = await generateEditorNote(withComments);
+  // 6. 스코어링된 데일리 JSON 갱신
+  // 전체 아티클에 점수 반영 + DM 픽 코멘트 반영
+  const commentMap = new Map(dmWithComments.map(a => [a.id, a.editorComment]));
+  const finalArticles = weighted
+    .sort((a, b) => b.weightedScore - a.weightedScore)
+    .map(a => ({
+      ...a,
+      isDmPick: dmPickIds.includes(a.id),
+      editorComment: commentMap.get(a.id) || null,
+    }));
 
-  // 6. 뉴스레터 조립
-  const issueNumber = (await getLastIssueNumber()) + 1;
-  const issueStr = String(issueNumber).padStart(3, '0');
-
-  const body = assembleNewsletter({
-    issueNumber,
-    editorNote,
-    articles: withComments,
-    closingRemark,
+  await writeDailyJSON(todayStr, {
+    date: todayStr,
+    status: 'scored',
+    total: finalArticles.length,
+    dmPickCount: dmWithComments.length,
+    articles: finalArticles,
+    dm_picks: dmPickIds,
+    scoredAt: new Date().toISOString(),
   });
 
-  const emailSubject = `📡 PriSignal #${issueStr} — ${subject}`;
+  console.log(`[Composer] 데일리 JSON 갱신 완료: ${finalArticles.length}개 (DM 픽 ${dmWithComments.length}개)`);
 
-  console.log(`\n[Composer] 뉴스레터 조립 완료:`);
-  console.log(`   제목: ${emailSubject}`);
-  console.log(`   아티클: ${withComments.length}개`);
-  console.log(`   본문 길이: ${body.length}자`);
-
-  // 7. Buttondown 예약 발송
-  console.log('\n--- Phase 5: 예약 발송 ---');
-  const publishDate = getNextMondaySendTime();
-  const emailResult = await scheduleEmail(emailSubject, body, publishDate);
-
-  // 8. 발행 이력 저장
-  const targetDate = candidatesPath.replace('candidates/', '').replace('.json', '');
-  await writeJSON(getIssuePath(targetDate), {
-    issueNumber,
-    subject: emailSubject,
-    buttondownEmailId: emailResult.id,
-    publishDate,
-    articleCount: withComments.length,
-    articles: withComments.map(a => ({
-      id: a.id,
-      title: a.title,
-      url: a.url,
-      source: a.source,
-      category: a.category,
-      tier: a.tier,
-      weightedScore: a.weightedScore,
-    })),
-    createdAt: new Date().toISOString(),
+  // 7. DM 발송
+  console.log('\n--- Phase 4: DM 발송 ---');
+  const dailyPageUrl = `https://www.prisincera.com/prisignal/${todayStr}`;
+  const body = assembleDailyDM({
+    date: todayStr,
+    articles: dmWithComments,
+    dailyPageUrl,
+    totalCount: finalArticles.length,
   });
 
-  await setLastIssueNumber(issueNumber);
+  const subject = `📡 PriSignal Daily — ${formatKoreanDate(todayStr)}`;
+
+  const sendTime = getDailySendTime();
+  let emailResult;
+  if (sendTime) {
+    // 08:00 KST 이전이면 예약 발송
+    emailResult = await scheduleEmail(subject, body, sendTime);
+  } else {
+    // 08:00 이후면 즉시 발송
+    emailResult = await sendEmail(subject, body);
+  }
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('\n═══════════════════════════════════════');
-  console.log(`✅ Composer 완료 (${elapsed}초)`);
-  console.log(`   이슈: #${issueStr}`);
-  console.log(`   아티클: ${withComments.length}개`);
-  console.log(`   발송 예정: ${publishDate}`);
+  console.log(`✅ Composer v2 완료 (${elapsed}초)`);
+  console.log(`   날짜: ${todayStr}`);
+  console.log(`   전체 아티클: ${finalArticles.length}개`);
+  console.log(`   DM 픽: ${dmWithComments.length}개`);
   console.log(`   Buttondown ID: ${emailResult.id}`);
   console.log('═══════════════════════════════════════');
 }
 
-/**
- * 후보가 없거나 선정이 실패한 경우의 폴백 뉴스레터 발송.
- * "절대 건너뛰지 않는다" 원칙을 보장합니다.
- */
-async function sendFallbackNewsletter(settings) {
-  console.log('[Fallback] 폴백 뉴스레터를 생성합니다...');
+/** 스코어링까지만 저장하고 종료 */
+async function saveAndExit(todayStr, articles, dmPicks) {
+  await writeDailyJSON(todayStr, {
+    date: todayStr,
+    status: 'scored',
+    total: articles.length,
+    dmPickCount: 0,
+    articles: articles.sort((a, b) => b.weightedScore - a.weightedScore),
+    dm_picks: dmPicks,
+    scoredAt: new Date().toISOString(),
+  });
+  console.log('[Composer] 스코어링만 저장 완료. DM 발송 스킵.');
+}
 
-  const issueNumber = (await getLastIssueNumber()) + 1;
-  const issueStr = String(issueNumber).padStart(3, '0');
-
-  const body = [
-    '✍️ **에디터 노트**\n',
-    '이번 주는 시그널 수집 과정에서 기술적인 이슈가 있었습니다.',
-    '다음 주에는 더 신선하고 깊이 있는 시그널들로 돌아오겠습니다.\n',
-    '---\n',
-    '💬 **이번 주의 한 마디**\n',
-    '때로는 멈춰서 방향을 재확인하는 것도 중요한 시그널입니다.\n',
-    '---\n',
-    '🔗 [prisincera.com에서 더 보기](https://www.prisincera.com/prisignal)',
-  ].join('\n');
-
-  const subject = `📡 PriSignal #${issueStr} — 잠시 재정비`;
-  const publishDate = getNextMondaySendTime();
-
-  const emailResult = await scheduleEmail(subject, body, publishDate);
-  await setLastIssueNumber(issueNumber);
-
-  console.log(`[Fallback] ✅ 폴백 뉴스레터 예약 완료: ${emailResult.id}`);
+/** 날짜를 한국어 형식으로 포맷 */
+function formatKoreanDate(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const date = new Date(Number(y), Number(m) - 1, Number(d));
+  return `${Number(m)}/${Number(d)}(${days[date.getDay()]})`;
 }
 
 main().catch(err => {

@@ -10,8 +10,8 @@ import './PriSignal.css';
 
 /**
  * PriSignal Landing Page — /prisignal
- * Dedicated page for the PriSignal weekly newsletter service.
- * Sections: Hero → Value → Categories → SIGNAL → Archive → Subscribe CTA → FAQ
+ * Dedicated page for the PriSignal daily AI-curated newsletter service.
+ * Sections: Hero → Value → Categories → SIGNAL → Archive (Daily) → Subscribe CTA → FAQ
  */
 export default function PriSignal() {
   useEffect(() => {
@@ -25,12 +25,12 @@ export default function PriSignal() {
       meta.name = 'description';
       document.head.appendChild(meta);
     }
-    meta.content = '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. PriSignal은 매주 35개 글로벌 소스에서 SIGNAL 기준으로 의미 있는 시그널만 포착합니다.';
+    meta.content = '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. PriSignal은 매일 35개 글로벌 소스에서 SIGNAL 기준으로 의미 있는 시그널만 포착합니다.';
 
     // Set OG meta tags
     const ogTags = {
       'og:title': 'PriSignal — 노이즈 속에서 시그널을 포착하다',
-      'og:description': '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. 매주 SIGNAL 기준으로 시그널을 포착합니다.',
+      'og:description': '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. 매일 SIGNAL 기준으로 시그널을 포착합니다.',
       'og:image': 'https://www.prisincera.com/prisignal-og.png',
       'og:url': 'https://www.prisincera.com/prisignal',
       'og:type': 'website',

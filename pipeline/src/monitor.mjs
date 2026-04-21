@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * PriSignal Monitor — 매주 월요일 08:30 KST 실행
+ * PriSignal Monitor — 매일 08:30 KST 실행
  *
+ * [Daily Model v2]
  * 1. Buttondown API로 최근 이메일 상태 확인
- * 2. 오늘 예정된 이메일이 정상 발송되었는지 검증
+ * 2. 오늘 예정된 DM이 정상 발송되었는지 검증
  * 3. 실패 시 ERROR 레벨 로그 출력 (Cloud Monitoring 알림 트리거)
  */
 import { getRecentEmails } from './lib/buttondown.mjs';

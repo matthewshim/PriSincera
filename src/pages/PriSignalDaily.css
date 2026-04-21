@@ -1,0 +1,384 @@
+/* ============================================
+   PriSignal Daily — 데일리 시그널 페이지
+   ============================================ */
+.prisignal-daily-page {
+  position: relative;
+  z-index: 2;
+  padding-top: 80px;
+  min-height: 100vh;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+  padding-bottom: var(--space-2xl);
+}
+
+/* --- Back Link --- */
+.prisignal-daily-back {
+  display: inline-block;
+  color: var(--prisignal-accent, #C4B5FD);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: var(--space-lg);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.prisignal-daily-back:hover {
+  opacity: 1;
+}
+
+/* --- Hero Header --- */
+.prisignal-daily-header {
+  text-align: center;
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: var(--space-xl);
+}
+
+.prisignal-daily-icon {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: var(--space-sm);
+  animation: dailyPulse 3s ease-in-out infinite;
+}
+
+@keyframes dailyPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+.prisignal-daily-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs);
+  letter-spacing: -0.02em;
+}
+
+.prisignal-daily-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* --- Date Navigation --- */
+.prisignal-daily-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.prisignal-daily-nav-btn {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s;
+}
+
+.prisignal-daily-nav-btn:hover {
+  border-color: var(--prisignal-accent, #C4B5FD);
+  color: var(--prisignal-accent, #C4B5FD);
+  background: rgba(196, 181, 253, 0.06);
+}
+
+.prisignal-daily-nav-today {
+  color: var(--prisignal-accent, #C4B5FD);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 8px;
+  background: rgba(196, 181, 253, 0.12);
+  border: 1px solid rgba(196, 181, 253, 0.3);
+  transition: all 0.2s;
+}
+
+.prisignal-daily-nav-today:hover {
+  background: rgba(196, 181, 253, 0.2);
+}
+
+/* --- Loading --- */
+.prisignal-daily-loading {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+  color: var(--text-secondary);
+}
+
+/* --- Empty State --- */
+.prisignal-daily-empty {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+}
+
+.prisignal-daily-empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+}
+
+.prisignal-daily-empty h2 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.prisignal-daily-empty p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* --- Category Section --- */
+.prisignal-daily-category {
+  margin-bottom: var(--space-xl);
+}
+
+.prisignal-daily-cat-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--cat-color, var(--text-primary));
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid var(--cat-color, rgba(255, 255, 255, 0.1));
+}
+
+.prisignal-daily-cat-icon {
+  font-size: 1.2rem;
+}
+
+.prisignal-daily-cat-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+/* --- Article Cards --- */
+.prisignal-daily-articles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.prisignal-daily-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: var(--space-lg);
+  transition: all 0.25s ease;
+}
+
+.prisignal-daily-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+/* DM Pick highlight */
+.prisignal-daily-card.dm-pick {
+  border-color: rgba(196, 181, 253, 0.25);
+  background: rgba(196, 181, 253, 0.04);
+}
+
+.prisignal-daily-card.dm-pick:hover {
+  border-color: rgba(196, 181, 253, 0.4);
+  background: rgba(196, 181, 253, 0.08);
+}
+
+.prisignal-daily-dm-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #C4B5FD;
+  background: rgba(196, 181, 253, 0.12);
+  border: 1px solid rgba(196, 181, 253, 0.25);
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.03em;
+}
+
+.prisignal-daily-card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-xs);
+  line-height: 1.4;
+}
+
+.prisignal-daily-card-title a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.prisignal-daily-card-title a:hover {
+  color: var(--prisignal-accent, #C4B5FD);
+}
+
+/* Meta row */
+.prisignal-daily-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.prisignal-daily-card-source {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.prisignal-daily-card-tier {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prisignal-daily-card-tier.tier-1 {
+  color: #34D399;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.prisignal-daily-card-tier.tier-2 {
+  color: #FBBF24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.prisignal-daily-card-tier.tier-3 {
+  color: #9CA3AF;
+  background: rgba(156, 163, 175, 0.1);
+  border: 1px solid rgba(156, 163, 175, 0.15);
+}
+
+.prisignal-daily-card-score {
+  font-size: 0.75rem;
+  color: #FBBF24;
+  font-weight: 600;
+}
+
+/* Summary */
+.prisignal-daily-card-summary {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 var(--space-sm);
+}
+
+/* Editor comment */
+.prisignal-daily-card-comment {
+  font-size: 0.85rem;
+  color: var(--prisignal-accent, #C4B5FD);
+  border-left: 3px solid rgba(196, 181, 253, 0.3);
+  padding: var(--space-xs) var(--space-md);
+  margin: var(--space-sm) 0;
+  background: rgba(196, 181, 253, 0.04);
+  border-radius: 0 8px 8px 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Read link */
+.prisignal-daily-card-link {
+  display: inline-block;
+  font-size: 0.82rem;
+  color: var(--prisignal-accent, #C4B5FD);
+  text-decoration: none;
+  font-weight: 500;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.prisignal-daily-card-link:hover {
+  opacity: 1;
+}
+
+/* --- Subscribe CTA --- */
+.prisignal-daily-cta {
+  margin-top: var(--space-2xl);
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, rgba(196, 181, 253, 0.06) 0%, rgba(124, 58, 237, 0.06) 100%);
+  border: 1px solid rgba(196, 181, 253, 0.12);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.prisignal-daily-cta h2 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.prisignal-daily-cta p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0 0 var(--space-md);
+}
+
+.prisignal-daily-cta-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  background: linear-gradient(135deg, #7C3AED, #6D28D9);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid rgba(196, 181, 253, 0.3);
+}
+
+.prisignal-daily-cta-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .prisignal-daily-page {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  .prisignal-daily-title {
+    font-size: 1.3rem;
+  }
+
+  .prisignal-daily-nav {
+    gap: var(--space-xs);
+  }
+
+  .prisignal-daily-nav-btn,
+  .prisignal-daily-nav-today {
+    font-size: 0.78rem;
+    padding: 5px 10px;
+  }
+
+  .prisignal-daily-card {
+    padding: var(--space-md);
+  }
+
+  .prisignal-daily-card-title {
+    font-size: 0.95rem;
+  }
+}

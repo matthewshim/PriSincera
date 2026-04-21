@@ -4,7 +4,10 @@
     "maxArticles": 5,
     "minCategories": 2,
     "tier1Minimum": 1,
-    "sendDay": "monday",
+    "dmPickCount": 5,
+    "sendFrequency": "daily",
+    "collectTimeKST": "06:00",
+    "composerTimeKST": "07:00",
     "sendTimeKST": "08:00",
     "alertEmail": "matthew.shim@prisincera.com"
   },

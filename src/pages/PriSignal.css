@@ -557,10 +557,7 @@
     border: 1px solid rgba(167, 139, 250, 0.1);
 }
 
-.prisignal-archive-card-footer {
-    display: flex;
-    justify-content: flex-end;
-}
+/* footer styles moved below (with align-items for DM count) */
 
 .prisignal-archive-card-read {
     font-family: var(--font-display);
@@ -573,6 +570,38 @@
 
 .prisignal-archive-card:hover .prisignal-archive-card-read {
     opacity: 1;
+}
+
+/* Today card highlight */
+.prisignal-archive-card.today {
+    border-color: rgba(196, 181, 253, 0.2);
+    background: rgba(196, 181, 253, 0.05);
+}
+
+.prisignal-archive-today-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #C4B5FD;
+    background: rgba(196, 181, 253, 0.15);
+    padding: 2px 7px;
+    border-radius: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.05em;
+}
+
+.prisignal-archive-dm-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+    margin-right: auto;
+}
+
+.prisignal-archive-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 /* --- Archive Empty State --- */

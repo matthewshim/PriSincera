@@ -2,70 +2,89 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 /**
- * PriSignal Archive — ④ Latest Issues section.
- * Fetches recent newsletter issues from Buttondown API via /api/archive proxy.
- * Renders issue cards with glassmorphism design.
- * Shows elegant empty state when no issues are published yet.
+ * PriSignal Archive — ④ 최근 시그널 섹션
+ *
+ * [Daily Model v2]
+ * 최근 7일의 데일리 시그널 페이지 목록을 표시합니다.
+ * 각 날짜별 수집 개수와 카테고리 분포를 미리보기합니다.
+ * /api/daily/:date 프록시를 통해 GCS 데일리 JSON을 조회합니다.
  */
 
-/** Map category keyword → icon */
-const categoryIcons = {
+const CATEGORY_ICONS = {
   attitude: '🎯',
   priority: '⚡',
-  'ai': '🤖',
-  'future': '🤖',
+  ai: '🤖',
   global: '🌍',
   product: '📦',
 };
 
-/** Extract category hints from issue subject line */
-function extractCategories(subject = '') {
-  const lower = subject.toLowerCase();
-  const found = [];
-  Object.entries(categoryIcons).forEach(([key, icon]) => {
-    if (lower.includes(key) && !found.some(f => f.icon === icon)) {
-      found.push({ icon, name: key.charAt(0).toUpperCase() + key.slice(1) });
-    }
-  });
-  return found;
+function getTodayKST() {
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().split('T')[0];
 }
 
-/** Format ISO date → readable Korean date */
-function formatDate(iso) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+function getRecentDates(days = 7) {
+  const dates = [];
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  for (let i = 0; i < days; i++) {
+    const d = new Date(kst);
+    d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().split('T')[0]);
+  }
+  return dates;
+}
+
+function formatShortDate(dateStr) {
+  const [, m, d] = dateStr.split('-').map(Number);
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dt = new Date(dateStr + 'T00:00:00');
+  return `${m}/${d}(${days[dt.getDay()]})`;
 }
 
 export default function PriSignalArchive() {
-  const [issues, setIssues] = useState([]);
+  const [dailyEntries, setDailyEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchArchive() {
-      try {
-        const res = await fetch('/api/archive');
-        if (!res.ok) throw new Error('API error');
-        const data = await res.json();
-        // Buttondown returns { results: [...] } or an array
-        const results = Array.isArray(data) ? data : (data.results || []);
-        // Filter only published emails, sort by publish_date desc
-        const published = results
-          .filter(e => e.status === 'sent' || e.publish_date)
-          .sort((a, b) => new Date(b.publish_date) - new Date(a.publish_date))
-          .slice(0, 5);
-        if (!cancelled) setIssues(published);
-      } catch {
-        if (!cancelled) setError(true);
-      } finally {
-        if (!cancelled) setLoading(false);
+    async function fetchRecentDailies() {
+      const dates = getRecentDates(7);
+      const today = getTodayKST();
+
+      const results = await Promise.allSettled(
+        dates.map(async (date) => {
+          try {
+            const res = await fetch(`/api/daily/${date}`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            return {
+              date,
+              total: data.total || 0,
+              dmPickCount: data.dmPickCount || data.dm_picks?.length || 0,
+              status: data.status || 'unknown',
+              categories: getCategoryBreakdown(data.articles || []),
+              isToday: date === today,
+            };
+          } catch {
+            return null;
+          }
+        })
+      );
+
+      if (!cancelled) {
+        const entries = results
+          .map(r => r.status === 'fulfilled' ? r.value : null)
+          .filter(Boolean)
+          .filter(e => e.total > 0);
+        setDailyEntries(entries);
+        setLoading(false);
       }
     }
 
-    fetchArchive();
+    fetchRecentDailies();
     return () => { cancelled = true; };
   }, []);
 
@@ -81,16 +100,14 @@ export default function PriSignalArchive() {
           </div>
         )}
 
-        {!loading && (issues.length === 0 || error) && (
+        {!loading && dailyEntries.length === 0 && (
           <div className="prisignal-archive-empty">
             <div className="prisignal-archive-empty-icon">
               <svg viewBox="0 0 80 80" fill="none" className="prisignal-radar-icon">
-                {/* Radar dish */}
                 <circle cx="40" cy="40" r="36" stroke="url(#radarGrad)" strokeWidth="1" opacity="0.15" />
                 <circle cx="40" cy="40" r="26" stroke="url(#radarGrad)" strokeWidth="1" opacity="0.25" />
                 <circle cx="40" cy="40" r="16" stroke="url(#radarGrad)" strokeWidth="1" opacity="0.35" />
                 <circle cx="40" cy="40" r="4" fill="url(#radarGrad)" opacity="0.8" />
-                {/* Pulse rings */}
                 <circle cx="40" cy="40" r="20" stroke="#22D3EE" strokeWidth="1.5" opacity="0.4" className="radar-pulse-1" />
                 <circle cx="40" cy="40" r="30" stroke="#22D3EE" strokeWidth="1" opacity="0.25" className="radar-pulse-2" />
                 <defs>
@@ -103,51 +120,68 @@ export default function PriSignalArchive() {
             </div>
             <p className="prisignal-archive-empty-title">첫 번째 시그널을 준비하고 있습니다</p>
             <p className="prisignal-archive-empty-desc">
-              곧 첫 이슈가 발행됩니다.<br />
-              구독하시면 가장 먼저 받아보실 수 있습니다.
+              곧 데일리 시그널이 시작됩니다.<br />
+              구독하시면 매일 아침 선별된 시그널을 받아보실 수 있습니다.
             </p>
           </div>
         )}
 
-        {!loading && issues.length > 0 && (
-          <>
-            <div className="prisignal-archive-grid">
-              {issues.map((issue) => {
-                const cats = extractCategories(issue.subject);
-                return (
-                  <Link
-                    to={`/prisignal/${issue.id}`}
-                    className="prisignal-archive-card"
-                    key={issue.id}
-                    id={`archiveCard-${issue.id}`}
-                  >
-                    <div className="prisignal-archive-card-header">
-                      <span className="prisignal-archive-card-number">
-                        {issue.subject || 'PriSignal'}
+        {!loading && dailyEntries.length > 0 && (
+          <div className="prisignal-archive-grid">
+            {dailyEntries.map((entry) => (
+              <Link
+                to={`/prisignal/${entry.date}`}
+                className={`prisignal-archive-card${entry.isToday ? ' today' : ''}`}
+                key={entry.date}
+                id={`dailyCard-${entry.date}`}
+              >
+                <div className="prisignal-archive-card-header">
+                  <span className="prisignal-archive-card-number">
+                    📡 {formatShortDate(entry.date)}
+                    {entry.isToday && <span className="prisignal-archive-today-badge">TODAY</span>}
+                  </span>
+                  <span className="prisignal-archive-card-date">
+                    {entry.total}개 시그널
+                  </span>
+                </div>
+
+                {entry.categories.length > 0 && (
+                  <div className="prisignal-archive-card-cats">
+                    {entry.categories.map((c, i) => (
+                      <span className="prisignal-archive-card-cat" key={i}>
+                        {c.icon} {c.name} ×{c.count}
                       </span>
-                      <span className="prisignal-archive-card-date">
-                        {formatDate(issue.publish_date)}
-                      </span>
-                    </div>
-                    {cats.length > 0 && (
-                      <div className="prisignal-archive-card-cats">
-                        {cats.map((c, i) => (
-                          <span className="prisignal-archive-card-cat" key={i}>
-                            {c.icon} {c.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <div className="prisignal-archive-card-footer">
-                      <span className="prisignal-archive-card-read">읽기 →</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </>
+                    ))}
+                  </div>
+                )}
+
+                <div className="prisignal-archive-card-footer">
+                  {entry.dmPickCount > 0 && (
+                    <span className="prisignal-archive-dm-count">📬 DM {entry.dmPickCount}</span>
+                  )}
+                  <span className="prisignal-archive-card-read">보기 →</span>
+                </div>
+              </Link>
+            ))}
+          </div>
         )}
       </div>
     </section>
   );
+}
+
+/** 카테고리별 아티클 수 집계 */
+function getCategoryBreakdown(articles) {
+  const counts = {};
+  for (const a of articles) {
+    const cat = a.category || 'etc';
+    counts[cat] = (counts[cat] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([cat, count]) => ({
+      icon: CATEGORY_ICONS[cat] || '📌',
+      name: cat.charAt(0).toUpperCase() + cat.slice(1),
+      count,
+    }))
+    .sort((a, b) => b.count - a.count);
 }

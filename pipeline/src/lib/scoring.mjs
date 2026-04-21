@@ -1,5 +1,6 @@
 /**
  * SIGNAL 스코어링 — Tier 가중치 적용 + 다양성 보장 선정 로직
+ * Daily Model v2: selectTopN + assembleDailyDM 추가
  */
 
 const TIER_WEIGHTS = { 1: 1.5, 2: 1.0, 3: 0.7 };
@@ -119,6 +120,80 @@ export function assembleNewsletter({ issueNumber, editorNote, articles, closingR
   lines.push(`🔗 [prisincera.com에서 더 보기](https://www.prisincera.com/prisignal)`);
 
   return lines.join('\n');
+}
+
+// ─── Daily Model v2 ──────────────────────────────────
+
+/**
+ * 점수 내림차순으로 상위 N개를 선정합니다. (Daily DM 픽용)
+ * 다양성 제약: 최소 2개 카테고리 포함
+ */
+export function selectTopN(scoredArticles, n = 5) {
+  const sorted = [...scoredArticles].sort((a, b) => b.weightedScore - a.weightedScore);
+  const selected = [];
+  const categories = new Set();
+
+  // 1단계: 카테고리 다양성 보장 (최소 2개)
+  for (const article of sorted) {
+    if (categories.size >= 2) break;
+    if (!categories.has(article.category)) {
+      selected.push(article);
+      categories.add(article.category);
+    }
+  }
+
+  // 2단계: 나머지 점수순 채움
+  for (const article of sorted) {
+    if (selected.length >= n) break;
+    if (!selected.find(s => s.id === article.id)) {
+      selected.push(article);
+    }
+  }
+
+  selected.sort((a, b) => b.weightedScore - a.weightedScore);
+  console.log(`[Scoring] DM 픽 선정: ${selected.length}개, ${new Set(selected.map(a => a.category)).size}개 카테고리`);
+  return selected;
+}
+
+/**
+ * 데일리 DM Markdown을 조립합니다.
+ * "더보기" 링크로 웹 유입을 유도합니다.
+ */
+export function assembleDailyDM({ date, articles, dailyPageUrl, totalCount }) {
+  const lines = [];
+
+  lines.push(`📡 **오늘의 시그널** — ${formatDateKR(date)}\n`);
+  lines.push(`오늘 ${totalCount}개의 시그널 중 **${articles.length}개**를 선별했습니다.\n`);
+  lines.push(`---\n`);
+
+  for (let i = 0; i < articles.length; i++) {
+    const a = articles[i];
+    const icon = CATEGORY_ICONS[a.category] || '📌';
+    const catName = CATEGORY_NAMES[a.category] || a.category;
+    const tierBadge = a.tier === 1 ? ' 🌟' : '';
+
+    lines.push(`**${i + 1}. ${icon} [${catName}] ${a.title}**${tierBadge}`);
+    lines.push(`${a.source} · [원문 읽기](${a.url})`);
+    if (a.editorComment) {
+      lines.push(`\n> ${a.editorComment}\n`);
+    }
+  }
+
+  lines.push(`---\n`);
+  lines.push(`📂 **오늘의 시그널 전체 보기 (${totalCount}개)**`);
+  lines.push(`[👉 ${dailyPageUrl}](${dailyPageUrl})\n`);
+  lines.push(`---\n`);
+  lines.push(`🔗 [PriSignal 구독 관리](https://www.prisincera.com/prisignal)`);
+
+  return lines.join('\n');
+}
+
+/** 날짜 한국어 포맷 */
+function formatDateKR(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dt = new Date(Number(y), Number(m) - 1, Number(d));
+  return `${Number(m)}월 ${Number(d)}일 (${days[dt.getDay()]})`;
 }
 
 export { CATEGORY_ICONS, CATEGORY_NAMES };

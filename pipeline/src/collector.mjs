@@ -2,23 +2,27 @@
 /**
  * PriSignal Collector — 매일 06:00 KST 실행
  *
+ * [Daily Model v2]
  * 1. sources.json에서 활성 소스 목록 로드
  * 2. 전 소스 RSS 피드 병렬 수집 (지난 24시간)
- * 3. 기존 주간 후보 풀과 중복 제거
- * 4. 후보 풀에 추가 저장 (GCS)
+ * 3. 오늘 기존 수집분과 중복 제거
+ * 4. 데일리 JSON 저장 (GCS daily/{date}.json — 공개 읽기)
  */
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { fetchAllFeeds, deduplicateArticles } from './lib/rss.mjs';
-import { readJSON, writeJSON, getCandidatesPath } from './lib/storage.mjs';
+import { readJSON, getTodayKST, getDailyPath, writeDailyJSON } from './lib/storage.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function main() {
   const startTime = Date.now();
+  const todayStr = getTodayKST();
+
   console.log('═══════════════════════════════════════');
-  console.log('📥 PriSignal Collector 시작');
+  console.log('📥 PriSignal Collector v2 (Daily) 시작');
+  console.log(`   날짜: ${todayStr}`);
   console.log(`   시각: ${new Date().toISOString()}`);
   console.log('═══════════════════════════════════════');
 
@@ -31,13 +35,22 @@ async function main() {
   const newArticles = await fetchAllFeeds(config.sources);
 
   if (newArticles.length === 0) {
-    console.log('[Collector] 수집된 신규 아티클 없음. 종료.');
+    console.log('[Collector] 수집된 신규 아티클 없음.');
+    // 빈 데일리 JSON 생성 (페이지에 "오늘은 시그널이 조용합니다" 표시)
+    await writeDailyJSON(todayStr, {
+      date: todayStr,
+      status: 'collected',
+      total: 0,
+      articles: [],
+      collectedAt: new Date().toISOString(),
+    });
+    console.log('[Collector] 빈 데일리 JSON 저장 완료. 종료.');
     return;
   }
 
-  // 3. 기존 후보 풀 로드 + 중복 제거
-  const candidatesPath = getCandidatesPath();
-  const existing = await readJSON(candidatesPath);
+  // 3. 오늘 기존 수집분과 중복 제거 (하루 2회+ 실행 대비)
+  const dailyPath = getDailyPath(todayStr);
+  const existing = await readJSON(dailyPath);
   const existingArticles = existing?.articles || [];
 
   const deduplicated = deduplicateArticles(newArticles, existingArticles);
@@ -47,21 +60,23 @@ async function main() {
     return;
   }
 
-  // 4. 후보 풀 저장
-  const updatedArticles = [...existingArticles, ...deduplicated];
-  await writeJSON(candidatesPath, {
-    targetMonday: candidatesPath.replace('candidates/', '').replace('.json', ''),
-    updatedAt: new Date().toISOString(),
-    totalCount: updatedArticles.length,
-    articles: updatedArticles,
+  // 4. 데일리 JSON 저장 (공개)
+  const allArticles = [...existingArticles, ...deduplicated];
+  await writeDailyJSON(todayStr, {
+    date: todayStr,
+    status: 'collected',
+    total: allArticles.length,
+    articles: allArticles,
+    collectedAt: new Date().toISOString(),
   });
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('═══════════════════════════════════════');
-  console.log(`✅ Collector 완료 (${elapsed}초)`);
+  console.log(`✅ Collector v2 완료 (${elapsed}초)`);
+  console.log(`   날짜: ${todayStr}`);
   console.log(`   신규 추가: ${deduplicated.length}개`);
-  console.log(`   누적 후보: ${updatedArticles.length}개`);
-  console.log(`   저장 위치: ${candidatesPath}`);
+  console.log(`   오늘 누적: ${allArticles.length}개`);
+  console.log(`   저장: daily/${todayStr}.json (공개)`);
   console.log('═══════════════════════════════════════');
 }
 

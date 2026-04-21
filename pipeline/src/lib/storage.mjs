@@ -1,5 +1,5 @@
 /**
- * Cloud Storage 유틸리티 — 후보 풀, 발행 이력, 상태 관리
+ * Cloud Storage 유틸리티 — 데일리 시그널, 후보 풀, 발행 이력, 상태 관리
  */
 import { Storage } from '@google-cloud/storage';
 
@@ -53,6 +53,80 @@ export function getCandidatesPath() {
  */
 export function getIssuePath(dateStr) {
   return `issues/${dateStr}.json`;
+}
+
+// ─── Daily Signal 전용 ───────────────────────────────
+
+/**
+ * 데일리 시그널 JSON 경로를 반환합니다.
+ * @param {string} dateStr - "2026-04-21" 형식
+ */
+export function getDailyPath(dateStr) {
+  return `daily/${dateStr}.json`;
+}
+
+/**
+ * 오늘 날짜 문자열을 KST 기준으로 반환합니다.
+ * @returns {string} "2026-04-21" 형식
+ */
+export function getTodayKST() {
+  const now = new Date();
+  // KST = UTC + 9
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().split('T')[0];
+}
+
+/**
+ * 데일리 JSON의 공개 URL을 반환합니다.
+ * Nginx에서 /api/daily/:date 로 프록시됩니다.
+ */
+export function getDailyPublicUrl(dateStr) {
+  return `https://storage.googleapis.com/${BUCKET}/daily/${dateStr}.json`;
+}
+
+/**
+ * 오늘 08:00 KST의 ISO 문자열을 반환합니다. (데일리 DM 발송 시간)
+ */
+export function getDailySendTime() {
+  const todayStr = getTodayKST();
+  // 08:00 KST = 전날 23:00 UTC
+  const [y, m, d] = todayStr.split('-').map(Number);
+  const sendTime = new Date(Date.UTC(y, m - 1, d - 1, 23, 0, 0));
+  // 이미 지난 시간이면 즉시 발송 (status: 'draft' → 'about_to_send')
+  if (sendTime < new Date()) return null;
+  return sendTime.toISOString();
+}
+
+/**
+ * 최근 N일간의 데일리 날짜 문자열 배열을 반환합니다.
+ * @param {number} days - 일수 (기본 7)
+ */
+export function getRecentDailyDates(days = 7) {
+  const dates = [];
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  for (let i = 0; i < days; i++) {
+    const d = new Date(kst);
+    d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().split('T')[0]);
+  }
+  return dates;
+}
+
+/**
+ * 데일리 JSON을 공개 읽기 가능하게 저장합니다.
+ */
+export async function writeDailyJSON(dateStr, data) {
+  const path = getDailyPath(dateStr);
+  const content = JSON.stringify(data, null, 2);
+  const file = storage.bucket(BUCKET).file(path);
+  await file.save(content, {
+    contentType: 'application/json',
+    metadata: { cacheControl: 'public, max-age=300' },
+  });
+  // 공개 읽기 설정
+  await file.makePublic();
+  console.log(`[GCS] 데일리 시그널 저장: gs://${BUCKET}/${path} (공개)`);
 }
 
 /**
@@ -109,3 +183,5 @@ export function getNextMondaySendTime() {
 function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
+
+export { BUCKET };
