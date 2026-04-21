@@ -72,6 +72,14 @@
     color: var(--text-primary);
 }
 
+.footer-link-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+}
+
 .footer-bottom {
     display: flex;
     justify-content: space-between;

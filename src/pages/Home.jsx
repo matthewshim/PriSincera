@@ -14,11 +14,21 @@ import './Home.css';
  * appears (all hero content revealed), scrolling is unlocked.
  */
 function Home() {
+  // Check if CI animation already played this session
+  const ciAlreadyPlayed = sessionStorage.getItem('prisincera_ci_played');
+
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [scrollLocked, setScrollLocked] = useState(true);
+  const [scrollLocked, setScrollLocked] = useState(!ciAlreadyPlayed);
   const [contentVisible, setContentVisible] = useState(false);
   const wrapperRef = useRef(null);
   const beliefRef = useRef(null);
+
+  // If CI already played, show GNB immediately on mount
+  useEffect(() => {
+    if (ciAlreadyPlayed) {
+      document.body.classList.add('hero-ready');
+    }
+  }, [ciAlreadyPlayed]);
 
   // Lock body scroll while hero is animating
   useEffect(() => {

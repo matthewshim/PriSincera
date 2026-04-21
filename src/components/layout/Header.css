@@ -95,6 +95,14 @@
 .nav-link.active::after {
     width: 100%;
 }
+
+/* PriStudy button styled as nav link */
+.nav-link-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
 /* --- BGM toggle in GNB --- */
 .nav-bgm-slot {
     margin-left: var(--space-md);

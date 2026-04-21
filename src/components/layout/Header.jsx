@@ -1,14 +1,76 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef(null);
+  const musicIntentRef = useRef(true);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const getAudio = useCallback(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/audio/bgm.mp3');
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.35;
+    }
+    return audioRef.current;
+  }, []);
+
+  // Auto-play BGM when hero-ready (GNB visible)
+  useEffect(() => {
+    if (!musicIntentRef.current) return;
+
+    const tryAutoplay = () => {
+      if (document.body.classList.contains('hero-ready') && musicIntentRef.current) {
+        const audio = getAudio();
+        audio.play().then(() => setMusicPlaying(true)).catch(() => {
+          // Autoplay blocked — wait for user interaction
+          const resume = () => {
+            if (musicIntentRef.current) audio.play().catch(() => {});
+            document.removeEventListener('click', resume);
+          };
+          document.addEventListener('click', resume, { once: true });
+        });
+        return true;
+      }
+      return false;
+    };
+
+    // Check immediately
+    if (tryAutoplay()) return;
+
+    // Watch for hero-ready class
+    const observer = new MutationObserver(() => {
+      if (tryAutoplay()) observer.disconnect();
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, [getAudio]);
+
+  const toggleMusic = useCallback(() => {
+    const audio = getAudio();
+    if (musicPlaying) {
+      audio.pause();
+      musicIntentRef.current = false;
+      setMusicPlaying(false);
+    } else {
+      musicIntentRef.current = true;
+      audio.play().then(() => setMusicPlaying(true)).catch(() => setMusicPlaying(false));
+    }
+  }, [musicPlaying, getAudio]);
+
+  const handlePriStudy = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    alert('PriStudy는 준비중입니다.');
   }, []);
 
   return (
@@ -51,12 +113,27 @@ function Header() {
           <span className="nav-wordmark">PriSincera</span>
         </Link>
         <div className="nav-links">
-          <Link to="/" className="nav-link" id="navHome">Home</Link>
-          <Link to="/prisignal" className="nav-link" id="navPriSignal">PriSignal</Link>
-          <a href="#" className="nav-link" id="navPriStudy" onClick={(e) => { e.preventDefault(); alert('PriStudy는 준비중입니다.'); }}>PriStudy</a>
+          <Link to="/" className={`nav-link${location.pathname === '/' ? ' active' : ''}`} id="navHome">Home</Link>
+          <Link to="/prisignal" className={`nav-link${location.pathname.startsWith('/prisignal') ? ' active' : ''}`} id="navPriSignal">PriSignal</Link>
+          <button type="button" className="nav-link nav-link-btn" id="navPriStudy" onClick={handlePriStudy}>PriStudy</button>
         </div>
-        {/* BGM toggle portal target — filled by HeroSection */}
-        <div className="nav-bgm-slot" id="gnbBgmSlot" />
+        {/* BGM toggle — works on all pages */}
+        <div className="nav-bgm-slot" id="gnbBgmSlot">
+          <button
+            className={`gnb-bgm-btn ${musicPlaying ? 'active' : ''}`}
+            onClick={toggleMusic}
+            aria-label="Toggle music"
+            id="bgmToggle"
+          >
+            <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
+              <div className="waveform-bar" />
+            </div>
+          </button>
+        </div>
       </div>
     </nav>
   );

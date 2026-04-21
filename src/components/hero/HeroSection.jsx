@@ -8,6 +8,8 @@ import HeroContent from './HeroContent';
 import SvgDefs from '../common/SvgDefs';
 import './HeroSection.css';
 
+// NOTE: BGM audio is now managed by Header component globally.
+
 /**
  * Hero Section — orchestrates all layers:
  * StarField canvas → Constellation Assembly SVG → Energy Circulation canvas → Text content
@@ -26,62 +28,12 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
   const { raw: rawMouseRef } = useMousePosition();
   const [assemblyDone, setAssemblyDone] = useState(false);
   const [userToggledConstellations, setUserToggledConstellations] = useState(false);
-  const [musicPlaying, setMusicPlaying] = useState(true);
-  const audioRef = useRef(null);
-  const musicIntentRef = useRef(true); // user wants music ON
-
-  const getAudio = useCallback(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio('/audio/bgm.mp3');
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.35;
-    }
-    return audioRef.current;
-  }, []);
-
-  // Auto-play when assembly completes
-  useEffect(() => {
-    if (!assemblyDone || !musicIntentRef.current) return;
-    const audio = getAudio();
-    const tryPlay = () => {
-      audio.play().then(() => {
-        setMusicPlaying(true);
-      }).catch(() => {
-        // Autoplay blocked — wait for first user interaction
-        setMusicPlaying(true); // show ON in UI (intent)
-        const resume = () => {
-          if (musicIntentRef.current) {
-            audio.play().catch(() => {});
-          }
-          document.removeEventListener('click', resume);
-          document.removeEventListener('touchstart', resume);
-        };
-        document.addEventListener('click', resume, { once: true });
-        document.addEventListener('touchstart', resume, { once: true });
-      });
-    };
-    tryPlay();
-  }, [assemblyDone, getAudio]);
 
   const onAssemblyComplete = useCallback(() => {
     setAssemblyDone(true);
   }, []);
 
-  const toggleMusic = useCallback(() => {
-    const audio = getAudio();
-    if (musicPlaying) {
-      audio.pause();
-      musicIntentRef.current = false;
-      setMusicPlaying(false);
-    } else {
-      musicIntentRef.current = true;
-      audio.play().then(() => {
-        setMusicPlaying(true);
-      }).catch(() => {
-        setMusicPlaying(false);
-      });
-    }
-  }, [musicPlaying, getAudio]);
+
 
   // Auto-ON: when scroll triggers forceShowAll for the first time, set user toggle ON.
   // After this, user toggle is the single source of truth (can freely turn off/on).
@@ -124,24 +76,7 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
       </div>
       <EnergyCirculation rawMouseRef={rawMouseRef} active={assemblyDone} />
 
-      {/* BGM toggle — rendered into GNB via portal */}
-      {assemblyDone && document.getElementById('gnbBgmSlot') && createPortal(
-        <button
-          className={`gnb-bgm-btn ${musicPlaying ? 'active' : ''}`}
-          onClick={toggleMusic}
-          aria-label="Toggle music"
-          id="bgmToggle"
-        >
-          <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-            <div className="waveform-bar" />
-          </div>
-        </button>,
-        document.getElementById('gnbBgmSlot')
-      )}
+
 
       {/* Celestial Controls — Star Map toggle only */}
       {assemblyDone && createPortal(
