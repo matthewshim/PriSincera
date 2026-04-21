@@ -139,8 +139,8 @@ app.get('/api/daily/:date', async (req, res) => {
   }
 });
 
-// --- SPA fallback ---
-app.get('*', (req, res) => {
+// --- SPA fallback (Express 5 compatible) ---
+app.use((req, res) => {
   const indexPath = join(DIST_DIR, 'index.html');
   if (existsSync(indexPath)) {
     res.sendFile(indexPath);
