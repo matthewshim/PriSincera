@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import './PriSignalDaily.css';
 
 /**
@@ -18,11 +18,32 @@ const CATEGORY_META = {
 
 const TIER_LABELS = { 1: 'T1', 2: 'T2', 3: 'T3' };
 
+/** 에디터 코멘트 기본 템플릿 문구 패턴 */
+const DEFAULT_COMMENT_PATTERNS = [
+  '이 기사는',
+  '본 기사는',
+  '해당 아티클은',
+];
+
+function isDefaultComment(comment) {
+  if (!comment) return true;
+  const trimmed = comment.trim();
+  if (trimmed.length < 10) return true;
+  return DEFAULT_COMMENT_PATTERNS.some(p => trimmed.startsWith(p) && trimmed.length < 30);
+}
+
 function formatKoreanDate(dateStr) {
   const [y, m, d] = dateStr.split('-').map(Number);
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const dt = new Date(y, m - 1, d);
   return `${y}년 ${m}월 ${d}일 (${days[dt.getDay()]})`;
+}
+
+function formatShortDate(dateStr) {
+  const [, m, d] = dateStr.split('-').map(Number);
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dt = new Date(dateStr + 'T00:00:00');
+  return { month: m, day: d, dayName: days[dt.getDay()] };
 }
 
 function getAdjacentDate(dateStr, offset) {
@@ -39,18 +60,24 @@ function getTodayKST() {
 
 export default function PriSignalDaily() {
   const { date } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [expandedComments, setExpandedComments] = useState(new Set());
 
   const today = getTodayKST();
   const prevDate = getAdjacentDate(date, -1);
   const nextDate = getAdjacentDate(date, 1);
   const isToday = date === today;
   const isFuture = date > today;
+  const dateInfo = formatShortDate(date);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setActiveFilter('all');
+    setExpandedComments(new Set());
     let cancelled = false;
 
     async function fetchDaily() {
@@ -87,59 +114,138 @@ export default function PriSignalDaily() {
     };
   }, [date]);
 
-  // Group articles by category
-  const groupedArticles = data?.articles
-    ? data.articles.reduce((acc, a) => {
-        const cat = a.category || 'etc';
-        if (!acc[cat]) acc[cat] = [];
-        acc[cat].push(a);
-        return acc;
-      }, {})
-    : {};
+  // Category counts for filter chips
+  const categoryCounts = useMemo(() => {
+    if (!data?.articles) return {};
+    return data.articles.reduce((acc, a) => {
+      const cat = a.category || 'etc';
+      acc[cat] = (acc[cat] || 0) + 1;
+      return acc;
+    }, {});
+  }, [data]);
+
+  // Group articles by category, filtered
+  const groupedArticles = useMemo(() => {
+    if (!data?.articles) return {};
+    const filtered = activeFilter === 'all'
+      ? data.articles
+      : data.articles.filter(a => (a.category || 'etc') === activeFilter);
+    return filtered.reduce((acc, a) => {
+      const cat = a.category || 'etc';
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(a);
+      return acc;
+    }, {});
+  }, [data, activeFilter]);
+
+  const filteredCount = useMemo(() => {
+    return Object.values(groupedArticles).reduce((sum, arr) => sum + arr.length, 0);
+  }, [groupedArticles]);
 
   const dmPicks = data?.dm_picks || [];
   const totalCount = data?.total || 0;
   const isScored = data?.status === 'scored';
 
+  const toggleComment = (id) => {
+    setExpandedComments(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  // Available filter categories (only those with articles)
+  const filterCategories = useMemo(() => {
+    return Object.entries(categoryCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([key, count]) => ({
+        key,
+        count,
+        ...(CATEGORY_META[key] || { icon: '📌', name: key, color: '#9CA3AF' }),
+      }));
+  }, [categoryCounts]);
+
   return (
     <div className="prisignal-daily-page">
-      {/* Header */}
-      <header className="prisignal-daily-header">
-        <Link to="/prisignal" className="prisignal-daily-back" id="dailyBackLink">
-          ← PriSignal
+      {/* ── Sticky Top Bar ── */}
+      <div className="prisignal-daily-topbar" id="dailyTopbar">
+        <Link to="/prisignal" className="prisignal-daily-topbar-back" id="dailyBackLink">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          PriSignal
         </Link>
+        <div className="prisignal-daily-topbar-center">
+          <span className="prisignal-daily-topbar-date">{dateInfo.month}/{dateInfo.day}</span>
+          {isToday && <span className="prisignal-daily-topbar-today">TODAY</span>}
+        </div>
+        <div className="prisignal-daily-topbar-nav">
+          <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-topbar-navbtn" id="dailyNavPrevTop" title="이전 날짜">
+            ‹
+          </Link>
+          {!isFuture && date < today && (
+            <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-topbar-navbtn" id="dailyNavNextTop" title="다음 날짜">
+              ›
+            </Link>
+          )}
+        </div>
+      </div>
 
+      {/* ── Hero Header ── */}
+      <header className="prisignal-daily-header">
         <div className="prisignal-daily-hero">
-          <span className="prisignal-daily-icon">📡</span>
-          <h1 className="prisignal-daily-title">{formatKoreanDate(date)}의 시그널</h1>
+          <div className="prisignal-daily-date-display">
+            <span className="prisignal-daily-date-day">{dateInfo.day}</span>
+            <div className="prisignal-daily-date-info">
+              <span className="prisignal-daily-date-month">{dateInfo.month}월</span>
+              <span className="prisignal-daily-date-dayname">{dateInfo.dayName}요일</span>
+            </div>
+            {isToday && (
+              <span className="prisignal-daily-today-badge" id="dailyTodayBadge">
+                <span className="prisignal-daily-today-dot" />
+                TODAY
+              </span>
+            )}
+          </div>
+          <h1 className="prisignal-daily-title">
+            데일리 <span className="accent">시그널</span>
+          </h1>
           {!loading && !error && (
             <p className="prisignal-daily-subtitle">
               {totalCount > 0
-                ? `오늘 ${totalCount}개의 시그널을 포착했습니다${dmPicks.length > 0 ? ` · DM 픽 ${dmPicks.length}개` : ''}`
+                ? `${totalCount}개의 시그널을 포착했습니다${dmPicks.length > 0 ? ` · DM 픽 ${dmPicks.length}개` : ''}`
                 : '오늘은 시그널이 조용합니다'}
             </p>
           )}
         </div>
 
         {/* Date Navigation */}
-        <nav className="prisignal-daily-nav">
+        <nav className="prisignal-daily-nav" id="dailyDateNav">
           <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-nav-btn" id="dailyNavPrev">
-            ← {prevDate.slice(5)}
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {prevDate.slice(5)}
           </Link>
           {!isToday && (
             <Link to={`/prisignal/${today}`} className="prisignal-daily-nav-today" id="dailyNavToday">
+              <span className="prisignal-daily-nav-today-dot" />
               오늘
             </Link>
           )}
           {!isFuture && date < today && (
             <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-nav-btn" id="dailyNavNext">
-              {nextDate.slice(5)} →
+              {nextDate.slice(5)}
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </Link>
           )}
         </nav>
       </header>
 
-      {/* Loading */}
+      {/* ── Loading ── */}
       {loading && (
         <div className="prisignal-daily-loading">
           <div className="prisignal-archive-pulse" />
@@ -147,7 +253,7 @@ export default function PriSignalDaily() {
         </div>
       )}
 
-      {/* Error / Empty */}
+      {/* ── Error / Empty ── */}
       {!loading && (error || totalCount === 0) && (
         <div className="prisignal-daily-empty">
           <div className="prisignal-daily-empty-icon">📡</div>
@@ -158,9 +264,42 @@ export default function PriSignalDaily() {
         </div>
       )}
 
-      {/* Articles by Category */}
+      {/* ── Category Filter Chips ── */}
+      {!loading && !error && totalCount > 0 && (
+        <div className="prisignal-daily-filters" id="dailyCategoryFilter">
+          <button
+            className={`prisignal-daily-filter-chip${activeFilter === 'all' ? ' active' : ''}`}
+            onClick={() => setActiveFilter('all')}
+            id="filterAll"
+          >
+            전체
+            <span className="prisignal-daily-filter-count">{totalCount}</span>
+          </button>
+          {filterCategories.map(cat => (
+            <button
+              key={cat.key}
+              className={`prisignal-daily-filter-chip${activeFilter === cat.key ? ' active' : ''}`}
+              onClick={() => setActiveFilter(cat.key)}
+              style={{ '--chip-color': cat.color }}
+              id={`filter-${cat.key}`}
+            >
+              <span className="prisignal-daily-filter-dot" />
+              {cat.name}
+              <span className="prisignal-daily-filter-count">{cat.count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ── Articles by Category ── */}
       {!loading && !error && totalCount > 0 && (
         <main className="prisignal-daily-content">
+          {activeFilter !== 'all' && (
+            <p className="prisignal-daily-filter-result">
+              {filteredCount}개의 시그널
+            </p>
+          )}
+
           {Object.entries(groupedArticles).map(([cat, articles]) => {
             const meta = CATEGORY_META[cat] || { icon: '📌', name: cat, color: '#9CA3AF' };
             return (
@@ -178,27 +317,31 @@ export default function PriSignalDaily() {
                       key={article.id}
                       id={`article-${article.id}`}
                     >
-                      {article.isDmPick && (
-                        <span className="prisignal-daily-dm-badge">📬 DM Pick</span>
-                      )}
+                      <div className="prisignal-daily-card-top">
+                        {article.isDmPick && (
+                          <span className="prisignal-daily-dm-badge">
+                            <span className="prisignal-daily-dm-badge-icon">📬</span>
+                            DM Pick
+                          </span>
+                        )}
+                        <div className="prisignal-daily-card-meta">
+                          <span className="prisignal-daily-card-source">{article.source}</span>
+                          <span className={`prisignal-daily-card-tier tier-${article.tier}`}>
+                            {TIER_LABELS[article.tier] || 'T3'}
+                          </span>
+                          {isScored && article.weightedScore && (
+                            <span className="prisignal-daily-card-score">
+                              ★ {article.weightedScore.toFixed(1)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
 
                       <h3 className="prisignal-daily-card-title">
                         <a href={article.url} target="_blank" rel="noopener noreferrer">
                           {article.title}
                         </a>
                       </h3>
-
-                      <div className="prisignal-daily-card-meta">
-                        <span className="prisignal-daily-card-source">{article.source}</span>
-                        <span className={`prisignal-daily-card-tier tier-${article.tier}`}>
-                          {TIER_LABELS[article.tier] || 'T3'}
-                        </span>
-                        {isScored && article.weightedScore && (
-                          <span className="prisignal-daily-card-score">
-                            ★ {article.weightedScore.toFixed(1)}
-                          </span>
-                        )}
-                      </div>
 
                       {article.summaryKr && (
                         <p className="prisignal-daily-card-summary">{article.summaryKr}</p>
@@ -207,10 +350,22 @@ export default function PriSignalDaily() {
                         <p className="prisignal-daily-card-summary">{article.summary.slice(0, 200)}...</p>
                       )}
 
-                      {article.editorComment && (
-                        <blockquote className="prisignal-daily-card-comment">
-                          ✍️ {article.editorComment}
-                        </blockquote>
+                      {article.editorComment && !isDefaultComment(article.editorComment) && (
+                        <div className={`prisignal-daily-card-sticker${expandedComments.has(article.id) ? ' expanded' : ''}`}>
+                          <button
+                            className="prisignal-daily-sticker-toggle"
+                            onClick={() => toggleComment(article.id)}
+                            id={`sticker-toggle-${article.id}`}
+                          >
+                            <span className="prisignal-daily-sticker-label">✍️ 에디터 추천</span>
+                            <svg className="prisignal-daily-sticker-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none">
+                              <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </button>
+                          <div className="prisignal-daily-sticker-body">
+                            <p>{article.editorComment}</p>
+                          </div>
+                        </div>
                       )}
 
                       <a
@@ -219,7 +374,10 @@ export default function PriSignalDaily() {
                         rel="noopener noreferrer"
                         className="prisignal-daily-card-link"
                       >
-                        원문 읽기 →
+                        원문 읽기
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                          <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                       </a>
                     </article>
                   ))}
@@ -230,13 +388,44 @@ export default function PriSignalDaily() {
         </main>
       )}
 
-      {/* Subscribe CTA */}
+      {/* ── Bottom Navigation ── */}
+      <nav className="prisignal-daily-bottom-nav" id="dailyBottomNav">
+        <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-bottom-link prev" id="dailyBottomPrev">
+          <span className="prisignal-daily-bottom-label">이전 시그널</span>
+          <span className="prisignal-daily-bottom-date">{prevDate.slice(5).replace('-', '/')}</span>
+        </Link>
+        <Link to="/prisignal" className="prisignal-daily-bottom-center" id="dailyBottomList">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+          </svg>
+          목록
+        </Link>
+        {!isFuture && date < today ? (
+          <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-bottom-link next" id="dailyBottomNext">
+            <span className="prisignal-daily-bottom-label">다음 시그널</span>
+            <span className="prisignal-daily-bottom-date">{nextDate.slice(5).replace('-', '/')}</span>
+          </Link>
+        ) : (
+          <div className="prisignal-daily-bottom-link next disabled">
+            <span className="prisignal-daily-bottom-label">다음 시그널</span>
+            <span className="prisignal-daily-bottom-date">—</span>
+          </div>
+        )}
+      </nav>
+
+      {/* ── Subscribe CTA ── */}
       <section className="prisignal-daily-cta">
         <div className="prisignal-daily-cta-inner">
-          <h2>매일 선별된 시그널을 받아보세요</h2>
+          <h2>매일 선별된 <span className="accent">시그널</span>을 받아보세요</h2>
           <p>매일 아침, {totalCount > 0 ? `${totalCount}개 중 선별된 5개` : '엄선된 5개'}의 시그널을 이메일로 전달합니다.</p>
           <Link to="/prisignal" className="prisignal-daily-cta-btn" id="dailyCTABtn">
-            구독하기 →
+            구독하기
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M4 8H12M12 8L8 4M12 8L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </Link>
         </div>
       </section>

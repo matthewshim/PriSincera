@@ -1,31 +1,92 @@
 /* ============================================
-   PriSignal Daily — 데일리 시그널 페이지
+   PriSignal Daily — 데일리 시그널 페이지 (v2)
    ============================================ */
 .prisignal-daily-page {
   position: relative;
   z-index: 2;
-  padding-top: 80px;
+  padding-top: 120px;
   min-height: 100vh;
   max-width: 900px;
   margin: 0 auto;
   padding-left: var(--space-lg);
   padding-right: var(--space-lg);
-  padding-bottom: var(--space-2xl);
+  padding-bottom: 100px;
 }
 
-/* --- Back Link --- */
-.prisignal-daily-back {
-  display: inline-block;
-  color: var(--prisignal-accent, #C4B5FD);
+/* --- Sticky Top Bar (below GNB) --- */
+.prisignal-daily-topbar {
+  position: sticky;
+  top: 52px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--space-lg);
+  margin: 0 calc(-1 * var(--space-lg)) var(--space-lg);
+  background: rgba(10, 7, 20, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(196, 181, 253, 0.06);
+}
+
+.prisignal-daily-topbar-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
   text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.prisignal-daily-topbar-back:hover { color: var(--orbit-cyan); }
+
+.prisignal-daily-topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.prisignal-daily-topbar-date {
+  font-family: var(--font-display);
   font-size: 0.9rem;
-  margin-bottom: var(--space-lg);
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.prisignal-daily-topbar-today {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #C4B5FD;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(196, 181, 253, 0.2));
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
 }
 
-.prisignal-daily-back:hover {
-  opacity: 1;
+.prisignal-daily-topbar-nav {
+  display: flex;
+  gap: 4px;
+}
+.prisignal-daily-topbar-navbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.prisignal-daily-topbar-navbtn:hover {
+  border-color: var(--prisignal-accent, #C4B5FD);
+  color: var(--prisignal-accent, #C4B5FD);
+  background: rgba(196, 181, 253, 0.08);
 }
 
 /* --- Hero Header --- */
@@ -33,33 +94,96 @@
   text-align: center;
   padding-bottom: var(--space-xl);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
 }
 
-.prisignal-daily-icon {
-  display: block;
-  font-size: 2.5rem;
-  margin-bottom: var(--space-sm);
-  animation: dailyPulse 3s ease-in-out infinite;
+/* Large Date Display */
+.prisignal-daily-date-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+.prisignal-daily-date-day {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.prisignal-daily-date-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.prisignal-daily-date-month {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.prisignal-daily-date-dayname {
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
-@keyframes dailyPulse {
-  0%, 100% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.06); opacity: 1; }
+/* TODAY Badge */
+.prisignal-daily-today-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #C4B5FD;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(196, 181, 253, 0.15));
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(196, 181, 253, 0.25);
+  letter-spacing: 0.06em;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+  animation: todayGlow 3s ease-in-out infinite;
+}
+.prisignal-daily-today-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C4B5FD;
+  animation: todayDotPulse 2s ease-in-out infinite;
+}
+@keyframes todayGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(124, 58, 237, 0.35); }
+}
+@keyframes todayDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
 }
 
 .prisignal-daily-title {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 var(--space-xs);
   letter-spacing: -0.02em;
 }
+.prisignal-daily-title .accent {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 .prisignal-daily-subtitle {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   margin: 0;
 }
 
@@ -71,8 +195,10 @@
   gap: var(--space-md);
   margin-top: var(--space-md);
 }
-
 .prisignal-daily-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.85rem;
@@ -82,7 +208,6 @@
   background: rgba(255, 255, 255, 0.03);
   transition: all 0.2s;
 }
-
 .prisignal-daily-nav-btn:hover {
   border-color: var(--prisignal-accent, #C4B5FD);
   color: var(--prisignal-accent, #C4B5FD);
@@ -90,6 +215,9 @@
 }
 
 .prisignal-daily-nav-today {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--prisignal-accent, #C4B5FD);
   text-decoration: none;
   font-size: 0.85rem;
@@ -100,9 +228,10 @@
   border: 1px solid rgba(196, 181, 253, 0.3);
   transition: all 0.2s;
 }
-
-.prisignal-daily-nav-today:hover {
-  background: rgba(196, 181, 253, 0.2);
+.prisignal-daily-nav-today:hover { background: rgba(196, 181, 253, 0.2); }
+.prisignal-daily-nav-today-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--prisignal-accent, #C4B5FD);
 }
 
 /* --- Loading --- */
@@ -117,29 +246,75 @@
   text-align: center;
   padding: var(--space-2xl) 0;
 }
+.prisignal-daily-empty-icon { font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.5; }
+.prisignal-daily-empty h2 { font-size: 1.3rem; color: var(--text-primary); margin-bottom: var(--space-sm); }
+.prisignal-daily-empty p { color: var(--text-secondary); font-size: 0.9rem; }
 
-.prisignal-daily-empty-icon {
-  font-size: 3rem;
-  margin-bottom: var(--space-md);
-  opacity: 0.5;
+/* --- Category Filter Chips --- */
+.prisignal-daily-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: var(--space-xl);
+  padding: var(--space-sm) 0;
 }
-
-.prisignal-daily-empty h2 {
-  font-size: 1.3rem;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
-}
-
-.prisignal-daily-empty p {
+.prisignal-daily-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+}
+.prisignal-daily-filter-chip:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+.prisignal-daily-filter-chip.active {
+  background: rgba(196, 181, 253, 0.15);
+  border-color: rgba(196, 181, 253, 0.35);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.prisignal-daily-filter-chip.active .prisignal-daily-filter-dot {
+  box-shadow: 0 0 8px var(--chip-color, #C4B5FD);
+}
+.prisignal-daily-filter-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--chip-color, #C4B5FD);
+  transition: box-shadow 0.25s;
+}
+.prisignal-daily-filter-count {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+.prisignal-daily-filter-result {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+  padding-left: 2px;
 }
 
 /* --- Category Section --- */
 .prisignal-daily-category {
   margin-bottom: var(--space-xl);
+  animation: catFadeIn 0.4s ease-out both;
 }
-
+@keyframes catFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .prisignal-daily-cat-title {
   display: flex;
   align-items: center;
@@ -151,18 +326,12 @@
   padding-bottom: var(--space-xs);
   border-bottom: 2px solid var(--cat-color, rgba(255, 255, 255, 0.1));
 }
-
-.prisignal-daily-cat-icon {
-  font-size: 1.2rem;
-}
-
+.prisignal-daily-cat-icon { font-size: 1.2rem; }
 .prisignal-daily-cat-count {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.75rem; font-weight: 500;
   color: var(--text-secondary);
   background: rgba(255, 255, 255, 0.06);
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: 2px 8px; border-radius: 10px;
   margin-left: auto;
 }
 
@@ -172,171 +341,266 @@
   flex-direction: column;
   gap: var(--space-md);
 }
-
 .prisignal-daily-card {
   position: relative;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: var(--space-lg);
   transition: all 0.25s ease;
+  animation: cardSlideIn 0.35s ease-out both;
 }
-
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .prisignal-daily-card:hover {
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* DM Pick highlight */
 .prisignal-daily-card.dm-pick {
-  border-color: rgba(196, 181, 253, 0.25);
+  border-color: rgba(196, 181, 253, 0.2);
   background: rgba(196, 181, 253, 0.04);
 }
-
 .prisignal-daily-card.dm-pick:hover {
-  border-color: rgba(196, 181, 253, 0.4);
+  border-color: rgba(196, 181, 253, 0.35);
   background: rgba(196, 181, 253, 0.08);
 }
-
+.prisignal-daily-card-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
 .prisignal-daily-dm-badge {
-  display: inline-block;
-  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
   font-weight: 600;
   color: #C4B5FD;
-  background: rgba(196, 181, 253, 0.12);
+  background: linear-gradient(135deg, rgba(196, 181, 253, 0.15), rgba(124, 58, 237, 0.1));
   border: 1px solid rgba(196, 181, 253, 0.25);
   padding: 3px 10px;
   border-radius: 12px;
-  margin-bottom: var(--space-sm);
   letter-spacing: 0.03em;
+  width: fit-content;
 }
+.prisignal-daily-dm-badge-icon { font-size: 0.75rem; }
 
 .prisignal-daily-card-title {
   font-size: 1.05rem;
   font-weight: 600;
   margin: 0 0 var(--space-xs);
-  line-height: 1.4;
+  line-height: 1.45;
 }
-
 .prisignal-daily-card-title a {
   color: var(--text-primary);
   text-decoration: none;
   transition: color 0.2s;
 }
-
-.prisignal-daily-card-title a:hover {
-  color: var(--prisignal-accent, #C4B5FD);
-}
+.prisignal-daily-card-title a:hover { color: var(--prisignal-accent, #C4B5FD); }
 
 /* Meta row */
 .prisignal-daily-card-meta {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
   flex-wrap: wrap;
 }
-
 .prisignal-daily-card-source {
   font-size: 0.8rem;
   color: var(--text-secondary);
   font-weight: 500;
 }
-
 .prisignal-daily-card-tier {
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: 0.05em;
 }
-
 .prisignal-daily-card-tier.tier-1 {
-  color: #34D399;
-  background: rgba(52, 211, 153, 0.12);
+  color: #34D399; background: rgba(52, 211, 153, 0.12);
   border: 1px solid rgba(52, 211, 153, 0.25);
 }
-
 .prisignal-daily-card-tier.tier-2 {
-  color: #FBBF24;
-  background: rgba(251, 191, 36, 0.1);
+  color: #FBBF24; background: rgba(251, 191, 36, 0.1);
   border: 1px solid rgba(251, 191, 36, 0.2);
 }
-
 .prisignal-daily-card-tier.tier-3 {
-  color: #9CA3AF;
-  background: rgba(156, 163, 175, 0.1);
+  color: #9CA3AF; background: rgba(156, 163, 175, 0.1);
   border: 1px solid rgba(156, 163, 175, 0.15);
 }
-
 .prisignal-daily-card-score {
-  font-size: 0.75rem;
-  color: #FBBF24;
-  font-weight: 600;
+  font-size: 0.75rem; color: #FBBF24; font-weight: 600;
 }
 
 /* Summary */
 .prisignal-daily-card-summary {
   font-size: 0.88rem;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0 0 var(--space-sm);
 }
 
-/* Editor comment */
-.prisignal-daily-card-comment {
-  font-size: 0.85rem;
-  color: var(--prisignal-accent, #C4B5FD);
-  border-left: 3px solid rgba(196, 181, 253, 0.3);
-  padding: var(--space-xs) var(--space-md);
+/* Editor Comment — Glassmorphism Sticker */
+.prisignal-daily-card-sticker {
   margin: var(--space-sm) 0;
+  border-radius: 10px;
   background: rgba(196, 181, 253, 0.04);
-  border-radius: 0 8px 8px 0;
-  line-height: 1.5;
+  border: 1px solid rgba(196, 181, 253, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.prisignal-daily-card-sticker:hover {
+  border-color: rgba(196, 181, 253, 0.2);
+}
+.prisignal-daily-sticker-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--prisignal-accent, #C4B5FD);
+  background: none; border: none; font: inherit;
+}
+.prisignal-daily-sticker-label { font-weight: 600; }
+.prisignal-daily-sticker-chevron {
+  transition: transform 0.25s var(--ease-out);
+  color: var(--text-muted);
+}
+.prisignal-daily-card-sticker.expanded .prisignal-daily-sticker-chevron {
+  transform: rotate(180deg);
+}
+.prisignal-daily-sticker-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s var(--ease-out), padding 0.35s var(--ease-out);
+  padding: 0 12px;
+}
+.prisignal-daily-card-sticker.expanded .prisignal-daily-sticker-body {
+  max-height: 200px;
+  padding: 0 12px 10px;
+}
+.prisignal-daily-sticker-body p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
   font-style: italic;
 }
 
 /* Read link */
 .prisignal-daily-card-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.82rem;
   color: var(--prisignal-accent, #C4B5FD);
   text-decoration: none;
   font-weight: 500;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  opacity: 0.7;
+  transition: all 0.2s;
 }
+.prisignal-daily-card-link:hover { opacity: 1; gap: 6px; }
 
-.prisignal-daily-card-link:hover {
-  opacity: 1;
+/* --- Bottom Navigation --- */
+.prisignal-daily-bottom-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  margin-top: var(--space-2xl);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
 }
+.prisignal-daily-bottom-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: var(--space-md) var(--space-sm);
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  position: relative;
+}
+.prisignal-daily-bottom-link:not(.disabled):hover {
+  background: rgba(196, 181, 253, 0.06);
+  color: var(--text-primary);
+}
+.prisignal-daily-bottom-link.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+.prisignal-daily-bottom-link.prev { border-right: 1px solid rgba(255, 255, 255, 0.06); }
+.prisignal-daily-bottom-link.next { border-left: 1px solid rgba(255, 255, 255, 0.06); }
+.prisignal-daily-bottom-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.prisignal-daily-bottom-date {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.prisignal-daily-bottom-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: var(--space-sm);
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 60px;
+}
+.prisignal-daily-bottom-center:hover { color: var(--text-primary); }
 
 /* --- Subscribe CTA --- */
 .prisignal-daily-cta {
-  margin-top: var(--space-2xl);
+  margin-top: var(--space-xl);
   padding: var(--space-xl);
   background: linear-gradient(135deg, rgba(196, 181, 253, 0.06) 0%, rgba(124, 58, 237, 0.06) 100%);
   border: 1px solid rgba(196, 181, 253, 0.12);
   border-radius: 16px;
   text-align: center;
 }
-
 .prisignal-daily-cta h2 {
   font-size: 1.3rem;
   color: var(--text-primary);
   margin: 0 0 var(--space-xs);
 }
-
+.prisignal-daily-cta h2 .accent {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 .prisignal-daily-cta p {
   color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0 0 var(--space-md);
 }
-
 .prisignal-daily-cta-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 10px 28px;
   background: linear-gradient(135deg, #7C3AED, #6D28D9);
   color: #fff;
@@ -347,7 +611,6 @@
   transition: all 0.2s;
   border: 1px solid rgba(196, 181, 253, 0.3);
 }
-
 .prisignal-daily-cta-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
@@ -358,27 +621,26 @@
   .prisignal-daily-page {
     padding-left: var(--space-md);
     padding-right: var(--space-md);
+    padding-top: 100px;
   }
-
-  .prisignal-daily-title {
-    font-size: 1.3rem;
+  .prisignal-daily-topbar {
+    padding: 8px var(--space-md);
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
+    top: 42px;
   }
-
-  .prisignal-daily-nav {
-    gap: var(--space-xs);
-  }
-
+  .prisignal-daily-date-day { font-size: 2.5rem; }
+  .prisignal-daily-title { font-size: 1.2rem; }
+  .prisignal-daily-nav { gap: var(--space-xs); }
   .prisignal-daily-nav-btn,
   .prisignal-daily-nav-today {
     font-size: 0.78rem;
     padding: 5px 10px;
   }
-
-  .prisignal-daily-card {
-    padding: var(--space-md);
-  }
-
-  .prisignal-daily-card-title {
-    font-size: 0.95rem;
-  }
+  .prisignal-daily-card { padding: var(--space-md); }
+  .prisignal-daily-card-title { font-size: 0.95rem; }
+  .prisignal-daily-filters { gap: 6px; }
+  .prisignal-daily-filter-chip { font-size: 0.75rem; padding: 5px 10px; }
+  .prisignal-daily-bottom-nav { border-radius: 12px; }
+  .prisignal-daily-bottom-date { font-size: 0.82rem; }
 }

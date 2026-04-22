@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom';
  * /api/daily/:date 프록시를 통해 GCS 데일리 JSON을 조회합니다.
  */
 
-const CATEGORY_ICONS = {
-  attitude: '🎯',
-  priority: '⚡',
-  ai: '🤖',
-  global: '🌍',
-  product: '📦',
+const CATEGORY_META = {
+  attitude: { icon: '🎯', name: 'Attitude', color: '#F472B6' },
+  priority: { icon: '⚡', name: 'Priority', color: '#FBBF24' },
+  ai:      { icon: '🤖', name: 'AI',       color: '#34D399' },
+  global:  { icon: '🌍', name: 'Global',   color: '#60A5FA' },
+  product: { icon: '📦', name: 'Product',  color: '#C084FC' },
 };
 
 function getTodayKST() {
@@ -36,11 +36,11 @@ function getRecentDates(days = 7) {
   return dates;
 }
 
-function formatShortDate(dateStr) {
+function parseDateParts(dateStr) {
   const [, m, d] = dateStr.split('-').map(Number);
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   const dt = new Date(dateStr + 'T00:00:00');
-  return `${m}/${d}(${days[dt.getDay()]})`;
+  return { month: m, day: d, dayName: days[dt.getDay()] };
 }
 
 export default function PriSignalArchive() {
@@ -128,41 +128,73 @@ export default function PriSignalArchive() {
 
         {!loading && dailyEntries.length > 0 && (
           <div className="prisignal-archive-grid">
-            {dailyEntries.map((entry) => (
-              <Link
-                to={`/prisignal/${entry.date}`}
-                className={`prisignal-archive-card${entry.isToday ? ' today' : ''}`}
-                key={entry.date}
-                id={`dailyCard-${entry.date}`}
-              >
-                <div className="prisignal-archive-card-header">
-                  <span className="prisignal-archive-card-number">
-                    📡 {formatShortDate(entry.date)}
-                    {entry.isToday && <span className="prisignal-archive-today-badge">TODAY</span>}
-                  </span>
-                  <span className="prisignal-archive-card-date">
-                    {entry.total}개 시그널
-                  </span>
-                </div>
-
-                {entry.categories.length > 0 && (
-                  <div className="prisignal-archive-card-cats">
-                    {entry.categories.map((c, i) => (
-                      <span className="prisignal-archive-card-cat" key={i}>
-                        {c.icon} {c.name} ×{c.count}
-                      </span>
-                    ))}
+            {dailyEntries.map((entry) => {
+              const dp = parseDateParts(entry.date);
+              const totalCats = entry.categories.reduce((s, c) => s + c.count, 0);
+              return (
+                <Link
+                  to={`/prisignal/${entry.date}`}
+                  className={`prisignal-archive-card${entry.isToday ? ' today' : ''}`}
+                  key={entry.date}
+                  id={`dailyCard-${entry.date}`}
+                >
+                  {/* Left: Large date */}
+                  <div className="prisignal-archive-card-date-col">
+                    <span className="prisignal-archive-card-bigday">{dp.day}</span>
+                    <span className="prisignal-archive-card-dayname">{dp.dayName}</span>
                   </div>
-                )}
 
-                <div className="prisignal-archive-card-footer">
-                  {entry.dmPickCount > 0 && (
-                    <span className="prisignal-archive-dm-count">📬 DM {entry.dmPickCount}</span>
-                  )}
-                  <span className="prisignal-archive-card-read">보기 →</span>
-                </div>
-              </Link>
-            ))}
+                  {/* Right: Content */}
+                  <div className="prisignal-archive-card-body">
+                    <div className="prisignal-archive-card-header">
+                      <div className="prisignal-archive-card-count-row">
+                        <span className="prisignal-archive-card-total">
+                          {entry.total}<span className="prisignal-archive-card-total-label">시그널</span>
+                        </span>
+                        {entry.isToday && (
+                          <span className="prisignal-archive-today-badge">
+                            <span className="prisignal-archive-today-dot" />
+                            TODAY
+                          </span>
+                        )}
+                        {entry.dmPickCount > 0 && (
+                          <span className="prisignal-archive-dm-count">📬 DM {entry.dmPickCount}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Category chips with color dots */}
+                    {entry.categories.length > 0 && (
+                      <div className="prisignal-archive-card-cats">
+                        {entry.categories.map((c, i) => {
+                          const meta = CATEGORY_META[c.rawKey] || {};
+                          return (
+                            <span
+                              className="prisignal-archive-card-chip"
+                              key={i}
+                              style={{ '--chip-color': meta.color || '#9CA3AF' }}
+                            >
+                              <span className="prisignal-archive-chip-dot" />
+                              {c.name}
+                              <span className="prisignal-archive-chip-num">{c.count}</span>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    <div className="prisignal-archive-card-footer">
+                      <span className="prisignal-archive-card-read">
+                        보기
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                          <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
@@ -179,8 +211,9 @@ function getCategoryBreakdown(articles) {
   }
   return Object.entries(counts)
     .map(([cat, count]) => ({
-      icon: CATEGORY_ICONS[cat] || '📌',
-      name: cat.charAt(0).toUpperCase() + cat.slice(1),
+      rawKey: cat,
+      icon: CATEGORY_META[cat]?.icon || '📌',
+      name: CATEGORY_META[cat]?.name || (cat.charAt(0).toUpperCase() + cat.slice(1)),
       count,
     }))
     .sort((a, b) => b.count - a.count);
