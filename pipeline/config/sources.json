@@ -6,6 +6,7 @@
     "tier1Minimum": 1,
     "dmPickCount": 5,
     "maxPerSource": 5,
+    "minPerCategory": 2,
     "minWeightedScore": 14,
     "maxPerCategory": 8,
     "sendFrequency": "daily",

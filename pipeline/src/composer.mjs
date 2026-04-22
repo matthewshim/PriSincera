@@ -83,22 +83,50 @@ async function main() {
   const dmWithComments = await generateComments(dmPicks);
   const dmPickIds = dmWithComments.map(a => a.id);
 
-  // 6. 품질 필터링 — 최소 점수 + 카테고리별 캡
-  const MIN_WEIGHTED_SCORE = 14;  // 가중 점수 14점 미만 제외
+  // 6. 품질 필터링 — 카테고리별 최소 보장 + 점수 필터 + 카테고리별 캡
+  //    Pass 1: 카테고리별 최소 개수 보장 (점수 무관, 상위 N개)
+  //    Pass 2: 점수 임계값 이상 기사 추가 (최소 보장 제외)
+  //    Pass 3: 카테고리별 최대 캡 적용
+  const MIN_PER_CATEGORY = 2;     // 카테고리당 최소 2개 보장 (있는 만큼)
   const MAX_PER_CATEGORY = 8;     // 카테고리당 최대 8개
+  const MIN_WEIGHTED_SCORE = 14;  // 가중 점수 14점 미만 제외 (최소 보장분 제외)
 
-  const qualityFiltered = weighted
-    .sort((a, b) => b.weightedScore - a.weightedScore)
-    .filter(a => a.weightedScore >= MIN_WEIGHTED_SCORE || dmPickIds.includes(a.id)); // DM 픽은 항상 포함
+  const sorted = [...weighted].sort((a, b) => b.weightedScore - a.weightedScore);
 
-  // 카테고리별 캡 적용
-  const catCounts = {};
-  const cappedArticles = qualityFiltered.filter(a => {
-    catCounts[a.category] = (catCounts[a.category] || 0) + 1;
-    return catCounts[a.category] <= MAX_PER_CATEGORY || dmPickIds.includes(a.id);
+  // Pass 1: 카테고리별 최소 보장 — 점수와 무관하게 상위 N개 확보
+  const guaranteed = new Set();
+  const catMinCounts = {};
+  for (const a of sorted) {
+    catMinCounts[a.category] = (catMinCounts[a.category] || 0) + 1;
+    if (catMinCounts[a.category] <= MIN_PER_CATEGORY) {
+      guaranteed.add(a.id);
+    }
+  }
+
+  // Pass 2: 점수 임계값 통과 기사 + DM 픽 추가
+  const qualifiedIds = new Set(guaranteed);
+  for (const a of sorted) {
+    if (a.weightedScore >= MIN_WEIGHTED_SCORE || dmPickIds.includes(a.id)) {
+      qualifiedIds.add(a.id);
+    }
+  }
+
+  // Pass 3: 카테고리별 최대 캡 적용
+  const catCapCounts = {};
+  const cappedArticles = sorted.filter(a => {
+    if (!qualifiedIds.has(a.id)) return false;
+    catCapCounts[a.category] = (catCapCounts[a.category] || 0) + 1;
+    // 최소 보장분과 DM 픽은 캡에서 제외
+    if (guaranteed.has(a.id) || dmPickIds.includes(a.id)) return true;
+    return catCapCounts[a.category] <= MAX_PER_CATEGORY;
   });
 
-  console.log(`[Composer] 품질 필터: ${weighted.length}개 → ${cappedArticles.length}개 (점수 ${MIN_WEIGHTED_SCORE}+, 카테고리당 ${MAX_PER_CATEGORY}개)`);
+  // 필터 결과 카테고리별 로깅
+  const catFinal = {};
+  cappedArticles.forEach(a => { catFinal[a.category] = (catFinal[a.category] || 0) + 1; });
+  const catSummary = Object.entries(catFinal).map(([k, v]) => `${k}:${v}`).join(', ');
+  console.log(`[Composer] 품질 필터: ${weighted.length}개 → ${cappedArticles.length}개 (최소 ${MIN_PER_CATEGORY}/카테고리, 점수 ${MIN_WEIGHTED_SCORE}+, 최대 ${MAX_PER_CATEGORY}/카테고리)`);
+  console.log(`[Composer] 카테고리별: ${catSummary}`);
 
   // 7. 스코어링된 데일리 JSON 갱신
   // 전체 아티클에 점수 반영 + DM 픽 코멘트 반영
