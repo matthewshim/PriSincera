@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import PriSignalHero from '../components/prisignal/PriSignalHero';
 import PriSignalValue from '../components/prisignal/PriSignalValue';
 import PriSignalCategories from '../components/prisignal/PriSignalCategories';
@@ -11,9 +11,39 @@ import './PriSignal.css';
 /**
  * PriSignal Landing Page — /prisignal
  * Dedicated page for the PriSignal daily AI-curated newsletter service.
- * Sections: Hero → Value → Categories → SIGNAL → Archive (Daily) → Subscribe CTA → FAQ
+ *
+ * Layout: Hero (shared) → Sub-tabs [소개 | 아티클]
+ *   - 소개 (default): Value → Categories → Signal → Subscribe CTA → FAQ
+ *   - 아티클: Archive (Daily signal list)
  */
+
+const TABS = [
+  { key: 'intro', label: '서비스 소개', icon: '📋' },
+  { key: 'articles', label: '데일리 시그널', icon: '📰' },
+];
+
 export default function PriSignal() {
+  const [activeTab, setActiveTab] = useState('intro');
+  const tabsRef = useRef(null);
+  const indicatorRef = useRef(null);
+
+  // Position the indicator under the active tab button
+  const updateIndicator = useCallback(() => {
+    if (!tabsRef.current || !indicatorRef.current) return;
+    const activeBtn = tabsRef.current.querySelector('.prisignal-tab.active');
+    if (!activeBtn) return;
+    const containerRect = tabsRef.current.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+    indicatorRef.current.style.left = `${btnRect.left - containerRect.left}px`;
+    indicatorRef.current.style.width = `${btnRect.width}px`;
+  }, []);
+
+  useEffect(() => {
+    updateIndicator();
+    window.addEventListener('resize', updateIndicator);
+    return () => window.removeEventListener('resize', updateIndicator);
+  }, [activeTab, updateIndicator]);
+
   useEffect(() => {
     document.title = 'PriSignal — 노이즈 속에서 시그널을 포착하다 | PriSincera';
     window.scrollTo(0, 0);
@@ -63,15 +93,68 @@ export default function PriSignal() {
     };
   }, []);
 
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+    // Scroll to tab bar so user sees content change
+    const tabBar = document.getElementById('prisignal-tabs');
+    if (tabBar) {
+      const top = tabBar.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="prisignal-page">
       <PriSignalHero />
-      <PriSignalValue />
-      <PriSignalCategories />
-      <PriSignalSignal />
-      <PriSignalArchive />
-      <PriSignalSubscribe />
-      <PriSignalFAQ />
+
+      {/* ── Sub-tab navigation ── */}
+      <nav className="prisignal-tabs" id="prisignal-tabs" role="tablist" aria-label="PriSignal 콘텐츠 탭">
+        <div className="prisignal-tabs-inner" ref={tabsRef}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              role="tab"
+              id={`tab-${tab.key}`}
+              aria-selected={activeTab === tab.key}
+              aria-controls={`panel-${tab.key}`}
+              className={`prisignal-tab${activeTab === tab.key ? ' active' : ''}`}
+              onClick={() => handleTabChange(tab.key)}
+            >
+              <span className="prisignal-tab-icon">{tab.icon}</span>
+              <span className="prisignal-tab-label">{tab.label}</span>
+            </button>
+          ))}
+          {/* Animated active indicator */}
+          <span className="prisignal-tab-indicator" ref={indicatorRef} />
+        </div>
+      </nav>
+
+
+      {/* ── Tab panels ── */}
+      <div
+        className="prisignal-tab-panel"
+        role="tabpanel"
+        id="panel-intro"
+        aria-labelledby="tab-intro"
+        hidden={activeTab !== 'intro'}
+      >
+        <PriSignalValue />
+        <PriSignalCategories />
+        <PriSignalSignal />
+        <PriSignalSubscribe />
+        <PriSignalFAQ />
+      </div>
+
+      <div
+        className="prisignal-tab-panel"
+        role="tabpanel"
+        id="panel-articles"
+        aria-labelledby="tab-articles"
+        hidden={activeTab !== 'articles'}
+      >
+        <PriSignalArchive />
+      </div>
     </div>
   );
 }
+

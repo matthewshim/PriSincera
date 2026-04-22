@@ -85,6 +85,103 @@
     text-align: center;
 }
 
+/* --- Sub-tab Navigation --- */
+.prisignal-tabs {
+    position: sticky;
+    top: 80px;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--space-xl);
+    background: rgba(10, 7, 20, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(196, 181, 253, 0.06);
+}
+
+.prisignal-tabs-inner {
+    position: relative;
+    display: flex;
+    gap: var(--space-xs);
+    max-width: 900px;
+    width: 100%;
+    justify-content: center;
+}
+
+.prisignal-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: var(--space-md) var(--space-xl);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.prisignal-tab:hover {
+    color: var(--text-secondary);
+}
+
+.prisignal-tab.active {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.prisignal-tab-icon {
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.prisignal-tab.active .prisignal-tab-icon {
+    transform: scale(1.1);
+}
+
+.prisignal-tab-label {
+    letter-spacing: 0.01em;
+}
+
+/* Animated underline indicator */
+.prisignal-tab-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background: var(--gradient-brand);
+    border-radius: 2px 2px 0 0;
+    transition: left var(--duration-normal) var(--ease-out),
+                width var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+}
+
+/* Tab panel transitions */
+.prisignal-tab-panel {
+    animation: tabFadeIn 0.35s ease-out;
+}
+
+.prisignal-tab-panel[hidden] {
+    display: none;
+}
+
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* --- Value Proposition --- */
 .prisignal-value {
     padding-bottom: 0;
@@ -893,6 +990,21 @@
 
     .prisignal-section {
         padding: var(--space-xl) var(--space-md);
+    }
+
+    .prisignal-tabs {
+        top: 60px;
+        padding: 0 var(--space-md);
+    }
+
+    .prisignal-tab {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.85rem;
+        gap: 6px;
+    }
+
+    .prisignal-tab-icon {
+        font-size: 0.9rem;
     }
 
     .prisignal-value-grid {
