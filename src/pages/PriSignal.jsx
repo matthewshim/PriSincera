@@ -26,6 +26,7 @@ export default function PriSignal() {
   const [activeTab, setActiveTab] = useState('intro');
   const tabsRef = useRef(null);
   const indicatorRef = useRef(null);
+  const tabsNavRef = useRef(null);
 
   // Position the indicator under the active tab button
   const updateIndicator = useCallback(() => {
@@ -43,6 +44,30 @@ export default function PriSignal() {
     window.addEventListener('resize', updateIndicator);
     return () => window.removeEventListener('resize', updateIndicator);
   }, [activeTab, updateIndicator]);
+
+  // Sync tab bar top position with GNB actual height
+  useEffect(() => {
+    const gnb = document.querySelector('.nav');
+    if (!gnb || !tabsNavRef.current) return;
+
+    const syncTop = () => {
+      const h = gnb.getBoundingClientRect().height;
+      tabsNavRef.current.style.top = `${h}px`;
+    };
+
+    syncTop();
+
+    // Observe GNB height changes (scroll state, resize)
+    const ro = new ResizeObserver(syncTop);
+    ro.observe(gnb);
+    window.addEventListener('scroll', syncTop, { passive: true });
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('scroll', syncTop);
+    };
+  }, []);
+
 
   useEffect(() => {
     document.title = 'PriSignal — 노이즈 속에서 시그널을 포착하다 | PriSincera';
@@ -108,7 +133,7 @@ export default function PriSignal() {
       <PriSignalHero />
 
       {/* ── Sub-tab navigation ── */}
-      <nav className="prisignal-tabs" id="prisignal-tabs" role="tablist" aria-label="PriSignal 콘텐츠 탭">
+      <nav className="prisignal-tabs" id="prisignal-tabs" ref={tabsNavRef} role="tablist" aria-label="PriSignal 콘텐츠 탭">
         <div className="prisignal-tabs-inner" ref={tabsRef}>
           {TABS.map((tab) => (
             <button

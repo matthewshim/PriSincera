@@ -88,7 +88,7 @@
 /* --- Sub-tab Navigation --- */
 .prisignal-tabs {
     position: sticky;
-    top: 80px;
+    top: 0; /* JS dynamically sets this to match GNB height */
     z-index: 20;
     display: flex;
     justify-content: center;
@@ -993,7 +993,6 @@
     }
 
     .prisignal-tabs {
-        top: 60px;
         padding: 0 var(--space-md);
     }
 
