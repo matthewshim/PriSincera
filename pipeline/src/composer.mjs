@@ -26,7 +26,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function main() {
   const startTime = Date.now();
-  const todayStr = getTodayKST();
+  const todayStr = process.env.TARGET_DATE || getTodayKST();
 
   console.log('═══════════════════════════════════════');
   console.log('🤖 PriSignal Composer v2 (Daily) 시작');
