@@ -38,7 +38,7 @@ export default function PriSignalCategories() {
   return (
     <section className="prisignal-section prisignal-categories" id="priSignalCategories">
       <div className="prisignal-section-inner">
-        <h2 className="prisignal-categories-title">다루는 시그널</h2>
+        <h2 className="prisignal-categories-title">다루는 <span className="accent">시그널</span></h2>
         <div className="prisignal-categories-grid">
           {categories.map((cat, i) => (
             <div

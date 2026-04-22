@@ -182,6 +182,19 @@
     }
 }
 
+/* --- Shared Section Title Accent --- */
+.prisignal-value-title .accent,
+.prisignal-categories-title .accent,
+.prisignal-signal-title .accent,
+.prisignal-cta-title .accent,
+.prisignal-faq-title .accent,
+.prisignal-archive-title .accent {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 /* --- Value Proposition --- */
 .prisignal-value {
     padding-bottom: 0;
@@ -189,8 +202,8 @@
 
 .prisignal-value-title {
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
     color: var(--text-primary);
     text-align: center;
     margin-bottom: var(--space-2xl);
@@ -233,7 +246,7 @@
 }
 
 .prisignal-value-card-desc {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
     line-height: 1.7;
 }
@@ -241,8 +254,8 @@
 /* --- Categories --- */
 .prisignal-categories-title {
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
     color: var(--text-primary);
     text-align: center;
     margin-bottom: var(--space-2xl);
@@ -301,23 +314,23 @@
 
 .prisignal-category-name {
     font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
 }
 
 .prisignal-category-desc {
-    font-size: 0.8rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.7;
     padding-left: 2rem;
 }
 
 /* --- SIGNAL Selection Criteria --- */
 .prisignal-signal-title {
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
     color: var(--text-primary);
     text-align: center;
     margin-bottom: var(--space-sm);
@@ -402,9 +415,9 @@
 }
 
 .prisignal-signal-desc {
-    font-size: 0.8rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.7;
     margin-bottom: var(--space-sm);
 }
 
@@ -454,8 +467,8 @@
 
 .prisignal-cta-title {
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
     color: var(--text-primary);
     margin-bottom: var(--space-sm);
 }
@@ -480,8 +493,8 @@
 /* --- FAQ --- */
 .prisignal-faq-title {
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
     color: var(--text-primary);
     text-align: center;
     margin-bottom: var(--space-2xl);
@@ -514,7 +527,7 @@
     border: none;
     color: var(--text-primary);
     font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 500;
     text-align: left;
     cursor: pointer;
@@ -561,8 +574,8 @@
 /* --- Archive (④ Latest Issues) --- */
 .prisignal-archive-title {
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
     color: var(--text-primary);
     text-align: center;
     margin-bottom: var(--space-2xl);

@@ -23,7 +23,7 @@ export default function PriSignalValue() {
   return (
     <section className="prisignal-section prisignal-value" id="priSignalValue">
       <div className="prisignal-section-inner">
-        <h2 className="prisignal-value-title">왜 PriSignal인가?</h2>
+        <h2 className="prisignal-value-title">왜 <span className="accent">PriSignal</span>인가?</h2>
         <div className="prisignal-value-grid">
           {values.map((v, i) => (
             <div className="prisignal-value-card" key={i}>

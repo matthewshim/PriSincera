@@ -40,7 +40,7 @@ export default function PriSignalFAQ() {
   return (
     <section className="prisignal-section prisignal-faq" id="priSignalFAQ">
       <div className="prisignal-section-inner">
-        <h2 className="prisignal-faq-title">자주 묻는 질문</h2>
+        <h2 className="prisignal-faq-title">자주 묻는 <span className="accent">질문</span></h2>
         <div className="prisignal-faq-list">
           {faqs.map((faq, i) => (
             <div

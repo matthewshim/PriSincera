@@ -51,7 +51,7 @@ export default function PriSignalSignal() {
   return (
     <section className="prisignal-section prisignal-signal" id="priSignalSignal">
       <div className="prisignal-section-inner">
-        <h2 className="prisignal-signal-title">시그널을 고르는 기준</h2>
+        <h2 className="prisignal-signal-title">시그널을 고르는 <span className="accent">기준</span></h2>
         <p className="prisignal-signal-subtitle">
           매주 35개 글로벌 소스에서 수집된 수백 개의 아티클 중,<br />
           6가지 기준으로 진짜 시그널만 포착합니다.
