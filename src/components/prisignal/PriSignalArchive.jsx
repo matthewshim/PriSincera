@@ -91,7 +91,6 @@ export default function PriSignalArchive() {
   return (
     <section className="prisignal-section prisignal-archive" id="priSignalArchive">
       <div className="prisignal-section-inner">
-        <h2 className="prisignal-archive-title">최근 <span className="accent">시그널</span></h2>
 
         {loading && (
           <div className="prisignal-archive-loading">

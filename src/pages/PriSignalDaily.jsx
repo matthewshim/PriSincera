@@ -191,10 +191,6 @@ export default function PriSignalDaily() {
     <div className="prisignal-daily-page">
       {/* ── Hero Header ── */}
       <header className="prisignal-daily-header">
-        <h1 className="prisignal-daily-title">
-          데일리 <span className="accent">시그널</span>
-        </h1>
-
         <div className="prisignal-daily-date-nav-row">
           <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-date-arrow" id="dailyNavPrev">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
