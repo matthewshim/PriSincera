@@ -71,7 +71,6 @@ function getTodayKST() {
 
 export default function PriSignalDaily() {
   const { date } = useParams();
-  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
