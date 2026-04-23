@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import './PriSignalDaily.css';
 
 /**
@@ -179,81 +179,54 @@ export default function PriSignalDaily() {
 
   return (
     <div className="prisignal-daily-page">
-      {/* ── Sticky Top Bar ── */}
-      <div className="prisignal-daily-topbar" id="dailyTopbar">
-        <Link to="/prisignal" className="prisignal-daily-topbar-back" id="dailyBackLink">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          PriSignal
-        </Link>
-        <div className="prisignal-daily-topbar-center">
-          <span className="prisignal-daily-topbar-date">{dateInfo.month}/{dateInfo.day}</span>
-          {isToday && <span className="prisignal-daily-topbar-today">TODAY</span>}
-        </div>
-        <div className="prisignal-daily-topbar-nav">
-          <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-topbar-navbtn" id="dailyNavPrevTop" title="이전 날짜">
-            ‹
-          </Link>
-          {!isFuture && date < today && (
-            <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-topbar-navbtn" id="dailyNavNextTop" title="다음 날짜">
-              ›
-            </Link>
-          )}
-        </div>
-      </div>
+      {/* ── Back Link ── */}
+      <Link to="/prisignal" className="prisignal-daily-back" id="dailyBackLink">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        PriSignal
+      </Link>
 
-      {/* ── Hero Header ── */}
+      {/* ── Hero Header with Integrated Nav ── */}
       <header className="prisignal-daily-header">
-        <div className="prisignal-daily-hero">
-          <div className="prisignal-daily-date-display">
+        <div className="prisignal-daily-date-nav-row">
+          <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-date-arrow" id="dailyNavPrev" title={formatNavDate(prevDate)}>
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="prisignal-daily-date-arrow-label">{formatNavDate(prevDate)}</span>
+          </Link>
+
+          <div className="prisignal-daily-date-center">
             <span className="prisignal-daily-date-day">{dateInfo.day}</span>
             <div className="prisignal-daily-date-info">
               <span className="prisignal-daily-date-month">{dateInfo.month}월</span>
               <span className="prisignal-daily-date-dayname">{dateInfo.dayName}요일</span>
             </div>
-            {isToday && (
-              <span className="prisignal-daily-today-badge" id="dailyTodayBadge">
-                <span className="prisignal-daily-today-dot" />
-                TODAY
-              </span>
-            )}
           </div>
-          <h1 className="prisignal-daily-title">
-            데일리 <span className="accent">시그널</span>
-          </h1>
-          {!loading && !error && (
-            <p className="prisignal-daily-subtitle">
-              {totalCount > 0
-                ? `${totalCount}개의 시그널을 포착했습니다${dmPicks.length > 0 ? ` · DM 픽 ${dmPicks.length}개` : ''}`
-                : '오늘은 시그널이 조용합니다'}
-            </p>
-          )}
-        </div>
 
-        {/* Date Navigation */}
-        <nav className="prisignal-daily-nav" id="dailyDateNav">
-          <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-nav-btn" id="dailyNavPrev">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            {formatNavDate(prevDate)}
-          </Link>
-          {!isToday && (
-            <Link to={`/prisignal/${today}`} className="prisignal-daily-nav-today" id="dailyNavToday">
-              <span className="prisignal-daily-nav-today-dot" />
-              오늘
-            </Link>
-          )}
-          {!isFuture && date < today && (
-            <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-nav-btn" id="dailyNavNext">
-              {formatNavDate(nextDate)}
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          {!isFuture && date < today ? (
+            <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-date-arrow next" id="dailyNavNext" title={formatNavDate(nextDate)}>
+              <span className="prisignal-daily-date-arrow-label">{formatNavDate(nextDate)}</span>
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
                 <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </Link>
+          ) : (
+            <div className="prisignal-daily-date-arrow next disabled" />
           )}
-        </nav>
+        </div>
+
+        <h1 className="prisignal-daily-title">
+          데일리 <span className="accent">시그널</span>
+        </h1>
+        {!loading && !error && (
+          <p className="prisignal-daily-subtitle">
+            {totalCount > 0
+              ? `${totalCount}개의 시그널을 포착했습니다${dmPicks.length > 0 ? ` · DM 픽 ${dmPicks.length}개` : ''}`
+              : '오늘은 시그널이 조용합니다'}
+          </p>
+        )}
       </header>
 
       {/* ── Loading ── */}
@@ -399,33 +372,15 @@ export default function PriSignalDaily() {
         </main>
       )}
 
-      {/* ── Bottom Navigation ── */}
-      <nav className="prisignal-daily-bottom-nav" id="dailyBottomNav">
-        <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-bottom-link prev" id="dailyBottomPrev">
-          <span className="prisignal-daily-bottom-label">이전 시그널</span>
-          <span className="prisignal-daily-bottom-date">{formatNavDate(prevDate)}</span>
-        </Link>
-        <Link to="/prisignal" className="prisignal-daily-bottom-center" id="dailyBottomList">
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
-            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
-            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
-            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+      {/* ── List Link ── */}
+      <div className="prisignal-daily-list-link-wrap">
+        <Link to="/prisignal" className="prisignal-daily-list-link" id="dailyListLink">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
           </svg>
-          목록
+          전체 시그널 목록 보기
         </Link>
-        {!isFuture && date < today ? (
-          <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-bottom-link next" id="dailyBottomNext">
-            <span className="prisignal-daily-bottom-label">다음 시그널</span>
-            <span className="prisignal-daily-bottom-date">{formatNavDate(nextDate)}</span>
-          </Link>
-        ) : (
-          <div className="prisignal-daily-bottom-link next disabled">
-            <span className="prisignal-daily-bottom-label">다음 시그널</span>
-            <span className="prisignal-daily-bottom-date">—</span>
-          </div>
-        )}
-      </nav>
+      </div>
 
       {/* ── Subscribe CTA ── */}
       <section className="prisignal-daily-cta">
