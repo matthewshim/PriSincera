@@ -49,7 +49,18 @@ function formatShortDate(dateStr) {
 function getAdjacentDate(dateStr, offset) {
   const [y, m, d] = dateStr.split('-').map(Number);
   const dt = new Date(y, m - 1, d + offset);
-  return dt.toISOString().split('T')[0];
+  const yy = dt.getFullYear();
+  const mm = String(dt.getMonth() + 1).padStart(2, '0');
+  const dd = String(dt.getDate()).padStart(2, '0');
+  return `${yy}-${mm}-${dd}`;
+}
+
+/** 네비게이션용 날짜 포맷: "04-22(수)" */
+function formatNavDate(dateStr) {
+  const [, m, d] = dateStr.split('-').map(Number);
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dt = new Date(dateStr + 'T00:00:00');
+  return `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}(${days[dt.getDay()]})`;
 }
 
 function getTodayKST() {
@@ -226,7 +237,7 @@ export default function PriSignalDaily() {
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
               <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            {prevDate.slice(5)}
+            {formatNavDate(prevDate)}
           </Link>
           {!isToday && (
             <Link to={`/prisignal/${today}`} className="prisignal-daily-nav-today" id="dailyNavToday">
@@ -236,7 +247,7 @@ export default function PriSignalDaily() {
           )}
           {!isFuture && date < today && (
             <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-nav-btn" id="dailyNavNext">
-              {nextDate.slice(5)}
+              {formatNavDate(nextDate)}
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                 <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -392,7 +403,7 @@ export default function PriSignalDaily() {
       <nav className="prisignal-daily-bottom-nav" id="dailyBottomNav">
         <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-bottom-link prev" id="dailyBottomPrev">
           <span className="prisignal-daily-bottom-label">이전 시그널</span>
-          <span className="prisignal-daily-bottom-date">{prevDate.slice(5).replace('-', '/')}</span>
+          <span className="prisignal-daily-bottom-date">{formatNavDate(prevDate)}</span>
         </Link>
         <Link to="/prisignal" className="prisignal-daily-bottom-center" id="dailyBottomList">
           <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
@@ -406,7 +417,7 @@ export default function PriSignalDaily() {
         {!isFuture && date < today ? (
           <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-bottom-link next" id="dailyBottomNext">
             <span className="prisignal-daily-bottom-label">다음 시그널</span>
-            <span className="prisignal-daily-bottom-date">{nextDate.slice(5).replace('-', '/')}</span>
+            <span className="prisignal-daily-bottom-date">{formatNavDate(nextDate)}</span>
           </Link>
         ) : (
           <div className="prisignal-daily-bottom-link next disabled">
