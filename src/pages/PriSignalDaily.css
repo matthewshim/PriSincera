@@ -13,67 +13,61 @@
   padding-bottom: var(--space-2xl);
 }
 
-/* --- Back Link --- */
-.prisignal-daily-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  font-weight: 500;
-  margin-bottom: var(--space-lg);
-  opacity: 0.8;
-  transition: all 0.2s;
-}
-.prisignal-daily-back:hover {
-  opacity: 1;
-  color: var(--orbit-cyan);
-}
-
 /* --- Hero Header --- */
 .prisignal-daily-header {
   text-align: center;
-  padding-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   margin-bottom: var(--space-lg);
 }
 
-/* Integrated Date Nav Row: ‹ prev | DATE | next › */
+.prisignal-daily-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md);
+  letter-spacing: -0.02em;
+}
+.prisignal-daily-title .accent {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Integrated Date Nav Row: arrows pushed to far edges */
 .prisignal-daily-date-nav-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-md);
-  margin-bottom: var(--space-md);
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
 }
 
-/* Arrow buttons (prev / next) */
+/* Arrow links — borderless, ghost style */
 .prisignal-daily-date-arrow {
   display: flex;
   align-items: center;
   gap: 4px;
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.8rem;
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.25s var(--ease-out);
-  min-width: 110px;
-  justify-content: center;
+  font-size: 0.82rem;
+  padding: 6px 4px;
+  background: none;
+  border: none;
+  transition: color 0.2s var(--ease-out);
+  min-width: 100px;
 }
 .prisignal-daily-date-arrow:hover {
-  border-color: rgba(196, 181, 253, 0.25);
-  color: var(--text-secondary);
-  background: rgba(196, 181, 253, 0.06);
+  color: var(--text-primary);
+}
+.prisignal-daily-date-arrow.next {
+  justify-content: flex-end;
 }
 .prisignal-daily-date-arrow.disabled {
   opacity: 0;
   pointer-events: none;
-  min-width: 110px;
+  min-width: 100px;
 }
 .prisignal-daily-date-arrow-label {
   font-family: var(--font-display);
@@ -91,7 +85,6 @@
   font-family: var(--font-display);
   font-size: clamp(3rem, 8vw, 4.5rem);
   font-weight: 700;
-  color: var(--text-primary);
   line-height: 1;
   letter-spacing: -0.04em;
   background: var(--gradient-brand);
@@ -116,25 +109,27 @@
   color: var(--text-muted);
 }
 
-.prisignal-daily-title {
+/* Daily List Button */
+.prisignal-daily-list-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 var(--space-xs);
-  letter-spacing: -0.02em;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s;
+  margin-top: var(--space-xs);
 }
-.prisignal-daily-title .accent {
-  background: var(--gradient-brand);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.prisignal-daily-subtitle {
+.prisignal-daily-list-btn:hover {
+  border-color: rgba(196, 181, 253, 0.2);
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin: 0;
+  background: rgba(196, 181, 253, 0.05);
 }
 
 /* --- Loading --- */
@@ -413,33 +408,7 @@
 }
 .prisignal-daily-card-link:hover { opacity: 1; gap: 6px; }
 
-/* --- List Link --- */
-.prisignal-daily-list-link-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--space-xl);
-  margin-bottom: var(--space-md);
-}
-.prisignal-daily-list-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 8px 20px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.25s var(--ease-out);
-}
-.prisignal-daily-list-link:hover {
-  border-color: rgba(196, 181, 253, 0.2);
-  color: var(--text-secondary);
-  background: rgba(196, 181, 253, 0.05);
-}
+
 
 /* --- Subscribe CTA --- */
 .prisignal-daily-cta {

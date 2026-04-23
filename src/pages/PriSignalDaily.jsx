@@ -134,12 +134,23 @@ export default function PriSignalDaily() {
     }, {});
   }, [data]);
 
+  // DM pick count
+  const dmPickCount = useMemo(() => {
+    if (!data?.articles) return 0;
+    return data.articles.filter(a => a.isDmPick).length;
+  }, [data]);
+
   // Group articles by category, filtered
   const groupedArticles = useMemo(() => {
     if (!data?.articles) return {};
-    const filtered = activeFilter === 'all'
-      ? data.articles
-      : data.articles.filter(a => (a.category || 'etc') === activeFilter);
+    let filtered;
+    if (activeFilter === 'all') {
+      filtered = data.articles;
+    } else if (activeFilter === 'dm') {
+      filtered = data.articles.filter(a => a.isDmPick);
+    } else {
+      filtered = data.articles.filter(a => (a.category || 'etc') === activeFilter);
+    }
     return filtered.reduce((acc, a) => {
       const cat = a.category || 'etc';
       if (!acc[cat]) acc[cat] = [];
@@ -178,19 +189,15 @@ export default function PriSignalDaily() {
 
   return (
     <div className="prisignal-daily-page">
-      {/* ── Back Link ── */}
-      <Link to="/prisignal" className="prisignal-daily-back" id="dailyBackLink">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        PriSignal
-      </Link>
-
-      {/* ── Hero Header with Integrated Nav ── */}
+      {/* ── Hero Header ── */}
       <header className="prisignal-daily-header">
+        <h1 className="prisignal-daily-title">
+          데일리 <span className="accent">시그널</span>
+        </h1>
+
         <div className="prisignal-daily-date-nav-row">
-          <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-date-arrow" id="dailyNavPrev" title={formatNavDate(prevDate)}>
-            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+          <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-date-arrow" id="dailyNavPrev">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span className="prisignal-daily-date-arrow-label">{formatNavDate(prevDate)}</span>
@@ -205,9 +212,9 @@ export default function PriSignalDaily() {
           </div>
 
           {!isFuture && date < today ? (
-            <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-date-arrow next" id="dailyNavNext" title={formatNavDate(nextDate)}>
+            <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-date-arrow next" id="dailyNavNext">
               <span className="prisignal-daily-date-arrow-label">{formatNavDate(nextDate)}</span>
-              <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </Link>
@@ -216,16 +223,12 @@ export default function PriSignalDaily() {
           )}
         </div>
 
-        <h1 className="prisignal-daily-title">
-          데일리 <span className="accent">시그널</span>
-        </h1>
-        {!loading && !error && (
-          <p className="prisignal-daily-subtitle">
-            {totalCount > 0
-              ? `${totalCount}개의 시그널을 포착했습니다${dmPicks.length > 0 ? ` · DM 픽 ${dmPicks.length}개` : ''}`
-              : '오늘은 시그널이 조용합니다'}
-          </p>
-        )}
+        <Link to="/prisignal#daily" className="prisignal-daily-list-btn" id="dailyListBtn">
+          Daily List
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+            <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </Link>
       </header>
 
       {/* ── Loading ── */}
@@ -258,6 +261,18 @@ export default function PriSignalDaily() {
             전체
             <span className="prisignal-daily-filter-count">{totalCount}</span>
           </button>
+          {dmPickCount > 0 && (
+            <button
+              className={`prisignal-daily-filter-chip${activeFilter === 'dm' ? ' active' : ''}`}
+              onClick={() => setActiveFilter('dm')}
+              style={{ '--chip-color': '#C4B5FD' }}
+              id="filter-dm"
+            >
+              <span className="prisignal-daily-filter-dot" />
+              DM 픽
+              <span className="prisignal-daily-filter-count">{dmPickCount}</span>
+            </button>
+          )}
           {filterCategories.map(cat => (
             <button
               key={cat.key}
