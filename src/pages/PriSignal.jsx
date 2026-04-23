@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import PriSignalHero from '../components/prisignal/PriSignalHero';
 import PriSignalValue from '../components/prisignal/PriSignalValue';
 import PriSignalCategories from '../components/prisignal/PriSignalCategories';
@@ -23,6 +24,7 @@ const TABS = [
 ];
 
 export default function PriSignal() {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('intro');
   const tabsRef = useRef(null);
   const indicatorRef = useRef(null);
@@ -67,6 +69,13 @@ export default function PriSignal() {
       window.removeEventListener('scroll', syncTop);
     };
   }, []);
+
+  // Hash-based tab switching: #daily → articles tab
+  useEffect(() => {
+    if (location.hash === '#daily') {
+      setActiveTab('articles');
+    }
+  }, [location.hash]);
 
 
   useEffect(() => {
