@@ -1,6 +1,6 @@
 # 📘 PriSincera — 개발 관리 & 운영 가이드
 
-> **최종 업데이트**: 2026-04-17  
+> **최종 업데이트**: 2026-04-23  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
 > CI/CD 파이프라인, 커스텀 도메인 연결까지의 전체 개발 운영 프로세스를 기록합니다.
 
@@ -83,17 +83,27 @@ prisincera.com (커스텀 도메인)
 d:\prisincera\www\
 │
 ├── 📁 src/                     # ── React 소스 코드 ──
-│   ├── App.jsx                 # 루트 컴포넌트
+│   ├── App.jsx                 # 루트 컴포넌트 (React Router 설정)
 │   ├── main.jsx                # 엔트리 포인트
 │   ├── 📁 components/          # 재사용 가능한 UI 컴포넌트
 │   │   ├── 📁 common/          #   공통 컴포넌트
 │   │   ├── 📁 hero/            #   히어로 섹션 (Canvas 30fps 제한 적용)
 │   │   ├── 📁 layout/          #   레이아웃 (헤더, 푸터 등)
 │   │   ├── 📁 philosophy/      #   Belief 섹션 (철학 + 신념 카드)
-│   │   └── 📁 journey/         #   Journey 섹션 (커리어 타임라인)
+│   │   ├── 📁 journey/         #   Journey 섹션 (커리어 타임라인)
+│   │   ├── 📁 connect/         #   Connect 섹션 (연락처)
+│   │   └── 📁 prisignal/       #   PriSignal 컴포넌트 (Hero, Value, Archive 등)
 │   ├── 📁 hooks/               # 커스텀 React 훅
 │   ├── 📁 pages/               # 페이지 컴포넌트
+│   │   ├── Home.jsx/css        #   메인 페이지
+│   │   ├── PriSignal.jsx/css   #   PriSignal 랜딩 (탭: 소개/데일리)
+│   │   └── PriSignalDaily.jsx/css  # PriSignal 데일리 상세 (/prisignal/:date)
 │   └── 📁 styles/              # 글로벌 CSS 스타일
+│
+├── 📁 pipeline/                # ── PriSignal 데일리 파이프라인 ──
+│   ├── 📁 src/                 #   Cloud Functions 소스
+│   ├── 📁 config/              #   소스 설정 (sources.json)
+│   └── setup-infra.sh          #   인프라 셋업 스크립트
 │
 ├── 📁 public/                  # ── 정적 에셋 (빌드 시 dist로 복사) ──
 │   └── 📁 audio/               #   BGM 등 오디오 파일
@@ -102,18 +112,12 @@ d:\prisincera\www\
 ├── 📁 docs/                    # ── 프로젝트 문서 ──
 ├── 📁 ci/                      # ── CI/브랜딩 관련 ──
 │
-├── 📁 scripts/                 # 개발 스크립트 (gitignore)
-├── 📁 sound/                   # 사운드 원본 소스 (gitignore)
-│
 ├── 📄 index.html               # Vite 진입 HTML
 ├── 📄 vite.config.js           # Vite 설정
 ├── 📄 package.json             # 프로젝트 & 의존성 정의
-├── 📄 package-lock.json        # 의존성 잠금 파일
 ├── 📄 Dockerfile               # Docker 멀티스테이지 빌드 (Node→Nginx)
-├── 📄 nginx.conf               # Nginx 서버 설정 (SPA rewrite, 캐시, 보안)
+├── 📄 nginx.conf               # Nginx 서버 설정 (SPA rewrite, API 프록시, 캐시)
 ├── 📄 cloudbuild.yaml          # Cloud Build CI/CD 파이프라인 정의
-├── 📄 .dockerignore            # Docker 빌드 제외 목록
-
 └── 📄 .gitignore               # Git 추적 제외 목록
 ```
 
@@ -408,6 +412,15 @@ CMD ["nginx", "-g", "daemon off;"]
 | `listen` | `8080` | Cloud Run 필수 포트 |
 | `try_files` | `$uri $uri/ /index.html` | SPA 라우팅 폴백 |
 | `gzip` | `on` | 텍스트 기반 리소스 압축 |
+
+### 7-3a. API 프록시 라우트 (nginx.conf)
+
+| 경로 | 프록시 대상 | 용도 |
+|------|------------|------|
+| `/api/subscribe` | Buttondown API (`/v1/subscribers`) | 이메일 구독 |
+| `/api/archive` | Buttondown API (`/v1/emails`) | 뉴스레터 아카이브 |
+| `/api/daily/:date` | GCS (`prisincera-prisignal-data/daily/:date.json`) | 데일리 시그널 JSON |
+| `/api/daily/index` | GCS (`prisincera-prisignal-data/daily/index.json`) | 데일리 시그널 목록 |
 
 ### 7-4. 캐시 정책 (nginx.conf)
 
