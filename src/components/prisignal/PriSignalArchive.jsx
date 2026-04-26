@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 /**
  * PriSignal Archive — ④ 최근 시그널 섹션
  *
- * [Daily Model v2]
+ * [Daily Model v3 — OG Image]
  * 최근 7일의 데일리 시그널 페이지 목록을 표시합니다.
- * 각 날짜별 수집 개수와 카테고리 분포를 미리보기합니다.
+ * 각 날짜별 가장 스코어가 높은 아티클의 OG 이미지를 썸네일로 표시합니다.
  * /api/daily/:date 프록시를 통해 GCS 데일리 JSON을 조회합니다.
  */
 
@@ -60,12 +60,22 @@ export default function PriSignalArchive() {
             const res = await fetch(`/api/daily/${date}`);
             if (!res.ok) return null;
             const data = await res.json();
+
+            // 최고 스코어 아티클 추출
+            const sorted = [...(data.articles || [])].sort(
+              (a, b) => (b.weightedScore || 0) - (a.weightedScore || 0)
+            );
+            const topArticle = sorted[0] || null;
+
             return {
               date,
               total: data.total || 0,
               dmPickCount: data.dmPickCount || data.dm_picks?.length || 0,
               status: data.status || 'unknown',
               categories: getCategoryBreakdown(data.articles || []),
+              ogImage: topArticle?.ogImage || null,
+              topTitle: topArticle?.title || null,
+              topCategory: topArticle?.category || null,
               isToday: date === today,
             };
           } catch {
@@ -129,7 +139,7 @@ export default function PriSignalArchive() {
           <div className="prisignal-archive-grid">
             {dailyEntries.map((entry) => {
               const dp = parseDateParts(entry.date);
-              const totalCats = entry.categories.reduce((s, c) => s + c.count, 0);
+              const topCatMeta = CATEGORY_META[entry.topCategory] || {};
               return (
                 <Link
                   to={`/prisignal/${entry.date}`}
@@ -137,15 +147,43 @@ export default function PriSignalArchive() {
                   key={entry.date}
                   id={`dailyCard-${entry.date}`}
                 >
-                  {/* Left: Large date */}
-                  <div className="prisignal-archive-card-date-col">
-                    <span className="prisignal-archive-card-bigday">{dp.day}</span>
-                    <span className="prisignal-archive-card-dayname">{dp.dayName}</span>
+                  {/* Left: OG Image Thumbnail */}
+                  <div className="prisignal-archive-card-thumb">
+                    {entry.ogImage ? (
+                      <img
+                        src={entry.ogImage}
+                        alt=""
+                        loading="lazy"
+                        onError={(e) => {
+                          // 이미지 로드 실패 시 폴백으로 교체
+                          e.target.style.display = 'none';
+                          e.target.nextElementSibling && (e.target.nextElementSibling.style.display = 'flex');
+                        }}
+                      />
+                    ) : null}
+                    <div
+                      className="prisignal-archive-card-thumb-fallback"
+                      style={{
+                        '--thumb-color': topCatMeta.color || 'rgba(196, 181, 253, 0.15)',
+                        display: entry.ogImage ? 'none' : 'flex',
+                      }}
+                    >
+                      <span className="prisignal-archive-thumb-icon">
+                        {topCatMeta.icon || '📡'}
+                      </span>
+                      <span className="prisignal-archive-thumb-label">
+                        {topCatMeta.name || 'Signal'}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Right: Content */}
                   <div className="prisignal-archive-card-body">
                     <div className="prisignal-archive-card-header">
+                      <div className="prisignal-archive-card-date-info">
+                        <span className="prisignal-archive-card-bigday">{dp.day}</span>
+                        <span className="prisignal-archive-card-dayname">{dp.dayName}</span>
+                      </div>
                       <div className="prisignal-archive-card-count-row">
                         <span className="prisignal-archive-card-total">
                           {entry.total}<span className="prisignal-archive-card-total-label">시그널</span>

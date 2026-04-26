@@ -331,6 +331,17 @@ export default function PriSignalDaily() {
                         </div>
                       </div>
 
+                      {article.ogImage && (
+                        <div className="prisignal-daily-card-og">
+                          <img
+                            src={article.ogImage}
+                            alt=""
+                            loading="lazy"
+                            onError={(e) => { e.target.parentElement.style.display = 'none'; }}
+                          />
+                        </div>
+                      )}
+
                       <h3 className="prisignal-daily-card-title">
                         <a href={article.url} target="_blank" rel="noopener noreferrer">
                           {article.title}

@@ -10,9 +10,49 @@ const parser = new Parser({
 });
 
 /**
+ * 아티클 URL에서 og:image 메타 태그를 추출합니다.
+ * @param {string} url - 아티클 URL
+ * @returns {Promise<string|null>} OG 이미지 URL 또는 null
+ */
+export async function fetchOgImage(url) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'PriSignal/1.0 (https://www.prisincera.com)',
+        'Accept': 'text/html',
+      },
+      redirect: 'follow',
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) return null;
+
+    const html = await res.text();
+    const headEnd = html.indexOf('</head>');
+    const headHtml = headEnd > -1 ? html.slice(0, headEnd) : html.slice(0, 15000);
+
+    // og:image 추출 (property/content 순서 양방향 대응)
+    const ogMatch = headHtml.match(
+      /<meta\s+(?:property|name)=["']og:image["']\s+content=["']([^"']+)["']/i
+    ) || headHtml.match(
+      /<meta\s+content=["']([^"']+)["']\s+(?:property|name)=["']og:image["']/i
+    );
+
+    return ogMatch?.[1] || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * 단일 RSS 피드를 가져와 정규화된 아티클 배열을 반환합니다.
+ * OG 이미지를 병렬로 크롤링하여 ogImage 필드를 추가합니다.
  * @param {Object} source - sources.json의 소스 객체
- * @returns {Promise<Array>} 정규화된 아티클 배열
+ * @returns {Promise<Array>} 정규화된 아티클 배열 (ogImage 포함)
  */
 export async function fetchFeed(source, maxPerSource = 5) {
   try {
@@ -20,7 +60,7 @@ export async function fetchFeed(source, maxPerSource = 5) {
     const now = new Date();
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-    return (feed.items || [])
+    const articles = (feed.items || [])
       .filter(item => {
         if (!item.link) return false;
         const pubDate = item.pubDate ? new Date(item.pubDate) : null;
@@ -40,6 +80,22 @@ export async function fetchFeed(source, maxPerSource = 5) {
         publishedAt: item.pubDate || now.toISOString(),
         collectedAt: now.toISOString(),
       }));
+
+    // OG 이미지 병렬 크롤링 (소스당 최대 5개이므로 부하 적음)
+    const ogResults = await Promise.allSettled(
+      articles.map(a => fetchOgImage(a.url))
+    );
+
+    articles.forEach((a, i) => {
+      a.ogImage = ogResults[i].status === 'fulfilled' ? ogResults[i].value : null;
+    });
+
+    const ogCount = articles.filter(a => a.ogImage).length;
+    if (ogCount > 0) {
+      console.log(`[RSS] ${source.name}: OG 이미지 ${ogCount}/${articles.length}개 수집`);
+    }
+
+    return articles;
   } catch (err) {
     console.warn(`[RSS] ⚠ ${source.name} 수집 실패: ${err.message}`);
     return [];
@@ -72,7 +128,8 @@ export async function fetchAllFeeds(sources) {
     }
   }
 
-  console.log(`[RSS] 수집 완료: 성공 ${successCount}, 실패 ${failCount}, 아티클 ${articles.length}개`);
+  const totalOg = articles.filter(a => a.ogImage).length;
+  console.log(`[RSS] 수집 완료: 성공 ${successCount}, 실패 ${failCount}, 아티클 ${articles.length}개, OG 이미지 ${totalOg}개`);
   return articles;
 }
 
