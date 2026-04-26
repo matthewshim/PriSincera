@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import '../../pages/PriSignal.css';
 
 /**
@@ -7,6 +8,16 @@ import '../../pages/PriSignal.css';
  * Route: /prisignal/:issueId
  * Fetches issue content from Buttondown API via /api/archive/:id proxy.
  */
+
+/** DOMPurify sanitization config — whitelist safe HTML tags & attributes */
+const SANITIZE_CONFIG = {
+  ALLOWED_TAGS: [
+    'p', 'br', 'strong', 'em', 'a', 'ul', 'ol', 'li',
+    'h1', 'h2', 'h3', 'h4', 'blockquote', 'img', 'span', 'div',
+    'pre', 'code', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
+  ],
+  ALLOWED_ATTR: ['href', 'src', 'alt', 'target', 'rel', 'class'],
+};
 
 /** Format ISO date → readable Korean date */
 function formatDate(iso) {
@@ -105,7 +116,7 @@ export default function PriSignalIssue() {
         {/* Content */}
         <div
           className="prisignal-issue-content"
-          dangerouslySetInnerHTML={{ __html: issue.body || issue.html_body || '' }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(issue.body || issue.html_body || '', SANITIZE_CONFIG) }}
         />
 
         {/* Footer */}

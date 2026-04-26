@@ -11,6 +11,9 @@ import express from 'express';
 import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import helmet from 'helmet';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -34,12 +37,44 @@ try {
 import compression from 'compression';
 app.use(compression());
 
-// --- Security headers ---
-app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-  next();
+// --- Security headers via Helmet (replaces manual headers) ---
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+    },
+  },
+  strictTransportSecurity: { maxAge: 31536000, includeSubDomains: true, preload: true },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  xXssProtection: false, // deprecated header — CSP replaces it
+}));
+
+// --- CORS — restrict to specific origin ---
+app.use('/api/', cors({ origin: 'https://www.prisincera.com' }));
+
+// --- Rate limiting ---
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 60,                  // 60 requests per IP per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/', apiLimiter);
+
+const subscribeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,                    // 5 requests per IP per 15 min
+  message: { error: '요청이 너무 많습니다. 15분 후 다시 시도해주세요.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 // --- Redirect non-www to www ---
@@ -64,22 +99,30 @@ app.use(express.static(DIST_DIR, {
 }));
 
 // --- Buttondown API Proxies ---
-app.post('/api/subscribe', async (req, res) => {
+
+// Subscribe — with rate limiting + body validation
+app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), async (req, res) => {
   try {
-    let body = '';
-    req.on('data', chunk => body += chunk);
-    req.on('end', async () => {
-      const resp = await fetch('https://api.buttondown.email/v1/subscribers', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Token ${BUTTONDOWN_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body
-      });
-      const data = await resp.json();
-      res.status(resp.status).json(data);
+    const { email_address } = req.body || {};
+
+    // Server-side email validation
+    if (!email_address || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
+      return res.status(400).json({ error: 'Invalid email address' });
+    }
+
+    // Only forward allowed fields to Buttondown
+    const safeBody = JSON.stringify({ email_address, type: 'regular' });
+
+    const resp = await fetch('https://api.buttondown.email/v1/subscribers', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Token ${BUTTONDOWN_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: safeBody
     });
+    const data = await resp.json();
+    res.status(resp.status).json(data);
   } catch (err) {
     res.status(500).json({ error: 'Proxy error' });
   }
@@ -97,9 +140,17 @@ app.get('/api/archive', async (req, res) => {
   }
 });
 
+// Archive by ID — with UUID validation
 app.get('/api/archive/:id', async (req, res) => {
+  const id = req.params.id;
+
+  // Validate UUID v4 format to prevent path manipulation
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    return res.status(400).json({ error: 'Invalid archive ID format' });
+  }
+
   try {
-    const resp = await fetch(`https://api.buttondown.email/v1/emails/${req.params.id}`, {
+    const resp = await fetch(`https://api.buttondown.email/v1/emails/${id}`, {
       headers: { 'Authorization': `Token ${BUTTONDOWN_API_KEY}` }
     });
     const data = await resp.json();
@@ -135,7 +186,8 @@ app.get('/api/daily/:date', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(content);
   } catch (err) {
-    res.status(404).json({ error: 'Daily signal not found', date: dateStr });
+    // Do not expose user input in error response
+    res.status(404).json({ error: 'Daily signal not found' });
   }
 });
 
