@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SubscribeForm from './SubscribeForm';
 
 /**
  * PriSignal Archive — ④ 최근 시그널 섹션
@@ -99,6 +100,7 @@ export default function PriSignalArchive() {
   }, []);
 
   return (
+    <>
     <section className="prisignal-section prisignal-archive" id="priSignalArchive">
       <div className="prisignal-section-inner">
 
@@ -220,6 +222,16 @@ export default function PriSignalArchive() {
         )}
       </div>
     </section>
+
+      {/* ── Archive CTA ── */}
+      <section className="prisignal-archive-cta">
+        <div className="prisignal-archive-cta-inner">
+          <h3>시그널을 놓치고 계신가요?</h3>
+          <p>매일 선별된 <span className="accent">5개의 시그널</span>을 이메일로 받아보세요.</p>
+          <SubscribeForm variant="inline" />
+        </div>
+      </section>
+    </>
   );
 }
 

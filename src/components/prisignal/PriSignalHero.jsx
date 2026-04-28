@@ -18,7 +18,7 @@ export default function PriSignalHero() {
         <p className="prisignal-hero-sub">
           20년차 PO의 기준으로 설계된, AI 큐레이션 뉴스레터
         </p>
-        <SubscribeForm variant="inline" />
+        <SubscribeForm variant="inline" showProof />
       </div>
     </section>
   );

@@ -7,6 +7,8 @@ import PriSignalSignal from '../components/prisignal/PriSignalSignal';
 import PriSignalArchive from '../components/prisignal/PriSignalArchive';
 import PriSignalSubscribe from '../components/prisignal/PriSignalSubscribe';
 import PriSignalFAQ from '../components/prisignal/PriSignalFAQ';
+import FloatingCTA from '../components/prisignal/FloatingCTA';
+import '../components/prisignal/FloatingCTA.css';
 import './PriSignal.css';
 
 /**
@@ -188,6 +190,8 @@ export default function PriSignal() {
       >
         <PriSignalArchive />
       </div>
+
+      <FloatingCTA />
     </div>
   );
 }

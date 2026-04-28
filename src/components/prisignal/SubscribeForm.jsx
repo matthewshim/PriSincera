@@ -9,7 +9,7 @@ import { useState, useCallback } from 'react';
  *   variant: 'inline' | 'stacked' (default: 'inline')
  *   className: additional CSS class
  */
-export default function SubscribeForm({ variant = 'inline', className = '' }) {
+export default function SubscribeForm({ variant = 'inline', className = '', showProof = false }) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('');
@@ -60,7 +60,7 @@ export default function SubscribeForm({ variant = 'inline', className = '' }) {
       <div className={`subscribe-form subscribe-success ${className}`}>
         <div className="subscribe-success-icon">✓</div>
         <p className="subscribe-success-text">구독이 완료되었습니다!</p>
-        <p className="subscribe-success-sub">매주 월요일, 시그널을 전합니다.</p>
+        <p className="subscribe-success-sub">매일 아침, 시그널을 전합니다.</p>
       </div>
     );
   }
@@ -102,8 +102,18 @@ export default function SubscribeForm({ variant = 'inline', className = '' }) {
         <p className="subscribe-error">{errorMsg}</p>
       )}
       <p className="subscribe-meta">
-        ✓ 매주 월요일 발송 &nbsp; ✓ 무료 &nbsp; ✓ 언제든 해지
+        ✓ 매일 발송 &nbsp; ✓ 무료 &nbsp; ✓ 언제든 해지
       </p>
+      {showProof && (
+        <div className="subscribe-social-proof">
+          <div className="subscribe-avatars">
+            <span className="subscribe-avatar" style={{ background: 'linear-gradient(135deg, #7C3AED, #C084FC)' }}>P</span>
+            <span className="subscribe-avatar" style={{ background: 'linear-gradient(135deg, #22D3EE, #818CF8)' }}>S</span>
+            <span className="subscribe-avatar" style={{ background: 'linear-gradient(135deg, #F0ABFC, #FDE68A)' }}>M</span>
+          </div>
+          <span className="subscribe-proof-text">시그널을 구독하는 프로덕트 메이커들과 함께하세요</span>
+        </div>
+      )}
     </form>
   );
 }

@@ -854,6 +854,64 @@
     margin-top: auto;
 }
 
+/* --- Archive Bottom CTA --- */
+.prisignal-archive-cta {
+    max-width: 900px;
+    width: 100%;
+    margin: var(--space-xl) auto 0;
+    padding: 0 var(--space-xl);
+}
+
+.prisignal-archive-cta-inner {
+    text-align: center;
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, rgba(196, 181, 253, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--duration-fast) var(--ease-smooth);
+}
+
+.prisignal-archive-cta-inner:hover {
+    border-color: var(--glass-border-hover);
+}
+
+.prisignal-archive-cta-inner h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.prisignal-archive-cta-inner p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+}
+
+.prisignal-archive-cta-inner p .accent {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+}
+
+.prisignal-archive-cta .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.prisignal-archive-cta .subscribe-form.inline .subscribe-input-wrap {
+    max-width: 420px;
+    width: 100%;
+}
+
+.prisignal-archive-cta .subscribe-meta {
+    text-align: center;
+}
+
 /* --- Archive Empty State --- */
 .prisignal-archive-empty {
     text-align: center;

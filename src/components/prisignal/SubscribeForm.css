@@ -161,6 +161,44 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- Social Proof --- */
+.subscribe-social-proof {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    animation: successFadeIn 0.6s var(--ease-out);
+}
+
+.subscribe-avatars {
+    display: flex;
+}
+
+.subscribe-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #fff;
+    border: 2px solid var(--bg-void);
+    margin-right: -8px;
+}
+
+.subscribe-avatar:last-child {
+    margin-right: 0;
+}
+
+.subscribe-proof-text {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
     .subscribe-form.inline .subscribe-input-wrap {
