@@ -585,8 +585,6 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-md);
-    max-width: 700px;
-    margin: 0 auto;
 }
 
 .prisignal-archive-card {
