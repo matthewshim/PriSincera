@@ -375,10 +375,25 @@ export default function PriSignalDaily() {
                       id={`article-${article.id}`}
                       style={{ '--card-index': idx, cursor: 'pointer' }}
                       onMouseMove={handleCardMouseMove}
-                      onClick={() => window.open(article.url, '_blank', 'noopener,noreferrer')}
+                      onClick={(e) => {
+                        if (e.target.closest('button')) return;
+                        const a = document.createElement('a');
+                        a.href = article.url;
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                        a.click();
+                      }}
                       role="link"
                       tabIndex={0}
-                      onKeyDown={(e) => { if (e.key === 'Enter') window.open(article.url, '_blank', 'noopener,noreferrer'); }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const a = document.createElement('a');
+                          a.href = article.url;
+                          a.target = '_blank';
+                          a.rel = 'noopener noreferrer';
+                          a.click();
+                        }
+                      }}
                     >
                       <div className="prisignal-daily-card-top">
                         {article.isDmPick && (
