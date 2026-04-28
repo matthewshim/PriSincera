@@ -307,6 +307,7 @@
     background 0.35s ease;
   animation: cardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: calc(var(--card-index, 0) * 60ms);
+  cursor: pointer;
 }
 @keyframes cardReveal {
   from { opacity: 0; transform: translateY(20px) scale(0.97); }
@@ -393,20 +394,11 @@
   font-weight: 600;
   margin: 0 0 var(--space-xs);
   line-height: 1.45;
-}
-.prisignal-daily-card-title a {
   color: var(--text-primary);
-  text-decoration: none;
-  transition: color 0.25s, background-size 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  background-image: linear-gradient(to right, var(--prisignal-accent, #C4B5FD), var(--orbit-cyan, #22D3EE));
-  background-size: 0% 2px;
-  background-repeat: no-repeat;
-  background-position: left bottom;
-  padding-bottom: 1px;
+  transition: color 0.25s;
 }
-.prisignal-daily-card-title a:hover {
+.prisignal-daily-card:hover .prisignal-daily-card-title {
   color: var(--prisignal-accent, #C4B5FD);
-  background-size: 100% 2px;
 }
 
 /* Meta row */
@@ -535,12 +527,15 @@
   gap: 4px;
   font-size: 0.82rem;
   color: var(--prisignal-accent, #C4B5FD);
-  text-decoration: none;
   font-weight: 500;
-  opacity: 0.7;
-  transition: all 0.2s;
+  opacity: 0.5;
+  transition: all 0.25s;
+  pointer-events: none;
 }
-.prisignal-daily-card-link:hover { opacity: 1; gap: 6px; }
+.prisignal-daily-card:hover .prisignal-daily-card-link {
+  opacity: 1;
+  gap: 6px;
+}
 
 /* --- Inline OG Thumbnail (right side) --- */
 .prisignal-daily-card-og-thumb {

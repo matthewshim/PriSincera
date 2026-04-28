@@ -373,8 +373,12 @@ export default function PriSignalDaily() {
                       className={`prisignal-daily-card${article.isDmPick ? ' dm-pick' : ''}`}
                       key={article.id}
                       id={`article-${article.id}`}
-                      style={{ '--card-index': idx }}
+                      style={{ '--card-index': idx, cursor: 'pointer' }}
                       onMouseMove={handleCardMouseMove}
+                      onClick={() => window.open(article.url, '_blank', 'noopener,noreferrer')}
+                      role="link"
+                      tabIndex={0}
+                      onKeyDown={(e) => { if (e.key === 'Enter') window.open(article.url, '_blank', 'noopener,noreferrer'); }}
                     >
                       <div className="prisignal-daily-card-top">
                         {article.isDmPick && (
@@ -400,9 +404,7 @@ export default function PriSignalDaily() {
                           </div>
 
                           <h3 className="prisignal-daily-card-title">
-                            <a href={article.url} target="_blank" rel="noopener noreferrer">
-                              {article.title}
-                            </a>
+                            {article.title}
                           </h3>
 
                           {article.summaryKr && (
@@ -429,7 +431,7 @@ export default function PriSignalDaily() {
                         <div className={`prisignal-daily-card-sticker${expandedComments.has(article.id) ? ' expanded' : ''}`}>
                           <button
                             className="prisignal-daily-sticker-toggle"
-                            onClick={() => toggleComment(article.id)}
+                            onClick={(e) => { e.stopPropagation(); toggleComment(article.id); }}
                             id={`sticker-toggle-${article.id}`}
                           >
                             <span className="prisignal-daily-sticker-label">Editor's Signal</span>
@@ -450,17 +452,12 @@ export default function PriSignalDaily() {
                         </div>
                       )}
 
-                      <a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="prisignal-daily-card-link"
-                      >
+                      <span className="prisignal-daily-card-link">
                         원문 읽기
                         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                           <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
-                      </a>
+                      </span>
                     </article>
                   ))}
                 </div>
