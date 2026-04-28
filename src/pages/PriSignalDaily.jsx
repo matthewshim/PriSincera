@@ -245,7 +245,6 @@ export default function PriSignalDaily() {
             <span className="prisignal-tab-icon">📰</span>
             <span className="prisignal-tab-label">데일리 시그널</span>
           </Link>
-          <span className="prisignal-tab-indicator" style={{ left: '50%', width: '50%' }} />
         </div>
       </nav>
 
@@ -482,10 +481,10 @@ export default function PriSignalDaily() {
       </div>
 
       {/* ── Subscribe CTA ── */}
-      <section className="prisignal-daily-cta">
-        <div className="prisignal-daily-cta-inner">
-          <h2>매일 선별된 <span className="accent">시그널</span>을 받아보세요</h2>
-          <p>매일 아침, {totalCount > 0 ? `${totalCount}개 중 선별된 5개` : '엄선된 5개'}의 시그널을 이메일로 전달합니다.</p>
+      <section className="prisignal-archive-cta" style={{ marginLeft: `calc(-1 * var(--space-lg))`, marginRight: `calc(-1 * var(--space-lg))`, paddingLeft: 0, paddingRight: 0 }}>
+        <div className="prisignal-archive-cta-inner">
+          <h3>시그널을 놓치고 계신가요?</h3>
+          <p>매일 선별된 <span className="accent">5개의 시그널</span>을 이메일로 받아보세요.</p>
           <SubscribeForm variant="inline" />
         </div>
       </section>
