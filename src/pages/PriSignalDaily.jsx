@@ -318,42 +318,47 @@ export default function PriSignalDaily() {
                             DM Pick
                           </span>
                         )}
-                        <div className="prisignal-daily-card-meta">
-                          <span className="prisignal-daily-card-source">{article.source}</span>
-                          <span className={`prisignal-daily-card-tier tier-${article.tier}`}>
-                            {TIER_LABELS[article.tier] || 'T3'}
-                          </span>
-                          {isScored && article.weightedScore && (
-                            <span className="prisignal-daily-card-score">
-                              ★ {article.weightedScore.toFixed(1)}
-                            </span>
-                          )}
-                        </div>
                       </div>
 
-                      {article.ogImage && (
-                        <div className="prisignal-daily-card-og">
-                          <img
-                            src={article.ogImage}
-                            alt=""
-                            loading="lazy"
-                            onError={(e) => { e.target.parentElement.style.display = 'none'; }}
-                          />
+                      <div className="prisignal-daily-card-main-row">
+                        <div className="prisignal-daily-card-text-col">
+                          <div className="prisignal-daily-card-meta">
+                            <span className="prisignal-daily-card-source">{article.source}</span>
+                            <span className={`prisignal-daily-card-tier tier-${article.tier}`}>
+                              {TIER_LABELS[article.tier] || 'T3'}
+                            </span>
+                            {isScored && article.weightedScore && (
+                              <span className="prisignal-daily-card-score">
+                                ★ {article.weightedScore.toFixed(1)}
+                              </span>
+                            )}
+                          </div>
+
+                          <h3 className="prisignal-daily-card-title">
+                            <a href={article.url} target="_blank" rel="noopener noreferrer">
+                              {article.title}
+                            </a>
+                          </h3>
+
+                          {article.summaryKr && (
+                            <p className="prisignal-daily-card-summary">{article.summaryKr}</p>
+                          )}
+                          {!article.summaryKr && article.summary && (
+                            <p className="prisignal-daily-card-summary">{article.summary.slice(0, 200)}...</p>
+                          )}
                         </div>
-                      )}
 
-                      <h3 className="prisignal-daily-card-title">
-                        <a href={article.url} target="_blank" rel="noopener noreferrer">
-                          {article.title}
-                        </a>
-                      </h3>
-
-                      {article.summaryKr && (
-                        <p className="prisignal-daily-card-summary">{article.summaryKr}</p>
-                      )}
-                      {!article.summaryKr && article.summary && (
-                        <p className="prisignal-daily-card-summary">{article.summary.slice(0, 200)}...</p>
-                      )}
+                        {article.ogImage && (
+                          <div className="prisignal-daily-card-og-thumb">
+                            <img
+                              src={article.ogImage}
+                              alt=""
+                              loading="lazy"
+                              onError={(e) => { e.target.parentElement.style.display = 'none'; }}
+                            />
+                          </div>
+                        )}
+                      </div>
 
                       {article.editorComment && !isDefaultComment(article.editorComment) && (
                         <div className={`prisignal-daily-card-sticker${expandedComments.has(article.id) ? ' expanded' : ''}`}>

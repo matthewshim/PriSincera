@@ -147,35 +147,11 @@ export default function PriSignalArchive() {
                   key={entry.date}
                   id={`dailyCard-${entry.date}`}
                 >
-                  {/* Left: OG Image Thumbnail */}
-                  <div className="prisignal-archive-card-thumb">
-                    {entry.ogImage ? (
-                      <img
-                        src={entry.ogImage}
-                        alt=""
-                        loading="lazy"
-                        onError={(e) => {
-                          // 이미지 로드 실패 시 폴백으로 교체
-                          e.target.style.display = 'none';
-                          e.target.nextElementSibling && (e.target.nextElementSibling.style.display = 'flex');
-                        }}
-                      />
-                    ) : null}
-                    <div
-                      className="prisignal-archive-card-thumb-fallback"
-                      style={{
-                        '--thumb-color': topCatMeta.color || 'rgba(196, 181, 253, 0.15)',
-                        display: entry.ogImage ? 'none' : 'flex',
-                      }}
-                    >
-                      <span className="prisignal-archive-thumb-icon">
-                        {topCatMeta.icon || '📡'}
-                      </span>
-                      <span className="prisignal-archive-thumb-label">
-                        {topCatMeta.name || 'Signal'}
-                      </span>
-                    </div>
-                  </div>
+                  {/* Left: Category Accent Stripe */}
+                  <div
+                    className="prisignal-archive-card-accent"
+                    style={{ '--accent-color': topCatMeta.color || 'rgba(196, 181, 253, 0.4)' }}
+                  />
 
                   {/* Right: Content */}
                   <div className="prisignal-archive-card-body">
@@ -218,6 +194,13 @@ export default function PriSignalArchive() {
                           );
                         })}
                       </div>
+                    )}
+
+                    {/* Top article headline */}
+                    {entry.topTitle && (
+                      <p className="prisignal-archive-card-headline">
+                        {entry.topTitle}
+                      </p>
                     )}
 
                     <div className="prisignal-archive-card-footer">
