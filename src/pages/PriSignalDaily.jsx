@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import SubscribeForm from '../components/prisignal/SubscribeForm';
 import './PriSignalDaily.css';
+import './PriSignal.css';
 
 /**
  * PriSignal Daily — 데일리 시그널 페이지
@@ -231,6 +233,22 @@ export default function PriSignalDaily() {
     <div className="prisignal-daily-page" ref={pageRef}>
       {/* Scroll Progress */}
       <div className="prisignal-scroll-progress" ref={scrollBarRef} />
+
+      {/* ── Sub-tab Navigation (shared with /prisignal) ── */}
+      <nav className="prisignal-tabs prisignal-daily-tabs" role="tablist" aria-label="PriSignal 콘텐츠 탭">
+        <div className="prisignal-tabs-inner">
+          <Link to="/prisignal" className="prisignal-tab" id="dailyTabIntro">
+            <span className="prisignal-tab-icon">📋</span>
+            <span className="prisignal-tab-label">서비스 소개</span>
+          </Link>
+          <Link to="/prisignal#daily" className="prisignal-tab active" id="dailyTabArticles">
+            <span className="prisignal-tab-icon">📰</span>
+            <span className="prisignal-tab-label">데일리 시그널</span>
+          </Link>
+          <span className="prisignal-tab-indicator" style={{ left: '50%', width: '50%' }} />
+        </div>
+      </nav>
+
       {/* ── Hero Header ── */}
       <header className="prisignal-daily-header">
         <div className="prisignal-daily-date-nav-row">
@@ -468,12 +486,7 @@ export default function PriSignalDaily() {
         <div className="prisignal-daily-cta-inner">
           <h2>매일 선별된 <span className="accent">시그널</span>을 받아보세요</h2>
           <p>매일 아침, {totalCount > 0 ? `${totalCount}개 중 선별된 5개` : '엄선된 5개'}의 시그널을 이메일로 전달합니다.</p>
-          <Link to="/prisignal" className="prisignal-daily-cta-btn" id="dailyCTABtn">
-            구독하기
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path d="M4 8H12M12 8L8 4M12 8L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Link>
+          <SubscribeForm variant="inline" />
         </div>
       </section>
     </div>
