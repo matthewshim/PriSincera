@@ -76,21 +76,21 @@ export default function WorkSection() {
             </div>
           </div>
 
-          {/* PriSignal — AI Curation Newsletter */}
+          {/* PriSignal — Daily Curation */}
           <Link to="/prisignal" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priSignalWorkCard">
             <div className="work-card-icon">
               <span className="work-card-emoji">📡</span>
             </div>
             <div className="work-card-body">
-              <div className="work-card-label">AI Curation Newsletter</div>
+              <div className="work-card-label">Daily Curation</div>
               <div className="work-card-name">
                 PriSignal
-                <span className="work-card-tag">Daily</span>
+                <span className="work-card-tag">prisincera.com/prisignal</span>
               </div>
               <p className="work-card-desc">
                 노이즈 속에서 시그널을 포착합니다.<br />
-                35개 글로벌 소스에서 AI가 선별한 시그널을 매일 큐레이션하는
-                뉴스레터 서비스.
+                35개 글로벌 소스에서 매일 수백 개의 글 중, AI가 선별한
+                시그널만 큐레이션하는 데일리 뉴스레터.
               </p>
               <div className="work-card-tags">
                 <span className="work-tag">AI Scoring</span>
