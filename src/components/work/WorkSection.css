@@ -204,71 +204,20 @@
     color: var(--crystal-light);
 }
 
-/* --- PriSignal Banner --- */
-.prisignal-banner {
-    position: relative;
-    padding: var(--space-xl);
-    background: rgba(26, 16, 53, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(34, 211, 238, 0.1);
-    border-radius: 16px;
-    overflow: hidden;
+/* --- PriSignal Card Variant --- */
+.work-card.prisignal {
+    --card-accent: var(--orbit-cyan);
+    text-decoration: none;
+    color: inherit;
 }
 
-.prisignal-banner::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 20%;
-    bottom: 20%;
-    width: 2px;
-    background: var(--orbit-cyan);
-    opacity: 0.3;
-    border-radius: 1px;
+.work-card.prisignal .work-card-label {
+    color: var(--orbit-cyan);
 }
 
-.prisignal-banner-header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-}
-
-.prisignal-banner-icon {
+.work-card-emoji {
     font-size: 1.6rem;
     line-height: 1;
-}
-
-.prisignal-banner-name {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 2px;
-}
-
-.prisignal-banner-desc {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-}
-
-.prisignal-detail-link {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: var(--orbit-cyan);
-    opacity: 0.6;
-    margin-top: var(--space-sm);
-    transition: all var(--duration-fast) var(--ease-out);
-    text-decoration: none;
-}
-
-.prisignal-detail-link:hover {
-    opacity: 1;
-    transform: translateX(4px);
 }
 
 /* --- Scroll Animation --- */
@@ -316,15 +265,5 @@
         width: 48px;
         height: 48px;
         padding: 8px;
-    }
-
-    .prisignal-banner {
-        padding: var(--space-lg);
-    }
-
-    .prisignal-banner-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-sm);
     }
 }

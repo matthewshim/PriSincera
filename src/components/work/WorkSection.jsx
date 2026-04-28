@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom';
 import useScrollReveal from '../../hooks/useScrollReveal';
-import SubscribeForm from '../prisignal/SubscribeForm';
-import '../prisignal/SubscribeForm.css';
 import './WorkSection.css';
 
 /**
  * Work Section — Project showcase.
- * Displays PriSincera as a featured project card + PriSignal subscribe banner.
+ * Displays PriSincera and PriSignal as consistent project cards.
  * Follows the same glassmorphic container pattern as Belief/Journey sections.
  */
 export default function WorkSection() {
@@ -27,7 +25,7 @@ export default function WorkSection() {
         </div>
 
         <div className="work-grid">
-          {/* PriSincera — Featured Project */}
+          {/* PriSincera — Personal Branding */}
           <div className="work-card featured reveal-item" style={{ '--reveal-delay': '0.2s' }}>
             <div className="work-card-icon">
               <svg viewBox="0 0 44 44" fill="none">
@@ -77,26 +75,33 @@ export default function WorkSection() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* PriSignal — Subscribe Banner */}
-        <div className="prisignal-banner reveal-item" style={{ '--reveal-delay': '0.35s' }}>
-          <div className="prisignal-banner-header">
-            <span className="prisignal-banner-icon">📡</span>
-            <div className="prisignal-banner-title-wrap">
-              <div className="prisignal-banner-name">PriSignal</div>
-              <p className="prisignal-banner-desc">
-                노이즈 속에서 시그널을 포착합니다.
-              </p>
+          {/* PriSignal — AI Curation Newsletter */}
+          <Link to="/prisignal" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priSignalWorkCard">
+            <div className="work-card-icon">
+              <span className="work-card-emoji">📡</span>
             </div>
-          </div>
-          <SubscribeForm variant="inline" />
-          <Link to="/prisignal" className="prisignal-detail-link" id="priSignalDetailLink">
-            자세히 보기 →
+            <div className="work-card-body">
+              <div className="work-card-label">AI Curation Newsletter</div>
+              <div className="work-card-name">
+                PriSignal
+                <span className="work-card-tag">Daily</span>
+              </div>
+              <p className="work-card-desc">
+                노이즈 속에서 시그널을 포착합니다.<br />
+                35개 글로벌 소스에서 AI가 선별한 시그널을 매일 큐레이션하는
+                뉴스레터 서비스.
+              </p>
+              <div className="work-card-tags">
+                <span className="work-tag">AI Scoring</span>
+                <span className="work-tag">Cloud Functions</span>
+                <span className="work-tag">Buttondown</span>
+                <span className="work-tag">Automated Pipeline</span>
+              </div>
+            </div>
           </Link>
         </div>
       </div>
     </section>
   );
 }
-
