@@ -20,8 +20,8 @@
   min-height: 100vh;
   max-width: 900px;
   margin: 0 auto;
-  padding-left: var(--space-lg);
-  padding-right: var(--space-lg);
+  padding-left: var(--space-xl);
+  padding-right: var(--space-xl);
   padding-bottom: var(--space-2xl);
 }
 
@@ -620,8 +620,8 @@
 .prisignal-daily-tabs {
   position: sticky;
   top: 56px;
-  margin-left: calc(-1 * var(--space-lg));
-  margin-right: calc(-1 * var(--space-lg));
+  margin-left: calc(-1 * var(--space-xl));
+  margin-right: calc(-1 * var(--space-xl));
   margin-bottom: var(--space-md);
 }
 
@@ -647,6 +647,10 @@
     padding-left: var(--space-md);
     padding-right: var(--space-md);
     padding-top: 80px;
+  }
+  .prisignal-daily-tabs {
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
   }
   .prisignal-daily-date-day { font-size: 2.5rem; }
   .prisignal-daily-date-nav-row { gap: var(--space-xs); }

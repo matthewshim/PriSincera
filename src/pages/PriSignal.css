@@ -859,7 +859,7 @@
     max-width: 900px;
     width: 100%;
     margin: var(--space-xl) auto var(--space-2xl);
-    padding: 0 var(--space-xl);
+    padding: 0;
 }
 
 .prisignal-archive-cta-inner {

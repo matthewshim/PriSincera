@@ -481,7 +481,7 @@ export default function PriSignalDaily() {
       </div>
 
       {/* ── Subscribe CTA ── */}
-      <section className="prisignal-archive-cta" style={{ marginLeft: `calc(-1 * var(--space-lg))`, marginRight: `calc(-1 * var(--space-lg))`, paddingLeft: 0, paddingRight: 0 }}>
+      <section className="prisignal-archive-cta">
         <div className="prisignal-archive-cta-inner">
           <h3>시그널을 놓치고 계신가요?</h3>
           <p>매일 선별된 <span className="accent">5개의 시그널</span>을 이메일로 받아보세요.</p>
