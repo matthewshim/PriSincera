@@ -111,9 +111,9 @@
 
 /* --- Meta (benefits line) --- */
 .subscribe-meta {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.06em;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
     color: var(--text-muted);
     opacity: 0.5;
     margin-top: 12px;
