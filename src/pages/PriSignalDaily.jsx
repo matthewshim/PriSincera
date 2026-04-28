@@ -455,7 +455,7 @@ export default function PriSignalDaily() {
 
       {/* ── List Link ── */}
       <div className="prisignal-daily-list-link-wrap">
-        <Link to="/prisignal" className="prisignal-daily-list-link" id="dailyListLink">
+        <Link to="/prisignal#daily" className="prisignal-daily-list-link" id="dailyListLink">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
           </svg>
