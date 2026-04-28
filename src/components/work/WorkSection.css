@@ -200,19 +200,11 @@
     --card-accent: #7C3AED;
 }
 
-.work-card.featured .work-card-label {
-    color: var(--crystal-light);
-}
-
 /* --- PriSignal Card Variant --- */
 .work-card.prisignal {
     --card-accent: var(--orbit-cyan);
     text-decoration: none;
     color: inherit;
-}
-
-.work-card.prisignal .work-card-label {
-    color: var(--orbit-cyan);
 }
 
 .work-card-emoji {
