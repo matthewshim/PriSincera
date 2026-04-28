@@ -206,6 +206,7 @@ backdrop-filter: blur(16px);
 -webkit-backdrop-filter: blur(16px);
 border: 1px solid rgba(196, 181, 253, 0.08);
 border-radius: 16px;
+cursor: pointer;  /* v4: 카드 전체 클릭 */
 ```
 
 **Hover 효과 (표준):**
@@ -215,6 +216,17 @@ transform: translateY(-4px);
 box-shadow: 0 12px 40px rgba(124, 58, 237, 0.12),
             0 0 1px rgba(196, 181, 253, 0.2);
 ```
+
+**마우스 추적 글로우 (v4):**
+```css
+.card::before {
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y),
+    rgba(196,181,253,0.06), transparent 40%
+  );
+}
+```
+- JS에서 `--mouse-x`, `--mouse-y` CSS 변수를 카드에 전달
 
 ### 4-3. Left Accent Line (카드 좌측 장식선)
 
@@ -235,6 +247,14 @@ box-shadow: 0 12px 40px rgba(124, 58, 237, 0.12),
 ```
 
 PriSignal 카테고리 카드에도 유사하게 적용되어 있어 **일관성 유지됨** ✅
+
+### 4-4. Work 섹션 카드 패턴 (v4 통일)
+
+두 카드 모두 동일한 `work-card` 구조:
+- **레이블**: `var(--font-mono)`, `var(--orbit-cyan)` — 두 카드 동일
+- **구조**: 좌측 아이콘 + 우측 (label > name+tag > desc > tags)
+- **PriSignal 카드**: `work-card.prisignal` 클래스, `--card-accent: var(--orbit-cyan)`
+- **PriSincera 카드**: `work-card.featured` 클래스, `--card-accent: #7C3AED`
 
 ---
 
@@ -379,16 +399,37 @@ border-color: rgba(196, 181, 253, 0.2);
 background: rgba(196, 181, 253, 0.04);
 ```
 
-### 8-4. 에디터 코멘트 (글래스모피즘 스티커)
+### 8-4. 에디터 코멘트 (v4 — Editor's Signal)
 
 ```css
-background: rgba(196, 181, 253, 0.04);
-border: 1px solid rgba(196, 181, 253, 0.1);
-backdrop-filter: blur(12px);
+border-left: 3px solid rgba(196, 181, 253, 0.3);
+padding-left: 14px;
+/* CSS grid 기반 부드러운 접힘/펼침 */
+display: grid;
+grid-template-rows: 0fr; /* 접힘 */
+grid-template-rows: 1fr; /* 펼침 */
 ```
 
-- 접이식 (max-height 애니메이션)
+- 큰따옴표(") 아이콘 + "Editor's Signal" 라벨
+- 접힌 상태에서 첫 1줄 프리뷰 노출
+- `stopPropagation()`으로 카드 전체 클릭과 독립 동작
 - 기본 템플릿 문구 자동 필터링 (`isDefaultComment()` 함수)
+
+### 8-5. 구독 메타 텍스트 규칙 (v4)
+
+"매일 발송 · 무료 · 언제든 해지" 텍스트는 UI 안내 텍스트이므로:
+- **폰트**: `var(--font-body)` (Noto Sans KR) — `font-mono` 사용 금지
+- **사이즈**: `0.72rem`, `letter-spacing: 0.02em`
+
+> `--font-mono`는 숫자 카운트, 날짜, 기술 데이터 전용입니다.
+
+### 8-6. 망원경 커서 (v4 최적화)
+
+- 크기: 120px → **80px** (클릭 대상 가시성 향상)
+- React state 0개: `classList` 직접 조작 (리렌더 제거)
+- GPU 가속: `transform: translate()` + `will-change: transform`
+- DOM 쿼리: `getBoundingClientRect()` 30프레임마다 1회
+- `prefers-reduced-motion: reduce` 대응
 
 ---
 
@@ -397,9 +438,9 @@ backdrop-filter: blur(12px);
 | 브레이크포인트 | 변경 내용 |
 |--------------|----------|
 | `≤ 1024px` | 2열 그리드 → 1열, 텍스트 패딩 리셋 |
-| `≤ 768px` | 모바일 레이아웃, 패딩 축소, GNB 높이 변경 |
-| `≤ 640px` | Daily Detail: 날짜 폰트 축소(2.5rem), 화살표 라벨 숨김, 카드 패딩 축소 |
+| `≤ 768px` | 모바일 레이아웃, 패딩 축소, GNB 높이 변경, 망원경 커서 숨김 |
+| `≤ 640px` | Daily Detail: 날짜 폰트 축소(2.5rem), 화살표 라벨 숨김, 카드 패딩 축소, 탭 바 마진 축소 |
 
 ---
 
-*최종 업데이트: 2026-04-23*
+*최종 업데이트: 2026-04-28*
