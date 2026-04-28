@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './PriSignalDaily.css';
 
@@ -76,6 +76,9 @@ export default function PriSignalDaily() {
   const [error, setError] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [expandedComments, setExpandedComments] = useState(new Set());
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const catRefs = useRef({});
+  const pageRef = useRef(null);
 
   const today = getTodayKST();
   const prevDate = getAdjacentDate(date, -1);
@@ -123,6 +126,37 @@ export default function PriSignalDaily() {
       document.body.classList.remove('hero-ready');
     };
   }, [date]);
+
+  // Scroll progress
+  useEffect(() => {
+    function onScroll() {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(h > 0 ? window.scrollY / h : 0);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Category header intersection observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      }),
+      { threshold: 0.3 }
+    );
+    const refs = catRefs.current;
+    Object.values(refs).forEach(el => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, [groupedArticles]);
+
+  // Mouse tracking for card glow
+  const handleCardMouseMove = useCallback((e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+  }, []);
 
   // Category counts for filter chips
   const categoryCounts = useMemo(() => {
@@ -188,7 +222,12 @@ export default function PriSignalDaily() {
   }, [categoryCounts]);
 
   return (
-    <div className="prisignal-daily-page">
+    <div className="prisignal-daily-page" ref={pageRef}>
+      {/* Scroll Progress */}
+      <div
+        className="prisignal-scroll-progress"
+        style={{ '--scroll-progress': scrollProgress }}
+      />
       {/* ── Hero Header ── */}
       <header className="prisignal-daily-header">
         <div className="prisignal-daily-date-nav-row">
@@ -287,7 +326,7 @@ export default function PriSignalDaily() {
 
       {/* ── Articles by Category ── */}
       {!loading && !error && totalCount > 0 && (
-        <main className="prisignal-daily-content">
+        <main className="prisignal-daily-content" key={activeFilter}>
           {activeFilter !== 'all' && (
             <p className="prisignal-daily-filter-result">
               {filteredCount}개의 시그널
@@ -298,18 +337,24 @@ export default function PriSignalDaily() {
             const meta = CATEGORY_META[cat] || { icon: '📌', name: cat, color: '#9CA3AF' };
             return (
               <section className="prisignal-daily-category" key={cat}>
-                <h2 className="prisignal-daily-cat-title" style={{ '--cat-color': meta.color }}>
+                <h2
+                  className="prisignal-daily-cat-title"
+                  style={{ '--cat-color': meta.color }}
+                  ref={el => catRefs.current[cat] = el}
+                >
                   <span className="prisignal-daily-cat-icon">{meta.icon}</span>
                   {meta.name}
                   <span className="prisignal-daily-cat-count">{articles.length}</span>
                 </h2>
 
                 <div className="prisignal-daily-articles">
-                  {articles.map(article => (
+                  {articles.map((article, idx) => (
                     <article
                       className={`prisignal-daily-card${article.isDmPick ? ' dm-pick' : ''}`}
                       key={article.id}
                       id={`article-${article.id}`}
+                      style={{ '--card-index': idx }}
+                      onMouseMove={handleCardMouseMove}
                     >
                       <div className="prisignal-daily-card-top">
                         {article.isDmPick && (
@@ -367,13 +412,20 @@ export default function PriSignalDaily() {
                             onClick={() => toggleComment(article.id)}
                             id={`sticker-toggle-${article.id}`}
                           >
-                            <span className="prisignal-daily-sticker-label">✍️ 에디터 추천</span>
+                            <span className="prisignal-daily-sticker-label">Editor's Signal</span>
                             <svg className="prisignal-daily-sticker-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none">
                               <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                           </button>
+                          {!expandedComments.has(article.id) && (
+                            <p className="prisignal-daily-sticker-preview">
+                              {article.editorComment.slice(0, 80)}...
+                            </p>
+                          )}
                           <div className="prisignal-daily-sticker-body">
-                            <p>{article.editorComment}</p>
+                            <div className="prisignal-daily-sticker-body-inner">
+                              <p>{article.editorComment}</p>
+                            </div>
                           </div>
                         </div>
                       )}

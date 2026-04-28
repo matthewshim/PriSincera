@@ -601,9 +601,19 @@
     border-radius: 16px;
     text-decoration: none;
     color: inherit;
-    transition: all var(--duration-normal) var(--ease-out);
+    transition:
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        background 0.35s ease;
     position: relative;
     overflow: hidden;
+    animation: archiveReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--card-index, 0) * 80ms);
+}
+@keyframes archiveReveal {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); filter: blur(3px); }
+    to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
 .prisignal-archive-card::after {
@@ -618,26 +628,41 @@
 }
 
 .prisignal-archive-card:hover {
-    border-color: rgba(196, 181, 253, 0.15);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.1);
+    border-color: rgba(196, 181, 253, 0.2);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.15),
+        0 20px 60px rgba(124, 58, 237, 0.06);
+    background: rgba(26, 16, 53, 0.6);
 }
 
 .prisignal-archive-card:hover::after {
     opacity: 1;
 }
+/* Hover: stripe grows + glows */
+.prisignal-archive-card:hover .prisignal-archive-card-accent {
+    width: 5px;
+    box-shadow:
+        0 0 16px color-mix(in srgb, var(--accent-color) 50%, transparent),
+        0 0 4px var(--accent-color);
+}
+/* Hover: read arrow slides */
+.prisignal-archive-card:hover .prisignal-archive-card-read {
+    opacity: 1;
+    gap: 8px;
+    transform: translateX(4px);
+}
 
-/* Left: Category Accent Stripe */
 .prisignal-archive-card-accent {
     width: 4px;
     align-self: stretch;
     border-radius: 4px;
     background: var(--accent-color, rgba(196, 181, 253, 0.4));
     flex-shrink: 0;
-    transition: background 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
-}
-.prisignal-archive-card:hover .prisignal-archive-card-accent {
-    box-shadow: 0 0 12px color-mix(in srgb, var(--accent-color, rgba(196, 181, 253, 0.4)) 60%, transparent);
+    transition:
+        width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s ease,
+        background 0.3s ease;
 }
 
 /* Top article headline */
@@ -650,8 +675,8 @@
     text-overflow: ellipsis;
     margin: 0;
     padding: 0;
-    opacity: 0.65;
-    transition: opacity 0.2s;
+    opacity: 0.55;
+    transition: opacity 0.3s;
 }
 .prisignal-archive-card:hover .prisignal-archive-card-headline {
     opacity: 0.9;
@@ -764,12 +789,16 @@
     color: var(--orbit-cyan);
     font-weight: 500;
     opacity: 0.5;
-    transition: all var(--duration-fast) var(--ease-out);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(0);
 }
 
-.prisignal-archive-card:hover .prisignal-archive-card-read {
-    opacity: 1;
-    gap: 5px;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .prisignal-archive-card {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* Today card highlight */

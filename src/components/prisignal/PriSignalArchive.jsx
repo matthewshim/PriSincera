@@ -137,7 +137,7 @@ export default function PriSignalArchive() {
 
         {!loading && dailyEntries.length > 0 && (
           <div className="prisignal-archive-grid">
-            {dailyEntries.map((entry) => {
+            {dailyEntries.map((entry, idx) => {
               const dp = parseDateParts(entry.date);
               const topCatMeta = CATEGORY_META[entry.topCategory] || {};
               return (
@@ -146,6 +146,7 @@ export default function PriSignalArchive() {
                   className={`prisignal-archive-card${entry.isToday ? ' today' : ''}`}
                   key={entry.date}
                   id={`dailyCard-${entry.date}`}
+                  style={{ '--card-index': idx }}
                 >
                   {/* Left: Category Accent Stripe */}
                   <div

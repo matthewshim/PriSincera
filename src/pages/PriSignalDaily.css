@@ -1,6 +1,17 @@
 /* ============================================
-   PriSignal Daily — 데일리 시그널 페이지 (v3)
+   PriSignal Daily — 데일리 시그널 페이지 (v4 Redesign)
    ============================================ */
+
+/* --- Scroll Progress Bar --- */
+.prisignal-scroll-progress {
+  position: fixed; top: 0; left: 0;
+  height: 2px; z-index: 100;
+  background: var(--gradient-brand);
+  transform-origin: left;
+  transform: scaleX(var(--scroll-progress, 0));
+  pointer-events: none;
+  width: 100%;
+}
 .prisignal-daily-page {
   position: relative;
   z-index: 2;
@@ -169,25 +180,38 @@
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s var(--ease-out);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
 }
 .prisignal-daily-filter-chip:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-1px);
+}
+.prisignal-daily-filter-chip:active {
+  transform: scale(0.95);
+  transition-duration: 0.1s;
 }
 .prisignal-daily-filter-chip.active {
-  background: rgba(196, 181, 253, 0.15);
-  border-color: rgba(196, 181, 253, 0.35);
+  background: rgba(196, 181, 253, 0.18);
+  border-color: rgba(196, 181, 253, 0.4);
   color: var(--text-primary);
   font-weight: 600;
+  box-shadow: 0 0 14px rgba(196, 181, 253, 0.12);
+  transform: scale(1.03);
 }
 .prisignal-daily-filter-chip.active .prisignal-daily-filter-dot {
-  box-shadow: 0 0 8px var(--chip-color, #C4B5FD);
+  box-shadow: 0 0 10px var(--chip-color, #C4B5FD);
+  animation: filterDotPulse 2s ease-in-out infinite;
+}
+@keyframes filterDotPulse {
+  0%, 100% { box-shadow: 0 0 8px var(--chip-color, #C4B5FD); }
+  50% { box-shadow: 0 0 16px var(--chip-color, #C4B5FD); }
 }
 .prisignal-daily-filter-dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--chip-color, #C4B5FD);
-  transition: box-shadow 0.25s;
+  transition: box-shadow 0.25s, transform 0.25s;
 }
 .prisignal-daily-filter-count {
   font-family: var(--font-mono);
@@ -203,14 +227,22 @@
   margin-bottom: var(--space-md);
   padding-left: 2px;
 }
+/* Filter transition */
+.prisignal-daily-content {
+  animation: filterFade 0.3s ease-out;
+}
+@keyframes filterFade {
+  from { opacity: 0.3; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* --- Category Section --- */
 .prisignal-daily-category {
   margin-bottom: var(--space-xl);
-  animation: catFadeIn 0.4s ease-out both;
+  animation: catFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @keyframes catFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .prisignal-daily-cat-title {
@@ -222,7 +254,19 @@
   color: var(--cat-color, var(--text-primary));
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-xs);
-  border-bottom: 2px solid var(--cat-color, rgba(255, 255, 255, 0.1));
+  position: relative;
+  border-bottom: none;
+}
+/* Slide-in underline */
+.prisignal-daily-cat-title::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px;
+  background: var(--cat-color, rgba(255,255,255,0.1));
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.prisignal-daily-cat-title.visible::after {
+  width: 100%;
 }
 .prisignal-daily-cat-icon { font-size: 1.2rem; }
 .prisignal-daily-cat-count {
@@ -231,6 +275,16 @@
   background: rgba(255, 255, 255, 0.06);
   padding: 2px 8px; border-radius: 10px;
   margin-left: auto;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .prisignal-daily-card,
+  .prisignal-daily-category,
+  .prisignal-daily-content {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* --- Article Cards --- */
@@ -245,19 +299,41 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
   padding: var(--space-lg);
-  transition: all 0.25s ease;
-  animation: cardSlideIn 0.35s ease-out both;
+  transition:
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    background 0.35s ease;
+  animation: cardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--card-index, 0) * 60ms);
 }
-@keyframes cardSlideIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+/* Mouse-tracking glow */
+.prisignal-daily-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(196,181,253,0.06), transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 0;
 }
 .prisignal-daily-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+  border-color: rgba(196, 181, 253, 0.2);
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 16px 48px rgba(124, 58, 237, 0.08);
 }
+.prisignal-daily-card:hover::before { opacity: 1; }
 
 /* DM Pick highlight */
 .prisignal-daily-card.dm-pick {
@@ -267,6 +343,15 @@
 .prisignal-daily-card.dm-pick:hover {
   border-color: rgba(196, 181, 253, 0.35);
   background: rgba(196, 181, 253, 0.08);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 16px 48px rgba(124, 58, 237, 0.15);
+}
+.prisignal-daily-card.dm-pick::before {
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(196,181,253,0.1), transparent 40%
+  );
 }
 .prisignal-daily-card-top {
   display: flex;
@@ -311,9 +396,17 @@
 .prisignal-daily-card-title a {
   color: var(--text-primary);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.25s, background-size 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background-image: linear-gradient(to right, var(--prisignal-accent, #C4B5FD), var(--orbit-cyan, #22D3EE));
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  padding-bottom: 1px;
 }
-.prisignal-daily-card-title a:hover { color: var(--prisignal-accent, #C4B5FD); }
+.prisignal-daily-card-title a:hover {
+  color: var(--prisignal-accent, #C4B5FD);
+  background-size: 100% 2px;
+}
 
 /* Meta row */
 .prisignal-daily-card-meta {
@@ -356,54 +449,82 @@
   margin: 0 0 var(--space-sm);
 }
 
-/* Editor Comment — Glassmorphism Sticker */
+/* Editor Note — Premium Quote Style */
 .prisignal-daily-card-sticker {
   margin: var(--space-sm) 0;
-  border-radius: 10px;
-  background: rgba(196, 181, 253, 0.04);
-  border: 1px solid rgba(196, 181, 253, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border-left: 3px solid rgba(196, 181, 253, 0.3);
+  padding-left: 14px;
   overflow: hidden;
-  transition: border-color 0.2s;
+  transition: border-color 0.3s ease;
+  position: relative;
 }
 .prisignal-daily-card-sticker:hover {
-  border-color: rgba(196, 181, 253, 0.2);
+  border-color: rgba(196, 181, 253, 0.5);
 }
 .prisignal-daily-sticker-toggle {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 8px 12px;
+  padding: 6px 0;
   cursor: pointer;
   font-size: 0.78rem;
   color: var(--prisignal-accent, #C4B5FD);
   background: none; border: none; font: inherit;
 }
-.prisignal-daily-sticker-label { font-weight: 600; }
+.prisignal-daily-sticker-label {
+  font-weight: 600;
+  display: flex; align-items: center; gap: 6px;
+}
+.prisignal-daily-sticker-label::before {
+  content: '"';
+  font-size: 1.4rem;
+  font-family: Georgia, serif;
+  line-height: 1;
+  opacity: 0.6;
+}
 .prisignal-daily-sticker-chevron {
-  transition: transform 0.25s var(--ease-out);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--text-muted);
 }
 .prisignal-daily-card-sticker.expanded .prisignal-daily-sticker-chevron {
   transform: rotate(180deg);
 }
-.prisignal-daily-sticker-body {
-  max-height: 0;
+/* Preview line visible when collapsed */
+.prisignal-daily-sticker-preview {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  white-space: nowrap;
   overflow: hidden;
-  transition: max-height 0.35s var(--ease-out), padding 0.35s var(--ease-out);
-  padding: 0 12px;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  margin: 0 0 4px;
+}
+.prisignal-daily-card-sticker.expanded .prisignal-daily-sticker-preview {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+}
+.prisignal-daily-sticker-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .prisignal-daily-card-sticker.expanded .prisignal-daily-sticker-body {
-  max-height: 200px;
-  padding: 0 12px 10px;
+  grid-template-rows: 1fr;
+}
+.prisignal-daily-sticker-body-inner {
+  overflow: hidden;
 }
 .prisignal-daily-sticker-body p {
   font-size: 0.82rem;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.65;
   font-style: italic;
+  padding-bottom: 6px;
 }
 
 /* Read link */
