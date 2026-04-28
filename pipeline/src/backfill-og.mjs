@@ -30,12 +30,15 @@ async function main() {
   let dates;
 
   if (args.length >= 2) {
-    // 시작일~종료일 범위 생성
-    const start = new Date(args[0] + 'T00:00:00');
-    const end = new Date(args[1] + 'T00:00:00');
+    // 시작일~종료일 범위 생성 (타임존 무관하게 문자열 기반)
+    const start = new Date(args[0] + 'T12:00:00Z');
+    const end = new Date(args[1] + 'T12:00:00Z');
     dates = [];
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      dates.push(d.toISOString().split('T')[0]);
+      const yy = d.getUTCFullYear();
+      const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const dd = String(d.getUTCDate()).padStart(2, '0');
+      dates.push(`${yy}-${mm}-${dd}`);
     }
   } else {
     dates = getRecentDailyDates(7);

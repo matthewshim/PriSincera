@@ -124,9 +124,8 @@ export async function writeDailyJSON(dateStr, data) {
     contentType: 'application/json',
     metadata: { cacheControl: 'public, max-age=300' },
   });
-  // 공개 읽기 설정
-  await file.makePublic();
-  console.log(`[GCS] 데일리 시그널 저장: gs://${BUCKET}/${path} (공개)`);
+  // Uniform Bucket-Level Access 사용 — 버킷 레벨 IAM으로 공개 접근 관리
+  console.log(`[GCS] 데일리 시그널 저장: gs://${BUCKET}/${path}`);
 }
 
 /**
