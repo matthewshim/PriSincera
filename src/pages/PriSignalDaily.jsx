@@ -76,9 +76,9 @@ export default function PriSignalDaily() {
   const [error, setError] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [expandedComments, setExpandedComments] = useState(new Set());
-  const [scrollProgress, setScrollProgress] = useState(0);
   const catRefs = useRef({});
   const pageRef = useRef(null);
+  const scrollBarRef = useRef(null);
 
   const today = getTodayKST();
   const prevDate = getAdjacentDate(date, -1);
@@ -127,11 +127,14 @@ export default function PriSignalDaily() {
     };
   }, [date]);
 
-  // Scroll progress
+  // Scroll progress (direct DOM, no re-render)
   useEffect(() => {
     function onScroll() {
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(h > 0 ? window.scrollY / h : 0);
+      const progress = h > 0 ? window.scrollY / h : 0;
+      if (scrollBarRef.current) {
+        scrollBarRef.current.style.transform = `scaleX(${progress})`;
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -139,16 +142,19 @@ export default function PriSignalDaily() {
 
   // Category header intersection observer
   useEffect(() => {
+    if (!data?.articles) return;
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => {
         if (e.isIntersecting) e.target.classList.add('visible');
       }),
       { threshold: 0.3 }
     );
-    const refs = catRefs.current;
-    Object.values(refs).forEach(el => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, [groupedArticles]);
+    // Small delay to ensure refs are populated after render
+    const timer = setTimeout(() => {
+      Object.values(catRefs.current).forEach(el => el && observer.observe(el));
+    }, 100);
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [data]);
 
   // Mouse tracking for card glow
   const handleCardMouseMove = useCallback((e) => {
@@ -224,10 +230,7 @@ export default function PriSignalDaily() {
   return (
     <div className="prisignal-daily-page" ref={pageRef}>
       {/* Scroll Progress */}
-      <div
-        className="prisignal-scroll-progress"
-        style={{ '--scroll-progress': scrollProgress }}
-      />
+      <div className="prisignal-scroll-progress" ref={scrollBarRef} />
       {/* ── Hero Header ── */}
       <header className="prisignal-daily-header">
         <div className="prisignal-daily-date-nav-row">

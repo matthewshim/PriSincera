@@ -612,8 +612,8 @@
     animation-delay: calc(var(--card-index, 0) * 80ms);
 }
 @keyframes archiveReveal {
-    from { opacity: 0; transform: translateY(24px) scale(0.98); filter: blur(3px); }
-    to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .prisignal-archive-card::after {
