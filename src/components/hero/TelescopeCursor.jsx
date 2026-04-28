@@ -1,71 +1,87 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import './TelescopeCursor.css';
 
 /**
- * Telescope cursor — golden reticle that follows the mouse.
- * Shows proximity info near the star constellation.
+ * Telescope cursor — compact golden reticle that follows the mouse.
+ * Optimised: no React state in animation loop, RAF-only positioning,
+ * classList mutations instead of setState, passive listeners.
  */
 export default function TelescopeCursor() {
   const cursorRef = useRef(null);
   const infoRef = useRef(null);
-  const [visible, setVisible] = useState(false);
-  const [nearStar, setNearStar] = useState(false);
-  const [hoveringInteractive, setHoveringInteractive] = useState(false);
 
   useEffect(() => {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
-    let curX = -200, curY = -200, targetX = -200, targetY = -200;
+    /* ── Pointer coordinates ── */
+    let targetX = -200, targetY = -200;
+    let curX = -200, curY = -200;
 
-    const timer = setTimeout(() => setVisible(true), 500);
+    /* ── Cached constellation rect (refreshed sparingly) ── */
+    let stageRect = null;
+    let stageCenter = { x: 0, y: 0 };
+    let stageThreshold = 0;
+    let rectTick = 0;
 
+    function refreshStageRect() {
+      const stage = document.getElementById('starConstellation');
+      if (stage) {
+        stageRect = stage.getBoundingClientRect();
+        stageCenter.x = stageRect.left + stageRect.width / 2;
+        stageCenter.y = stageRect.top + stageRect.height / 2;
+        stageThreshold = stageRect.width * 0.7;
+      }
+    }
+
+    /* ── Event handlers ── */
     function onMove(e) { targetX = e.clientX; targetY = e.clientY; }
-    function onLeave() { setVisible(false); targetX = -200; targetY = -200; }
-    function onEnter() { setVisible(true); }
-
+    function onLeave() { cursor.classList.remove('visible'); targetX = -200; targetY = -200; }
+    function onEnter() { cursor.classList.add('visible'); }
     function onOver(e) {
-      if (e.target.closest('a, button, .nav-link, .cta-primary, .cta-secondary')) {
-        setHoveringInteractive(true);
+      if (e.target.closest('a, button, input, textarea, select, label, [role="button"], [tabindex]')) {
+        cursor.classList.add('hovering-interactive');
       }
     }
     function onOut(e) {
-      if (e.target.closest('a, button, .nav-link, .cta-primary, .cta-secondary')) {
-        setHoveringInteractive(false);
+      if (e.target.closest('a, button, input, textarea, select, label, [role="button"], [tabindex]')) {
+        cursor.classList.remove('hovering-interactive');
       }
     }
 
     document.addEventListener('mousemove', onMove, { passive: true });
     document.addEventListener('mouseleave', onLeave);
     document.addEventListener('mouseenter', onEnter);
-    document.addEventListener('mouseover', onOver);
-    document.addEventListener('mouseout', onOut);
+    document.addEventListener('mouseover', onOver, { passive: true });
+    document.addEventListener('mouseout', onOut, { passive: true });
 
+    /* ── Show after short delay ── */
+    const timer = setTimeout(() => cursor.classList.add('visible'), 500);
+
+    /* ── Animation loop (zero React state) ── */
     let frameId;
-    function animate() {
-      curX += (targetX - curX) * 0.12;
-      curY += (targetY - curY) * 0.12;
-      cursor.style.left = curX + 'px';
-      cursor.style.top = curY + 'px';
+    const info = infoRef.current;
 
-      // Check proximity to star
-      const stage = document.getElementById('starConstellation');
-      if (stage) {
-        const rect = stage.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dist = Math.hypot(curX - cx, curY - cy);
-        const threshold = rect.width * 0.7;
-        if (dist < threshold) {
-          setNearStar(true);
-          if (infoRef.current) {
-            const angle = Math.atan2(curY - cy, curX - cx) * (180 / Math.PI);
-            const norm = (dist / threshold * 100).toFixed(0);
-            infoRef.current.textContent = `${angle.toFixed(0)}° · ${norm}%`;
+    function animate() {
+      curX += (targetX - curX) * 0.15;
+      curY += (targetY - curY) * 0.15;
+      cursor.style.transform = `translate(${curX - 40}px, ${curY - 40}px)`;
+
+      /* Refresh constellation rect every ~30 frames (~0.5s) */
+      if (++rectTick % 30 === 0) refreshStageRect();
+
+      if (stageRect) {
+        const dist = Math.hypot(curX - stageCenter.x, curY - stageCenter.y);
+        if (dist < stageThreshold) {
+          cursor.classList.add('near-star');
+          if (info) {
+            const angle = Math.atan2(curY - stageCenter.y, curX - stageCenter.x) * (180 / Math.PI);
+            const norm = (dist / stageThreshold * 100).toFixed(0);
+            info.textContent = `${angle.toFixed(0)}° · ${norm}%`;
           }
         } else {
-          setNearStar(false);
-          if (infoRef.current) infoRef.current.textContent = '';
+          cursor.classList.remove('near-star');
+          if (info) info.textContent = '';
         }
       }
 
@@ -75,40 +91,29 @@ export default function TelescopeCursor() {
 
     return () => {
       clearTimeout(timer);
+      cancelAnimationFrame(frameId);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseleave', onLeave);
       document.removeEventListener('mouseenter', onEnter);
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mouseout', onOut);
-      cancelAnimationFrame(frameId);
     };
   }, []);
 
-  const cls = [
-    'telescope-cursor',
-    visible && 'visible',
-    nearStar && 'near-star',
-    hoveringInteractive && 'hovering-interactive',
-  ].filter(Boolean).join(' ');
-
   return (
-    <div className={cls} ref={cursorRef}>
-      <div className="telescope-ring">
-        <svg viewBox="0 0 120 120" fill="none">
-          <circle cx="60" cy="60" r="56" stroke="rgba(253,230,138,0.45)" strokeWidth="1.2"/>
-          <circle cx="60" cy="60" r="52" stroke="rgba(253,230,138,0.18)" strokeWidth="0.5"/>
-          <line x1="60" y1="6" x2="60" y2="28" stroke="rgba(253,230,138,0.4)" strokeWidth="1"/>
-          <line x1="60" y1="92" x2="60" y2="114" stroke="rgba(253,230,138,0.4)" strokeWidth="1"/>
-          <line x1="6" y1="60" x2="28" y2="60" stroke="rgba(253,230,138,0.4)" strokeWidth="1"/>
-          <line x1="92" y1="60" x2="114" y2="60" stroke="rgba(253,230,138,0.4)" strokeWidth="1"/>
-          <line x1="60" y1="2" x2="60" y2="8" stroke="rgba(253,230,138,0.65)" strokeWidth="1.5"/>
-          <line x1="60" y1="112" x2="60" y2="118" stroke="rgba(253,230,138,0.65)" strokeWidth="1.5"/>
-          <line x1="2" y1="60" x2="8" y2="60" stroke="rgba(253,230,138,0.65)" strokeWidth="1.5"/>
-          <line x1="112" y1="60" x2="118" y2="60" stroke="rgba(253,230,138,0.65)" strokeWidth="1.5"/>
-          <circle cx="60" cy="60" r="2.5" fill="rgba(253,230,138,0.5)"/>
-          <circle cx="60" cy="60" r="56" stroke="rgba(253,230,138,0.12)" strokeWidth="0.4" strokeDasharray="1.5 7.3"/>
-        </svg>
-      </div>
+    <div className="telescope-cursor" ref={cursorRef}>
+      <svg className="telescope-ring" viewBox="0 0 80 80" fill="none">
+        {/* Outer reticle circle */}
+        <circle cx="40" cy="40" r="38" stroke="rgba(253,230,138,0.35)" strokeWidth="1" />
+        {/* Cross-hairs — short ticks */}
+        <line x1="40" y1="4"  x2="40" y2="16" stroke="rgba(253,230,138,0.4)" strokeWidth="0.8" />
+        <line x1="40" y1="64" x2="40" y2="76" stroke="rgba(253,230,138,0.4)" strokeWidth="0.8" />
+        <line x1="4"  y1="40" x2="16" y2="40" stroke="rgba(253,230,138,0.4)" strokeWidth="0.8" />
+        <line x1="64" y1="40" x2="76" y2="40" stroke="rgba(253,230,138,0.4)" strokeWidth="0.8" />
+        {/* Center dot — click point */}
+        <circle cx="40" cy="40" r="3" fill="rgba(253,230,138,0.6)" />
+        <circle cx="40" cy="40" r="1" fill="rgba(253,230,138,0.9)" />
+      </svg>
       <div className="telescope-glow"></div>
       <div className="telescope-info" ref={infoRef}></div>
     </div>
