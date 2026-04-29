@@ -1,6 +1,6 @@
 # 📘 PriSincera — 개발 관리 & 운영 가이드
 
-> **최종 업데이트**: 2026-04-23  
+> **최종 업데이트**: 2026-04-29  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
 > CI/CD 파이프라인, 커스텀 도메인 연결까지의 전체 개발 운영 프로세스를 기록합니다.
 
@@ -101,7 +101,9 @@ d:\prisincera\www\
 │   └── 📁 styles/              # 글로벌 CSS 스타일
 │
 ├── 📁 pipeline/                # ── PriSignal 데일리 파이프라인 ──
-│   ├── 📁 src/                 #   Cloud Functions 소스
+│   ├── 📁 src/                 #   Cloud Run Jobs 소스
+│   │   ├── 📁 lib/             #   코어 모듈 (mailer, email-template, subscribers 등)
+│   │   └── 📁 tests/           #   단위/통합 테스트 (88건)
 │   ├── 📁 config/              #   소스 설정 (sources.json)
 │   └── setup-infra.sh          #   인프라 셋업 스크립트
 │
@@ -413,14 +415,15 @@ CMD ["nginx", "-g", "daemon off;"]
 | `try_files` | `$uri $uri/ /index.html` | SPA 라우팅 폴백 |
 | `gzip` | `on` | 텍스트 기반 리소스 압축 |
 
-### 7-3a. API 프록시 라우트 (nginx.conf)
+### 7-3a. API 라우트 (server.mjs — 2026-04-29 업데이트)
 
-| 경로 | 프록시 대상 | 용도 |
-|------|------------|------|
-| `/api/subscribe` | Buttondown API (`/v1/subscribers`) | 이메일 구독 |
-| `/api/archive` | Buttondown API (`/v1/emails`) | 뉴스레터 아카이브 |
-| `/api/daily/:date` | GCS (`prisincera-prisignal-data/daily/:date.json`) | 데일리 시그널 JSON |
-| `/api/daily/index` | GCS (`prisincera-prisignal-data/daily/index.json`) | 데일리 시그널 목록 |
+| 경로 | 대상 | 용도 |
+|------|------|------|
+| `POST /api/subscribe` | GCS `subscribers/active.json` | 이메일 구독 (직접 저장) |
+| `GET /api/unsubscribe` | GCS `subscribers/active.json` | HMAC 토큰 검증 후 구독 해지 |
+| `GET /api/archive` | 리다이렉트 | → `/api/daily/index` (deprecated) |
+| `GET /api/daily/:date` | GCS (`daily/:date.json`) | 데일리 시그널 JSON |
+| `GET /api/daily/index` | GCS (`daily/index.json`) | 데일리 시그널 목록 |
 
 ### 7-4. 캐시 정책 (nginx.conf)
 

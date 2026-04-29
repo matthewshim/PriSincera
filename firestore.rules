@@ -1,0 +1,44 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 기본: 모든 접근 차단
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Admin SDK (서버사이드)는 Security Rules를 우회합니다.
+    // 아래 규칙은 클라이언트 SDK 사용 시를 위한 방어 규칙입니다.
+    
+    // subscribers — 서버에서만 접근 (Admin SDK)
+    match /subscribers/{subscriberId} {
+      allow read, write: if false;
+    }
+    
+    // email_logs — 서버에서만 접근
+    match /email_logs/{logId} {
+      allow read, write: if false;
+    }
+    
+    // daily_signals — 서버에서만 접근
+    match /daily_signals/{signalId} {
+      allow read, write: if false;
+    }
+    
+    // study_content — 공개 읽기, 서버에서만 쓰기 (향후 PriStudy)
+    match /study_content/{contentId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // study_progress — 인증된 사용자만 본인 데이터 접근 (향후)
+    match /study_progress/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // admin_config — 서버에서만 접근
+    match /admin_config/{docId} {
+      allow read, write: if false;
+    }
+  }
+}

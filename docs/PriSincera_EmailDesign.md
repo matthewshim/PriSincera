@@ -1,8 +1,9 @@
 # 📧 PriSignal 이메일 뉴스레터 디자인 개편안
 
-> **문서 버전:** v1.0  
+> **문서 버전:** v2.0  
 > **작성일:** 2026-04-29  
-> **상태:** 📋 Proposed → 구현 승인 대기
+> **최종 업데이트:** 2026-04-29  
+> **상태:** ✅ 구현 완료 (Gmail SMTP 자체 발송 — 테스트 발송 성공)
 
 ---
 
@@ -314,81 +315,78 @@ CTA 버튼:
 
 ---
 
-## 6. 콘텐츠 자동 생성 전략
+## 6. 콘텐츠 자동 생성 — ✅ 구현 완료
 
-### 6-1. 현재 방식 (수동)
+### 6-1. 이전 방식 (Buttondown 의존 — 폐기)
 
-마크다운 텍스트를 Buttondown 에디터에 수동 입력 → 기본 렌더링
+마크다운 텍스트를 Buttondown 에디터에 수동 입력 → Buttondown 기본 렌더링
 
-### 6-2. 제안 방식 (자동화)
+### 6-2. 현재 방식 (자체 발송 — Gmail SMTP)
 
 ```
-Daily Pipeline (Cloud Scheduler)
+Daily Pipeline (Cloud Scheduler → Composer)
         │
         ▼
   ① GCS에서 당일 scored JSON 로드
         │
         ▼
-  ② HTML 이메일 본문 자동 생성
+  ② email-template.mjs로 HTML 이메일 자동 생성
+     - Header (PriSignal 브랜드 + 날짜/통계)
      - DM Pick 카드 렌더링 (isDmPick === true)
-     - More Signals 카테고리 그룹핑
-     - Quick Stats 카운트
+     - More Signals 카테고리별 그룹핑
+     - Portal CTA 버튼
+     - Footer (구독 해지 + 브랜드)
         │
         ▼
-  ③ Buttondown API로 Draft 생성
-     POST /v1/emails
-     { subject, body(HTML), status: "draft" }
+  ③ 구독자별 개인화 렌더링 (unsubscribe URL)
         │
         ▼
-  ④ 관리자 리뷰 후 Publish
-     (또는 자동 Publish 설정 가능)
+  ④ mailer.mjs → Gmail SMTP로 직접 발송
+     (구독자 목록: GCS subscribers/active.json)
 ```
 
-### 6-3. 이메일 본문 생성 함수 (의사코드)
+### 6-3. 구현된 모듈
 
-```javascript
-function generateEmailBody(dailyData) {
-  const { date, total, dmPickCount, articles } = dailyData;
-  const dmPicks = articles.filter(a => a.isDmPick);
-  const others = articles.filter(a => !a.isDmPick);
-  const grouped = groupByCategory(others);
-  
-  return `
-    ${renderQuickStats(total, dmPickCount, Object.keys(grouped).length)}
-    ${dmPicks.map(renderDmPickCard).join('')}
-    ${renderMoreSignals(grouped)}
-    ${renderCtaBanner(date)}
-  `;
-}
-```
+| 모듈 | 파일 | 역할 |
+|------|------|------|
+| **이메일 템플릿** | `pipeline/src/lib/email-template.mjs` | HTML 이메일 렌더링 (다크 테마, 카드형 레이아웃) |
+| **SMTP 발송** | `pipeline/src/lib/mailer.mjs` | Gmail SMTP (Nodemailer, pool 모드) |
+| **구독자 관리** | `pipeline/src/lib/subscribers.mjs` | GCS JSON 기반 CRUD + HMAC 해지 토큰 |
+
+### 6-4. 테스트 결과 (2026-04-29)
+
+- **단위 테스트**: 88건 전체 통과
+- **실 발송 테스트**: shimks@gravity.co.kr 성공 (messageId 확인)
+- **HTML 크기**: 31.3KB (16건 아티클 기준)
 
 ---
 
-## 7. 구현 로드맵
+## 7. 구현 로드맵 — ✅ 전체 완료
 
-### Phase 1 — 즉시 (Buttondown 템플릿 적용)
+### Phase 1 — 이메일 템플릿 엔진 ✅
 
-| # | 작업 | 담당 |
-|---|------|------|
-| 1-1 | 기존 `prisignal-email-template.html` 개편 | 개발 |
-| 1-2 | Buttondown Settings > Design에 적용 | 수동 |
-| 1-3 | 테스트 메일 발송 후 클라이언트별 검증 | QA |
+| # | 작업 | 상태 |
+|---|------|:---:|
+| 1-1 | `email-template.mjs` — HTML 이메일 렌더링 엔진 | ✅ |
+| 1-2 | DM Pick 카드 / More Signals / Portal CTA 컴포넌트 | ✅ |
+| 1-3 | XSS 방지 (escapeHtml) + 다크 모드 메타 | ✅ |
 
-### Phase 2 — 단기 (콘텐츠 구조화)
+### Phase 2 — 자체 발송 인프라 ✅
 
-| # | 작업 | 담당 |
-|---|------|------|
-| 2-1 | 마크다운 → 구조화된 HTML 본문 생성 스크립트 | 개발 |
-| 2-2 | DM Pick 카드 / More Signals 템플릿 컴포넌트 | 개발 |
-| 2-3 | 데일리 포털 링크 자동 삽입 | 개발 |
+| # | 작업 | 상태 |
+|---|------|:---:|
+| 2-1 | `mailer.mjs` — Gmail SMTP (Nodemailer pool 모드) | ✅ |
+| 2-2 | `subscribers.mjs` — GCS JSON 구독자 관리 | ✅ |
+| 2-3 | HMAC-SHA256 구독 해지 토큰 시스템 | ✅ |
 
-### Phase 3 — 중기 (파이프라인 자동화)
+### Phase 3 — 서버/파이프라인 연결 ✅
 
-| # | 작업 | 담당 |
-|---|------|------|
-| 3-1 | Cloud Function으로 이메일 HTML 자동 생성 | 개발 |
-| 3-2 | Buttondown API 연동 (Draft 자동 생성) | 개발 |
-| 3-3 | 관리자 승인 후 자동 발송 워크플로우 | 운영 |
+| # | 작업 | 상태 |
+|---|------|:---:|
+| 3-1 | `server.mjs` — Buttondown 프록시 → GCS 직접 관리 | ✅ |
+| 3-2 | `composer.mjs` v3 — 구독자별 개인화 HTML 발송 | ✅ |
+| 3-3 | `/api/unsubscribe` 엔드포인트 (HMAC 토큰 검증) | ✅ |
+| 3-4 | 테스트 발송 성공 (2026-04-29) | ✅ |
 
 ---
 

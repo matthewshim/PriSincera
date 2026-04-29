@@ -7,6 +7,7 @@ const Home = lazy(() => import('./pages/Home'));
 const PriSignal = lazy(() => import('./pages/PriSignal'));
 const PriSignalDaily = lazy(() => import('./pages/PriSignalDaily'));
 const PriSignalIssue = lazy(() => import('./components/prisignal/PriSignalIssue'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 /**
  * Route discriminator: /prisignal/:param
@@ -28,6 +29,10 @@ function App() {
   return (
     <Suspense fallback={PageFallback}>
       <Routes>
+        {/* Admin — Layout 밖 (독립 레이아웃) */}
+        <Route path="admin" element={<AdminDashboard />} />
+
+        {/* Public — Layout 안 (GNB/Footer) */}
         <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="prisignal" element={<PriSignal />} />

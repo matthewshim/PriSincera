@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --production=false
 COPY . .
+ARG VITE_FIREBASE_API_KEY
+ENV VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}
 RUN npm run build
 
 # ── Stage 2: Production server ──
@@ -13,8 +15,10 @@ WORKDIR /app
 # Copy built frontend assets
 COPY --from=builder /app/dist ./dist
 
-# Copy server and install production deps only
+# Copy server, admin API, and pipeline modules
 COPY server.mjs ./
+COPY admin-api.mjs ./
+COPY pipeline/ ./pipeline/
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 

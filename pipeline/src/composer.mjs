@@ -2,25 +2,27 @@
 /**
  * PriSignal Composer — 매일 07:00 KST 실행
  *
- * [Daily Model v2]
+ * [Daily Model v3 — 자체 발송]
  * 1. 오늘의 데일리 JSON 로드 (Collector 결과)
  * 2. Gemini Flash로 전체 아티클 SIGNAL 스코어링
  * 3. Tier 가중치 적용
  * 4. 상위 5개 DM 픽 선정
  * 5. DM 픽에 에디터 코멘트 생성
  * 6. 스코어링된 데일리 JSON 갱신 (dm_picks 포함)
- * 7. DM 발송 (Buttondown — 즉시 or 08:00 예약)
+ * 7. Gmail SMTP로 전체 구독자에게 HTML 이메일 발송
  */
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { scoreArticles, generateComments } from './lib/gemini.mjs';
-import { applyTierWeights, selectTopN, assembleDailyDM } from './lib/scoring.mjs';
+import { applyTierWeights, selectTopN } from './lib/scoring.mjs';
 import {
   readJSON, getTodayKST, getDailyPath,
-  writeDailyJSON, getDailySendTime,
+  writeDailyJSON,
 } from './lib/storage.mjs';
-import { sendEmail, scheduleEmail } from './lib/buttondown.mjs';
+import { sendToSubscribers } from './lib/mailer.mjs';
+import { renderDailyEmail } from './lib/email-template.mjs';
+import { getActiveSubscribers, buildUnsubscribeUrl } from './lib/subscribers.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -150,35 +152,40 @@ async function main() {
 
   console.log(`[Composer] 데일리 JSON 갱신 완료: ${finalArticles.length}개 (DM 픽 ${dmWithComments.length}개)`);
 
-  // 7. DM 발송
-  console.log('\n--- Phase 4: DM 발송 ---');
+  // 7. Gmail SMTP 자체 발송
+  console.log('\n--- Phase 4: 이메일 발송 (Gmail SMTP) ---');
   const dailyPageUrl = `https://www.prisincera.com/prisignal/${todayStr}`;
-  const body = assembleDailyDM({
-    date: todayStr,
-    articles: dmWithComments,
-    dailyPageUrl,
-    totalCount: finalArticles.length,
-  });
-
   const subject = `📡 PriSignal Daily — ${formatKoreanDate(todayStr)}`;
 
-  const sendTime = getDailySendTime();
-  let emailResult;
-  if (sendTime) {
-    // 08:00 KST 이전이면 예약 발송
-    emailResult = await scheduleEmail(subject, body, sendTime);
-  } else {
-    // 08:00 이후면 즉시 발송
-    emailResult = await sendEmail(subject, body);
+  // 구독자 목록 조회
+  const subscribers = await getActiveSubscribers();
+  console.log(`[Composer] 활성 구독자: ${subscribers.length}명`);
+
+  if (subscribers.length === 0) {
+    console.log('[Composer] 구독자가 없습니다. 이메일 발송 스킵.');
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.log(`\n✅ Composer v3 완료 (${elapsed}초) — 발송 없음`);
+    return;
   }
+
+  // 구독자별 개인화된 HTML 렌더링 (unsubscribe URL 개별 생성)
+  const htmlRenderer = (subscriberEmail) => renderDailyEmail({
+    date: todayStr,
+    articles: finalArticles,
+    totalCount: finalArticles.length,
+    dailyPageUrl,
+    unsubscribeUrl: buildUnsubscribeUrl(subscriberEmail),
+  });
+
+  const emailResult = await sendToSubscribers(subject, htmlRenderer, subscribers);
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('\n═══════════════════════════════════════');
-  console.log(`✅ Composer v2 완료 (${elapsed}초)`);
+  console.log(`✅ Composer v3 완료 (${elapsed}초)`);
   console.log(`   날짜: ${todayStr}`);
   console.log(`   전체 아티클: ${finalArticles.length}개`);
   console.log(`   DM 픽: ${dmWithComments.length}개`);
-  console.log(`   Buttondown ID: ${emailResult.id}`);
+  console.log(`   발송: ${emailResult.sent}/${emailResult.total}건 성공`);
   console.log('═══════════════════════════════════════');
 }
 

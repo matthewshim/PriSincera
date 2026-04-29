@@ -11,6 +11,8 @@
   "dependencies": {
     "@google-cloud/storage": "^7.15.0",
     "@google/generative-ai": "^0.24.0",
+    "juice": "^11.1.1",
+    "nodemailer": "^8.0.7",
     "rss-parser": "^3.13.0"
   }
 }

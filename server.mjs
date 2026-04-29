@@ -1,10 +1,11 @@
 /**
- * PriSincera Web Server — Express + GCS authenticated proxy
+ * PriSincera Web Server — Express + GCS/Firestore
  * 
- * Replaces Nginx for Cloud Run deployment.
+ * Cloud Run deployment.
  * - Serves static files from dist/
- * - Proxies Buttondown API requests
- * - Reads GCS daily JSON using Cloud Run service account (auto-auth)
+ * - Subscriber management via Firestore (GCS fallback)
+ * - GCS daily JSON proxy (authenticated)
+ * - Admin API (Firebase Auth protected)
  * - SPA fallback for client-side routing
  */
 import express from 'express';
@@ -14,14 +15,15 @@ import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
+import adminRouter from './admin-api.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 8080;
 const DIST_DIR = join(__dirname, 'dist');
 
-// --- Buttondown API key ---
-const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY || '';
+// --- Buttondown API key (deprecated — 마이그레이션 완료 후 환경변수에서 제거) ---
+// const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY || '';
 
 // --- GCS config ---
 const GCS_BUCKET = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
@@ -46,7 +48,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"],
+      connectSrc: ["'self'", "https://identitytoolkit.googleapis.com"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
@@ -98,9 +100,12 @@ app.use(express.static(DIST_DIR, {
   }
 }));
 
-// --- Buttondown API Proxies ---
+// --- Admin API (Firebase Auth protected) ---
+app.use('/admin/api', express.json({ limit: '10kb' }), adminRouter);
 
-// Subscribe — with rate limiting + body validation
+// --- Subscriber Management (GCS JSON / Firestore) ---
+
+// Subscribe — GCS 직접 저장
 app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), async (req, res) => {
   try {
     const { email_address } = req.body || {};
@@ -110,72 +115,92 @@ app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), asy
       return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
     }
 
-    // Only forward allowed fields to Buttondown
-    const safeBody = JSON.stringify({ email_address, type: 'regular' });
+    // GCS 구독자 관리 모듈 dynamic import (서버 시작 시 로드 실패 방지)
+    const { addSubscriber } = await import('./pipeline/src/lib/subscribers.mjs');
+    const result = await addSubscriber(email_address, 'website');
 
-    const resp = await fetch('https://api.buttondown.email/v1/subscribers', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Token ${BUTTONDOWN_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: safeBody
-    });
-    const data = await resp.json();
-
-    // Classify Buttondown responses for the client
-    if (resp.ok || resp.status === 201) {
-      // New subscriber created
-      return res.status(201).json({ code: 'subscribed', ...data });
+    switch (result.code) {
+      case 'subscribed':
+      case 'resubscribed':
+        return res.status(201).json({ code: 'subscribed', email: result.email });
+      case 'already_subscribed':
+        return res.status(200).json({ code: 'already_subscribed' });
+      case 'invalid_email':
+        return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
+      default:
+        return res.status(500).json({ code: 'error', error: 'Unknown result' });
     }
-
-    if (data?.code === 'subscriber_blocked') {
-      // Firewall blocked — return 403 so client shows error
-      return res.status(403).json({ code: 'blocked', error: '구독이 차단되었습니다. 관리자에게 문의해주세요.' });
-    }
-
-    if (data?.code === 'email_already_exists' || data?.detail?.includes?.('already')) {
-      // Already subscribed — treat as success
-      return res.status(200).json({ code: 'already_subscribed' });
-    }
-
-    // Other errors — forward as-is
-    res.status(resp.status).json(data);
   } catch (err) {
-    res.status(500).json({ code: 'proxy_error', error: 'Proxy error' });
+    console.error('[Subscribe] Error:', err.message);
+    res.status(500).json({ code: 'server_error', error: '구독 처리 중 오류가 발생했습니다.' });
   }
 });
 
-app.get('/api/archive', async (req, res) => {
+// Unsubscribe — HMAC 토큰 검증 후 해지
+app.get('/api/unsubscribe', async (req, res) => {
   try {
-    const resp = await fetch('https://api.buttondown.email/v1/emails', {
-      headers: { 'Authorization': `Token ${BUTTONDOWN_API_KEY}` }
-    });
-    const data = await resp.json();
-    res.status(resp.status).json(data);
+    const { email, token } = req.query;
+
+    if (!email || !token) {
+      return res.status(400).send(renderUnsubPage('잘못된 요청입니다.', false));
+    }
+
+    const { verifyUnsubToken, removeSubscriber } = await import('./pipeline/src/lib/subscribers.mjs');
+
+    if (!verifyUnsubToken(email, token)) {
+      return res.status(403).send(renderUnsubPage('유효하지 않은 요청입니다.', false));
+    }
+
+    const result = await removeSubscriber(email);
+
+    if (result.code === 'unsubscribed') {
+      return res.status(200).send(renderUnsubPage('구독이 성공적으로 해지되었습니다.', true));
+    }
+
+    return res.status(200).send(renderUnsubPage('이미 해지된 이메일이거나 존재하지 않는 이메일입니다.', true));
   } catch (err) {
-    res.status(500).json({ error: 'Proxy error' });
+    console.error('[Unsubscribe] Error:', err.message);
+    res.status(500).send(renderUnsubPage('처리 중 오류가 발생했습니다.', false));
   }
 });
 
-// Archive by ID — with UUID validation
-app.get('/api/archive/:id', async (req, res) => {
-  const id = req.params.id;
+/** 구독 해지 결과 페이지 HTML */
+function renderUnsubPage(message, success) {
+  const icon = success ? '✅' : '❌';
+  const color = success ? '#22D3EE' : '#EF4444';
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PriSignal — 구독 해지</title>
+  <style>
+    body { margin:0; padding:0; background:#0A0714; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:'Noto Sans KR',-apple-system,sans-serif; }
+    .card { background:#1A1035; border:1px solid rgba(196,181,253,0.08); border-radius:16px; padding:48px; text-align:center; max-width:400px; }
+    .icon { font-size:48px; margin-bottom:16px; }
+    .msg { color:#E9D5FF; font-size:16px; line-height:1.6; margin-bottom:24px; }
+    .link { color:#C084FC; text-decoration:none; font-size:14px; }
+    .link:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">${icon}</div>
+    <p class="msg" style="color:${color};">${message}</p>
+    <a href="https://www.prisincera.com/prisignal" class="link">← PriSignal로 돌아가기</a>
+  </div>
+</body>
+</html>`;
+}
 
-  // Validate UUID v4 format to prevent path manipulation
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
-    return res.status(400).json({ error: 'Invalid archive ID format' });
-  }
-
-  try {
-    const resp = await fetch(`https://api.buttondown.email/v1/emails/${id}`, {
-      headers: { 'Authorization': `Token ${BUTTONDOWN_API_KEY}` }
-    });
-    const data = await resp.json();
-    res.status(resp.status).json(data);
-  } catch (err) {
-    res.status(500).json({ error: 'Proxy error' });
-  }
+// --- Archive redirect (기존 /api/archive → /api/daily/index 사용 안내) ---
+// Buttondown 아카이브 프록시 제거 — 기존 /api/daily/index, /api/daily/:date 사용
+app.get('/api/archive', (req, res) => {
+  res.redirect(301, '/api/daily/index');
+});
+app.get('/api/archive/:id', (req, res) => {
+  // 기존 UUID 기반 → 날짜 기반으로 전환됨
+  res.status(410).json({ error: 'Archive endpoint deprecated. Use /api/daily/:date instead.' });
 });
 
 // --- GCS Daily Signal Proxy (authenticated via Cloud Run SA) ---
@@ -223,5 +248,7 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`[PriSincera] Server running on port ${PORT}`);
   console.log(`[PriSincera] GCS bucket: ${GCS_BUCKET}`);
-  console.log(`[PriSincera] Buttondown API: ${BUTTONDOWN_API_KEY ? 'configured' : 'NOT SET'}`);
+  console.log(`[PriSincera] Subscriber management: Firestore (GCS fallback)`);
+  console.log(`[PriSincera] Admin API: /admin/api/*`);
+  console.log(`[PriSincera] Unsubscribe secret: ${process.env.UNSUBSCRIBE_SECRET ? 'configured' : 'NOT SET'}`);
 });

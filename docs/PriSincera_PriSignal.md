@@ -133,13 +133,14 @@ RSS 수집(매일) → AI SIGNAL 스코어링 → 데일리 포털 게시 → DM
 │     └── Tier 가중치 적용 → 상위 5개 DM 픽 선정                   │
 │     └── 에디터 코멘트 AI 자동 생성                                │
 │     └── 스코어링된 데일리 JSON 갱신 (dm_picks 포함)               │
-│     └── Buttondown API → DM 선별 발송                            │
+│     └── Gmail SMTP → 전체 구독자에게 HTML 이메일 발송             │
 │                                                                  │
-│  📡 매일 AM — Buttondown DM 발송                                 │
+│  📡 매일 AM — Gmail SMTP 자체 발송                                │
+│     └── 구독자별 개인화된 unsubscribe URL 포함                    │
 │     └── 절대 건너뛰지 않음 (공휴일/연휴 무관)                     │
 │                                                                  │
 │  ⏰ CRON 3 — 매일 08:30 KST (Cloud Run Job: monitor)            │
-│     └── Buttondown API 발송 상태 확인                            │
+│     └── 발송 결과 로그 확인                                      │
 │     └── 실패 시 Cloud Monitoring → matthew.shim@prisincera.com   │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
@@ -172,14 +173,14 @@ RSS 수집(매일) → AI SIGNAL 스코어링 → 데일리 포털 게시 → DM
 |------|------|------|
 | **Cloud Run Jobs** | Collector / Composer / Monitor 3개 Job | $0 (무료 티어) |
 | **Cloud Scheduler** | 3개 크론 트리거 | $0 (3개 무료) |
-| **Cloud Storage** | 후보 풀, 발행 이력 JSON | $0 (5GB 무료) |
+| **Cloud Storage** | 후보 풀, 발행 이력 JSON, 구독자 JSON | $0 (5GB 무료) |
 | **Gemini Flash API** | 스코어링, 코멘트 생성 | $0 (무료 티어) |
-| **Buttondown** | 예약 발송, 구독자 관리 | $0 (100명까지 무료) |
-| **Secret Manager** | API 키 관리 | $0 (6개 무료) |
+| **Gmail SMTP** | 이메일 발송 (Google Workspace) | $0 (기존 Workspace 포함, 일 2,000건) |
+| **Secret Manager** | API 키, SMTP 비밀번호, 해지 시크릿 관리 | $0 (6개 무료) |
 
 > [!TIP]
-> **월 운영비: $0** — 모든 구성 요소가 GCP/Gemini 무료 티어 내에서 운영됩니다.
-> 구독자 100명 초과 시 Buttondown $9/월만 추가됩니다.
+> **월 운영비: $0** — 모든 구성 요소가 GCP/Gemini/Workspace 무료 티어 내에서 운영됩니다.
+> Buttondown 의존성이 완전히 제거되어 추가 구독 비용이 없습니다.
 
 ---
 
@@ -242,18 +243,25 @@ RSS 수집(매일) → AI SIGNAL 스코어링 → 데일리 포털 게시 → DM
 | **구독 폼 위치** | Work 섹션 PriSignal 배너 + `/prisignal` 랜딩 페이지 (Hero, CTA 섹션) | ✅ |
 | **수집 필드** | 이메일 (필수) | ✅ |
 | **UX** | 인라인 폼 + 성공/에러 피드백 애니메이션, glassmorphism 디자인 | ✅ |
-| **API 연동** | `POST /api/subscribe` → Express 프록시 → Buttondown API | ✅ |
+| **API 연동** | `POST /api/subscribe` → Express → GCS JSON 직접 저장 | ✅ |
 | **컴포넌트** | `src/components/prisignal/SubscribeForm.jsx` (공유 컴포넌트) | ✅ |
 
-### 5-2. 이메일 플랫폼: Buttondown — ✅ 연동 완료
+### 5-2. 이메일 플랫폼: Gmail SMTP 자체 발송 — ✅ 전환 완료 (2026-04-29)
 
-| 항목 | 내용 | 상태 |
-|------|------|:---:|
-| **계정** | Buttondown 계정 생성 완료, 뉴스레터명 "PriSignal" 설정 | ✅ |
-| **API Key** | Cloud Run 환경변수 + Secret Manager `BUTTONDOWN_API_KEY` | ✅ |
-| **무료 티어** | 구독자 100명까지 (현재 사용 중) | ✅ |
-| **커스텀 도메인** | 미사용 (선택사항 — 구독자 500명+ 시 검토) | ⏸️ |
-| **아카이브** | API 연동 완료 | ✅ |
+> [!IMPORTANT]
+> **Buttondown → Gmail SMTP 전환 (2026-04-29)**
+> Buttondown의 디자인 제약(Markdown 기반, CSS 인라인 한계)을 극복하기 위해
+> Cloud Run 기반의 자체 발송 시스템으로 완전 전환했습니다.
+
+| 항목 | Before (Buttondown) | After (자체 발송) |
+|------|---------------------|-------------------|
+| **발송** | Buttondown API | **Gmail SMTP** (Nodemailer) |
+| **구독자 DB** | Buttondown SaaS | **GCS JSON** (`subscribers/active.json`) |
+| **이메일 HTML** | Buttondown 마크다운 렌더링 | **email-template.mjs** (프로그래매틱 렌더링) |
+| **구독 해지** | Buttondown 내장 링크 | **HMAC-SHA256 토큰** 기반 자체 구현 |
+| **API Key** | `BUTTONDOWN_API_KEY` | `SMTP_PASS` + `UNSUBSCRIBE_SECRET` |
+| **일일 한도** | Buttondown 요금제 종속 | Google Workspace **2,000건/일** |
+| **HTML 커스텀** | `{{ body }}` 단일 블록 한계 | **완전 자유** (다크 테마, 카드형, 개인화) |
 
 ### 5-3. 웹 서버 — Express.js ✅ 완료 (2026-04-22 전환)
 
@@ -271,28 +279,30 @@ RSS 수집(매일) → AI SIGNAL 스코어링 → 데일리 포털 게시 → DM
 
 ```javascript
 // server.mjs (실제 적용 중) — 주요 엔드포인트
-app.post('/api/subscribe', ...)   // → Buttondown API 프록시
-app.get('/api/archive', ...)      // → Buttondown API 프록시
-app.get('/api/archive/:id', ...)  // → Buttondown API 프록시
-app.get('/api/daily/index', ...)  // → GCS 인증 프록시 (서비스 계정)
-app.get('/api/daily/:date', ...)  // → GCS 인증 프록시 (서비스 계정)
-app.use(express.static('dist'))   // → 정적 파일 서빙
-app.use((req, res) => ...)        // → SPA 폴백
+app.post('/api/subscribe', ...)    // → GCS subscribers/active.json 직접 저장
+app.get('/api/unsubscribe', ...)   // → HMAC 토큰 검증 + GCS 구독 해지 (NEW)
+app.get('/api/archive', ...)       // → /api/daily/index 리다이렉트 (deprecated)
+app.get('/api/daily/index', ...)   // → GCS 인증 프록시 (서비스 계정)
+app.get('/api/daily/:date', ...)   // → GCS 인증 프록시 (서비스 계정)
+app.use(express.static('dist'))    // → 정적 파일 서빙
+app.use((req, res) => ...)         // → SPA 폴백
 ```
 
-### 5-4. 아키텍처 (실제 운영 중)
+### 5-4. 아키텍처 (실제 운영 중 — 2026-04-29 업데이트)
 
 ```
 prisincera.com (구독 폼 / 데일리 페이지)
     ↓ POST /api/subscribe { email }
-    ↓ GET /api/daily/2026-04-21
+    ↓ GET /api/daily/2026-04-29
 Express.js 서버 (Cloud Run 컨테이너)
-    ├── Buttondown API 프록시 (Authorization: Token)
+    ├── GCS 구독자 직접 관리 (subscribers/active.json)
+    ├── HMAC 토큰 기반 구독 해지 (/api/unsubscribe)
     └── GCS 인증 프록시 (@google-cloud/storage, SA 자동 인증)
-Buttondown
-    ↓ 구독자 등록 / DM 발송
+Gmail SMTP (matthew.shim@prisincera.com)
+    ↓ Composer v3 → 구독자별 개인화 HTML 발송
 GCS (prisincera-prisignal-data)
-    ↓ daily/{date}.json → 데일리 페이지 데이터
+    ├── daily/{date}.json → 데일리 페이지 데이터
+    └── subscribers/active.json → 구독자 목록
 prisincera.com/prisignal/{date}
     ↓ 데일리 포털 페이지 표시
 ```
@@ -424,16 +434,21 @@ src/
 ├── server.mjs                   # ✅ Express 웹 서버 (API 프록시 + 정적 파일 + SPA 폴백)
 ├── pipeline/
 │   ├── src/collector.mjs        # ✅ RSS 수집 Job
-│   ├── src/composer.mjs         # ✅ AI 스코어링 + DM 발송 Job
+│   ├── src/composer.mjs         # ✅ AI 스코어링 + Gmail SMTP 발송 Job (v3)
 │   ├── src/monitor.mjs          # ✅ 발송 모니터링 Job
+│   ├── src/migrate-subscribers.mjs # ✅ Buttondown→GCS 구독자 마이그레이션
 │   ├── src/lib/gemini.mjs       # ✅ Gemini Flash API 클라이언트
-│   ├── src/lib/buttondown.mjs   # ✅ Buttondown API 클라이언트
+│   ├── src/lib/mailer.mjs       # ✅ Gmail SMTP 발송 (Nodemailer) ← NEW
+│   ├── src/lib/email-template.mjs # ✅ HTML 이메일 템플릿 엔진 ← NEW
+│   ├── src/lib/subscribers.mjs  # ✅ GCS JSON 구독자 관리 ← NEW
+│   ├── src/lib/buttondown.mjs   # ❌ (deprecated — 자체 발송으로 교체)
 │   ├── src/lib/scoring.mjs      # ✅ Tier 가중치 + DM 선정 로직
 │   ├── src/lib/rss.mjs          # ✅ RSS 피드 파서
 │   ├── src/lib/storage.mjs      # ✅ GCS 읽기/쓰기
+│   ├── src/tests/               # ✅ 단위/통합 테스트 (88건)
 │   └── config/sources.json      # ✅ 35개 RSS 소스 설정
 ├── docs/
-│   └── prisignal-email-template.html  # ✅ Buttondown 이메일 템플릿
+│   └── prisignal-email-template.html  # ❌ (deprecated — email-template.mjs로 교체)
 ```
 
 #### 라우팅 (App.jsx) — ✅ 적용 완료
@@ -445,13 +460,13 @@ src/
 <Route path="prisignal/:issueId" element={<PriSignalIssue />} /> // ✅ 개별 이슈 상세
 ```
 
-#### Buttondown API 연동 현황
+#### API 연동 현황 (2026-04-29 업데이트)
 
 | API | 엔드포인트 | 용도 | 상태 |
 |-----|-----------|------|:---:|
-| **구독 등록** | `POST /api/subscribe` | 구독 폼 → 신규 구독자 등록 | ✅ |
-| **아카이브 조회** | `GET /api/archive` | 최근 발행 이슈 목록 조회 | ✅ |
-| **이슈 상세** | `GET /api/archive/:id` | 개별 이슈 HTML 본문 조회 | ✅ |
+| **구독 등록** | `POST /api/subscribe` | 구독 폼 → GCS JSON 직접 저장 | ✅ |
+| **구독 해지** | `GET /api/unsubscribe` | HMAC 토큰 검증 → GCS 구독 해지 | ✅ NEW |
+| **아카이브 (deprecated)** | `GET /api/archive` | → `/api/daily/index` 리다이렉트 | ✅ |
 | **데일리 인덱스** | `GET /api/daily/index` | 최근 데일리 목록 (GCS) | ✅ |
 | **데일리 데이터** | `GET /api/daily/:date` | 특정 날짜 스코어링된 아티클 (GCS) | ✅ |
 
@@ -617,7 +632,7 @@ Footer:  Home / PriSignal / PriStudy(준비중 얼럿)
 |---|------|------|:---:|
 | 1 | **발송 주기** | 주 1회 | ✅ |
 | 2 | **발송 요일/시간** | 월요일 오전 8시 | ✅ |
-| 3 | **이메일 플랫폼** | Buttondown (무료 티어) | ✅ |
+| 3 | **이메일 플랫폼** | Gmail SMTP 자체 발송 (Google Workspace, Buttondown 제거) | ✅ |
 | 4 | **커스텀 도메인** | 미사용 (기본 도메인 운영, 500명+ 시 재검토) | ✅ |
 | 5 | **랜딩 페이지 URL** | `/prisignal` (서브 라우트) | ✅ |
 | 6 | **GNB 메뉴** | Home · PriSignal · PriStudy 3메뉴 구조 | ✅ |
@@ -635,8 +650,8 @@ Footer:  Home / PriSignal / PriStudy(준비중 얼럿)
 | **PriSignal 랜딩 페이지** | https://www.prisincera.com/prisignal |
 | **데일리 뷰 (예시)** | https://www.prisincera.com/prisignal/2026-04-21 |
 | **데일리 API (예시)** | https://www.prisincera.com/api/daily/2026-04-21 |
-| **Buttondown 관리자** | https://buttondown.com/home |
-| **API Key 관리** | https://buttondown.com/keys |
+| **Buttondown 관리자 (deprecated)** | https://buttondown.com/home |
+| **GCS 구독자 JSON** | gs://prisincera-prisignal-data/subscribers/active.json |
 | **Cloud Run 콘솔** | https://console.cloud.google.com/run?project=prisincera |
 | **Cloud Run Jobs** | https://console.cloud.google.com/run/jobs?project=prisincera |
 
