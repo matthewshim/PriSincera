@@ -55,7 +55,7 @@ export default function FloatingCTA() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email_address: email, type: 'regular' }),
       });
-      if (res.ok || res.status === 201 || res.status === 400) {
+      if (res.ok || res.status === 201) {
         setStatus('success');
         setEmail('');
         dismissTimerRef.current = setTimeout(handleDismiss, 2500);

@@ -107,7 +107,7 @@ app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), asy
 
     // Server-side email validation
     if (!email_address || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
-      return res.status(400).json({ error: 'Invalid email address' });
+      return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
     }
 
     // Only forward allowed fields to Buttondown
@@ -122,9 +122,27 @@ app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), asy
       body: safeBody
     });
     const data = await resp.json();
+
+    // Classify Buttondown responses for the client
+    if (resp.ok || resp.status === 201) {
+      // New subscriber created
+      return res.status(201).json({ code: 'subscribed', ...data });
+    }
+
+    if (data?.code === 'subscriber_blocked') {
+      // Firewall blocked — return 403 so client shows error
+      return res.status(403).json({ code: 'blocked', error: '구독이 차단되었습니다. 관리자에게 문의해주세요.' });
+    }
+
+    if (data?.code === 'email_already_exists' || data?.detail?.includes?.('already')) {
+      // Already subscribed — treat as success
+      return res.status(200).json({ code: 'already_subscribed' });
+    }
+
+    // Other errors — forward as-is
     res.status(resp.status).json(data);
   } catch (err) {
-    res.status(500).json({ error: 'Proxy error' });
+    res.status(500).json({ code: 'proxy_error', error: 'Proxy error' });
   }
 });
 

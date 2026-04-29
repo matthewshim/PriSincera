@@ -37,15 +37,17 @@ export default function SubscribeForm({ variant = 'inline', className = '', show
       });
 
       if (res.ok || res.status === 201) {
+        // Success (new subscriber or already subscribed)
         setStatus('success');
         setEmail('');
       } else {
         const data = await res.json().catch(() => null);
-        // Buttondown returns 400 if already subscribed
-        if (res.status === 400 || data?.detail?.includes?.('already')) {
-          setStatus('success'); // Treat already-subscribed as success
+        setStatus('error');
+        if (res.status === 403 || data?.code === 'blocked') {
+          setErrorMsg('구독 등록이 차단되었습니다. 관리자에게 문의해주세요.');
+        } else if (data?.code === 'invalid_email') {
+          setErrorMsg('올바른 이메일 주소를 입력해주세요.');
         } else {
-          setStatus('error');
           setErrorMsg('구독 등록에 실패했습니다. 잠시 후 다시 시도해주세요.');
         }
       }
