@@ -555,6 +555,181 @@
   to { transform: rotate(360deg); }
 }
 
+/* ─── Admin CRUD ──────────────────────────────── */
+
+.admin-me-badge {
+  display: inline-block;
+  background: rgba(192, 132, 252, 0.15);
+  color: var(--admin-accent);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 8px;
+  vertical-align: middle;
+  letter-spacing: 0.05em;
+}
+
+.admin-actions-cell {
+  white-space: nowrap;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.admin-action-btn {
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer !important;
+  transition: all 0.2s;
+  color: var(--admin-text-dim);
+  line-height: 1;
+}
+
+.admin-action-btn.edit:hover {
+  border-color: var(--admin-blue);
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.admin-action-btn.delete:hover {
+  border-color: var(--admin-red);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.admin-delete-confirm {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.admin-action-btn.confirm-yes {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: var(--admin-red);
+  color: var(--admin-red);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+}
+
+.admin-action-btn.confirm-yes:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.admin-action-btn.confirm-no {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+.admin-status-badge.orphan {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--admin-orange);
+}
+
+/* ─── Modal ───────────────────────────────────── */
+
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: admin-fadeIn 0.2s ease;
+}
+
+@keyframes admin-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.admin-modal {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border-hover);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  animation: admin-slideUp 0.25s ease;
+}
+
+@keyframes admin-slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.admin-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--admin-text-muted);
+  font-size: 18px;
+  cursor: pointer !important;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.admin-modal-close:hover {
+  color: var(--admin-text);
+}
+
+.admin-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-form-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--admin-text-muted);
+}
+
+.admin-form-label input {
+  background: rgba(196, 181, 253, 0.04);
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  color: var(--admin-text);
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.admin-form-label input:focus {
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px var(--admin-accent-glow);
+}
+
+.admin-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--admin-border);
+}
+
 /* ─── Responsive ──────────────────────────────── */
 
 @media (max-width: 768px) {
@@ -573,5 +748,9 @@
   }
   .admin-test-send-form {
     flex-direction: column;
+  }
+  .admin-modal {
+    margin: 16px;
+    max-width: calc(100% - 32px);
   }
 }
