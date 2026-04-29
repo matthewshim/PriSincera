@@ -2,6 +2,27 @@
    PriSincera Admin Dashboard — Premium Dark Theme
    ═══════════════════════════════════════════════ */
 
+/* 전역 cursor:none (TelescopeCursor) 오버라이드 — Admin에서 일반 커서 복원 */
+.admin-login,
+.admin-login *,
+.admin-dashboard,
+.admin-dashboard * {
+  cursor: auto !important;
+}
+.admin-login a, .admin-login button,
+.admin-dashboard a, .admin-dashboard button,
+.admin-dashboard .admin-tab,
+.admin-dashboard .admin-btn-primary,
+.admin-dashboard .admin-btn-secondary,
+.admin-dashboard .admin-logout-btn,
+.admin-dashboard .admin-stat-card {
+  cursor: pointer !important;
+}
+.admin-login-card button:disabled,
+.admin-dashboard button:disabled {
+  cursor: not-allowed !important;
+}
+
 :root {
   --admin-bg: #0A0714;
   --admin-surface: #1A1035;
