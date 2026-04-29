@@ -4,9 +4,7 @@ import './AdminDashboard.css';
 const API_BASE = '/admin/api';
 
 /**
- * Firebase Auth — 클라이언트 (CDN import 대신 REST API 사용)
- * Cloud Run 환경에서는 Firebase SDK를 번들에 포함하지 않고
- * REST API로 인증 처리 (번들 크기 최적화)
+ * Firebase Auth — REST API 인증
  */
 const FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || '';
 
@@ -58,21 +56,12 @@ function LoginForm({ onLogin }) {
         <p className="admin-login-sub">관리자 인증이 필요합니다</p>
         <form onSubmit={handleSubmit}>
           <input
-            id="admin-email"
-            type="email"
-            placeholder="관리자 이메일"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            autoFocus
+            id="admin-email" type="email" placeholder="관리자 이메일"
+            value={email} onChange={e => setEmail(e.target.value)} required autoFocus
           />
           <input
-            id="admin-password"
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
+            id="admin-password" type="password" placeholder="비밀번호"
+            value={password} onChange={e => setPassword(e.target.value)} required
           />
           {error && <div className="admin-error">{error}</div>}
           <button id="admin-login-btn" type="submit" disabled={loading}>
@@ -97,10 +86,12 @@ function useAdminApi(token) {
       },
     });
     if (res.status === 401) throw new Error('AUTH_EXPIRED');
-    if (!res.ok) throw new Error(`API Error: ${res.status}`);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `API Error: ${res.status}`);
+    }
     return res.json();
   }, [token]);
-
   return fetchApi;
 }
 
@@ -117,74 +108,108 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [testEmail, setTestEmail] = useState('');
   const [sendStatus, setSendStatus] = useState(null);
 
-  // Admin CRUD state
-  const [admins, setAdmins] = useState([]);
-  const [adminModal, setAdminModal] = useState(null); // null | 'create' | { mode: 'edit', admin }
-  const [adminForm, setAdminForm] = useState({ email: '', password: '', displayName: '' });
-  const [adminAction, setAdminAction] = useState(null); // { type, msg }
-  const [deleteConfirm, setDeleteConfirm] = useState(null); // uid to confirm delete
+  // Role & Profile
+  const [role, setRole] = useState('admin');
+  const [profile, setProfile] = useState(null);
+  const [profileModal, setProfileModal] = useState(false);
+  const [profileForm, setProfileForm] = useState({ displayName: '', password: '' });
+  const [profileAction, setProfileAction] = useState(null);
 
-  useEffect(() => {
-    loadDashboard();
-  }, []);
+  // Admin CRUD
+  const [admins, setAdmins] = useState([]);
+  const [adminModal, setAdminModal] = useState(null);
+  const [adminForm, setAdminForm] = useState({ email: '', password: '', displayName: '', role: 'admin' });
+  const [adminAction, setAdminAction] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+  const isSuperAdmin = role === 'super_admin';
+
+  useEffect(() => { loadDashboard(); }, []);
 
   async function loadDashboard() {
     setLoading(true);
     try {
-      const [statsRes, pipelineRes] = await Promise.allSettled([
+      const [statsRes, pipelineRes, verifyRes] = await Promise.allSettled([
         fetchApi('/stats'),
         fetchApi('/pipeline/status'),
+        fetchApi('/auth/verify'),
       ]);
       setStats(statsRes.status === 'fulfilled' ? statsRes.value : {
         subscribers: { active: 0, total: 0, unsubscribed: 0 },
         emails: { totalSent: 0, lastSentDate: null },
       });
       setPipeline(pipelineRes.status === 'fulfilled' ? pipelineRes.value : {
-        collector: { status: 'pending', lastRun: null },
-        totalDates: 0,
-        recentDates: [],
+        collector: { status: 'pending', lastRun: null }, totalDates: 0, recentDates: [],
       });
+      if (verifyRes.status === 'fulfilled') {
+        setRole(verifyRes.value.role || 'admin');
+      }
     } catch (err) {
       if (err.message === 'AUTH_EXPIRED') onLogout();
-      console.error('Dashboard load error:', err);
     }
     setLoading(false);
   }
+
+  // ─── Profile ──────────────────────────────────
+
+  async function openProfile() {
+    try {
+      const data = await fetchApi('/profile');
+      setProfile(data);
+      setProfileForm({ displayName: data.displayName || '', password: '' });
+      setProfileAction(null);
+      setProfileModal(true);
+    } catch (err) {
+      if (err.message === 'AUTH_EXPIRED') onLogout();
+    }
+  }
+
+  async function handleProfileSubmit(e) {
+    e.preventDefault();
+    setProfileAction({ type: 'loading', msg: '저장 중...' });
+    try {
+      const body = {};
+      if (profileForm.displayName !== (profile?.displayName || '')) body.displayName = profileForm.displayName;
+      if (profileForm.password) body.password = profileForm.password;
+      if (Object.keys(body).length === 0) {
+        setProfileAction({ type: 'error', msg: '변경할 내용이 없습니다' });
+        return;
+      }
+      await fetchApi('/profile', { method: 'PUT', body: JSON.stringify(body) });
+      setProfileAction({ type: 'success', msg: '✅ 프로필이 수정되었습니다' });
+      setTimeout(() => setProfileModal(false), 1200);
+    } catch (err) {
+      setProfileAction({ type: 'error', msg: `❌ ${err.message}` });
+    }
+  }
+
+  // ─── Data Loaders ─────────────────────────────
 
   async function loadSubscribers() {
     try {
       const data = await fetchApi('/subscribers?limit=50');
       setSubscribers(data.subscribers || []);
-    } catch (err) {
-      if (err.message === 'AUTH_EXPIRED') onLogout();
-    }
+    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
   async function loadEmailLogs() {
     try {
       const data = await fetchApi('/email/logs?limit=20');
       setEmailLogs(data.logs || []);
-    } catch (err) {
-      if (err.message === 'AUTH_EXPIRED') onLogout();
-    }
+    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
   async function exportCsv() {
     try {
       const res = await fetch(`${API_BASE}/subscribers/export`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        method: 'POST', headers: { Authorization: `Bearer ${token}` },
       });
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = `subscribers_${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Export failed:', err);
-    }
+      a.href = url; a.download = `subscribers_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click(); URL.revokeObjectURL(url);
+    } catch (err) { console.error('Export failed:', err); }
   }
 
   async function sendTestEmail() {
@@ -192,8 +217,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     setSendStatus({ type: 'loading', msg: '발송 중...' });
     try {
       const result = await fetchApi('/email/send-test', {
-        method: 'POST',
-        body: JSON.stringify({ to: testEmail }),
+        method: 'POST', body: JSON.stringify({ to: testEmail }),
       });
       setSendStatus({ type: 'success', msg: `✅ 발송 성공 (${result.messageId})` });
     } catch (err) {
@@ -201,27 +225,23 @@ function Dashboard({ token, adminEmail, onLogout }) {
     }
   }
 
-  // ─── Admin CRUD Functions ─────────────────────
+  // ─── Admin CRUD ───────────────────────────────
 
   async function loadAdmins() {
     try {
       const data = await fetchApi('/admins');
       setAdmins(data.admins || []);
-    } catch (err) {
-      if (err.message === 'AUTH_EXPIRED') onLogout();
-    }
+    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
   function openCreateAdmin() {
-    setAdminForm({ email: '', password: '', displayName: '' });
-    setAdminAction(null);
-    setAdminModal('create');
+    setAdminForm({ email: '', password: '', displayName: '', role: 'admin' });
+    setAdminAction(null); setAdminModal('create');
   }
 
   function openEditAdmin(admin) {
-    setAdminForm({ email: admin.email, password: '', displayName: admin.displayName || '' });
-    setAdminAction(null);
-    setAdminModal({ mode: 'edit', admin });
+    setAdminForm({ email: admin.email, password: '', displayName: admin.displayName || '', role: admin.role || 'admin' });
+    setAdminAction(null); setAdminModal({ mode: 'edit', admin });
   }
 
   async function handleAdminSubmit(e) {
@@ -229,20 +249,15 @@ function Dashboard({ token, adminEmail, onLogout }) {
     setAdminAction({ type: 'loading', msg: '처리 중...' });
     try {
       if (adminModal === 'create') {
-        await fetchApi('/admins', {
-          method: 'POST',
-          body: JSON.stringify(adminForm),
-        });
+        await fetchApi('/admins', { method: 'POST', body: JSON.stringify(adminForm) });
         setAdminAction({ type: 'success', msg: '✅ 관리자가 생성되었습니다' });
       } else {
         const body = {};
         if (adminForm.email !== adminModal.admin.email) body.email = adminForm.email;
         if (adminForm.password) body.password = adminForm.password;
         if (adminForm.displayName !== (adminModal.admin.displayName || '')) body.displayName = adminForm.displayName;
-        await fetchApi(`/admins/${adminModal.admin.uid}`, {
-          method: 'PUT',
-          body: JSON.stringify(body),
-        });
+        if (adminForm.role !== (adminModal.admin.role || 'admin')) body.role = adminForm.role;
+        await fetchApi(`/admins/${adminModal.admin.uid}`, { method: 'PUT', body: JSON.stringify(body) });
         setAdminAction({ type: 'success', msg: '✅ 관리자 정보가 수정되었습니다' });
       }
       setTimeout(() => { setAdminModal(null); loadAdmins(); }, 1000);
@@ -254,23 +269,29 @@ function Dashboard({ token, adminEmail, onLogout }) {
   async function handleDeleteAdmin(uid) {
     try {
       await fetchApi(`/admins/${uid}`, { method: 'DELETE' });
-      setDeleteConfirm(null);
-      loadAdmins();
-    } catch (err) {
-      alert(err.message);
-      setDeleteConfirm(null);
-    }
+      setDeleteConfirm(null); loadAdmins();
+    } catch (err) { alert(err.message); setDeleteConfirm(null); }
   }
 
   useEffect(() => {
     if (activeTab === 'subscribers') loadSubscribers();
     if (activeTab === 'emails') loadEmailLogs();
-    if (activeTab === 'admins') loadAdmins();
+    if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
   }, [activeTab]);
 
   if (loading) {
     return <div className="admin-loading"><div className="admin-spinner" />데이터 로딩 중...</div>;
   }
+
+  const ROLE_LABEL = { super_admin: '슈퍼 관리자', admin: '관리자' };
+
+  const tabs = [
+    { id: 'overview', label: '📊 대시보드' },
+    { id: 'subscribers', label: '👥 구독자' },
+    { id: 'emails', label: '📧 이메일' },
+    { id: 'pipeline', label: '⚙️ 파이프라인' },
+    ...(isSuperAdmin ? [{ id: 'admins', label: '🔐 관리자' }] : []),
+  ];
 
   return (
     <div className="admin-dashboard">
@@ -281,31 +302,28 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <h1>PriSincera Admin</h1>
         </div>
         <div className="admin-header-right">
-          <span className="admin-user">{adminEmail}</span>
+          <button className="admin-profile-btn" onClick={openProfile} title="마이페이지">
+            <span className="admin-avatar">👤</span>
+            <span className="admin-profile-info">
+              <span className="admin-profile-email">{adminEmail}</span>
+              <span className={`admin-role-badge ${role}`}>{ROLE_LABEL[role] || role}</span>
+            </span>
+          </button>
           <button className="admin-logout-btn" onClick={onLogout}>로그아웃</button>
         </div>
       </header>
 
-      {/* Tab Navigation */}
+      {/* Tabs */}
       <nav className="admin-tabs">
-        {[
-          { id: 'overview', label: '📊 대시보드' },
-          { id: 'subscribers', label: '👥 구독자' },
-          { id: 'emails', label: '📧 이메일' },
-          { id: 'pipeline', label: '⚙️ 파이프라인' },
-          { id: 'admins', label: '🔐 관리자' },
-        ].map(tab => (
-          <button
-            key={tab.id}
+        {tabs.map(tab => (
+          <button key={tab.id}
             className={`admin-tab ${activeTab === tab.id ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </button>
+          >{tab.label}</button>
         ))}
       </nav>
 
-      {/* Tab Content */}
+      {/* Content */}
       <main className="admin-content">
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
@@ -336,30 +354,17 @@ function Dashboard({ token, adminEmail, onLogout }) {
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>이메일</th>
-                    <th>상태</th>
-                    <th>구독일</th>
-                    <th>가입 경로</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>이메일</th><th>상태</th><th>구독일</th><th>가입 경로</th></tr></thead>
                 <tbody>
                   {subscribers.map((sub, i) => (
                     <tr key={i}>
                       <td className="admin-email-cell">{sub.email}</td>
-                      <td>
-                        <span className={`admin-status-badge ${sub.status}`}>
-                          {sub.status === 'active' ? '활성' : '해지'}
-                        </span>
-                      </td>
+                      <td><span className={`admin-status-badge ${sub.status}`}>{sub.status === 'active' ? '활성' : '해지'}</span></td>
                       <td>{sub.subscribedAt ? new Date(sub.subscribedAt).toLocaleDateString('ko') : '-'}</td>
                       <td>{sub.source || '-'}</td>
                     </tr>
                   ))}
-                  {subscribers.length === 0 && (
-                    <tr><td colSpan={4} className="admin-empty">구독자 데이터가 없습니다</td></tr>
-                  )}
+                  {subscribers.length === 0 && (<tr><td colSpan={4} className="admin-empty">구독자 데이터가 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>
@@ -368,41 +373,20 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {activeTab === 'emails' && (
           <div className="admin-emails">
-            <div className="admin-section-header">
-              <h2>이메일 발송</h2>
-            </div>
-            {/* Test send */}
+            <div className="admin-section-header"><h2>이메일 발송</h2></div>
             <div className="admin-test-send">
               <h3>테스트 발송</h3>
               <div className="admin-test-send-form">
-                <input
-                  id="test-email-input"
-                  type="email"
-                  placeholder="수신 이메일"
-                  value={testEmail}
-                  onChange={e => setTestEmail(e.target.value)}
-                />
-                <button className="admin-btn-primary" onClick={sendTestEmail}>
-                  📨 테스트 발송
-                </button>
+                <input id="test-email-input" type="email" placeholder="수신 이메일"
+                  value={testEmail} onChange={e => setTestEmail(e.target.value)} />
+                <button className="admin-btn-primary" onClick={sendTestEmail}>📨 테스트 발송</button>
               </div>
-              {sendStatus && (
-                <div className={`admin-send-status ${sendStatus.type}`}>{sendStatus.msg}</div>
-              )}
+              {sendStatus && <div className={`admin-send-status ${sendStatus.type}`}>{sendStatus.msg}</div>}
             </div>
-            {/* Logs */}
             <h3>발송 이력</h3>
             <div className="admin-table-wrap">
               <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>날짜</th>
-                    <th>제목</th>
-                    <th>수신</th>
-                    <th>성공</th>
-                    <th>발송 시각</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>날짜</th><th>제목</th><th>수신</th><th>성공</th><th>발송 시각</th></tr></thead>
                 <tbody>
                   {emailLogs.map((log, i) => (
                     <tr key={i}>
@@ -413,9 +397,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       <td>{log.sentAt ? new Date(log.sentAt).toLocaleString('ko') : '-'}</td>
                     </tr>
                   ))}
-                  {emailLogs.length === 0 && (
-                    <tr><td colSpan={5} className="admin-empty">발송 이력이 없습니다</td></tr>
-                  )}
+                  {emailLogs.length === 0 && (<tr><td colSpan={5} className="admin-empty">발송 이력이 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>
@@ -426,43 +408,26 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-pipeline">
             <h2>파이프라인 현황</h2>
             <div className="admin-stat-grid">
-              <StatCard
-                label="Collector"
-                value={pipeline.collector.status === 'success' ? '정상' : '대기'}
-                icon="📡"
-                color={pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)'}
-              />
+              <StatCard label="Collector" value={pipeline.collector.status === 'success' ? '정상' : '대기'}
+                icon="📡" color={pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)'} />
               <StatCard label="누적 데일리" value={`${pipeline.totalDates}일`} icon="📅" color="var(--admin-blue)" />
             </div>
             <h3>최근 7일</h3>
             <div className="admin-recent-dates">
-              {(pipeline.recentDates || []).map(d => (
-                <span key={d} className="admin-date-chip">{d}</span>
-              ))}
+              {(pipeline.recentDates || []).map(d => (<span key={d} className="admin-date-chip">{d}</span>))}
             </div>
           </div>
         )}
 
-        {activeTab === 'admins' && (
+        {activeTab === 'admins' && isSuperAdmin && (
           <div className="admin-admins">
             <div className="admin-section-header">
               <h2>관리자 계정 관리</h2>
-              <button className="admin-btn-primary" onClick={openCreateAdmin}>
-                ➕ 관리자 추가
-              </button>
+              <button className="admin-btn-primary" onClick={openCreateAdmin}>➕ 관리자 추가</button>
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>이메일</th>
-                    <th>이름</th>
-                    <th>생성일</th>
-                    <th>최근 로그인</th>
-                    <th>상태</th>
-                    <th>관리</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>이메일</th><th>이름</th><th>역할</th><th>생성일</th><th>최근 로그인</th><th>관리</th></tr></thead>
                 <tbody>
                   {admins.map((admin, i) => (
                     <tr key={i}>
@@ -471,51 +436,21 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         {admin.email === adminEmail && <span className="admin-me-badge">나</span>}
                       </td>
                       <td>{admin.displayName || <span className="admin-text-muted">—</span>}</td>
+                      <td><span className={`admin-role-badge ${admin.role}`}>{ROLE_LABEL[admin.role] || admin.role}</span></td>
                       <td>{admin.createdAt ? new Date(admin.createdAt).toLocaleDateString('ko') : '—'}</td>
                       <td>{admin.lastSignIn ? new Date(admin.lastSignIn).toLocaleDateString('ko') : '—'}</td>
-                      <td>
-                        {admin.orphan ? (
-                          <span className="admin-status-badge orphan">미등록</span>
-                        ) : admin.disabled ? (
-                          <span className="admin-status-badge unsubscribed">비활성</span>
-                        ) : (
-                          <span className="admin-status-badge active">활성</span>
-                        )}
-                      </td>
                       <td className="admin-actions-cell">
                         {admin.uid && (
                           <>
-                            <button
-                              className="admin-action-btn edit"
-                              onClick={() => openEditAdmin(admin)}
-                              title="수정"
-                            >
-                              ✏️
-                            </button>
+                            <button className="admin-action-btn edit" onClick={() => openEditAdmin(admin)} title="수정">✏️</button>
                             {admin.email !== adminEmail && (
                               deleteConfirm === admin.uid ? (
                                 <span className="admin-delete-confirm">
-                                  <button
-                                    className="admin-action-btn confirm-yes"
-                                    onClick={() => handleDeleteAdmin(admin.uid)}
-                                  >
-                                    삭제
-                                  </button>
-                                  <button
-                                    className="admin-action-btn confirm-no"
-                                    onClick={() => setDeleteConfirm(null)}
-                                  >
-                                    취소
-                                  </button>
+                                  <button className="admin-action-btn confirm-yes" onClick={() => handleDeleteAdmin(admin.uid)}>삭제</button>
+                                  <button className="admin-action-btn confirm-no" onClick={() => setDeleteConfirm(null)}>취소</button>
                                 </span>
                               ) : (
-                                <button
-                                  className="admin-action-btn delete"
-                                  onClick={() => setDeleteConfirm(admin.uid)}
-                                  title="삭제"
-                                >
-                                  🗑️
-                                </button>
+                                <button className="admin-action-btn delete" onClick={() => setDeleteConfirm(admin.uid)} title="삭제">🗑️</button>
                               )
                             )}
                           </>
@@ -523,9 +458,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       </td>
                     </tr>
                   ))}
-                  {admins.length === 0 && (
-                    <tr><td colSpan={6} className="admin-empty">관리자 계정이 없습니다</td></tr>
-                  )}
+                  {admins.length === 0 && (<tr><td colSpan={6} className="admin-empty">관리자 계정이 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>
@@ -534,60 +467,114 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {/* Admin Create/Edit Modal */}
         {adminModal && (
-          <div className="admin-modal-overlay" onClick={() => setAdminModal(null)}>
+          <AdminModal
+            mode={adminModal === 'create' ? 'create' : 'edit'}
+            form={adminForm} setForm={setAdminForm}
+            action={adminAction} onSubmit={handleAdminSubmit}
+            onClose={() => setAdminModal(null)}
+            showRole={true}
+          />
+        )}
+
+        {/* Profile Modal */}
+        {profileModal && (
+          <div className="admin-modal-overlay" onClick={() => setProfileModal(false)}>
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
               <div className="admin-modal-header">
-                <h3>{adminModal === 'create' ? '관리자 추가' : '관리자 수정'}</h3>
-                <button className="admin-modal-close" onClick={() => setAdminModal(null)}>✕</button>
+                <h3>👤 마이페이지</h3>
+                <button className="admin-modal-close" onClick={() => setProfileModal(false)}>✕</button>
               </div>
-              <form onSubmit={handleAdminSubmit}>
+              <form onSubmit={handleProfileSubmit}>
                 <div className="admin-modal-body">
+                  <div className="admin-profile-card">
+                    <div className="admin-profile-avatar-lg">👤</div>
+                    <div className="admin-profile-detail">
+                      <div className="admin-profile-email-lg">{profile?.email}</div>
+                      <span className={`admin-role-badge ${profile?.role}`}>{ROLE_LABEL[profile?.role] || profile?.role}</span>
+                    </div>
+                  </div>
+                  <div className="admin-profile-meta">
+                    <span>가입: {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko') : '—'}</span>
+                    <span>최근 접속: {profile?.lastSignIn ? new Date(profile.lastSignIn).toLocaleDateString('ko') : '—'}</span>
+                  </div>
                   <label className="admin-form-label">
-                    이메일
-                    <input
-                      type="email"
-                      value={adminForm.email}
-                      onChange={e => setAdminForm(f => ({ ...f, email: e.target.value }))}
-                      required
-                      placeholder="admin@prisincera.com"
-                    />
+                    이름
+                    <input type="text" value={profileForm.displayName}
+                      onChange={e => setProfileForm(f => ({ ...f, displayName: e.target.value }))}
+                      placeholder="표시 이름" />
                   </label>
                   <label className="admin-form-label">
-                    {adminModal === 'create' ? '비밀번호' : '새 비밀번호 (변경 시에만)'}
-                    <input
-                      type="password"
-                      value={adminForm.password}
-                      onChange={e => setAdminForm(f => ({ ...f, password: e.target.value }))}
-                      {...(adminModal === 'create' ? { required: true, minLength: 8 } : {})}
-                      placeholder={adminModal === 'create' ? '8자 이상' : '변경하지 않으려면 비워두세요'}
-                    />
+                    새 비밀번호
+                    <input type="password" value={profileForm.password}
+                      onChange={e => setProfileForm(f => ({ ...f, password: e.target.value }))}
+                      placeholder="변경하지 않으려면 비워두세요" minLength={8} />
                   </label>
-                  <label className="admin-form-label">
-                    이름 (선택)
-                    <input
-                      type="text"
-                      value={adminForm.displayName}
-                      onChange={e => setAdminForm(f => ({ ...f, displayName: e.target.value }))}
-                      placeholder="관리자 이름"
-                    />
-                  </label>
-                  {adminAction && (
-                    <div className={`admin-send-status ${adminAction.type}`}>{adminAction.msg}</div>
+                  {profileAction && (
+                    <div className={`admin-send-status ${profileAction.type}`}>{profileAction.msg}</div>
                   )}
                 </div>
                 <div className="admin-modal-footer">
-                  <button type="button" className="admin-btn-secondary" onClick={() => setAdminModal(null)}>
-                    취소
-                  </button>
-                  <button type="submit" className="admin-btn-primary">
-                    {adminModal === 'create' ? '생성' : '저장'}
-                  </button>
+                  <button type="button" className="admin-btn-secondary" onClick={() => setProfileModal(false)}>닫기</button>
+                  <button type="submit" className="admin-btn-primary">저장</button>
                 </div>
               </form>
             </div>
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+// ─── Admin Modal ─────────────────────────────────
+
+function AdminModal({ mode, form, setForm, action, onSubmit, onClose, showRole }) {
+  return (
+    <div className="admin-modal-overlay" onClick={onClose}>
+      <div className="admin-modal" onClick={e => e.stopPropagation()}>
+        <div className="admin-modal-header">
+          <h3>{mode === 'create' ? '관리자 추가' : '관리자 수정'}</h3>
+          <button className="admin-modal-close" onClick={onClose}>✕</button>
+        </div>
+        <form onSubmit={onSubmit}>
+          <div className="admin-modal-body">
+            <label className="admin-form-label">
+              이메일
+              <input type="email" value={form.email}
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                required placeholder="admin@prisincera.com" />
+            </label>
+            <label className="admin-form-label">
+              {mode === 'create' ? '비밀번호' : '새 비밀번호 (변경 시에만)'}
+              <input type="password" value={form.password}
+                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                {...(mode === 'create' ? { required: true, minLength: 8 } : {})}
+                placeholder={mode === 'create' ? '8자 이상' : '변경하지 않으려면 비워두세요'} />
+            </label>
+            <label className="admin-form-label">
+              이름 (선택)
+              <input type="text" value={form.displayName}
+                onChange={e => setForm(f => ({ ...f, displayName: e.target.value }))}
+                placeholder="관리자 이름" />
+            </label>
+            {showRole && (
+              <label className="admin-form-label">
+                역할
+                <select value={form.role}
+                  onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
+                  <option value="admin">관리자</option>
+                  <option value="super_admin">슈퍼 관리자</option>
+                </select>
+              </label>
+            )}
+            {action && <div className={`admin-send-status ${action.type}`}>{action.msg}</div>}
+          </div>
+          <div className="admin-modal-footer">
+            <button type="button" className="admin-btn-secondary" onClick={onClose}>취소</button>
+            <button type="submit" className="admin-btn-primary">{mode === 'create' ? '생성' : '저장'}</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
@@ -611,22 +598,17 @@ export default function AdminDashboard() {
   const [adminEmail, setAdminEmail] = useState(() => sessionStorage.getItem('admin_email'));
 
   const handleLogin = (idToken, email) => {
-    setToken(idToken);
-    setAdminEmail(email);
+    setToken(idToken); setAdminEmail(email);
     sessionStorage.setItem('admin_token', idToken);
     sessionStorage.setItem('admin_email', email);
   };
 
   const handleLogout = () => {
-    setToken(null);
-    setAdminEmail(null);
+    setToken(null); setAdminEmail(null);
     sessionStorage.removeItem('admin_token');
     sessionStorage.removeItem('admin_email');
   };
 
-  if (!token) {
-    return <LoginForm onLogin={handleLogin} />;
-  }
-
+  if (!token) return <LoginForm onLogin={handleLogin} />;
   return <Dashboard token={token} adminEmail={adminEmail} onLogout={handleLogout} />;
 }

@@ -2,7 +2,7 @@
  * Admin API 라우터 — PriSignal 관리 대시보드 백엔드
  *
  * 엔드포인트:
- *   GET  /admin/api/auth/verify     — Firebase ID 토큰 검증
+ *   GET  /admin/api/auth/verify     — Firebase ID 토큰 검증 + 역할 반환
  *   GET  /admin/api/stats           — 구독자 통계
  *   GET  /admin/api/subscribers     — 구독자 목록 (페이지네이션)
  *   POST /admin/api/subscribers/export — CSV 내보내기
@@ -10,278 +10,286 @@
  *   GET  /admin/api/pipeline/status — 파이프라인 상태
  *   GET  /admin/api/email/logs      — 이메일 발송 이력
  *
- *   === Admin Account CRUD ===
+ *   === Profile (본인) ===
+ *   GET  /admin/api/profile         — 본인 프로필 조회
+ *   PUT  /admin/api/profile         — 본인 프로필 수정 (이름/비밀번호)
+ *
+ *   === Admin CRUD (super_admin 전용) ===
  *   GET    /admin/api/admins        — 관리자 목록 조회
  *   POST   /admin/api/admins        — 관리자 생성
- *   PUT    /admin/api/admins/:uid   — 관리자 수정 (이메일/비밀번호/이름)
+ *   PUT    /admin/api/admins/:uid   — 관리자 수정
  *   DELETE /admin/api/admins/:uid   — 관리자 삭제
  *
- * 모든 /admin/api/* 요청은 Firebase Auth ID 토큰 검증을 거칩니다.
- * 관리자 화이트리스트는 Firestore admin_config/settings 문서에서 관리합니다.
+ * 역할: super_admin (모든 권한) / admin (대시보드 조회만)
  */
 import { Router } from 'express';
 
 const router = Router();
 
-// ─── Admin 화이트리스트 헬퍼 ─────────────────────
+// ─── Admin 데이터 레이어 (Firestore) ──────────────
 
-/** Firestore에서 관리자 이메일 목록 조회 (캐시 포함) */
-let _adminEmailsCache = null;
-let _adminEmailsCacheTime = 0;
-const CACHE_TTL = 60_000; // 1분 캐시
+let _adminCache = null;
+let _adminCacheTime = 0;
+const CACHE_TTL = 60_000;
 
-async function getAdminEmails() {
+/** Firestore에서 관리자 맵 조회 { email: { role, addedAt } } */
+async function getAdminMap() {
   const now = Date.now();
-  if (_adminEmailsCache && (now - _adminEmailsCacheTime) < CACHE_TTL) {
-    return _adminEmailsCache;
-  }
+  if (_adminCache && (now - _adminCacheTime) < CACHE_TTL) return _adminCache;
   try {
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
     const doc = await db.collection(COLLECTIONS.ADMIN_CONFIG).doc('settings').get();
-    if (doc.exists && doc.data().adminEmails?.length > 0) {
-      _adminEmailsCache = doc.data().adminEmails;
-      _adminEmailsCacheTime = now;
-      return _adminEmailsCache;
+    if (doc.exists && doc.data().admins) {
+      const adminsObj = doc.data().admins;
+      // key→email 맵 변환
+      const map = {};
+      for (const val of Object.values(adminsObj)) {
+        map[val.email] = { role: val.role || 'admin', addedAt: val.addedAt };
+      }
+      _adminCache = map;
+      _adminCacheTime = now;
+      return map;
     }
   } catch (e) {
-    console.warn('[Admin] Firestore admin list unavailable, using env fallback');
+    console.warn('[Admin] Firestore admin map unavailable, using fallback');
   }
-  // 폴백: 환경변수
-  return (process.env.ADMIN_EMAILS || 'matthew.shim@prisincera.com').split(',').map(e => e.trim());
+  return { 'matthew.shim@prisincera.com': { role: 'super_admin' } };
 }
 
-/** 캐시 무효화 */
-function invalidateAdminCache() {
-  _adminEmailsCache = null;
-  _adminEmailsCacheTime = 0;
+function invalidateAdminCache() { _adminCache = null; _adminCacheTime = 0; }
+
+/** 이메일 → Firestore 키 변환 */
+function emailToKey(email) {
+  return email.replace(/\./g, '_DOT_').replace(/@/g, '_AT_');
 }
 
-/** Firestore에 관리자 이메일 목록 저장 */
-async function saveAdminEmails(emails) {
+/** Firestore에 관리자 추가/수정 */
+async function upsertAdmin(email, role) {
   const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-  await db.collection(COLLECTIONS.ADMIN_CONFIG).doc('settings').set(
-    { adminEmails: emails, updatedAt: new Date() },
-    { merge: true }
-  );
+  const key = emailToKey(email);
+  const adminMap = await getAdminMap();
+  const allEmails = Object.keys(adminMap);
+  if (!allEmails.includes(email)) allEmails.push(email);
+  await db.collection(COLLECTIONS.ADMIN_CONFIG).doc('settings').set({
+    admins: { [key]: { email, role, addedAt: new Date() } },
+    adminEmails: allEmails,
+    updatedAt: new Date(),
+  }, { merge: true });
   invalidateAdminCache();
 }
 
-// ─── Firebase Auth 미들웨어 ──────────────────────
+/** Firestore에서 관리자 제거 */
+async function removeAdmin(email) {
+  const { db, COLLECTIONS, } = await import('./pipeline/src/lib/firestore.mjs');
+  const { FieldValue } = await import('firebase-admin/firestore');
+  const key = emailToKey(email);
+  await db.collection(COLLECTIONS.ADMIN_CONFIG).doc('settings').update({
+    [`admins.${key}`]: FieldValue.delete(),
+    adminEmails: FieldValue.arrayRemove(email),
+    updatedAt: new Date(),
+  });
+  invalidateAdminCache();
+}
+
+// ─── 미들웨어 ────────────────────────────────────
 
 async function requireAdmin(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader?.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Authorization header required' });
   }
-
   try {
     const { auth } = await import('./pipeline/src/lib/firestore.mjs');
-    const token = authHeader.split('Bearer ')[1];
-    const decoded = await auth.verifyIdToken(token);
-
-    // Firestore 기반 Admin 화이트리스트
-    const adminEmails = await getAdminEmails();
-    if (!adminEmails.includes(decoded.email)) {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
+    const decoded = await auth.verifyIdToken(authHeader.split('Bearer ')[1]);
+    const adminMap = await getAdminMap();
+    const adminInfo = adminMap[decoded.email];
+    if (!adminInfo) return res.status(403).json({ error: 'Admin access required' });
     req.adminUser = decoded;
+    req.adminRole = adminInfo.role; // 'super_admin' | 'admin'
     next();
   } catch (err) {
-    console.error('[Admin Auth] Token verification failed:', err.message);
+    console.error('[Admin Auth]', err.message);
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 }
 
-// 모든 admin API에 인증 적용
+function requireSuperAdmin(req, res, next) {
+  if (req.adminRole !== 'super_admin') {
+    return res.status(403).json({ error: '슈퍼 관리자 권한이 필요합니다' });
+  }
+  next();
+}
+
 router.use(requireAdmin);
 
-// ─── 인증 확인 ───────────────────────────────────
+// ─── 인증 확인 (역할 포함) ────────────────────────
 
 router.get('/auth/verify', (req, res) => {
   res.json({
     authenticated: true,
     email: req.adminUser.email,
     uid: req.adminUser.uid,
+    role: req.adminRole,
   });
 });
 
-// ─── 구독자 통계 ─────────────────────────────────
+// ─── 프로필 (본인) ───────────────────────────────
+
+router.get('/profile', async (req, res) => {
+  try {
+    const { auth } = await import('./pipeline/src/lib/firestore.mjs');
+    const user = await auth.getUser(req.adminUser.uid);
+    res.json({
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName || '',
+      role: req.adminRole,
+      createdAt: user.metadata.creationTime,
+      lastSignIn: user.metadata.lastSignInTime,
+    });
+  } catch (err) {
+    res.status(500).json({ error: '프로필 조회 실패' });
+  }
+});
+
+router.put('/profile', async (req, res) => {
+  try {
+    const { displayName, password } = req.body || {};
+    const { auth } = await import('./pipeline/src/lib/firestore.mjs');
+    const updateData = {};
+    if (displayName !== undefined) updateData.displayName = displayName;
+    if (password) {
+      if (password.length < 8) return res.status(400).json({ error: '비밀번호는 8자 이상이어야 합니다' });
+      updateData.password = password;
+    }
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: '변경할 내용이 없습니다' });
+    }
+    const updated = await auth.updateUser(req.adminUser.uid, updateData);
+    console.log(`[Admin Profile] Updated: ${updated.email}`);
+    res.json({
+      success: true,
+      displayName: updated.displayName || '',
+    });
+  } catch (err) {
+    console.error('[Admin Profile]', err.message);
+    res.status(500).json({ error: `프로필 수정 실패: ${err.message}` });
+  }
+});
+
+// ─── 통계 ─────────────────────────────────────────
 
 router.get('/stats', async (req, res) => {
   try {
-    const { getSubscriberStats } = await import('./pipeline/src/lib/subscribers.mjs');
-    const stats = await getSubscriberStats();
-
-    // 이메일 발송 이력 통계
-    let emailStats = { totalSent: 0, lastSentDate: null };
+    const { getAllSubscribers: getSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
+    const subscribers = await getSubscribers();
+    const active = subscribers.filter(s => s.status === 'active').length;
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    let totalSent = 0, lastSentDate = null;
     try {
-      const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-      const logsSnap = await db.collection(COLLECTIONS.EMAIL_LOGS)
-        .orderBy('sentAt', 'desc')
-        .limit(1)
-        .get();
-      if (!logsSnap.empty) {
-        const allLogs = await db.collection(COLLECTIONS.EMAIL_LOGS).count().get();
-        emailStats.totalSent = allLogs.data().count;
-        emailStats.lastSentDate = logsSnap.docs[0].data().date;
+      const logSnap = await db.collection(COLLECTIONS.EMAIL_LOGS)
+        .orderBy('sentAt', 'desc').limit(1).get();
+      if (!logSnap.empty) {
+        lastSentDate = logSnap.docs[0].data().date;
       }
-    } catch (e) { /* Firestore 미활성 시 무시 */ }
-
-    res.json({ subscribers: stats, emails: emailStats });
+      const countSnap = await db.collection(COLLECTIONS.EMAIL_LOGS).get();
+      totalSent = countSnap.size;
+    } catch (_) {}
+    res.json({
+      subscribers: { total: subscribers.length, active, unsubscribed: subscribers.length - active },
+      emails: { totalSent, lastSentDate },
+    });
   } catch (err) {
     console.error('[Admin Stats]', err.message);
     res.status(500).json({ error: '통계 조회 실패' });
   }
 });
 
-// ─── 구독자 목록 (페이지네이션) ──────────────────
+// ─── 구독자 ───────────────────────────────────────
 
 router.get('/subscribers', async (req, res) => {
   try {
-    const { getAllSubscribers, getSubscribersPaginated, useFirestore } = await import('./pipeline/src/lib/subscribers.mjs');
-    const status = req.query.status || null;
-    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
-
-    if (useFirestore) {
-      const result = await getSubscribersPaginated({ limit, status });
-      // Firestore Timestamp → ISO 변환
-      result.subscribers = result.subscribers.map(s => ({
-        ...s,
-        subscribedAt: s.subscribedAt?.toDate?.() ? s.subscribedAt.toDate().toISOString() : s.subscribedAt,
-        unsubscribedAt: s.unsubscribedAt?.toDate?.() ? s.unsubscribedAt.toDate().toISOString() : s.unsubscribedAt,
-      }));
-      return res.json(result);
-    }
-
-    // GCS 폴백
-    const data = await getAllSubscribers();
-    let subs = data.subscribers || [];
-    if (status) subs = subs.filter(s => s.status === status);
-    res.json({ subscribers: subs.slice(0, limit), hasMore: subs.length > limit });
+    const limit = parseInt(req.query.limit) || 50;
+    const { getAllSubscribers: getSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
+    const all = await getSubscribers();
+    res.json({ subscribers: all.slice(0, limit), total: all.length });
   } catch (err) {
     console.error('[Admin Subscribers]', err.message);
-    res.status(500).json({ error: '구독자 조회 실패' });
+    res.status(500).json({ error: '구독자 목록 조회 실패' });
   }
 });
-
-// ─── 구독자 CSV 내보내기 ─────────────────────────
 
 router.post('/subscribers/export', async (req, res) => {
   try {
-    const { getAllSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
-    const data = await getAllSubscribers();
-    const subs = data.subscribers || [];
-
-    const csv = [
-      'email,status,subscribedAt,source,unsubscribedAt',
-      ...subs.map(s => {
-        const subscribedAt = s.subscribedAt?.toDate?.() ? s.subscribedAt.toDate().toISOString() : (s.subscribedAt || '');
-        const unsubscribedAt = s.unsubscribedAt?.toDate?.() ? s.unsubscribedAt.toDate().toISOString() : (s.unsubscribedAt || '');
-        return `${s.email},${s.status},${subscribedAt},${s.source || ''},${unsubscribedAt}`;
-      })
-    ].join('\n');
-
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename=subscribers_${new Date().toISOString().slice(0,10)}.csv`);
-    res.send(csv);
+    const { getAllSubscribers: getSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
+    const all = await getSubscribers();
+    const header = 'email,status,subscribedAt,source\n';
+    const rows = all.map(s =>
+      `${s.email},${s.status},${s.subscribedAt || ''},${s.source || ''}`
+    ).join('\n');
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="subscribers_${new Date().toISOString().slice(0,10)}.csv"`);
+    res.send('\uFEFF' + header + rows);
   } catch (err) {
     console.error('[Admin Export]', err.message);
-    res.status(500).json({ error: '내보내기 실패' });
+    res.status(500).json({ error: 'CSV 내보내기 실패' });
   }
 });
 
-// ─── 테스트 이메일 발송 ──────────────────────────
+// ─── 이메일 ───────────────────────────────────────
 
 router.post('/email/send-test', async (req, res) => {
   try {
-    const { to, date } = req.body || {};
+    const { to } = req.body || {};
     if (!to) return res.status(400).json({ error: '수신 이메일 필요' });
-
-    const targetDate = date || new Date().toISOString().slice(0, 10);
-    console.log(`[Admin] 테스트 이메일 발송 요청: ${to} (${targetDate})`);
-
-    // composer에서 사용하는 동일한 파이프라인으로 테스트 발송
-    const { Storage } = await import('@google-cloud/storage');
-    const gcs = new Storage();
-    const bucket = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
-
-    const [content] = await gcs.bucket(bucket).file(`daily/${targetDate}.json`).download();
-    const dailyData = JSON.parse(content.toString('utf-8'));
-
-    const { renderDailyEmail } = await import('./pipeline/src/lib/email-template.mjs');
-    const { sendSingle } = await import('./pipeline/src/lib/mailer.mjs');
-    const { buildUnsubscribeUrl } = await import('./pipeline/src/lib/subscribers.mjs');
-
-    const unsubUrl = buildUnsubscribeUrl(to);
-    const html = renderDailyEmail(dailyData, unsubUrl);
-    const subject = `📡 [TEST] PriSignal Daily — ${targetDate}`;
-
-    const result = await sendSingle(to, subject, html);
+    const { sendEmail } = await import('./pipeline/src/lib/mailer.mjs');
+    const result = await sendEmail({
+      to, subject: '[PriSignal] 테스트 발송',
+      html: '<h2>PriSignal 테스트 메일</h2><p>Admin 대시보드에서 발송된 테스트 이메일입니다.</p>',
+    });
     res.json({ success: true, messageId: result.messageId });
   } catch (err) {
-    console.error('[Admin SendTest]', err.message);
-    res.status(500).json({ error: `발송 실패: ${err.message}` });
+    console.error('[Admin Email]', err.message);
+    res.status(500).json({ error: `이메일 발송 실패: ${err.message}` });
   }
 });
-
-// ─── 이메일 발송 이력 ────────────────────────────
 
 router.get('/email/logs', async (req, res) => {
   try {
+    const limit = parseInt(req.query.limit) || 20;
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-    const limit = Math.min(parseInt(req.query.limit) || 20, 50);
-
     const snap = await db.collection(COLLECTIONS.EMAIL_LOGS)
-      .orderBy('sentAt', 'desc')
-      .limit(limit)
-      .get();
-
-    const logs = snap.docs.map(d => {
-      const data = d.data();
-      return {
-        id: d.id,
-        ...data,
-        sentAt: data.sentAt?.toDate?.() ? data.sentAt.toDate().toISOString() : data.sentAt,
-      };
-    });
-
+      .orderBy('sentAt', 'desc').limit(limit).get();
+    const logs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     res.json({ logs });
   } catch (err) {
     console.error('[Admin EmailLogs]', err.message);
-    res.status(500).json({ error: '발송 이력 조회 실패' });
+    res.json({ logs: [] });
   }
 });
 
-// ─── 파이프라인 상태 ─────────────────────────────
+// ─── 파이프라인 ───────────────────────────────────
 
 router.get('/pipeline/status', async (req, res) => {
   try {
     const { Storage } = await import('@google-cloud/storage');
     const gcs = new Storage();
     const bucket = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
-
-    // 최근 데일리 인덱스에서 파이프라인 상태 추론
     const [content] = await gcs.bucket(bucket).file('daily/index.json').download();
     const index = JSON.parse(content.toString('utf-8'));
     const dates = index.dates || [];
     const latestDate = dates.length > 0 ? dates[0] : null;
-
     const today = new Date().toISOString().slice(0, 10);
-    const collectorStatus = latestDate === today ? 'success' : 'pending';
-
     res.json({
-      collector: { status: collectorStatus, lastRun: latestDate },
+      collector: { status: latestDate === today ? 'success' : 'pending', lastRun: latestDate },
       totalDates: dates.length,
       recentDates: dates.slice(0, 7),
     });
   } catch (err) {
-    // index.json 없으면 빈 상태 반환 (파이프라인 미실행)
     if (err.code === 404 || err.message?.includes('No such object')) {
       return res.json({
         collector: { status: 'pending', lastRun: null },
-        totalDates: 0,
-        recentDates: [],
+        totalDates: 0, recentDates: [],
       });
     }
     console.error('[Admin Pipeline]', err.message);
@@ -289,188 +297,110 @@ router.get('/pipeline/status', async (req, res) => {
   }
 });
 
-// ─── 관리자 계정 CRUD ────────────────────────────
+// ─── 관리자 CRUD (super_admin 전용) ──────────────
 
-// 관리자 목록 조회
-router.get('/admins', async (req, res) => {
+router.get('/admins', requireSuperAdmin, async (req, res) => {
   try {
     const { auth } = await import('./pipeline/src/lib/firestore.mjs');
-    const adminEmails = await getAdminEmails();
-
-    // Firebase Auth에서 각 관리자 상세 정보 조회
+    const adminMap = await getAdminMap();
     const admins = await Promise.all(
-      adminEmails.map(async (email) => {
+      Object.entries(adminMap).map(async ([email, info]) => {
         try {
           const user = await auth.getUserByEmail(email);
           return {
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName || '',
-            createdAt: user.metadata.creationTime,
-            lastSignIn: user.metadata.lastSignInTime,
-            disabled: user.disabled,
+            uid: user.uid, email, displayName: user.displayName || '',
+            role: info.role, createdAt: user.metadata.creationTime,
+            lastSignIn: user.metadata.lastSignInTime, disabled: user.disabled,
           };
-        } catch (e) {
-          // Firebase Auth에 없는 이메일 (화이트리스트만 존재)
-          return {
-            uid: null,
-            email,
-            displayName: '',
-            createdAt: null,
-            lastSignIn: null,
-            disabled: false,
-            orphan: true, // Auth에 계정 없음
-          };
+        } catch {
+          return { uid: null, email, displayName: '', role: info.role,
+            createdAt: null, lastSignIn: null, disabled: false, orphan: true };
         }
       })
     );
-
     res.json({ admins, total: admins.length });
   } catch (err) {
-    console.error('[Admin CRUD] List error:', err.message);
+    console.error('[Admin CRUD] List:', err.message);
     res.status(500).json({ error: '관리자 목록 조회 실패' });
   }
 });
 
-// 관리자 생성
-router.post('/admins', async (req, res) => {
+router.post('/admins', requireSuperAdmin, async (req, res) => {
   try {
-    const { email, password, displayName } = req.body || {};
-
-    if (!email || !password) {
-      return res.status(400).json({ error: '이메일과 비밀번호는 필수입니다' });
-    }
-    if (password.length < 8) {
-      return res.status(400).json({ error: '비밀번호는 8자 이상이어야 합니다' });
-    }
-
+    const { email, password, displayName, role } = req.body || {};
+    if (!email || !password) return res.status(400).json({ error: '이메일과 비밀번호는 필수입니다' });
+    if (password.length < 8) return res.status(400).json({ error: '비밀번호는 8자 이상이어야 합니다' });
+    const assignedRole = role === 'super_admin' ? 'super_admin' : 'admin';
     const { auth } = await import('./pipeline/src/lib/firestore.mjs');
-
-    // 1) Firebase Auth에 사용자 생성
     const userRecord = await auth.createUser({
-      email,
-      password,
-      displayName: displayName || '',
-      emailVerified: true, // Admin 계정은 자동 인증
+      email, password, displayName: displayName || '', emailVerified: true,
     });
-
-    // 2) Firestore 화이트리스트에 추가
-    const adminEmails = await getAdminEmails();
-    if (!adminEmails.includes(email)) {
-      adminEmails.push(email);
-      await saveAdminEmails(adminEmails);
-    }
-
-    console.log(`[Admin CRUD] Created admin: ${email} (${userRecord.uid})`);
+    await upsertAdmin(email, assignedRole);
+    console.log(`[Admin CRUD] Created: ${email} (${assignedRole})`);
     res.json({
       success: true,
-      admin: {
-        uid: userRecord.uid,
-        email: userRecord.email,
-        displayName: userRecord.displayName || '',
-        createdAt: userRecord.metadata.creationTime,
-      },
+      admin: { uid: userRecord.uid, email, displayName: userRecord.displayName || '',
+        role: assignedRole, createdAt: userRecord.metadata.creationTime },
     });
   } catch (err) {
-    console.error('[Admin CRUD] Create error:', err.message);
-    if (err.code === 'auth/email-already-exists') {
-      return res.status(409).json({ error: '이미 존재하는 이메일입니다' });
-    }
-    if (err.code === 'auth/invalid-email') {
-      return res.status(400).json({ error: '유효하지 않은 이메일 형식입니다' });
-    }
+    console.error('[Admin CRUD] Create:', err.message);
+    if (err.code === 'auth/email-already-exists') return res.status(409).json({ error: '이미 존재하는 이메일입니다' });
+    if (err.code === 'auth/invalid-email') return res.status(400).json({ error: '유효하지 않은 이메일 형식입니다' });
     res.status(500).json({ error: `관리자 생성 실패: ${err.message}` });
   }
 });
 
-// 관리자 수정
-router.put('/admins/:uid', async (req, res) => {
+router.put('/admins/:uid', requireSuperAdmin, async (req, res) => {
   try {
     const { uid } = req.params;
-    const { email, password, displayName } = req.body || {};
-
+    const { email, password, displayName, role } = req.body || {};
     const { auth } = await import('./pipeline/src/lib/firestore.mjs');
-
-    // 기존 사용자 정보 조회
-    const existingUser = await auth.getUser(uid);
-    const oldEmail = existingUser.email;
-
-    // Firebase Auth 업데이트
+    const existing = await auth.getUser(uid);
+    const oldEmail = existing.email;
     const updateData = {};
     if (email && email !== oldEmail) updateData.email = email;
     if (password) updateData.password = password;
     if (displayName !== undefined) updateData.displayName = displayName;
-
-    if (Object.keys(updateData).length === 0) {
+    if (Object.keys(updateData).length === 0 && !role) {
       return res.status(400).json({ error: '변경할 내용이 없습니다' });
     }
-
-    const updatedUser = await auth.updateUser(uid, updateData);
-
-    // 이메일이 변경된 경우 화이트리스트 업데이트
+    if (Object.keys(updateData).length > 0) await auth.updateUser(uid, updateData);
     if (email && email !== oldEmail) {
-      const adminEmails = await getAdminEmails();
-      const idx = adminEmails.indexOf(oldEmail);
-      if (idx !== -1) adminEmails[idx] = email;
-      else adminEmails.push(email);
-      await saveAdminEmails(adminEmails);
+      await removeAdmin(oldEmail);
+      await upsertAdmin(email, role || 'admin');
+    } else if (role) {
+      await upsertAdmin(oldEmail, role);
     }
-
-    console.log(`[Admin CRUD] Updated admin: ${updatedUser.email} (${uid})`);
-    res.json({
-      success: true,
-      admin: {
-        uid: updatedUser.uid,
-        email: updatedUser.email,
-        displayName: updatedUser.displayName || '',
-      },
-    });
+    const updated = await auth.getUser(uid);
+    console.log(`[Admin CRUD] Updated: ${updated.email}`);
+    res.json({ success: true, admin: { uid, email: updated.email, displayName: updated.displayName || '' } });
   } catch (err) {
-    console.error('[Admin CRUD] Update error:', err.message);
-    if (err.code === 'auth/user-not-found') {
-      return res.status(404).json({ error: '관리자를 찾을 수 없습니다' });
-    }
-    if (err.code === 'auth/email-already-exists') {
-      return res.status(409).json({ error: '이미 사용 중인 이메일입니다' });
-    }
+    console.error('[Admin CRUD] Update:', err.message);
+    if (err.code === 'auth/user-not-found') return res.status(404).json({ error: '관리자를 찾을 수 없습니다' });
+    if (err.code === 'auth/email-already-exists') return res.status(409).json({ error: '이미 사용 중인 이메일입니다' });
     res.status(500).json({ error: `관리자 수정 실패: ${err.message}` });
   }
 });
 
-// 관리자 삭제
-router.delete('/admins/:uid', async (req, res) => {
+router.delete('/admins/:uid', requireSuperAdmin, async (req, res) => {
   try {
     const { uid } = req.params;
     const { auth } = await import('./pipeline/src/lib/firestore.mjs');
-
-    // 삭제 대상 조회
-    const targetUser = await auth.getUser(uid);
-
-    // 안전장치 1: 자기 자신 삭제 방지
-    if (targetUser.email === req.adminUser.email) {
+    const target = await auth.getUser(uid);
+    if (target.email === req.adminUser.email) {
       return res.status(403).json({ error: '본인 계정은 삭제할 수 없습니다' });
     }
-
-    // 안전장치 2: 마지막 관리자 삭제 방지
-    const adminEmails = await getAdminEmails();
-    if (adminEmails.length <= 1) {
+    const adminMap = await getAdminMap();
+    if (Object.keys(adminMap).length <= 1) {
       return res.status(403).json({ error: '마지막 관리자는 삭제할 수 없습니다' });
     }
-
-    // 1) Firebase Auth에서 삭제
     await auth.deleteUser(uid);
-
-    // 2) 화이트리스트에서 제거
-    const updatedEmails = adminEmails.filter(e => e !== targetUser.email);
-    await saveAdminEmails(updatedEmails);
-
-    console.log(`[Admin CRUD] Deleted admin: ${targetUser.email} (${uid})`);
-    res.json({ success: true, deleted: targetUser.email });
+    await removeAdmin(target.email);
+    console.log(`[Admin CRUD] Deleted: ${target.email}`);
+    res.json({ success: true, deleted: target.email });
   } catch (err) {
-    console.error('[Admin CRUD] Delete error:', err.message);
-    if (err.code === 'auth/user-not-found') {
-      return res.status(404).json({ error: '관리자를 찾을 수 없습니다' });
-    }
+    console.error('[Admin CRUD] Delete:', err.message);
+    if (err.code === 'auth/user-not-found') return res.status(404).json({ error: '관리자를 찾을 수 없습니다' });
     res.status(500).json({ error: `관리자 삭제 실패: ${err.message}` });
   }
 });
