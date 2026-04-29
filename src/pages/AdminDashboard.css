@@ -189,14 +189,27 @@
   background: rgba(196, 181, 253, 0.04);
   border: 1px solid var(--admin-border);
   border-radius: 10px;
-  padding: 6px 14px 6px 8px;
+  padding: 8px 16px 8px 10px;
   cursor: pointer !important;
   transition: all 0.2s;
+  position: relative;
+  z-index: 10;
+  min-height: 42px;
+}
+
+.admin-profile-btn * {
+  pointer-events: none;
 }
 
 .admin-profile-btn:hover {
-  border-color: var(--admin-border-hover);
-  background: rgba(196, 181, 253, 0.08);
+  border-color: var(--admin-accent);
+  background: rgba(196, 181, 253, 0.12);
+  box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.15);
+}
+
+.admin-profile-btn:active {
+  transform: scale(0.97);
+  background: rgba(196, 181, 253, 0.18);
 }
 
 .admin-avatar {
