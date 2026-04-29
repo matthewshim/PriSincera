@@ -181,8 +181,9 @@ router.put('/profile', async (req, res) => {
 
 router.get('/stats', async (req, res) => {
   try {
-    const { getAllSubscribers: getSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
-    const subscribers = await getSubscribers();
+    const { getAllSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
+    const result = await getAllSubscribers();
+    const subscribers = result.subscribers || [];
     const active = subscribers.filter(s => s.status === 'active').length;
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
     let totalSent = 0, lastSentDate = null;
@@ -210,8 +211,9 @@ router.get('/stats', async (req, res) => {
 router.get('/subscribers', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 50;
-    const { getAllSubscribers: getSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
-    const all = await getSubscribers();
+    const { getAllSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
+    const result = await getAllSubscribers();
+    const all = result.subscribers || [];
     res.json({ subscribers: all.slice(0, limit), total: all.length });
   } catch (err) {
     console.error('[Admin Subscribers]', err.message);
@@ -221,8 +223,9 @@ router.get('/subscribers', async (req, res) => {
 
 router.post('/subscribers/export', async (req, res) => {
   try {
-    const { getAllSubscribers: getSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
-    const all = await getSubscribers();
+    const { getAllSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
+    const result = await getAllSubscribers();
+    const all = result.subscribers || [];
     const header = 'email,status,subscribedAt,source\n';
     const rows = all.map(s =>
       `${s.email},${s.status},${s.subscribedAt || ''},${s.source || ''}`
