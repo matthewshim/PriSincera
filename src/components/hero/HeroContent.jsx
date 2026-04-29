@@ -18,19 +18,24 @@ export default function HeroContent({ visible, onIntroComplete }) {
     const sub = el.querySelector('.hero-sub');
     const scroll = document.getElementById('scrollIndicator');
 
-    setTimeout(() => label?.classList.add('visible'), 200);
-    setTimeout(() => {
+    /* Collect all timer IDs for cleanup */
+    const timers = [];
+
+    timers.push(setTimeout(() => label?.classList.add('visible'), 200));
+    timers.push(setTimeout(() => {
       words.forEach((w) => {
         const delay = parseInt(w.dataset.delay) || 0;
-        setTimeout(() => w.classList.add('visible'), delay * 150);
+        timers.push(setTimeout(() => w.classList.add('visible'), delay * 150));
       });
-    }, 600);
-    setTimeout(() => sub?.classList.add('visible'), 1600);
-    setTimeout(() => {
+    }, 600));
+    timers.push(setTimeout(() => sub?.classList.add('visible'), 1600));
+    timers.push(setTimeout(() => {
       scroll?.classList.add('visible');
       // All hero content is now visible — unlock scrolling
       onIntroComplete?.();
-    }, 2200);
+    }, 2200));
+
+    return () => timers.forEach(id => clearTimeout(id));
   }, [visible, onIntroComplete]);
 
   return (
@@ -50,4 +55,3 @@ export default function HeroContent({ visible, onIntroComplete }) {
     </div>
   );
 }
-

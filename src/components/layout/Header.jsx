@@ -55,6 +55,17 @@ function Header() {
     return () => observer.disconnect();
   }, [getAudio]);
 
+  // Cleanup audio resource on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   const toggleMusic = useCallback(() => {
     const audio = getAudio();
     if (musicPlaying) {

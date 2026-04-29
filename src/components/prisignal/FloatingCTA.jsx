@@ -12,6 +12,7 @@ export default function FloatingCTA() {
   );
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const dismissTimerRef = useRef(null);
 
   // Watch hero subscribe form visibility
   useEffect(() => {
@@ -29,6 +30,11 @@ export default function FloatingCTA() {
     observer.observe(heroSection);
     return () => observer.disconnect();
   }, [dismissed]);
+
+  // Cleanup dismiss timer on unmount
+  useEffect(() => {
+    return () => { if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current); };
+  }, []);
 
   const handleDismiss = useCallback(() => {
     setDismissed(true);
@@ -52,7 +58,7 @@ export default function FloatingCTA() {
       if (res.ok || res.status === 201 || res.status === 400) {
         setStatus('success');
         setEmail('');
-        setTimeout(handleDismiss, 2500);
+        dismissTimerRef.current = setTimeout(handleDismiss, 2500);
       } else {
         setStatus('error');
       }
