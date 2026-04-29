@@ -97,13 +97,13 @@ export default function PriSignal() {
     const ogTags = {
       'og:title': 'PriSignal — 노이즈 속에서 시그널을 포착하다',
       'og:description': '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. 매일 SIGNAL 기준으로 시그널을 포착합니다.',
-      'og:image': 'https://www.prisincera.com/prisignal-og.png',
+      'og:image': 'https://www.prisincera.com/prisignal-og.webp',
       'og:url': 'https://www.prisincera.com/prisignal',
       'og:type': 'website',
       'twitter:card': 'summary_large_image',
       'twitter:title': 'PriSignal — 노이즈 속에서 시그널을 포착하다',
       'twitter:description': '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터.',
-      'twitter:image': 'https://www.prisincera.com/prisignal-og.png',
+      'twitter:image': 'https://www.prisincera.com/prisignal-og.webp',
     };
 
     const createdMetas = [];

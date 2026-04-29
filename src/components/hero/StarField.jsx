@@ -136,7 +136,8 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
      */
     function createStars() {
       stars = [];
-      const density = Math.floor((w * h) / 2800); // slightly more stars for layered richness
+      const isMobile = w <= 768;
+      const density = Math.floor((w * h) / (isMobile ? 5600 : 2800));
 
       // Depth-based color palettes (atmospheric perspective)
       // Far = cool blue/cyan, Mid = neutral lavender/white, Near = warm white/gold

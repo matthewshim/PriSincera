@@ -1,9 +1,12 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-import Home from './pages/Home';
-import PriSignal from './pages/PriSignal';
-import PriSignalDaily from './pages/PriSignalDaily';
-import PriSignalIssue from './components/prisignal/PriSignalIssue';
+
+/* ── Code Splitting: page-level lazy imports ── */
+const Home = lazy(() => import('./pages/Home'));
+const PriSignal = lazy(() => import('./pages/PriSignal'));
+const PriSignalDaily = lazy(() => import('./pages/PriSignalDaily'));
+const PriSignalIssue = lazy(() => import('./components/prisignal/PriSignalIssue'));
 
 /**
  * Route discriminator: /prisignal/:param
@@ -16,15 +19,22 @@ function PriSignalParamRoute() {
   return isDate ? <PriSignalDaily /> : <PriSignalIssue />;
 }
 
+/** Minimal loading fallback — invisible, prevents layout shift */
+const PageFallback = (
+  <div style={{ minHeight: '100vh', background: 'var(--bg-void, #0A0714)' }} />
+);
+
 function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="prisignal" element={<PriSignal />} />
-        <Route path="prisignal/:date" element={<PriSignalParamRoute />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={PageFallback}>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="prisignal" element={<PriSignal />} />
+          <Route path="prisignal/:date" element={<PriSignalParamRoute />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
 
