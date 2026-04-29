@@ -157,11 +157,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
       const data = await fetchApi('/profile');
       setProfile(data);
       setProfileForm({ displayName: data.displayName || '', password: '' });
-      setProfileAction(null);
-      setProfileModal(true);
     } catch (err) {
-      if (err.message === 'AUTH_EXPIRED') onLogout();
+      if (err.message === 'AUTH_EXPIRED') return onLogout();
+      // API 실패해도 기본 정보로 모달 열기
+      setProfile({ uid: '', email: adminEmail, displayName: '', role, createdAt: null, lastSignIn: null });
+      setProfileForm({ displayName: '', password: '' });
     }
+    setProfileAction(null);
+    setProfileModal(true);
   }
 
   async function handleProfileSubmit(e) {

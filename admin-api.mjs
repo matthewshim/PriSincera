@@ -148,7 +148,16 @@ router.get('/profile', async (req, res) => {
       lastSignIn: user.metadata.lastSignInTime,
     });
   } catch (err) {
-    res.status(500).json({ error: '프로필 조회 실패' });
+    console.error('[Admin Profile GET]', err.message, err.code);
+    // API 실패해도 토큰에서 최소 정보를 반환하여 모달이 열리게 함
+    res.json({
+      uid: req.adminUser.uid,
+      email: req.adminUser.email,
+      displayName: '',
+      role: req.adminRole,
+      createdAt: null,
+      lastSignIn: null,
+    });
   }
 });
 
@@ -181,13 +190,18 @@ router.put('/profile', async (req, res) => {
 
 router.get('/stats', async (req, res) => {
   try {
-    const { getAllSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
-    const result = await getAllSubscribers();
-    const subscribers = result.subscribers || [];
+    let subscribers = [];
+    try {
+      const { getAllSubscribers } = await import('./pipeline/src/lib/subscribers.mjs');
+      const result = await getAllSubscribers();
+      subscribers = result?.subscribers || (Array.isArray(result) ? result : []);
+    } catch (subErr) {
+      console.warn('[Admin Stats] Subscriber fetch failed:', subErr.message);
+    }
     const active = subscribers.filter(s => s.status === 'active').length;
-    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
     let totalSent = 0, lastSentDate = null;
     try {
+      const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
       const logSnap = await db.collection(COLLECTIONS.EMAIL_LOGS)
         .orderBy('sentAt', 'desc').limit(1).get();
       if (!logSnap.empty) {
@@ -202,7 +216,11 @@ router.get('/stats', async (req, res) => {
     });
   } catch (err) {
     console.error('[Admin Stats]', err.message);
-    res.status(500).json({ error: '통계 조회 실패' });
+    // 에러 시에도 빈 데이터로 정상 응답 (대시보드 로딩이 실패하지 않게)
+    res.json({
+      subscribers: { total: 0, active: 0, unsubscribed: 0 },
+      emails: { totalSent: 0, lastSentDate: null },
+    });
   }
 });
 
