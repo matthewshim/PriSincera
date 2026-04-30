@@ -1,6 +1,6 @@
 # 📘 PriSincera — 개발 관리 & 운영 가이드
 
-> **최종 업데이트**: 2026-04-29  
+> **최종 업데이트**: 2026-04-30  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
 > CI/CD 파이프라인, 커스텀 도메인 연결까지의 전체 개발 운영 프로세스를 기록합니다.
 
@@ -380,7 +380,8 @@ gcloud run deploy prisincera-web \
 |----------|---------|------|
 | **Cloud Run 서비스** | `prisincera-web` | Nginx 컨테이너 (포트 8080) |
 | **Artifact Registry** | `prisincera-images` | Docker 이미지 저장소 |
-| **Cloud Build 트리거** | `deploy-to-cloud-run` | GitHub main 푸시 시 자동 빌드 |
+| **Cloud Build 트리거** | `deploy-to-cloud-run` | GitHub main 푸시 시 웹 서비스 자동 빌드 |
+| **Cloud Build 트리거** | `deploy-pipeline` | GitHub main 푸시 시 파이프라인 이미지 빌드 |
 | **Network Endpoint Group** | `prisincera-neg` | Cloud Run → LB 연결 |
 | **Backend Service** | `prisincera-backend` | LB 백엔드 |
 | **URL Map** | `prisincera-urlmap` | 요청 라우팅 |
@@ -454,9 +455,9 @@ Cloud Run 배포 설정:
 
 | 설정 | 값 | 설명 |
 |------|-----|------|
-| `min-instances` | `0` | 트래픽 없으면 인스턴스 0 (비용 절감) |
-| `max-instances` | `3` | 최대 스케일 |
-| `memory` | `256Mi` | 인스턴스 메모리 |
+| `min-instances` | `1` | 콜드 스타트 방지 |
+| `max-instances` | `5` | 최대 스케일 |
+| `memory` | `512Mi` | 인스턴스 메모리 |
 | `concurrency` | `80` | 인스턴스당 동시 요청 수 |
 
 ---
@@ -753,3 +754,5 @@ git push origin main
 
 > 💡 **이 문서는 프로젝트의 개발 환경 또는 인프라 변경 시 업데이트해야 합니다.**  
 > Git 브랜치 전략 변경, GCP 설정 변경, 도메인 이전, 빌드 도구 변경 등이 발생하면 이 문서에 반영하세요.
+
+*최종 업데이트: 2026-04-30*
