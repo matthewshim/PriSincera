@@ -24,6 +24,26 @@ async function signInWithEmail(email, password) {
   return res.json();
 }
 
+/** Firebase REST API로 비밀번호 변경 (서버 Admin SDK 불필요) */
+async function changePasswordWithToken(idToken, newPassword) {
+  const res = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${FIREBASE_API_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken, password: newPassword, returnSecureToken: true }),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json();
+    const msg = err.error?.message || 'Password change failed';
+    if (msg === 'WEAK_PASSWORD') throw new Error('비밀번호가 너무 약합니다 (8자 이상)');
+    if (msg === 'INVALID_ID_TOKEN' || msg === 'TOKEN_EXPIRED') throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
 // ─── Login Component ─────────────────────────────
 
 function LoginForm({ onLogin }) {
@@ -171,16 +191,39 @@ function Dashboard({ token, adminEmail, onLogout }) {
     e.preventDefault();
     setProfileAction({ type: 'loading', msg: '저장 중...' });
     try {
-      const body = {};
-      if (profileForm.displayName !== (profile?.displayName || '')) body.displayName = profileForm.displayName;
-      if (profileForm.password) body.password = profileForm.password;
-      if (Object.keys(body).length === 0) {
+      const hasNameChange = profileForm.displayName !== (profile?.displayName || '');
+      const hasPasswordChange = !!profileForm.password;
+      if (!hasNameChange && !hasPasswordChange) {
         setProfileAction({ type: 'error', msg: '변경할 내용이 없습니다' });
         return;
       }
-      await fetchApi('/profile', { method: 'PUT', body: JSON.stringify(body) });
+
+      // 비밀번호 변경: Firebase Client REST API로 직접 처리 (Admin SDK 권한 불필요)
+      if (hasPasswordChange) {
+        if (profileForm.password.length < 8) {
+          setProfileAction({ type: 'error', msg: '비밀번호는 8자 이상이어야 합니다' });
+          return;
+        }
+        const result = await changePasswordWithToken(token, profileForm.password);
+        // 비밀번호 변경 시 새 토큰 발급 → 세션 갱신
+        if (result.idToken) {
+          sessionStorage.setItem('admin_token', result.idToken);
+        }
+      }
+
+      // 이름 변경: 서버 API로 처리
+      if (hasNameChange) {
+        await fetchApi('/profile', {
+          method: 'PUT',
+          body: JSON.stringify({ displayName: profileForm.displayName }),
+        });
+      }
+
       setProfileAction({ type: 'success', msg: '✅ 프로필이 수정되었습니다' });
-      setTimeout(() => setProfileModal(false), 1200);
+      setTimeout(() => {
+        setProfileModal(false);
+        if (hasPasswordChange) window.location.reload(); // 토큰 갱신 반영
+      }, 1200);
     } catch (err) {
       setProfileAction({ type: 'error', msg: `❌ ${err.message}` });
     }
