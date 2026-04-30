@@ -107,16 +107,22 @@ export async function sendToSubscribers(subject, htmlRenderer, subscribers) {
   let failedCount = 0;
 
   for (const email of subscribers) {
-    const html = typeof htmlRenderer === 'function'
-      ? htmlRenderer(email)
-      : htmlRenderer; // 문자열이면 그대로 사용
+    try {
+      const html = typeof htmlRenderer === 'function'
+        ? htmlRenderer(email)
+        : htmlRenderer; // 문자열이면 그대로 사용
 
-    const result = await sendEmail(email, subject, html);
-    results.push(result);
+      const result = await sendEmail(email, subject, html);
+      results.push(result);
 
-    if (result.success) {
-      sent++;
-    } else {
+      if (result.success) {
+        sent++;
+      } else {
+        failedCount++;
+      }
+    } catch (err) {
+      console.error(`[Mailer] ❌ 렌더링/발송 실패: ${email} — ${err.message}`);
+      results.push({ success: false, error: err.message, to: email });
       failedCount++;
     }
   }

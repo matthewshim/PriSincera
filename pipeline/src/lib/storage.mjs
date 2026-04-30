@@ -126,6 +126,29 @@ export async function writeDailyJSON(dateStr, data) {
   });
   // Uniform Bucket-Level Access 사용 — 버킷 레벨 IAM으로 공개 접근 관리
   console.log(`[GCS] 데일리 시그널 저장: gs://${BUCKET}/${path}`);
+
+  // index.json 자동 갱신 — 날짜 목록 관리
+  try {
+    const indexPath = 'daily/index.json';
+    let index = { dates: [], updatedAt: null };
+    try {
+      const existing = await readJSON(indexPath);
+      if (existing) index = existing;
+    } catch (_) {}
+    if (!index.dates.includes(dateStr)) {
+      index.dates.push(dateStr);
+    }
+    // 최신순 정렬
+    index.dates.sort((a, b) => b.localeCompare(a));
+    index.updatedAt = new Date().toISOString();
+    await storage.bucket(BUCKET).file(indexPath).save(
+      JSON.stringify(index, null, 2),
+      { contentType: 'application/json', metadata: { cacheControl: 'public, max-age=300' } }
+    );
+    console.log(`[GCS] index.json 갱신: ${index.dates.length}개 날짜`);
+  } catch (err) {
+    console.warn(`[GCS] index.json 갱신 실패 (비치명적): ${err.message}`);
+  }
 }
 
 /**

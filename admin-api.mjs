@@ -265,10 +265,11 @@ router.post('/email/send-test', async (req, res) => {
     const { to } = req.body || {};
     if (!to) return res.status(400).json({ error: '수신 이메일 필요' });
     const { sendEmail } = await import('./pipeline/src/lib/mailer.mjs');
-    const result = await sendEmail({
-      to, subject: '[PriSignal] 테스트 발송',
-      html: '<h2>PriSignal 테스트 메일</h2><p>Admin 대시보드에서 발송된 테스트 이메일입니다.</p>',
-    });
+    const result = await sendEmail(
+      to,
+      '[PriSignal] 테스트 발송',
+      '<h2>PriSignal 테스트 메일</h2><p>Admin 대시보드에서 발송된 테스트 이메일입니다.</p>',
+    );
     res.json({ success: true, messageId: result.messageId });
   } catch (err) {
     console.error('[Admin Email]', err.message);

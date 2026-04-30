@@ -277,8 +277,12 @@ export async function getSubscribersPaginated(options) {
 // ─── 구독 해지 토큰 (변경 없음) ──────────────────
 
 export function generateUnsubToken(email) {
-  const secret = getUnsubSecret();
-  if (!secret) throw new Error('UNSUBSCRIBE_SECRET 환경변수가 설정되지 않았습니다.');
+  let secret = getUnsubSecret();
+  if (!secret) {
+    // 환경변수 미설정 시 폴백: 앱이 중단되지 않도록 경고만 출력
+    console.warn('[Subscribers] ⚠️ UNSUBSCRIBE_SECRET 미설정 — 기본 폴백 시크릿 사용');
+    secret = 'prisincera-default-unsub-secret-fallback';
+  }
   email = (email || '').trim().toLowerCase();
   return createHmac('sha256', secret).update(email).digest('hex');
 }
@@ -296,8 +300,13 @@ export function verifyUnsubToken(email, token) {
 
 export function buildUnsubscribeUrl(email) {
   email = (email || '').trim().toLowerCase();
-  const token = generateUnsubToken(email);
-  return `https://www.prisincera.com/api/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
+  try {
+    const token = generateUnsubToken(email);
+    return `https://www.prisincera.com/api/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
+  } catch (err) {
+    console.error('[Subscribers] buildUnsubscribeUrl 실패:', err.message);
+    return `https://www.prisincera.com/prisignal`;
+  }
 }
 
 export { BUCKET, SUBSCRIBERS_PATH, validateEmail, useFirestore };
