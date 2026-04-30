@@ -248,7 +248,17 @@ export async function removeSubscriber(email) {
 export async function getAllSubscribers() {
   if (useFirestore) {
     const snap = await db.collection(COLLECTIONS.SUBSCRIBERS).get();
-    return { subscribers: snap.docs.map(d => d.data()) };
+    return { subscribers: snap.docs.map(d => {
+      const data = d.data();
+      // Firestore Timestamp → ISO string 변환
+      if (data.subscribedAt && typeof data.subscribedAt.toDate === 'function') {
+        data.subscribedAt = data.subscribedAt.toDate().toISOString();
+      }
+      if (data.unsubscribedAt && typeof data.unsubscribedAt.toDate === 'function') {
+        data.unsubscribedAt = data.unsubscribedAt.toDate().toISOString();
+      }
+      return data;
+    }) };
   }
   const { data } = await gcsReadSubscribersWithGen();
   return data;
