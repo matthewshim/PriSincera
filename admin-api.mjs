@@ -137,19 +137,20 @@ router.get('/auth/verify', (req, res) => {
 
 router.get('/profile', async (req, res) => {
   try {
-    const { auth } = await import('./pipeline/src/lib/firestore.mjs');
-    const user = await auth.getUser(req.adminUser.uid);
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    const doc = await db.collection(COLLECTIONS.ADMIN_CONFIG).doc('settings').get();
+    const key = emailToKey(req.adminUser.email);
+    const adminData = doc.exists ? doc.data()?.admins?.[key] : null;
     res.json({
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName || '',
+      uid: req.adminUser.uid,
+      email: req.adminUser.email,
+      displayName: adminData?.displayName || '',
       role: req.adminRole,
-      createdAt: user.metadata.creationTime,
-      lastSignIn: user.metadata.lastSignInTime,
+      createdAt: null,
+      lastSignIn: null,
     });
   } catch (err) {
-    console.error('[Admin Profile GET]', err.message, err.code);
-    // API 실패해도 토큰에서 최소 정보를 반환하여 모달이 열리게 함
+    console.error('[Admin Profile GET]', err.message);
     res.json({
       uid: req.adminUser.uid,
       email: req.adminUser.email,
@@ -163,22 +164,22 @@ router.get('/profile', async (req, res) => {
 
 router.put('/profile', async (req, res) => {
   try {
-    const { displayName, password } = req.body || {};
-    const { auth } = await import('./pipeline/src/lib/firestore.mjs');
-    const updateData = {};
-    if (displayName !== undefined) updateData.displayName = displayName;
-    if (password) {
-      if (password.length < 8) return res.status(400).json({ error: '비밀번호는 8자 이상이어야 합니다' });
-      updateData.password = password;
-    }
-    if (Object.keys(updateData).length === 0) {
+    const { displayName } = req.body || {};
+    // 비밀번호 변경은 클라이언트 사이드에서 Firebase REST API로 처리
+    // 서버에서는 displayName만 Firestore에 저장
+    if (displayName === undefined) {
       return res.status(400).json({ error: '변경할 내용이 없습니다' });
     }
-    const updated = await auth.updateUser(req.adminUser.uid, updateData);
-    console.log(`[Admin Profile] Updated: ${updated.email}`);
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    const key = emailToKey(req.adminUser.email);
+    await db.collection(COLLECTIONS.ADMIN_CONFIG).doc('settings').set({
+      admins: { [key]: { displayName, updatedAt: new Date() } },
+      updatedAt: new Date(),
+    }, { merge: true });
+    console.log(`[Admin Profile] Updated displayName for: ${req.adminUser.email}`);
     res.json({
       success: true,
-      displayName: updated.displayName || '',
+      displayName: displayName || '',
     });
   } catch (err) {
     console.error('[Admin Profile]', err.message);
