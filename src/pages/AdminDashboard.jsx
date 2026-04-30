@@ -197,32 +197,42 @@ function Dashboard({ token, adminEmail, onLogout }) {
         setProfileAction({ type: 'error', msg: '변경할 내용이 없습니다' });
         return;
       }
-
-      // 비밀번호 변경: Firebase Client REST API로 직접 처리 (Admin SDK 권한 불필요)
-      if (hasPasswordChange) {
-        if (profileForm.password.length < 8) {
-          setProfileAction({ type: 'error', msg: '비밀번호는 8자 이상이어야 합니다' });
-          return;
-        }
-        const result = await changePasswordWithToken(token, profileForm.password);
-        // 비밀번호 변경 시 새 토큰 발급 → 세션 갱신
-        if (result.idToken) {
-          sessionStorage.setItem('admin_token', result.idToken);
-        }
+      if (hasPasswordChange && profileForm.password.length < 8) {
+        setProfileAction({ type: 'error', msg: '비밀번호는 8자 이상이어야 합니다' });
+        return;
       }
 
-      // 이름 변경: 서버 API로 처리
-      if (hasNameChange) {
-        await fetchApi('/profile', {
-          method: 'PUT',
-          body: JSON.stringify({ displayName: profileForm.displayName }),
-        });
+      // 모든 프로필 변경을 Firebase Client REST API로 직접 처리 (서버 불필요)
+      const updateBody = { idToken: token, returnSecureToken: true };
+      if (hasPasswordChange) updateBody.password = profileForm.password;
+      if (hasNameChange) updateBody.displayName = profileForm.displayName;
+
+      const res = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${FIREBASE_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateBody),
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json();
+        const msg = err.error?.message || '프로필 수정 실패';
+        if (msg === 'WEAK_PASSWORD : Password should be at least 6 characters') throw new Error('비밀번호가 너무 약합니다');
+        if (msg.includes('TOKEN_EXPIRED') || msg.includes('INVALID_ID_TOKEN')) throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
+        throw new Error(msg);
+      }
+      const result = await res.json();
+
+      // 새 토큰으로 세션 갱신
+      if (result.idToken) {
+        sessionStorage.setItem('admin_token', result.idToken);
       }
 
       setProfileAction({ type: 'success', msg: '✅ 프로필이 수정되었습니다' });
       setTimeout(() => {
         setProfileModal(false);
-        if (hasPasswordChange) window.location.reload(); // 토큰 갱신 반영
+        window.location.reload();
       }, 1200);
     } catch (err) {
       setProfileAction({ type: 'error', msg: `❌ ${err.message}` });
