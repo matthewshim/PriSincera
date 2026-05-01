@@ -295,28 +295,50 @@ router.get('/email/logs', async (req, res) => {
 
 router.get('/pipeline/status', async (req, res) => {
   try {
-    const { Storage } = await import('@google-cloud/storage');
-    const gcs = new Storage();
-    const bucket = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
-    const [content] = await gcs.bucket(bucket).file('daily/index.json').download();
-    const index = JSON.parse(content.toString('utf-8'));
-    const dates = index.dates || [];
+    const { getStorage } = await import('firebase-admin/storage');
+    const bucketName = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
+    let dates = [];
+    
+    // GCS에서 index.json 시도
+    try {
+      const bucket = getStorage().bucket(bucketName);
+      const [content] = await bucket.file('daily/index.json').download();
+      const index = JSON.parse(content.toString('utf-8'));
+      dates = index.dates || [];
+    } catch (gcsErr) {
+      console.warn('[Admin Pipeline] GCS 조회 실패, Firestore email_logs 대체 시도:', gcsErr.message);
+      // Fallback: Firestore에서 email_logs를 최근순으로 가져와서 날짜 추출
+      const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+      const snap = await db.collection(COLLECTIONS.EMAIL_LOGS)
+        .where('date', '>=', '2000-01-01') // date 필드가 있는 문서만
+        .orderBy('date', 'desc')
+        .limit(30)
+        .get();
+      dates = snap.docs.map(d => d.data().date);
+      // 중복 제거
+      dates = [...new Set(dates)];
+    }
+
     const latestDate = dates.length > 0 ? dates[0] : null;
-    const today = new Date().toISOString().slice(0, 10);
+
+    // KST 기준으로 오늘 날짜 구하기
+    const now = new Date();
+    const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const todayStr = kst.toISOString().split('T')[0];
+
     res.json({
-      collector: { status: latestDate === today ? 'success' : 'pending', lastRun: latestDate },
-      totalDates: dates.length,
+      collector: { status: latestDate === todayStr ? 'success' : 'pending', lastRun: latestDate },
+      totalDates: dates.length, // Fallback의 경우 최대 30일 수 있지만 정상 작동 시 전체 수 표시
       recentDates: dates.slice(0, 7),
     });
   } catch (err) {
-    if (err.code === 404 || err.message?.includes('No such object')) {
-      return res.json({
-        collector: { status: 'pending', lastRun: null },
-        totalDates: 0, recentDates: [],
-      });
-    }
-    console.error('[Admin Pipeline]', err.message);
-    res.status(500).json({ error: '파이프라인 상태 조회 실패' });
+    console.error('[Admin Pipeline] 상태 조회 완전 실패:', err.message);
+    res.json({
+      collector: { status: 'pending', lastRun: null },
+      totalDates: 0,
+      recentDates: [],
+      error: err.message
+    });
   }
 });
 
