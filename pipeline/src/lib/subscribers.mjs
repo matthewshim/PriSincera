@@ -31,7 +31,7 @@ try {
   COLLECTIONS = mod.COLLECTIONS;
   useFirestore = true;
 } catch (e) {
-  console.warn('[Subscribers] Firestore 미사용 — GCS JSON 폴백 모드');
+  console.warn('[Subscribers] Firestore 미사용 — GCS JSON 폴백 모드. (원인: ' + e.message + ')');
 }
 
 // ─── GCS 폴백 (기존 v1 로직) ─────────────────────

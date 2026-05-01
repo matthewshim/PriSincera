@@ -23,6 +23,7 @@ import {
 import { sendToSubscribers } from './lib/mailer.mjs';
 import { renderDailyEmail } from './lib/email-template.mjs';
 import { getActiveSubscribers, buildUnsubscribeUrl } from './lib/subscribers.mjs';
+import { db, COLLECTIONS } from './lib/firestore.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -178,6 +179,23 @@ async function main() {
   });
 
   const emailResult = await sendToSubscribers(subject, htmlRenderer, subscribers);
+
+  try {
+    if (db) {
+      await db.collection(COLLECTIONS.EMAIL_LOGS).doc(`daily-${todayStr}`).set({
+        date: todayStr,
+        subject: subject,
+        totalRecipients: emailResult.total,
+        successCount: emailResult.sent,
+        failedCount: emailResult.failed,
+        sentAt: new Date().toISOString(),
+        results: emailResult.results.map(r => ({ to: r.to, success: r.success, error: r.error || null }))
+      });
+      console.log(`[Composer] 발송 이력 Firestore 저장 완료: daily-${todayStr}`);
+    }
+  } catch (err) {
+    console.error(`[Composer] 발송 이력 저장 실패: ${err.message}`);
+  }
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log('\n═══════════════════════════════════════');
