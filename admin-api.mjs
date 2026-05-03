@@ -60,6 +60,7 @@ function invalidateAdminCache() { _adminCache = null; _adminCacheTime = 0; }
 
 /** 이메일 → Firestore 키 변환 */
 function emailToKey(email) {
+  if (typeof email !== 'string') return '';
   return email.replace(/\./g, '_DOT_').replace(/@/g, '_AT_');
 }
 
@@ -163,8 +164,13 @@ router.get('/profile', async (req, res) => {
 });
 
 router.put('/profile', async (req, res) => {
+  const { displayName, password } = req.body;
+  if ((displayName !== undefined && typeof displayName !== 'string') || 
+      (password !== undefined && typeof password !== 'string')) {
+    return res.status(400).json({ error: 'Invalid input types' });
+  }
+
   try {
-    const { displayName } = req.body || {};
     // 비밀번호 변경은 클라이언트 사이드에서 Firebase REST API로 처리
     // 서버에서는 displayName만 Firestore에 저장
     if (displayName === undefined) {
@@ -371,9 +377,18 @@ router.get('/admins', requireSuperAdmin, async (req, res) => {
 });
 
 router.post('/admins', requireSuperAdmin, async (req, res) => {
+  const { email, password, displayName, role } = req.body;
+  
+  if (typeof email !== 'string' || typeof password !== 'string' || 
+      typeof displayName !== 'string' || typeof role !== 'string') {
+    return res.status(400).json({ error: 'Invalid input types' });
+  }
+
+  if (!email || !password || !role) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
   try {
-    const { email, password, displayName, role } = req.body || {};
-    if (!email || !password) return res.status(400).json({ error: '이메일과 비밀번호는 필수입니다' });
     if (password.length < 8) return res.status(400).json({ error: '비밀번호는 8자 이상이어야 합니다' });
     const assignedRole = role === 'super_admin' ? 'super_admin' : 'admin';
     const { auth } = await import('./pipeline/src/lib/firestore.mjs');
@@ -396,9 +411,17 @@ router.post('/admins', requireSuperAdmin, async (req, res) => {
 });
 
 router.put('/admins/:uid', requireSuperAdmin, async (req, res) => {
+  const { uid } = req.params;
+  const { role, displayName, password, email } = req.body;
+
+  if ((role !== undefined && typeof role !== 'string') || 
+      (displayName !== undefined && typeof displayName !== 'string') || 
+      (password !== undefined && typeof password !== 'string') ||
+      (email !== undefined && typeof email !== 'string')) {
+    return res.status(400).json({ error: 'Invalid input types' });
+  }
+
   try {
-    const { uid } = req.params;
-    const { email, password, displayName, role } = req.body || {};
     const { auth } = await import('./pipeline/src/lib/firestore.mjs');
     const existing = await auth.getUser(uid);
     const oldEmail = existing.email;

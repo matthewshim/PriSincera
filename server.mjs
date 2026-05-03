@@ -79,6 +79,14 @@ const subscribeLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,                  // 100 requests per IP per 15 min
+  message: { error: 'Too many requests to admin API' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // --- Redirect non-www to www ---
 app.use((req, res, next) => {
   if (req.hostname === 'prisincera.com') {
@@ -101,7 +109,7 @@ app.use(express.static(DIST_DIR, {
 }));
 
 // --- Admin API (Firebase Auth protected) ---
-app.use('/admin/api', express.json({ limit: '10kb' }), adminRouter);
+app.use('/admin/api', adminLimiter, express.json({ limit: '10kb' }), adminRouter);
 
 // --- Subscriber Management (GCS JSON / Firestore) ---
 
@@ -110,8 +118,8 @@ app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), asy
   try {
     const { email_address } = req.body || {};
 
-    // Server-side email validation
-    if (!email_address || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
+    // Server-side email validation (Type check against NoSQL Injection)
+    if (typeof email_address !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
       return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
     }
 
@@ -141,7 +149,7 @@ app.get('/api/unsubscribe', async (req, res) => {
   try {
     const { email, token } = req.query;
 
-    if (!email || !token) {
+    if (typeof email !== 'string' || typeof token !== 'string' || !email || !token) {
       return res.status(400).send(renderUnsubPage('잘못된 요청입니다.', false));
     }
 
