@@ -242,6 +242,16 @@ app.get('/api/env-check', (req, res) => {
   });
 });
 
+app.get('/api/temp-logs', async (req, res) => {
+  try {
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    const snap = await db.collection(COLLECTIONS.EMAIL_LOGS).orderBy('sentAt', 'desc').limit(5).get();
+    res.json(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // --- SPA fallback (Express 5 compatible) ---
 app.use((req, res) => {
   const indexPath = join(DIST_DIR, 'index.html');
