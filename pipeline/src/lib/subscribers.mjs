@@ -18,6 +18,7 @@
  * - verifyUnsubToken(email, t)  — 토큰 검증
  */
 import { createHmac, createHash } from 'crypto';
+import { rawGcsUpload } from './storage.mjs';
 
 // ─── Firestore 초기화 (실패 시 GCS 폴백) ─────────
 
@@ -201,10 +202,7 @@ async function gcsWriteSubscribers(data, expectedGeneration) {
   const options = { contentType: 'application/json' };
   try {
     await file.delete({ ignoreNotFound: true });
-    await file.save(JSON.stringify(data, null, 2), {
-      resumable: false,
-      metadata: { contentType: 'application/json' }
-    });
+    await rawGcsUpload(SUBSCRIBERS_PATH, JSON.stringify(data, null, 2), 'application/json');
   } catch (err) {
     if (err.code === 412) throw new Error('CONCURRENT_MODIFICATION');
     throw err;

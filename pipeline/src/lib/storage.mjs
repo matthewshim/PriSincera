@@ -2,9 +2,42 @@
  * Cloud Storage 유틸리티 — 데일리 시그널, 후보 풀, 발행 이력, 상태 관리
  */
 import { Storage } from '@google-cloud/storage';
+import { GoogleAuth } from 'google-auth-library';
 
 const storage = new Storage();
+const googleAuth = new GoogleAuth({ scopes: 'https://www.googleapis.com/auth/cloud-platform' });
 const BUCKET = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
+
+/**
+ * GCS REST API를 직접 호출하여 파일을 업로드 (ACL 생성 버그 우회)
+ */
+export async function rawGcsUpload(path, contentStr, contentType = 'application/json', cacheControl = '') {
+  const client = await googleAuth.getClient();
+  const tokenResp = await client.getAccessToken();
+  
+  const url = `https://storage.googleapis.com/upload/storage/v1/b/${BUCKET}/o?uploadType=media&name=${encodeURIComponent(path)}`;
+  
+  const headers = {
+    'Authorization': `Bearer ${tokenResp.token}`,
+    'Content-Type': contentType
+  };
+  
+  if (cacheControl) {
+    headers['Cache-Control'] = cacheControl;
+  }
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: headers,
+    body: contentStr
+  });
+  
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Raw GCS Upload Failed [${response.status}]: ${errText}`);
+  }
+}
+
 
 /**
  * GCS에서 JSON 파일을 읽습니다.
@@ -32,10 +65,7 @@ export async function readJSON(path) {
 export async function writeJSON(path, data) {
   const content = JSON.stringify(data, null, 2);
   try { await storage.bucket(BUCKET).file(path).delete({ ignoreNotFound: true }); } catch(e) {}
-  await storage.bucket(BUCKET).file(path).save(content, {
-    resumable: false,
-    metadata: { contentType: 'application/json' }
-  });
+  await rawGcsUpload(path, content, 'application/json');
   console.log(`[GCS] 저장 완료: gs://${BUCKET}/${path}`);
 }
 
@@ -122,13 +152,7 @@ export async function writeDailyJSON(dateStr, data) {
   const content = JSON.stringify(data, null, 2);
   const file = storage.bucket(BUCKET).file(path);
   try { await file.delete({ ignoreNotFound: true }); } catch(e) {}
-  await file.save(content, {
-    resumable: false,
-    metadata: {
-      contentType: 'application/json',
-      cacheControl: 'public, max-age=300'
-    }
-  });
+  await rawGcsUpload(path, content, 'application/json', 'public, max-age=300');
   // Uniform Bucket-Level Access 사용 — 버킷 레벨 IAM으로 공개 접근 관리
   console.log(`[GCS] 데일리 시그널 저장: gs://${BUCKET}/${path}`);
 
@@ -147,13 +171,7 @@ export async function writeDailyJSON(dateStr, data) {
     index.dates.sort((a, b) => b.localeCompare(a));
     index.updatedAt = new Date().toISOString();
     try { await storage.bucket(BUCKET).file(indexPath).delete({ ignoreNotFound: true }); } catch(e) {}
-    await storage.bucket(BUCKET).file(indexPath).save(
-      JSON.stringify(index, null, 2),
-      { 
-        resumable: false,
-        metadata: { contentType: 'application/json' } 
-      }
-    );
+    await rawGcsUpload(indexPath, JSON.stringify(index, null, 2), 'application/json');
     console.log(`[GCS] index.json 갱신: ${index.dates.length}개 날짜`);
   } catch (err) {
     console.warn(`[GCS] index.json 갱신 실패 (비치명적): ${err.message}`);
