@@ -203,14 +203,31 @@ app.get('/api/archive/:id', (req, res) => {
   res.status(410).json({ error: 'Archive endpoint deprecated. Use /api/daily/:date instead.' });
 });
 
-// --- Daily Signal API (Firestore via DailyRepository) ---
+// --- Daily Signal API (Firestore + GCS Fallback) ---
 app.get('/api/daily/index', async (req, res) => {
   try {
     const { getDailyIndex } = await import('./pipeline/src/repositories/DailyRepository.mjs');
-    const index = await getDailyIndex();
+    const fsIndex = await getDailyIndex();
+    
+    // GCS 폴백 병합 (기존 과거 데이터 유지)
+    let gcsDates = [];
+    if (storage) {
+      try {
+        const [content] = await storage.bucket(GCS_BUCKET).file('daily/index.json').download();
+        const gcsIndex = JSON.parse(content.toString('utf-8'));
+        gcsDates = gcsIndex.dates || [];
+      } catch (err) {
+        // 무시
+      }
+    }
+    
+    // 중복 제거 및 최신순 정렬
+    const allDates = Array.from(new Set([...fsIndex.dates, ...gcsDates]));
+    allDates.sort((a, b) => b.localeCompare(a));
+
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('Content-Type', 'application/json');
-    res.json(index);
+    res.json({ dates: allDates });
   } catch (err) {
     console.error('[API] /api/daily/index Error:', err);
     res.status(500).json({ error: 'Failed to fetch index' });
@@ -224,7 +241,18 @@ app.get('/api/daily/:date', async (req, res) => {
   }
   try {
     const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
-    const data = await getDailySignal(dateStr);
+    let data = await getDailySignal(dateStr);
+    
+    // Firestore에 없으면 GCS에서 폴백 시도
+    if (!data && storage) {
+      try {
+        const [content] = await storage.bucket(GCS_BUCKET).file(`daily/${dateStr}.json`).download();
+        data = JSON.parse(content.toString('utf-8'));
+      } catch (err) {
+        // 무시
+      }
+    }
+
     if (!data) {
       return res.status(404).json({ error: 'Daily signal not found' });
     }
