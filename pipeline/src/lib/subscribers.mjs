@@ -201,7 +201,10 @@ async function gcsWriteSubscribers(data, expectedGeneration) {
   const options = { contentType: 'application/json' };
   try {
     await file.delete({ ignoreNotFound: true });
-    await file.save(JSON.stringify(data, null, 2), options);
+    await file.save(JSON.stringify(data, null, 2), {
+      resumable: false,
+      metadata: { contentType: 'application/json' }
+    });
   } catch (err) {
     if (err.code === 412) throw new Error('CONCURRENT_MODIFICATION');
     throw err;
