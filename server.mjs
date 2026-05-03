@@ -242,16 +242,18 @@ app.get('/api/env-check', (req, res) => {
   });
 });
 
-app.get('/api/temp-trigger', (req, res) => {
+app.get('/api/temp-trigger', async (req, res) => {
   if (req.query.secret !== 'prisignal-temp-run-9988') return res.status(403).send('Forbidden');
-  import('child_process').then(({ exec }) => {
-    console.log('[Trigger] Starting composer.mjs');
-    exec('node pipeline/src/composer.mjs', (error, stdout, stderr) => {
-      if (error) console.error('[Trigger Error]', error.message);
-      else console.log('[Trigger Success]\n', stdout);
-    });
-  });
-  res.send('Pipeline Triggered in background');
+  try {
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
+    
+    const { stdout, stderr } = await execAsync('node pipeline/src/composer.mjs');
+    res.type('text/plain').send(`[STDOUT]\n${stdout}\n[STDERR]\n${stderr}`);
+  } catch (err) {
+    res.type('text/plain').status(500).send(`[EXEC ERROR]\n${err.message}\n[STDOUT]\n${err.stdout}\n[STDERR]\n${err.stderr}`);
+  }
 });
 
 app.get('/api/temp-logs', async (req, res) => {

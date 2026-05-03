@@ -32,6 +32,7 @@ export async function readJSON(path) {
 export async function writeJSON(path, data) {
   const content = JSON.stringify(data, null, 2);
   await storage.bucket(BUCKET).file(path).save(content, {
+    resumable: false,
     contentType: 'application/json',
     metadata: { cacheControl: 'no-cache' },
   });
@@ -121,6 +122,7 @@ export async function writeDailyJSON(dateStr, data) {
   const content = JSON.stringify(data, null, 2);
   const file = storage.bucket(BUCKET).file(path);
   await file.save(content, {
+    resumable: false,
     contentType: 'application/json',
     metadata: { cacheControl: 'public, max-age=300' },
   });
@@ -143,7 +145,7 @@ export async function writeDailyJSON(dateStr, data) {
     index.updatedAt = new Date().toISOString();
     await storage.bucket(BUCKET).file(indexPath).save(
       JSON.stringify(index, null, 2),
-      { contentType: 'application/json', metadata: { cacheControl: 'public, max-age=300' } }
+      { resumable: false, contentType: 'application/json', metadata: { cacheControl: 'public, max-age=300' } }
     );
     console.log(`[GCS] index.json 갱신: ${index.dates.length}개 날짜`);
   } catch (err) {

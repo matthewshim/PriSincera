@@ -198,7 +198,7 @@ async function gcsReadSubscribersWithGen() {
 async function gcsWriteSubscribers(data, expectedGeneration) {
   data.updatedAt = new Date().toISOString();
   const file = storage.bucket(BUCKET).file(SUBSCRIBERS_PATH);
-  const options = { contentType: 'application/json', metadata: { cacheControl: 'no-cache' } };
+  const options = { resumable: false, contentType: 'application/json', metadata: { cacheControl: 'no-cache' } };
   if (expectedGeneration > 0) {
     options.preconditionOpts = { ifGenerationMatch: expectedGeneration };
   }
