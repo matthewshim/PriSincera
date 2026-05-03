@@ -234,6 +234,14 @@ app.get('/api/daily/:date', async (req, res) => {
   }
 });
 
+app.get('/api/env-check', (req, res) => {
+  res.json({
+    smtpUser: process.env.SMTP_USER || 'missing',
+    smtpPass: process.env.SMTP_PASS ? 'exists' : 'missing',
+    fromName: process.env.SMTP_FROM_NAME || 'missing'
+  });
+});
+
 // --- SPA fallback (Express 5 compatible) ---
 app.use((req, res) => {
   const indexPath = join(DIST_DIR, 'index.html');
