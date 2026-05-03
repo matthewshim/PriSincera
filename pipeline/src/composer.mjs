@@ -19,7 +19,7 @@ import { applyTierWeights, selectTopN } from './lib/scoring.mjs';
 import { getTodayKST } from './lib/storage.mjs';
 import { getDailySignal, saveDailySignal } from './repositories/DailyRepository.mjs';
 import { filterAndCapArticles, mapEditorComments } from './services/ScoringService.mjs';
-import { dispatchDailyEmail } from './services/MailService.mjs';
+import { dispatchDailyEmail, isEmailAlreadySent } from './services/MailService.mjs';
 import { getActiveSubscribers } from './lib/subscribers.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -104,6 +104,15 @@ async function main() {
 
   // 8. Gmail SMTP 자체 발송
   console.log('\n--- Phase 4: 이메일 발송 (Gmail SMTP) ---');
+
+  // 오늘 이미 발송했는지 확인
+  const alreadySent = await isEmailAlreadySent(todayStr);
+  if (alreadySent) {
+    console.log(`[Composer] 🛑 이미 오늘(${todayStr}) 메일이 발송되었습니다. 중복 발송을 방지합니다.`);
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.log(`\n✅ Composer v3 완료 (${elapsed}초) — 중복 발송 스킵`);
+    return;
+  }
 
   // 구독자 목록 조회
   const subscribers = await getActiveSubscribers();

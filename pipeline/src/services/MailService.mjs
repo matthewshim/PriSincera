@@ -7,6 +7,22 @@ import { buildUnsubscribeUrl } from '../lib/subscribers.mjs';
 import { db, COLLECTIONS } from '../lib/firestore.mjs';
 
 /**
+ * 당일 이메일이 이미 발송되었는지 확인합니다.
+ * @param {string} todayStr 
+ * @returns {Promise<boolean>}
+ */
+export async function isEmailAlreadySent(todayStr) {
+  if (!db) return false;
+  try {
+    const doc = await db.collection(COLLECTIONS.EMAIL_LOGS).doc(`daily-${todayStr}`).get();
+    return doc.exists;
+  } catch (err) {
+    console.error(`[MailService] 발송 여부 확인 실패: ${err.message}`);
+    return false;
+  }
+}
+
+/**
  * 데일리 이메일을 발송하고 그 결과를 Firestore에 기록합니다.
  * 
  * @param {string} todayStr 
