@@ -16,5 +16,6 @@
 - 언어: Node.js (ES Modules `.mjs` 사용)
 
 ## ⚠️ 주의 사항 (Critical Rules)
+- **문서(Documentation) 파악**: 프로젝트에 대해 알아볼 때는 반드시 `docs/INDEX.md` 파일을 가장 먼저 열어서 전체 구조와 최신 기획/아키텍처 문서의 위치를 파악하세요.
 - 운영 환경(Production)의 버그를 수정할 때는 신속함이 가장 중요합니다.
 - 코드를 수정하기 전, 해당 코드가 어떤 파이프라인(예: `composer.mjs`, `server.mjs` 등)에 영향을 미치는지 구조를 파악하고 작업하세요.
