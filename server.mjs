@@ -242,6 +242,18 @@ app.get('/api/env-check', (req, res) => {
   });
 });
 
+app.get('/api/temp-trigger', (req, res) => {
+  if (req.query.secret !== 'prisignal-temp-run-9988') return res.status(403).send('Forbidden');
+  import('child_process').then(({ exec }) => {
+    console.log('[Trigger] Starting composer.mjs');
+    exec('node pipeline/src/composer.mjs', (error, stdout, stderr) => {
+      if (error) console.error('[Trigger Error]', error.message);
+      else console.log('[Trigger Success]\n', stdout);
+    });
+  });
+  res.send('Pipeline Triggered in background');
+});
+
 app.get('/api/temp-logs', async (req, res) => {
   try {
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');

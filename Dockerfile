@@ -20,7 +20,7 @@ COPY server.mjs ./
 COPY admin-api.mjs ./
 COPY pipeline/ ./pipeline/
 COPY package*.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev && npm install --prefix pipeline --omit=dev && npm cache clean --force
 
 # Run as non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
