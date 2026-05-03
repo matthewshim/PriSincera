@@ -68,6 +68,34 @@ async function fsGetActiveSubscribers() {
   const snap = await db.collection(COLLECTIONS.SUBSCRIBERS)
     .where('status', '==', 'active')
     .get();
+
+  if (snap.empty) {
+    console.log('[Subscribers] Firestore에 활성 구독자가 없습니다. GCS 마이그레이션을 시도합니다...');
+    try {
+      const gcsEmails = await gcsGetActiveSubscribers();
+      if (gcsEmails.length > 0) {
+        console.log(`[Subscribers] GCS에서 ${gcsEmails.length}명의 구독자 발견. 마이그레이션 진행 중...`);
+        const batch = db.batch();
+        let count = 0;
+        for (const email of gcsEmails) {
+          const docRef = db.collection(COLLECTIONS.SUBSCRIBERS).doc(emailHash(email));
+          batch.set(docRef, {
+            email,
+            status: 'active',
+            subscribedAt: new Date(),
+            source: 'migration_from_gcs',
+          });
+          count++;
+        }
+        await batch.commit();
+        console.log(`[Subscribers] GCS -> Firestore 마이그레이션 완료 (${count}명)`);
+        return gcsEmails;
+      }
+    } catch (err) {
+      console.warn('[Subscribers] 자동 마이그레이션 실패:', err.message);
+    }
+  }
+
   return snap.docs.map(d => d.data().email);
 }
 
