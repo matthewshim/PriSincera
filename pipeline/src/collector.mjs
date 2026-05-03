@@ -12,7 +12,8 @@ import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { fetchAllFeeds, deduplicateArticles } from './lib/rss.mjs';
-import { readJSON, getTodayKST, getDailyPath, writeDailyJSON } from './lib/storage.mjs';
+import { getTodayKST } from './lib/storage.mjs';
+import { getDailySignal, saveDailySignal } from './repositories/DailyRepository.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -37,20 +38,19 @@ async function main() {
   if (newArticles.length === 0) {
     console.log('[Collector] 수집된 신규 아티클 없음.');
     // 빈 데일리 JSON 생성 (페이지에 "오늘은 시그널이 조용합니다" 표시)
-    await writeDailyJSON(todayStr, {
+    await saveDailySignal(todayStr, {
       date: todayStr,
       status: 'collected',
       total: 0,
       articles: [],
       collectedAt: new Date().toISOString(),
     });
-    console.log('[Collector] 빈 데일리 JSON 저장 완료. 종료.');
+    console.log('[Collector] 빈 데일리 상태 저장 완료. 종료.');
     return;
   }
 
   // 3. 오늘 기존 수집분과 중복 제거 (하루 2회+ 실행 대비)
-  const dailyPath = getDailyPath(todayStr);
-  const existing = await readJSON(dailyPath);
+  const existing = await getDailySignal(todayStr);
   const existingArticles = existing?.articles || [];
 
   const deduplicated = deduplicateArticles(newArticles, existingArticles);
@@ -60,9 +60,9 @@ async function main() {
     return;
   }
 
-  // 4. 데일리 JSON 저장 (공개)
+  // 4. 데일리 데이터 Firestore 저장 (공개)
   const allArticles = [...existingArticles, ...deduplicated];
-  await writeDailyJSON(todayStr, {
+  await saveDailySignal(todayStr, {
     date: todayStr,
     status: 'collected',
     total: allArticles.length,
@@ -76,7 +76,7 @@ async function main() {
   console.log(`   날짜: ${todayStr}`);
   console.log(`   신규 추가: ${deduplicated.length}개`);
   console.log(`   오늘 누적: ${allArticles.length}개`);
-  console.log(`   저장: daily/${todayStr}.json (공개)`);
+  console.log(`   저장: Firestore (daily_signals/${todayStr})`);
   console.log('═══════════════════════════════════════');
 }
 

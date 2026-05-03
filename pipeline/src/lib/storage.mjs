@@ -89,14 +89,6 @@ export function getIssuePath(dateStr) {
 // ─── Daily Signal 전용 ───────────────────────────────
 
 /**
- * 데일리 시그널 JSON 경로를 반환합니다.
- * @param {string} dateStr - "2026-04-21" 형식
- */
-export function getDailyPath(dateStr) {
-  return `daily/${dateStr}.json`;
-}
-
-/**
  * 오늘 날짜 문자열을 KST 기준으로 반환합니다.
  * @returns {string} "2026-04-21" 형식
  */
@@ -105,14 +97,6 @@ export function getTodayKST() {
   // KST = UTC + 9
   const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
   return kst.toISOString().split('T')[0];
-}
-
-/**
- * 데일리 JSON의 공개 URL을 반환합니다.
- * Nginx에서 /api/daily/:date 로 프록시됩니다.
- */
-export function getDailyPublicUrl(dateStr) {
-  return `https://storage.googleapis.com/${BUCKET}/daily/${dateStr}.json`;
 }
 
 /**
@@ -144,39 +128,7 @@ export function getRecentDailyDates(days = 7) {
   return dates;
 }
 
-/**
- * 데일리 JSON을 공개 읽기 가능하게 저장합니다.
- */
-export async function writeDailyJSON(dateStr, data) {
-  const path = getDailyPath(dateStr);
-  const content = JSON.stringify(data, null, 2);
-  const file = storage.bucket(BUCKET).file(path);
-  try { await file.delete({ ignoreNotFound: true }); } catch(e) {}
-  await rawGcsUpload(path, content, 'application/json', 'public, max-age=300');
-  // Uniform Bucket-Level Access 사용 — 버킷 레벨 IAM으로 공개 접근 관리
-  console.log(`[GCS] 데일리 시그널 저장: gs://${BUCKET}/${path}`);
 
-  // index.json 자동 갱신 — 날짜 목록 관리
-  try {
-    const indexPath = 'daily/index.json';
-    let index = { dates: [], updatedAt: null };
-    try {
-      const existing = await readJSON(indexPath);
-      if (existing) index = existing;
-    } catch (_) {}
-    if (!index.dates.includes(dateStr)) {
-      index.dates.push(dateStr);
-    }
-    // 최신순 정렬
-    index.dates.sort((a, b) => b.localeCompare(a));
-    index.updatedAt = new Date().toISOString();
-    try { await storage.bucket(BUCKET).file(indexPath).delete({ ignoreNotFound: true }); } catch(e) {}
-    await rawGcsUpload(indexPath, JSON.stringify(index, null, 2), 'application/json');
-    console.log(`[GCS] index.json 갱신: ${index.dates.length}개 날짜`);
-  } catch (err) {
-    console.warn(`[GCS] index.json 갱신 실패 (비치명적): ${err.message}`);
-  }
-}
 
 /**
  * 마지막 발행 이슈 번호를 가져옵니다.

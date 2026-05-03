@@ -23,6 +23,7 @@ export const auth = getAuth();
 export const COLLECTIONS = {
   SUBSCRIBERS: 'subscribers',
   EMAIL_LOGS: 'email_logs',
+  FAILED_EMAILS: 'failed_emails',
   DAILY_SIGNALS: 'daily_signals',
   STUDY_CONTENT: 'study_content',
   STUDY_PROGRESS: 'study_progress',

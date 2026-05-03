@@ -64,7 +64,7 @@ function getTransporter() {
  * @param {string} html - HTML 본문
  * @returns {Promise<Object>} 발송 결과
  */
-export async function sendEmail(to, subject, html) {
+export async function sendEmail(to, subject, html, maxRetries = 3) {
   const config = getConfig();
   const transporter = getTransporter();
 
@@ -79,13 +79,20 @@ export async function sendEmail(to, subject, html) {
     },
   };
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`[Mailer] ✅ 발송 완료: ${to} (messageId: ${info.messageId})`);
-    return { success: true, messageId: info.messageId, to };
-  } catch (err) {
-    console.error(`[Mailer] ❌ 발송 실패: ${to} — ${err.message}`);
-    return { success: false, error: err.message, to };
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log(`[Mailer] ✅ 발송 완료: ${to} (messageId: ${info.messageId})`);
+      return { success: true, messageId: info.messageId, to };
+    } catch (err) {
+      console.warn(`[Mailer] ⚠️ 발송 시도 ${attempt}/${maxRetries} 실패: ${to} — ${err.message}`);
+      if (attempt === maxRetries) {
+        console.error(`[Mailer] ❌ 최종 발송 실패: ${to}`);
+        return { success: false, error: err.message, to };
+      }
+      // 재시도 전 대기 (지수 백오프)
+      await new Promise(r => setTimeout(r, 1000 * attempt));
+    }
   }
 }
 

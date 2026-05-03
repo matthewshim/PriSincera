@@ -1,10 +1,6 @@
 /**
  * PriSignal 구독자 관리 — Firestore 기반 (v2)
  *
- * v1: GCS JSON + ETag 잠금
- * v2: Firestore 네이티브 (트랜잭션, 쿼리, 실시간 지원)
- *     GCS는 Firestore 미활성 시 폴백으로 유지
- *
  * Firestore 컬렉션: subscribers/{emailHash}
  *   - email, status, subscribedAt, source, unsubscribedAt
  *
@@ -18,33 +14,7 @@
  * - verifyUnsubToken(email, t)  — 토큰 검증
  */
 import { createHmac, createHash } from 'crypto';
-import { rawGcsUpload } from './storage.mjs';
-
-// ─── Firestore 초기화 (실패 시 GCS 폴백) ─────────
-
-let db = null;
-let COLLECTIONS = null;
-let useFirestore = false;
-
-try {
-  const mod = await import('./firestore.mjs');
-  db = mod.db;
-  COLLECTIONS = mod.COLLECTIONS;
-  useFirestore = true;
-} catch (e) {
-  console.warn('[Subscribers] Firestore 미사용 — GCS JSON 폴백 모드. (원인: ' + e.message + ')');
-}
-
-// ─── GCS 폴백 (기존 v1 로직) ─────────────────────
-
-let storage = null;
-try {
-  const { Storage } = await import('@google-cloud/storage');
-  storage = new Storage();
-} catch (e) { /* 로컬에서는 무시 */ }
-
-const BUCKET = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
-const SUBSCRIBERS_PATH = 'subscribers/active.json';
+import { db, COLLECTIONS } from './firestore.mjs';
 
 function getUnsubSecret() {
   return process.env.UNSUBSCRIBE_SECRET || '';
@@ -54,7 +24,7 @@ function getUnsubSecret() {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function validateEmail(email) {
+export function validateEmail(email) {
   if (!email || typeof email !== 'string') return false;
   return EMAIL_RE.test(email.trim().toLowerCase());
 }
@@ -63,45 +33,25 @@ function emailHash(email) {
   return createHash('sha256').update(email.toLowerCase().trim()).digest('hex').slice(0, 16);
 }
 
-// ─── Firestore 구현 ──────────────────────────────
+// ─── 공개 API ──────────────────────────────
 
-async function fsGetActiveSubscribers() {
+export async function getActiveSubscribers() {
   const snap = await db.collection(COLLECTIONS.SUBSCRIBERS)
     .where('status', '==', 'active')
     .get();
 
   if (snap.empty) {
-    console.log('[Subscribers] Firestore에 활성 구독자가 없습니다. GCS 마이그레이션을 시도합니다...');
-    try {
-      const gcsEmails = await gcsGetActiveSubscribers();
-      if (gcsEmails.length > 0) {
-        console.log(`[Subscribers] GCS에서 ${gcsEmails.length}명의 구독자 발견. 마이그레이션 진행 중...`);
-        const batch = db.batch();
-        let count = 0;
-        for (const email of gcsEmails) {
-          const docRef = db.collection(COLLECTIONS.SUBSCRIBERS).doc(emailHash(email));
-          batch.set(docRef, {
-            email,
-            status: 'active',
-            subscribedAt: new Date(),
-            source: 'migration_from_gcs',
-          });
-          count++;
-        }
-        await batch.commit();
-        console.log(`[Subscribers] GCS -> Firestore 마이그레이션 완료 (${count}명)`);
-        return gcsEmails;
-      }
-    } catch (err) {
-      console.warn('[Subscribers] 자동 마이그레이션 실패:', err.message);
-    }
+    console.log('[Subscribers] Firestore에 활성 구독자가 없습니다.');
+    return [];
   }
 
   return snap.docs.map(d => d.data().email);
 }
 
-async function fsAddSubscriber(email, source = 'website') {
-  email = email.trim().toLowerCase();
+export async function addSubscriber(email, source = 'website') {
+  email = (email || '').trim().toLowerCase();
+  if (!validateEmail(email)) return { code: 'invalid_email', email };
+
   const docRef = db.collection(COLLECTIONS.SUBSCRIBERS).doc(emailHash(email));
   const doc = await docRef.get();
 
@@ -130,8 +80,8 @@ async function fsAddSubscriber(email, source = 'website') {
   return { code: 'subscribed', email };
 }
 
-async function fsRemoveSubscriber(email) {
-  email = email.trim().toLowerCase();
+export async function removeSubscriber(email) {
+  email = (email || '').trim().toLowerCase();
   const docRef = db.collection(COLLECTIONS.SUBSCRIBERS).doc(emailHash(email));
   const doc = await docRef.get();
 
@@ -147,7 +97,23 @@ async function fsRemoveSubscriber(email) {
   return { code: 'unsubscribed', email };
 }
 
-async function fsGetSubscriberStats() {
+export async function getAllSubscribers() {
+  const snap = await db.collection(COLLECTIONS.SUBSCRIBERS).get();
+  return { subscribers: snap.docs.map(d => {
+    const data = d.data();
+    // Firestore Timestamp → ISO string 변환
+    if (data.subscribedAt && typeof data.subscribedAt.toDate === 'function') {
+      data.subscribedAt = data.subscribedAt.toDate().toISOString();
+    }
+    if (data.unsubscribedAt && typeof data.unsubscribedAt.toDate === 'function') {
+      data.unsubscribedAt = data.unsubscribedAt.toDate().toISOString();
+    }
+    return data;
+  }) };
+}
+
+/** Admin 전용 — 구독자 통계 */
+export async function getSubscriberStats() {
   const col = db.collection(COLLECTIONS.SUBSCRIBERS);
   const activeSnap = await col.where('status', '==', 'active').count().get();
   const totalSnap = await col.count().get();
@@ -160,7 +126,8 @@ async function fsGetSubscriberStats() {
   };
 }
 
-async function fsGetSubscribersPaginated({ limit = 20, startAfter = null, status = null } = {}) {
+/** Admin 전용 — 페이지네이션 조회 */
+export async function getSubscribersPaginated({ limit = 20, startAfter = null, status = null } = {}) {
   let query = db.collection(COLLECTIONS.SUBSCRIBERS).orderBy('subscribedAt', 'desc');
 
   if (status) {
@@ -179,144 +146,11 @@ async function fsGetSubscribersPaginated({ limit = 20, startAfter = null, status
   };
 }
 
-// ─── GCS 폴백 구현 (v1 호환) ─────────────────────
-
-async function gcsReadSubscribersWithGen() {
-  if (!storage) throw new Error('GCS not available');
-  const file = storage.bucket(BUCKET).file(SUBSCRIBERS_PATH);
-  try {
-    const [metadata] = await file.getMetadata();
-    const [content] = await file.download();
-    return { data: JSON.parse(content.toString('utf-8')), generation: Number(metadata.generation) };
-  } catch (err) {
-    if (err.code === 404) {
-      return { data: { version: 1, updatedAt: new Date().toISOString(), subscribers: [] }, generation: 0 };
-    }
-    throw err;
-  }
-}
-
-async function gcsWriteSubscribers(data, expectedGeneration) {
-  data.updatedAt = new Date().toISOString();
-  const file = storage.bucket(BUCKET).file(SUBSCRIBERS_PATH);
-  const options = { contentType: 'application/json' };
-  try {
-    await file.delete({ ignoreNotFound: true });
-    await rawGcsUpload(SUBSCRIBERS_PATH, JSON.stringify(data, null, 2), 'application/json');
-  } catch (err) {
-    if (err.code === 412) throw new Error('CONCURRENT_MODIFICATION');
-    throw err;
-  }
-}
-
-async function gcsGetActiveSubscribers() {
-  const { data } = await gcsReadSubscribersWithGen();
-  return (data.subscribers || []).filter(s => s.status === 'active').map(s => s.email);
-}
-
-async function gcsAddSubscriber(email, source = 'website') {
-  email = email.trim().toLowerCase();
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const { data, generation } = await gcsReadSubscribersWithGen();
-    const existing = data.subscribers.find(s => s.email === email);
-    if (existing) {
-      if (existing.status === 'active') return { code: 'already_subscribed', email };
-      existing.status = 'active';
-      existing.subscribedAt = new Date().toISOString();
-      existing.unsubscribedAt = null;
-    } else {
-      data.subscribers.push({ email, status: 'active', subscribedAt: new Date().toISOString(), source });
-    }
-    try {
-      await gcsWriteSubscribers(data, generation);
-      return { code: existing ? 'resubscribed' : 'subscribed', email };
-    } catch (err) {
-      if (err.message.startsWith('CONCURRENT_MODIFICATION') && attempt < 2) continue;
-      throw err;
-    }
-  }
-}
-
-async function gcsRemoveSubscriber(email) {
-  email = email.trim().toLowerCase();
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const { data, generation } = await gcsReadSubscribersWithGen();
-    const existing = data.subscribers.find(s => s.email === email);
-    if (!existing || existing.status === 'unsubscribed') return { code: 'not_found', email };
-    existing.status = 'unsubscribed';
-    existing.unsubscribedAt = new Date().toISOString();
-    try {
-      await gcsWriteSubscribers(data, generation);
-      return { code: 'unsubscribed', email };
-    } catch (err) {
-      if (err.message.startsWith('CONCURRENT_MODIFICATION') && attempt < 2) continue;
-      throw err;
-    }
-  }
-}
-
-// ─── 공개 API (Firestore 우선, GCS 폴백) ─────────
-
-export async function getActiveSubscribers() {
-  return useFirestore ? fsGetActiveSubscribers() : gcsGetActiveSubscribers();
-}
-
-export async function addSubscriber(email, source = 'website') {
-  email = (email || '').trim().toLowerCase();
-  if (!validateEmail(email)) return { code: 'invalid_email', email };
-  return useFirestore ? fsAddSubscriber(email, source) : gcsAddSubscriber(email, source);
-}
-
-export async function removeSubscriber(email) {
-  email = (email || '').trim().toLowerCase();
-  return useFirestore ? fsRemoveSubscriber(email) : gcsRemoveSubscriber(email);
-}
-
-export async function getAllSubscribers() {
-  if (useFirestore) {
-    const snap = await db.collection(COLLECTIONS.SUBSCRIBERS).get();
-    return { subscribers: snap.docs.map(d => {
-      const data = d.data();
-      // Firestore Timestamp → ISO string 변환
-      if (data.subscribedAt && typeof data.subscribedAt.toDate === 'function') {
-        data.subscribedAt = data.subscribedAt.toDate().toISOString();
-      }
-      if (data.unsubscribedAt && typeof data.unsubscribedAt.toDate === 'function') {
-        data.unsubscribedAt = data.unsubscribedAt.toDate().toISOString();
-      }
-      return data;
-    }) };
-  }
-  const { data } = await gcsReadSubscribersWithGen();
-  return data;
-}
-
-/** Admin 전용 — 구독자 통계 */
-export async function getSubscriberStats() {
-  if (!useFirestore) {
-    const { data } = await gcsReadSubscribersWithGen();
-    const subs = data.subscribers || [];
-    return {
-      active: subs.filter(s => s.status === 'active').length,
-      total: subs.length,
-      unsubscribed: subs.filter(s => s.status === 'unsubscribed').length,
-    };
-  }
-  return fsGetSubscriberStats();
-}
-
-/** Admin 전용 — 페이지네이션 조회 */
-export async function getSubscribersPaginated(options) {
-  if (!useFirestore) throw new Error('Firestore 미활성: 페이지네이션 미지원');
-  return fsGetSubscribersPaginated(options);
-}
-
-// ─── 구독 해지 토큰 (변경 없음) ──────────────────
+// ─── 구독 해지 토큰 ───────────────────────────────
 
 export function generateUnsubToken(email) {
   let secret = getUnsubSecret();
   if (!secret) {
-    // 환경변수 미설정 시 폴백: 앱이 중단되지 않도록 경고만 출력
     console.warn('[Subscribers] ⚠️ UNSUBSCRIBE_SECRET 미설정 — 기본 폴백 시크릿 사용');
     secret = 'prisincera-default-unsub-secret-fallback';
   }
@@ -345,5 +179,3 @@ export function buildUnsubscribeUrl(email) {
     return `https://www.prisincera.com/prisignal`;
   }
 }
-
-export { BUCKET, SUBSCRIBERS_PATH, validateEmail, useFirestore };

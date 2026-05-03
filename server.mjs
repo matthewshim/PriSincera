@@ -203,34 +203,37 @@ app.get('/api/archive/:id', (req, res) => {
   res.status(410).json({ error: 'Archive endpoint deprecated. Use /api/daily/:date instead.' });
 });
 
-// --- GCS Daily Signal Proxy (authenticated via Cloud Run SA) ---
+// --- Daily Signal API (Firestore via DailyRepository) ---
 app.get('/api/daily/index', async (req, res) => {
-  if (!storage) return res.status(503).json({ error: 'GCS not available' });
   try {
-    const [content] = await storage.bucket(GCS_BUCKET).file('daily/index.json').download();
+    const { getDailyIndex } = await import('./pipeline/src/repositories/DailyRepository.mjs');
+    const index = await getDailyIndex();
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('Content-Type', 'application/json');
-    res.send(content);
+    res.json(index);
   } catch (err) {
-    res.status(404).json({ error: 'Index not found' });
+    console.error('[API] /api/daily/index Error:', err);
+    res.status(500).json({ error: 'Failed to fetch index' });
   }
 });
 
 app.get('/api/daily/:date', async (req, res) => {
-  if (!storage) return res.status(503).json({ error: 'GCS not available' });
   const dateStr = req.params.date;
-  // Validate date format
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
     return res.status(400).json({ error: 'Invalid date format' });
   }
   try {
-    const [content] = await storage.bucket(GCS_BUCKET).file(`daily/${dateStr}.json`).download();
+    const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
+    const data = await getDailySignal(dateStr);
+    if (!data) {
+      return res.status(404).json({ error: 'Daily signal not found' });
+    }
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('Content-Type', 'application/json');
-    res.send(content);
+    res.json(data);
   } catch (err) {
-    // Do not expose user input in error response
-    res.status(404).json({ error: 'Daily signal not found' });
+    console.error(`[API] /api/daily/${dateStr} Error:`, err);
+    res.status(500).json({ error: 'Failed to fetch daily signal' });
   }
 });
 
