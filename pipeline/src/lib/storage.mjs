@@ -31,10 +31,9 @@ export async function readJSON(path) {
  */
 export async function writeJSON(path, data) {
   const content = JSON.stringify(data, null, 2);
+  try { await storage.bucket(BUCKET).file(path).delete({ ignoreNotFound: true }); } catch(e) {}
   await storage.bucket(BUCKET).file(path).save(content, {
-    resumable: false,
     contentType: 'application/json',
-    metadata: { cacheControl: 'no-cache' },
   });
   console.log(`[GCS] 저장 완료: gs://${BUCKET}/${path}`);
 }
@@ -121,11 +120,11 @@ export async function writeDailyJSON(dateStr, data) {
   const path = getDailyPath(dateStr);
   const content = JSON.stringify(data, null, 2);
   const file = storage.bucket(BUCKET).file(path);
+  try { await file.delete({ ignoreNotFound: true }); } catch(e) {}
   await file.save(content, {
-    resumable: false,
     contentType: 'application/json',
-    metadata: { cacheControl: 'public, max-age=300' },
   });
+  try { await file.setMetadata({ cacheControl: 'public, max-age=300' }); } catch(e) {}
   // Uniform Bucket-Level Access 사용 — 버킷 레벨 IAM으로 공개 접근 관리
   console.log(`[GCS] 데일리 시그널 저장: gs://${BUCKET}/${path}`);
 
@@ -143,9 +142,10 @@ export async function writeDailyJSON(dateStr, data) {
     // 최신순 정렬
     index.dates.sort((a, b) => b.localeCompare(a));
     index.updatedAt = new Date().toISOString();
+    try { await storage.bucket(BUCKET).file(indexPath).delete({ ignoreNotFound: true }); } catch(e) {}
     await storage.bucket(BUCKET).file(indexPath).save(
       JSON.stringify(index, null, 2),
-      { resumable: false, contentType: 'application/json', metadata: { cacheControl: 'public, max-age=300' } }
+      { contentType: 'application/json' }
     );
     console.log(`[GCS] index.json 갱신: ${index.dates.length}개 날짜`);
   } catch (err) {

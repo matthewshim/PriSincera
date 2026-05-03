@@ -242,17 +242,13 @@ app.get('/api/env-check', (req, res) => {
   });
 });
 
-app.get('/api/temp-trigger', async (req, res) => {
-  if (req.query.secret !== 'prisignal-temp-run-9988') return res.status(403).send('Forbidden');
+app.get('/api/temp-check-subs', async (req, res) => {
   try {
-    const { exec } = await import('child_process');
-    const { promisify } = await import('util');
-    const execAsync = promisify(exec);
-    
-    const { stdout, stderr } = await execAsync('node pipeline/src/composer.mjs');
-    res.type('text/plain').send(`[STDOUT]\n${stdout}\n[STDERR]\n${stderr}`);
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    const snap = await db.collection(COLLECTIONS.SUBSCRIBERS).where('status', '==', 'active').get();
+    res.json({ activeCount: snap.docs.length, emails: snap.docs.map(d => d.data().email) });
   } catch (err) {
-    res.type('text/plain').status(500).send(`[EXEC ERROR]\n${err.message}\n[STDOUT]\n${err.stdout}\n[STDERR]\n${err.stderr}`);
+    res.status(500).send(err.message);
   }
 });
 
