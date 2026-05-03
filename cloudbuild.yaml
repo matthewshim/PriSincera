@@ -1,12 +1,16 @@
 steps:
-  # Step 0: Security audit — fail build on high/critical vulnerabilities
+  # ==========================================
+  # [Part 1] Web Frontend (prisincera-web)
+  # ==========================================
+  
+  # Step 0: Security audit — fail build on high/critical vulnerabilities (Web)
   - name: 'node:20-alpine'
     entrypoint: 'sh'
     args:
       - '-c'
       - 'npm ci && npm audit --audit-level=high'
 
-  # Step 1: Build Docker image
+  # Step 1: Build Web Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
@@ -18,14 +22,14 @@ steps:
       - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:latest'
       - '.'
 
-  # Step 2: Push to Artifact Registry
+  # Step 2: Push Web to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - '--all-tags'
       - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web'
 
-  # Step 3: Deploy to Cloud Run
+  # Step 3: Deploy Web to Cloud Run Service
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -52,9 +56,96 @@ steps:
       - '--concurrency'
       - '80'
 
+  # ==========================================
+  # [Part 2] Backend Pipeline (Cloud Run Jobs)
+  # ==========================================
+
+  # Step 4: Build Pipeline Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'pipeline'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '-t'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:latest'
+      - '.'
+
+  # Step 5: Push Pipeline to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline'
+
+  # Step 6: Update Collector Job (daily)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'prisignal-collector'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/collector.mjs'
+      - '--task-timeout'
+      - '300s'
+      - '--max-retries'
+      - '2'
+
+  # Step 7: Update Composer Job (weekly Sunday)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'prisignal-composer'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/composer.mjs'
+      - '--task-timeout'
+      - '600s'
+      - '--max-retries'
+      - '2'
+
+  # Step 8: Update Monitor Job (weekly Monday)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'prisignal-monitor'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/monitor.mjs'
+      - '--task-timeout'
+      - '120s'
+      - '--max-retries'
+      - '1'
+
 images:
   - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:$SHORT_SHA'
   - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:latest'
+  - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+  - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:latest'
 
 options:
   logging: CLOUD_LOGGING_ONLY
