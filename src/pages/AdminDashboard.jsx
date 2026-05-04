@@ -321,7 +321,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   }
 
   function openCreateContent() {
-    setContentForm({ date: '', theme: '', sentence_jp: '', sentence_furigana: '', sentence_kr: '', vocabulary: '[]', business_context: '' });
+    setContentForm({ date: '', theme: '', sentence_jp: '', sentence_furigana: '', sentence_pronunciation_kr: '', sentence_kr: '', vocabulary: '[]', business_context: '' });
     setContentAction(null);
     setContentModal({ mode: 'create' });
   }
@@ -772,7 +772,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <textarea value={contentForm.sentence_kr} onChange={e => setContentForm({...contentForm, sentence_kr: e.target.value})} required rows={2} />
                   </label>
                   <label className="admin-form-label">
-                    단어장 (JSON 배열)
+                    문장 한국어 발음
+                    <textarea value={contentForm.sentence_pronunciation_kr} onChange={e => setContentForm({...contentForm, sentence_pronunciation_kr: e.target.value})} rows={2} placeholder="예: 사이킨노 에-아이..." />
+                  </label>
+                  <label className="admin-form-label">
+                    단어장 (JSON 배열 - pronunciation_kr 속성 포함)
                     <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={3} style={{ fontFamily: 'monospace' }} />
                   </label>
                   <label className="admin-form-label">
