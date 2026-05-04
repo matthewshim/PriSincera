@@ -8,10 +8,8 @@ const API_BASE = '/admin/api';
  */
 const FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || '';
 
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, setPersistence, browserSessionPersistence } from 'firebase/auth';
-
-const FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || '';
 
 // ─── Admin 전용 별도 Firebase 인스턴스 (세션 분리) ───
 const firebaseConfig = {
@@ -24,7 +22,6 @@ try {
   adminApp = initializeApp(firebaseConfig, 'adminApp');
 } catch (e) {
   // 이미 초기화된 경우
-  import { getApp } from 'firebase/app';
   adminApp = getApp('adminApp');
 }
 const adminAuth = getAuth(adminApp);
