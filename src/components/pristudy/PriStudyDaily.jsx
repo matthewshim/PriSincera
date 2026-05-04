@@ -6,12 +6,6 @@ export default function PriStudyDaily({
 }) {
   return (
     <div className="pristudy-daily-wrapper">
-      {userEmail && (
-        <div style={{ textAlign: 'center', marginBottom: 24, fontSize: 13, color: 'var(--text-muted)' }}>
-          접속 중: {userEmail} <button onClick={handleLogout} style={{ background:'none', border:'none', color:'#EF4444', cursor:'pointer', marginLeft: 8 }}>로그아웃</button>
-        </div>
-      )}
-
       {showAuth ? (
         <div className="pristudy-empty" style={{ padding: '60px 24px' }}>
           <div style={{ fontSize: 48, marginBottom: 20 }}>🚀</div>

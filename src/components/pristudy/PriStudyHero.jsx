@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function PriStudyHero({ activeTab, onTabChange, token, handleGoogleLogin }) {
+export default function PriStudyHero({ activeTab, onTabChange, token, handleGoogleLogin, userEmail, handleLogout }) {
   return (
     <section className="pristudy-section pristudy-hero">
       <div className="pristudy-section-inner">
@@ -20,9 +20,10 @@ export default function PriStudyHero({ activeTab, onTabChange, token, handleGoog
               Google로 1초 만에 시작하기
             </button>
           ) : (
-            <button className="pristudy-cta-btn" onClick={() => onTabChange('daily')}>
-              {activeTab === 'daily' ? '학습 기록 보기' : '오늘의 스터디 시작하기'}
-            </button>
+            <div className="pristudy-hero-user-info">
+              <span className="pristudy-hero-email">{userEmail} 로 학습 진행중</span>
+              <button className="pristudy-hero-logout" onClick={handleLogout}>로그아웃</button>
+            </div>
           )}
         </div>
       </div>

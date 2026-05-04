@@ -203,6 +203,8 @@ export default function PriStudy() {
         onTabChange={handleTabChange} 
         token={token}
         handleGoogleLogin={handleGoogleLogin}
+        userEmail={userEmail}
+        handleLogout={handleLogout}
       />
 
       {/* ── Sub-tab navigation ── */}
