@@ -1,10 +1,8 @@
 import React from 'react';
-import AuthModal from './AuthModal';
-
 export default function PriStudyDaily({
   showAuth, loading, dailyContent, isFlipped, setIsFlipped,
   playAudio, markCompleted, isTodayCompleted, isMarking,
-  progress, last7Days, todayStr, handleLoginSuccess, userEmail, handleLogout
+  progress, last7Days, todayStr, handleGoogleLogin, userEmail, handleLogout
 }) {
   return (
     <div className="pristudy-daily-wrapper">
@@ -15,7 +13,17 @@ export default function PriStudyDaily({
       )}
 
       {showAuth ? (
-        <AuthModal onSuccess={handleLoginSuccess} />
+        <div className="pristudy-empty" style={{ padding: '60px 24px' }}>
+          <div style={{ fontSize: 48, marginBottom: 20 }}>🚀</div>
+          <h2 style={{ fontSize: 24, marginBottom: 12 }}>로그인하고 성장을 기록하세요</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: 32, lineHeight: 1.6 }}>
+            하루 1문장 비즈니스 일본어, 매일 꾸준히 학습하고<br/>
+            나만의 잔디를 심어보세요. 단 1초면 충분합니다.
+          </p>
+          <button className="pristudy-cta-btn" onClick={handleGoogleLogin}>
+            Google로 1초 만에 시작하기
+          </button>
+        </div>
       ) : loading ? (
         <div className="pristudy-empty">데이터를 불러오는 중입니다...</div>
       ) : dailyContent ? (

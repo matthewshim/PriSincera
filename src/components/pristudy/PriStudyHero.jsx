@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function PriStudyHero({ activeTab, onTabChange }) {
+export default function PriStudyHero({ activeTab, onTabChange, token, handleGoogleLogin }) {
   return (
     <section className="pristudy-section pristudy-hero">
       <div className="pristudy-section-inner">
@@ -14,11 +14,17 @@ export default function PriStudyHero({ activeTab, onTabChange }) {
         <p className="pristudy-hero-sub">
           매일 1문장, AI가 생성하고 분석한 고품질 플래시카드와 함께 성장하세요.
         </p>
-        {activeTab === 'intro' && (
-          <button className="pristudy-cta-btn" onClick={() => onTabChange('daily')}>
-            오늘의 스터디 시작하기
-          </button>
-        )}
+        <div className="pristudy-hero-actions">
+          {!token ? (
+            <button className="pristudy-cta-btn" onClick={handleGoogleLogin}>
+              Google로 1초 만에 시작하기
+            </button>
+          ) : (
+            <button className="pristudy-cta-btn" onClick={() => onTabChange('daily')}>
+              {activeTab === 'daily' ? '학습 기록 보기' : '오늘의 스터디 시작하기'}
+            </button>
+          )}
+        </div>
       </div>
     </section>
   );

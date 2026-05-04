@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../firebase';
 import PriStudyHero from '../components/pristudy/PriStudyHero';
 import PriStudyIntro from '../components/pristudy/PriStudyIntro';
 import PriStudyDaily from '../components/pristudy/PriStudyDaily';
@@ -113,15 +115,29 @@ export default function PriStudy() {
   }, []);
 
   // -- Event Handlers --
-  const handleLoginSuccess = (idToken, email) => {
-    setToken(idToken);
-    setUserEmail(email);
-    localStorage.setItem('pristudy_token', idToken);
-    localStorage.setItem('pristudy_email', email);
-    setShowAuth(false);
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+      
+      setToken(idToken);
+      setUserEmail(user.email);
+      localStorage.setItem('pristudy_token', idToken);
+      localStorage.setItem('pristudy_email', user.email);
+      setShowAuth(false);
+      
+      if (activeTab !== 'daily') {
+        handleTabChange('daily');
+      }
+    } catch (error) {
+      console.error('Google login failed:', error);
+      alert('로그인 중 오류가 발생했습니다.');
+    }
   };
 
   const handleLogout = () => {
+    auth.signOut();
     setToken(null);
     setUserEmail(null);
     localStorage.removeItem('pristudy_token');
@@ -182,7 +198,12 @@ export default function PriStudy() {
 
   return (
     <div className="pristudy-page">
-      <PriStudyHero activeTab={activeTab} onTabChange={handleTabChange} />
+      <PriStudyHero 
+        activeTab={activeTab} 
+        onTabChange={handleTabChange} 
+        token={token}
+        handleGoogleLogin={handleGoogleLogin}
+      />
 
       {/* ── Sub-tab navigation ── */}
       <nav className="pristudy-tabs-nav" id="pristudy-tabs" ref={tabsNavRef} role="tablist">
@@ -222,7 +243,7 @@ export default function PriStudy() {
           progress={progress}
           last7Days={last7Days}
           todayStr={todayStr}
-          handleLoginSuccess={handleLoginSuccess}
+          handleGoogleLogin={handleGoogleLogin}
           userEmail={userEmail}
           handleLogout={handleLogout}
         />
