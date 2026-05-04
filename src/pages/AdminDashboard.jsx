@@ -341,12 +341,30 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   const ROLE_LABEL = { super_admin: '슈퍼 관리자', admin: '관리자' };
 
-  const tabs = [
-    { id: 'overview', label: '📊 대시보드' },
-    { id: 'subscribers', label: '👥 구독자' },
-    { id: 'emails', label: '📧 이메일' },
-    { id: 'pipeline', label: '⚙️ 파이프라인' },
-    ...(isSuperAdmin ? [{ id: 'admins', label: '🔐 관리자' }] : []),
+  const menuGroups = [
+    {
+      id: 'prisignal',
+      label: 'PriSignal',
+      items: [
+        { id: 'overview', label: '📊 대시보드' },
+        { id: 'subscribers', label: '👥 구독자' },
+        { id: 'emails', label: '📧 이메일' },
+        { id: 'pipeline', label: '⚙️ 파이프라인' },
+      ]
+    },
+    {
+      id: 'pristudy',
+      label: 'PriStudy',
+      onClick: () => alert("준비중입니다."),
+      items: []
+    },
+    ...(isSuperAdmin ? [{
+      id: 'common',
+      label: 'Common',
+      items: [
+        { id: 'admins', label: '🔐 관리자' }
+      ]
+    }] : [])
   ];
 
   return (
@@ -369,18 +387,36 @@ function Dashboard({ token, adminEmail, onLogout }) {
         </div>
       </header>
 
-      {/* Tabs */}
-      <nav className="admin-tabs">
-        {tabs.map(tab => (
-          <button key={tab.id}
-            className={`admin-tab ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >{tab.label}</button>
-        ))}
-      </nav>
+      {/* Layout */}
+      <div className="admin-layout">
+        {/* Sidebar */}
+        <aside className="admin-sidebar">
+          {menuGroups.map(group => (
+            <div key={group.id} className="admin-sidebar-group">
+              <div 
+                className={`admin-sidebar-header ${group.onClick ? 'clickable' : ''}`} 
+                onClick={group.onClick}
+              >
+                {group.label}
+              </div>
+              {group.items.length > 0 && (
+                <div className="admin-sidebar-items">
+                  {group.items.map(item => (
+                    <button key={item.id}
+                      className={`admin-sidebar-item ${activeTab === item.id ? 'active' : ''}`}
+                      onClick={() => setActiveTab(item.id)}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </aside>
 
-      {/* Content */}
-      <main className="admin-content">
+        {/* Content */}
+        <main className="admin-content">
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
             <div className="admin-stat-grid">
@@ -578,6 +614,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 }
