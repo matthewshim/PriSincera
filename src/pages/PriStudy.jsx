@@ -114,6 +114,13 @@ export default function PriStudy() {
     fetchData();
   }, [token]);
 
+  useEffect(() => {
+    document.body.classList.add('hero-ready');
+    return () => {
+      document.body.classList.remove('hero-ready');
+    };
+  }, []);
+
   const handleLoginSuccess = (idToken, email) => {
     setToken(idToken);
     setUserEmail(email);
