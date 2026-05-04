@@ -57,6 +57,7 @@ app.use(helmet({
   },
   strictTransportSecurity: { maxAge: 31536000, includeSubDomains: true, preload: true },
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
   xXssProtection: false, // deprecated header — CSP replaces it
 }));
 
