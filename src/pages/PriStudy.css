@@ -4,6 +4,9 @@
 
 /* ── 페이지 레이아웃 ── */
 .pristudy-page {
+  position: relative;
+  z-index: 2;
+  padding-top: 80px; /* GNB clearance */
   padding-bottom: 80px;
   min-height: 100vh;
   display: flex;
