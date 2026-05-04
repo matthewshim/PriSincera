@@ -141,6 +141,27 @@ steps:
       - '--max-retries'
       - '1'
 
+  # Step 9: Update PriStudy Composer Job (daily)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'pristudy-composer'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/study-composer.mjs'
+      - '--task-timeout'
+      - '1800s'
+      - '--max-retries'
+      - '0'
+
 images:
   - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:$SHORT_SHA'
   - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:latest'
