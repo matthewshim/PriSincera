@@ -21,7 +21,9 @@ export default function PriStudyHero({ activeTab, onTabChange, token, handleGoog
             </button>
           ) : (
             <div className="pristudy-hero-user-info">
-              <span className="pristudy-hero-email">{userEmail} 로 학습 진행중</span>
+              <button className="pristudy-cta-btn" onClick={() => onTabChange('daily')}>
+                <span style={{ fontWeight: 400, opacity: 0.9 }}>{userEmail}</span> 로 학습 이어하기
+              </button>
               <button className="pristudy-hero-logout" onClick={handleLogout}>로그아웃</button>
             </div>
           )}
