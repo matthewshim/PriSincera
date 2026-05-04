@@ -58,8 +58,10 @@
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 40px 32px;
   display: flex;
@@ -67,13 +69,13 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .pristudy-card-back {
   transform: rotateY(180deg);
-  background: var(--bg-surface-hover);
-  border-color: rgba(196, 181, 253, 0.3);
+  background: rgba(26, 16, 53, 0.7);
+  border-color: var(--glass-border-hover);
 }
 
 .pristudy-tag {
@@ -90,12 +92,14 @@
 
 /* 앞면 (일본어 원문) */
 .pristudy-jp {
-  font-size: 28px;
+  font-size: clamp(22px, 5vw, 26px);
   font-weight: 700;
   line-height: 1.6;
-  word-break: keep-all;
+  word-break: break-word;
+  overflow-wrap: break-word;
   color: var(--text-primary);
   margin-bottom: 32px;
+  width: 100%;
 }
 
 .pristudy-furigana {
@@ -108,11 +112,12 @@
 
 /* 뒷면 (해석 및 코멘트) */
 .pristudy-kr {
-  font-size: 20px;
+  font-size: clamp(18px, 4vw, 20px);
   font-weight: 600;
   line-height: 1.5;
   color: var(--text-primary);
   margin-bottom: 24px;
+  word-break: keep-all;
 }
 
 .pristudy-vocab {
@@ -146,15 +151,15 @@
   color: var(--text-secondary);
   line-height: 1.6;
   text-align: left;
-  background: rgba(34, 211, 238, 0.05);
-  border-left: 3px solid #22D3EE;
+  background: rgba(34, 211, 238, 0.08);
+  border-left: 3px solid var(--orbit-cyan);
   padding: 12px 16px;
   border-radius: 0 8px 8px 0;
 }
 
 .pristudy-audio-btn {
-  background: transparent;
-  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
   color: var(--text-secondary);
   border-radius: 50%;
   width: 48px;
@@ -164,37 +169,55 @@
   justify-content: center;
   font-size: 20px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s var(--ease-out);
   margin-top: auto;
 }
 
 .pristudy-audio-btn:hover {
-  border-color: #C084FC;
-  color: #C084FC;
+  border-color: var(--prism-lavender);
+  color: var(--prism-lavender);
+  background: rgba(192, 132, 252, 0.1);
   transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(192, 132, 252, 0.3);
 }
 
 .pristudy-done-btn {
-  background: linear-gradient(135deg, #7C3AED, #C084FC);
-  color: white;
-  border: none;
-  padding: 14px 32px;
-  border-radius: 12px;
+  background: var(--gradient-cta);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 32px;
+  border-radius: 16px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  margin-top: 24px;
-  transition: all 0.2s;
+  margin-top: 32px;
+  transition: all 0.3s var(--ease-out);
   width: 100%;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.pristudy-done-btn:hover {
-  opacity: 0.9;
+.pristudy-done-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(rgba(255,255,255,0.1), transparent);
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.pristudy-done-btn:hover:not(:disabled) {
+  opacity: 0.95;
   transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.5);
 }
 
 .pristudy-done-btn:disabled {
-  opacity: 0.5;
+  background: rgba(196, 181, 253, 0.1);
+  color: var(--text-muted);
+  border-color: rgba(196, 181, 253, 0.1);
+  box-shadow: none;
   cursor: not-allowed;
   transform: none;
 }
@@ -208,10 +231,13 @@
 
 /* ── 잔디 심기 (Contribution Graph) ── */
 .pristudy-streak-section {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
   padding: 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
 }
 
 .pristudy-streak-header {
@@ -247,27 +273,29 @@
 
 .pristudy-graph-day {
   aspect-ratio: 1;
-  background: rgba(196, 181, 253, 0.05);
-  border: 1px solid rgba(196, 181, 253, 0.1);
-  border-radius: 8px;
+  background: rgba(196, 181, 253, 0.03);
+  border: 1px solid rgba(196, 181, 253, 0.08);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-muted);
-  transition: all 0.3s;
+  transition: all 0.3s var(--ease-out);
 }
 
 .pristudy-graph-day.completed {
-  background: rgba(192, 132, 252, 0.2);
-  border-color: #C084FC;
-  color: #C084FC;
+  background: rgba(192, 132, 252, 0.15);
+  border-color: var(--prism-lavender);
+  color: var(--prism-lavender);
   font-weight: 700;
-  box-shadow: 0 0 12px rgba(192, 132, 252, 0.2);
+  box-shadow: 0 0 16px rgba(192, 132, 252, 0.2), inset 0 0 8px rgba(192, 132, 252, 0.1);
+  text-shadow: 0 0 8px rgba(192, 132, 252, 0.4);
 }
 
 .pristudy-graph-day.today {
-  border-color: #22D3EE;
+  border-color: var(--orbit-cyan);
 }
 
 /* ── Auth Modal ── */
