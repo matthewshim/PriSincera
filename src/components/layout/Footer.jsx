@@ -49,7 +49,7 @@ function Footer() {
             <h4 className="footer-col-title">Navigate</h4>
             <Link to="/" className="footer-link">Home</Link>
             <Link to="/prisignal" className="footer-link">PriSignal</Link>
-            <button type="button" className="footer-link footer-link-btn" onClick={(e) => { e.preventDefault(); alert('PriStudy는 준비중입니다.'); }}>PriStudy</button>
+            <Link to="/pristudy" className="footer-link">PriStudy</Link>
           </div>
           <div className="footer-col">
             <h4 className="footer-col-title">Connect</h4>
