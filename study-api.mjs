@@ -28,7 +28,19 @@ studyRouter.get('/daily/:date', async (req, res) => {
     if (!content) {
       return res.status(404).json({ error: 'Content not found for this date' });
     }
-    res.json(content);
+    
+    const d = new Date(date);
+    const prevDate = new Date(d.getTime() - 86400000).toISOString().split('T')[0];
+    const nextDate = new Date(d.getTime() + 86400000).toISOString().split('T')[0];
+    
+    const prevContent = await getStudyContent(prevDate);
+    const nextContent = await getStudyContent(nextDate);
+    
+    res.json({
+      ...content,
+      hasPrev: !!prevContent,
+      hasNext: !!nextContent
+    });
   } catch (err) {
     console.error('[PriStudy API] Get Content Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });

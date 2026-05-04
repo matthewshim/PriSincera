@@ -316,7 +316,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 600px;
+  width: 100%;
   margin: 0 auto 32px auto;
   border-bottom: 1px solid rgba(196, 181, 253, 0.1);
   padding-bottom: 24px;
@@ -380,7 +380,6 @@
 /* ── 통합 카드 (Unified Card) ── */
 .pristudy-card-container {
   width: 100%;
-  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -768,4 +767,196 @@
   text-align: center;
   padding: 60px 0;
   color: var(--text-secondary);
+}
+
+/* ── 아카이브 (리스트) ── */
+.pristudy-archive {
+  width: 100%;
+}
+.pristudy-archive-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.pristudy-archive-loading,
+.pristudy-archive-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: var(--text-muted);
+}
+
+.pristudy-archive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.pristudy-archive-card {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: rgba(26, 16, 53, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(196, 181, 253, 0.06);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease,
+              background 0.35s ease;
+  position: relative;
+  overflow: hidden;
+  animation: archiveReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--card-index, 0) * 80ms);
+}
+
+@keyframes archiveReveal {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pristudy-archive-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(34, 211, 238, 0.03));
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+  pointer-events: none;
+}
+
+.pristudy-archive-card:hover {
+  border-color: rgba(196, 181, 253, 0.2);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 20px 60px rgba(124, 58, 237, 0.06);
+  background: rgba(26, 16, 53, 0.6);
+}
+
+.pristudy-archive-card:hover::after {
+  opacity: 1;
+}
+
+.pristudy-archive-card-accent {
+  width: 4px;
+  align-self: stretch;
+  border-radius: 4px;
+  background: var(--prism-lavender);
+  flex-shrink: 0;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s ease,
+              background 0.3s ease;
+}
+
+.pristudy-archive-card:hover .pristudy-archive-card-accent {
+  width: 5px;
+  box-shadow: 0 0 16px rgba(196, 181, 253, 0.5), 0 0 4px var(--prism-lavender);
+}
+
+.pristudy-archive-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.pristudy-archive-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.pristudy-archive-card-date-info {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.pristudy-archive-card-bigday {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.pristudy-archive-card-dayname {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.pristudy-archive-today-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 20px;
+  color: #22D3EE;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.pristudy-archive-today-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22D3EE;
+  box-shadow: 0 0 8px #22D3EE;
+  animation: pulseToday 2s infinite;
+}
+
+.pristudy-archive-card-headline {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.pristudy-archive-card-context {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  opacity: 0.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pristudy-archive-card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-sm);
+}
+
+.pristudy-archive-card-read {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--prism-lavender);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.3s ease;
+}
+
+.pristudy-archive-card:hover .pristudy-archive-card-read {
+  opacity: 1;
+  gap: 8px;
+  transform: translateX(4px);
 }

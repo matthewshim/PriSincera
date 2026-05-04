@@ -5,6 +5,7 @@ import { auth, googleProvider } from '../firebase';
 import PriStudyHero from '../components/pristudy/PriStudyHero';
 import PriStudyIntro from '../components/pristudy/PriStudyIntro';
 import PriStudyDaily from '../components/pristudy/PriStudyDaily';
+import PriStudyArchive from '../components/pristudy/PriStudyArchive';
 import './PriStudy.css';
 
 const TABS = [
@@ -203,6 +204,32 @@ export default function PriStudy() {
     }
   };
 
+  if (date) {
+    return (
+      <div className="pristudy-page">
+        <PriStudyDaily 
+          showAuth={showAuth}
+          loading={loading}
+          dailyContent={dailyContent}
+          isFlipped={isFlipped}
+          setIsFlipped={setIsFlipped}
+          playAudio={playAudio}
+          markCompleted={markCompleted}
+          isTodayCompleted={progress?.completed_dates?.includes(targetDate)}
+          isMarking={isMarking}
+          progress={progress}
+          last7Days={last7Days}
+          todayStr={todayStr}
+          targetDate={targetDate}
+          handleGoogleLogin={handleGoogleLogin}
+          userEmail={userEmail}
+          handleLogout={handleLogout}
+          navigate={navigate}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="pristudy-page">
       <PriStudyHero 
@@ -239,25 +266,7 @@ export default function PriStudy() {
       </div>
 
       <div className="pristudy-tab-panel" hidden={activeTab !== 'daily'}>
-          <PriStudyDaily 
-            showAuth={showAuth}
-            loading={loading}
-            dailyContent={dailyContent}
-            isFlipped={isFlipped}
-            setIsFlipped={setIsFlipped}
-            playAudio={playAudio}
-            markCompleted={markCompleted}
-            isTodayCompleted={progress?.completed_dates?.includes(targetDate)}
-            isMarking={isMarking}
-            progress={progress}
-            last7Days={last7Days}
-            todayStr={todayStr}
-            targetDate={targetDate}
-            handleGoogleLogin={handleGoogleLogin}
-            userEmail={userEmail}
-            handleLogout={handleLogout}
-            navigate={navigate}
-          />
+        <PriStudyArchive />
       </div>
     </div>
   );
