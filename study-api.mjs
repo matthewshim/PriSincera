@@ -43,7 +43,17 @@ studyRouter.get('/progress', verifyUser, async (req, res) => {
     if (!doc.exists) {
       return res.json({ completed_dates: [], current_streak: 0, longest_streak: 0 });
     }
-    res.json(doc.data());
+    const data = doc.data();
+    
+    // 이메일 누락된 기존 유저 자동 보정
+    if (!data.email || data.email === 'unknown') {
+      if (req.user.email) {
+        data.email = req.user.email;
+        await docRef.update({ email: req.user.email });
+      }
+    }
+    
+    res.json(data);
   } catch (err) {
     console.error('[PriStudy API] Get Progress Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -78,6 +88,14 @@ studyRouter.post('/progress/:date', verifyUser, async (req, res) => {
       }
       
       await docRef.set(progress, { merge: true });
+    } else {
+      // 이미 잔디가 심어진 경우라도 이메일 정보가 없다면 업데이트
+      if (!progress.email || progress.email === 'unknown') {
+        if (req.user.email) {
+          progress.email = req.user.email;
+          await docRef.set({ email: req.user.email }, { merge: true });
+        }
+      }
     }
     
     res.json({ success: true, progress });

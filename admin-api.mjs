@@ -422,6 +422,7 @@ router.get('/pristudy/learners', async (req, res) => {
           const user = await auth.getUser(doc.id);
           email = user.email;
         } catch (e) {
+          console.error(`[Admin API] Failed to get user ${doc.id}:`, e.message);
           email = '알 수 없음';
         }
       }
