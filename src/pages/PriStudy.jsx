@@ -145,11 +145,12 @@ export default function PriStudy() {
     setShowAuth(true);
   };
 
-  const playAudio = (e) => {
-    e.stopPropagation();
-    if (!dailyContent?.sentence_jp) return;
+  const playAudio = (text, e) => {
+    if (e) e.stopPropagation();
+    const textToPlay = typeof text === 'string' ? text : dailyContent?.sentence_jp;
+    if (!textToPlay) return;
     synth.cancel();
-    const utterance = new SpeechSynthesisUtterance(dailyContent.sentence_jp);
+    const utterance = new SpeechSynthesisUtterance(textToPlay);
     utterance.lang = 'ja-JP';
     utterance.rate = 0.85;
     const voices = synth.getVoices();

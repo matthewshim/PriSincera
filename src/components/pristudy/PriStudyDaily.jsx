@@ -23,42 +23,47 @@ export default function PriStudyDaily({
       ) : dailyContent ? (
         <>
           <div className="pristudy-card-container">
-            <div className={`pristudy-card ${isFlipped ? 'flipped' : ''}`} onClick={() => setIsFlipped(!isFlipped)}>
-              {/* 앞면: 일본어 */}
+            <div className="pristudy-card unified">
               <div className="pristudy-card-face">
-                <span className="pristudy-tag">오늘의 1-Pick</span>
+                <div className="pristudy-content-header">
+                  <span className="pristudy-tag">오늘의 1-Pick</span>
+                  <button className="pristudy-audio-btn main-audio" onClick={(e) => playAudio(dailyContent.sentence_jp, e)} title="문장 발음 듣기">
+                    🔊 문장 듣기
+                  </button>
+                </div>
+
                 <div className="pristudy-jp">{dailyContent.sentence_jp}</div>
                 <div className="pristudy-furigana">{dailyContent.sentence_furigana}</div>
+                {dailyContent.sentence_pronunciation_kr && (
+                  <div className="pristudy-pronunciation">{dailyContent.sentence_pronunciation_kr}</div>
+                )}
                 
-                <button className="pristudy-audio-btn" onClick={playAudio} title="발음 듣기">
-                  🔊
-                </button>
-                <div className="pristudy-flip-hint">화면을 탭하여 뜻과 해설 보기</div>
-              </div>
-
-              {/* 뒷면: 해석 및 해설 */}
-              <div className="pristudy-card-face pristudy-card-back">
-                <span className="pristudy-tag">해석 및 코멘트</span>
                 <div className="pristudy-kr">{dailyContent.sentence_kr}</div>
                 
-                {dailyContent.vocabulary && dailyContent.vocabulary.length > 0 && (
-                  <div className="pristudy-vocab">
-                    {dailyContent.vocabulary.map((v, i) => (
-                      <div key={i} className="pristudy-vocab-item">
-                        <span className="pristudy-vocab-word">{v.word}</span>
-                        <span>({v.reading})</span>
-                        <span style={{ color: 'var(--text-secondary)' }}>- {v.meaning}</span>
-                      </div>
-                    ))}
+                {dailyContent.business_context && (
+                  <div className="pristudy-comment-box">
+                    <div className="pristudy-comment-title">💡 비즈니스 팁</div>
+                    <div className="pristudy-comment">{dailyContent.business_context}</div>
                   </div>
                 )}
                 
-                {dailyContent.business_context && (
-                  <div className="pristudy-comment">
-                    {dailyContent.business_context}
+                {dailyContent.vocabulary && dailyContent.vocabulary.length > 0 && (
+                  <div className="pristudy-vocab-section">
+                    <div className="pristudy-vocab-title">📚 단어장</div>
+                    <div className="pristudy-vocab-list">
+                      {dailyContent.vocabulary.map((v, i) => (
+                        <div key={i} className="pristudy-vocab-card">
+                          <div className="pristudy-vocab-info">
+                            <span className="pristudy-vocab-word">{v.word}</span>
+                            <span className="pristudy-vocab-reading">({v.reading})</span>
+                            <span className="pristudy-vocab-meaning">- {v.meaning}</span>
+                          </div>
+                          <button className="pristudy-audio-btn vocab-audio" onClick={(e) => playAudio(v.word, e)} title="단어 발음 듣기">🔊</button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
-                <div className="pristudy-flip-hint" style={{ marginTop: 'auto' }}>다시 탭하여 원문 보기</div>
               </div>
             </div>
           </div>
