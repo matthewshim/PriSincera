@@ -96,7 +96,7 @@ gcloud run jobs update prisignal-collector \
   --image ${IMAGE} \
   --region ${REGION}
 
-# Composer Job (주간 뉴스레터 작성)
+# Composer Job (매일 시그널 작성 및 발송)
 gcloud run jobs create prisignal-composer \
   --image ${IMAGE} \
   --region ${REGION} \
@@ -105,8 +105,8 @@ gcloud run jobs create prisignal-composer \
   --args "src/composer.mjs" \
   --set-env-vars "GCS_BUCKET=${BUCKET_NAME}" \
   --set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest,BUTTONDOWN_API_KEY=BUTTONDOWN_API_KEY:latest" \
-  --task-timeout 600s \
-  --max-retries 2 \
+  --task-timeout 1800s \
+  --max-retries 0 \
   --memory 512Mi \
   --cpu 1 2>/dev/null || \
 gcloud run jobs update prisignal-composer \
@@ -143,10 +143,10 @@ gcloud scheduler jobs create http prisignal-collect-daily \
   --oauth-service-account-email ${SA_EMAIL} \
   --description "PriSignal: 매일 RSS 자동 수집" 2>/dev/null || echo "  (이미 존재)"
 
-# 매주 일요일 08:00 KST — 뉴스레터 작성 + 예약
-gcloud scheduler jobs create http prisignal-compose-weekly \
+# 매일 08:00 KST — 뉴스레터 작성 + 발송
+gcloud scheduler jobs create http prisignal-compose-daily \
   --location ${REGION} \
-  --schedule "0 8 * * 0" \
+  --schedule "0 8 * * *" \
   --time-zone "Asia/Seoul" \
   --uri "https://${REGION}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_ID}/jobs/prisignal-composer:run" \
   --http-method POST \

@@ -99,7 +99,7 @@ steps:
       - '--max-retries'
       - '2'
 
-  # Step 7: Update Composer Job (weekly Sunday)
+  # Step 7: Update Composer Job (daily)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -116,9 +116,9 @@ steps:
       - '--args'
       - 'src/composer.mjs'
       - '--task-timeout'
-      - '600s'
+      - '1800s'
       - '--max-retries'
-      - '2'
+      - '0'
 
   # Step 8: Update Monitor Job (weekly Monday)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'

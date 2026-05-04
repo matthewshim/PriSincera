@@ -105,11 +105,14 @@ async function main() {
   // 8. Gmail SMTP 자체 발송
   console.log('\n--- Phase 4: 이메일 발송 (Gmail SMTP) ---');
 
-  // 정규 발송 시간(KST 08:00) 이전에는 발송 대기 (테스트 시 FORCE_DISPATCH=true 환경변수로 우회 가능)
+  // 정규 발송 시간(KST 08:00) 트리거 오차를 고려해 07:50 이후면 발송 허용 (테스트 시 FORCE_DISPATCH=true로 우회)
   const now = new Date();
   const kstHours = (now.getUTCHours() + 9) % 24;
-  if (kstHours < 8 && process.env.FORCE_DISPATCH !== 'true') {
-    console.log(`[Composer] ⏰ 현재 시간(${kstHours}시)은 정규 발송 시간(08:00 KST) 전입니다. 발송 대기...`);
+  const kstMinutes = now.getUTCMinutes();
+  const isTooEarly = kstHours < 7 || (kstHours === 7 && kstMinutes < 50);
+
+  if (isTooEarly && process.env.FORCE_DISPATCH !== 'true') {
+    console.log(`[Composer] ⏰ 현재 시간(${kstHours}시 ${kstMinutes}분)은 정규 발송 시간(08:00 KST) 전입니다. 발송 대기...`);
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.log(`\n✅ Composer v3 완료 (${elapsed}초) — 발송 시간 대기 스킵`);
     return;
