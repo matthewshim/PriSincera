@@ -8,41 +8,28 @@ const API_BASE = '/admin/api';
  */
 const FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || '';
 
-async function signInWithEmail(email, password) {
-  const res = await fetch(
-    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, returnSecureToken: true }),
-    }
-  );
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error?.message || 'Login failed');
-  }
-  return res.json();
-}
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, setPersistence, browserSessionPersistence } from 'firebase/auth';
 
-/** Firebase REST API로 비밀번호 변경 (서버 Admin SDK 불필요) */
-async function changePasswordWithToken(idToken, newPassword) {
-  const res = await fetch(
-    `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${FIREBASE_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken, password: newPassword, returnSecureToken: true }),
-    }
-  );
-  if (!res.ok) {
-    const err = await res.json();
-    const msg = err.error?.message || 'Password change failed';
-    if (msg === 'WEAK_PASSWORD') throw new Error('비밀번호가 너무 약합니다 (8자 이상)');
-    if (msg === 'INVALID_ID_TOKEN' || msg === 'TOKEN_EXPIRED') throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
-    throw new Error(msg);
-  }
-  return res.json();
+const FIREBASE_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || '';
+
+// ─── Admin 전용 별도 Firebase 인스턴스 (세션 분리) ───
+const firebaseConfig = {
+  apiKey: FIREBASE_API_KEY,
+  authDomain: "prisincera.firebaseapp.com",
+  projectId: "prisincera",
+};
+let adminApp;
+try {
+  adminApp = initializeApp(firebaseConfig, 'adminApp');
+} catch (e) {
+  // 이미 초기화된 경우
+  import { getApp } from 'firebase/app';
+  adminApp = getApp('adminApp');
 }
+const adminAuth = getAuth(adminApp);
+setPersistence(adminAuth, browserSessionPersistence);
+const adminGoogleProvider = new GoogleAuthProvider();
 
 // ─── Login Component ─────────────────────────────
 
@@ -57,12 +44,27 @@ function LoginForm({ onLogin }) {
     setLoading(true);
     setError('');
     try {
-      const result = await signInWithEmail(email, password);
-      onLogin(result.idToken, result.email);
+      const result = await signInWithEmailAndPassword(adminAuth, email, password);
+      const token = await result.user.getIdToken();
+      onLogin(token, result.user.email);
     } catch (err) {
-      setError(err.message === 'INVALID_LOGIN_CREDENTIALS'
+      setError(err.code === 'auth/invalid-login-credentials' || err.code === 'auth/wrong-password'
         ? '이메일 또는 비밀번호가 올바르지 않습니다.'
         : err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const result = await signInWithPopup(adminAuth, adminGoogleProvider);
+      const token = await result.user.getIdToken();
+      onLogin(token, result.user.email);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -84,8 +86,11 @@ function LoginForm({ onLogin }) {
             value={password} onChange={e => setPassword(e.target.value)} required
           />
           {error && <div className="admin-error">{error}</div>}
-          <button id="admin-login-btn" type="submit" disabled={loading}>
-            {loading ? '인증 중...' : '로그인'}
+          <button id="admin-login-btn" type="submit" disabled={loading} style={{ marginBottom: 12 }}>
+            {loading ? '인증 중...' : '이메일로 로그인'}
+          </button>
+          <button type="button" onClick={handleGoogleLogin} disabled={loading} style={{ background: '#4285F4', width: '100%', padding: '12px', borderRadius: '8px', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
+            Google 계정으로 로그인
           </button>
         </form>
       </div>

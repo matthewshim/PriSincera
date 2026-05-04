@@ -39,6 +39,7 @@ function App() {
           <Route path="prisignal" element={<PriSignal />} />
           <Route path="prisignal/:date" element={<PriSignalParamRoute />} />
           <Route path="pristudy" element={<PriStudy />} />
+          <Route path="pristudy/:date" element={<PriStudy />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

@@ -312,6 +312,71 @@
   margin: 0 auto;
 }
 
+.pristudy-daily-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto 32px auto;
+  border-bottom: 1px solid rgba(196, 181, 253, 0.1);
+  padding-bottom: 24px;
+}
+
+.pristudy-nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.pristudy-nav-btn:hover:not(:disabled) {
+  color: var(--prism-lavender);
+  background: rgba(192, 132, 252, 0.1);
+}
+
+.pristudy-nav-btn:disabled {
+  opacity: 0;
+  cursor: default;
+}
+
+.pristudy-date-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pristudy-date-day {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 700;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.pristudy-date-month-dow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pristudy-date-month {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--prism-lavender);
+}
+
+.pristudy-date-dow {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 /* ── 통합 카드 (Unified Card) ── */
 .pristudy-card-container {
   width: 100%;
@@ -474,6 +539,12 @@
 
 .pristudy-vocab-reading {
   color: var(--text-muted);
+}
+
+.pristudy-vocab-pronunciation {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 13px;
 }
 
 .pristudy-vocab-meaning {

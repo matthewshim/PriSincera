@@ -2,7 +2,7 @@ import React from 'react';
 export default function PriStudyDaily({
   showAuth, loading, dailyContent, isFlipped, setIsFlipped,
   playAudio, markCompleted, isTodayCompleted, isMarking,
-  progress, last7Days, todayStr, handleGoogleLogin, userEmail, handleLogout
+  progress, last7Days, todayStr, targetDate, handleGoogleLogin, userEmail, handleLogout, navigate
 }) {
   return (
     <div className="pristudy-daily-wrapper">
@@ -22,6 +22,40 @@ export default function PriStudyDaily({
         <div className="pristudy-empty">데이터를 불러오는 중입니다...</div>
       ) : dailyContent ? (
         <>
+          <div className="pristudy-daily-header">
+            <button 
+              className="pristudy-nav-btn" 
+              onClick={() => {
+                const d = new Date(targetDate);
+                d.setDate(d.getDate() - 1);
+                navigate(`/pristudy/${d.toISOString().slice(0, 10)}`);
+              }}
+            >
+              &lt; {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() - 1)).toISOString().slice(5, 10)}
+            </button>
+            <div className="pristudy-date-center">
+              <span className="pristudy-date-day">{new Date(targetDate).getDate()}</span>
+              <div className="pristudy-date-month-dow">
+                <span className="pristudy-date-month">{new Date(targetDate).getMonth() + 1}월</span>
+                <span className="pristudy-date-dow">{['일', '월', '화', '수', '목', '금', '토'][new Date(targetDate).getDay()]}요일</span>
+              </div>
+            </div>
+            <button 
+              className="pristudy-nav-btn" 
+              onClick={() => {
+                const d = new Date(targetDate);
+                d.setDate(d.getDate() + 1);
+                const nextDateStr = d.toISOString().slice(0, 10);
+                if (nextDateStr === todayStr) navigate('/pristudy#daily');
+                else navigate(`/pristudy/${nextDateStr}`);
+              }}
+              disabled={targetDate === todayStr}
+              style={{ visibility: targetDate === todayStr ? 'hidden' : 'visible' }}
+            >
+              {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() + 1)).toISOString().slice(5, 10)} &gt;
+            </button>
+          </div>
+
           <div className="pristudy-card-container">
             <div className="pristudy-card unified">
               <div className="pristudy-card-face">
@@ -56,6 +90,7 @@ export default function PriStudyDaily({
                           <div className="pristudy-vocab-info">
                             <span className="pristudy-vocab-word">{v.word}</span>
                             <span className="pristudy-vocab-reading">({v.reading})</span>
+                            {v.pronunciation_kr && <span className="pristudy-vocab-pronunciation">[{v.pronunciation_kr}]</span>}
                             <span className="pristudy-vocab-meaning">- {v.meaning}</span>
                           </div>
                           <button className="pristudy-audio-btn vocab-audio" onClick={(e) => playAudio(v.word, e)} title="단어 발음 듣기">🔊</button>

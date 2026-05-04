@@ -29,7 +29,11 @@ export default function PriStudy() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isMarking, setIsMarking] = useState(false);
 
+  const { date } = useParams();
+  const navigate = useNavigate();
+
   const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const targetDate = date || todayStr;
   const synth = window.speechSynthesis;
 
   // -- Tab Indicator Logic --
@@ -79,9 +83,11 @@ export default function PriStudy() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const contentRes = await fetch(`/api/study/daily/${todayStr}`);
+      const contentRes = await fetch(`/api/study/daily/${targetDate}`);
       if (contentRes.ok) {
         setDailyContent(await contentRes.json());
+      } else {
+        setDailyContent(null);
       }
       
       if (token) {
@@ -105,7 +111,7 @@ export default function PriStudy() {
     document.title = 'PriStudy — 하루 5분 실무 비즈니스 일본어';
     if (activeTab === 'daily' && !token) setShowAuth(true);
     fetchData();
-  }, [token, activeTab]);
+  }, [token, activeTab, targetDate]);
 
   useEffect(() => {
     document.body.classList.add('hero-ready');
@@ -233,23 +239,25 @@ export default function PriStudy() {
       </div>
 
       <div className="pristudy-tab-panel" hidden={activeTab !== 'daily'}>
-        <PriStudyDaily 
-          showAuth={showAuth}
-          loading={loading}
-          dailyContent={dailyContent}
-          isFlipped={isFlipped}
-          setIsFlipped={setIsFlipped}
-          playAudio={playAudio}
-          markCompleted={markCompleted}
-          isTodayCompleted={isTodayCompleted}
-          isMarking={isMarking}
-          progress={progress}
-          last7Days={last7Days}
-          todayStr={todayStr}
-          handleGoogleLogin={handleGoogleLogin}
-          userEmail={userEmail}
-          handleLogout={handleLogout}
-        />
+          <PriStudyDaily 
+            showAuth={showAuth}
+            loading={loading}
+            dailyContent={dailyContent}
+            isFlipped={isFlipped}
+            setIsFlipped={setIsFlipped}
+            playAudio={playAudio}
+            markCompleted={markCompleted}
+            isTodayCompleted={progress?.completed_dates?.includes(targetDate)}
+            isMarking={isMarking}
+            progress={progress}
+            last7Days={last7Days}
+            todayStr={todayStr}
+            targetDate={targetDate}
+            handleGoogleLogin={handleGoogleLogin}
+            userEmail={userEmail}
+            handleLogout={handleLogout}
+            navigate={navigate}
+          />
       </div>
     </div>
   );
