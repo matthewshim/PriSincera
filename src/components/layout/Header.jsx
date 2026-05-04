@@ -66,6 +66,16 @@ function Header() {
     };
   }, []);
 
+  // Auto-pause BGM on /pristudy
+  useEffect(() => {
+    if (location.pathname.startsWith('/pristudy')) {
+      const audio = getAudio();
+      audio.pause();
+      musicIntentRef.current = false;
+      setMusicPlaying(false);
+    }
+  }, [location.pathname, getAudio]);
+
   const toggleMusic = useCallback(() => {
     const audio = getAudio();
     if (musicPlaying) {

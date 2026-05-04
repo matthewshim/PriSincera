@@ -81,12 +81,6 @@ export default function PriStudy() {
   const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const synth = window.speechSynthesis;
 
-  useEffect(() => {
-    document.title = 'PriStudy — 1일 1문장 비즈니스 일본어';
-    if (!token) setShowAuth(true);
-    fetchData();
-  }, [token]);
-
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -113,6 +107,12 @@ export default function PriStudy() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    document.title = 'PriStudy — 1일 1문장 비즈니스 일본어';
+    if (!token) setShowAuth(true);
+    fetchData();
+  }, [token]);
 
   const handleLoginSuccess = (idToken, email) => {
     setToken(idToken);
@@ -181,7 +181,6 @@ export default function PriStudy() {
 
   return (
     <div className="pristudy-page">
-      {showAuth && <AuthModal onSuccess={handleLoginSuccess} />}
       
       <header className="pristudy-header">
         <h1>PriStudy 🇯🇵</h1>
@@ -193,7 +192,9 @@ export default function PriStudy() {
         )}
       </header>
 
-      {loading ? (
+      {showAuth ? (
+        <AuthModal onSuccess={handleLoginSuccess} />
+      ) : loading ? (
         <div className="pristudy-empty">데이터를 불러오는 중입니다...</div>
       ) : dailyContent ? (
         <>
