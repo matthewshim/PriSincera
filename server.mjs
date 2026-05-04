@@ -100,10 +100,13 @@ app.use((req, res, next) => {
 app.use(express.static(DIST_DIR, {
   maxAge: '1d',
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
+    if (filePath.endsWith('index.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    } else if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    }
-    if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
+    } else if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
       res.setHeader('Cache-Control', 'public, max-age=86400');
     }
   }

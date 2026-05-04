@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 
 /* ── Code Splitting: page-level lazy imports ── */
@@ -39,6 +39,7 @@ function App() {
           <Route path="prisignal" element={<PriSignal />} />
           <Route path="prisignal/:date" element={<PriSignalParamRoute />} />
           <Route path="pristudy" element={<PriStudy />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </Suspense>
