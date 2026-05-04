@@ -16,6 +16,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import adminRouter from './admin-api.mjs';
+import studyRouter from './study-api.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -110,6 +111,9 @@ app.use(express.static(DIST_DIR, {
 
 // --- Admin API (Firebase Auth protected) ---
 app.use('/admin/api', adminLimiter, express.json({ limit: '10kb' }), adminRouter);
+
+// --- PriStudy API ---
+app.use('/api/study', apiLimiter, express.json({ limit: '5kb' }), studyRouter);
 
 // --- Subscriber Management (GCS JSON / Firestore) ---
 

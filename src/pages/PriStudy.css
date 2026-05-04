@@ -1,0 +1,345 @@
+/* ═══════════════════════════════════════════════
+   PriStudy — Daily Microlearning (Premium Dark)
+   ═══════════════════════════════════════════════ */
+
+.pristudy-page {
+  padding: 120px 24px 80px;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  color: var(--text-primary);
+}
+
+.pristudy-header {
+  text-align: center;
+}
+
+.pristudy-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  background: linear-gradient(135deg, #C084FC, #22D3EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pristudy-header p {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+/* ── 플래시카드 (Flashcard) ── */
+.pristudy-card-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  min-height: 400px;
+}
+
+.pristudy-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.pristudy-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.pristudy-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+
+.pristudy-card-back {
+  transform: rotateY(180deg);
+  background: var(--bg-surface-hover);
+  border-color: rgba(196, 181, 253, 0.3);
+}
+
+.pristudy-tag {
+  background: rgba(192, 132, 252, 0.15);
+  color: #C084FC;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+/* 앞면 (일본어 원문) */
+.pristudy-jp {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.6;
+  word-break: keep-all;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+}
+
+.pristudy-furigana {
+  font-size: 18px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* 뒷면 (해석 및 코멘트) */
+.pristudy-kr {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.pristudy-vocab {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.pristudy-vocab-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.pristudy-vocab-item:last-child {
+  margin-bottom: 0;
+}
+
+.pristudy-vocab-word {
+  color: #C084FC;
+  font-weight: 700;
+}
+
+.pristudy-comment {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  text-align: left;
+  background: rgba(34, 211, 238, 0.05);
+  border-left: 3px solid #22D3EE;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+}
+
+.pristudy-audio-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto;
+}
+
+.pristudy-audio-btn:hover {
+  border-color: #C084FC;
+  color: #C084FC;
+  transform: scale(1.05);
+}
+
+.pristudy-done-btn {
+  background: linear-gradient(135deg, #7C3AED, #C084FC);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.pristudy-done-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.pristudy-done-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pristudy-flip-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 16px;
+  opacity: 0.7;
+}
+
+/* ── 잔디 심기 (Contribution Graph) ── */
+.pristudy-streak-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.pristudy-streak-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.pristudy-streak-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.pristudy-streak-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.pristudy-streak-stats strong {
+  color: #C084FC;
+  font-size: 16px;
+}
+
+.pristudy-graph {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.pristudy-graph-day {
+  aspect-ratio: 1;
+  background: rgba(196, 181, 253, 0.05);
+  border: 1px solid rgba(196, 181, 253, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: all 0.3s;
+}
+
+.pristudy-graph-day.completed {
+  background: rgba(192, 132, 252, 0.2);
+  border-color: #C084FC;
+  color: #C084FC;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.2);
+}
+
+.pristudy-graph-day.today {
+  border-color: #22D3EE;
+}
+
+/* ── Auth Modal ── */
+.pristudy-auth-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pristudy-auth-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.pristudy-auth-card h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.pristudy-auth-card input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(196, 181, 253, 0.04);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.pristudy-auth-card input:focus {
+  border-color: #C084FC;
+}
+
+.pristudy-auth-btn {
+  width: 100%;
+  padding: 14px;
+  background: #C084FC;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.pristudy-auth-toggle {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.pristudy-auth-toggle:hover {
+  color: white;
+}
+
+/* Empty State */
+.pristudy-empty {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-secondary);
+}

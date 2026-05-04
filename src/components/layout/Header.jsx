@@ -78,11 +78,6 @@ function Header() {
     }
   }, [musicPlaying, getAudio]);
 
-  const handlePriStudy = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    alert('PriStudy는 준비중입니다.');
-  }, []);
 
   return (
     <nav className={`nav${scrolled ? ' scrolled' : ''}`} id="nav">
@@ -126,7 +121,7 @@ function Header() {
         <div className="nav-links">
           <Link to="/" className={`nav-link${location.pathname === '/' ? ' active' : ''}`} id="navHome">Home</Link>
           <Link to="/prisignal" className={`nav-link${location.pathname.startsWith('/prisignal') ? ' active' : ''}`} id="navPriSignal">PriSignal</Link>
-          <button type="button" className="nav-link nav-link-btn" id="navPriStudy" onClick={handlePriStudy}>PriStudy</button>
+          <Link to="/pristudy" className={`nav-link${location.pathname.startsWith('/pristudy') ? ' active' : ''}`} id="navPriStudy">PriStudy</Link>
         </div>
         {/* BGM toggle — works on all pages */}
         <div className="nav-bgm-slot" id="gnbBgmSlot">

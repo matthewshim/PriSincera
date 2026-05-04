@@ -33,7 +33,7 @@ function loadTemplate(name) {
 /**
  * Gemini 호출 + JSON 파싱 (재시도 포함)
  */
-async function callGemini(prompt, maxRetries = 3) {
+export async function callGemini(prompt, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const result = await model.generateContent(prompt);

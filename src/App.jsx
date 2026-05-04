@@ -7,6 +7,7 @@ const Home = lazy(() => import('./pages/Home'));
 const PriSignal = lazy(() => import('./pages/PriSignal'));
 const PriSignalDaily = lazy(() => import('./pages/PriSignalDaily'));
 const PriSignalIssue = lazy(() => import('./components/prisignal/PriSignalIssue'));
+const PriStudy = lazy(() => import('./pages/PriStudy'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 /**
@@ -37,6 +38,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="prisignal" element={<PriSignal />} />
           <Route path="prisignal/:date" element={<PriSignalParamRoute />} />
+          <Route path="pristudy" element={<PriStudy />} />
         </Route>
       </Routes>
     </Suspense>
