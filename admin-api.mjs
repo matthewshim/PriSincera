@@ -348,6 +348,93 @@ router.get('/pipeline/status', async (req, res) => {
   }
 });
 
+// ─── PriStudy 관리 ────────────────────────────────
+
+router.get('/pristudy/stats', async (req, res) => {
+  try {
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    const contentSnap = await db.collection(COLLECTIONS.STUDY_CONTENT).count().get();
+    const progressSnap = await db.collection(COLLECTIONS.STUDY_PROGRESS).count().get();
+    res.json({ 
+      totalContent: contentSnap.data().count, 
+      totalLearners: progressSnap.data().count 
+    });
+  } catch (err) {
+    console.error('[Admin PriStudy Stats]', err.message);
+    res.json({ totalContent: 0, totalLearners: 0 });
+  }
+});
+
+router.get('/pristudy/content', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    const snap = await db.collection(COLLECTIONS.STUDY_CONTENT).orderBy('date', 'desc').limit(limit).get();
+    const contents = snap.docs.map(doc => doc.data());
+    res.json({ contents });
+  } catch (err) {
+    res.status(500).json({ error: '콘텐츠 조회 실패' });
+  }
+});
+
+router.put('/pristudy/content/:date', async (req, res) => {
+  try {
+    const { date } = req.params;
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    await db.collection(COLLECTIONS.STUDY_CONTENT).doc(date).update({
+      ...req.body,
+      updatedAt: new Date()
+    });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: '수정 실패' });
+  }
+});
+
+router.post('/pristudy/content', async (req, res) => {
+  try {
+    const { date } = req.body;
+    if (!date) return res.status(400).json({ error: '날짜(date)가 필요합니다' });
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    await db.collection(COLLECTIONS.STUDY_CONTENT).doc(date).set({
+      ...req.body,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: '등록 실패' });
+  }
+});
+
+router.get('/pristudy/learners', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 20;
+    const { db, COLLECTIONS, auth } = await import('./pipeline/src/lib/firestore.mjs');
+    const snap = await db.collection(COLLECTIONS.STUDY_PROGRESS)
+      .orderBy('longest_streak', 'desc').limit(limit).get();
+      
+    const learners = await Promise.all(snap.docs.map(async (doc) => {
+      const data = doc.data();
+      let email = '알 수 없음';
+      try {
+        const user = await auth.getUser(doc.id);
+        email = user.email;
+      } catch (e) {}
+      return {
+        uid: doc.id, email,
+        current_streak: data.current_streak || 0,
+        longest_streak: data.longest_streak || 0,
+        last_study_date: data.last_study_date || '-',
+        total_completed: data.completed_dates?.length || 0,
+      };
+    }));
+    res.json({ learners });
+  } catch (err) {
+    res.status(500).json({ error: '학습자 현황 조회 실패' });
+  }
+});
+
 // ─── 관리자 CRUD (super_admin 전용) ──────────────
 
 router.get('/admins', requireSuperAdmin, async (req, res) => {

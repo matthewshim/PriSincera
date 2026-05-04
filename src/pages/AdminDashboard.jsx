@@ -142,6 +142,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [adminAction, setAdminAction] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
+  // PriStudy
+  const [priStudyStats, setPriStudyStats] = useState(null);
+  const [priStudyContent, setPriStudyContent] = useState([]);
+  const [priStudyLearners, setPriStudyLearners] = useState([]);
+  const [contentModal, setContentModal] = useState(null);
+  const [contentForm, setContentForm] = useState(null);
+  const [contentAction, setContentAction] = useState(null);
+
   const isSuperAdmin = role === 'super_admin';
 
   useEffect(() => { loadDashboard(); }, []);
@@ -281,6 +289,58 @@ function Dashboard({ token, adminEmail, onLogout }) {
     }
   }
 
+  // ─── PriStudy Loaders & Handlers ─────────────────
+  
+  async function loadPriStudyStats() {
+    try {
+      const data = await fetchApi('/pristudy/stats');
+      setPriStudyStats(data);
+    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
+  async function loadPriStudyContent() {
+    try {
+      const data = await fetchApi('/pristudy/content');
+      setPriStudyContent(data.contents || []);
+    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
+  async function loadPriStudyLearners() {
+    try {
+      const data = await fetchApi('/pristudy/learners');
+      setPriStudyLearners(data.learners || []);
+    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
+  function openEditContent(item) {
+    setContentForm({ ...item, vocabulary: JSON.stringify(item.vocabulary || [], null, 2) });
+    setContentAction(null);
+    setContentModal({ mode: 'edit', date: item.date });
+  }
+
+  function openCreateContent() {
+    setContentForm({ date: '', theme: '', sentence_jp: '', sentence_furigana: '', sentence_kr: '', vocabulary: '[]', business_context: '' });
+    setContentAction(null);
+    setContentModal({ mode: 'create' });
+  }
+
+  async function handleContentSubmit(e) {
+    e.preventDefault();
+    setContentAction({ type: 'loading', msg: '저장 중...' });
+    try {
+      const body = { ...contentForm, vocabulary: JSON.parse(contentForm.vocabulary || '[]') };
+      if (contentModal.mode === 'create') {
+        await fetchApi('/pristudy/content', { method: 'POST', body: JSON.stringify(body) });
+      } else {
+        await fetchApi(`/pristudy/content/${contentModal.date}`, { method: 'PUT', body: JSON.stringify(body) });
+      }
+      setContentAction({ type: 'success', msg: '저장 완료!' });
+      setTimeout(() => { setContentModal(null); loadPriStudyContent(); }, 1000);
+    } catch (err) {
+      setContentAction({ type: 'error', msg: `오류: ${err.message}` });
+    }
+  }
+
   // ─── Admin CRUD ───────────────────────────────
 
   async function loadAdmins() {
@@ -333,6 +393,9 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'subscribers') loadSubscribers();
     if (activeTab === 'emails') loadEmailLogs();
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
+    if (activeTab === 'pristudy_overview') loadPriStudyStats();
+    if (activeTab === 'pristudy_content') loadPriStudyContent();
+    if (activeTab === 'pristudy_learners') loadPriStudyLearners();
   }, [activeTab]);
 
   if (loading) {
@@ -355,8 +418,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
     {
       id: 'pristudy',
       label: 'PriStudy',
-      onClick: () => alert("준비중입니다."),
-      items: []
+      items: [
+        { id: 'pristudy_overview', label: '📊 대시보드' },
+        { id: 'pristudy_content', label: '📚 콘텐츠 관리' },
+        { id: 'pristudy_learners', label: '🏆 학습자 현황' },
+      ]
     },
     ...(isSuperAdmin ? [{
       id: 'common',
@@ -557,6 +623,66 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
 
+        {activeTab === 'pristudy_overview' && priStudyStats && (
+          <div className="admin-overview">
+            <div className="admin-section-header"><h2>PriStudy 대시보드</h2></div>
+            <div className="admin-stat-grid">
+              <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" />
+              <StatCard label="총 학습자" value={priStudyStats.totalLearners} icon="👥" color="var(--admin-green)" />
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'pristudy_content' && (
+          <div className="admin-subscribers">
+            <div className="admin-section-header">
+              <h2>콘텐츠 관리</h2>
+              <button className="admin-btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
+            </div>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>날짜</th><th>일본어 문장</th><th>테마</th><th>관리</th></tr></thead>
+                <tbody>
+                  {priStudyContent.map((item, i) => (
+                    <tr key={i}>
+                      <td>{item.date}</td>
+                      <td className="admin-subject-cell">{item.sentence_jp}</td>
+                      <td>{item.theme || '-'}</td>
+                      <td className="admin-actions-cell">
+                        <button className="admin-action-btn edit" onClick={() => openEditContent(item)} title="수정">✏️</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {priStudyContent.length === 0 && (<tr><td colSpan={4} className="admin-empty">콘텐츠가 없습니다</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'pristudy_learners' && (
+          <div className="admin-subscribers">
+            <div className="admin-section-header"><h2>우수 학습자 현황</h2></div>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>이메일</th><th>최장 연속(일)</th><th>현재 연속(일)</th><th>누적 학습(일)</th><th>최근 학습일</th></tr></thead>
+                <tbody>
+                  {priStudyLearners.map((l, i) => (
+                    <tr key={i}>
+                      <td className="admin-email-cell">{l.email}</td>
+                      <td><strong>{l.longest_streak}</strong></td>
+                      <td>{l.current_streak}</td>
+                      <td>{l.total_completed}</td>
+                      <td>{l.last_study_date}</td>
+                    </tr>
+                  ))}
+                  {priStudyLearners.length === 0 && (<tr><td colSpan={5} className="admin-empty">학습자 데이터가 없습니다</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* Admin Create/Edit Modal */}
         {adminModal && (
           <AdminModal
@@ -607,6 +733,54 @@ function Dashboard({ token, adminEmail, onLogout }) {
                 </div>
                 <div className="admin-modal-footer">
                   <button type="button" className="admin-btn-secondary" onClick={() => setProfileModal(false)}>닫기</button>
+                  <button type="submit" className="admin-btn-primary">저장</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+        {/* Content Create/Edit Modal */}
+        {contentModal && (
+          <div className="admin-modal-overlay" onClick={() => setContentModal(null)}>
+            <div className="admin-modal" style={{ maxWidth: 600 }} onClick={e => e.stopPropagation()}>
+              <div className="admin-modal-header">
+                <h3>{contentModal.mode === 'create' ? '콘텐츠 수동 발행' : '콘텐츠 수정'}</h3>
+                <button className="admin-modal-close" onClick={() => setContentModal(null)}>✕</button>
+              </div>
+              <form onSubmit={handleContentSubmit}>
+                <div className="admin-modal-body">
+                  <label className="admin-form-label">
+                    날짜 (YYYY-MM-DD)
+                    <input type="text" value={contentForm.date} onChange={e => setContentForm({...contentForm, date: e.target.value})} required disabled={contentModal.mode === 'edit'} />
+                  </label>
+                  <label className="admin-form-label">
+                    테마 (선택)
+                    <input type="text" value={contentForm.theme} onChange={e => setContentForm({...contentForm, theme: e.target.value})} />
+                  </label>
+                  <label className="admin-form-label">
+                    일본어 원문
+                    <textarea value={contentForm.sentence_jp} onChange={e => setContentForm({...contentForm, sentence_jp: e.target.value})} required rows={2} />
+                  </label>
+                  <label className="admin-form-label">
+                    요미가나
+                    <textarea value={contentForm.sentence_furigana} onChange={e => setContentForm({...contentForm, sentence_furigana: e.target.value})} required rows={2} />
+                  </label>
+                  <label className="admin-form-label">
+                    한국어 해석
+                    <textarea value={contentForm.sentence_kr} onChange={e => setContentForm({...contentForm, sentence_kr: e.target.value})} required rows={2} />
+                  </label>
+                  <label className="admin-form-label">
+                    단어장 (JSON 배열)
+                    <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={3} style={{ fontFamily: 'monospace' }} />
+                  </label>
+                  <label className="admin-form-label">
+                    비즈니스 코멘트
+                    <textarea value={contentForm.business_context} onChange={e => setContentForm({...contentForm, business_context: e.target.value})} rows={3} />
+                  </label>
+                  {contentAction && <div className={`admin-send-status ${contentAction.type}`}>{contentAction.msg}</div>}
+                </div>
+                <div className="admin-modal-footer">
+                  <button type="button" className="admin-btn-secondary" onClick={() => setContentModal(null)}>취소</button>
                   <button type="submit" className="admin-btn-primary">저장</button>
                 </div>
               </form>
