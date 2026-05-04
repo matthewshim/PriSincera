@@ -486,10 +486,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
             <div className="admin-stat-grid">
-              <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" />
-              <StatCard label="전체 구독자" value={stats.subscribers.total} icon="📋" color="var(--admin-blue)" />
-              <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" />
-              <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" />
+              <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
+              <StatCard label="전체 구독자" value={stats.subscribers.total} icon="📋" color="var(--admin-blue)" onClick={() => setActiveTab('subscribers')} />
+              <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
+              <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" onClick={() => setActiveTab('emails')} />
             </div>
             {pipeline && (
               <div className="admin-pipeline-summary">
@@ -627,8 +627,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-overview">
             <div className="admin-section-header"><h2>PriStudy 대시보드</h2></div>
             <div className="admin-stat-grid">
-              <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" />
-              <StatCard label="총 학습자" value={priStudyStats.totalLearners} icon="👥" color="var(--admin-green)" />
+              <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('pristudy_content')} />
+              <StatCard label="총 학습자" value={priStudyStats.totalLearners} icon="👥" color="var(--admin-green)" onClick={() => setActiveTab('pristudy_learners')} />
             </div>
           </div>
         )}
@@ -848,9 +848,15 @@ function AdminModal({ mode, form, setForm, action, onSubmit, onClose, showRole }
 
 // ─── Stat Card ───────────────────────────────────
 
-function StatCard({ label, value, icon, color }) {
+function StatCard({ label, value, icon, color, onClick }) {
   return (
-    <div className="admin-stat-card" style={{ '--card-accent': color }}>
+    <div 
+      className={`admin-stat-card ${onClick ? 'clickable' : ''}`} 
+      style={{ '--card-accent': color }}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
       <div className="admin-stat-icon">{icon}</div>
       <div className="admin-stat-value">{value}</div>
       <div className="admin-stat-label">{label}</div>
