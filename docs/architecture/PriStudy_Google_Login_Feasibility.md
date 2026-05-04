@@ -1,8 +1,8 @@
-# PriStudy 구글 로그인(Google Login) 전환 기술 검토 보고서
+# PriStudy 구글 로그인(Google Login) 전환 및 구현 보고서
 
 ## 1. 개요 및 목적
-현재 PriStudy의 이메일/비밀번호 기반 회원가입 로직을 **구글 로그인(Google OAuth)** 기반으로 전환하고자 합니다.
-이메일 가입의 허들(Friction)을 제거하여 사용자가 단 원클릭으로 가입/로그인을 완료하고 즉각적으로 데일리 스터디(마이크로러닝)에 진입하도록 유도하는 것이 주 목적입니다.
+현재 PriStudy의 이메일/비밀번호 기반 회원가입 로직을 **구글 로그인(Google OAuth)** 기반으로 성공적으로 전환했습니다.
+이메일 가입의 허들(Friction)을 제거하여 사용자가 단 원클릭으로 가입/로그인을 완료하고 즉각적으로 데일리 스터디(마이크로러닝)에 진입하도록 구현되었습니다.
 
 ---
 
@@ -36,21 +36,23 @@
 
 ---
 
-## 4. 아키텍처 및 구현 방향 (Implementation Plan)
+## 4. 아키텍처 및 구현 결과 (Implementation Results)
 
-### Step 1: 로그인 로직 개편
-- 현재 REST API 기반(`fetch`)으로 되어 있는 코드를 **Firebase Web SDK (`firebase/app`, `firebase/auth`)** 기반의 팝업 인증(`signInWithPopup`)으로 교체하여 안정적인 구글 로그인 팝업을 띄웁니다.
+### Step 1: 로그인 로직 개편 (완료)
+- `src/lib/firebase.js`를 신설하여 Firebase Web SDK (`firebase/app`, `firebase/auth`) 기반의 팝업 인증(`signInWithPopup`)을 구현했습니다.
+- 이를 통해 사용자는 번거로운 회원가입 없이 Google 계정 하나로 1초 만에 로그인할 수 있습니다.
 
-### Step 2: 프론트엔드 UI/UX 개편
-- `PriStudyHero.jsx`에 로그인 상태(token 유무)를 Props로 전달받아, 비로그인 시 [Google로 1초 만에 시작하기] 버튼을 노출합니다. 탭 상태와 무관하게 고정 노출됩니다.
-- `PriStudyDaily.jsx`에서 `AuthModal`을 걷어내고, 비로그인 유저를 위한 **구글 연동 유도 Empty State** UI를 추가합니다.
+### Step 2: 세션 격리 (Session Isolation) 아키텍처 (중요)
+- **이슈:** 일반 사용자 구글 로그인 연동 후, 어드민 페이지(`AdminDashboard.jsx`)에서 기존 이메일/비밀번호 계정이 접속되지 않고 일반 사용자 세션과 충돌하는 문제가 발생했습니다.
+- **해결책:** `AdminDashboard.jsx` 내부에 관리자 전용 Firebase App 인스턴스(`adminApp`)를 별도로 초기화(`initializeApp`)하여, 일반 유저용 `firebase/app`과 세션을 완전히 격리했습니다.
+- **결과:** 어드민 관리자는 기존 방식대로 이메일 인증을 통해 백오피스에 접근 가능하며, 일반 사용자는 구글 로그인으로만 프론트엔드 서비스를 이용하도록 완벽하게 분리되었습니다.
 
-### Step 3: 토큰 핸들링 유지
-- 구글 로그인 성공 시 반환되는 `idToken`과 `email`을 기존 방식과 동일하게 `localStorage`에 저장하여 세션을 유지합니다. 사용자 입장에서는 로그인 수단만 바뀔 뿐 경험은 매끄럽게 연결됩니다.
+### Step 3: 프론트엔드 UI/UX 개편 (완료)
+- `PriStudyHero.jsx`에서 로그인 여부에 따라 "Google로 1초 만에 시작하기" 버튼 또는 "사용자 메일 주소 + 로그아웃 링크"를 동적으로 노출합니다.
+- `PriStudyDaily.jsx`에서 기존 이메일 폼(`AuthModal`)을 걷어내고, Google 인증 버튼을 통일성 있게 배치했습니다.
 
 ---
 
 ## 5. 결론
-**구글 로그인 전환은 기술적 무리 없이 100% 가능하며, UX 관점에서도 현재의 이메일 직접 가입 방식보다 이탈률을 현저히 낮출 수 있는 탁월한 선택입니다.**
-
-위 사전 체크 리스트(Firebase 콘솔 설정)만 확인 및 세팅해 주시면, 즉시 프론트엔드 코드 수정 및 UI 디자인 개선 작업을 진행할 수 있습니다.
+**구글 로그인 전환은 성공적으로 완료되었습니다.**
+초기 우려되었던 관리자 권한 충돌 문제는 다중 Firebase App 인스턴스 기법으로 해결되었으며, PriStudy의 사용자 경험이 압도적으로 향상되었습니다.

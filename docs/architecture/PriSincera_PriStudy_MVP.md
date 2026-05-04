@@ -10,8 +10,8 @@
 
 **포함되는 기능 (In-Scope):**
 *   **백엔드:** Gemini AI를 활용한 매일 1문장(번역, 요미가나, 단어장, 코멘트 포함) 자동 생성 파이프라인.
-*   **프론트엔드:** `/pristudy` 전용 페이지, 플래시카드 UI, Web Speech API (또는 GC TTS) 기반 발음 듣기.
-*   **사용자 관리:** Firebase Auth 기반 로그인 연동, Firestore를 통한 개별 유저의 일일 학습 완료 기록(Streak) 저장.
+*   **프론트엔드:** `/pristudy` 전용 페이지, 플래시카드 UI, Web Speech API 기반 문장/단어 발음 듣기(TTS), 7일 치 학습 기록을 모아보는 아카이브(Archive) 뷰 제공.
+*   **사용자 관리:** Firebase Auth 기반 **구글 로그인(Google OAuth)** 연동, Firestore를 통한 개별 유저의 일일 학습 완료 기록(Streak) 저장.
 *   **관리자 (Admin):** PriStudy 전용 대시보드(학습 지표), 자동 생성된 콘텐츠의 열람 및 수정(Edit) 기능.
 
 **제외되는 기능 (Out-of-Scope - Phase 2 이후):**
@@ -30,7 +30,7 @@ graph TD
     B -->|Prompting| D{Gemini Flash AI}
     D -->|JSON Output| E[(Firestore<br>'study_content')]
     
-    F[User Browser] -->|Visit /pristudy| G[React Frontend]
+    F[User Browser] -->|Google Login| G[React Frontend]
     G -->|Read Daily Content| E
     G -->|Play Audio| H[Web Speech API]
     G -->|Mark Done| I[(Firestore<br>'study_progress')]
@@ -45,11 +45,13 @@ graph TD
 *   **Fields:**
     *   `date`: "2026-05-04"
     *   `sentence_jp`: "AIの導入により、業務効率化が急速に進んでいます。"
-    *   `sentence_furigana`: "AIの 導入(どうにゅう)により、業務(ぎょうむ) 効率化(こうりつか)が 急速(きゅうそく)に 進(すす)んでいます。"
+    *   `sentence_furigana`: "AIの 導入(どうにゅう)により..."
+    *   `sentence_pronunciation_kr`: "에-아이노 도-뉴-니 요리..."
     *   `sentence_kr`: "AI 도입으로 인해 업무 효율화가 급속히 진행되고 있습니다."
     *   `vocabulary`: Array of Objects
-        *   `[{word: "導入", reading: "どうにゅう", meaning: "도입"}]`
+        *   `[{word: "導入", reading: "どうにゅう", meaning: "도입", pronunciation_kr: "도-뉴-"}]`
     *   `business_context`: "최근 IT 트렌드 회의나 보고서에서 서론으로 자주 쓰이는 매우 정중하고 격식 있는 표현입니다."
+    *   `hasPrev`, `hasNext`: (클라이언트 API 응답 시 추가되는 네비게이션 플래그)
     *   `createdAt`: Timestamp
 
 ### 3.2 `study_progress` 컬렉션 (유저별 학습 트래킹 - 잔디 심기)
@@ -72,8 +74,8 @@ graph TD
 *   **콘텐츠 적재 현황:** 파이프라인에 의해 자동 생성되어 Firestore에 적재된 학습 콘텐츠 누적 개수.
 
 ### 4.2. 콘텐츠 관리 (Content Management)
-*   **콘텐츠 열람 및 수정 (CRUD):** AI 파이프라인(`pristudy-composer`)이 자동 생성한 데이터를 조회하고, 오역이나 어색한 표현이 있을 경우 관리자가 직접 수정(Edit)할 수 있는 인터페이스 제공.
-*   **수동 발행 (Manual Publishing):** 특정 날짜(예: 연휴, 특별 이벤트)에 관리자가 직접 선정한 문장을 수동으로 등록할 수 있는 기능.
+*   **콘텐츠 열람 및 수정 (CRUD):** AI 파이프라인(`pristudy-composer`)이 자동 생성한 데이터를 조회하고, 오역이나 어색한 표현이 있을 경우 관리자가 직접 수정(Edit)할 수 있는 인터페이스 제공. (한국어 발음 필드 포함)
+*   **수동 발행 (Manual Publishing):** 특정 날짜에 관리자가 직접 선정한 문장과 발음 기호를 수동으로 등록할 수 있는 기능.
 
 ### 4.3. 학습자 현황 (Learner Progress)
 *   **우수 학습자 모니터링:** 최장 기간 잔디(Longest Streak)를 유지 중인 유저 목록 조회 기능. 향후 리워드 혹은 리텐션 프로모션 타겟팅에 활용.
@@ -93,9 +95,10 @@ graph TD
 ### Step 2: 플래시카드 및 코어 UI 개발 (Frontend)
 1.  **라우트 추가:** `App.jsx`에서 `/pristudy` 라우팅 개방.
 2.  **`PriStudyCard.jsx` 컴포넌트:** 
-    *   앞면: 일본어 한자 + 후리가나 표기.
-    *   뒷면(스와이프/클릭 시): 한국어 해석, 단어장, 에디터 코멘트 노출.
-3.  **발음 듣기 (TTS):** 브라우저 내장 `window.speechSynthesis`를 우선 사용하여 일본어 음성(`ja-JP`) 재생 구현 (초기 개발 비용 및 로드 속도 최소화).
+    *   일본어 한자 + 후리가나 + 한국어 독음(소리나는 대로 표기) 제공.
+    *   한국어 해석, 단어장(단어별 발음 기호 포함), 에디터 코멘트 기본 노출.
+3.  **발음 듣기 (TTS):** 브라우저 내장 `window.speechSynthesis`를 사용하여 문장 및 개별 단어의 일본어 음성(`ja-JP`) 재생 지원.
+4.  **아카이브 연동:** `PriSignal`과 유사한 레이아웃으로, 지난 7일간의 학습 리스트를 볼 수 있는 `/pristudy` (Archive) 라우트와 날짜별 네비게이션 제공.
 
 ### Step 3: 출석체크(잔디 심기) 및 Auth 연동 (Frontend & DB)
 1.  **로그인 강제 로직:** PriStudy는 개인의 진도율 저장이 필수이므로, 비로그인 유저가 접속 시 로그인 유도 모달 띄우기.
