@@ -100,6 +100,31 @@ export default function WorkSection() {
               </div>
             </div>
           </Link>
+
+          {/* PriStudy — Microlearning */}
+          <Link to="/pristudy" className="work-card pristudy reveal-item" style={{ '--reveal-delay': '0.5s' }} id="priStudyWorkCard">
+            <div className="work-card-icon">
+              <span className="work-card-emoji">📖</span>
+            </div>
+            <div className="work-card-body">
+              <div className="work-card-label">Microlearning</div>
+              <div className="work-card-name">
+                PriStudy
+                <span className="work-card-tag">prisincera.com/pristudy</span>
+              </div>
+              <p className="work-card-desc">
+                하루 5분, 실무 비즈니스 일본어 1문장.<br />
+                매일 새벽 AI 파이프라인이 생성한 고품질 콘텐츠와 함께
+                꾸준한 성장을 기록하는 에빙하우스 마이크로러닝 서비스.
+              </p>
+              <div className="work-card-tags">
+                <span className="work-tag">Daily Study</span>
+                <span className="work-tag">AI Composer</span>
+                <span className="work-tag">Cloud Run Jobs</span>
+                <span className="work-tag">Firestore</span>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
     </section>

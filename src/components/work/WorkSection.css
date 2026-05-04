@@ -207,6 +207,13 @@
     color: inherit;
 }
 
+/* --- PriStudy Card Variant --- */
+.work-card.pristudy {
+    --card-accent: var(--prism-rose);
+    text-decoration: none;
+    color: inherit;
+}
+
 .work-card-emoji {
     font-size: 1.6rem;
     line-height: 1;
