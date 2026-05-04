@@ -21,30 +21,30 @@ export default function PriStudyDaily({
       ) : null}
 
       <div className="pristudy-daily-header">
-        {dailyContent?.hasPrev ? (
-          <button 
-            className="pristudy-nav-btn" 
-            onClick={() => {
-              const d = new Date(targetDate);
-              d.setDate(d.getDate() - 1);
-              navigate(`/pristudy/${d.toISOString().slice(0, 10)}`);
-            }}
-          >
-            &lt; {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() - 1)).toISOString().slice(5, 10)}
-          </button>
-        ) : (
-          <div style={{ width: 80 }} />
-        )}
-        
-        <div className="pristudy-date-center">
-          <span className="pristudy-date-day">{new Date(targetDate).getDate()}</span>
-          <div className="pristudy-date-month-dow">
-            <span className="pristudy-date-month">{new Date(targetDate).getMonth() + 1}월</span>
-            <span className="pristudy-date-dow">{['일', '월', '화', '수', '목', '금', '토'][new Date(targetDate).getDay()]}요일</span>
+        <div className="pristudy-daily-date-nav-row">
+          {dailyContent?.hasPrev ? (
+            <button 
+              className="pristudy-nav-btn" 
+              onClick={() => {
+                const d = new Date(targetDate);
+                d.setDate(d.getDate() - 1);
+                navigate(`/pristudy/${d.toISOString().slice(0, 10)}`);
+              }}
+            >
+              &lt; {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() - 1)).toISOString().slice(5, 10)}
+            </button>
+          ) : (
+            <div className="pristudy-nav-btn" disabled />
+          )}
+          
+          <div className="pristudy-date-center">
+            <span className="pristudy-date-day">{new Date(targetDate).getDate()}</span>
+            <div className="pristudy-date-month-dow">
+              <span className="pristudy-date-month">{new Date(targetDate).getMonth() + 1}월</span>
+              <span className="pristudy-date-dow">{['일', '월', '화', '수', '목', '금', '토'][new Date(targetDate).getDay()]}요일</span>
+            </div>
           </div>
-        </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {dailyContent?.hasNext && targetDate !== todayStr ? (
             <button 
               className="pristudy-nav-btn" 
@@ -59,20 +59,19 @@ export default function PriStudyDaily({
               {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() + 1)).toISOString().slice(5, 10)} &gt;
             </button>
           ) : (
-            <div style={{ width: 80 }} />
+            <div className="pristudy-nav-btn" disabled />
           )}
-
-          <button 
-            className="pristudy-nav-btn"
-            style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, color: 'var(--prism-lavender)' }}
-            onClick={() => navigate('/pristudy#daily')}
-          >
-            Daily List
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
         </div>
+
+        <button 
+          className="pristudy-daily-list-btn"
+          onClick={() => navigate('/pristudy#daily')}
+        >
+          Daily List
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+            <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
       </div>
 
       {loading ? (
