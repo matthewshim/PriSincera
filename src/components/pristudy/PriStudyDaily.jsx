@@ -85,14 +85,21 @@ export default function PriStudyDaily({
               {last7Days.map(date => {
                 const isDone = progress?.completed_dates?.includes(date);
                 const isToday = date === todayStr;
-                const dateLabel = date.split('-')[2]; // 일만 표시
+                const d = new Date(date);
+                const dayName = ['일', '월', '화', '수', '목', '금', '토'][d.getDay()];
+                const dateLabel = d.getDate();
+                
                 return (
                   <div 
                     key={date} 
-                    className={`pristudy-graph-day ${isDone ? 'completed' : ''} ${isToday ? 'today' : ''}`}
+                    className={`pristudy-graph-item ${isDone ? 'completed' : ''} ${isToday ? 'today' : ''}`}
                     title={`${date} ${isDone ? '(완료)' : '(미완료)'}`}
                   >
-                    {dateLabel}
+                    <span className="pristudy-graph-dayname">{dayName}</span>
+                    <div className="pristudy-graph-box">
+                      {isDone ? '🌿' : ''}
+                    </div>
+                    <span className="pristudy-graph-date">{dateLabel}일</span>
                   </div>
                 );
               })}

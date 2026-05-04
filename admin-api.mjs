@@ -416,11 +416,15 @@ router.get('/pristudy/learners', async (req, res) => {
       
     const learners = await Promise.all(snap.docs.map(async (doc) => {
       const data = doc.data();
-      let email = '알 수 없음';
-      try {
-        const user = await auth.getUser(doc.id);
-        email = user.email;
-      } catch (e) {}
+      let email = data.email;
+      if (!email || email === 'unknown') {
+        try {
+          const user = await auth.getUser(doc.id);
+          email = user.email;
+        } catch (e) {
+          email = '알 수 없음';
+        }
+      }
       return {
         uid: doc.id, email,
         current_streak: data.current_streak || 0,

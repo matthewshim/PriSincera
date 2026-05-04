@@ -63,13 +63,15 @@ studyRouter.post('/progress/:date', verifyUser, async (req, res) => {
       completed_dates: [],
       current_streak: 0,
       longest_streak: 0,
-      last_study_date: null
+      last_study_date: null,
+      email: req.user.email || 'unknown',
     };
 
     if (!progress.completed_dates.includes(date)) {
       progress.completed_dates.push(date);
       // 간단한 스트릭 계산 로직 (MVP: 날짜만 단순히 추가)
       progress.last_study_date = date;
+      progress.email = req.user.email || progress.email || 'unknown';
       progress.current_streak += 1;
       if (progress.current_streak > progress.longest_streak) {
         progress.longest_streak = progress.current_streak;
