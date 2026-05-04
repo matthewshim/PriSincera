@@ -4,7 +4,7 @@ export default function PriStudyHero({ activeTab, onTabChange }) {
   return (
     <section className="pristudy-section pristudy-hero">
       <div className="pristudy-section-inner">
-        <div className="pristudy-hero-icon">🇯🇵</div>
+        <div className="pristudy-hero-icon">📖</div>
         <h1 className="pristudy-hero-title">
           Pri<span className="accent">Study</span>
         </h1>

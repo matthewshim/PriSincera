@@ -7,7 +7,7 @@ import './PriStudy.css';
 
 const TABS = [
   { key: 'intro', label: '서비스 소개', icon: '📋' },
-  { key: 'daily', label: '데일리 스터디', icon: '🇯🇵' },
+  { key: 'daily', label: '데일리 스터디', icon: '📝' },
 ];
 
 export default function PriStudy() {
