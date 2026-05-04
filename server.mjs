@@ -119,36 +119,6 @@ app.use('/admin/api', adminLimiter, express.json({ limit: '10kb' }), adminRouter
 // --- PriStudy API ---
 app.use('/api/study', apiLimiter, express.json({ limit: '5kb' }), studyRouter);
 
-app.get('/api/temp-update', async (req, res) => {
-  try {
-    const { getStudyContent, saveStudyContent } = await import('./pipeline/src/repositories/StudyRepository.mjs');
-    const data = await getStudyContent('2026-05-04');
-    if (data) {
-      data.sentence_pronunciation_kr = "사이킨노 에-아이 기쥬츠노 신카와 메자마시쿠, 콘고노 비지네스 텐카이니 오이테 소노 센자이테키나 카노-세-오 도노요-니 이카세루카, 미나사마토 이켄 코-칸 데키레바 사이와이데스.";
-      data.vocabulary = [
-        {"word":"最近","reading":"さいきん","meaning":"최근","pronunciation_kr":"사이킨"},
-        {"word":"技術","reading":"ぎじゅつ","meaning":"기술","pronunciation_kr":"기쥬츠"},
-        {"word":"進化","reading":"しんか","meaning":"진화, 발전","pronunciation_kr":"신카"},
-        {"word":"目覚ましい","reading":"めざましい","meaning":"눈부시다, 현저하다","pronunciation_kr":"메자마시이"},
-        {"word":"今後","reading":"こんご","meaning":"향후, 앞으로","pronunciation_kr":"콘고"},
-        {"word":"ビジネス展開","reading":"ビジネスてんかい","meaning":"사업 전개","pronunciation_kr":"비지네스 텐카이"},
-        {"word":"潜在的","reading":"せんざいてき","meaning":"잠재적","pronunciation_kr":"센자이테키"},
-        {"word":"可能性","reading":"かのうせい","meaning":"가능성","pronunciation_kr":"카노-세-"},
-        {"word":"活かす","reading":"いかす","meaning":"활용하다, 살리다","pronunciation_kr":"이카스"},
-        {"word":"皆様","reading":"みなさま","meaning":"여러분 (높임말)","pronunciation_kr":"미나사마"},
-        {"word":"意見交換","reading":"いけんこうかん","meaning":"의견 교환","pronunciation_kr":"이켄 코-칸"},
-        {"word":"幸いです","reading":"さいわいです","meaning":"~하면 좋겠습니다, 다행입니다 (정중한 표현)","pronunciation_kr":"사이와이데스"}
-      ];
-      await saveStudyContent('2026-05-04', data);
-      res.json({ success: true, data });
-    } else {
-      res.json({ success: false, msg: 'Not found' });
-    }
-  } catch (err) {
-    res.json({ success: false, error: err.message });
-  }
-});
-
 // --- Subscriber Management (GCS JSON / Firestore) ---
 
 // Subscribe — GCS 직접 저장
