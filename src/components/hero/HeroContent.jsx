@@ -46,9 +46,11 @@ export default function HeroContent({ visible, onIntroComplete }) {
         <span className="word accent" data-delay="1">Prioritized.</span>
       </h1>
       <p className="hero-sub">
-        가장 중요한 것을, 가장 먼저.
+        <strong>"발 아래 꽃, 먼 곳의 별"</strong>
+        <br/><br/>
+        멀리 빛나는 목표(별)를 향해 나아가면서도,
         <br/>
-        멀리 있어도, 흐려져도, 본질은 반드시 찾아냅니다.
+        지금 내 앞의 피어난 본질(꽃)에 충실하는 태도.
         <br/>
         그것이 가장 올바른 길이라 확신합니다.
       </p>
