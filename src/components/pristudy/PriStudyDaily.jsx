@@ -1,4 +1,11 @@
 import React from 'react';
+
+function formatNavDate(dateStr) {
+  const [, m, d] = dateStr.split('-').map(Number);
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dt = new Date(dateStr + 'T00:00:00');
+  return `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}(${days[dt.getDay()]})`;
+}
 export default function PriStudyDaily({
   showAuth, loading, dailyContent, isFlipped, setIsFlipped,
   playAudio, markCompleted, isTodayCompleted, isMarking,
@@ -19,10 +26,15 @@ export default function PriStudyDaily({
                 navigate(`/pristudy/${d.toISOString().slice(0, 10)}`);
               }}
             >
-              &lt; {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() - 1)).toISOString().slice(5, 10)}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className="pristudy-nav-btn-label">
+                {formatNavDate(new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() - 1)).toISOString().slice(0, 10))}
+              </span>
             </button>
           ) : (
-            <div className="pristudy-nav-btn" disabled />
+            <div className="pristudy-nav-btn disabled" />
           )}
           
           <div className="pristudy-date-center">
@@ -35,18 +47,22 @@ export default function PriStudyDaily({
 
           {dailyContent?.hasNext && targetDate !== todayStr ? (
             <button 
-              className="pristudy-nav-btn" 
+              className="pristudy-nav-btn next" 
               onClick={() => {
                 const d = new Date(targetDate);
                 d.setDate(d.getDate() + 1);
-                const nextDateStr = d.toISOString().slice(0, 10);
-                navigate(`/pristudy/${nextDateStr}`);
+                navigate(`/pristudy/${d.toISOString().slice(0, 10)}`);
               }}
             >
-              {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() + 1)).toISOString().slice(5, 10)} &gt;
+              <span className="pristudy-nav-btn-label">
+                {formatNavDate(new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() + 1)).toISOString().slice(0, 10))}
+              </span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
           ) : (
-            <div className="pristudy-nav-btn" disabled />
+            <div className="pristudy-nav-btn next disabled" />
           )}
         </div>
 
