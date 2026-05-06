@@ -450,7 +450,11 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
             </td>
           </tr>
 
-          ${studyHtml}
+          <tr>
+            <td style="padding: 0;">
+              ${studyHtml}
+            </td>
+          </tr>
 
           <!-- ═══ PORTAL CTA ═══ -->
           <tr>
