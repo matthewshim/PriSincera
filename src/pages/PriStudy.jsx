@@ -49,10 +49,13 @@ export default function PriStudy() {
   }, []);
 
   useEffect(() => {
-    updateIndicator();
+    const tId = setTimeout(updateIndicator, 50);
     window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
-  }, [activeTab, updateIndicator]);
+    return () => {
+      clearTimeout(tId);
+      window.removeEventListener('resize', updateIndicator);
+    };
+  }, [activeTab, updateIndicator, date]);
 
   useEffect(() => {
     const gnb = document.querySelector('.nav');
@@ -209,7 +212,7 @@ export default function PriStudy() {
       <div className="pristudy-page">
         {/* ── Sub-tab navigation ── */}
         <nav className="pristudy-tabs-nav" ref={tabsNavRef} role="tablist">
-          <div className="pristudy-tabs-inner">
+          <div className="pristudy-tabs-inner" ref={tabsRef}>
             <Link to="/pristudy" className="pristudy-tab">
               <span className="pristudy-tab-icon">📖</span>
               <span className="pristudy-tab-label">서비스 소개</span>
@@ -218,6 +221,7 @@ export default function PriStudy() {
               <span className="pristudy-tab-icon">🗓️</span>
               <span className="pristudy-tab-label">데일리 스터디</span>
             </Link>
+            <span className="pristudy-tab-indicator" ref={indicatorRef} />
           </div>
         </nav>
 

@@ -81,6 +81,9 @@ export default function PriSignalDaily() {
   const catRefs = useRef({});
   const pageRef = useRef(null);
   const scrollBarRef = useRef(null);
+  const tabsNavRef = useRef(null);
+  const tabsRef = useRef(null);
+  const indicatorRef = useRef(null);
 
   const today = getTodayKST();
   const prevDate = getAdjacentDate(date, -1);
@@ -141,6 +144,46 @@ export default function PriSignalDaily() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Sync tabs top with GNB height for sticky behavior
+  useEffect(() => {
+    const gnb = document.querySelector('.nav');
+    if (!gnb || !tabsNavRef.current) return;
+
+    const syncTop = () => {
+      const h = gnb.getBoundingClientRect().height;
+      tabsNavRef.current.style.top = `${h}px`;
+    };
+
+    syncTop();
+    const ro = new ResizeObserver(syncTop);
+    ro.observe(gnb);
+    window.addEventListener('scroll', syncTop, { passive: true });
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('scroll', syncTop);
+    };
+  }, []);
+
+  const updateIndicator = useCallback(() => {
+    if (!tabsRef.current || !indicatorRef.current) return;
+    const activeBtn = tabsRef.current.querySelector('.prisignal-tab.active');
+    if (!activeBtn) return;
+    const containerRect = tabsRef.current.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+    indicatorRef.current.style.left = `${btnRect.left - containerRect.left}px`;
+    indicatorRef.current.style.width = `${btnRect.width}px`;
+  }, []);
+
+  useEffect(() => {
+    const tId = setTimeout(updateIndicator, 50);
+    window.addEventListener('resize', updateIndicator);
+    return () => {
+      clearTimeout(tId);
+      window.removeEventListener('resize', updateIndicator);
+    };
+  }, [updateIndicator]);
 
   // Category header intersection observer
   useEffect(() => {
@@ -235,8 +278,8 @@ export default function PriSignalDaily() {
       <div className="prisignal-scroll-progress" ref={scrollBarRef} />
 
       {/* ── Sub-tab Navigation (shared with /prisignal) ── */}
-      <nav className="prisignal-tabs prisignal-daily-tabs" role="tablist" aria-label="PriSignal 콘텐츠 탭">
-        <div className="prisignal-tabs-inner">
+      <nav className="prisignal-tabs prisignal-daily-tabs" ref={tabsNavRef} role="tablist" aria-label="PriSignal 콘텐츠 탭">
+        <div className="prisignal-tabs-inner" ref={tabsRef}>
           <Link to="/prisignal" className="prisignal-tab" id="dailyTabIntro">
             <span className="prisignal-tab-icon">📋</span>
             <span className="prisignal-tab-label">서비스 소개</span>
@@ -245,6 +288,7 @@ export default function PriSignalDaily() {
             <span className="prisignal-tab-icon">📰</span>
             <span className="prisignal-tab-label">데일리 시그널</span>
           </Link>
+          <span className="prisignal-tab-indicator" ref={indicatorRef} />
         </div>
       </nav>
 
