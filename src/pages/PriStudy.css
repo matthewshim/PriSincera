@@ -307,7 +307,10 @@
 
 /* ── 데일리 스터디 탭 ── */
 .pristudy-daily-wrapper {
-  padding: 24px 24px 80px;
+  padding-top: 24px;
+  padding-bottom: var(--space-2xl);
+  padding-left: var(--space-xl);
+  padding-right: var(--space-xl);
   max-width: 900px;
   margin: 0 auto;
 }
@@ -821,7 +824,10 @@
 .pristudy-archive-inner {
   max-width: 900px;
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  padding-top: 40px;
+  padding-bottom: 80px;
+  padding-left: var(--space-xl);
+  padding-right: var(--space-xl);
 }
 
 .pristudy-archive-loading,
