@@ -215,6 +215,65 @@ function renderPortalCTA(dailyPageUrl) {
 </table>`;
 }
 
+/**
+ * PriStudy 오늘의 1문장 섹션
+ */
+function renderStudySection(studyData) {
+  if (!studyData) return '';
+  return `
+<!-- ═══ PRISTUDY ═══ -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td style="padding: 24px 32px 24px;">
+      <div style="height:1px; background: linear-gradient(90deg, transparent, rgba(16,185,129,0.25), transparent);"></div>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 0 24px;">
+      <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#10B981; line-height:1.3;">
+        📚 오늘의 PriStudy 1문장
+      </p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+             style="background-color:#1A1035; border:1px solid rgba(16,185,129,0.15); border-radius:16px;">
+        <tr>
+          <td style="padding:20px 22px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td style="padding-bottom:12px;">
+                  <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#10B981; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); border-radius:100px; padding:3px 12px; letter-spacing:0.02em;">
+                    비즈니스 일본어
+                  </span>
+                  <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3; margin-left:8px;">
+                    ${escapeHtml(studyData.theme || '오늘의 표현')}
+                  </span>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:0 0 8px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#F5F3FF; line-height:1.5;">
+              ${escapeHtml(studyData.sentence_jp)}
+            </p>
+            <p style="margin:0 0 16px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA; line-height:1.6;">
+              ${escapeHtml(studyData.sentence_kr)}
+            </p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td bgcolor="#10B981"
+                    style="background:linear-gradient(135deg,#10B981,#059669); border-radius:100px; padding:8px 22px;">
+                  <a href="https://www.prisincera.com/pristudy/${escapeHtml(studyData.date)}"
+                     style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+                    → 발음 듣고 잔디 심기
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+}
+
 // ─── Main Render ─────────────────────────────────
 
 /**
@@ -226,9 +285,10 @@ function renderPortalCTA(dailyPageUrl) {
  * @param {number} params.totalCount - 전체 아티클 수
  * @param {string} params.dailyPageUrl - 데일리 포털 URL
  * @param {string} params.unsubscribeUrl - 구독 해지 URL (개인화)
+ * @param {Object} [params.studyData] - PriStudy 오늘의 1문장 데이터
  * @returns {string} 완전한 HTML 이메일 문자열
  */
-export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, unsubscribeUrl }) {
+export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, unsubscribeUrl, studyData }) {
   const dateKR = formatDateKR(date);
   const dmPicks = articles.filter(a => a.isDmPick);
   const otherArticles = articles.filter(a => !a.isDmPick);
@@ -239,6 +299,9 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
 
   // More Signals
   const moreSignalsHtml = renderMoreSignals(articles);
+
+  // PriStudy Section
+  const studyHtml = renderStudySection(studyData);
 
   // Portal CTA
   const portalCTA = renderPortalCTA(dailyPageUrl);
@@ -386,6 +449,8 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
               ${moreSignalsHtml}
             </td>
           </tr>
+
+          ${studyHtml}
 
           <!-- ═══ PORTAL CTA ═══ -->
           <tr>

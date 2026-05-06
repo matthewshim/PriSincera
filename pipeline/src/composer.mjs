@@ -131,10 +131,17 @@ async function main() {
   const subscribers = await getActiveSubscribers();
   console.log(`[Composer] 활성 구독자: ${subscribers.length}명`);
 
+  // PriStudy 데일리 문장 로드 (오늘자)
+  const { getStudyContent } = await import('./repositories/StudyRepository.mjs');
+  const studyData = await getStudyContent(todayStr);
+  if (studyData) {
+    console.log(`[Composer] PriStudy 오늘의 1문장 로드 완료`);
+  }
+
   let emailResult = { sent: 0, total: 0 };
   
   if (subscribers.length > 0) {
-    emailResult = await dispatchDailyEmail(todayStr, finalArticles, subscribers);
+    emailResult = await dispatchDailyEmail(todayStr, finalArticles, subscribers, studyData);
   } else {
     console.log('[Composer] 구독자가 없습니다. 이메일 발송 스킵.');
   }
