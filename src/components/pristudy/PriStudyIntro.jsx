@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const values = [
   {
@@ -45,6 +46,8 @@ const processSteps = [
 ];
 
 export default function PriStudyIntro() {
+  const navigate = useNavigate();
+
   return (
     <div className="pristudy-intro-wrapper">
       
@@ -123,6 +126,19 @@ export default function PriStudyIntro() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── 5. CTA Section ── */}
+      <section className="pristudy-section pristudy-cta">
+        <div className="pristudy-section-inner" style={{ textAlign: 'center', paddingBottom: '60px' }}>
+          <button 
+            className="pristudy-done-btn" 
+            style={{ maxWidth: '400px', margin: '0 auto' }}
+            onClick={() => navigate('/pristudy#daily')}
+          >
+            🚀 오늘의 1-Pick 학습 시작하기
+          </button>
         </div>
       </section>
 
