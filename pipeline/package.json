@@ -6,7 +6,8 @@
   "scripts": {
     "collect": "node src/collector.mjs",
     "compose": "node src/composer.mjs",
-    "monitor": "node src/monitor.mjs"
+    "monitor": "node src/monitor.mjs",
+    "study:compose": "node src/study-composer.mjs"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.15.0",

@@ -52,8 +52,7 @@ export default function PriStudyDaily({
                 const d = new Date(targetDate);
                 d.setDate(d.getDate() + 1);
                 const nextDateStr = d.toISOString().slice(0, 10);
-                if (nextDateStr === todayStr) navigate('/pristudy#daily');
-                else navigate(`/pristudy/${nextDateStr}`);
+                navigate(`/pristudy/${nextDateStr}`);
               }}
             >
               {new Date(new Date(targetDate).setDate(new Date(targetDate).getDate() + 1)).toISOString().slice(5, 10)} &gt;

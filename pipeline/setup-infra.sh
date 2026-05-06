@@ -130,6 +130,23 @@ gcloud run jobs update prisignal-monitor \
   --image ${IMAGE} \
   --region ${REGION}
 
+# PriStudy Composer Job (매일 학습 문장 자동 생성)
+gcloud run jobs create pristudy-composer \
+  --image ${IMAGE} \
+  --region ${REGION} \
+  --service-account ${SA_EMAIL} \
+  --command "node" \
+  --args "src/study-composer.mjs" \
+  --set-env-vars "GCS_BUCKET=${BUCKET_NAME}" \
+  --set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest" \
+  --task-timeout 1800s \
+  --max-retries 0 \
+  --memory 512Mi \
+  --cpu 1 2>/dev/null || \
+gcloud run jobs update pristudy-composer \
+  --image ${IMAGE} \
+  --region ${REGION}
+
 # ─── 7. Cloud Scheduler 크론 생성 ───
 echo -e "\n[7/8] Cloud Scheduler 크론 생성..."
 
@@ -162,6 +179,16 @@ gcloud scheduler jobs create http prisignal-monitor-weekly \
   --http-method POST \
   --oauth-service-account-email ${SA_EMAIL} \
   --description "PriSignal: 발송 상태 확인 및 알림" 2>/dev/null || echo "  (이미 존재)"
+
+# 매일 04:00 KST — PriStudy 학습 문장 생성
+gcloud scheduler jobs create http pristudy-compose-daily \
+  --location ${REGION} \
+  --schedule "0 4 * * *" \
+  --time-zone "Asia/Seoul" \
+  --uri "https://${REGION}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_ID}/jobs/pristudy-composer:run" \
+  --http-method POST \
+  --oauth-service-account-email ${SA_EMAIL} \
+  --description "PriStudy: 매일 일본어 학습 문장 자동 생성" 2>/dev/null || echo "  (이미 존재)"
 
 # ─── 8. Cloud Monitoring 알림 채널 설정 ───
 echo -e "\n[8/8] Cloud Monitoring 알림 설정..."
