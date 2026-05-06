@@ -6,19 +6,7 @@ export default function PriStudyDaily({
 }) {
   return (
     <div className="pristudy-daily-wrapper">
-      {showAuth ? (
-        <div className="pristudy-empty" style={{ padding: '60px 24px' }}>
-          <div style={{ fontSize: 48, marginBottom: 20 }}>🚀</div>
-          <h2 style={{ fontSize: 24, marginBottom: 12 }}>로그인하고 성장을 기록하세요</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: 32, lineHeight: 1.6 }}>
-            하루 1문장 비즈니스 일본어, 매일 꾸준히 학습하고<br/>
-            나만의 잔디를 심어보세요. 단 1초면 충분합니다.
-          </p>
-          <button className="pristudy-cta-btn" onClick={handleGoogleLogin}>
-            Google로 1초 만에 시작하기
-          </button>
-        </div>
-      ) : null}
+
 
       <div className="pristudy-daily-header">
         <div className="pristudy-daily-date-nav-row">
@@ -126,8 +114,8 @@ export default function PriStudyDaily({
 
           <button 
             className="pristudy-done-btn" 
-            onClick={markCompleted} 
-            disabled={isTodayCompleted || isMarking}
+            onClick={showAuth ? handleGoogleLogin : markCompleted} 
+            disabled={!showAuth && (isTodayCompleted || isMarking)}
           >
             {isTodayCompleted ? '🎉 오늘의 학습 완료' : '✅ 다 외웠어요 (잔디 심기)'}
           </button>
