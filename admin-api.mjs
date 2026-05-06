@@ -270,11 +270,36 @@ router.post('/email/send-test', async (req, res) => {
   try {
     const { to } = req.body || {};
     if (!to) return res.status(400).json({ error: '수신 이메일 필요' });
+
+    // 오늘 날짜 구하기 (KST)
+    const { getTodayKST } = await import('./pipeline/src/lib/storage.mjs');
+    const todayStr = getTodayKST();
+
+    // 오늘의 PriSignal 아티클 가져오기
+    const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
+    const dailyData = await getDailySignal(todayStr);
+    const articles = dailyData?.articles || [];
+
+    // 오늘의 PriStudy 문장 가져오기
+    const { getStudyContent } = await import('./pipeline/src/repositories/StudyRepository.mjs');
+    const studyData = await getStudyContent(todayStr);
+
+    // 템플릿 렌더링
+    const { renderDailyEmail } = await import('./pipeline/src/lib/email-template.mjs');
+    const htmlContent = renderDailyEmail({
+      date: todayStr,
+      articles: articles,
+      totalCount: articles.length,
+      dailyPageUrl: `https://www.prisincera.com/prisignal/${todayStr}`,
+      unsubscribeUrl: `https://www.prisincera.com/unsubscribe?email=${encodeURIComponent(to)}`,
+      studyData: studyData,
+    });
+
     const { sendEmail } = await import('./pipeline/src/lib/mailer.mjs');
     const result = await sendEmail(
       to,
-      '[PriSignal] 테스트 발송',
-      '<h2>PriSignal 테스트 메일</h2><p>Admin 대시보드에서 발송된 테스트 이메일입니다.</p>',
+      `[PriSignal 테스트 발송] 오늘의 시그널 템플릿`,
+      htmlContent,
     );
     res.json({ success: true, messageId: result.messageId });
   } catch (err) {
