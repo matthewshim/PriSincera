@@ -615,8 +615,10 @@
 .prisignal-daily-tabs {
   position: sticky;
   top: 56px;
-  margin-left: calc(-1 * var(--space-xl));
-  margin-right: calc(-1 * var(--space-xl));
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  width: 100vw;
+  max-width: 100vw;
   margin-bottom: var(--space-md);
 }
 
