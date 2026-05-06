@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import PriStudyHero from '../components/pristudy/PriStudyHero';
@@ -207,6 +207,20 @@ export default function PriStudy() {
   if (date) {
     return (
       <div className="pristudy-page">
+        {/* ── Sub-tab navigation ── */}
+        <nav className="pristudy-tabs-nav" ref={tabsNavRef} role="tablist">
+          <div className="pristudy-tabs-inner">
+            <Link to="/pristudy" className="pristudy-tab">
+              <span className="pristudy-tab-icon">📖</span>
+              <span className="pristudy-tab-label">서비스 소개</span>
+            </Link>
+            <Link to="/pristudy#daily" className="pristudy-tab active">
+              <span className="pristudy-tab-icon">🗓️</span>
+              <span className="pristudy-tab-label">데일리 스터디</span>
+            </Link>
+          </div>
+        </nav>
+
         <PriStudyDaily 
           showAuth={showAuth}
           loading={loading}
