@@ -112,7 +112,7 @@ export default function PriStudy() {
   };
 
   useEffect(() => {
-    document.title = 'Study — 하루 5분 실무 비즈니스 일본어';
+    document.title = 'Study — 하루 5분, 실무 지식 1-Pick';
     if (activeTab === 'daily' && !token) setShowAuth(true);
     fetchData();
   }, [token, activeTab, targetDate]);

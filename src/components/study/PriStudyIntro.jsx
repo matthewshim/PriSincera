@@ -10,7 +10,7 @@ const values = [
   {
     icon: '💼',
     title: '실무 투입 가능 100%',
-    desc: '이메일, 회의, 협상 등 실제 비즈니스 현장에서 쓰이는 세련된 표현과 일본 특유의 기업 문화(혼네와 다테마에 등)까지 다루어 깊이를 더합니다.',
+    desc: '글로벌 비즈니스 이메일, 현지 기업 문화, 그리고 AI 활용 프롬프트까지. 내일 당장 실무에 적용할 수 있는 핵심 지식만 다루어 깊이를 더합니다.',
   },
   {
     icon: '🤖',
@@ -19,8 +19,8 @@ const values = [
   },
   {
     icon: '🌱',
-    title: '자기 주도 성장 (잔디 심기)',
-    desc: '매일 학습을 완료하면 대시보드에 잔디가 심어집니다. 나의 연속 학습 기록(Streak)을 시각화하여 강력한 동기를 부여하세요.',
+    title: '자기 주도 성장 (멀티 트랙 & 잔디 심기)',
+    desc: '언어부터 AI 프롬프트까지 관심 있는 과목(트랙)을 넘나들며 학습하세요. 매일 대시보드에 잔디가 심어지며 연속 기록(Streak)이 시각화됩니다.',
   },
 ];
 
@@ -33,15 +33,15 @@ const processSteps = [
   },
   {
     num: '02',
-    title: '핵심 문장 추출 & 분석',
+    title: '핵심 문장 & 프롬프트 추출',
     time: '05:00 KST',
-    desc: 'Gemini Composer가 가장 유용한 1문장을 선정하고, 해석, 요미가나, 비즈니스 코멘트를 자동 생성합니다.'
+    desc: 'Gemini Composer가 가장 유용한 1-Pick을 선정하고, 해석, 핵심 어휘 및 비즈니스 실무 활용 코멘트를 자동 생성합니다.'
   },
   {
     num: '03',
-    title: '플래시카드 렌더링',
+    title: '과목별 플래시카드 렌더링',
     time: '06:00 KST',
-    desc: '고품질 원어민 TTS 음성과 함께 데일리 플래시카드로 렌더링되어 구독자에게 서비스됩니다.'
+    desc: '원어민 TTS 음성 및 코드(프롬프트) 스니펫과 함께 트랙별 플래시카드로 렌더링되어 구독자에게 제공됩니다.'
   }
 ];
 
@@ -89,20 +89,20 @@ export default function PriStudyIntro() {
           <div className="pristudy-ux-container">
             <div className="pristudy-ux-item">
               <div className="pristudy-ux-icon">📝</div>
-              <h3>원문 & 발음</h3>
-              <p>한자, 요미가나, 원어민 TTS 음성 지원</p>
+              <h3>원문/템플릿 & 발음</h3>
+              <p>텍스트 원문, 프롬프트 템플릿, 원어민 TTS 음성 지원</p>
             </div>
             <div className="pristudy-ux-arrow">➔</div>
             <div className="pristudy-ux-item">
               <div className="pristudy-ux-icon">💡</div>
-              <h3>비즈니스 맥락</h3>
-              <p>단순 직역을 넘어선 뉘앙스와 에디터 코멘트</p>
+              <h3>실무 맥락 (Context)</h3>
+              <p>단순 직역을 넘어선 실무 뉘앙스와 20년차 PO의 코멘트</p>
             </div>
             <div className="pristudy-ux-arrow">➔</div>
             <div className="pristudy-ux-item">
               <div className="pristudy-ux-icon">🌿</div>
-              <h3>잔디 심기</h3>
-              <p>GitHub 잔디처럼 시각화되는 성취감과 연속성</p>
+              <h3>멀티 트랙 잔디 심기</h3>
+              <p>다양한 관심 과목을 동시에 달성하는 연속성(Streak) 확보</p>
             </div>
           </div>
         </div>

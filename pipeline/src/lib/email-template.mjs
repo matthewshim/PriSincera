@@ -231,7 +231,7 @@ function renderStudySection(studyData) {
   <tr>
     <td style="padding: 0 24px;">
       <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#10B981; line-height:1.3;">
-        📚 오늘의 PriStudy 1문장
+        📚 오늘의 PriStudy 1-Pick
       </p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
              style="background-color:#1A1035; border:1px solid rgba(16,185,129,0.15); border-radius:16px;">
@@ -241,7 +241,7 @@ function renderStudySection(studyData) {
               <tr>
                 <td style="padding-bottom:12px;">
                   <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#10B981; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); border-radius:100px; padding:3px 12px; letter-spacing:0.02em;">
-                    비즈니스 일본어
+                    ${escapeHtml(studyData.trackName || '비즈니스 1-Pick')}
                   </span>
                   <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3; margin-left:8px;">
                     ${escapeHtml(studyData.theme || '오늘의 표현')}
@@ -259,9 +259,9 @@ function renderStudySection(studyData) {
               <tr>
                 <td bgcolor="#10B981"
                     style="background:linear-gradient(135deg,#10B981,#059669); border-radius:100px; padding:8px 22px;">
-                  <a href="https://www.prisincera.com/pristudy/${escapeHtml(studyData.date)}"
+                  <a href="https://www.prisincera.com/study/${escapeHtml(studyData.date)}"
                      style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
-                    → 발음 듣고 잔디 심기
+                    → 학습 완료하고 잔디 심기
                   </a>
                 </td>
               </tr>
