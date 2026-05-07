@@ -36,10 +36,10 @@ function App() {
         {/* Public — Layout 안 (GNB/Footer) */}
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="prisignal" element={<PriSignal />} />
-          <Route path="prisignal/:date" element={<PriSignalParamRoute />} />
-          <Route path="pristudy" element={<PriStudy />} />
-          <Route path="pristudy/:date" element={<PriStudy />} />
+          <Route path="signal" element={<Signal />} />
+          <Route path="signal/:date" element={<PriSignalParamRoute />} />
+          <Route path="study" element={<Study />} />
+          <Route path="study/:date" element={<Study />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
