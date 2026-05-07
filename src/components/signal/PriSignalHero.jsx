@@ -10,7 +10,7 @@ export default function PriSignalHero() {
       <div className="prisignal-section-inner">
         <div className="prisignal-hero-icon">📡</div>
         <h1 className="prisignal-hero-title">
-          Pri<span className="accent">Signal</span>
+          <span className="accent">Signal</span>
         </h1>
         <p className="prisignal-hero-tagline">
           노이즈 속에서 시그널을 포착하다

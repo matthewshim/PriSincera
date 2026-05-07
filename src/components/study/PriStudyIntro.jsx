@@ -14,8 +14,8 @@ const values = [
   },
   {
     icon: '🤖',
-    title: 'PriSignal 시너지 (AI 큐레이션)',
-    desc: 'PriSignal이 분석한 최신 IT/경제 트렌드 뉴스에서 실무 문장을 직접 발췌하여, 가장 유용하고 맥락 있는 1-Pick을 제안합니다.',
+    title: 'Signal 시너지 (AI 큐레이션)',
+    desc: 'Signal이 분석한 최신 IT/경제 트렌드 뉴스에서 실무 문장을 직접 발췌하여, 가장 유용하고 맥락 있는 1-Pick을 제안합니다.',
   },
   {
     icon: '🌱',

@@ -6,7 +6,7 @@ export default function PriStudyHero({ activeTab, onTabChange, token, handleGoog
       <div className="pristudy-section-inner">
         <div className="pristudy-hero-icon">📖</div>
         <h1 className="pristudy-hero-title">
-          Pri<span className="accent">Study</span>
+          <span className="accent">Study</span>
         </h1>
         <p className="pristudy-hero-tagline">
           하루 5분, 실무에서 바로 쓰는 비즈니스 일본어

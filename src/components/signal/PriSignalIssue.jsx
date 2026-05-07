@@ -99,7 +99,7 @@ export default function PriSignalIssue() {
         {/* Navigation */}
         <nav className="prisignal-issue-nav">
           <Link to="/signal" className="prisignal-issue-back" id="issueBackLink">
-            ← PriSignal
+            ← Signal
           </Link>
         </nav>
 
