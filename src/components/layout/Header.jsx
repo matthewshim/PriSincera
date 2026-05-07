@@ -6,8 +6,26 @@ function Header() {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const audioRef = useRef(null);
   const musicIntentRef = useRef(true);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -133,22 +151,50 @@ function Header() {
           <Link to="/prisignal" className={`nav-link${location.pathname.startsWith('/prisignal') ? ' active' : ''}`} id="navPriSignal">PriSignal</Link>
           <Link to="/pristudy" className={`nav-link${location.pathname.startsWith('/pristudy') ? ' active' : ''}`} id="navPriStudy">PriStudy</Link>
         </div>
-        {/* BGM toggle — works on all pages */}
-        <div className="nav-bgm-slot" id="gnbBgmSlot">
-          <button
-            className={`gnb-bgm-btn ${musicPlaying ? 'active' : ''}`}
-            onClick={toggleMusic}
-            aria-label="Toggle music"
-            id="bgmToggle"
+        <div className="nav-right">
+          {/* BGM toggle — works on all pages */}
+          <div className="nav-bgm-slot" id="gnbBgmSlot">
+            <button
+              className={`gnb-bgm-btn ${musicPlaying ? 'active' : ''}`}
+              onClick={toggleMusic}
+              aria-label="Toggle music"
+              id="bgmToggle"
+            >
+              <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
+                <div className="waveform-bar" />
+                <div className="waveform-bar" />
+                <div className="waveform-bar" />
+                <div className="waveform-bar" />
+                <div className="waveform-bar" />
+              </div>
+            </button>
+          </div>
+
+          {/* Hamburger toggle button (mobile only) */}
+          <button 
+            className="mobile-menu-toggle" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
           >
-            <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-              <div className="waveform-bar" />
-            </div>
+            {isMobileMenuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
           </button>
+        </div>
+      </div>
+
+      {/* Mobile Overlay Navigation */}
+      <div className={`mobile-nav-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-nav-links">
+          <Link to="/" className={`mobile-nav-link${location.pathname === '/' ? ' active' : ''}`}>Home</Link>
+          <Link to="/prisignal" className={`mobile-nav-link${location.pathname.startsWith('/prisignal') ? ' active' : ''}`}>PriSignal</Link>
+          <Link to="/pristudy" className={`mobile-nav-link${location.pathname.startsWith('/pristudy') ? ' active' : ''}`}>PriStudy</Link>
         </div>
       </div>
     </nav>

@@ -27,6 +27,8 @@
 }
 
 .nav-inner {
+    position: relative;
+    z-index: 1002;
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -103,9 +105,33 @@
     cursor: pointer;
 }
 
+/* --- Right Side Group --- */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 4px;
+    transition: opacity 0.2s;
+}
+
+.mobile-menu-toggle:hover {
+    opacity: 0.7;
+}
+
+.mobile-nav-overlay {
+    display: none;
+}
+
 /* --- BGM toggle in GNB --- */
 .nav-bgm-slot {
-    margin-left: var(--space-md);
     display: flex;
     align-items: center;
     min-width: 32px;
@@ -165,10 +191,69 @@
 
 @media (max-width: 768px) {
     .nav { padding: var(--space-sm) var(--space-md); }
-    .nav-links { gap: var(--space-md); }
-    .nav-link { font-size: 0.8rem; }
+    .nav-links { display: none; }
+    .nav-right { gap: var(--space-sm); }
     .nav-symbol { width: 28px; height: 28px; }
     .nav-wordmark { font-size: 0.95rem; }
-    .nav-bgm-slot { margin-left: var(--space-sm); }
     .gnb-bgm-btn { width: 28px; height: 28px; }
+
+    .mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-nav-overlay {
+        display: flex;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: rgba(10, 7, 20, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        z-index: 1001;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s var(--ease-out);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-nav-overlay.open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-2xl);
+        transform: translateY(20px);
+        transition: transform 0.4s var(--ease-out);
+    }
+
+    .mobile-nav-overlay.open .mobile-nav-links {
+        transform: translateY(0);
+    }
+
+    .mobile-nav-link {
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: -0.02em;
+    }
+
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active {
+        color: var(--text-primary);
+        background: var(--gradient-brand);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transform: scale(1.05);
+    }
 }
