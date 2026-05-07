@@ -110,6 +110,23 @@ function Header() {
   return (
     <nav className={`nav${scrolled ? ' scrolled' : ''}`} id="nav">
       <div className="nav-inner">
+        {/* Hamburger toggle button (mobile only) - Moved to left */}
+        <button 
+          className="mobile-menu-toggle" 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle mobile menu"
+        >
+          {isMobileMenuOpen ? (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </button>
+
         <Link to="/" className="nav-logo" id="navLogo">
           <div className="nav-symbol">
             <svg viewBox="0 0 44 44" fill="none">
@@ -169,23 +186,6 @@ function Header() {
               </div>
             </button>
           </div>
-
-          {/* Hamburger toggle button (mobile only) */}
-          <button 
-            className="mobile-menu-toggle" 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-          >
-            {isMobileMenuOpen ? (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            ) : (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            )}
-          </button>
         </div>
       </div>
 
