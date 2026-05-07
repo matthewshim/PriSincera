@@ -1,19 +1,19 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import PriSignalHero from '../components/prisignal/PriSignalHero';
-import PriSignalValue from '../components/prisignal/PriSignalValue';
-import PriSignalCategories from '../components/prisignal/PriSignalCategories';
-import PriSignalSignal from '../components/prisignal/PriSignalSignal';
-import PriSignalArchive from '../components/prisignal/PriSignalArchive';
-import PriSignalSubscribe from '../components/prisignal/PriSignalSubscribe';
-import PriSignalFAQ from '../components/prisignal/PriSignalFAQ';
-import FloatingCTA from '../components/prisignal/FloatingCTA';
-import '../components/prisignal/FloatingCTA.css';
+import PriSignalHero from '../components/signal/PriSignalHero';
+import PriSignalValue from '../components/signal/PriSignalValue';
+import PriSignalCategories from '../components/signal/PriSignalCategories';
+import PriSignalSignal from '../components/signal/PriSignalSignal';
+import PriSignalArchive from '../components/signal/PriSignalArchive';
+import PriSignalSubscribe from '../components/signal/PriSignalSubscribe';
+import PriSignalFAQ from '../components/signal/PriSignalFAQ';
+import FloatingCTA from '../components/signal/FloatingCTA';
+import '../components/signal/FloatingCTA.css';
 import './PriSignal.css';
 
 /**
- * PriSignal Landing Page — /prisignal
- * Dedicated page for the PriSignal daily AI-curated newsletter service.
+ * Signal Landing Page — /signal
+ * Dedicated page for the Signal daily AI-curated newsletter service.
  *
  * Layout: Hero (shared) → Sub-tabs [소개 | 아티클]
  *   - 소개 (default): Value → Categories → Signal → Subscribe CTA → FAQ
@@ -81,7 +81,7 @@ export default function PriSignal() {
 
 
   useEffect(() => {
-    document.title = 'PriSignal — 노이즈 속에서 시그널을 포착하다 | PriSincera';
+    document.title = 'Signal — 노이즈 속에서 시그널을 포착하다 | PriSincera';
     window.scrollTo(0, 0);
 
     // Set meta description
@@ -91,19 +91,19 @@ export default function PriSignal() {
       meta.name = 'description';
       document.head.appendChild(meta);
     }
-    meta.content = '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. PriSignal은 매일 35개 글로벌 소스에서 SIGNAL 기준으로 의미 있는 시그널만 포착합니다.';
+    meta.content = '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. Signal은 매일 35개 글로벌 소스에서 SIGNAL 기준으로 의미 있는 시그널만 포착합니다.';
 
     // Set OG meta tags
     const ogTags = {
-      'og:title': 'PriSignal — 노이즈 속에서 시그널을 포착하다',
+      'og:title': 'Signal — 노이즈 속에서 시그널을 포착하다',
       'og:description': '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터. 매일 SIGNAL 기준으로 시그널을 포착합니다.',
-      'og:image': 'https://www.prisincera.com/prisignal-og.webp',
-      'og:url': 'https://www.prisincera.com/prisignal',
+      'og:image': 'https://www.prisincera.com/signal-og.webp',
+      'og:url': 'https://www.prisincera.com/signal',
       'og:type': 'website',
       'twitter:card': 'summary_large_image',
-      'twitter:title': 'PriSignal — 노이즈 속에서 시그널을 포착하다',
+      'twitter:title': 'Signal — 노이즈 속에서 시그널을 포착하다',
       'twitter:description': '20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터.',
-      'twitter:image': 'https://www.prisincera.com/prisignal-og.webp',
+      'twitter:image': 'https://www.prisincera.com/signal-og.webp',
     };
 
     const createdMetas = [];
@@ -119,7 +119,7 @@ export default function PriSignal() {
       tag.content = content;
     });
 
-    // PriSignal 페이지에는 Hero 인트로가 없으므로 GNB를 즉시 표시
+    // Signal 페이지에는 Hero 인트로가 없으므로 GNB를 즉시 표시
     document.body.classList.add('hero-ready');
 
     return () => {
@@ -144,7 +144,7 @@ export default function PriSignal() {
       <PriSignalHero />
 
       {/* ── Sub-tab navigation ── */}
-      <nav className="prisignal-tabs" id="prisignal-tabs" ref={tabsNavRef} role="tablist" aria-label="PriSignal 콘텐츠 탭">
+      <nav className="prisignal-tabs" id="prisignal-tabs" ref={tabsNavRef} role="tablist" aria-label="Signal 콘텐츠 탭">
         <div className="prisignal-tabs-inner" ref={tabsRef}>
           {TABS.map((tab) => (
             <button

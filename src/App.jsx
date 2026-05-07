@@ -4,19 +4,19 @@ import Layout from './components/layout/Layout';
 
 /* ── Code Splitting: page-level lazy imports ── */
 const Home = lazy(() => import('./pages/Home'));
-const PriSignal = lazy(() => import('./pages/PriSignal'));
+const Signal = lazy(() => import('./pages/PriSignal'));
 const PriSignalDaily = lazy(() => import('./pages/PriSignalDaily'));
-const PriSignalIssue = lazy(() => import('./components/prisignal/PriSignalIssue'));
-const PriStudy = lazy(() => import('./pages/PriStudy'));
+const PriSignalIssue = lazy(() => import('./components/signal/PriSignalIssue'));
+const Study = lazy(() => import('./pages/PriStudy'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 /**
- * Route discriminator: /prisignal/:param
+ * Route discriminator: /signal/:param
  * - YYYY-MM-DD → PriSignalDaily (데일리 시그널)
  * - UUID/other → PriSignalIssue (레거시 뉴스레터 아카이브)
  */
 function PriSignalParamRoute() {
-  const param = window.location.pathname.split('/prisignal/')[1]?.split('/')[0] || '';
+  const param = window.location.pathname.split('/signal/')[1]?.split('/')[0] || '';
   const isDate = /^\d{4}-\d{2}-\d{2}$/.test(param);
   return isDate ? <PriSignalDaily /> : <PriSignalIssue />;
 }

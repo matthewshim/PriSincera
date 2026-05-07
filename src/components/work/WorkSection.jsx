@@ -4,7 +4,7 @@ import './WorkSection.css';
 
 /**
  * Work Section — Project showcase.
- * Displays PriSincera and PriSignal as consistent project cards.
+ * Displays PriSincera and Signal as consistent project cards.
  * Follows the same glassmorphic container pattern as Belief/Journey sections.
  */
 export default function WorkSection() {
@@ -76,8 +76,8 @@ export default function WorkSection() {
             </div>
           </div>
 
-          {/* PriSignal — Daily Curation */}
-          <Link to="/prisignal" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priSignalWorkCard">
+          {/* Signal — Daily Curation */}
+          <Link to="/signal" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priSignalWorkCard">
             <div className="work-card-icon">
               <span className="work-card-emoji">📡</span>
             </div>
@@ -85,7 +85,7 @@ export default function WorkSection() {
               <div className="work-card-label">Daily Curation</div>
               <div className="work-card-name">
                 PriSignal
-                <span className="work-card-tag">prisincera.com/prisignal</span>
+                <span className="work-card-tag">prisincera.com/signal</span>
               </div>
               <p className="work-card-desc">
                 노이즈 속에서 시그널을 포착합니다.<br />
@@ -101,8 +101,8 @@ export default function WorkSection() {
             </div>
           </Link>
 
-          {/* PriStudy — Microlearning */}
-          <Link to="/pristudy" className="work-card pristudy reveal-item" style={{ '--reveal-delay': '0.5s' }} id="priStudyWorkCard">
+          {/* Study — Microlearning */}
+          <Link to="/study" className="work-card pristudy reveal-item" style={{ '--reveal-delay': '0.5s' }} id="priStudyWorkCard">
             <div className="work-card-icon">
               <span className="work-card-emoji">📖</span>
             </div>
@@ -110,7 +110,7 @@ export default function WorkSection() {
               <div className="work-card-label">Microlearning</div>
               <div className="work-card-name">
                 PriStudy
-                <span className="work-card-tag">prisincera.com/pristudy</span>
+                <span className="work-card-tag">prisincera.com/study</span>
               </div>
               <p className="work-card-desc">
                 하루 5분, 실무 비즈니스 일본어 1문장.<br />

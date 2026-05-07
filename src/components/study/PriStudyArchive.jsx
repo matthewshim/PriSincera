@@ -71,7 +71,7 @@ export default function PriStudyArchive() {
               const dp = parseDateParts(entry.date);
               return (
                 <Link
-                  to={`/pristudy/${entry.date}`}
+                  to={`/study/${entry.date}`}
                   className={`pristudy-archive-card${entry.isToday ? ' today' : ''}`}
                   key={entry.date}
                   style={{ '--card-index': idx }}

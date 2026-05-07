@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
 
 /**
- * SubscribeForm — Reusable PriSignal subscription form.
+ * SubscribeForm — Reusable Signal subscription form.
  * Posts email to /api/subscribe (Nginx proxy → Buttondown API).
- * Used in Work section banner and PriSignal landing page.
+ * Used in Work section banner and Signal landing page.
  *
  * Props:
  *   variant: 'inline' | 'stacked' (default: 'inline')

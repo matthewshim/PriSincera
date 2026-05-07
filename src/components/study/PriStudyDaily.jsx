@@ -23,7 +23,7 @@ export default function PriStudyDaily({
               onClick={() => {
                 const d = new Date(targetDate);
                 d.setDate(d.getDate() - 1);
-                navigate(`/pristudy/${d.toISOString().slice(0, 10)}`);
+                navigate(`/study/${d.toISOString().slice(0, 10)}`);
               }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -51,7 +51,7 @@ export default function PriStudyDaily({
               onClick={() => {
                 const d = new Date(targetDate);
                 d.setDate(d.getDate() + 1);
-                navigate(`/pristudy/${d.toISOString().slice(0, 10)}`);
+                navigate(`/study/${d.toISOString().slice(0, 10)}`);
               }}
             >
               <span className="pristudy-nav-btn-label">
@@ -68,7 +68,7 @@ export default function PriStudyDaily({
 
         <button 
           className="pristudy-daily-list-btn"
-          onClick={() => navigate('/pristudy#daily')}
+          onClick={() => navigate('/study#daily')}
         >
           Daily List
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none">

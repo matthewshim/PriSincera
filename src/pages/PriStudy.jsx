@@ -2,10 +2,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
-import PriStudyHero from '../components/pristudy/PriStudyHero';
-import PriStudyIntro from '../components/pristudy/PriStudyIntro';
-import PriStudyDaily from '../components/pristudy/PriStudyDaily';
-import PriStudyArchive from '../components/pristudy/PriStudyArchive';
+import PriStudyHero from '../components/study/PriStudyHero';
+import PriStudyIntro from '../components/study/PriStudyIntro';
+import PriStudyDaily from '../components/study/PriStudyDaily';
+import PriStudyArchive from '../components/study/PriStudyArchive';
 import './PriStudy.css';
 
 const TABS = [
@@ -112,7 +112,7 @@ export default function PriStudy() {
   };
 
   useEffect(() => {
-    document.title = 'PriStudy — 하루 5분 실무 비즈니스 일본어';
+    document.title = 'Study — 하루 5분 실무 비즈니스 일본어';
     if (activeTab === 'daily' && !token) setShowAuth(true);
     fetchData();
   }, [token, activeTab, targetDate]);
@@ -213,11 +213,11 @@ export default function PriStudy() {
         {/* ── Sub-tab navigation ── */}
         <nav className="pristudy-tabs-nav" ref={tabsNavRef} role="tablist">
           <div className="pristudy-tabs-inner" ref={tabsRef}>
-            <Link to="/pristudy" className="pristudy-tab">
+            <Link to="/study" className="pristudy-tab">
               <span className="pristudy-tab-icon">📖</span>
               <span className="pristudy-tab-label">서비스 소개</span>
             </Link>
-            <Link to="/pristudy#daily" className="pristudy-tab active">
+            <Link to="/study#daily" className="pristudy-tab active">
               <span className="pristudy-tab-icon">🗓️</span>
               <span className="pristudy-tab-label">데일리 스터디</span>
             </Link>

@@ -1,5 +1,5 @@
 /**
- * PriSignal Categories — ③ Content categories section.
+ * Signal Categories — ③ Content categories section.
  */
 const categories = [
   {

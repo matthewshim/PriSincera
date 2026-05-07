@@ -1,5 +1,5 @@
 /**
- * PriSignal SIGNAL Criteria — ③-b Selection criteria section.
+ * Signal SIGNAL Criteria — ③-b Selection criteria section.
  * Shows how articles are scored using the S.I.G.N.A.L. framework.
  */
 const signals = [

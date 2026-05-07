@@ -200,14 +200,14 @@
     --card-accent: #7C3AED;
 }
 
-/* --- PriSignal Card Variant --- */
+/* --- Signal Card Variant --- */
 .work-card.prisignal {
     --card-accent: var(--orbit-cyan);
     text-decoration: none;
     color: inherit;
 }
 
-/* --- PriStudy Card Variant --- */
+/* --- Study Card Variant --- */
 .work-card.pristudy {
     --card-accent: var(--prism-rose);
     text-decoration: none;

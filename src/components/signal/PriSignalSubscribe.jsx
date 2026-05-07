@@ -1,7 +1,7 @@
 import SubscribeForm from './SubscribeForm';
 
 /**
- * PriSignal Subscribe CTA — ⑤ Repeated subscribe call-to-action.
+ * Signal Subscribe CTA — ⑤ Repeated subscribe call-to-action.
  */
 export default function PriSignalSubscribe() {
   return (

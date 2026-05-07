@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react';
 
 /**
- * PriSignal FAQ — ⑦ Frequently asked questions accordion.
+ * Signal FAQ — ⑦ Frequently asked questions accordion.
  */
 const faqs = [
   {
-    q: 'PriSignal은 무엇인가요?',
-    a: 'PriSignal은 PriSincera가 운영하는 주간 인사이트 큐레이션 뉴스레터입니다. 20년차 프로덕트 오너의 기준으로 설계된 AI 시스템이, 매주 글로벌 소스에서 의미 있는 시그널을 포착하고 코멘트와 함께 전합니다.',
+    q: 'Signal은 무엇인가요?',
+    a: 'Signal은 PriSincera가 운영하는 주간 인사이트 큐레이션 뉴스레터입니다. 20년차 프로덕트 오너의 기준으로 설계된 AI 시스템이, 매주 글로벌 소스에서 의미 있는 시그널을 포착하고 코멘트와 함께 전합니다.',
   },
   {
     q: '시그널은 어떻게 선정되나요?',

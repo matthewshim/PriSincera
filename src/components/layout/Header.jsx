@@ -84,9 +84,9 @@ function Header() {
     };
   }, []);
 
-  // Auto-pause BGM on /pristudy
+  // Auto-pause BGM on /study
   useEffect(() => {
-    if (location.pathname.startsWith('/pristudy')) {
+    if (location.pathname.startsWith('/study')) {
       const audio = getAudio();
       audio.pause();
       musicIntentRef.current = false;
@@ -165,8 +165,8 @@ function Header() {
         </Link>
         <div className="nav-links">
           <Link to="/" className={`nav-link${location.pathname === '/' ? ' active' : ''}`} id="navHome">Home</Link>
-          <Link to="/prisignal" className={`nav-link${location.pathname.startsWith('/prisignal') ? ' active' : ''}`} id="navPriSignal">PriSignal</Link>
-          <Link to="/pristudy" className={`nav-link${location.pathname.startsWith('/pristudy') ? ' active' : ''}`} id="navPriStudy">PriStudy</Link>
+          <Link to="/signal" className={`nav-link${location.pathname.startsWith('/signal') ? ' active' : ''}`} id="navPriSignal">Signal</Link>
+          <Link to="/study" className={`nav-link${location.pathname.startsWith('/study') ? ' active' : ''}`} id="navPriStudy">Study</Link>
         </div>
         <div className="nav-right">
           {/* BGM toggle — works on all pages */}
@@ -193,8 +193,8 @@ function Header() {
       <div className={`mobile-nav-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-nav-links">
           <Link to="/" className={`mobile-nav-link${location.pathname === '/' ? ' active' : ''}`}>Home</Link>
-          <Link to="/prisignal" className={`mobile-nav-link${location.pathname.startsWith('/prisignal') ? ' active' : ''}`}>PriSignal</Link>
-          <Link to="/pristudy" className={`mobile-nav-link${location.pathname.startsWith('/pristudy') ? ' active' : ''}`}>PriStudy</Link>
+          <Link to="/signal" className={`mobile-nav-link${location.pathname.startsWith('/signal') ? ' active' : ''}`}>Signal</Link>
+          <Link to="/study" className={`mobile-nav-link${location.pathname.startsWith('/study') ? ' active' : ''}`}>Study</Link>
         </div>
       </div>
     </nav>

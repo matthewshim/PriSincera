@@ -69,7 +69,7 @@ export default function PriStudyIntro() {
       {/* ── 2. Value Proposition ── */}
       <section className="pristudy-section pristudy-value">
         <div className="pristudy-section-inner">
-          <h2 className="pristudy-section-title">왜 <span className="accent">PriStudy</span>인가?</h2>
+          <h2 className="pristudy-section-title">왜 <span className="accent">Study</span>인가?</h2>
           <div className="pristudy-value-grid">
             {values.map((v, i) => (
               <div className="pristudy-value-card" key={i}>
@@ -135,7 +135,7 @@ export default function PriStudyIntro() {
           <button 
             className="pristudy-done-btn" 
             style={{ maxWidth: '400px', margin: '0 auto' }}
-            onClick={() => navigate('/pristudy#daily')}
+            onClick={() => navigate('/study#daily')}
           >
             🚀 오늘의 1-Pick 학습 시작하기
           </button>

@@ -4,8 +4,8 @@ import DOMPurify from 'dompurify';
 import '../../pages/PriSignal.css';
 
 /**
- * PriSignal Issue — Individual newsletter issue detail page.
- * Route: /prisignal/:issueId
+ * Signal Issue — Individual newsletter issue detail page.
+ * Route: /signal/:issueId
  * Fetches issue content from Buttondown API via /api/archive/:id proxy.
  */
 
@@ -56,9 +56,9 @@ export default function PriSignalIssue() {
   // Set document title
   useEffect(() => {
     if (issue?.subject) {
-      document.title = `${issue.subject} | PriSignal — PriSincera`;
+      document.title = `${issue.subject} | Signal — PriSincera`;
     } else {
-      document.title = 'PriSignal — PriSincera';
+      document.title = 'Signal — PriSincera';
     }
     return () => {
       document.title = 'PriSincera — Sincerity, Prioritized.';
@@ -85,8 +85,8 @@ export default function PriSignalIssue() {
           <p className="prisignal-issue-error-desc">
             요청하신 이슈가 존재하지 않거나 삭제되었습니다.
           </p>
-          <Link to="/prisignal" className="prisignal-issue-back-btn" id="issueBackBtn">
-            ← PriSignal로 돌아가기
+          <Link to="/signal" className="prisignal-issue-back-btn" id="issueBackBtn">
+            ← Signal로 돌아가기
           </Link>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function PriSignalIssue() {
       <article className="prisignal-issue-article">
         {/* Navigation */}
         <nav className="prisignal-issue-nav">
-          <Link to="/prisignal" className="prisignal-issue-back" id="issueBackLink">
+          <Link to="/signal" className="prisignal-issue-back" id="issueBackLink">
             ← PriSignal
           </Link>
         </nav>
@@ -121,7 +121,7 @@ export default function PriSignalIssue() {
 
         {/* Footer */}
         <footer className="prisignal-issue-footer">
-          <Link to="/prisignal" className="prisignal-issue-back-btn" id="issueFooterBackBtn">
+          <Link to="/signal" className="prisignal-issue-back-btn" id="issueFooterBackBtn">
             ← 전체 시그널 목록
           </Link>
         </footer>

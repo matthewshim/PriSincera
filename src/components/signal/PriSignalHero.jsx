@@ -1,8 +1,8 @@
 import SubscribeForm from './SubscribeForm';
-import '../prisignal/SubscribeForm.css';
+import '../signal/SubscribeForm.css';
 
 /**
- * PriSignal Hero — ① Hero section with tagline and subscribe form.
+ * Signal Hero — ① Hero section with tagline and subscribe form.
  */
 export default function PriSignalHero() {
   return (

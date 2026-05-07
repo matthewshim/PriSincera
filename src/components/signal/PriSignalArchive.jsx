@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SubscribeForm from './SubscribeForm';
 
 /**
- * PriSignal Archive — ④ 최근 시그널 섹션
+ * Signal Archive — ④ 최근 시그널 섹션
  *
  * [Daily Model v3 — OG Image]
  * 최근 7일의 데일리 시그널 페이지 목록을 표시합니다.
@@ -144,7 +144,7 @@ export default function PriSignalArchive() {
               const topCatMeta = CATEGORY_META[entry.topCategory] || {};
               return (
                 <Link
-                  to={`/prisignal/${entry.date}`}
+                  to={`/signal/${entry.date}`}
                   className={`prisignal-archive-card${entry.isToday ? ' today' : ''}`}
                   key={entry.date}
                   id={`dailyCard-${entry.date}`}

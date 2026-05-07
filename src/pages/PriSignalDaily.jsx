@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import SubscribeForm from '../components/prisignal/SubscribeForm';
+import SubscribeForm from '../components/signal/SubscribeForm';
 import './PriSignalDaily.css';
 import './PriSignal.css';
 
 /**
- * PriSignal Daily — 데일리 시그널 페이지
- * Route: /prisignal/:date (e.g. /prisignal/2026-04-21)
+ * Signal Daily — 데일리 시그널 페이지
+ * Route: /signal/:date (e.g. /signal/2026-04-21)
  * GCS daily JSON을 /api/daily/:date 프록시로 조회
  */
 
@@ -124,7 +124,7 @@ export default function PriSignalDaily() {
   }, [date, isFuture]);
 
   useEffect(() => {
-    document.title = `${formatKoreanDate(date)}의 시그널 | PriSignal — PriSincera`;
+    document.title = `${formatKoreanDate(date)}의 시그널 | Signal — PriSincera`;
     document.body.classList.add('hero-ready');
     return () => {
       document.title = 'PriSincera — Sincerity, Prioritized.';
@@ -277,14 +277,14 @@ export default function PriSignalDaily() {
       {/* Scroll Progress */}
       <div className="prisignal-scroll-progress" ref={scrollBarRef} />
 
-      {/* ── Sub-tab Navigation (shared with /prisignal) ── */}
-      <nav className="prisignal-tabs prisignal-daily-tabs" ref={tabsNavRef} role="tablist" aria-label="PriSignal 콘텐츠 탭">
+      {/* ── Sub-tab Navigation (shared with /signal) ── */}
+      <nav className="prisignal-tabs prisignal-daily-tabs" ref={tabsNavRef} role="tablist" aria-label="Signal 콘텐츠 탭">
         <div className="prisignal-tabs-inner" ref={tabsRef}>
-          <Link to="/prisignal" className="prisignal-tab" id="dailyTabIntro">
+          <Link to="/signal" className="prisignal-tab" id="dailyTabIntro">
             <span className="prisignal-tab-icon">📋</span>
             <span className="prisignal-tab-label">서비스 소개</span>
           </Link>
-          <Link to="/prisignal#daily" className="prisignal-tab active" id="dailyTabArticles">
+          <Link to="/signal#daily" className="prisignal-tab active" id="dailyTabArticles">
             <span className="prisignal-tab-icon">📰</span>
             <span className="prisignal-tab-label">데일리 시그널</span>
           </Link>
@@ -295,7 +295,7 @@ export default function PriSignalDaily() {
       {/* ── Hero Header ── */}
       <header className="prisignal-daily-header">
         <div className="prisignal-daily-date-nav-row">
-          <Link to={`/prisignal/${prevDate}`} className="prisignal-daily-date-arrow" id="dailyNavPrev">
+          <Link to={`/signal/${prevDate}`} className="prisignal-daily-date-arrow" id="dailyNavPrev">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -311,7 +311,7 @@ export default function PriSignalDaily() {
           </div>
 
           {!isFuture && date < today ? (
-            <Link to={`/prisignal/${nextDate}`} className="prisignal-daily-date-arrow next" id="dailyNavNext">
+            <Link to={`/signal/${nextDate}`} className="prisignal-daily-date-arrow next" id="dailyNavNext">
               <span className="prisignal-daily-date-arrow-label">{formatNavDate(nextDate)}</span>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -322,7 +322,7 @@ export default function PriSignalDaily() {
           )}
         </div>
 
-        <Link to="/prisignal#daily" className="prisignal-daily-list-btn" id="dailyListBtn">
+        <Link to="/signal#daily" className="prisignal-daily-list-btn" id="dailyListBtn">
           Daily List
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
             <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -528,7 +528,7 @@ export default function PriSignalDaily() {
 
       {/* ── List Link ── */}
       <div className="prisignal-daily-list-link-wrap">
-        <Link to="/prisignal#daily" className="prisignal-daily-list-link" id="dailyListLink">
+        <Link to="/signal#daily" className="prisignal-daily-list-link" id="dailyListLink">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
           </svg>

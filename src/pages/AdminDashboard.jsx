@@ -291,7 +291,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     }
   }
 
-  // ─── PriStudy Loaders & Handlers ─────────────────
+  // ─── Study Loaders & Handlers ─────────────────
   
   async function loadPriStudyStats() {
     try {
@@ -409,7 +409,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const menuGroups = [
     {
       id: 'prisignal',
-      label: 'PriSignal',
+      label: 'Signal',
       items: [
         { id: 'overview', label: '📊 대시보드' },
         { id: 'subscribers', label: '👥 구독자' },
@@ -419,7 +419,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     },
     {
       id: 'pristudy',
-      label: 'PriStudy',
+      label: 'Study',
       items: [
         { id: 'pristudy_overview', label: '📊 대시보드' },
         { id: 'pristudy_content', label: '📚 콘텐츠 관리' },
@@ -627,7 +627,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {activeTab === 'pristudy_overview' && priStudyStats && (
           <div className="admin-overview">
-            <div className="admin-section-header"><h2>PriStudy 대시보드</h2></div>
+            <div className="admin-section-header"><h2>Study 대시보드</h2></div>
             <div className="admin-stat-grid">
               <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('pristudy_content')} />
               <StatCard label="총 학습자" value={priStudyStats.totalLearners} icon="👥" color="var(--admin-green)" onClick={() => setActiveTab('pristudy_learners')} />

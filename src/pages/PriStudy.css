@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════
-   PriStudy — Daily Microlearning (Premium Dark)
+   Study — Daily Microlearning (Premium Dark)
    ═══════════════════════════════════════════════ */
 
 /* ── 페이지 레이아웃 ── */
@@ -313,6 +313,13 @@
   padding-right: var(--space-xl);
   max-width: 900px;
   margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .pristudy-daily-wrapper {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
 }
 
 .pristudy-daily-header {
@@ -828,6 +835,13 @@
   padding-bottom: 80px;
   padding-left: var(--space-xl);
   padding-right: var(--space-xl);
+}
+
+@media (max-width: 640px) {
+  .pristudy-archive-inner {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
 }
 
 .pristudy-archive-loading,
