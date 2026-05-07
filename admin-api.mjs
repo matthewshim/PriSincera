@@ -298,7 +298,7 @@ router.post('/email/send-test', async (req, res) => {
     const { sendEmail } = await import('./pipeline/src/lib/mailer.mjs');
     const result = await sendEmail(
       to,
-      `[PriSignal 테스트 발송] 오늘의 시그널 템플릿`,
+      `[PriSincera 테스트 발송] 오늘의 템플릿 미리보기`,
       htmlContent,
     );
     res.json({ success: true, messageId: result.messageId });
