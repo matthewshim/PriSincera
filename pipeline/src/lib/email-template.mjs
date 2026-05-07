@@ -363,20 +363,20 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="center" style="padding-bottom: 12px;">
-                    <span style="font-size:32px; line-height:1;">📡</span>
+                    <span style="font-size:32px; line-height:1;">✨</span>
                   </td>
                 </tr>
                 <tr>
                   <td align="center">
                     <h1 style="margin:0; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:28px; font-weight:700; color:#F5F3FF; letter-spacing:-0.02em;">
-                      Pri<span style="color:#C084FC;">Signal</span>
+                      Pri<span style="color:#C084FC;">Sincera</span>
                     </h1>
                   </td>
                 </tr>
                 <tr>
                   <td align="center" style="padding-top: 8px;">
                     <p style="margin:0; font-family:'Inter','Noto Sans KR',-apple-system,sans-serif; font-size:13px; color:#6D5BA3; line-height:1.5; letter-spacing:0.02em;">
-                      노이즈 속에서 시그널을 포착하다
+                      Daily Insights & Study
                     </p>
                   </td>
                 </tr>
@@ -388,7 +388,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
           <tr>
             <td align="center" style="padding: 0 24px 12px;">
               <p style="margin:0 0 20px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA; text-align:center;">
-                ${dateKR}의 시그널을 전합니다.
+                ${dateKR}, 오늘 하루 성장을 위한 시그널과 배움을 전해드립니다.
               </p>
               <table role="presentation" cellpadding="0" cellspacing="0" border="0"
                      style="background-color:rgba(26,16,53,0.6); border:1px solid rgba(196,181,253,0.08); border-radius:12px;">
@@ -430,7 +430,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
           <tr>
             <td style="padding: 0 24px;">
               <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#22D3EE; line-height:1.3;">
-                ⭐ DM Pick — 오늘의 핵심 시그널
+                📡 Signal — Today's DM Pick
               </p>
               ${dmPickCards}
             </td>

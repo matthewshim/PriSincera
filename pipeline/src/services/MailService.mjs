@@ -7,7 +7,7 @@ import { buildUnsubscribeUrl } from '../lib/subscribers.mjs';
 import { db, COLLECTIONS } from '../lib/firestore.mjs';
 
 /**
- * 당일 이메일이 이미 발송되었는지 확인합니다.
+ * 당일 이메일 발송이 진행 중이거나 완료되었는지 확인합니다.
  * @param {string} todayStr 
  * @returns {Promise<boolean>}
  */
@@ -39,7 +39,22 @@ export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, s
   const dateObj = new Date(Number(y), Number(m) - 1, Number(d));
   const dateKr = `${Number(m)}/${Number(d)}(${days[dateObj.getDay()]})`;
 
-  const subject = `📡 PriSignal Daily — ${dateKr}`;
+  const subject = `📬 PriSincera Daily — ${dateKr}`;
+
+  // 발송 시작 전 Pending(Lock) 상태 기록하여 중복 트리거 차단
+  try {
+    if (db) {
+      await db.collection(COLLECTIONS.EMAIL_LOGS).doc(`daily-${todayStr}`).set({
+        date: todayStr,
+        status: 'pending',
+        subject: subject,
+        startedAt: new Date().toISOString()
+      });
+      console.log(`[MailService] 🔒 중복 발송 방지를 위한 Pending 락 생성: daily-${todayStr}`);
+    }
+  } catch (err) {
+    console.error(`[MailService] Pending 락 생성 실패: ${err.message}`);
+  }
 
   // 구독자별 개인화된 HTML 렌더링 (unsubscribe URL 개별 생성)
   const htmlRenderer = (subscriberEmail) => renderDailyEmail({
@@ -57,9 +72,9 @@ export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, s
   // Firestore 이력 저장
   try {
     if (db) {
-      await db.collection(COLLECTIONS.EMAIL_LOGS).doc(`daily-${todayStr}`).set({
-        date: todayStr,
-        subject: subject,
+      // 이미 생성된 Pending 문서를 업데이트
+      await db.collection(COLLECTIONS.EMAIL_LOGS).doc(`daily-${todayStr}`).update({
+        status: 'completed',
         totalRecipients: emailResult.total,
         successCount: emailResult.sent,
         failedCount: emailResult.failed,

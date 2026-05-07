@@ -18,7 +18,7 @@ function getConfig() {
     port: Number(process.env.SMTP_PORT) || 587,
     user: process.env.SMTP_USER || '',
     pass: process.env.SMTP_PASS || '',
-    fromName: process.env.SMTP_FROM_NAME || 'PriSignal',
+    fromName: process.env.SMTP_FROM_NAME || 'PriSincera',
     fromEmail: process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || '',
   };
 }
@@ -75,7 +75,7 @@ export async function sendEmail(to, subject, html, maxRetries = 3) {
     html,
     // List-Unsubscribe 헤더 (이메일 클라이언트 구독해지 버튼 지원)
     headers: {
-      'X-Mailer': 'PriSignal/2.0',
+      'X-Mailer': 'PriSincera/3.0',
     },
   };
 
