@@ -84,7 +84,7 @@ export default function WorkSection() {
             <div className="work-card-body">
               <div className="work-card-label">Daily Curation</div>
               <div className="work-card-name">
-                PriSignal
+                Signal
                 <span className="work-card-tag">prisincera.com/signal</span>
               </div>
               <p className="work-card-desc">
@@ -109,7 +109,7 @@ export default function WorkSection() {
             <div className="work-card-body">
               <div className="work-card-label">Microlearning</div>
               <div className="work-card-name">
-                PriStudy
+                Study
                 <span className="work-card-tag">prisincera.com/study</span>
               </div>
               <p className="work-card-desc">
