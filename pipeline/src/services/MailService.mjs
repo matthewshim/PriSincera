@@ -31,7 +31,7 @@ export async function isEmailAlreadySent(todayStr) {
  * @param {Object} [studyData]
  */
 export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, studyData) {
-  const dailyPageUrl = `https://www.prisincera.com/prisignal/${todayStr}`;
+  const dailyPageUrl = `https://www.prisincera.com/daily/${todayStr}`;
   
   // 날짜 한국어 포맷 (예: 5/3(일))
   const [y, m, d] = todayStr.split('-');
