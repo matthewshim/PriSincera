@@ -26,11 +26,12 @@
   z-index: 0;
 }
 .daily-hero-quote {
+  font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-md);
   line-height: 1.4;
-  background: linear-gradient(135deg, #F3F4F6 0%, #A78BFA 100%);
+  background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
@@ -50,29 +51,31 @@
 .daily-value-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
+  gap: var(--space-md);
   margin-top: 40px;
 }
 .daily-value-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 32px 24px;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg) var(--space-md);
+  transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  backdrop-filter: blur(12px);
 }
 .daily-value-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: var(--glass-border-hover);
 }
 .daily-value-card-icon {
   font-size: 2.5rem;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 .daily-value-card-title {
+  font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 600;
-  color: #F3F4F6;
-  margin-bottom: 12px;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
 }
 .daily-value-card-desc {
   font-size: 0.95rem;
@@ -85,12 +88,13 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 20px;
+  gap: var(--space-md);
   margin-top: 40px;
-  background: var(--bg-card);
+  background: var(--glass-bg);
   padding: 40px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
 }
 .daily-pipeline-step {
   flex: 1;
@@ -99,45 +103,47 @@
 .step-num {
   width: 48px;
   height: 48px;
-  border-radius: 24px;
-  background: rgba(139, 92, 246, 0.2);
-  color: #C4B5FD;
+  border-radius: var(--radius-pill);
+  background: rgba(124, 58, 237, 0.2);
+  color: var(--crystal-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
-  margin: 0 auto 16px;
-  border: 1px solid rgba(139, 92, 246, 0.4);
+  margin: 0 auto var(--space-md);
+  border: 1px solid rgba(124, 58, 237, 0.4);
 }
 .daily-pipeline-step h3 {
+  font-family: var(--font-display);
   font-size: 1.1rem;
-  color: #E9D5FF;
-  margin-bottom: 12px;
+  color: var(--crystal-white);
+  margin-bottom: var(--space-sm);
 }
 .daily-pipeline-step p {
   font-size: 0.9rem;
-  color: #9CA3AF;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 .pipeline-arrow {
-  color: #6B7280;
+  color: var(--text-muted);
   font-size: 1.5rem;
-  padding-top: 12px;
+  padding-top: var(--space-sm);
 }
 
 /* CTA */
 .daily-done-btn {
-  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
-  color: white;
+  background: var(--gradient-brand);
+  color: var(--bg-deep);
   border: none;
-  padding: 16px 40px;
+  padding: var(--space-md) 40px;
+  font-family: var(--font-display);
   font-size: 1.15rem;
-  font-weight: 600;
-  border-radius: 30px;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
-  transition: all 0.3s ease;
+  transition: all var(--duration-fast) var(--ease-out);
 }
 .daily-done-btn:hover {
   transform: translateY(-2px);
