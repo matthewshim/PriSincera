@@ -44,14 +44,14 @@
 
 /* ── Daily View (The Feed) ── */
 .daily-feed-container {
-  max-width: 800px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 var(--space-md) var(--space-xl);
 }
 
 /* Section Wrapper */
 .daily-section {
-  margin-bottom: 40px;
+  margin-bottom: var(--space-lg);
 }
 .daily-section-header {
   display: flex;
@@ -134,19 +134,34 @@
 }
 
 .signal-article-category {
-  display: inline-block;
-  background: rgba(34, 211, 238, 0.1);
-  color: var(--orbit-cyan);
+  display: inline-flex;
+  align-items: center;
+  background: rgba(124, 58, 237, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(196, 181, 253, 0.2);
+  color: var(--crystal-white);
   font-family: var(--font-display);
   font-size: 0.75rem;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
   margin-bottom: var(--space-sm);
   align-self: flex-start;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(34, 211, 238, 0.2);
+  letter-spacing: 1px;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+.signal-article-category::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s var(--ease-out);
+}
+.signal-article-card:hover .signal-article-category::before {
+  transform: translateX(100%);
 }
 
 .signal-article-body h3 {
@@ -308,9 +323,9 @@
 
 /* ── Archive List View ── */
 .archive-container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
+  max-width: 1000px;
+  margin: var(--space-lg) auto;
+  padding: 0 var(--space-md);
 }
 .archive-section-title {
   font-family: var(--font-display);

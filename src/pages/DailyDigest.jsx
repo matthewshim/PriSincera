@@ -140,6 +140,16 @@ export default function DailyDigest() {
 
   const isTodayCompleted = progress?.completed_dates?.includes(date || todayStr);
 
+  const getCategoryStyles = (category) => {
+    if (!category) return {};
+    const cat = category.toLowerCase();
+    if (cat.includes('ai') || cat.includes('인공지능')) return { color: 'var(--orbit-cyan)', background: 'rgba(34, 211, 238, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(34, 211, 238, 0.3)' };
+    if (cat.includes('startup') || cat.includes('스타트업') || cat.includes('business') || cat.includes('비즈니스')) return { color: 'var(--prism-rose)', background: 'rgba(240, 171, 252, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(240, 171, 252, 0.3)' };
+    if (cat.includes('tech') || cat.includes('개발') || cat.includes('software') || cat.includes('트렌드')) return { color: 'var(--prism-amber)', background: 'rgba(253, 230, 138, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(253, 230, 138, 0.3)' };
+    if (cat.includes('security') || cat.includes('보안')) return { color: '#FCA5A5', background: 'rgba(248, 113, 113, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(248, 113, 113, 0.3)' };
+    return { color: 'var(--prism-lavender)', background: 'rgba(192, 132, 252, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(192, 132, 252, 0.3)' };
+  };
+
   const handleTabChange = (key) => {
     setActiveTab(key);
     if (key === 'daily') {
@@ -260,7 +270,7 @@ export default function DailyDigest() {
                           </div>
                         )}
                         <div className="signal-article-body">
-                          {article.category && <span className="signal-article-category">{article.category}</span>}
+                          {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
                           <h3>{article.title}</h3>
                           {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
                           <p>{article.summary}</p>
