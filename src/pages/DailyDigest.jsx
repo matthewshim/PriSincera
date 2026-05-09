@@ -365,6 +365,24 @@ export default function DailyDigest() {
   // Detail View
   return (
     <div className="daily-digest-page">
+      {/* ── Sub-tab navigation (Detail View) ── */}
+      <nav className="daily-tabs-nav" role="tablist">
+        <div className="daily-tabs-inner">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              role="tab"
+              aria-selected={tab.key === 'daily'}
+              className={`daily-tab${tab.key === 'daily' ? ' active' : ''}`}
+              onClick={() => handleTabChange(tab.key)}
+            >
+              <span className="daily-tab-icon">{tab.icon}</span>
+              <span className="daily-tab-label">{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+
       <div className="daily-detail-header">
         <div className="daily-date-nav-row">
           <button 
