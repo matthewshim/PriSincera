@@ -251,18 +251,24 @@ export default function DailyDigest() {
                   <span className="daily-section-icon">📰</span>
                   <h2 className="daily-section-title">IT Tech Signal</h2>
                 </div>
-                <div className="daily-card">
-                  <div className="signal-articles">
+                  <div className="signal-articles-masonry">
                     {data.signal.articles?.map((article, idx) => (
-                      <div className="signal-article" key={idx}>
-                        <h3>{article.title}</h3>
-                        {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
-                        <p>{article.summary}</p>
-                        {article.url && <a href={article.url} target="_blank" rel="noopener noreferrer" className="signal-link">원문 보기 →</a>}
-                      </div>
+                      <a href={article.url} target="_blank" rel="noopener noreferrer" className="signal-article-card" key={idx}>
+                        {article.og_image && (
+                          <div className="signal-article-image">
+                            <img src={article.og_image} alt={article.title} loading="lazy" />
+                          </div>
+                        )}
+                        <div className="signal-article-body">
+                          {article.category && <span className="signal-article-category">{article.category}</span>}
+                          <h3>{article.title}</h3>
+                          {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
+                          <p>{article.summary}</p>
+                          <span className="signal-link">원문 읽기 →</span>
+                        </div>
+                      </a>
                     ))}
                   </div>
-                </div>
               </div>
             )}
 
