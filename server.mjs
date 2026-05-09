@@ -259,24 +259,36 @@ app.get('/api/daily/:date', async (req, res) => {
   }
   try {
     const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
-    let data = await getDailySignal(dateStr);
+    const { getStudyContent } = await import('./pipeline/src/repositories/StudyRepository.mjs');
     
-    // Firestore에 없으면 GCS에서 폴백 시도
-    if (!data && storage) {
+    let [signalData, studyData] = await Promise.all([
+      getDailySignal(dateStr),
+      getStudyContent(dateStr)
+    ]);
+    
+    // Firestore에 signal이 없으면 GCS에서 폴백 시도
+    if (!signalData && storage) {
       try {
         const [content] = await storage.bucket(GCS_BUCKET).file(`daily/${dateStr}.json`).download();
-        data = JSON.parse(content.toString('utf-8'));
+        signalData = JSON.parse(content.toString('utf-8'));
       } catch (err) {
         // 무시
       }
     }
 
-    if (!data) {
-      return res.status(404).json({ error: 'Daily signal not found' });
+    if (!signalData && !studyData) {
+      return res.status(404).json({ error: 'Daily digest not found' });
     }
+    
+    const aggregatedData = {
+      date: dateStr,
+      signal: signalData || null,
+      study: studyData || null
+    };
+
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('Content-Type', 'application/json');
-    res.json(data);
+    res.json(aggregatedData);
   } catch (err) {
     console.error(`[API] /api/daily/${dateStr} Error:`, err);
     res.status(500).json({ error: 'Failed to fetch daily signal' });

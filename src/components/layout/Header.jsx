@@ -165,8 +165,7 @@ function Header() {
         </Link>
         <div className="nav-links">
           <Link to="/" className={`nav-link${location.pathname === '/' ? ' active' : ''}`} id="navHome">Home</Link>
-          <Link to="/signal" className={`nav-link${location.pathname.startsWith('/signal') ? ' active' : ''}`} id="navPriSignal">Signal</Link>
-          <Link to="/study" className={`nav-link${location.pathname.startsWith('/study') ? ' active' : ''}`} id="navPriStudy">Study</Link>
+          <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">Daily Digest</Link>
         </div>
         <div className="nav-right">
           {/* BGM toggle — works on all pages */}
@@ -193,8 +192,7 @@ function Header() {
       <div className={`mobile-nav-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-nav-links">
           <Link to="/" className={`mobile-nav-link${location.pathname === '/' ? ' active' : ''}`}>Home</Link>
-          <Link to="/signal" className={`mobile-nav-link${location.pathname.startsWith('/signal') ? ' active' : ''}`}>Signal</Link>
-          <Link to="/study" className={`mobile-nav-link${location.pathname.startsWith('/study') ? ' active' : ''}`}>Study</Link>
+          <Link to="/daily" className={`mobile-nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`}>Daily Digest</Link>
         </div>
       </div>
     </nav>

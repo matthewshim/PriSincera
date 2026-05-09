@@ -1,0 +1,234 @@
+.daily-digest-page {
+  min-height: 100vh;
+  background: var(--bg-void);
+  padding-top: 80px;
+  color: var(--text-primary);
+  padding-bottom: 60px;
+}
+
+/* ── Hero Section ── */
+.daily-hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+}
+.daily-hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 800px; height: 100%;
+  background: radial-gradient(circle at top, rgba(124, 58, 237, 0.15), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.daily-hero-content {
+  position: relative;
+  z-index: 1;
+}
+.daily-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+  background: linear-gradient(135deg, #FFF 0%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.daily-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Daily View (The Feed) ── */
+.daily-feed-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Section Wrapper */
+.daily-section {
+  margin-bottom: 40px;
+}
+.daily-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.daily-section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #F3F4F6;
+  margin: 0;
+}
+.daily-section-icon {
+  font-size: 1.5rem;
+}
+
+/* Card Styling */
+.daily-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+.daily-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(196, 181, 253, 0.3);
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.1);
+}
+
+/* Signal specific */
+.signal-articles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.signal-article h3 {
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+  color: #E9D5FF;
+}
+.signal-article p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+.signal-insight {
+  background: rgba(124, 58, 237, 0.1);
+  border-left: 3px solid #8B5CF6;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9rem;
+  color: #D8B4FE;
+  margin: 0 0 12px;
+}
+.signal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #60A5FA;
+  text-decoration: none;
+}
+.signal-link:hover {
+  text-decoration: underline;
+}
+
+/* Study specific */
+.study-snippet {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  border-radius: 8px;
+  color: #10B981;
+  word-break: break-all;
+  margin-bottom: 16px;
+}
+.study-jp {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #F9FAFB;
+  margin-bottom: 4px;
+}
+.study-furigana {
+  font-size: 0.85rem;
+  color: #9CA3AF;
+  margin-bottom: 12px;
+}
+.study-kr {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+/* Unified Streak Button */
+.streak-btn-container {
+  text-align: center;
+  margin-top: 40px;
+}
+.streak-btn {
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.streak-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+}
+.streak-btn:disabled {
+  background: #374151;
+  color: #9CA3AF;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Archive List View ── */
+.archive-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+.archive-card {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  align-items: center;
+}
+.archive-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(196, 181, 253, 0.3);
+}
+.archive-date {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #C4B5FD;
+  min-width: 120px;
+}
+.archive-summary {
+  flex: 1;
+  font-size: 1rem;
+  color: #D1D5DB;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.archive-arrow {
+  color: #6B7280;
+}
+
+@media (max-width: 768px) {
+  .daily-title { font-size: 2.2rem; }
+  .daily-card { padding: 16px; }
+  .archive-card { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .archive-date { min-width: auto; }
+}
