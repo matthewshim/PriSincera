@@ -10,6 +10,13 @@ const TABS = [
   { key: 'daily', label: '데일리 다이제스트', icon: '📝' },
 ];
 
+function formatNavDate(dateStr) {
+  const [, m, d] = dateStr.split('-').map(Number);
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dt = new Date(dateStr + 'T00:00:00');
+  return `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}(${days[dt.getDay()]})`;
+}
+
 export default function DailyDigest() {
   const { date } = useParams();
   const location = useLocation();
@@ -327,12 +334,71 @@ export default function DailyDigest() {
   // Detail View
   return (
     <div className="daily-digest-page">
-      <section className="daily-hero" style={{ padding: '40px 20px 20px' }}>
-        <Link to="/daily" style={{ color: '#C4B5FD', textDecoration: 'none', fontSize: '0.9rem', marginBottom: '16px', display: 'inline-block' }}>← 목록으로 돌아가기</Link>
-        <div className="daily-hero-content">
-          <h1 className="daily-title">{date} Digest</h1>
+      <div className="daily-detail-header">
+        <div className="daily-date-nav-row">
+          <button 
+            className="daily-nav-btn" 
+            onClick={() => {
+              const d = new Date(date);
+              d.setDate(d.getDate() - 1);
+              navigate(`/daily/${d.toISOString().slice(0, 10)}`);
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="daily-nav-btn-label">
+              {formatNavDate(new Date(new Date(date).setDate(new Date(date).getDate() - 1)).toISOString().slice(0, 10))}
+            </span>
+          </button>
+          
+          <div className="daily-date-center">
+            <span className="daily-date-day">{new Date(date).getDate()}</span>
+            <div className="daily-date-month-dow">
+              <span className="daily-date-month">{new Date(date).getMonth() + 1}월</span>
+              <span className="daily-date-dow">{['일', '월', '화', '수', '목', '금', '토'][new Date(date).getDay()]}요일</span>
+            </div>
+          </div>
+
+          <button 
+            className="daily-nav-btn next" 
+            onClick={() => {
+              const d = new Date(date);
+              d.setDate(d.getDate() + 1);
+              const nextStr = d.toISOString().slice(0, 10);
+              const todayStr = new Date(new Date().getTime() + 9*60*60*1000).toISOString().slice(0, 10);
+              if (nextStr <= todayStr) {
+                navigate(`/daily/${nextStr}`);
+              } else {
+                alert('아직 발행되지 않은 날짜입니다.');
+              }
+            }}
+          >
+            <span className="daily-nav-btn-label">
+              {formatNavDate(new Date(new Date(date).setDate(new Date(date).getDate() + 1)).toISOString().slice(0, 10))}
+            </span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
-      </section>
+        
+        <div style={{ marginTop: '20px' }}>
+          <button 
+            onClick={() => navigate('/daily')}
+            style={{ 
+              background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', 
+              color: 'var(--prism-lavender)', padding: '6px 16px', borderRadius: '20px', 
+              fontSize: '0.85rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            목록으로 돌아가기
+          </button>
+        </div>
+      </div>
 
       <div className="daily-feed-container">
         {loading ? (
