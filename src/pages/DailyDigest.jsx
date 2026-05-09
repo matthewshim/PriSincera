@@ -143,10 +143,36 @@ export default function DailyDigest() {
   const getCategoryStyles = (category) => {
     if (!category) return {};
     const cat = category.toLowerCase();
-    if (cat.includes('ai') || cat.includes('인공지능')) return { color: 'var(--orbit-cyan)', background: 'rgba(34, 211, 238, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(34, 211, 238, 0.3)' };
-    if (cat.includes('startup') || cat.includes('스타트업') || cat.includes('business') || cat.includes('비즈니스') || cat.includes('attitude') || cat.includes('mindset')) return { color: 'var(--prism-rose)', background: 'rgba(240, 171, 252, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(240, 171, 252, 0.3)' };
-    if (cat.includes('tech') || cat.includes('개발') || cat.includes('software') || cat.includes('트렌드') || cat.includes('priority') || cat.includes('strategy')) return { color: 'var(--prism-amber)', background: 'rgba(253, 230, 138, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(253, 230, 138, 0.3)' };
-    if (cat.includes('security') || cat.includes('보안') || cat.includes('global') || cat.includes('글로벌')) return { color: 'var(--prism-indigo)', background: 'rgba(129, 140, 248, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(129, 140, 248, 0.3)' };
+    
+    // AI / 인공지능 (Cyan)
+    if (cat.includes('ai') || cat.includes('인공지능')) 
+      return { color: '#22D3EE', background: 'rgba(34, 211, 238, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(34, 211, 238, 0.3)' };
+    
+    // Attitude / Mindset (Emerald/Green)
+    if (cat.includes('attitude') || cat.includes('mindset') || cat.includes('태도')) 
+      return { color: '#34D399', background: 'rgba(52, 211, 153, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(52, 211, 153, 0.3)' };
+    
+    // Priority / Strategy (Amber/Yellow)
+    if (cat.includes('priority') || cat.includes('strategy') || cat.includes('전략')) 
+      return { color: '#FBBF24', background: 'rgba(251, 191, 36, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(251, 191, 36, 0.3)' };
+    
+    // Global / Trend (Blue)
+    if (cat.includes('global') || cat.includes('글로벌') || cat.includes('trend') || cat.includes('트렌드')) 
+      return { color: '#60A5FA', background: 'rgba(96, 165, 250, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.3)' };
+    
+    // Startup / Business (Rose/Pink)
+    if (cat.includes('startup') || cat.includes('스타트업') || cat.includes('business') || cat.includes('비즈니스')) 
+      return { color: '#F472B6', background: 'rgba(244, 114, 182, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(244, 114, 182, 0.3)' };
+    
+    // Tech / Dev / SW (Violet)
+    if (cat.includes('tech') || cat.includes('개발') || cat.includes('software')) 
+      return { color: '#A78BFA', background: 'rgba(167, 139, 250, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(167, 139, 250, 0.3)' };
+    
+    // Security / Defense (Red)
+    if (cat.includes('security') || cat.includes('보안')) 
+      return { color: '#F87171', background: 'rgba(248, 113, 113, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(248, 113, 113, 0.3)' };
+    
+    // Default (Lavender)
     return { color: 'var(--prism-lavender)', background: 'rgba(192, 132, 252, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(192, 132, 252, 0.3)' };
   };
 
