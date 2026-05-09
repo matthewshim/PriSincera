@@ -9,10 +9,10 @@ export default function PriStudyHero({ activeTab, onTabChange, token, handleGoog
           <span className="accent">Study</span>
         </h1>
         <p className="pristudy-hero-tagline">
-          하루 5분, 실무에서 바로 쓰는 비즈니스 일본어
+          하루 5분, 성장을 증명하는 실무 지식 1-Pick
         </p>
         <p className="pristudy-hero-sub">
-          매일 1문장, AI가 생성하고 분석한 고품질 플래시카드와 함께 성장하세요.
+          비즈니스 언어부터 AI 프롬프트까지, 매일 하나의 고밀도 지식을 내 것으로 만드세요.
         </p>
         <div className="pristudy-hero-actions">
           {!token ? (
