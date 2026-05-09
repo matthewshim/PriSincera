@@ -316,6 +316,27 @@ export default function DailyDigest() {
                        💡 {data.study.business_context}
                      </div>
                   )}
+
+                  {data.study.vocabulary && data.study.vocabulary.length > 0 && (
+                    <div style={{ marginTop: '24px' }}>
+                      <strong style={{ color: '#F3F4F6', fontSize: '1rem', display: 'block', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px' }}>📚 핵심 단어장</strong>
+                      <div className="study-vocab-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {data.study.vocabulary.map((v, i) => (
+                          <div key={i} className="study-vocab-item" style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div>
+                              <span style={{ fontSize: '1.1rem', color: '#F9FAFB', fontWeight: 'bold' }}>{v.word}</span>
+                              <span style={{ color: '#9CA3AF', fontSize: '0.9rem', marginLeft: '8px' }}>({v.reading})</span>
+                              {v.pronunciation_kr && <span style={{ color: '#60A5FA', fontSize: '0.85rem', marginLeft: '8px' }}>[{v.pronunciation_kr}]</span>}
+                              <div style={{ color: '#D1D5DB', fontSize: '0.95rem', marginTop: '4px' }}>- {v.meaning}</div>
+                            </div>
+                            <button onClick={() => playAudio(v.word)} style={{ background: 'rgba(139, 92, 246, 0.2)', border: 'none', color: '#C4B5FD', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }} title="발음 듣기">
+                              🔊
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
