@@ -48,8 +48,7 @@ function Footer() {
           <div className="footer-col">
             <h4 className="footer-col-title">Navigate</h4>
             <Link to="/" className="footer-link">Home</Link>
-            <Link to="/signal" className="footer-link">Signal</Link>
-            <Link to="/study" className="footer-link">Study</Link>
+            <Link to="/daily" className="footer-link">Daily Digest</Link>
           </div>
           <div className="footer-col">
             <h4 className="footer-col-title">Connect</h4>

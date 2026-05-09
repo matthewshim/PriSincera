@@ -76,52 +76,26 @@ export default function WorkSection() {
             </div>
           </div>
 
-          {/* Signal — Daily Curation */}
-          <Link to="/signal" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priSignalWorkCard">
+          {/* Daily Digest — Unified Service */}
+          <Link to="/daily" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priDailyWorkCard">
             <div className="work-card-icon">
-              <span className="work-card-emoji">📡</span>
+              <span className="work-card-emoji">📰</span>
             </div>
             <div className="work-card-body">
-              <div className="work-card-label">Daily Curation</div>
+              <div className="work-card-label">Daily Curation & Learning</div>
               <div className="work-card-name">
-                Signal
-                <span className="work-card-tag">prisincera.com/signal</span>
+                Daily Digest
+                <span className="work-card-tag">prisincera.com/daily</span>
               </div>
               <p className="work-card-desc">
-                노이즈 속에서 시그널을 포착합니다.<br />
-                35개 글로벌 소스에서 매일 수백 개의 글 중, AI가 선별한
-                시그널만 큐레이션하는 데일리 뉴스레터.
+                하루 5분, IT 트렌드 인사이트와 AI 프롬프트, 그리고 비즈니스 일본어 학습까지.<br/>
+                가장 효율적인 데일리 마이크로 지식 소비를 경험하세요.
               </p>
               <div className="work-card-tags">
                 <span className="work-tag">AI Scoring</span>
-                <span className="work-tag">Cloud Functions</span>
-                <span className="work-tag">Buttondown</span>
-                <span className="work-tag">Automated Pipeline</span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Study — Microlearning */}
-          <Link to="/study" className="work-card pristudy reveal-item" style={{ '--reveal-delay': '0.5s' }} id="priStudyWorkCard">
-            <div className="work-card-icon">
-              <span className="work-card-emoji">📖</span>
-            </div>
-            <div className="work-card-body">
-              <div className="work-card-label">Microlearning</div>
-              <div className="work-card-name">
-                Study
-                <span className="work-card-tag">prisincera.com/study</span>
-              </div>
-              <p className="work-card-desc">
-                하루 5분, 실무 비즈니스 일본어 1문장.<br />
-                매일 새벽 AI 파이프라인이 생성한 고품질 콘텐츠와 함께
-                꾸준한 성장을 기록하는 에빙하우스 마이크로러닝 서비스.
-              </p>
-              <div className="work-card-tags">
+                <span className="work-tag">Microlearning</span>
                 <span className="work-tag">Daily Study</span>
-                <span className="work-tag">AI Composer</span>
-                <span className="work-tag">Cloud Run Jobs</span>
-                <span className="work-tag">Firestore</span>
+                <span className="work-tag">Unified Pipeline</span>
               </div>
             </div>
           </Link>
