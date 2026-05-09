@@ -319,7 +319,7 @@
 /* Unified Streak Button */
 /* ── Streak Dashboard ── */
 .streak-dashboard-section {
-  max-width: 800px;
+  width: 100%;
   margin: 60px auto;
   padding: 40px;
   background: var(--glass-bg);
