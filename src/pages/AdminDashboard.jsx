@@ -149,6 +149,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [dailyContent, setDailyContent] = useState([]);
   const [priStudyLearners, setPriStudyLearners] = useState([]);
   const [contentModal, setContentModal] = useState(null);
+  const [contentModalTab, setContentModalTab] = useState('basic');
   const [contentForm, setContentForm] = useState(null);
   const [contentAction, setContentAction] = useState(null);
 
@@ -324,6 +325,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       parameters: JSON.stringify(item.study?.parameters || [], null, 2)
     });
     setContentAction(null);
+    setContentModalTab('basic');
     setContentModal({ mode: 'edit', date: item.date });
   }
 
@@ -337,6 +339,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       parameters: '[]'
     });
     setContentAction(null);
+    setContentModalTab('basic');
     setContentModal({ mode: 'create' });
   }
 
@@ -761,69 +764,81 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </div>
               <form onSubmit={handleContentSubmit}>
                 <div className="admin-modal-body">
-                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', marginBottom: '16px' }}>
-                    <strong>📅 기본 정보</strong>
-                  </label>
-                  <label className="admin-form-label">
-                    날짜 (YYYY-MM-DD)
-                    <input type="text" value={contentForm.date} onChange={e => setContentForm({...contentForm, date: e.target.value})} required disabled={contentModal.mode === 'edit'} />
-                  </label>
-                  <label className="admin-form-label">
-                    공통 테마 (선택)
-                    <input type="text" value={contentForm.study?.theme || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, theme: e.target.value}})} />
-                  </label>
+                  <div className="admin-modal-tabs">
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'basic' ? 'active' : ''}`} onClick={() => setContentModalTab('basic')}>📅 기본 정보</button>
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'signal' ? 'active' : ''}`} onClick={() => setContentModalTab('signal')}>📰 IT Signal</button>
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'prompt' ? 'active' : ''}`} onClick={() => setContentModalTab('prompt')}>🤖 AI 프롬프트</button>
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'jp' ? 'active' : ''}`} onClick={() => setContentModalTab('jp')}>🇯🇵 일본어</button>
+                  </div>
 
-                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', margin: '24px 0 16px', color: '#22D3EE' }}>
-                    <strong>📰 IT Tech Signal</strong>
-                  </label>
-                  <label className="admin-form-label">
-                    아티클 목록 (JSON 배열 - title, insight, summary, url, og_image, category 등)
-                    <textarea value={contentForm.articles} onChange={e => setContentForm({...contentForm, articles: e.target.value})} rows={6} style={{ fontFamily: 'monospace' }} />
-                  </label>
+                  {contentModalTab === 'basic' && (
+                    <>
+                      <label className="admin-form-label">
+                        날짜 (YYYY-MM-DD)
+                        <input type="text" value={contentForm.date} onChange={e => setContentForm({...contentForm, date: e.target.value})} required disabled={contentModal.mode === 'edit'} />
+                      </label>
+                      <label className="admin-form-label">
+                        공통 테마 (선택)
+                        <input type="text" value={contentForm.study?.theme || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, theme: e.target.value}})} />
+                      </label>
+                    </>
+                  )}
 
-                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', margin: '24px 0 16px', color: '#FCD34D' }}>
-                    <strong>🤖 AI 프롬프트 1-Pick</strong>
-                  </label>
-                  <label className="admin-form-label">
-                    프롬프트 스니펫
-                    <textarea value={contentForm.study?.prompt_snippet || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, prompt_snippet: e.target.value}})} rows={3} style={{ fontFamily: 'monospace' }} />
-                  </label>
-                  <label className="admin-form-label">
-                    상세 설명
-                    <textarea value={contentForm.study?.explanation || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, explanation: e.target.value}})} rows={2} />
-                  </label>
-                  <label className="admin-form-label">
-                    파라미터 설정 (JSON 배열 - name, description)
-                    <textarea value={contentForm.parameters} onChange={e => setContentForm({...contentForm, parameters: e.target.value})} rows={3} style={{ fontFamily: 'monospace' }} />
-                  </label>
+                  {contentModalTab === 'signal' && (
+                    <>
+                      <label className="admin-form-label">
+                        아티클 목록 (JSON 배열 - title, insight, summary, url, og_image, category 등)
+                        <textarea value={contentForm.articles} onChange={e => setContentForm({...contentForm, articles: e.target.value})} rows={10} style={{ fontFamily: 'monospace' }} />
+                      </label>
+                    </>
+                  )}
 
-                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', margin: '24px 0 16px', color: '#F87171' }}>
-                    <strong>🇯🇵 비즈니스 일본어 1-Pick</strong>
-                  </label>
-                  <label className="admin-form-label">
-                    일본어 원문
-                    <textarea value={contentForm.study?.sentence_jp || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_jp: e.target.value}})} rows={2} />
-                  </label>
-                  <label className="admin-form-label">
-                    요미가나
-                    <textarea value={contentForm.study?.sentence_furigana || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_furigana: e.target.value}})} rows={2} />
-                  </label>
-                  <label className="admin-form-label">
-                    한국어 해석
-                    <textarea value={contentForm.study?.sentence_kr || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_kr: e.target.value}})} rows={2} />
-                  </label>
-                  <label className="admin-form-label">
-                    문장 한국어 발음
-                    <textarea value={contentForm.study?.sentence_pronunciation_kr || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_pronunciation_kr: e.target.value}})} rows={2} placeholder="예: 사이킨노 에-아이..." />
-                  </label>
-                  <label className="admin-form-label">
-                    단어장 (JSON 배열 - word, reading, pronunciation_kr, meaning)
-                    <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={4} style={{ fontFamily: 'monospace' }} />
-                  </label>
-                  <label className="admin-form-label">
-                    실무 활용 팁 (비즈니스 코멘트)
-                    <textarea value={contentForm.study?.business_context || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, business_context: e.target.value}})} rows={3} />
-                  </label>
+                  {contentModalTab === 'prompt' && (
+                    <>
+                      <label className="admin-form-label">
+                        프롬프트 스니펫
+                        <textarea value={contentForm.study?.prompt_snippet || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, prompt_snippet: e.target.value}})} rows={4} style={{ fontFamily: 'monospace' }} />
+                      </label>
+                      <label className="admin-form-label">
+                        상세 설명
+                        <textarea value={contentForm.study?.explanation || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, explanation: e.target.value}})} rows={3} />
+                      </label>
+                      <label className="admin-form-label">
+                        파라미터 설정 (JSON 배열 - name, description)
+                        <textarea value={contentForm.parameters} onChange={e => setContentForm({...contentForm, parameters: e.target.value})} rows={4} style={{ fontFamily: 'monospace' }} />
+                      </label>
+                    </>
+                  )}
+
+                  {contentModalTab === 'jp' && (
+                    <>
+                      <label className="admin-form-label">
+                        일본어 원문
+                        <textarea value={contentForm.study?.sentence_jp || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_jp: e.target.value}})} rows={2} />
+                      </label>
+                      <label className="admin-form-label">
+                        요미가나
+                        <textarea value={contentForm.study?.sentence_furigana || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_furigana: e.target.value}})} rows={2} />
+                      </label>
+                      <label className="admin-form-label">
+                        한국어 해석
+                        <textarea value={contentForm.study?.sentence_kr || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_kr: e.target.value}})} rows={2} />
+                      </label>
+                      <label className="admin-form-label">
+                        문장 한국어 발음
+                        <textarea value={contentForm.study?.sentence_pronunciation_kr || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_pronunciation_kr: e.target.value}})} rows={2} placeholder="예: 사이킨노 에-아이..." />
+                      </label>
+                      <label className="admin-form-label">
+                        단어장 (JSON 배열 - word, reading, pronunciation_kr, meaning)
+                        <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={4} style={{ fontFamily: 'monospace' }} />
+                      </label>
+                      <label className="admin-form-label">
+                        실무 활용 팁 (비즈니스 코멘트)
+                        <textarea value={contentForm.study?.business_context || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, business_context: e.target.value}})} rows={3} />
+                      </label>
+                    </>
+                  )}
+
                   {contentAction && <div className={`admin-send-status ${contentAction.type}`}>{contentAction.msg}</div>}
                 </div>
                 <div className="admin-modal-footer">

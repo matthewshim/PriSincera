@@ -936,3 +936,37 @@
     display: none;
   }
 }
+
+/* ─── Modal Tabs ──────────────────────────────── */
+.admin-modal-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--admin-border);
+  padding-bottom: 16px;
+  overflow-x: auto;
+}
+
+.admin-modal-tab {
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  color: var(--admin-text-dim);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.admin-modal-tab:hover {
+  background: rgba(196, 181, 253, 0.05);
+  color: var(--admin-text);
+}
+
+.admin-modal-tab.active {
+  background: rgba(192, 132, 252, 0.15);
+  border-color: var(--admin-accent);
+  color: var(--admin-text);
+}
