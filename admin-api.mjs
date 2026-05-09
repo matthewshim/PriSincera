@@ -390,42 +390,83 @@ router.get('/pristudy/stats', async (req, res) => {
   }
 });
 
-router.get('/pristudy/content', async (req, res) => {
+// ─── 통합 콘텐츠 관리 (Signal + Study) ────────────────────────────────
+
+router.get('/daily/content', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 50;
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-    const snap = await db.collection(COLLECTIONS.STUDY_CONTENT).orderBy('date', 'desc').limit(limit).get();
-    const contents = snap.docs.map(doc => doc.data());
+    
+    const [studySnap, signalSnap] = await Promise.all([
+      db.collection(COLLECTIONS.STUDY_CONTENT).orderBy('date', 'desc').limit(limit).get(),
+      db.collection(COLLECTIONS.DAILY_SIGNALS).orderBy('date', 'desc').limit(limit).get()
+    ]);
+
+    const dataMap = {};
+    
+    studySnap.docs.forEach(doc => {
+      dataMap[doc.id] = { date: doc.id, study: doc.data(), signal: { articles: [] } };
+    });
+    
+    signalSnap.docs.forEach(doc => {
+      if (!dataMap[doc.id]) {
+        dataMap[doc.id] = { date: doc.id, study: {}, signal: doc.data() };
+      } else {
+        dataMap[doc.id].signal = doc.data();
+      }
+    });
+
+    const contents = Object.values(dataMap).sort((a, b) => b.date.localeCompare(a.date));
     res.json({ contents });
   } catch (err) {
     res.status(500).json({ error: '콘텐츠 조회 실패' });
   }
 });
 
-router.put('/pristudy/content/:date', async (req, res) => {
+router.put('/daily/content/:date', async (req, res) => {
   try {
     const { date } = req.params;
+    const { study, signal } = req.body; // 분리해서 받음
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-    await db.collection(COLLECTIONS.STUDY_CONTENT).doc(date).update({
-      ...req.body,
-      updatedAt: new Date()
-    });
+    
+    const batch = db.batch();
+    
+    if (study && Object.keys(study).length > 0) {
+      const studyRef = db.collection(COLLECTIONS.STUDY_CONTENT).doc(date);
+      batch.set(studyRef, { ...study, date, updatedAt: new Date() }, { merge: true });
+    }
+    
+    if (signal && Object.keys(signal).length > 0) {
+      const signalRef = db.collection(COLLECTIONS.DAILY_SIGNALS).doc(date);
+      batch.set(signalRef, { ...signal, date, updatedAt: new Date() }, { merge: true });
+    }
+    
+    await batch.commit();
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: '수정 실패' });
   }
 });
 
-router.post('/pristudy/content', async (req, res) => {
+router.post('/daily/content', async (req, res) => {
   try {
-    const { date } = req.body;
+    const { date, study, signal } = req.body;
     if (!date) return res.status(400).json({ error: '날짜(date)가 필요합니다' });
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-    await db.collection(COLLECTIONS.STUDY_CONTENT).doc(date).set({
-      ...req.body,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    
+    const batch = db.batch();
+    
+    if (study && Object.keys(study).length > 0) {
+      const studyRef = db.collection(COLLECTIONS.STUDY_CONTENT).doc(date);
+      batch.set(studyRef, { ...study, date, createdAt: new Date(), updatedAt: new Date() });
+    }
+    
+    if (signal && Object.keys(signal).length > 0) {
+      const signalRef = db.collection(COLLECTIONS.DAILY_SIGNALS).doc(date);
+      batch.set(signalRef, { ...signal, date, createdAt: new Date(), updatedAt: new Date() });
+    }
+
+    await batch.commit();
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: '등록 실패' });

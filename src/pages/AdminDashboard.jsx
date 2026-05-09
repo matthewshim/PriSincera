@@ -146,7 +146,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   // PriStudy
   const [priStudyStats, setPriStudyStats] = useState(null);
-  const [priStudyContent, setPriStudyContent] = useState([]);
+  const [dailyContent, setDailyContent] = useState([]);
   const [priStudyLearners, setPriStudyLearners] = useState([]);
   const [contentModal, setContentModal] = useState(null);
   const [contentForm, setContentForm] = useState(null);
@@ -300,10 +300,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
     } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
-  async function loadPriStudyContent() {
+  async function loadDailyContent() {
     try {
-      const data = await fetchApi('/pristudy/content');
-      setPriStudyContent(data.contents || []);
+      const data = await fetchApi('/daily/content');
+      setDailyContent(data.contents || []);
     } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
@@ -315,13 +315,27 @@ function Dashboard({ token, adminEmail, onLogout }) {
   }
 
   function openEditContent(item) {
-    setContentForm({ ...item, vocabulary: JSON.stringify(item.vocabulary || [], null, 2) });
+    setContentForm({ 
+      date: item.date,
+      study: item.study || {},
+      signal: item.signal || {},
+      vocabulary: JSON.stringify(item.study?.vocabulary || [], null, 2),
+      articles: JSON.stringify(item.signal?.articles || [], null, 2),
+      parameters: JSON.stringify(item.study?.parameters || [], null, 2)
+    });
     setContentAction(null);
     setContentModal({ mode: 'edit', date: item.date });
   }
 
   function openCreateContent() {
-    setContentForm({ date: '', theme: '', sentence_jp: '', sentence_furigana: '', sentence_pronunciation_kr: '', sentence_kr: '', vocabulary: '[]', business_context: '' });
+    setContentForm({ 
+      date: '', 
+      study: { theme: '', sentence_jp: '', sentence_furigana: '', sentence_pronunciation_kr: '', sentence_kr: '', business_context: '', prompt_snippet: '', explanation: '' },
+      signal: { articles: [] },
+      vocabulary: '[]',
+      articles: '[]',
+      parameters: '[]'
+    });
     setContentAction(null);
     setContentModal({ mode: 'create' });
   }
@@ -330,14 +344,24 @@ function Dashboard({ token, adminEmail, onLogout }) {
     e.preventDefault();
     setContentAction({ type: 'loading', msg: '저장 중...' });
     try {
-      const body = { ...contentForm, vocabulary: JSON.parse(contentForm.vocabulary || '[]') };
+      let parsedVocab = [], parsedArticles = [], parsedParams = [];
+      try { parsedVocab = JSON.parse(contentForm.vocabulary || '[]'); } catch(e) {}
+      try { parsedArticles = JSON.parse(contentForm.articles || '[]'); } catch(e) {}
+      try { parsedParams = JSON.parse(contentForm.parameters || '[]'); } catch(e) {}
+
+      const body = { 
+        date: contentForm.date,
+        study: { ...contentForm.study, vocabulary: parsedVocab, parameters: parsedParams },
+        signal: { ...contentForm.signal, articles: parsedArticles }
+      };
+      
       if (contentModal.mode === 'create') {
-        await fetchApi('/pristudy/content', { method: 'POST', body: JSON.stringify(body) });
+        await fetchApi('/daily/content', { method: 'POST', body: JSON.stringify(body) });
       } else {
-        await fetchApi(`/pristudy/content/${contentModal.date}`, { method: 'PUT', body: JSON.stringify(body) });
+        await fetchApi(`/daily/content/${contentModal.date}`, { method: 'PUT', body: JSON.stringify(body) });
       }
       setContentAction({ type: 'success', msg: '저장 완료!' });
-      setTimeout(() => { setContentModal(null); loadPriStudyContent(); }, 1000);
+      setTimeout(() => { setContentModal(null); loadDailyContent(); }, 1000);
     } catch (err) {
       setContentAction({ type: 'error', msg: `오류: ${err.message}` });
     }
@@ -395,7 +419,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'subscribers') { loadSubscribers(); loadEmailLogs(); }
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
     if (activeTab === 'overview') { loadPriStudyStats(); }
-    if (activeTab === 'content') loadPriStudyContent();
+    if (activeTab === 'content') loadDailyContent();
     if (activeTab === 'learners') loadPriStudyLearners();
   }, [activeTab]);
 
@@ -628,19 +652,20 @@ function Dashboard({ token, adminEmail, onLogout }) {
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
-                <thead><tr><th>날짜</th><th>일본어 문장</th><th>테마</th><th>관리</th></tr></thead>
+                <thead><tr><th>날짜</th><th>IT 시그널</th><th>AI 프롬프트</th><th>일본어 문장</th><th>관리</th></tr></thead>
                 <tbody>
-                  {priStudyContent.map((item, i) => (
+                  {dailyContent.map((item, i) => (
                     <tr key={i}>
                       <td>{item.date}</td>
-                      <td className="admin-subject-cell">{item.sentence_jp}</td>
-                      <td>{item.theme || '-'}</td>
+                      <td>{item.signal?.articles?.length || 0}건</td>
+                      <td>{item.study?.prompt_snippet ? '✅' : '❌'}</td>
+                      <td className="admin-subject-cell">{item.study?.sentence_jp || '-'}</td>
                       <td className="admin-actions-cell">
                         <button className="admin-action-btn edit" onClick={() => openEditContent(item)} title="수정">✏️</button>
                       </td>
                     </tr>
                   ))}
-                  {priStudyContent.length === 0 && (<tr><td colSpan={4} className="admin-empty">콘텐츠가 없습니다</td></tr>)}
+                  {dailyContent.length === 0 && (<tr><td colSpan={5} className="admin-empty">콘텐츠가 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>
@@ -736,37 +761,68 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </div>
               <form onSubmit={handleContentSubmit}>
                 <div className="admin-modal-body">
+                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', marginBottom: '16px' }}>
+                    <strong>📅 기본 정보</strong>
+                  </label>
                   <label className="admin-form-label">
                     날짜 (YYYY-MM-DD)
                     <input type="text" value={contentForm.date} onChange={e => setContentForm({...contentForm, date: e.target.value})} required disabled={contentModal.mode === 'edit'} />
                   </label>
                   <label className="admin-form-label">
-                    테마 (선택)
-                    <input type="text" value={contentForm.theme} onChange={e => setContentForm({...contentForm, theme: e.target.value})} />
+                    공통 테마 (선택)
+                    <input type="text" value={contentForm.study?.theme || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, theme: e.target.value}})} />
+                  </label>
+
+                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', margin: '24px 0 16px', color: '#22D3EE' }}>
+                    <strong>📰 IT Tech Signal</strong>
+                  </label>
+                  <label className="admin-form-label">
+                    아티클 목록 (JSON 배열 - title, insight, summary, url, og_image, category 등)
+                    <textarea value={contentForm.articles} onChange={e => setContentForm({...contentForm, articles: e.target.value})} rows={6} style={{ fontFamily: 'monospace' }} />
+                  </label>
+
+                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', margin: '24px 0 16px', color: '#FCD34D' }}>
+                    <strong>🤖 AI 프롬프트 1-Pick</strong>
+                  </label>
+                  <label className="admin-form-label">
+                    프롬프트 스니펫
+                    <textarea value={contentForm.study?.prompt_snippet || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, prompt_snippet: e.target.value}})} rows={3} style={{ fontFamily: 'monospace' }} />
+                  </label>
+                  <label className="admin-form-label">
+                    상세 설명
+                    <textarea value={contentForm.study?.explanation || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, explanation: e.target.value}})} rows={2} />
+                  </label>
+                  <label className="admin-form-label">
+                    파라미터 설정 (JSON 배열 - name, description)
+                    <textarea value={contentForm.parameters} onChange={e => setContentForm({...contentForm, parameters: e.target.value})} rows={3} style={{ fontFamily: 'monospace' }} />
+                  </label>
+
+                  <label className="admin-form-label" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px', margin: '24px 0 16px', color: '#F87171' }}>
+                    <strong>🇯🇵 비즈니스 일본어 1-Pick</strong>
                   </label>
                   <label className="admin-form-label">
                     일본어 원문
-                    <textarea value={contentForm.sentence_jp} onChange={e => setContentForm({...contentForm, sentence_jp: e.target.value})} required rows={2} />
+                    <textarea value={contentForm.study?.sentence_jp || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_jp: e.target.value}})} rows={2} />
                   </label>
                   <label className="admin-form-label">
                     요미가나
-                    <textarea value={contentForm.sentence_furigana} onChange={e => setContentForm({...contentForm, sentence_furigana: e.target.value})} required rows={2} />
+                    <textarea value={contentForm.study?.sentence_furigana || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_furigana: e.target.value}})} rows={2} />
                   </label>
                   <label className="admin-form-label">
                     한국어 해석
-                    <textarea value={contentForm.sentence_kr} onChange={e => setContentForm({...contentForm, sentence_kr: e.target.value})} required rows={2} />
+                    <textarea value={contentForm.study?.sentence_kr || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_kr: e.target.value}})} rows={2} />
                   </label>
                   <label className="admin-form-label">
                     문장 한국어 발음
-                    <textarea value={contentForm.sentence_pronunciation_kr} onChange={e => setContentForm({...contentForm, sentence_pronunciation_kr: e.target.value})} rows={2} placeholder="예: 사이킨노 에-아이..." />
+                    <textarea value={contentForm.study?.sentence_pronunciation_kr || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_pronunciation_kr: e.target.value}})} rows={2} placeholder="예: 사이킨노 에-아이..." />
                   </label>
                   <label className="admin-form-label">
-                    단어장 (JSON 배열 - pronunciation_kr 속성 포함)
-                    <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={3} style={{ fontFamily: 'monospace' }} />
+                    단어장 (JSON 배열 - word, reading, pronunciation_kr, meaning)
+                    <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={4} style={{ fontFamily: 'monospace' }} />
                   </label>
                   <label className="admin-form-label">
-                    비즈니스 코멘트
-                    <textarea value={contentForm.business_context} onChange={e => setContentForm({...contentForm, business_context: e.target.value})} rows={3} />
+                    실무 활용 팁 (비즈니스 코멘트)
+                    <textarea value={contentForm.study?.business_context || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, business_context: e.target.value}})} rows={3} />
                   </label>
                   {contentAction && <div className={`admin-send-status ${contentAction.type}`}>{contentAction.msg}</div>}
                 </div>
