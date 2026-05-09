@@ -392,12 +392,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
   }
 
   useEffect(() => {
-    if (activeTab === 'subscribers') loadSubscribers();
-    if (activeTab === 'emails') loadEmailLogs();
+    if (activeTab === 'subscribers') { loadSubscribers(); loadEmailLogs(); }
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
-    if (activeTab === 'pristudy_overview') loadPriStudyStats();
-    if (activeTab === 'pristudy_content') loadPriStudyContent();
-    if (activeTab === 'pristudy_learners') loadPriStudyLearners();
+    if (activeTab === 'overview') { loadPriStudyStats(); }
+    if (activeTab === 'content') loadPriStudyContent();
+    if (activeTab === 'learners') loadPriStudyLearners();
   }, [activeTab]);
 
   if (loading) {
@@ -408,22 +407,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   const menuGroups = [
     {
-      id: 'prisignal',
-      label: 'Signal',
+      id: 'daily',
+      label: 'Daily Digest',
       items: [
         { id: 'overview', label: '📊 대시보드' },
-        { id: 'subscribers', label: '👥 구독자' },
-        { id: 'emails', label: '📧 이메일' },
+        { id: 'subscribers', label: '👥 구독 및 이메일 발송' },
+        { id: 'content', label: '📚 콘텐츠 관리' },
+        { id: 'learners', label: '🏆 학습자(잔디) 현황' },
         { id: 'pipeline', label: '⚙️ 파이프라인' },
-      ]
-    },
-    {
-      id: 'pristudy',
-      label: 'Study',
-      items: [
-        { id: 'pristudy_overview', label: '📊 대시보드' },
-        { id: 'pristudy_content', label: '📚 콘텐츠 관리' },
-        { id: 'pristudy_learners', label: '🏆 학습자 현황' },
       ]
     },
     ...(isSuperAdmin ? [{
@@ -487,15 +478,21 @@ function Dashboard({ token, adminEmail, onLogout }) {
         <main className="admin-content">
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
-            <div className="admin-stat-grid">
+            <div className="admin-section-header"><h2>Daily Digest 대시보드</h2></div>
+            <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
               <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
-              <StatCard label="전체 구독자" value={stats.subscribers.total} icon="📋" color="var(--admin-blue)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
-              <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" onClick={() => setActiveTab('emails')} />
+              <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" onClick={() => setActiveTab('subscribers')} />
             </div>
+            {priStudyStats && (
+              <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
+                <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
+                <StatCard label="총 학습자" value={priStudyStats.totalLearners} icon="🌿" color="var(--admin-green)" onClick={() => setActiveTab('learners')} />
+              </div>
+            )}
             {pipeline && (
               <div className="admin-pipeline-summary">
-                <h3>파이프라인 상태</h3>
+                <h3>데이터 수집 상태</h3>
                 <div className={`admin-pipeline-badge ${pipeline.collector.status}`}>
                   {pipeline.collector.status === 'success' ? '✅ 오늘 수집 완료' : '⏳ 대기 중'}
                 </div>
@@ -509,42 +506,22 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'subscribers' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>구독자 관리</h2>
-              <button className="admin-btn-secondary" onClick={exportCsv}>📥 CSV 내보내기</button>
+              <h2>구독자 및 메일링 관리</h2>
+              <button className="admin-btn-secondary" onClick={exportCsv}>📥 구독자 CSV 내보내기</button>
             </div>
-            <div className="admin-table-wrap">
-              <table className="admin-table">
-                <thead><tr><th>이메일</th><th>상태</th><th>구독일</th><th>가입 경로</th></tr></thead>
-                <tbody>
-                  {subscribers.map((sub, i) => (
-                    <tr key={i}>
-                      <td className="admin-email-cell">{sub.email}</td>
-                      <td><span className={`admin-status-badge ${sub.status}`}>{sub.status === 'active' ? '활성' : '해지'}</span></td>
-                      <td>{sub.subscribedAt ? new Date(sub.subscribedAt).toLocaleDateString('ko') : '-'}</td>
-                      <td>{sub.source || '-'}</td>
-                    </tr>
-                  ))}
-                  {subscribers.length === 0 && (<tr><td colSpan={4} className="admin-empty">구독자 데이터가 없습니다</td></tr>)}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
 
-        {activeTab === 'emails' && (
-          <div className="admin-emails">
-            <div className="admin-section-header"><h2>이메일 발송</h2></div>
-            <div className="admin-test-send">
-              <h3>테스트 발송</h3>
+            <div className="admin-test-send" style={{ marginBottom: '32px' }}>
+              <h3>수동 이메일 발송 (테스트)</h3>
               <div className="admin-test-send-form">
                 <input id="test-email-input" type="email" placeholder="수신 이메일"
                   value={testEmail} onChange={e => setTestEmail(e.target.value)} />
-                <button className="admin-btn-primary" onClick={sendTestEmail}>📨 테스트 발송</button>
+                <button className="admin-btn-primary" onClick={sendTestEmail}>📨 발송</button>
               </div>
               {sendStatus && <div className={`admin-send-status ${sendStatus.type}`}>{sendStatus.msg}</div>}
             </div>
+
             <h3>발송 이력</h3>
-            <div className="admin-table-wrap">
+            <div className="admin-table-wrap" style={{ marginBottom: '32px' }}>
               <table className="admin-table">
                 <thead><tr><th>날짜</th><th>제목</th><th>수신</th><th>성공</th><th>발송 시각</th></tr></thead>
                 <tbody>
@@ -558,6 +535,24 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     </tr>
                   ))}
                   {emailLogs.length === 0 && (<tr><td colSpan={5} className="admin-empty">발송 이력이 없습니다</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+
+            <h3>구독자 목록</h3>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>이메일</th><th>상태</th><th>구독일</th><th>가입 경로</th></tr></thead>
+                <tbody>
+                  {subscribers.map((sub, i) => (
+                    <tr key={i}>
+                      <td className="admin-email-cell">{sub.email}</td>
+                      <td><span className={`admin-status-badge ${sub.status}`}>{sub.status === 'active' ? '활성' : '해지'}</span></td>
+                      <td>{sub.subscribedAt ? new Date(sub.subscribedAt).toLocaleDateString('ko') : '-'}</td>
+                      <td>{sub.source || '-'}</td>
+                    </tr>
+                  ))}
+                  {subscribers.length === 0 && (<tr><td colSpan={4} className="admin-empty">구독자 데이터가 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>
@@ -625,17 +620,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
 
-        {activeTab === 'pristudy_overview' && priStudyStats && (
-          <div className="admin-overview">
-            <div className="admin-section-header"><h2>Study 대시보드</h2></div>
-            <div className="admin-stat-grid">
-              <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('pristudy_content')} />
-              <StatCard label="총 학습자" value={priStudyStats.totalLearners} icon="👥" color="var(--admin-green)" onClick={() => setActiveTab('pristudy_learners')} />
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'pristudy_content' && (
+        {activeTab === 'content' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
               <h2>콘텐츠 관리</h2>
@@ -662,9 +647,9 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
 
-        {activeTab === 'pristudy_learners' && (
+        {activeTab === 'learners' && (
           <div className="admin-subscribers">
-            <div className="admin-section-header"><h2>우수 학습자 현황</h2></div>
+            <div className="admin-section-header"><h2>학습자(잔디) 현황</h2></div>
             <div className="admin-table-wrap">
               <table className="admin-table">
                 <thead><tr><th>이메일</th><th>최장 연속(일)</th><th>현재 연속(일)</th><th>누적 학습(일)</th><th>최근 학습일</th></tr></thead>
