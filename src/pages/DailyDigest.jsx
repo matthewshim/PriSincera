@@ -240,11 +240,9 @@ export default function DailyDigest() {
                   </svg>
                 </span>
                 {subStatus === 'loading' ? '구독 처리 중...' : 
-                 subStatus === 'success' ? '구독 완료' : 
-                 subStatus === 'already_subscribed' ? '구독 중' : 'Google 계정으로 데일리 무료 구독하기'}
+                 subStatus === 'success' ? '🎉 성공적으로 구독되었습니다! 매일 아침 찾아갈게요.' : 
+                 subStatus === 'already_subscribed' ? '✅ 이미 구독 중입니다. 매일 아침 다이제스트를 확인해주세요.' : 'Google 계정으로 데일리 무료 구독하기'}
               </button>
-              {subStatus === 'success' && <div className="sub-msg success">🎉 성공적으로 구독되었습니다! 매일 아침 메일로 찾아갈게요.</div>}
-              {subStatus === 'already_subscribed' && <div className="sub-msg info">✅ 이미 구독 중인 이메일입니다. 매일 아침 다이제스트를 확인해주세요.</div>}
               {subStatus === 'error' && <div className="sub-msg error">앗, 구독 처리 중 오류가 발생했습니다. 다시 시도해 주세요.</div>}
             </div>
           </div>
