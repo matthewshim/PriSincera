@@ -182,6 +182,25 @@ app.get('/api/unsubscribe', async (req, res) => {
   }
 });
 
+// Unsubscribe — Frontend (POST without Token)
+app.post('/api/unsubscribe', subscribeLimiter, express.json({ limit: '1kb' }), async (req, res) => {
+  try {
+    const { email_address } = req.body || {};
+    if (typeof email_address !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
+      return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
+    }
+    const { removeSubscriber } = await import('./pipeline/src/lib/subscribers.mjs');
+    const result = await removeSubscriber(email_address);
+    if (result.code === 'unsubscribed') {
+      return res.status(200).json({ code: 'unsubscribed' });
+    }
+    return res.status(200).json({ code: 'not_found' });
+  } catch (err) {
+    console.error('[Unsubscribe POST] Error:', err.message);
+    res.status(500).json({ code: 'server_error', error: 'Server error' });
+  }
+});
+
 /** 구독 해지 결과 페이지 HTML */
 function renderUnsubPage(message, success) {
   const icon = success ? '✅' : '❌';
