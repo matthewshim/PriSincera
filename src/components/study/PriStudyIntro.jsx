@@ -108,6 +108,40 @@ export default function PriStudyIntro() {
         </div>
       </section>
 
+      {/* ── 3.5. Curriculum Tracks (확장) ── */}
+      <section className="pristudy-section pristudy-tracks" style={{ background: 'var(--bg-card)' }}>
+        <div className="pristudy-section-inner">
+          <h2 className="pristudy-section-title">관심사에 맞춘 <span className="accent">멀티 트랙</span> 학습</h2>
+          <div className="pristudy-ux-container" style={{ alignItems: 'stretch' }}>
+            
+            {/* Track 1 */}
+            <div className="pristudy-ux-item" style={{ flex: 1, borderTop: '4px solid #3B82F6' }}>
+              <div className="pristudy-ux-icon">🇯🇵</div>
+              <h3>Track 1: 실무 비즈니스 일본어</h3>
+              <p style={{ textAlign: 'left', marginTop: 12 }}>
+                단순 어학을 넘어선 현지 기업 문화와 뉘앙스.<br/><br/>
+                ✅ <strong>요미가나 & 한국어 발음:</strong> 한자를 몰라도 쉽게 따라 읽을 수 있는 완벽한 가이드<br/>
+                ✅ <strong>원어민 음성(TTS):</strong> 듣기와 말하기를 동시에 훈련<br/>
+                ✅ <strong>필수 어휘장:</strong> 문장 내 핵심 단어를 한 번에 정리
+              </p>
+            </div>
+            
+            {/* Track 2 */}
+            <div className="pristudy-ux-item" style={{ flex: 1, borderTop: '4px solid #8B5CF6' }}>
+              <div className="pristudy-ux-icon">🤖</div>
+              <h3>Track 2: AI 프롬프트 엔지니어링</h3>
+              <p style={{ textAlign: 'left', marginTop: 12 }}>
+                내일 당장 실무에 적용 가능한 AI 활용법.<br/><br/>
+                ✅ <strong>프롬프트 템플릿:</strong> 복사해서 바로 쓸 수 있는 코드형 스니펫<br/>
+                ✅ <strong>상황별 맥락 가이드:</strong> AI 모델별 최적의 결과를 이끌어내는 노하우<br/>
+                ✅ <strong>파라미터 코멘트:</strong> 왜 이렇게 질문해야 하는지에 대한 상세 해설
+              </p>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+
       {/* ── 4. Pipeline Steps ── */}
       <section className="pristudy-section pristudy-feature">
         <div className="pristudy-section-inner">
