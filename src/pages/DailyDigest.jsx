@@ -402,27 +402,30 @@ export default function DailyDigest() {
             </div>
           </div>
 
-          <button 
-            className="daily-nav-btn next" 
-            onClick={() => {
-              const d = new Date(date);
-              d.setDate(d.getDate() + 1);
-              const nextStr = d.toISOString().slice(0, 10);
-              const todayStr = new Date(new Date().getTime() + 9*60*60*1000).toISOString().slice(0, 10);
-              if (nextStr <= todayStr) {
-                navigate(`/daily/${nextStr}`);
-              } else {
-                alert('아직 발행되지 않은 날짜입니다.');
-              }
-            }}
-          >
-            <span className="daily-nav-btn-label">
-              {formatNavDate(new Date(new Date(date).setDate(new Date(date).getDate() + 1)).toISOString().slice(0, 10))}
-            </span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+          {(() => {
+            const d = new Date(date);
+            d.setDate(d.getDate() + 1);
+            const nextStr = d.toISOString().slice(0, 10);
+            const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+            
+            if (nextStr <= todayStr) {
+              return (
+                <button 
+                  className="daily-nav-btn next" 
+                  onClick={() => navigate(`/daily/${nextStr}`)}
+                >
+                  <span className="daily-nav-btn-label">
+                    {formatNavDate(nextStr)}
+                  </span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              );
+            } else {
+              return <div className="daily-nav-btn next disabled" />;
+            }
+          })()}
         </div>
         
         <div style={{ marginTop: '20px' }}>
