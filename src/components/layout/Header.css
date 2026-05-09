@@ -191,6 +191,7 @@
 
 @media (max-width: 768px) {
     .nav { padding: var(--space-sm) var(--space-md); }
+    .nav.scrolled { padding: var(--space-sm) var(--space-md); }
     .nav-links { display: none; }
     .nav-right { gap: var(--space-sm); }
     .nav-symbol { width: 28px; height: 28px; }

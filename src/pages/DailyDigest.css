@@ -641,6 +641,7 @@
   .daily-title { font-size: 2.2rem; }
   .daily-card { padding: 16px; }
   .daily-tab { padding: 16px 12px; font-size: 0.9rem; }
+  .daily-tabs-nav { top: 52px; } /* GNB 모바일 높이에 맞춤 */
   
   .signal-articles-masonry, .archive-grid {
     grid-template-columns: 1fr;
