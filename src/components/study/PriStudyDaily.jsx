@@ -81,91 +81,94 @@ export default function PriStudyDaily({
         <div className="pristudy-empty">데이터를 불러오는 중입니다...</div>
       ) : dailyContent ? (
         <>
-          <div className="pristudy-card-container">
-            <div className="pristudy-card unified">
-              <div className="pristudy-card-face">
-                <div className="pristudy-content-header">
-                  <span className="pristudy-tag">오늘의 1-Pick</span>
-                  {dailyContent.track === 'prompt' ? (
-                    <span className="pristudy-tag" style={{ background: 'var(--color-accent-sub)', marginLeft: 8 }}>🤖 AI 프롬프트</span>
-                  ) : (
+          <div className="pristudy-card-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {/* AI 프롬프트 트랙 렌더링 */}
+            {dailyContent.prompt_snippet && (
+              <div className="pristudy-card unified">
+                <div className="pristudy-card-face">
+                  <div className="pristudy-content-header">
+                    <span className="pristudy-tag" style={{ background: 'var(--color-accent-sub)' }}>🤖 AI 프롬프트 1-Pick</span>
+                  </div>
+                  <div className="pristudy-jp" style={{ fontFamily: 'monospace', fontSize: '1.2rem', background: 'var(--bg-card)', padding: '16px', borderRadius: '8px', color: '#10B981', textAlign: 'left', wordBreak: 'break-word' }}>
+                    {dailyContent.prompt_snippet}
+                  </div>
+                  {dailyContent.explanation && <div className="pristudy-kr" style={{ marginTop: '20px' }}>{dailyContent.explanation}</div>}
+                  
+                  {/* 프롬프트용 business_context가 없는 경우, 기본 business_context를 사용하지 않음 (보통 일본어용임). 단 prompt_snippet과 함께 저장된 설명이라면 사용 */}
+                  {dailyContent.explanation && dailyContent.business_context && (
+                    <div className="pristudy-comment-box">
+                      <div className="pristudy-comment-title">💡 실무 활용 팁 (Context)</div>
+                      <div className="pristudy-comment">{dailyContent.business_context}</div>
+                    </div>
+                  )}
+                  
+                  {dailyContent.parameters && dailyContent.parameters.length > 0 && (
+                    <div className="pristudy-vocab-section">
+                      <div className="pristudy-vocab-title">⚙️ 파라미터 해설</div>
+                      <div className="pristudy-vocab-list">
+                        {dailyContent.parameters.map((p, i) => (
+                          <div key={i} className="pristudy-vocab-card" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <div className="pristudy-vocab-info">
+                              <span className="pristudy-vocab-word" style={{ color: '#F59E0B' }}>[{p.name}]</span>
+                              <span className="pristudy-vocab-meaning" style={{ display: 'block', marginTop: '4px' }}>{p.description}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* 기존 비즈니스 일본어 트랙 렌더링 */}
+            {dailyContent.sentence_jp && (
+              <div className="pristudy-card unified">
+                <div className="pristudy-card-face">
+                  <div className="pristudy-content-header">
+                    <span className="pristudy-tag" style={{ background: '#3B82F6' }}>🇯🇵 비즈니스 일본어 1-Pick</span>
                     <button className="pristudy-audio-btn main-audio" onClick={(e) => playAudio(dailyContent.sentence_jp, e)} title="문장 발음 듣기">
                       🔊 문장 듣기
                     </button>
+                  </div>
+
+                  <div className="pristudy-jp">{dailyContent.sentence_jp}</div>
+                  <div className="pristudy-furigana">{dailyContent.sentence_furigana}</div>
+                  {dailyContent.sentence_pronunciation_kr && (
+                    <div className="pristudy-pronunciation">{dailyContent.sentence_pronunciation_kr}</div>
+                  )}
+                  
+                  <div className="pristudy-kr">{dailyContent.sentence_kr}</div>
+                  
+                  {/* 프롬프트 explanation이 없을 때만(일본어 단독일 때) business_context를 여기에 표시. 같이 있을 때는 위에서 이미 보여줬거나 분리 필요 */}
+                  {!dailyContent.explanation && dailyContent.business_context && (
+                    <div className="pristudy-comment-box">
+                      <div className="pristudy-comment-title">💡 비즈니스 팁</div>
+                      <div className="pristudy-comment">{dailyContent.business_context}</div>
+                    </div>
+                  )}
+                  
+                  {dailyContent.vocabulary && dailyContent.vocabulary.length > 0 && (
+                    <div className="pristudy-vocab-section">
+                      <div className="pristudy-vocab-title">📚 단어장</div>
+                      <div className="pristudy-vocab-list">
+                        {dailyContent.vocabulary.map((v, i) => (
+                          <div key={i} className="pristudy-vocab-card">
+                            <div className="pristudy-vocab-info">
+                              <span className="pristudy-vocab-word">{v.word}</span>
+                              <span className="pristudy-vocab-reading">({v.reading})</span>
+                              {v.pronunciation_kr && <span className="pristudy-vocab-pronunciation">[{v.pronunciation_kr}]</span>}
+                              <span className="pristudy-vocab-meaning">- {v.meaning}</span>
+                            </div>
+                            <button className="pristudy-audio-btn vocab-audio" onClick={(e) => playAudio(v.word, e)} title="단어 발음 듣기">🔊</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
-
-                {/* AI 프롬프트 트랙 렌더링 */}
-                {dailyContent.track === 'prompt' ? (
-                  <>
-                    <div className="pristudy-jp" style={{ fontFamily: 'monospace', fontSize: '1.2rem', background: 'var(--bg-card)', padding: '16px', borderRadius: '8px', color: '#10B981', textAlign: 'left', wordBreak: 'break-word' }}>
-                      {dailyContent.prompt_snippet}
-                    </div>
-                    <div className="pristudy-kr" style={{ marginTop: '20px' }}>{dailyContent.explanation}</div>
-                    
-                    {dailyContent.business_context && (
-                      <div className="pristudy-comment-box">
-                        <div className="pristudy-comment-title">💡 실무 활용 팁 (Context)</div>
-                        <div className="pristudy-comment">{dailyContent.business_context}</div>
-                      </div>
-                    )}
-                    
-                    {dailyContent.parameters && dailyContent.parameters.length > 0 && (
-                      <div className="pristudy-vocab-section">
-                        <div className="pristudy-vocab-title">⚙️ 파라미터 해설</div>
-                        <div className="pristudy-vocab-list">
-                          {dailyContent.parameters.map((p, i) => (
-                            <div key={i} className="pristudy-vocab-card" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                              <div className="pristudy-vocab-info">
-                                <span className="pristudy-vocab-word" style={{ color: '#F59E0B' }}>[{p.name}]</span>
-                                <span className="pristudy-vocab-meaning" style={{ display: 'block', marginTop: '4px' }}>{p.description}</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  /* 기존 비즈니스 일본어 트랙 렌더링 */
-                  <>
-                    <div className="pristudy-jp">{dailyContent.sentence_jp}</div>
-                    <div className="pristudy-furigana">{dailyContent.sentence_furigana}</div>
-                    {dailyContent.sentence_pronunciation_kr && (
-                      <div className="pristudy-pronunciation">{dailyContent.sentence_pronunciation_kr}</div>
-                    )}
-                    
-                    <div className="pristudy-kr">{dailyContent.sentence_kr}</div>
-                    
-                    {dailyContent.business_context && (
-                      <div className="pristudy-comment-box">
-                        <div className="pristudy-comment-title">💡 비즈니스 팁</div>
-                        <div className="pristudy-comment">{dailyContent.business_context}</div>
-                      </div>
-                    )}
-                    
-                    {dailyContent.vocabulary && dailyContent.vocabulary.length > 0 && (
-                      <div className="pristudy-vocab-section">
-                        <div className="pristudy-vocab-title">📚 단어장</div>
-                        <div className="pristudy-vocab-list">
-                          {dailyContent.vocabulary.map((v, i) => (
-                            <div key={i} className="pristudy-vocab-card">
-                              <div className="pristudy-vocab-info">
-                                <span className="pristudy-vocab-word">{v.word}</span>
-                                <span className="pristudy-vocab-reading">({v.reading})</span>
-                                {v.pronunciation_kr && <span className="pristudy-vocab-pronunciation">[{v.pronunciation_kr}]</span>}
-                                <span className="pristudy-vocab-meaning">- {v.meaning}</span>
-                              </div>
-                              <button className="pristudy-audio-btn vocab-audio" onClick={(e) => playAudio(v.word, e)} title="단어 발음 듣기">🔊</button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
               </div>
-            </div>
+            )}
           </div>
 
           <button 
