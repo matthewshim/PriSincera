@@ -373,18 +373,84 @@
 }
 
 .archive-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: var(--space-sm);
   border-bottom: 1px solid var(--glass-border);
   padding-bottom: var(--space-sm);
+}
+.archive-date-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .archive-date {
   font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--crystal-light);
+}
+.archive-badge {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(4px);
+}
+
+.archive-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+.archive-track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.archive-track-icon {
+  font-size: 1.3rem;
+  background: var(--bg-elevated);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+.archive-track-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.archive-track-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.archive-track-count {
+  color: var(--orbit-cyan);
+  font-size: 0.85rem;
+  margin-left: 4px;
+}
+.archive-track-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.archive-card-footer {
+  margin-top: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px dashed rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: flex-end;
 }
 .archive-arrow {
   font-family: var(--font-display);
@@ -398,31 +464,6 @@
 .archive-card:hover .archive-arrow {
   opacity: 1;
   transform: translateX(0);
-}
-
-.archive-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.archive-track {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-sm);
-}
-.archive-track-icon {
-  font-size: 1.2rem;
-  background: var(--bg-elevated);
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: var(--radius-sm);
-}
-.archive-track-text {
-  flex: 1;
-  font-size: 1rem;
-  color: var(--text-primary);
-  line-height: 1.5;
-  margin-top: 4px;
 }
 
 @media (max-width: 768px) {

@@ -79,9 +79,11 @@ export default function DailyDigest() {
                 const digest = await dRes.json();
                 return {
                   date: d,
+                  signalCount: digest?.signal?.articles?.length || 0,
                   signalTitle: digest?.signal?.articles?.[0]?.title || '',
-                  studyPrompt: digest?.study?.prompt_snippet ? '🤖 AI 프롬프트' : '',
-                  studyJp: digest?.study?.sentence_jp ? '🇯🇵 비즈니스 일본어' : ''
+                  promptTheme: digest?.study?.prompt_snippet ? '🤖 AI 프롬프트' : '',
+                  jpTheme: digest?.study?.sentence_jp ? '🇯🇵 비즈니스 일본어' : '',
+                  theme: digest?.study?.theme || digest?.signal?.articles?.[0]?.category || ''
                 };
               }
               return { date: d };
@@ -228,28 +230,35 @@ export default function DailyDigest() {
                 data.map((item) => (
                   <Link to={`/daily/${item.date}`} className="archive-card" key={item.date}>
                     <div className="archive-card-header">
-                      <span className="archive-date">{item.date}</span>
-                      <span className="archive-arrow">학습하기 →</span>
+                      <div className="archive-date-wrap">
+                        <span className="archive-date">{item.date}</span>
+                        {item.theme && <span className="archive-badge" style={getCategoryStyles(item.theme)}>{item.theme}</span>}
+                      </div>
                     </div>
                     <div className="archive-card-body">
-                      {item.signalTitle && (
+                      {item.signalCount > 0 && (
                         <div className="archive-track">
                           <span className="archive-track-icon">📰</span>
-                          <span className="archive-track-text">{item.signalTitle}</span>
+                          <div className="archive-track-content">
+                            <span className="archive-track-title">IT Tech Signal <span className="archive-track-count">({item.signalCount}건)</span></span>
+                            <span className="archive-track-desc">{item.signalTitle} 등</span>
+                          </div>
                         </div>
                       )}
-                      {item.studyPrompt && (
+                      {(item.promptTheme || item.jpTheme) && (
                         <div className="archive-track">
-                          <span className="archive-track-icon">🤖</span>
-                          <span className="archive-track-text">AI 프롬프트: 실무 활용 스니펫</span>
+                          <span className="archive-track-icon">🚀</span>
+                          <div className="archive-track-content">
+                            <span className="archive-track-title">Skill Up 1-Pick</span>
+                            <span className="archive-track-desc">
+                              {[item.promptTheme, item.jpTheme].filter(Boolean).join(' · ')}
+                            </span>
+                          </div>
                         </div>
                       )}
-                      {item.studyJp && (
-                        <div className="archive-track">
-                          <span className="archive-track-icon">🇯🇵</span>
-                          <span className="archive-track-text">비즈니스 일본어: 핵심 문장 1-Pick</span>
-                        </div>
-                      )}
+                    </div>
+                    <div className="archive-card-footer">
+                      <span className="archive-arrow">다이제스트 학습하기 →</span>
                     </div>
                   </Link>
                 ))
