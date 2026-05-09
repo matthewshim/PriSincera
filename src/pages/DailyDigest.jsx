@@ -2,13 +2,20 @@ import { useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import DailyIntro from '../components/daily/DailyIntro';
 import './DailyDigest.css';
+
+const TABS = [
+  { key: 'intro', label: '서비스 소개', icon: '📋' },
+  { key: 'daily', label: '데일리 다이제스트', icon: '📝' },
+];
 
 export default function DailyDigest() {
   const { date } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   
+  const [activeTab, setActiveTab] = useState('intro');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null); // Detail data or Archive list
   const [token, setToken] = useState(() => localStorage.getItem('pristudy_token'));
@@ -17,6 +24,20 @@ export default function DailyDigest() {
   const synth = window.speechSynthesis;
 
   const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+  // 헤더 노출을 위한 hero-ready 클래스 제어
+  useEffect(() => {
+    document.body.classList.add('hero-ready');
+    return () => {
+      document.body.classList.remove('hero-ready');
+    };
+  }, []);
+
+  useEffect(() => {
+    if (location.hash === '#daily') {
+      setActiveTab('daily');
+    }
+  }, [location.hash]);
 
   useEffect(() => {
     document.title = 'PriSincera Daily Digest';
@@ -119,8 +140,17 @@ export default function DailyDigest() {
 
   const isTodayCompleted = progress?.completed_dates?.includes(date || todayStr);
 
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+    if (key === 'daily') {
+      navigate('/daily#daily');
+    } else {
+      navigate('/daily');
+    }
+  };
+
   if (!date) {
-    // Archive View
+    // Landing View (Tabs + Archive/Intro)
     return (
       <div className="daily-digest-page">
         <section className="daily-hero">
@@ -129,24 +159,69 @@ export default function DailyDigest() {
             <p className="daily-subtitle">하루 5분, IT 트렌드부터 실무 프롬프트와 어학까지 한 번에.</p>
           </div>
         </section>
+
+        {/* ── Sub-tab navigation ── */}
+        <nav className="daily-tabs-nav" role="tablist">
+          <div className="daily-tabs-inner">
+            {TABS.map((tab) => (
+              <button
+                key={tab.key}
+                role="tab"
+                aria-selected={activeTab === tab.key}
+                className={`daily-tab${activeTab === tab.key ? ' active' : ''}`}
+                onClick={() => handleTabChange(tab.key)}
+              >
+                <span className="daily-tab-icon">{tab.icon}</span>
+                <span className="daily-tab-label">{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </nav>
         
-        <div className="archive-container">
-          {loading ? (
-            <div style={{ textAlign: 'center', color: '#9CA3AF' }}>목록을 불러오는 중입니다...</div>
-          ) : Array.isArray(data) && data.length > 0 ? (
-            data.map((item) => (
-              <Link to={`/daily/${item.date}`} className="archive-card" key={item.date}>
-                <span className="archive-date">{item.date}</span>
-                <span className="archive-summary">
-                  {item.signalTitle ? `📰 ${item.signalTitle}` : '새로운 업데이트가 없습니다.'}
-                  {(item.studyPrompt || item.studyJp) && ` | ${item.studyPrompt} ${item.studyJp}`}
-                </span>
-                <span className="archive-arrow">→</span>
-              </Link>
-            ))
-          ) : (
-            <div style={{ textAlign: 'center', color: '#9CA3AF' }}>아직 발행된 피드가 없습니다.</div>
-          )}
+        <div className="daily-tab-panel" hidden={activeTab !== 'intro'}>
+          <DailyIntro />
+        </div>
+
+        <div className="daily-tab-panel" hidden={activeTab !== 'daily'}>
+          <div className="archive-container">
+            <h2 className="archive-section-title">지난 다이제스트 보기</h2>
+            <div className="archive-grid">
+              {loading ? (
+                <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px' }}>목록을 불러오는 중입니다...</div>
+              ) : Array.isArray(data) && data.length > 0 ? (
+                data.map((item) => (
+                  <Link to={`/daily/${item.date}`} className="archive-card" key={item.date}>
+                    <div className="archive-card-header">
+                      <span className="archive-date">{item.date}</span>
+                      <span className="archive-arrow">학습하기 →</span>
+                    </div>
+                    <div className="archive-card-body">
+                      {item.signalTitle && (
+                        <div className="archive-track">
+                          <span className="archive-track-icon">📰</span>
+                          <span className="archive-track-text">{item.signalTitle}</span>
+                        </div>
+                      )}
+                      {item.studyPrompt && (
+                        <div className="archive-track">
+                          <span className="archive-track-icon">🤖</span>
+                          <span className="archive-track-text">AI 프롬프트: 실무 활용 스니펫</span>
+                        </div>
+                      )}
+                      {item.studyJp && (
+                        <div className="archive-track">
+                          <span className="archive-track-icon">🇯🇵</span>
+                          <span className="archive-track-text">비즈니스 일본어: 핵심 문장 1-Pick</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px' }}>아직 발행된 피드가 없습니다.</div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );
