@@ -250,59 +250,68 @@ export default function DailyDigest() {
     }
   };
 
-  if (!date) {
-    // Landing View (Tabs + Archive/Intro)
-    return (
-      <div className="daily-digest-page">
-        <section className="daily-hero">
-          <div className="daily-hero-content">
-            <h1 className="daily-title">Daily Digest</h1>
-            <p className="daily-subtitle">하루 5분, IT 트렌드부터 실무 프롬프트와 어학까지 한 번에.</p>
+  const renderHeroAndTabs = () => (
+    <>
+      <section className="daily-hero">
+        <div className="daily-hero-content">
+          <h1 className="daily-title">Daily Digest</h1>
+          <p className="daily-subtitle">하루 5분, IT 트렌드부터 실무 프롬프트와 어학까지 한 번에.</p>
+          
+          <div className="daily-subscribe-wrap">
+            <button 
+              className={`daily-google-sub-btn ${subStatus || 'idle'}`} 
+              onClick={handleGoogleSubscribe} 
+              disabled={subStatus === 'loading' || subStatus === 'success' || subStatus === 'already_subscribed'}
+            >
+              {subStatus === 'loading' ? '🚀 시그널 동기화 중...' : 
+               subStatus === 'success' ? '✨ Your Daily Signal is ON : 내일 아침 만나요!' : 
+               subStatus === 'already_subscribed' ? '✨ 이미 구독 중이에요 : 내일 아침 만나요!' : '✨ 하루 5분, 다이제스트 무료 구독'}
+            </button>
             
-            <div className="daily-subscribe-wrap">
-              <button 
-                className={`daily-google-sub-btn ${subStatus || 'idle'}`} 
-                onClick={handleGoogleSubscribe} 
-                disabled={subStatus === 'loading' || subStatus === 'success' || subStatus === 'already_subscribed'}
-              >
-                {subStatus === 'loading' ? '🚀 시그널 동기화 중...' : 
-                 subStatus === 'success' ? '✨ Your Daily Signal is ON : 내일 아침 만나요!' : 
-                 subStatus === 'already_subscribed' ? '✨ 이미 구독 중이에요 : 내일 아침 만나요!' : '✨ 하루 5분, 다이제스트 무료 구독'}
-              </button>
-              
-              {(subStatus === 'success' || subStatus === 'already_subscribed') && (
-                <div style={{ marginTop: '12px', textAlign: 'center' }}>
-                  <button 
-                    onClick={handleUnsubscribe}
-                    style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
-                  >
-                    더 이상 받아보고 싶지 않으신가요? (구독 해제)
-                  </button>
-                </div>
-              )}
+            {(subStatus === 'success' || subStatus === 'already_subscribed') && (
+              <div style={{ marginTop: '12px', textAlign: 'center' }}>
+                <button 
+                  onClick={handleUnsubscribe}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
+                >
+                  더 이상 받아보고 싶지 않으신가요? (구독 해제)
+                </button>
+              </div>
+            )}
 
-              {subStatus === 'error' && <div className="sub-msg error">앗, 구독 처리 중 오류가 발생했습니다. 다시 시도해 주세요.</div>}
-            </div>
+            {subStatus === 'error' && <div className="sub-msg error">앗, 구독 처리 중 오류가 발생했습니다. 다시 시도해 주세요.</div>}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── Sub-tab navigation ── */}
-        <nav className="daily-tabs-nav" role="tablist">
-          <div className="daily-tabs-inner">
-            {TABS.map((tab) => (
+      {/* ── Sub-tab navigation ── */}
+      <nav className="daily-tabs-nav" role="tablist">
+        <div className="daily-tabs-inner">
+          {TABS.map((tab) => {
+            const isSelected = date ? tab.key === 'daily' : activeTab === tab.key;
+            return (
               <button
                 key={tab.key}
                 role="tab"
-                aria-selected={activeTab === tab.key}
-                className={`daily-tab${activeTab === tab.key ? ' active' : ''}`}
+                aria-selected={isSelected}
+                className={`daily-tab${isSelected ? ' active' : ''}`}
                 onClick={() => handleTabChange(tab.key)}
               >
                 <span className="daily-tab-icon">{tab.icon}</span>
                 <span className="daily-tab-label">{tab.label}</span>
               </button>
-            ))}
-          </div>
-        </nav>
+            );
+          })}
+        </div>
+      </nav>
+    </>
+  );
+
+  if (!date) {
+    // Landing View (Tabs + Archive/Intro)
+    return (
+      <div className="daily-digest-page">
+        {renderHeroAndTabs()}
         
         <div className="daily-tab-panel" hidden={activeTab !== 'intro'}>
           <DailyIntro />
@@ -365,23 +374,7 @@ export default function DailyDigest() {
   // Detail View
   return (
     <div className="daily-digest-page">
-      {/* ── Sub-tab navigation (Detail View) ── */}
-      <nav className="daily-tabs-nav" role="tablist">
-        <div className="daily-tabs-inner">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              role="tab"
-              aria-selected={tab.key === 'daily'}
-              className={`daily-tab${tab.key === 'daily' ? ' active' : ''}`}
-              onClick={() => handleTabChange(tab.key)}
-            >
-              <span className="daily-tab-icon">{tab.icon}</span>
-              <span className="daily-tab-label">{tab.label}</span>
-            </button>
-          ))}
-        </div>
-      </nav>
+      {renderHeroAndTabs()}
 
       <div className="daily-detail-header">
         <div className="daily-date-nav-row">
