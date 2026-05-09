@@ -47,40 +47,137 @@
   z-index: 1;
 }
 
-/* Value Props */
-.daily-value-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--space-md);
+.daily-hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(192, 132, 252, 0.15);
+  color: var(--prism-lavender);
+  border: 1px solid rgba(192, 132, 252, 0.3);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: var(--space-lg);
+}
+
+.desktop-only { display: inline; }
+
+/* Synergy */
+.synergy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
   margin-top: 40px;
 }
-.daily-value-card {
+
+@media (min-width: 768px) {
+  .synergy-grid {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+.synergy-card {
+  flex: 1;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg) var(--space-md);
-  transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  border-radius: var(--radius-lg);
+  padding: 32px;
   backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--duration-fast), border-color var(--duration-fast);
 }
-.daily-value-card:hover {
+
+.synergy-card:hover {
   transform: translateY(-5px);
-  border-color: var(--glass-border-hover);
 }
-.daily-value-card-icon {
-  font-size: 2.5rem;
-  margin-bottom: var(--space-md);
+
+.synergy-card.signal-part:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 10px 30px rgba(96, 165, 250, 0.1);
 }
-.daily-value-card-title {
+
+.synergy-card.study-part:hover {
+  border-color: rgba(244, 114, 182, 0.4);
+  box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1);
+}
+
+.synergy-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.synergy-icon {
+  font-size: 2rem;
+}
+
+.synergy-title {
   font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--crystal-white);
+  display: flex;
+  flex-direction: column;
 }
-.daily-value-card-desc {
+
+.synergy-title .sub {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.synergy-subtitle {
   font-size: 0.95rem;
   color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.synergy-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.synergy-features li {
+  font-size: 0.95rem;
+  color: var(--text-muted);
   line-height: 1.6;
+  position: relative;
+  padding-left: 20px;
+}
+
+.synergy-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--prism-lavender);
+  font-weight: bold;
+}
+
+.synergy-features li strong {
+  color: var(--crystal-white);
+  font-weight: 500;
+}
+
+.synergy-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--text-muted);
+  font-weight: 300;
 }
 
 /* Pipeline */
@@ -151,6 +248,7 @@
 }
 
 @media (max-width: 768px) {
+  .desktop-only { display: none; }
   .daily-hero-quote { font-size: 1.8rem; }
   .daily-pipeline-container {
     flex-direction: column;
