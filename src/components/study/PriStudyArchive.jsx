@@ -37,7 +37,9 @@ export default function PriStudyArchive() {
             const data = await res.json();
             return {
               date,
+              track: data.track || 'japanese',
               sentence_jp: data.sentence_jp,
+              prompt_snippet: data.prompt_snippet,
               business_context: data.business_context,
               isToday: date === today,
             };
@@ -90,7 +92,16 @@ export default function PriStudyArchive() {
                         </span>
                       )}
                     </div>
-                    <p className="pristudy-archive-card-headline">{entry.sentence_jp}</p>
+                    <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                      {entry.track === 'prompt' ? (
+                        <span className="pristudy-archive-today-badge" style={{ background: 'var(--color-accent-sub)' }}>🤖 AI 프롬프트</span>
+                      ) : (
+                        <span className="pristudy-archive-today-badge" style={{ background: '#3B82F6' }}>🇯🇵 비즈니스 일본어</span>
+                      )}
+                    </div>
+                    <p className="pristudy-archive-card-headline" style={entry.track === 'prompt' ? { fontFamily: 'monospace', color: '#10B981', fontSize: '1rem', wordBreak: 'break-all' } : {}}>
+                      {entry.track === 'prompt' ? entry.prompt_snippet : entry.sentence_jp}
+                    </p>
                     <p className="pristudy-archive-card-context">{entry.business_context}</p>
                     <div className="pristudy-archive-card-footer">
                       <span className="pristudy-archive-card-read">
