@@ -118,6 +118,8 @@ app.use('/admin/api', adminLimiter, express.json({ limit: '10kb' }), adminRouter
 
 // --- PriStudy API ---
 app.use('/api/study', apiLimiter, express.json({ limit: '5kb' }), studyRouter);
+// 구버전 프론트엔드 캐시 하위 호환 (pristudy -> study)
+app.use('/api/pristudy', apiLimiter, express.json({ limit: '5kb' }), studyRouter);
 
 // --- Subscriber Management (GCS JSON / Firestore) ---
 
