@@ -126,64 +126,32 @@ function renderDmPickCard(article, index) {
 /**
  * More Signals — 카테고리별 그룹
  */
-function renderMoreSignals(articles) {
-  // DM Pick이 아닌 아티클을 카테고리별로 그룹핑
-  const grouped = {};
-  for (const a of articles) {
-    if (a.isDmPick) continue;
-    const cat = a.category || 'etc';
-    if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(a);
-  }
-
-  if (Object.keys(grouped).length === 0) return '';
-
-  let html = `
+function renderMoreSignals(articles, dailyPageUrl) {
+  const otherArticles = articles.filter(a => !a.isDmPick);
+  if (otherArticles.length === 0) return '';
+  return `
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
        style="margin-top:8px;">
   <tr>
-    <td>
-      <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#C084FC; line-height:1.3;">
-        📰 More Signals
-      </p>`;
-
-  for (const [cat, catArticles] of Object.entries(grouped)) {
-    const icon = CATEGORY_ICONS[cat] || '📌';
-    const catName = CATEGORY_NAMES[cat] || cat;
-    const catColor = CATEGORY_COLORS[cat] || '#C084FC';
-
-    html += `
-      <!-- Category: ${escapeHtml(catName)} -->
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+    <td style="padding: 24px; background: rgba(196,181,253,0.05); border: 1px solid rgba(196,181,253,0.1); border-radius: 12px; text-align: center;">
+      <p style="margin:0 0 12px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:16px; font-weight:700; color:#C084FC; line-height:1.3;">
+        ✨ 더 많은 시그널이 기다리고 있어요!
+      </p>
+      <p style="margin:0 0 20px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA; line-height:1.5;">
+        이 외에도 ${otherArticles.length}개의 유익한 IT Tech Signal 아티클이 준비되어 있습니다. 전체 리스트와 상세 인사이트를 웹에서 바로 확인해 보세요.
+      </p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
         <tr>
-          <td style="padding:8px 0 6px; border-bottom:1px solid rgba(196,181,253,0.08);">
-            <span style="font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:700; color:${catColor}; letter-spacing:0.08em; text-transform:uppercase;">
-              ${icon} ${escapeHtml(catName)}
-            </span>
-          </td>
-        </tr>`;
-
-    for (const a of catArticles) {
-      html += `
-        <tr>
-          <td style="padding:8px 0; border-bottom:1px solid rgba(196,181,253,0.04);">
-            <a href="${escapeHtml(a.url)}" style="font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#E9D5FF; text-decoration:none; line-height:1.5;">
-              ${escapeHtml(a.title)}
+          <td bgcolor="#7C3AED" style="background:linear-gradient(135deg,#7C3AED,#A855F7); border-radius:100px; padding:10px 24px;">
+            <a href="${escapeHtml(dailyPageUrl)}" style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+              → 더 많은 시그널 보러가기
             </a>
-            <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3;"> — ${escapeHtml(a.source)}</span>
           </td>
-        </tr>`;
-    }
-
-    html += `</table>`;
-  }
-
-  html += `
+        </tr>
+      </table>
     </td>
   </tr>
 </table>`;
-
-  return html;
 }
 
 /**
@@ -218,9 +186,10 @@ function renderPortalCTA(dailyPageUrl) {
 /**
  * PriStudy 오늘의 1문장 섹션
  */
-function renderStudySection(studyData) {
+function renderStudySection(studyData, date) {
   if (!studyData) return '';
-  return `
+
+  let html = `
 <!-- ═══ PRISTUDY ═══ -->
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
@@ -231,8 +200,44 @@ function renderStudySection(studyData) {
   <tr>
     <td style="padding: 0 24px;">
       <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#10B981; line-height:1.3;">
-        📚 오늘의 PriStudy 1-Pick
+        🚀 Skill Up 1-Pick
       </p>
+  `;
+
+  // AI 프롬프트 1-Pick
+  if (studyData.prompt_snippet) {
+    html += `
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+             style="background-color:#1A1035; border:1px solid rgba(34, 211, 238, 0.15); border-radius:16px; margin-bottom: 16px;">
+        <tr>
+          <td style="padding:20px 22px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td style="padding-bottom:12px;">
+                  <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#22D3EE; background:rgba(34, 211, 238, 0.12); border:1px solid rgba(34, 211, 238, 0.25); border-radius:100px; padding:3px 12px; letter-spacing:0.02em;">
+                    🤖 AI 프롬프트 1-Pick
+                  </span>
+                  <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3; margin-left:8px;">
+                    실무 활용 스니펫
+                  </span>
+                </td>
+              </tr>
+            </table>
+            <div style="margin:0 0 12px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#E9D5FF; line-height:1.6; padding: 12px; background: rgba(34, 211, 238, 0.05); border: 1px solid rgba(34,211,238,0.1); border-radius: 8px;">
+              ${escapeHtml(studyData.prompt_snippet).replace(/\\n/g, '<br>')}
+            </div>
+            <p style="margin:0; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:13px; color:#A78BFA; line-height:1.6;">
+              ${escapeHtml(studyData.explanation || '')}
+            </p>
+          </td>
+        </tr>
+      </table>
+    `;
+  }
+
+  // 비즈니스 일본어 1-Pick
+  if (studyData.sentence_jp) {
+    html += `
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
              style="background-color:#1A1035; border:1px solid rgba(16,185,129,0.15); border-radius:16px;">
         <tr>
@@ -241,7 +246,7 @@ function renderStudySection(studyData) {
               <tr>
                 <td style="padding-bottom:12px;">
                   <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#10B981; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); border-radius:100px; padding:3px 12px; letter-spacing:0.02em;">
-                    ${escapeHtml(studyData.trackName || '비즈니스 1-Pick')}
+                    🇯🇵 비즈니스 일본어 1-Pick
                   </span>
                   <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3; margin-left:8px;">
                     ${escapeHtml(studyData.theme || '오늘의 표현')}
@@ -255,23 +260,29 @@ function renderStudySection(studyData) {
             <p style="margin:0 0 16px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA; line-height:1.6;">
               ${escapeHtml(studyData.sentence_kr)}
             </p>
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td bgcolor="#10B981"
-                    style="background:linear-gradient(135deg,#10B981,#059669); border-radius:100px; padding:8px 22px;">
-                  <a href="https://www.prisincera.com/study/${escapeHtml(studyData.date)}"
-                     style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
-                    → 학습 완료하고 잔디 심기
-                  </a>
-                </td>
-              </tr>
-            </table>
+          </td>
+        </tr>
+      </table>
+    `;
+  }
+
+  html += `
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top: 16px;">
+        <tr>
+          <td bgcolor="#10B981"
+              style="background:linear-gradient(135deg,#10B981,#059669); border-radius:100px; padding:8px 22px;">
+            <a href="https://www.prisincera.com/daily/${date}"
+               style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+              → 학습 완료하고 잔디 심기
+            </a>
           </td>
         </tr>
       </table>
     </td>
   </tr>
 </table>`;
+
+  return html;
 }
 
 // ─── Main Render ─────────────────────────────────
@@ -298,10 +309,10 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
   const dmPickCards = dmPicks.map((a, i) => renderDmPickCard(a, i)).join('');
 
   // More Signals
-  const moreSignalsHtml = renderMoreSignals(articles);
+  const moreSignalsHtml = renderMoreSignals(articles, dailyPageUrl);
 
   // PriStudy Section
-  const studyHtml = renderStudySection(studyData);
+  const studyHtml = renderStudySection(studyData, date);
 
   // Portal CTA
   const portalCTA = renderPortalCTA(dailyPageUrl);
@@ -430,7 +441,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
           <tr>
             <td style="padding: 0 24px;">
               <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#22D3EE; line-height:1.3;">
-                📡 Signal — Today's DM Pick
+                📰 IT Tech Signal
               </p>
               ${dmPickCards}
             </td>

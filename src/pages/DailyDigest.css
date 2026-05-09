@@ -211,7 +211,6 @@
   font-weight: 700;
   padding: 4px 12px;
   border-radius: var(--radius-pill);
-  margin-bottom: var(--space-sm);
   align-self: flex-start;
   text-transform: uppercase;
   letter-spacing: 1px;

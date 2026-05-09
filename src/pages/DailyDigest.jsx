@@ -359,7 +359,19 @@ export default function DailyDigest() {
                           </div>
                         )}
                         <div className="signal-article-body">
-                          {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
+                          <div className="signal-article-meta-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                            {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
+                            
+                            <div className="signal-article-meta-info" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                              {article.weightedScore && (
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <span style={{ color: '#FCD34D' }}>★</span> {Number(article.weightedScore).toFixed(1)} {article.tier === 1 && '🌟'}
+                                </span>
+                              )}
+                              {article.weightedScore && article.source && <span style={{ opacity: 0.3 }}>|</span>}
+                              {article.source && <span style={{ color: 'var(--prism-lavender)', fontWeight: 500 }}>{article.source}</span>}
+                            </div>
+                          </div>
                           <h3>{article.title}</h3>
                           {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
                           <p>{article.summary}</p>

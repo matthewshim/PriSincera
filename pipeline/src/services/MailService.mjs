@@ -39,7 +39,7 @@ export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, s
   const dateObj = new Date(Number(y), Number(m) - 1, Number(d));
   const dateKr = `${Number(m)}/${Number(d)}(${days[dateObj.getDay()]})`;
 
-  const subject = `📬 PriSincera Daily — ${dateKr}`;
+  const subject = `📬 Daily Digest - ${dateKr}`;
 
   // 발송 시작 전 Pending(Lock) 상태 기록하여 중복 트리거 차단
   try {
