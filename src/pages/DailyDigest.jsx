@@ -460,8 +460,14 @@ export default function DailyDigest() {
                   <h2 className="daily-section-title">IT Tech Signal</h2>
                 </div>
                   <div className="signal-articles-masonry">
-                    {data.signal.articles?.map((article, idx) => (
-                      <a href={article.url} target="_blank" rel="noopener noreferrer" className="signal-article-card" key={idx}>
+                    {[...(data.signal.articles || [])]
+                      .sort((a, b) => {
+                        if (a.isDmPick && !b.isDmPick) return -1;
+                        if (!a.isDmPick && b.isDmPick) return 1;
+                        return b.weightedScore - a.weightedScore;
+                      })
+                      .map((article, idx) => (
+                      <a href={article.url} target="_blank" rel="noopener noreferrer" className={`signal-article-card ${article.isDmPick ? 'dm-pick' : ''}`} key={idx}>
                         {article.og_image && (
                           <div className="signal-article-image">
                             <img src={article.og_image} alt={article.title} loading="lazy" />
@@ -469,6 +475,15 @@ export default function DailyDigest() {
                         )}
                         <div className="signal-article-body">
                           <div className="signal-article-meta-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                            {article.isDmPick && (
+                              <span style={{
+                                fontFamily: 'var(--font-display)', fontSize: '0.75rem', fontWeight: 700,
+                                color: '#10B981', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)',
+                                padding: '2px 8px', borderRadius: '100px',
+                              }}>
+                                DM Pick
+                              </span>
+                            )}
                             {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
                             
                             <div className="signal-article-meta-info" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
