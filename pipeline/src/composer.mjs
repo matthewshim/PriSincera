@@ -60,47 +60,57 @@ async function main() {
   const candidates = dailyData.articles;
   console.log(`[Composer] 오늘 아티클: ${candidates.length}개`);
 
-  // 2. AI 스코어링 (전체 아티클)
-  console.log('\n--- Phase 1: SIGNAL 스코어링 ---');
-  const scored = await scoreArticles(candidates);
+  let finalArticles = [];
+  let studyData = null;
 
-  // 3. Tier 가중치 적용
-  console.log('\n--- Phase 2: 가중치 + 선정 ---');
-  const weighted = applyTierWeights(scored);
+  // 이미 스코어링이 완료되었는지 확인 (FORCE_SCORE=true 일 경우 강제 재실행)
+  if (dailyData.status === 'scored' && process.env.FORCE_SCORE !== 'true') {
+    console.log('\n[Composer] 🛑 이미 스코어링이 완료된 데이터입니다. AI 스코어링 단계를 건너뜁니다.');
+    finalArticles = dailyData.articles;
+  } else {
+    // 2. AI 스코어링 (전체 아티클)
+    console.log('\n--- Phase 1: SIGNAL 스코어링 ---');
+    const scored = await scoreArticles(candidates);
 
-  // 4. 상위 5개 DM 픽 선정
-  const dmPicks = selectTopN(weighted, settings.dmPickCount || 5);
+    // 3. Tier 가중치 적용
+    console.log('\n--- Phase 2: 가중치 + 선정 ---');
+    const weighted = applyTierWeights(scored);
 
-  if (dmPicks.length === 0) {
-    console.error('❌ DM 픽 선정 실패.');
-    await saveAndExit(todayStr, weighted, []);
-    return;
+    // 4. 상위 5개 DM 픽 선정
+    const dmPicks = selectTopN(weighted, settings.dmPickCount || 5);
+
+    if (dmPicks.length === 0) {
+      console.error('❌ DM 픽 선정 실패.');
+      // 실패 시에도 기존 구조를 유지하도록 빈 배열로 처리 (실제로는 return 됨)
+      return;
+    }
+
+    // 5. DM 픽에 에디터 코멘트 생성
+    console.log('\n--- Phase 3: 에디터 코멘트 ---');
+    const dmWithComments = await generateComments(dmPicks);
+    const dmPickIds = dmWithComments.map(a => a.id);
+
+    // 6. 품질 필터링 — 카테고리별 최소 보장 + 점수 필터 + 카테고리별 캡
+    const { filteredArticles, catSummary } = filterAndCapArticles(weighted, dmPickIds);
+    console.log(`[Composer] 품질 필터: ${weighted.length}개 → ${filteredArticles.length}개`);
+    console.log(`[Composer] 카테고리별: ${catSummary}`);
+
+    // 7. 스코어링된 데일리 데이터 갱신
+    finalArticles = mapEditorComments(filteredArticles, dmWithComments, dmPickIds);
+
+    await saveDailySignal(todayStr, {
+      date: todayStr,
+      status: 'scored',
+      total: finalArticles.length,
+      dmPickCount: dmWithComments.length,
+      articles: finalArticles,
+      dm_picks: dmPickIds,
+      scoredAt: new Date().toISOString(),
+    });
+
+    console.log(`[Composer] 데일리 데이터 갱신 완료: ${finalArticles.length}개 (DM 픽 ${dmWithComments.length}개)`);
   }
 
-  // 5. DM 픽에 에디터 코멘트 생성
-  console.log('\n--- Phase 3: 에디터 코멘트 ---');
-  const dmWithComments = await generateComments(dmPicks);
-  const dmPickIds = dmWithComments.map(a => a.id);
-
-  // 6. 품질 필터링 — 카테고리별 최소 보장 + 점수 필터 + 카테고리별 캡
-  const { filteredArticles, catSummary } = filterAndCapArticles(weighted, dmPickIds);
-  console.log(`[Composer] 품질 필터: ${weighted.length}개 → ${filteredArticles.length}개`);
-  console.log(`[Composer] 카테고리별: ${catSummary}`);
-
-  // 7. 스코어링된 데일리 데이터 갱신
-  const finalArticles = mapEditorComments(filteredArticles, dmWithComments, dmPickIds);
-
-  await saveDailySignal(todayStr, {
-    date: todayStr,
-    status: 'scored',
-    total: finalArticles.length,
-    dmPickCount: dmWithComments.length,
-    articles: finalArticles,
-    dm_picks: dmPickIds,
-    scoredAt: new Date().toISOString(),
-  });
-
-  console.log(`[Composer] 데일리 데이터 갱신 완료: ${finalArticles.length}개 (DM 픽 ${dmWithComments.length}개)`);
 
   // 8. Gmail SMTP 자체 발송
   console.log('\n--- Phase 4: 이메일 발송 (Gmail SMTP) ---');
@@ -133,7 +143,7 @@ async function main() {
 
   // PriStudy 데일리 문장 로드 (오늘자)
   const { getStudyContent } = await import('./repositories/StudyRepository.mjs');
-  const studyData = await getStudyContent(todayStr);
+  studyData = await getStudyContent(todayStr);
   if (studyData) {
     console.log(`[Composer] PriStudy 오늘의 1문장 로드 완료`);
   }
