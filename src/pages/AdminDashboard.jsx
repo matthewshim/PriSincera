@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+} from 'recharts';
 import './AdminDashboard.css';
 
 const API_BASE = '/admin/api';
@@ -421,7 +424,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   useEffect(() => {
     if (activeTab === 'subscribers') { loadSubscribers(); loadEmailLogs(); }
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
-    if (activeTab === 'overview') { loadPriStudyStats(); }
+    if (activeTab === 'overview') { loadPriStudyStats(); loadEmailLogs(); }
     if (activeTab === 'content') loadDailyContent();
     if (activeTab === 'learners') loadPriStudyLearners();
   }, [activeTab]);
@@ -518,13 +521,35 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </div>
             )}
             {pipeline && (
-              <div className="admin-pipeline-summary">
+              <div className="admin-pipeline-summary" style={{ marginBottom: '24px' }}>
                 <h3>데이터 수집 상태</h3>
                 <div className={`admin-pipeline-badge ${pipeline.collector.status}`}>
                   {pipeline.collector.status === 'success' ? '✅ 오늘 수집 완료' : '⏳ 대기 중'}
                 </div>
                 <p>최근 실행: {pipeline.collector.lastRun || 'N/A'}</p>
                 <p>누적 데일리: {pipeline.totalDates}일</p>
+              </div>
+            )}
+            
+            {/* Chart Area */}
+            {emailLogs && emailLogs.length > 0 && (
+              <div className="admin-chart-container" style={{ background: '#1A1035', padding: '24px', borderRadius: '16px', border: '1px solid rgba(196,181,253,0.1)' }}>
+                <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', color: '#E9D5FF' }}>최근 데일리 발송 추이</h3>
+                <div style={{ width: '100%', height: 300 }}>
+                  <ResponsiveContainer>
+                    <LineChart data={[...emailLogs].reverse().slice(-14)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                      <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} tickFormatter={str => str.substring(5)} />
+                      <YAxis stroke="#9CA3AF" fontSize={12} allowDecimals={false} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#0A0714', borderColor: 'rgba(196,181,253,0.2)', borderRadius: '8px' }}
+                        itemStyle={{ color: '#F5F3FF' }}
+                      />
+                      <Line type="monotone" name="수신" dataKey="totalRecipients" stroke="#7C3AED" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                      <Line type="monotone" name="성공" dataKey="successCount" stroke="#10B981" strokeWidth={2} dot={{ r: 4 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             )}
           </div>
