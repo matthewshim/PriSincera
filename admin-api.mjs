@@ -475,41 +475,52 @@ router.post('/daily/content', async (req, res) => {
 
 router.get('/pacenotes/users', async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 20;
     const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
-    const snap = await db.collection('pacenotes').limit(limit).get();
+    // 빈(Ghost) 부모 문서 문제를 피하기 위해 collectionGroup 사용
+    const snap = await db.collectionGroup('weeks').get();
+    
+    const usersMap = {};
+    snap.docs.forEach(doc => {
+      const uid = doc.ref.parent.parent.id;
+      if (!usersMap[uid]) {
+        usersMap[uid] = { uid, weeks: [] };
+      }
+      usersMap[uid].weeks.push(doc.data());
+    });
       
-    const pacers = await Promise.all(snap.docs.map(async (doc) => {
+    const pacers = [];
+    for (const uid of Object.keys(usersMap)) {
+      const userWeeks = usersMap[uid].weeks;
+      // JS 레벨 정렬 (인덱스 필요 없음)
+      userWeeks.sort((a, b) => b.weekId.localeCompare(a.weekId));
+      
+      const latestWeek = userWeeks[0];
+      const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
+      const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
+
       let email = '알 수 없음';
       try {
-        const user = await auth.getUser(doc.id);
+        const user = await auth.getUser(uid);
         email = user.email;
       } catch (e) {
-        console.error(`[Admin API] Failed to get user ${doc.id}:`, e.message);
+        console.error(`[Admin API] Failed to get user ${uid}:`, e.message);
       }
       
-      const weeksSnap = await doc.ref.collection('weeks').orderBy('weekId', 'desc').limit(1).get();
-      let lastWeekId = '-';
-      let currentTasks = 0;
-      let completedTasks = 0;
-      
-      if (!weeksSnap.empty) {
-        const weekData = weeksSnap.docs[0].data();
-        lastWeekId = weekData.weekId;
-        currentTasks = weekData.currentPace ? weekData.currentPace.length : 0;
-        completedTasks = weekData.currentPace ? weekData.currentPace.filter(t => t.completed).length : 0;
-      }
-
-      return {
-        uid: doc.id, 
+      pacers.push({
+        uid, 
         email,
-        lastWeekId,
+        lastWeekId: latestWeek.weekId,
         currentTasks,
         completedTasks
-      };
-    }));
+      });
+    }
+    
+    // 접속 주차 최신순 정렬
+    pacers.sort((a, b) => b.lastWeekId.localeCompare(a.lastWeekId));
+    
     res.json({ pacers });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Pace Note 사용자 조회 실패' });
   }
 });
@@ -517,7 +528,8 @@ router.get('/pacenotes/users', async (req, res) => {
 router.get('/pacenotes/insights', async (req, res) => {
   try {
     const { db } = await import('./pipeline/src/lib/firestore.mjs');
-    const snap = await db.collectionGroup('weeks').orderBy('createdAt', 'desc').limit(100).get();
+    // 복합 인덱스 요구를 피하기 위해 단순 collectionGroup 쿼리 후 JS에서 정렬
+    const snap = await db.collectionGroup('weeks').get();
     
     let customTasks = [];
     snap.docs.forEach(doc => {
@@ -529,15 +541,18 @@ router.get('/pacenotes/insights', async (req, res) => {
               weekId: data.weekId,
               title: task.title,
               completed: task.completed,
-              createdAt: data.createdAt
+              createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
             });
           }
         });
       }
     });
     
-    res.json({ insights: customTasks });
+    customTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    
+    res.json({ insights: customTasks.slice(0, 100) });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: '인사이트 조회 실패' });
   }
 });
