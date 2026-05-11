@@ -198,28 +198,7 @@ export default function PaceNoteDashboard() {
               </div>
             </div>
 
-            {/* ── Middle: AI Recommendations (Only if Current Week) ── */}
-            {selectedWeekId === data.current.weekId && data.current.recommendedPace && data.current.recommendedPace.length > 0 && (
-              <div className="pacenote-ai-section">
-                <div className="pacenote-ai-header">
-                  <h2>AI 추천 가이드 <span className="pacenote-ai-badge">✨ Gemini</span></h2>
-                  <p>나의 주도적 성장을 위해 제안하는 추가 액션입니다.</p>
-                </div>
-                <div className="pacenote-ai-scroll">
-                  {data.current.recommendedPace.map((rec) => (
-                    <div key={rec.id} className="pacenote-recommend-item">
-                      <div className="pacenote-rec-cat" style={{ color: rec.color || '#22D3EE' }}>{rec.category}</div>
-                      <div className="pacenote-rec-title">{rec.title}</div>
-                      <button className="pacenote-btn-accept" onClick={() => acceptRecommend(rec.id)}>
-                        내 궤도에 추가하기
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ── Bottom: Pace Tracker ── */}
+            {/* ── Pace Tracker & AI Recommendations ── */}
             <div className={`pacenote-tracker-section ${selectedWeekId !== data.current.weekId ? 'past-view' : ''}`}>
               {(() => {
                 const isCurrent = selectedWeekId === data.current.weekId;
@@ -227,7 +206,7 @@ export default function PaceNoteDashboard() {
                 const paceList = isCurrent ? viewData.currentPace : viewData.tasks;
                 
                 return (
-                  <div className="pacenote-bento-card tracker-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+                  <div className="pacenote-bento-card tracker-card" style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
                     <div className="pacenote-card-header">
                       <h2>{isCurrent ? '이번 주 나의 궤도' : `${selectedWeekId} 나의 궤도`}</h2>
                       <span className="pacenote-date-badge">{selectedWeekId}</span>
@@ -283,6 +262,27 @@ export default function PaceNoteDashboard() {
                       {isCurrent && paceList && paceList.length > 0 && paceList.every(t => t.completed) && (
                         <div className="pacenote-celebration">
                           🎉 이번 주 궤도 안착 완료! 단단한 한 걸음이 되었습니다.
+                        </div>
+                      )}
+
+                      {/* ── AI Recommendations (Right below Add Form) ── */}
+                      {isCurrent && data.current.recommendedPace && data.current.recommendedPace.length > 0 && (
+                        <div className="pacenote-ai-section" style={{ marginTop: '32px', marginBottom: '0' }}>
+                          <div className="pacenote-ai-header">
+                            <h2>AI 추천 가이드 <span className="pacenote-ai-badge">✨ Gemini</span></h2>
+                            <p>나의 주도적 성장을 위해 지속적으로 제안하는 새로운 액션입니다.</p>
+                          </div>
+                          <div className="pacenote-ai-scroll">
+                            {data.current.recommendedPace.map((rec) => (
+                              <div key={rec.id} className="pacenote-recommend-item">
+                                <div className="pacenote-rec-cat" style={{ color: rec.color || '#22D3EE' }}>{rec.category}</div>
+                                <div className="pacenote-rec-title">{rec.title}</div>
+                                <button className="pacenote-btn-accept" onClick={() => acceptRecommend(rec.id)}>
+                                  내 궤도에 추가하기
+                                </button>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>

@@ -48,13 +48,42 @@ function getWeekDateRange(weekStr) {
   };
 }
 
-// 임시 추천 데이터 (나중에 AI 자동화 파이프라인으로 대체)
-// 외부/주도적 액션 위주
-const DUMMY_RECOMMENDATIONS = [
+// 다량의 추천 케이스 (지속 추천을 위한 풀)
+const AI_RECOMMENDATION_POOL = [
   { id: 'rec-1', title: '아침 출근 전 30분 동안 온전히 나를 위한 명상하기', category: 'Mindset', color: '#34D399' },
   { id: 'rec-2', title: '이번 주 배운 내용을 바탕으로 링크드인에 인사이트 짧게 공유하기', category: 'Branding', color: '#60A5FA' },
   { id: 'rec-3', title: '스마트폰을 끄고 1시간 동안 종이책이나 긴 호흡의 아티클 읽기', category: 'Deep Work', color: '#FBBF24' },
+  { id: 'rec-4', title: '관심 있는 분야의 오프라인 네트워킹 모임 찾아보기', category: 'Networking', color: '#A78BFA' },
+  { id: 'rec-5', title: '평소 쓰지 않던 새로운 AI 툴 1가지 테스트해보고 후기 남기기', category: 'AI & Future', color: '#22D3EE' },
+  { id: 'rec-6', title: '이번 주 나의 업무 프로세스 중 비효율적인 부분 1개 개선하기', category: 'Productivity', color: '#F472B6' },
+  { id: 'rec-7', title: '10년 뒤 나의 커리어 모습을 상상하며 한 페이지 에세이 작성하기', category: 'Vision', color: '#818CF8' },
+  { id: 'rec-8', title: '업무와 무관한 완전히 새로운 주제의 다큐멘터리 시청하기', category: 'Inspiration', color: '#FCD34D' },
+  { id: 'rec-9', title: '이번 주 감사했던 일 3가지를 적고 주변 사람에게 표현하기', category: 'Mindset', color: '#34D399' },
+  { id: 'rec-10', title: '책상과 작업 환경을 완전히 새롭게 정리정돈하기', category: 'Environment', color: '#9CA3AF' },
+  { id: 'rec-11', title: "이번 주 가장 어려웠던 문제에 대해 '왜?'를 3번 반복하며 회고하기", category: 'Problem Solving', color: '#FB923C' },
+  { id: 'rec-12', title: '평소 연락하지 않던 동료나 멘토에게 먼저 커피챗 제안하기', category: 'Networking', color: '#A78BFA' },
+  { id: 'rec-13', title: '이번 주 알게 된 새로운 영단어나 비즈니스 용어 5개 완벽히 암기하기', category: 'Learning', color: '#60A5FA' },
+  { id: 'rec-14', title: '잠들기 전 내일 가장 먼저 처리할 핵심 목표 1가지 적어두기', category: 'Productivity', color: '#F472B6' },
+  { id: 'rec-15', title: '가벼운 산책을 하며 팟캐스트나 오디오북 청취하기', category: 'Health', color: '#4ADE80' }
 ];
+
+// 추천 풀에서 필요한 개수만큼 부족한 추천을 채워주는 함수
+function replenishRecommendations(currentPace = [], recommendedPace = [], count = 3) {
+  const currentIds = new Set(currentPace.map(p => p.id));
+  const recIds = new Set(recommendedPace.map(p => p.id));
+  let newRecs = [...recommendedPace];
+  
+  // 이미 목표나 추천에 없는 항목들 필터링
+  const availablePool = AI_RECOMMENDATION_POOL.filter(item => !currentIds.has(item.id) && !recIds.has(item.id));
+  
+  // 랜덤 셔플
+  availablePool.sort(() => 0.5 - Math.random());
+  
+  while (newRecs.length < count && availablePool.length > 0) {
+    newRecs.push(availablePool.pop());
+  }
+  return newRecs;
+}
 
 // 1. 유저의 Pace Note 데이터 조회 (현재 주간 + 과거 타임라인)
 pacenoteRouter.get('/', verifyUser, async (req, res) => {
@@ -73,31 +102,30 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
     if (!currentDoc.exists) {
       // 데이터가 없으면 기본값 생성
       const { start, end } = getWeekDateRange(currentWeekId);
+      const defaultCurrentPace = [
+        { id: 'default-1', title: 'Daily Digest 오늘의 인사이트 1개 이상 읽기', completed: false },
+        { id: 'default-2', title: '이번 주 AI 스터디 프롬프트 직접 실행해보기', completed: false },
+        { id: 'default-3', title: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기', completed: false },
+        { id: 'default-4', title: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기', completed: false },
+        { id: 'default-5', title: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기', completed: false },
+      ];
+      
       currentWeekData = {
         weekId: currentWeekId,
         startDate: start,
         endDate: end,
-        currentPace: [
-          { id: 'default-1', title: 'Daily Digest 오늘의 인사이트 1개 이상 읽기', completed: false },
-          { id: 'default-2', title: '이번 주 AI 스터디 프롬프트 직접 실행해보기', completed: false },
-          { id: 'default-3', title: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기', completed: false },
-          { id: 'default-4', title: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기', completed: false },
-          { id: 'default-5', title: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기', completed: false },
-        ],
-        recommendedPace: DUMMY_RECOMMENDATIONS,
+        currentPace: defaultCurrentPace,
+        recommendedPace: replenishRecommendations(defaultCurrentPace, [], 3),
         createdAt: new Date().toISOString()
       };
       await weeksRef.doc(currentWeekId).set(currentWeekData);
     } else {
       currentWeekData = currentDoc.data();
-      // 만약 과거 로직으로 인해 recommendedPace가 없고, 현재 궤도에도 DUMMY가 없다면 다시 채워줌
-      if (!currentWeekData.recommendedPace || currentWeekData.recommendedPace.length === 0) {
-        const currentPaceIds = (currentWeekData.currentPace || []).map(p => p.id);
-        const missingRecommendations = DUMMY_RECOMMENDATIONS.filter(rec => !currentPaceIds.includes(rec.id));
-        if (missingRecommendations.length > 0) {
-          currentWeekData.recommendedPace = missingRecommendations;
-          await weeksRef.doc(currentWeekId).update({ recommendedPace: missingRecommendations });
-        }
+      // 지속적인 추천 UX 제공을 위해 항상 추천 항목이 3개 미만이면 채워줌
+      const oldRecCount = (currentWeekData.recommendedPace || []).length;
+      if (oldRecCount < 3) {
+        currentWeekData.recommendedPace = replenishRecommendations(currentWeekData.currentPace, currentWeekData.recommendedPace || [], 3);
+        await weeksRef.doc(currentWeekId).update({ recommendedPace: currentWeekData.recommendedPace });
       }
     }
 
@@ -232,6 +260,11 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
       color: taskToMove.color,
       completed: false
     });
+    
+    // 부족해진 추천 항목을 다시 3개로 채움
+    if (recommendedPace.length < 3) {
+      recommendedPace = replenishRecommendations(currentPace, recommendedPace, 3);
+    }
     
     await docRef.update({ currentPace, recommendedPace });
     res.json({ success: true, currentPace, recommendedPace });
