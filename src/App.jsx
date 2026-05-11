@@ -6,6 +6,7 @@ import Layout from './components/layout/Layout';
 const Home = lazy(() => import('./pages/Home'));
 const DailyDigest = lazy(() => import('./pages/DailyDigest'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const PaceNoteDashboard = lazy(() => import('./pages/PaceNoteDashboard'));
 
 
 
@@ -27,6 +28,9 @@ function App() {
           {/* Unified Daily Digest Routes */}
           <Route path="daily" element={<DailyDigest />} />
           <Route path="daily/:date" element={<DailyDigest />} />
+
+          {/* Pace Note Routes */}
+          <Route path="pacenote" element={<PaceNoteDashboard />} />
           
           {/* Legacy Redirects */}
           <Route path="signal/*" element={<Navigate to="/daily" replace />} />

@@ -1,0 +1,378 @@
+.pacenote-page {
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ── Hero Section ── */
+.pacenote-hero {
+  padding: 140px 24px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 60%);
+}
+
+.pacenote-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.pacenote-hero-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.pacenote-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #FFF 0%, #C4B5FD 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: var(--font-display);
+}
+
+.pacenote-subtitle {
+  font-size: 1.15rem;
+  color: #E9D5FF;
+  line-height: 1.6;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Bento Container ── */
+.pacenote-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.pacenote-loading {
+  text-align: center;
+  padding: 80px 0;
+  color: #9CA3AF;
+}
+
+.pacenote-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(196, 181, 253, 0.2);
+  border-top-color: #C4B5FD;
+  border-radius: 50%;
+  animation: pacenote-spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes pacenote-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Bento Grid ── */
+.pacenote-bento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.pacenote-bento-card {
+  background: rgba(26, 16, 53, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(196, 181, 253, 0.1);
+  border-radius: 24px;
+  padding: 32px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.pacenote-bento-card:hover {
+  border-color: rgba(196, 181, 253, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px -10px rgba(124, 58, 237, 0.15);
+}
+
+.tracker-card {
+  grid-column: 1 / 2;
+}
+
+.ai-recommend-card {
+  grid-column: 2 / 3;
+}
+
+.logbook-card {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+
+/* ── Card Elements ── */
+.pacenote-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pacenote-card-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #F5F3FF;
+  margin: 0;
+}
+
+.pacenote-card-desc {
+  color: #9CA3AF;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+/* Badges */
+.pacenote-date-badge {
+  background: rgba(167, 139, 250, 0.15);
+  color: #C4B5FD;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.pacenote-ai-badge {
+  background: rgba(34, 211, 238, 0.15);
+  color: #22D3EE;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pacenote-btn-export {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E9D5FF;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pacenote-btn-export:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFF;
+}
+
+/* ── Tasks (Tracker) ── */
+.pacenote-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pacenote-task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pacenote-task-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(196, 181, 253, 0.2);
+}
+
+.pacenote-task-item input {
+  display: none;
+}
+
+.task-custom-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(196, 181, 253, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.pacenote-task-item.completed .task-custom-checkbox {
+  background: #10B981;
+  border-color: #10B981;
+}
+
+.pacenote-task-item.completed .task-custom-checkbox::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 4px;
+}
+
+.task-text {
+  color: #E9D5FF;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.2s;
+}
+
+.pacenote-task-item.completed .task-text {
+  color: #9CA3AF;
+  text-decoration: line-through;
+}
+
+.pacenote-celebration {
+  margin-top: 8px;
+  padding: 16px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34D399;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  animation: fadeInDown 0.5s ease-out forwards;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── AI Recommendations ── */
+.pacenote-recommend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pacenote-recommend-item {
+  padding: 20px;
+  background: linear-gradient(145deg, rgba(34, 211, 238, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(34, 211, 238, 0.15);
+  position: relative;
+}
+
+.pacenote-rec-cat {
+  font-size: 0.75rem;
+  color: #22D3EE;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.pacenote-rec-title {
+  color: #F5F3FF;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.pacenote-btn-accept {
+  background: rgba(34, 211, 238, 0.1);
+  color: #67E8F9;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.pacenote-btn-accept:hover {
+  background: rgba(34, 211, 238, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ── Logbook (Masonry) ── */
+.pacenote-masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.pacenote-log-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.2s;
+}
+
+.pacenote-log-card:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pacenote-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pacenote-log-date {
+  color: #9CA3AF;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+}
+
+.pacenote-log-cat {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.pacenote-log-title {
+  color: #E9D5FF;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ── Responsive Design ── */
+@media (max-width: 900px) {
+  .pacenote-bento-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tracker-card, .ai-recommend-card {
+    grid-column: 1 / -1;
+  }
+  
+  .pacenote-hero {
+    padding: 120px 20px 40px;
+  }
+
+  .pacenote-title {
+    font-size: 2.5rem;
+  }
+}
