@@ -203,22 +203,33 @@ export default function PaceNoteDashboard() {
           <h1 className="pacenote-title">Pace Note</h1>
           <p className="pacenote-subtitle">남들의 속도에 휩쓸리지 않고, 나만의 호흡과 방향을 잃지 않기 위해 기록합니다.</p>
           
-          <div className="pacenote-auth-action" style={{ marginTop: '24px' }}>
+          <div className="pacenote-auth-action" style={{ marginTop: '32px', textAlign: 'center' }}>
             {!userToken ? (
-              <button className="pacenote-btn-accept" style={{ width: 'auto', padding: '12px 24px', fontSize: '1rem', background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)' }} onClick={handleLoginClick}>
+              <button className="pacenote-btn-accept" style={{ padding: '16px 32px', fontSize: '1.1rem', background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)', borderRadius: '100px', width: 'auto' }} onClick={handleLoginClick}>
                 ✨ 3초 만에 로그인하고 나만의 궤도 만들기
               </button>
             ) : (
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.3)', padding: '10px 24px', borderRadius: '100px' }}>
-                <span style={{ color: '#E9D5FF', fontSize: '0.95rem', fontWeight: '500' }}>
+              <div className="pacenote-logged-in-wrap">
+                <div style={{ 
+                  display: 'inline-block', 
+                  background: 'rgba(167, 139, 250, 0.1)', 
+                  border: '1px solid rgba(167, 139, 250, 0.5)', 
+                  padding: '16px 32px', 
+                  borderRadius: '100px', 
+                  color: '#A78BFA', 
+                  fontSize: '1.1rem', 
+                  fontWeight: '500' 
+                }}>
                   ⛵ 오늘도 당신만의 궤도를 만들어가고 계시군요! 흔들림 없는 항해를 응원합니다.
-                </span>
-                <button 
-                  onClick={handleLogout}
-                  style={{ background: 'transparent', border: 'none', color: '#9CA3AF', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', marginLeft: '8px' }}
-                >
-                  로그아웃
-                </button>
+                </div>
+                <div style={{ marginTop: '16px' }}>
+                  <button 
+                    onClick={handleLogout}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
+                  >
+                    더 이상 항해를 계속하지 않으신가요? (로그아웃)
+                  </button>
+                </div>
               </div>
             )}
           </div>
