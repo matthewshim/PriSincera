@@ -49,10 +49,11 @@ function getWeekDateRange(weekStr) {
 }
 
 // 임시 추천 데이터 (나중에 AI 자동화 파이프라인으로 대체)
+// 외부/주도적 액션 위주
 const DUMMY_RECOMMENDATIONS = [
-  { id: 'rec-1', title: '이번 주 읽은 아티클 중 1개를 선정해 내 업무에 어떻게 적용할지 3줄 요약하기', category: 'Attitude', color: '#F472B6' },
-  { id: 'rec-2', title: 'Claude/Cursor 등을 활용해 반복되는 텍스트 작업 자동화 스크립트 작성', category: 'AI & Future', color: '#22D3EE' },
-  { id: 'rec-3', title: '현재 진행 중인 프로젝트의 병목 지점을 파악하고 팀원에게 공유하기', category: 'Product Strategy', color: '#FBBF24' },
+  { id: 'rec-1', title: '아침 출근 전 30분 동안 온전히 나를 위한 명상하기', category: 'Mindset', color: '#34D399' },
+  { id: 'rec-2', title: '이번 주 배운 내용을 바탕으로 링크드인에 인사이트 짧게 공유하기', category: 'Branding', color: '#60A5FA' },
+  { id: 'rec-3', title: '스마트폰을 끄고 1시간 동안 종이책이나 긴 호흡의 아티클 읽기', category: 'Deep Work', color: '#FBBF24' },
 ];
 
 // 1. 유저의 Pace Note 데이터 조회 (현재 주간 + 과거 타임라인)
@@ -77,7 +78,11 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
         startDate: start,
         endDate: end,
         currentPace: [
-          { id: 'default-1', title: '매일 5분 데일리 다이제스트 읽기', completed: false },
+          { id: 'default-1', title: 'Daily Digest 오늘의 인사이트 1개 이상 읽기', completed: false },
+          { id: 'default-2', title: '이번 주 AI 스터디 프롬프트 직접 실행해보기', completed: false },
+          { id: 'default-3', title: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기', completed: false },
+          { id: 'default-4', title: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기', completed: false },
+          { id: 'default-5', title: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기', completed: false },
         ],
         recommendedPace: DUMMY_RECOMMENDATIONS,
         createdAt: new Date().toISOString()

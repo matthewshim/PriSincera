@@ -309,113 +309,116 @@
   transform: translateY(-1px);
 }
 
-/* ── Timeline Logbook ── */
-.pacenote-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin-top: 24px;
-  position: relative;
-  padding-left: 12px;
+/* ── Top: Week Selector (Timeline) ── */
+.pacenote-week-selector {
+  margin-bottom: 24px;
 }
 
-.timeline-item {
-  position: relative;
-  padding-left: 32px;
-  padding-bottom: 32px;
-}
-
-.timeline-item:last-child {
-  padding-bottom: 0;
-}
-
-.timeline-node {
-  position: absolute;
-  left: -4px;
-  top: 6px;
-  width: 12px;
-  height: 12px;
-  background: #C4B5FD;
-  border-radius: 50%;
-  border: 2px solid #1A1035;
-  z-index: 2;
-  box-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
-}
-
-.timeline-line {
-  position: absolute;
-  left: 1px;
-  top: 18px;
-  bottom: -6px;
-  width: 2px;
-  background: rgba(196, 181, 253, 0.2);
-  z-index: 1;
-}
-
-.timeline-content {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 20px;
-  transition: all 0.2s;
-}
-
-.timeline-content:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.timeline-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 16px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-  padding-bottom: 12px;
-}
-
-.timeline-header h3 {
-  font-size: 1.1rem;
+.pacenote-selector-title {
+  font-size: 1.25rem;
   color: #F5F3FF;
-  margin: 0;
+  margin-bottom: 16px;
+  font-weight: 700;
+  padding-left: 8px;
+}
+
+.pacenote-week-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 8px;
+  padding-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pacenote-week-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.pacenote-week-scroll::-webkit-scrollbar-thumb {
+  background: rgba(196, 181, 253, 0.2);
+  border-radius: 4px;
+}
+
+.pacenote-week-btn {
+  flex-shrink: 0;
+  background: rgba(26, 16, 53, 0.5);
+  border: 1px solid rgba(196, 181, 253, 0.1);
+  padding: 16px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  min-width: 160px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.pacenote-week-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(196, 181, 253, 0.3);
+  transform: translateY(-2px);
+}
+
+.pacenote-week-btn.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%);
+  border-color: #A78BFA;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.2);
+}
+
+.pacenote-week-btn.current {
+  border-color: #34D399;
+}
+
+.pacenote-week-btn.current.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 211, 238, 0.1) 100%);
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.2);
+}
+
+.week-id {
   font-family: var(--font-mono);
-}
-
-.timeline-date {
-  color: #9CA3AF;
-  font-size: 0.85rem;
-}
-
-.timeline-tasks {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.timeline-task {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.timeline-check {
-  color: #10B981;
-  font-weight: bold;
   font-size: 1.1rem;
-}
-
-.timeline-task-title {
+  font-weight: 700;
   color: #E9D5FF;
-  font-size: 0.95rem;
-  flex: 1;
+  margin-bottom: 4px;
 }
 
-.timeline-task-cat {
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  white-space: nowrap;
+.pacenote-week-btn.current .week-id {
+  color: #34D399;
+}
+
+.week-date {
+  font-size: 0.8rem;
+  color: #9CA3AF;
+  margin-bottom: 8px;
+}
+
+.week-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #A78BFA;
+}
+
+.pacenote-week-btn.current .week-status {
+  color: #34D399;
+}
+
+/* ── Bento Grid Past View ── */
+.pacenote-bento-grid.past-view {
+  display: block;
+}
+
+.pacenote-task-item.readonly {
+  cursor: default;
+}
+
+.pacenote-task-item.readonly:hover {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+  transform: none;
+}
+
+.pacenote-task-item.readonly .task-text {
+  color: #E9D5FF;
+  text-decoration: none;
 }
 
 /* ── Responsive Design ── */
@@ -436,3 +439,4 @@
     font-size: 2.5rem;
   }
 }
+
