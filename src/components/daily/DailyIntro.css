@@ -249,26 +249,46 @@
 .bar:nth-child(5) { height: 50px; animation-delay: 0.8s; }
 @keyframes wave { 0% { transform: scaleY(0.5); } 100% { transform: scaleY(1); } }
 
-/* Streak Visual */
-.visual-streak {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+/* Pace Note Visual */
+.visual-pacenote {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   background: transparent;
   border: none;
   margin-top: 0;
-  width: 140px;
+  width: 150px;
   flex-shrink: 0;
 }
-.streak-box {
-  width: 16px; height: 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  animation: streakGlow 3s ease-in-out infinite alternate;
+.pacenote-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0.4;
+  animation: paceCheck 3s ease-in-out infinite;
+  animation-fill-mode: both;
 }
-@keyframes streakGlow {
-  0% { background: rgba(255, 255, 255, 0.1); }
-  100% { background: #34D399; box-shadow: 0 0 8px rgba(52, 211, 153, 0.6); }
+.pacenote-check {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(196, 181, 253, 0.4);
+  position: relative;
+}
+.pacenote-line.active .pacenote-check,
+.pacenote-line:nth-child(odd) .pacenote-check {
+  background: #A78BFA;
+  border-color: #A78BFA;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+}
+.pacenote-text {
+  flex-grow: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
+}
+@keyframes paceCheck {
+  0% { opacity: 0.4; transform: translateX(-5px); }
+  50%, 100% { opacity: 1; transform: translateX(0); }
 }
 
 /* ── 3. Pipeline Section ── */

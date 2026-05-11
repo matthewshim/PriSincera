@@ -104,16 +104,19 @@ export default function DailyIntro() {
             </div>
           </div>
 
-          {/* Streak (Wide) */}
+          {/* Pace Note (Wide) */}
           <div className="bento-card card-streak reveal-on-scroll">
-            <div className="bento-visual visual-streak">
-              {Array.from({length: 14}).map((_, i) => (
-                <div className="streak-box" key={i} style={{ animationDelay: `${i * 0.05}s` }}></div>
+            <div className="bento-visual visual-pacenote">
+              {Array.from({length: 4}).map((_, i) => (
+                <div className="pacenote-line" key={i} style={{ animationDelay: `${i * 0.4}s` }}>
+                  <div className="pacenote-check"></div>
+                  <div className="pacenote-text"></div>
+                </div>
               ))}
             </div>
             <div className="bento-content streak-content">
-              <h3 className="bento-title">당신의 성장이 기록되는 잔디밭</h3>
-              <p className="bento-desc">출퇴근길 5분 투자로 지식을 습득하고, 매일 잔디를 심으며 꾸준한 습관을 시각화하세요.</p>
+              <h3 className="bento-title">나만의 성장을 이끄는 Pace Note</h3>
+              <p className="bento-desc">단순히 읽고 넘기지 마세요. 매일 얻은 인사이트를 실천 과제로 만들고, 나만의 궤도(Pace)에 올려 성장 로그를 기록하세요.</p>
             </div>
           </div>
 

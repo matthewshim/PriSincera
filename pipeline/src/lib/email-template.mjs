@@ -269,11 +269,11 @@ function renderStudySection(studyData, date) {
   html += `
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top: 16px;">
         <tr>
-          <td bgcolor="#10B981"
-              style="background:linear-gradient(135deg,#10B981,#059669); border-radius:100px; padding:8px 22px;">
-            <a href="https://www.prisincera.com/daily/${date}"
+          <td bgcolor="#8B5CF6"
+              style="background:linear-gradient(135deg,#8B5CF6,#6D28D9); border-radius:100px; padding:8px 22px;">
+            <a href="https://www.prisincera.com/pacenote"
                style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
-              → 학습 완료하고 잔디 심기
+              → 나만의 궤도 기록하기 (Pace Note)
             </a>
           </td>
         </tr>
