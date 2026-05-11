@@ -476,43 +476,31 @@ router.post('/daily/content', async (req, res) => {
 router.get('/pacenotes/users', async (req, res) => {
   try {
     const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
-    // 빈(Ghost) 부모 문서 문제를 피하기 위해 collectionGroup 사용
-    const snap = await db.collectionGroup('weeks').get();
-    
-    const usersMap = {};
-    snap.docs.forEach(doc => {
-      const uid = doc.ref.parent.parent.id;
-      if (!usersMap[uid]) {
-        usersMap[uid] = { uid, weeks: [] };
-      }
-      usersMap[uid].weeks.push(doc.data());
-    });
-      
+    // Auth에서 전체 유저 리스트 가져오기 (최대 1000명 기준)
+    const listUsersResult = await auth.listUsers(1000);
     const pacers = [];
-    for (const uid of Object.keys(usersMap)) {
-      const userWeeks = usersMap[uid].weeks;
-      // JS 레벨 정렬 (인덱스 필요 없음)
-      userWeeks.sort((a, b) => b.weekId.localeCompare(a.weekId));
-      
-      const latestWeek = userWeeks[0];
-      const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
-      const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
 
-      let email = '알 수 없음';
-      try {
-        const user = await auth.getUser(uid);
-        email = user.email;
-      } catch (e) {
-        console.error(`[Admin API] Failed to get user ${uid}:`, e.message);
+    // 각 유저별로 Pace Note 사용 기록이 있는지 확인
+    for (const user of listUsersResult.users) {
+      const uid = user.uid;
+      const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+        .orderBy('weekId', 'desc')
+        .limit(1)
+        .get();
+        
+      if (!weeksSnap.empty) {
+        const latestWeek = weeksSnap.docs[0].data();
+        const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
+        const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
+        
+        pacers.push({
+          uid,
+          email: user.email || '알 수 없음',
+          lastWeekId: latestWeek.weekId,
+          currentTasks,
+          completedTasks
+        });
       }
-      
-      pacers.push({
-        uid, 
-        email,
-        lastWeekId: latestWeek.weekId,
-        currentTasks,
-        completedTasks
-      });
     }
     
     // 접속 주차 최신순 정렬
@@ -527,26 +515,34 @@ router.get('/pacenotes/users', async (req, res) => {
 
 router.get('/pacenotes/insights', async (req, res) => {
   try {
-    const { db } = await import('./pipeline/src/lib/firestore.mjs');
-    // 복합 인덱스 요구를 피하기 위해 단순 collectionGroup 쿼리 후 JS에서 정렬
-    const snap = await db.collectionGroup('weeks').get();
+    const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
+    const listUsersResult = await auth.listUsers(1000);
     
     let customTasks = [];
-    snap.docs.forEach(doc => {
-      const data = doc.data();
-      if (data.currentPace) {
-        data.currentPace.forEach(task => {
-          if (task.id.startsWith('custom-')) {
-            customTasks.push({
-              weekId: data.weekId,
-              title: task.title,
-              completed: task.completed,
-              createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
-            });
-          }
-        });
-      }
-    });
+    
+    for (const user of listUsersResult.users) {
+      const uid = user.uid;
+      const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+        .orderBy('weekId', 'desc')
+        .limit(10)
+        .get();
+        
+      weeksSnap.docs.forEach(doc => {
+        const data = doc.data();
+        if (data.currentPace) {
+          data.currentPace.forEach(task => {
+            if (task.id.startsWith('custom-')) {
+              customTasks.push({
+                weekId: data.weekId,
+                title: task.title,
+                completed: task.completed,
+                createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
+              });
+            }
+          });
+        }
+      });
+    }
     
     customTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     
