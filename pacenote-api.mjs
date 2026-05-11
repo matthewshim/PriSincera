@@ -90,6 +90,15 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       await weeksRef.doc(currentWeekId).set(currentWeekData);
     } else {
       currentWeekData = currentDoc.data();
+      // 만약 과거 로직으로 인해 recommendedPace가 없고, 현재 궤도에도 DUMMY가 없다면 다시 채워줌
+      if (!currentWeekData.recommendedPace || currentWeekData.recommendedPace.length === 0) {
+        const currentPaceIds = (currentWeekData.currentPace || []).map(p => p.id);
+        const missingRecommendations = DUMMY_RECOMMENDATIONS.filter(rec => !currentPaceIds.includes(rec.id));
+        if (missingRecommendations.length > 0) {
+          currentWeekData.recommendedPace = missingRecommendations;
+          await weeksRef.doc(currentWeekId).update({ recommendedPace: missingRecommendations });
+        }
+      }
     }
 
     // 과거 데이터 (Timeline 용) - 최신순 10개
@@ -119,6 +128,41 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
     });
   } catch (err) {
     console.error('[PaceNote API] Get Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 1-1. 사용자 정의 미션 추가
+pacenoteRouter.post('/add', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const { title } = req.body;
+    if (!title || !title.trim()) return res.status(400).json({ error: 'title is required' });
+
+    const today = new Date();
+    const currentWeekId = getWeekNumber(today);
+    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+    
+    const data = doc.data();
+    const currentPace = data.currentPace || [];
+    
+    const newTask = {
+      id: `custom-${Date.now()}`,
+      title: title.trim(),
+      category: 'My Action',
+      color: '#C4B5FD',
+      completed: false
+    };
+    
+    currentPace.push(newTask);
+    await docRef.update({ currentPace });
+    
+    res.json({ success: true, currentPace });
+  } catch (err) {
+    console.error('[PaceNote API] Add Task Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

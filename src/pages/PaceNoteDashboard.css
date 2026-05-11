@@ -260,19 +260,58 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── AI Recommendations ── */
-.pacenote-recommend-list {
+/* ── AI Recommendations (Horizontal Scroll) ── */
+.pacenote-ai-section {
+  margin-bottom: 32px;
+}
+
+.pacenote-ai-header {
+  margin-bottom: 16px;
+  padding-left: 8px;
+}
+
+.pacenote-ai-header h2 {
+  font-size: 1.25rem;
+  color: #F5F3FF;
+  margin: 0 0 4px 0;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.pacenote-ai-header p {
+  font-size: 0.9rem;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+.pacenote-ai-scroll {
+  display: flex;
   gap: 16px;
+  overflow-x: auto;
+  padding: 8px;
+  padding-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pacenote-ai-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.pacenote-ai-scroll::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.2);
+  border-radius: 4px;
 }
 
 .pacenote-recommend-item {
+  flex-shrink: 0;
+  width: 280px;
   padding: 20px;
   background: linear-gradient(145deg, rgba(34, 211, 238, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
   border-radius: 16px;
   border: 1px solid rgba(34, 211, 238, 0.15);
-  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .pacenote-rec-cat {
@@ -289,6 +328,7 @@
   font-size: 1rem;
   line-height: 1.5;
   margin-bottom: 16px;
+  flex-grow: 1;
 }
 
 .pacenote-btn-accept {
@@ -311,7 +351,7 @@
 
 /* ── Top: Week Selector (Timeline) ── */
 .pacenote-week-selector {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .pacenote-selector-title {
@@ -401,11 +441,66 @@
   color: #34D399;
 }
 
-/* ── Bento Grid Past View ── */
-.pacenote-bento-grid.past-view {
-  display: block;
+/* ── Custom Task Input ── */
+.pacenote-add-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px dashed rgba(196, 181, 253, 0.3);
+  border-radius: 16px;
+  padding: 12px 20px;
+  transition: all 0.2s;
 }
 
+.pacenote-add-form:focus-within {
+  border-color: #C4B5FD;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.add-icon {
+  font-size: 1.5rem;
+  color: #C4B5FD;
+  font-weight: 300;
+}
+
+.pacenote-add-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: #F5F3FF;
+  font-size: 1rem;
+  outline: none;
+}
+
+.pacenote-add-input::placeholder {
+  color: rgba(156, 163, 175, 0.5);
+}
+
+.pacenote-add-btn {
+  background: rgba(196, 181, 253, 0.15);
+  color: #C4B5FD;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pacenote-add-btn:hover:not(:disabled) {
+  background: rgba(196, 181, 253, 0.25);
+  color: #FFF;
+}
+
+.pacenote-add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Past View ── */
 .pacenote-task-item.readonly {
   cursor: default;
 }
@@ -423,14 +518,6 @@
 
 /* ── Responsive Design ── */
 @media (max-width: 900px) {
-  .pacenote-bento-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .tracker-card, .ai-recommend-card {
-    grid-column: 1 / -1;
-  }
-  
   .pacenote-hero {
     padding: 120px 20px 40px;
   }

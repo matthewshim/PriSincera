@@ -10,6 +10,8 @@ export default function PaceNoteDashboard() {
   const [data, setData] = useState(null);
   const [userToken, setUserToken] = useState(null);
   const [selectedWeekId, setSelectedWeekId] = useState(null);
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [addingTask, setAddingTask] = useState(false);
 
   useEffect(() => {
     document.title = 'PriSincera Pace Note';
@@ -107,6 +109,35 @@ export default function PaceNoteDashboard() {
     }
   };
 
+  const handleAddTask = async (e) => {
+    e.preventDefault();
+    if (!newTaskTitle.trim() || addingTask) return;
+
+    setAddingTask(true);
+    try {
+      const res = await fetch('/api/pacenote/add', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}` 
+        },
+        body: JSON.stringify({ title: newTaskTitle })
+      });
+      if (res.ok) {
+        const result = await res.json();
+        setData(prev => ({
+          ...prev,
+          current: { ...prev.current, currentPace: result.currentPace }
+        }));
+        setNewTaskTitle('');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAddingTask(false);
+    }
+  };
+
   const handleLoginClick = () => {
     navigate('/daily'); // User can login from daily digest page for now
   };
@@ -167,17 +198,36 @@ export default function PaceNoteDashboard() {
               </div>
             </div>
 
-            {/* ── Middle: Bento Grid ── */}
-            <div className={`pacenote-bento-grid ${selectedWeekId !== data.current.weekId ? 'past-view' : ''}`}>
-              
-              {/* 1. Pace Tracker (진행 중인 미션 or 과거 미션) */}
+            {/* ── Middle: AI Recommendations (Only if Current Week) ── */}
+            {selectedWeekId === data.current.weekId && data.current.recommendedPace && data.current.recommendedPace.length > 0 && (
+              <div className="pacenote-ai-section">
+                <div className="pacenote-ai-header">
+                  <h2>AI 추천 가이드 <span className="pacenote-ai-badge">✨ Gemini</span></h2>
+                  <p>나의 주도적 성장을 위해 제안하는 추가 액션입니다.</p>
+                </div>
+                <div className="pacenote-ai-scroll">
+                  {data.current.recommendedPace.map((rec) => (
+                    <div key={rec.id} className="pacenote-recommend-item">
+                      <div className="pacenote-rec-cat" style={{ color: rec.color || '#22D3EE' }}>{rec.category}</div>
+                      <div className="pacenote-rec-title">{rec.title}</div>
+                      <button className="pacenote-btn-accept" onClick={() => acceptRecommend(rec.id)}>
+                        내 궤도에 추가하기
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── Bottom: Pace Tracker ── */}
+            <div className={`pacenote-tracker-section ${selectedWeekId !== data.current.weekId ? 'past-view' : ''}`}>
               {(() => {
                 const isCurrent = selectedWeekId === data.current.weekId;
                 const viewData = isCurrent ? data.current : data.timeline.find(t => t.weekId === selectedWeekId) || { tasks: [] };
                 const paceList = isCurrent ? viewData.currentPace : viewData.tasks;
                 
                 return (
-                  <div className="pacenote-bento-card tracker-card">
+                  <div className="pacenote-bento-card tracker-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
                     <div className="pacenote-card-header">
                       <h2>{isCurrent ? '이번 주 나의 궤도' : `${selectedWeekId} 나의 궤도`}</h2>
                       <span className="pacenote-date-badge">{selectedWeekId}</span>
@@ -189,7 +239,7 @@ export default function PaceNoteDashboard() {
                     <div className="pacenote-tasks">
                       {paceList && paceList.length > 0 ? (
                         paceList.map((task) => {
-                          const isCompleted = isCurrent ? task.completed : true; // past tasks are all completed in this context, or we just rely on task.completed if we stored it
+                          const isCompleted = isCurrent ? task.completed : true; 
                           return (
                             <label key={task.id} className={`pacenote-task-item ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}>
                               <input 
@@ -201,7 +251,7 @@ export default function PaceNoteDashboard() {
                               <span className="task-custom-checkbox"></span>
                               <span className="task-text">{task.title}</span>
                               {task.category && (
-                                <span className="task-category-badge" style={{ color: task.color || '#A78BFA', marginLeft: 'auto', fontSize: '0.75rem', border: `1px solid ${task.color || '#A78BFA'}`, padding: '2px 6px', borderRadius: '4px' }}>
+                                <span className="task-category-badge" style={{ color: task.color || '#A78BFA', marginLeft: 'auto', fontSize: '0.75rem', border: `1px solid ${task.color || '#A78BFA'}`, padding: '2px 6px', borderRadius: '4px', whiteSpace: 'nowrap' }}>
                                   {task.category}
                                 </span>
                               )}
@@ -210,6 +260,24 @@ export default function PaceNoteDashboard() {
                         })
                       ) : (
                         <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>기록된 궤도가 없습니다.</div>
+                      )}
+                      
+                      {/* Add Custom Task Input */}
+                      {isCurrent && (
+                        <form className="pacenote-add-form" onSubmit={handleAddTask}>
+                          <span className="add-icon">+</span>
+                          <input 
+                            type="text" 
+                            className="pacenote-add-input"
+                            placeholder="나만의 새로운 목표 궤도를 추가하세요..." 
+                            value={newTaskTitle}
+                            onChange={(e) => setNewTaskTitle(e.target.value)}
+                            disabled={addingTask}
+                          />
+                          <button type="submit" className="pacenote-add-btn" disabled={addingTask || !newTaskTitle.trim()}>
+                            추가
+                          </button>
+                        </form>
                       )}
                       
                       {isCurrent && paceList && paceList.length > 0 && paceList.every(t => t.completed) && (
@@ -221,33 +289,6 @@ export default function PaceNoteDashboard() {
                   </div>
                 );
               })()}
-
-              {/* 2. AI-Tailored Pace (AI 추천 미션 - 이번 주일 때만 노출) */}
-              {selectedWeekId === data.current.weekId && (
-                <div className="pacenote-bento-card ai-recommend-card">
-                  <div className="pacenote-card-header">
-                    <h2>AI 추천 가이드</h2>
-                    <span className="pacenote-ai-badge">✨ Gemini</span>
-                  </div>
-                  <p className="pacenote-card-desc">나의 주도적 성장을 위해 제안하는 이번 주 추가 액션입니다.</p>
-                  
-                  <div className="pacenote-recommend-list">
-                    {data.current.recommendedPace && data.current.recommendedPace.length > 0 ? (
-                      data.current.recommendedPace.map((rec) => (
-                        <div key={rec.id} className="pacenote-recommend-item">
-                          <div className="pacenote-rec-cat" style={{ color: rec.color || '#22D3EE' }}>{rec.category}</div>
-                          <div className="pacenote-rec-title">{rec.title}</div>
-                          <button className="pacenote-btn-accept" onClick={() => acceptRecommend(rec.id)}>
-                            내 궤도에 추가하기
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>모든 추천 가이드를 내 궤도에 추가하셨습니다!</div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         ) : (
