@@ -209,12 +209,17 @@ export default function PaceNoteDashboard() {
                 ✨ 3초 만에 로그인하고 나만의 궤도 만들기
               </button>
             ) : (
-              <button 
-                onClick={handleLogout}
-                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
-              >
-                로그아웃
-              </button>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.3)', padding: '10px 24px', borderRadius: '100px' }}>
+                <span style={{ color: '#E9D5FF', fontSize: '0.95rem', fontWeight: '500' }}>
+                  ⛵ 오늘도 당신만의 궤도를 만들어가고 계시군요! 흔들림 없는 항해를 응원합니다.
+                </span>
+                <button 
+                  onClick={handleLogout}
+                  style={{ background: 'transparent', border: 'none', color: '#9CA3AF', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', marginLeft: '8px' }}
+                >
+                  로그아웃
+                </button>
+              </div>
             )}
           </div>
         </div>
