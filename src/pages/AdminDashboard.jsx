@@ -147,14 +147,17 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [adminAction, setAdminAction] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-  // PriStudy
+  // PriStudy & Content
   const [priStudyStats, setPriStudyStats] = useState(null);
   const [dailyContent, setDailyContent] = useState([]);
-  const [pacers, setPacers] = useState([]);
   const [contentModal, setContentModal] = useState(null);
   const [contentModalTab, setContentModalTab] = useState('basic');
   const [contentForm, setContentForm] = useState(null);
   const [contentAction, setContentAction] = useState(null);
+
+  // Pace Note
+  const [pacers, setPacers] = useState([]);
+  const [paceInsights, setPaceInsights] = useState([]);
 
   const isSuperAdmin = role === 'super_admin';
 
@@ -318,6 +321,13 @@ function Dashboard({ token, adminEmail, onLogout }) {
     } catch (err) { setPacers([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
+  async function loadPaceInsights() {
+    try {
+      const data = await fetchApi('/pacenotes/insights');
+      setPaceInsights(data.insights || []);
+    } catch (err) { setPaceInsights([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
   function openEditContent(item) {
     setContentForm({ 
       date: item.date,
@@ -427,6 +437,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'overview') { loadPriStudyStats(); loadEmailLogs(); }
     if (activeTab === 'content') loadDailyContent();
     if (activeTab === 'pacenotes') loadPacers();
+    if (activeTab === 'pacenote_insights') loadPaceInsights();
   }, [activeTab]);
 
   if (loading) {
@@ -443,8 +454,15 @@ function Dashboard({ token, adminEmail, onLogout }) {
         { id: 'overview', label: '📊 대시보드' },
         { id: 'subscribers', label: '👥 구독 및 이메일 발송' },
         { id: 'content', label: '📚 콘텐츠 관리' },
-        { id: 'pacenotes', label: '⛵ Pace Note 현황' },
         { id: 'pipeline', label: '⚙️ 파이프라인' },
+      ]
+    },
+    {
+      id: 'pacenote',
+      label: 'Pace Note',
+      items: [
+        { id: 'pacenotes', label: '⛵ Pacer 현황' },
+        { id: 'pacenote_insights', label: '💡 유저 목표 인사이트' },
       ]
     },
     ...(isSuperAdmin ? [{
@@ -716,6 +734,36 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     </tr>
                   ))}
                   {pacers.length === 0 && (<tr><td colSpan={4} className="admin-empty">Pace Note 데이터가 없습니다</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'pacenote_insights' && (
+          <div className="admin-subscribers">
+            <div className="admin-section-header">
+              <h2>유저 커스텀 목표 인사이트</h2>
+            </div>
+            <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
+              Pacer들이 AI 추천에 의존하지 않고 직접 등록한 목표들을 분석하여, 향후 서비스 및 AI 추천 고도화에 활용할 수 있습니다.
+            </p>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>주차 (Week)</th><th>등록된 목표 (Title)</th><th>달성 여부</th></tr></thead>
+                <tbody>
+                  {paceInsights.map((insight, i) => (
+                    <tr key={i}>
+                      <td><span className="admin-date-chip">{insight.weekId}</span></td>
+                      <td style={{ color: '#E9D5FF' }}>{insight.title}</td>
+                      <td>
+                        {insight.completed 
+                          ? <span style={{ color: '#10B981', fontWeight: 'bold' }}>달성 완료</span> 
+                          : <span style={{ color: '#9CA3AF' }}>진행 중</span>}
+                      </td>
+                    </tr>
+                  ))}
+                  {paceInsights.length === 0 && (<tr><td colSpan={3} className="admin-empty">유저가 직접 등록한 목표가 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>

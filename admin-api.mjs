@@ -514,6 +514,34 @@ router.get('/pacenotes/users', async (req, res) => {
   }
 });
 
+router.get('/pacenotes/insights', async (req, res) => {
+  try {
+    const { db } = await import('./pipeline/src/lib/firestore.mjs');
+    const snap = await db.collectionGroup('weeks').orderBy('createdAt', 'desc').limit(100).get();
+    
+    let customTasks = [];
+    snap.docs.forEach(doc => {
+      const data = doc.data();
+      if (data.currentPace) {
+        data.currentPace.forEach(task => {
+          if (task.id.startsWith('custom-')) {
+            customTasks.push({
+              weekId: data.weekId,
+              title: task.title,
+              completed: task.completed,
+              createdAt: data.createdAt
+            });
+          }
+        });
+      }
+    });
+    
+    res.json({ insights: customTasks });
+  } catch (err) {
+    res.status(500).json({ error: '인사이트 조회 실패' });
+  }
+});
+
 // ─── 관리자 CRUD (super_admin 전용) ──────────────
 
 router.get('/admins', requireSuperAdmin, async (req, res) => {
