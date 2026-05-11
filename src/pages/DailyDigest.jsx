@@ -238,6 +238,7 @@ export default function DailyDigest() {
     <>
       <section className="daily-hero">
         <div className="daily-hero-content">
+          <div className="daily-hero-icon">☕</div>
           <h1 className="daily-title">Daily Digest</h1>
           <p className="daily-subtitle">하루 5분, IT 트렌드부터 실무 프롬프트와 어학까지 한 번에.</p>
           

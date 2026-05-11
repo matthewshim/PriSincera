@@ -35,7 +35,7 @@
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 16px;
-  background: linear-gradient(135deg, #FFF 0%, #C4B5FD 100%);
+  background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: var(--font-display);
@@ -46,8 +46,9 @@
   color: #E9D5FF;
   line-height: 1.6;
   opacity: 0.8;
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
+  word-break: keep-all;
 }
 
 /* ── Bento Container ── */

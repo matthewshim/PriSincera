@@ -25,6 +25,16 @@
   position: relative;
   z-index: 1;
 }
+.daily-hero-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
 .daily-title {
   font-family: var(--font-display);
   font-size: 3rem;
