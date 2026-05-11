@@ -214,6 +214,13 @@
     color: inherit;
 }
 
+/* --- Pace Note Card Variant --- */
+.work-card.pacenote {
+    --card-accent: #34D399; /* Green/Emerald accent */
+    text-decoration: none;
+    color: inherit;
+}
+
 .work-card-emoji {
     font-size: 1.6rem;
     line-height: 1;

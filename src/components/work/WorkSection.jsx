@@ -76,7 +76,6 @@ export default function WorkSection() {
             </div>
           </div>
 
-          {/* Daily Digest — Unified Service */}
           <Link to="/daily" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priDailyWorkCard">
             <div className="work-card-icon">
               <span className="work-card-emoji">📰</span>
@@ -96,6 +95,30 @@ export default function WorkSection() {
                 <span className="work-tag">Microlearning</span>
                 <span className="work-tag">Daily Study</span>
                 <span className="work-tag">Unified Pipeline</span>
+              </div>
+            </div>
+          </Link>
+
+          {/* Pace Note — Action & Proof */}
+          <Link to="/pacenote" className="work-card pacenote reveal-item" style={{ '--reveal-delay': '0.5s' }} id="priPaceNoteWorkCard">
+            <div className="work-card-icon">
+              <span className="work-card-emoji">⛵</span>
+            </div>
+            <div className="work-card-body">
+              <div className="work-card-label">Action & Branding</div>
+              <div className="work-card-name">
+                Pace Note
+                <span className="work-card-tag">prisincera.com/pacenote</span>
+              </div>
+              <p className="work-card-desc">
+                조급함을 덜어주고 나만의 궤도를 만들어가는 마이크로 행동 인증 트래커.<br/>
+                AI가 제안하는 나만의 페이스와 함께 매일 올바른 방향으로 나아가세요.
+              </p>
+              <div className="work-card-tags">
+                <span className="work-tag">Personalized</span>
+                <span className="work-tag">Action Tracker</span>
+                <span className="work-tag">AI Guide</span>
+                <span className="work-tag">Timeline</span>
               </div>
             </div>
           </Link>
