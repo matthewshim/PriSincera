@@ -17,6 +17,7 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import adminRouter from './admin-api.mjs';
 import studyRouter from './study-api.mjs';
+import pacenoteRouter from './pacenote-api.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -120,6 +121,9 @@ app.use('/admin/api', adminLimiter, express.json({ limit: '10kb' }), adminRouter
 app.use('/api/study', apiLimiter, express.json({ limit: '5kb' }), studyRouter);
 // 구버전 프론트엔드 캐시 하위 호환 (pristudy -> study)
 app.use('/api/pristudy', apiLimiter, express.json({ limit: '5kb' }), studyRouter);
+
+// --- Pace Note API ---
+app.use('/api/pacenote', apiLimiter, express.json({ limit: '5kb' }), pacenoteRouter);
 
 // --- Subscriber Management (GCS JSON / Firestore) ---
 

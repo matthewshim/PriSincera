@@ -309,53 +309,113 @@
   transform: translateY(-1px);
 }
 
-/* ── Logbook (Masonry) ── */
-.pacenote-masonry-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+/* ── Timeline Logbook ── */
+.pacenote-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   margin-top: 24px;
+  position: relative;
+  padding-left: 12px;
 }
 
-.pacenote-log-card {
-  background: rgba(0, 0, 0, 0.3);
+.timeline-item {
+  position: relative;
+  padding-left: 32px;
+  padding-bottom: 32px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-node {
+  position: absolute;
+  left: -4px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  background: #C4B5FD;
+  border-radius: 50%;
+  border: 2px solid #1A1035;
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
+}
+
+.timeline-line {
+  position: absolute;
+  left: 1px;
+  top: 18px;
+  bottom: -6px;
+  width: 2px;
+  background: rgba(196, 181, 253, 0.2);
+  z-index: 1;
+}
+
+.timeline-content {
+  background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   padding: 20px;
   transition: all 0.2s;
 }
 
-.pacenote-log-card:hover {
-  background: rgba(255, 255, 255, 0.02);
+.timeline-content:hover {
+  background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.pacenote-log-header {
+.timeline-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  align-items: baseline;
+  margin-bottom: 16px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
 }
 
-.pacenote-log-date {
-  color: #9CA3AF;
-  font-size: 0.8rem;
+.timeline-header h3 {
+  font-size: 1.1rem;
+  color: #F5F3FF;
+  margin: 0;
   font-family: var(--font-mono);
 }
 
-.pacenote-log-cat {
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 600;
+.timeline-date {
+  color: #9CA3AF;
+  font-size: 0.85rem;
 }
 
-.pacenote-log-title {
+.timeline-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timeline-task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.timeline-check {
+  color: #10B981;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.timeline-task-title {
   color: #E9D5FF;
   font-size: 0.95rem;
-  line-height: 1.5;
-  margin: 0;
-  font-weight: 500;
+  flex: 1;
+}
+
+.timeline-task-cat {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
 }
 
 /* ── Responsive Design ── */

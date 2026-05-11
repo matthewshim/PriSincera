@@ -1,49 +1,110 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import './PaceNoteDashboard.css';
 
 export default function PaceNoteDashboard() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
     document.title = 'PriSincera Pace Note';
     document.body.classList.add('hero-ready');
-    
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setData({
-        currentPace: [
-          { id: '1', title: 'Cursor AI를 활용해 반복 업무 자동화 스크립트 1개 작성하기', completed: true },
-          { id: '2', title: '어제 배운 일본어 비즈니스 표현을 실제 이메일 초안에 적용해보기', completed: false },
-        ],
-        recommendedPace: [
-          { id: '3', title: '프로덕트 경쟁력 분석을 위한 린 캔버스 1장 그려보기', category: 'Product Strategy' },
-          { id: '4', title: '해외 트렌드 기사를 읽고 팀 메신저에 짧은 인사이트 공유하기', category: 'Global Trend' },
-        ],
-        logs: [
-          { id: '101', date: '2026-05-04', title: 'AI 툴 활용으로 업무 시간 2시간 단축 완료', category: 'AI & Future', color: '#22D3EE' },
-          { id: '102', date: '2026-05-01', title: '매일 5분 비즈니스 일본어 학습 1주일 완주', category: 'Growth', color: '#34D399' },
-          { id: '103', date: '2026-04-25', title: '글로벌 프로덕트 사례 분석 리포트 노션에 정리', category: 'Global Trend', color: '#60A5FA' },
-          { id: '104', date: '2026-04-18', title: '새로운 기술 트렌드 사내 세미나 발표 진행', category: 'Tech & Dev', color: '#A78BFA' },
-          { id: '105', date: '2026-04-10', title: '스타트업 투자 동향 기사 읽고 산업 동향 맵핑', category: 'Startup', color: '#F472B6' },
-        ]
-      });
-      setLoading(false);
-    }, 800);
-
-    return () => {
-      document.body.classList.remove('hero-ready');
-      clearTimeout(timer);
-    };
+    return () => document.body.classList.remove('hero-ready');
   }, []);
 
-  const toggleComplete = (id) => {
-    setData(prev => {
-      const newPace = prev.currentPace.map(p => 
-        p.id === id ? { ...p, completed: !p.completed } : p
-      );
-      return { ...prev, currentPace: newPace };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+        setUserToken(token);
+        fetchPaceData(token);
+      } else {
+        // Not logged in -> can't see personalized pace note
+        setLoading(false);
+      }
     });
+    return () => unsubscribe();
+  }, []);
+
+  const fetchPaceData = async (token) => {
+    try {
+      const res = await fetch('/api/pacenote', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const result = await res.json();
+        setData(result);
+      } else {
+        console.error('Failed to fetch pace note');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleComplete = async (taskId) => {
+    // Optimistic UI update
+    setData(prev => {
+      const currentPace = prev.current.currentPace.map(p => 
+        p.id === taskId ? { ...p, completed: !p.completed } : p
+      );
+      return { ...prev, current: { ...prev.current, currentPace } };
+    });
+
+    try {
+      await fetch('/api/pacenote/toggle', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}` 
+        },
+        body: JSON.stringify({ taskId })
+      });
+    } catch (err) {
+      console.error(err);
+      // Revert on error
+      fetchPaceData(userToken);
+    }
+  };
+
+  const acceptRecommend = async (taskId) => {
+    // Optimistic UI update
+    setData(prev => {
+      const recIndex = prev.current.recommendedPace.findIndex(t => t.id === taskId);
+      if (recIndex === -1) return prev;
+      
+      const taskToMove = prev.current.recommendedPace[recIndex];
+      const newRec = [...prev.current.recommendedPace];
+      newRec.splice(recIndex, 1);
+      
+      const newCur = [...prev.current.currentPace, { ...taskToMove, completed: false }];
+      
+      return { ...prev, current: { ...prev.current, currentPace: newCur, recommendedPace: newRec } };
+    });
+
+    try {
+      await fetch('/api/pacenote/accept', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}` 
+        },
+        body: JSON.stringify({ taskId })
+      });
+    } catch (err) {
+      console.error(err);
+      fetchPaceData(userToken);
+    }
+  };
+
+  const handleLoginClick = () => {
+    navigate('/daily'); // User can login from daily digest page for now
   };
 
   return (
@@ -64,32 +125,44 @@ export default function PaceNoteDashboard() {
             <div className="pacenote-spinner" />
             <p>나의 항해 일지를 불러오는 중입니다...</p>
           </div>
-        ) : (
+        ) : !userToken ? (
+          <div className="pacenote-loading" style={{ padding: '120px 0' }}>
+            <h2 style={{ color: '#E9D5FF', marginBottom: '16px' }}>구글 로그인이 필요합니다</h2>
+            <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>초개인화된 나만의 Pace Note를 작성하기 위해 로그인해주세요.</p>
+            <button className="pacenote-btn-accept" style={{ width: 'auto', padding: '12px 24px' }} onClick={handleLoginClick}>
+              로그인 하러 가기
+            </button>
+          </div>
+        ) : data?.current ? (
           <div className="pacenote-bento-grid">
             
             {/* 1. Pace Tracker (진행 중인 미션) */}
             <div className="pacenote-bento-card tracker-card">
               <div className="pacenote-card-header">
                 <h2>이번 주 나의 궤도</h2>
-                <span className="pacenote-date-badge">May Week 2</span>
+                <span className="pacenote-date-badge">{data.current.weekId}</span>
               </div>
               <p className="pacenote-card-desc">조급해하지 않고 이번 주에 집중할 작은 행동들입니다.</p>
               
               <div className="pacenote-tasks">
-                {data.currentPace.map((task) => (
-                  <label key={task.id} className={`pacenote-task-item ${task.completed ? 'completed' : ''}`}>
-                    <input 
-                      type="checkbox" 
-                      checked={task.completed} 
-                      onChange={() => toggleComplete(task.id)} 
-                    />
-                    <span className="task-custom-checkbox"></span>
-                    <span className="task-text">{task.title}</span>
-                  </label>
-                ))}
+                {data.current.currentPace && data.current.currentPace.length > 0 ? (
+                  data.current.currentPace.map((task) => (
+                    <label key={task.id} className={`pacenote-task-item ${task.completed ? 'completed' : ''}`}>
+                      <input 
+                        type="checkbox" 
+                        checked={task.completed} 
+                        onChange={() => toggleComplete(task.id)} 
+                      />
+                      <span className="task-custom-checkbox"></span>
+                      <span className="task-text">{task.title}</span>
+                    </label>
+                  ))
+                ) : (
+                  <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>이번 주 궤도가 비어있습니다. 우측에서 추천 가이드를 추가해보세요.</div>
+                )}
                 
                 {/* 100% 완료 시 애니메이션 파티클이나 축하 메시지 공간 */}
-                {data.currentPace.every(t => t.completed) && (
+                {data.current.currentPace && data.current.currentPace.length > 0 && data.current.currentPace.every(t => t.completed) && (
                   <div className="pacenote-celebration">
                     🎉 이번 주 궤도 안착 완료! 단단한 한 걸음이 되었습니다.
                   </div>
@@ -106,40 +179,69 @@ export default function PaceNoteDashboard() {
               <p className="pacenote-card-desc">이번 주 소비한 시그널을 바탕으로 제안하는 다음 스텝입니다.</p>
               
               <div className="pacenote-recommend-list">
-                {data.recommendedPace.map((rec) => (
-                  <div key={rec.id} className="pacenote-recommend-item">
-                    <div className="pacenote-rec-cat">{rec.category}</div>
-                    <div className="pacenote-rec-title">{rec.title}</div>
-                    <button className="pacenote-btn-accept">내 궤도에 추가하기</button>
-                  </div>
-                ))}
+                {data.current.recommendedPace && data.current.recommendedPace.length > 0 ? (
+                  data.current.recommendedPace.map((rec) => (
+                    <div key={rec.id} className="pacenote-recommend-item">
+                      <div className="pacenote-rec-cat" style={{ color: rec.color || '#22D3EE' }}>{rec.category}</div>
+                      <div className="pacenote-rec-title">{rec.title}</div>
+                      <button className="pacenote-btn-accept" onClick={() => acceptRecommend(rec.id)}>
+                        내 궤도에 추가하기
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>모든 추천 가이드를 내 궤도에 추가하셨습니다!</div>
+                )}
               </div>
             </div>
 
-            {/* 3. Monthly Branding Log (지금까지의 기록) */}
+            {/* 3. Timeline Logbook */}
             <div className="pacenote-bento-card logbook-card">
               <div className="pacenote-card-header">
-                <h2>My Logbook</h2>
-                <button className="pacenote-btn-export">📥 포트폴리오 다운로드</button>
+                <h2>My Logbook (Timeline)</h2>
+                <button className="pacenote-btn-export">📥 이번 달 항해일지 다운로드</button>
               </div>
               <p className="pacenote-card-desc">지금까지 흔들림 없이 나아온 성장의 발자취입니다.</p>
               
-              <div className="pacenote-masonry-grid">
-                {data.logs.map((log) => (
-                  <div key={log.id} className="pacenote-log-card">
-                    <div className="pacenote-log-header">
-                      <span className="pacenote-log-date">{log.date}</span>
-                      <span className="pacenote-log-cat" style={{ color: log.color, backgroundColor: `${log.color}20` }}>
-                        {log.category}
-                      </span>
+              <div className="pacenote-timeline">
+                {data.timeline && data.timeline.length > 0 ? (
+                  data.timeline.map((weekLog, idx) => (
+                    <div key={weekLog.weekId} className="timeline-item">
+                      <div className="timeline-node"></div>
+                      {idx !== data.timeline.length - 1 && <div className="timeline-line"></div>}
+                      
+                      <div className="timeline-content">
+                        <div className="timeline-header">
+                          <h3>{weekLog.weekId}</h3>
+                          <span className="timeline-date">{weekLog.startDate} ~ {weekLog.endDate}</span>
+                        </div>
+                        <div className="timeline-tasks">
+                          {weekLog.tasks.map(t => (
+                            <div key={t.id} className="timeline-task">
+                              <span className="timeline-check">✓</span>
+                              <span className="timeline-task-title">{t.title}</span>
+                              {t.category && (
+                                <span className="timeline-task-cat" style={{ color: t.color || '#A78BFA' }}>
+                                  {t.category}
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <h3 className="pacenote-log-title">{log.title}</h3>
+                  ))
+                ) : (
+                  <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '40px 20px', textAlign: 'center' }}>
+                    아직 완료된 과거 기록이 없습니다. 이번 주 궤도를 완수해보세요!
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
           </div>
+        ) : (
+          <div className="pacenote-loading">데이터를 불러오는 중 오류가 발생했습니다.</div>
         )}
       </div>
     </div>
