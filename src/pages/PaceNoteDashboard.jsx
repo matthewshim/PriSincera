@@ -1,8 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth, googleProvider } from '../firebase';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import './PaceNoteDashboard.css';
+
+const DUMMY_DATA = {
+  current: {
+    weekId: 'W1',
+    currentPace: [
+      { id: 'd1', title: '아침 30분 달리기 (샘플)', category: 'Health', color: '#10B981', completed: true },
+      { id: 'd2', title: '하루 5분 업무 회고 작성하기 (샘플)', category: 'Productivity', color: '#F472B6', completed: false }
+    ],
+    recommendedPace: [
+      { id: 'r1', title: '이번 주 감사했던 일 3가지 적어보기', category: 'Mindset', color: '#34D399' },
+      { id: 'r2', title: '동료에게 따뜻한 피드백 전달하기', category: 'Networking', color: '#A78BFA' },
+      { id: 'r3', title: '관심 분야 아티클 1편 정독하기', category: 'Learning', color: '#60A5FA' }
+    ]
+  },
+  timeline: [
+    { weekId: 'W0', startDate: '지난 주', tasks: [{ id: 'old1', title: '일찍 일어나기', completed: true }] }
+  ]
+};
 
 export default function PaceNoteDashboard() {
   const navigate = useNavigate();
@@ -26,7 +44,9 @@ export default function PaceNoteDashboard() {
         setUserToken(token);
         fetchPaceData(token);
       } else {
-        // Not logged in -> can't see personalized pace note
+        setUserToken(null);
+        setData(DUMMY_DATA);
+        setSelectedWeekId(DUMMY_DATA.current.weekId);
         setLoading(false);
       }
     });
@@ -55,6 +75,11 @@ export default function PaceNoteDashboard() {
   };
 
   const toggleComplete = async (taskId) => {
+    if (!userToken) {
+      alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+      return handleLoginClick();
+    }
+
     // Optimistic UI update
     setData(prev => {
       const currentPace = prev.current.currentPace.map(p => 
@@ -80,6 +105,11 @@ export default function PaceNoteDashboard() {
   };
 
   const acceptRecommend = async (taskId) => {
+    if (!userToken) {
+      alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+      return handleLoginClick();
+    }
+
     // Optimistic UI update
     setData(prev => {
       const recIndex = prev.current.recommendedPace.findIndex(t => t.id === taskId);
@@ -95,7 +125,7 @@ export default function PaceNoteDashboard() {
     });
 
     try {
-      await fetch('/api/pacenote/accept', {
+      const res = await fetch('/api/pacenote/accept', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -103,6 +133,16 @@ export default function PaceNoteDashboard() {
         },
         body: JSON.stringify({ taskId })
       });
+      if (res.ok) {
+        const result = await res.json();
+        // Update UI with replenished data from server
+        setData(prev => ({
+          ...prev,
+          current: { ...prev.current, currentPace: result.currentPace, recommendedPace: result.recommendedPace }
+        }));
+      } else {
+        fetchPaceData(userToken);
+      }
     } catch (err) {
       console.error(err);
       fetchPaceData(userToken);
@@ -111,6 +151,10 @@ export default function PaceNoteDashboard() {
 
   const handleAddTask = async (e) => {
     e.preventDefault();
+    if (!userToken) {
+      alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+      return handleLoginClick();
+    }
     if (!newTaskTitle.trim() || addingTask) return;
 
     setAddingTask(true);
@@ -138,8 +182,16 @@ export default function PaceNoteDashboard() {
     }
   };
 
-  const handleLoginClick = () => {
-    navigate('/daily'); // User can login from daily digest page for now
+  const handleLoginClick = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error('Login failed', err);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
   };
 
   return (
@@ -150,6 +202,21 @@ export default function PaceNoteDashboard() {
           <div className="pacenote-hero-icon">⛵</div>
           <h1 className="pacenote-title">Pace Note</h1>
           <p className="pacenote-subtitle">남들의 속도에 휩쓸리지 않고, 나만의 호흡과 방향을 잃지 않기 위해 기록합니다.</p>
+          
+          <div className="pacenote-auth-action" style={{ marginTop: '24px' }}>
+            {!userToken ? (
+              <button className="pacenote-btn-accept" style={{ width: 'auto', padding: '12px 24px', fontSize: '1rem', background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)' }} onClick={handleLoginClick}>
+                ✨ 3초 만에 로그인하고 나만의 궤도 만들기
+              </button>
+            ) : (
+              <button 
+                onClick={handleLogout}
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline' }}
+              >
+                로그아웃
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
@@ -159,14 +226,6 @@ export default function PaceNoteDashboard() {
           <div className="pacenote-loading">
             <div className="pacenote-spinner" />
             <p>나의 항해 일지를 불러오는 중입니다...</p>
-          </div>
-        ) : !userToken ? (
-          <div className="pacenote-loading" style={{ padding: '120px 0' }}>
-            <h2 style={{ color: '#E9D5FF', marginBottom: '16px' }}>구글 로그인이 필요합니다</h2>
-            <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>초개인화된 나만의 Pace Note를 작성하기 위해 로그인해주세요.</p>
-            <button className="pacenote-btn-accept" style={{ width: 'auto', padding: '12px 24px' }} onClick={handleLoginClick}>
-              로그인 하러 가기
-            </button>
           </div>
         ) : data?.current ? (
           <div className="pacenote-content-wrapper">
