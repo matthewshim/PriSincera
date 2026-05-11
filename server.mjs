@@ -158,6 +158,21 @@ app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), asy
   }
 });
 
+// Check Subscription Status
+app.get('/api/subscribe/check', async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.json({ subscribed: false });
+    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
+    const { createHash } = await import('crypto');
+    const hash = createHash('sha256').update(email.toLowerCase().trim()).digest('hex').slice(0, 16);
+    const doc = await db.collection(COLLECTIONS.SUBSCRIBERS).doc(hash).get();
+    res.json({ subscribed: doc.exists && doc.data().status === 'active' });
+  } catch (err) {
+    res.json({ subscribed: false });
+  }
+});
+
 // Unsubscribe — HMAC 토큰 검증 후 해지
 app.get('/api/unsubscribe', async (req, res) => {
   try {

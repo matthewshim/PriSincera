@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import DailyIntro from '../components/daily/DailyIntro';
 import './DailyDigest.css';
@@ -28,6 +28,32 @@ export default function DailyDigest() {
   const [subStatus, setSubStatus] = useState('');
   const [subEmail, setSubEmail] = useState('');
   const synth = window.speechSynthesis;
+
+  // Global Auth Sync
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setSubEmail(user.email);
+        try {
+          const res = await fetch(`/api/subscribe/check?email=${encodeURIComponent(user.email)}`);
+          if (res.ok) {
+            const result = await res.json();
+            if (result.subscribed) {
+              setSubStatus('already_subscribed');
+            }
+          }
+        } catch (err) {
+          console.error('Failed to check subscription status', err);
+        }
+      } else {
+        setSubEmail('');
+        if (subStatus === 'already_subscribed' || subStatus === 'success') {
+          setSubStatus('');
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -227,7 +253,13 @@ export default function DailyDigest() {
             </button>
             
             {(subStatus === 'success' || subStatus === 'already_subscribed') && (
-              <div style={{ marginTop: '12px', textAlign: 'center' }}>
+              <div style={{ marginTop: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button 
+                  onClick={async () => { await signOut(auth); setSubStatus(''); setSubEmail(''); }}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
+                >
+                  로그아웃 (다른 계정으로 접속)
+                </button>
                 <button 
                   onClick={handleUnsubscribe}
                   style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}

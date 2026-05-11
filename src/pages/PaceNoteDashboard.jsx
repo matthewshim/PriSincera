@@ -201,7 +201,10 @@ export default function PaceNoteDashboard() {
         <div className="pacenote-hero-content">
           <div className="pacenote-hero-icon">⛵</div>
           <h1 className="pacenote-title">Pace Note</h1>
-          <p className="pacenote-subtitle">남들의 속도에 휩쓸리지 않고, 나만의 호흡과 방향을 잃지 않기 위해 기록합니다.</p>
+          <p className="pacenote-subtitle" style={{ lineHeight: '1.6' }}>
+            단순히 읽고 넘기지 마세요. 매일 얻은 인사이트를 실천 과제로 만들고, 나만의 궤도(Pace)에 올려 성장 로그를 기록하세요.<br/>
+            남들의 속도에 휩쓸리지 않고, 나만의 호흡과 방향을 잃지 않기 위해.
+          </p>
           
           <div className="pacenote-auth-action" style={{ marginTop: '32px', textAlign: 'center' }}>
             {!userToken ? (
