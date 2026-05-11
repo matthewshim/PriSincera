@@ -290,7 +290,7 @@ router.post('/email/send-test', async (req, res) => {
       date: todayStr,
       articles: articles,
       totalCount: articles.length,
-      dailyPageUrl: `https://www.prisincera.com/prisignal/${todayStr}`,
+      dailyPageUrl: `https://www.prisincera.com/daily/${todayStr}`,
       unsubscribeUrl: `https://www.prisincera.com/unsubscribe?email=${encodeURIComponent(to)}`,
       studyData: studyData,
     });
@@ -379,7 +379,7 @@ router.get('/pristudy/stats', async (req, res) => {
   try {
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
     const contentSnap = await db.collection(COLLECTIONS.STUDY_CONTENT).count().get();
-    const progressSnap = await db.collection(COLLECTIONS.STUDY_PROGRESS).count().get();
+    const progressSnap = await db.collection('pacenotes').count().get();
     res.json({ 
       totalContent: contentSnap.data().count, 
       totalLearners: progressSnap.data().count 
@@ -473,36 +473,44 @@ router.post('/daily/content', async (req, res) => {
   }
 });
 
-router.get('/pristudy/learners', async (req, res) => {
+router.get('/pacenotes/users', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 20;
-    const { db, COLLECTIONS, auth } = await import('./pipeline/src/lib/firestore.mjs');
-    const snap = await db.collection(COLLECTIONS.STUDY_PROGRESS)
-      .orderBy('longest_streak', 'desc').limit(limit).get();
+    const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
+    const snap = await db.collection('pacenotes').limit(limit).get();
       
-    const learners = await Promise.all(snap.docs.map(async (doc) => {
-      const data = doc.data();
-      let email = data.email;
-      if (!email || email === 'unknown') {
-        try {
-          const user = await auth.getUser(doc.id);
-          email = user.email;
-        } catch (e) {
-          console.error(`[Admin API] Failed to get user ${doc.id}:`, e.message);
-          email = '알 수 없음';
-        }
+    const pacers = await Promise.all(snap.docs.map(async (doc) => {
+      let email = '알 수 없음';
+      try {
+        const user = await auth.getUser(doc.id);
+        email = user.email;
+      } catch (e) {
+        console.error(`[Admin API] Failed to get user ${doc.id}:`, e.message);
       }
+      
+      const weeksSnap = await doc.ref.collection('weeks').orderBy('weekId', 'desc').limit(1).get();
+      let lastWeekId = '-';
+      let currentTasks = 0;
+      let completedTasks = 0;
+      
+      if (!weeksSnap.empty) {
+        const weekData = weeksSnap.docs[0].data();
+        lastWeekId = weekData.weekId;
+        currentTasks = weekData.currentPace ? weekData.currentPace.length : 0;
+        completedTasks = weekData.currentPace ? weekData.currentPace.filter(t => t.completed).length : 0;
+      }
+
       return {
-        uid: doc.id, email,
-        current_streak: data.current_streak || 0,
-        longest_streak: data.longest_streak || 0,
-        last_study_date: data.last_study_date || '-',
-        total_completed: data.completed_dates?.length || 0,
+        uid: doc.id, 
+        email,
+        lastWeekId,
+        currentTasks,
+        completedTasks
       };
     }));
-    res.json({ learners });
+    res.json({ pacers });
   } catch (err) {
-    res.status(500).json({ error: '학습자 현황 조회 실패' });
+    res.status(500).json({ error: 'Pace Note 사용자 조회 실패' });
   }
 });
 

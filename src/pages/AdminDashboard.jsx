@@ -150,7 +150,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   // PriStudy
   const [priStudyStats, setPriStudyStats] = useState(null);
   const [dailyContent, setDailyContent] = useState([]);
-  const [priStudyLearners, setPriStudyLearners] = useState([]);
+  const [pacers, setPacers] = useState([]);
   const [contentModal, setContentModal] = useState(null);
   const [contentModalTab, setContentModalTab] = useState('basic');
   const [contentForm, setContentForm] = useState(null);
@@ -311,11 +311,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
     } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
-  async function loadPriStudyLearners() {
+  async function loadPacers() {
     try {
-      const data = await fetchApi('/pristudy/learners');
-      setPriStudyLearners(data.learners || []);
-    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+      const data = await fetchApi('/pacenotes/users');
+      setPacers(data.pacers || []);
+    } catch (err) { setPacers([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
   function openEditContent(item) {
@@ -426,7 +426,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
     if (activeTab === 'overview') { loadPriStudyStats(); loadEmailLogs(); }
     if (activeTab === 'content') loadDailyContent();
-    if (activeTab === 'learners') loadPriStudyLearners();
+    if (activeTab === 'pacenotes') loadPacers();
   }, [activeTab]);
 
   if (loading) {
@@ -443,7 +443,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         { id: 'overview', label: '📊 대시보드' },
         { id: 'subscribers', label: '👥 구독 및 이메일 발송' },
         { id: 'content', label: '📚 콘텐츠 관리' },
-        { id: 'learners', label: '🏆 학습자(잔디) 현황' },
+        { id: 'pacenotes', label: '⛵ Pace Note 현황' },
         { id: 'pipeline', label: '⚙️ 파이프라인' },
       ]
     },
@@ -517,7 +517,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             {priStudyStats && (
               <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
                 <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
-                <StatCard label="총 학습자" value={priStudyStats.totalLearners} icon="🌿" color="var(--admin-green)" onClick={() => setActiveTab('learners')} />
+                <StatCard label="Pacer 참여자" value={priStudyStats.totalLearners} icon="⛵" color="var(--admin-green)" onClick={() => setActiveTab('pacenotes')} />
               </div>
             )}
             {pipeline && (
@@ -700,23 +700,22 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
 
-        {activeTab === 'learners' && (
+        {activeTab === 'pacenotes' && (
           <div className="admin-subscribers">
-            <div className="admin-section-header"><h2>학습자(잔디) 현황</h2></div>
+            <div className="admin-section-header"><h2>Pace Note (Pacer) 현황</h2></div>
             <div className="admin-table-wrap">
               <table className="admin-table">
-                <thead><tr><th>이메일</th><th>최장 연속(일)</th><th>현재 연속(일)</th><th>누적 학습(일)</th><th>최근 학습일</th></tr></thead>
+                <thead><tr><th>이메일</th><th>최근 접속 주차</th><th>현재 미션(개)</th><th>완료(개)</th></tr></thead>
                 <tbody>
-                  {priStudyLearners.map((l, i) => (
+                  {pacers.map((l, i) => (
                     <tr key={i}>
                       <td className="admin-email-cell">{l.email}</td>
-                      <td><strong>{l.longest_streak}</strong></td>
-                      <td>{l.current_streak}</td>
-                      <td>{l.total_completed}</td>
-                      <td>{l.last_study_date}</td>
+                      <td><strong>{l.lastWeekId}</strong></td>
+                      <td>{l.currentTasks}</td>
+                      <td>{l.completedTasks}</td>
                     </tr>
                   ))}
-                  {priStudyLearners.length === 0 && (<tr><td colSpan={5} className="admin-empty">학습자 데이터가 없습니다</td></tr>)}
+                  {pacers.length === 0 && (<tr><td colSpan={4} className="admin-empty">Pace Note 데이터가 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>
