@@ -25,6 +25,28 @@ const DUMMY_DATA = {
 export default function PaceNoteDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  
+  // ISO 주차 계산 (간단한 미래 주차 생성용)
+  const generateFutureWeeks = (currentWeekId, count = 3) => {
+    if (!currentWeekId) return [];
+    const parts = currentWeekId.split('-W');
+    if (parts.length !== 2) return [];
+    let year = parseInt(parts[0], 10);
+    let week = parseInt(parts[1], 10);
+    
+    const futureWeeks = [];
+    for (let i = 1; i <= count; i++) {
+      let nextWeek = week + i;
+      let nextYear = year;
+      if (nextWeek > 52) {
+        nextWeek = nextWeek % 52;
+        if (nextWeek === 0) nextWeek = 52;
+        nextYear = year + 1;
+      }
+      futureWeeks.push(`${nextYear}-W${nextWeek.toString().padStart(2, '0')}`);
+    }
+    return futureWeeks;
+  };
   const [data, setData] = useState(null);
   const [userToken, setUserToken] = useState(null);
   const [selectedWeekId, setSelectedWeekId] = useState(null);
@@ -202,7 +224,7 @@ export default function PaceNoteDashboard() {
           <div className="pacenote-hero-icon">⛵</div>
           <h1 className="pacenote-title">Pace Note</h1>
           <p className="pacenote-subtitle" style={{ lineHeight: '1.6' }}>
-            단순히 읽고 넘기지 마세요. 매일 얻은 인사이트를 실천 과제로 만들고, 나만의 궤도(Pace)에 올려 성장 로그를 기록하세요.<br/>
+            단순히 읽고 넘기지 마세요.<br/>매일 얻은 인사이트를 실천 과제로 만들고, 나만의 궤도(Pace)에 올려 성장 로그를 기록하세요.<br/>
             남들의 속도에 휩쓸리지 않고, 나만의 호흡과 방향을 잃지 않기 위해.
           </p>
           
@@ -217,20 +239,20 @@ export default function PaceNoteDashboard() {
                   display: 'inline-block', 
                   background: 'rgba(167, 139, 250, 0.1)', 
                   border: '1px solid rgba(167, 139, 250, 0.5)', 
-                  padding: '16px 32px', 
+                  padding: '12px 28px', 
                   borderRadius: '100px', 
                   color: '#A78BFA', 
-                  fontSize: '1.1rem', 
+                  fontSize: '1rem', 
                   fontWeight: '500' 
                 }}>
-                  ⛵ 오늘도 당신만의 궤도를 만들어가고 계시군요! 흔들림 없는 항해를 응원합니다.
+                  ⛵ 흔들림 없는 항해를 응원합니다.
                 </div>
                 <div style={{ marginTop: '16px' }}>
                   <button 
                     onClick={handleLogout}
                     style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
                   >
-                    더 이상 항해를 계속하지 않으신가요? (로그아웃)
+                    기록 중단하기
                   </button>
                 </div>
               </div>
@@ -256,7 +278,7 @@ export default function PaceNoteDashboard() {
                 {[...data.timeline].reverse().map(weekLog => (
                   <div 
                     key={weekLog.weekId} 
-                    className={`pacenote-week-btn ${selectedWeekId === weekLog.weekId ? 'active' : ''}`}
+                    className={`pacenote-week-btn past ${selectedWeekId === weekLog.weekId ? 'active' : ''}`}
                     onClick={() => setSelectedWeekId(weekLog.weekId)}
                   >
                     <div className="week-id">{weekLog.weekId}</div>
@@ -273,6 +295,15 @@ export default function PaceNoteDashboard() {
                   <div className="week-date">이번 주</div>
                   <div className="week-status">항해 중 ⛵</div>
                 </div>
+
+                {/* ── Future Weeks (Locked) ── */}
+                {generateFutureWeeks(data.current.weekId, 3).map(fw => (
+                  <div key={fw} className="pacenote-week-btn locked">
+                    <div className="week-id">{fw}</div>
+                    <div className="week-date">예정된 항해</div>
+                    <div className="week-status">🔒 대기 중</div>
+                  </div>
+                ))}
               </div>
             </div>
 

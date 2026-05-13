@@ -442,6 +442,34 @@
   color: #34D399;
 }
 
+/* ── Past & Locked Weeks ── */
+.pacenote-week-btn.past {
+  opacity: 0.7;
+  background: rgba(26, 16, 53, 0.3);
+}
+
+.pacenote-week-btn.past .week-id,
+.pacenote-week-btn.past .week-status {
+  color: #9CA3AF;
+}
+
+.pacenote-week-btn.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.2);
+  border-style: dashed;
+}
+
+.pacenote-week-btn.locked:hover {
+  transform: none;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.pacenote-week-btn.locked .week-id,
+.pacenote-week-btn.locked .week-status {
+  color: #6B7280;
+}
+
 /* ── Custom Task Input ── */
 .pacenote-add-form {
   display: flex;
