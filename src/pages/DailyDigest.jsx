@@ -240,7 +240,11 @@ export default function DailyDigest() {
         <div className="daily-hero-content">
           <div className="daily-hero-icon">☕</div>
           <h1 className="daily-title">Daily Digest</h1>
-          <p className="daily-subtitle">하루 5분, IT 트렌드부터 실무 프롬프트와 어학까지 한 번에.</p>
+          <p className="daily-subtitle" style={{ lineHeight: '1.6' }}>
+            넘쳐나는 정보 속에서 길을 잃지 마세요.<br/>
+            가장 핵심적인 IT 트렌드와 인사이트만 선별하여 매일 아침 당신의 메일함으로 배달합니다.<br/>
+            하루 단 5분, 성장을 위한 고밀도 지식 습득의 습관을 시작해 보세요.
+          </p>
           
           <div className="daily-subscribe-wrap">
             <button 
