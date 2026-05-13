@@ -368,7 +368,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 40px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 40px auto 32px auto;
+  border-bottom: 1px solid rgba(196, 181, 253, 0.1);
+  padding: 0 20px 24px;
 }
 
 .pacenote-detail-nav {
@@ -376,28 +380,41 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 480px;
 }
 
 .nav-side {
   flex: 1;
+  display: flex;
 }
 
 .nav-arrow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   background: transparent;
   border: none;
-  color: #A78BFA;
-  font-size: 0.95rem;
-  font-weight: 600;
+  color: var(--prism-lavender);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 6px 12px;
   border-radius: 8px;
   transition: all 0.2s;
+  min-width: 100px;
+  letter-spacing: 0.01em;
+}
+
+.nav-arrow.prev {
+  justify-content: flex-start;
+}
+.nav-arrow.next {
+  justify-content: flex-end;
 }
 
 .nav-arrow:hover {
+  color: var(--text-primary);
   background: rgba(167, 139, 250, 0.1);
-  color: #C4B5FD;
 }
 
 .nav-center {
@@ -409,6 +426,7 @@
   border-radius: 16px;
   transition: all 0.2s;
   position: relative;
+  gap: 4px;
 }
 
 .nav-center:hover {
@@ -417,14 +435,15 @@
 }
 
 .nav-huge-num {
-  font-size: 4.5rem;
-  font-weight: 800;
-  color: #FFF;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  font-weight: 700;
   line-height: 1;
-  background: linear-gradient(135deg, #FFF 0%, #C4B5FD 100%);
+  letter-spacing: -0.04em;
+  background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: -2px;
+  background-clip: text;
 }
 
 .nav-huge-num.future {
@@ -435,11 +454,21 @@
 
 .nav-small-info {
   display: flex;
-  gap: 4px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   margin-top: 4px;
-  color: #C4B5FD;
+}
+.nav-year {
+  font-family: var(--font-display);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.nav-label {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .nav-status-badge {
@@ -466,25 +495,26 @@
 }
 
 .nav-back-wrap {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .nav-back-btn {
-  background: rgba(26, 16, 53, 0.6);
-  border: 1px solid rgba(196, 181, 253, 0.2);
-  color: #C4B5FD;
-  padding: 10px 24px;
-  border-radius: 100px;
-  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--prism-lavender);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .nav-back-btn:hover {
-  background: rgba(167, 139, 250, 0.15);
-  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* ── Calendar Modal ── */

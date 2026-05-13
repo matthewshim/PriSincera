@@ -303,7 +303,10 @@ export default function PaceNoteDashboard() {
                 <div className="nav-side">
                   {prevWeekId && (
                     <button className="nav-arrow prev" onClick={() => setSelectedWeekId(prevWeekId)}>
-                      &lt; {parseWeekInfo(prevWeekId).num}주차
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span className="nav-arrow-label">{parseWeekInfo(prevWeekId).num}주차</span>
                     </button>
                   )}
                 </div>
@@ -321,10 +324,13 @@ export default function PaceNoteDashboard() {
                   </div>
                 </div>
                 
-                <div className="nav-side" style={{ textAlign: 'right' }}>
+                <div className="nav-side" style={{ justifyContent: 'flex-end' }}>
                   {nextWeekId && (
                     <button className="nav-arrow next" onClick={() => setSelectedWeekId(nextWeekId)}>
-                      {parseWeekInfo(nextWeekId).num}주차 &gt;
+                      <span className="nav-arrow-label">{parseWeekInfo(nextWeekId).num}주차</span>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </button>
                   )}
                 </div>
@@ -332,7 +338,10 @@ export default function PaceNoteDashboard() {
               
               <div className="nav-back-wrap">
                 <button className="nav-back-btn" onClick={() => setShowWeekCalendar(true)}>
-                  ⊞ 전체 항해 일지 보기
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span>전체 항해 일지 보기</span>
                 </button>
               </div>
             </div>
