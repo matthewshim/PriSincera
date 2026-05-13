@@ -477,45 +477,38 @@ router.get('/pacenotes/users', async (req, res) => {
   try {
     const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
     
-    // 1. 모든 유저 정보 가져와서 맵 구성 (최대 1000명)
+    // Auth에서 전체 유저 리스트 가져오기 (최대 1000명 기준)
     const listUsersResult = await auth.listUsers(1000);
-    const userMap = {};
-    listUsersResult.users.forEach(u => {
-      userMap[u.uid] = u.email || '알 수 없음';
-    });
-
-    // 2. CollectionGroup으로 모든 weeks 데이터 한번에 가져오기
-    const weeksSnap = await db.collectionGroup('weeks').get();
     
-    // 유저별 최신 주차 데이터를 보관할 객체
-    const userLatestWeek = {};
-
-    weeksSnap.docs.forEach(doc => {
-      const uid = doc.ref.parent.parent.id;
-      const data = doc.data();
-      const weekId = data.weekId;
-      
-      if (!userLatestWeek[uid] || userLatestWeek[uid].weekId < weekId) {
-        userLatestWeek[uid] = data;
-      }
-    });
-
-    const pacers = [];
-    for (const [uid, latestWeek] of Object.entries(userLatestWeek)) {
-      const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
-      const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
-      
-      // 혹시 auth에 없는 유저 데이터가 있다면 '알 수 없음' 처리
-      const email = userMap[uid] || '알 수 없음';
-
-      pacers.push({
-        uid,
-        email,
-        lastWeekId: latestWeek.weekId,
-        currentTasks,
-        completedTasks
-      });
-    }
+    // 각 유저별 최신 주차 데이터를 Promise.all로 병렬 조회 (속도 최적화 및 인덱스 에러 회피)
+    const pacers = (await Promise.all(
+      listUsersResult.users.map(async (user) => {
+        try {
+          const uid = user.uid;
+          const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+            .orderBy('weekId', 'desc')
+            .limit(1)
+            .get();
+            
+          if (!weeksSnap.empty) {
+            const latestWeek = weeksSnap.docs[0].data();
+            const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
+            const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
+            
+            return {
+              uid,
+              email: user.email || '알 수 없음',
+              lastWeekId: latestWeek.weekId,
+              currentTasks,
+              completedTasks
+            };
+          }
+        } catch (e) {
+          console.error(`Error fetching for uid ${user.uid}:`, e);
+        }
+        return null;
+      })
+    )).filter(p => p !== null);
     
     // 접속 주차 최신순 정렬, 주차가 같으면 이메일 오름차순
     pacers.sort((a, b) => {
@@ -534,27 +527,43 @@ router.get('/pacenotes/users', async (req, res) => {
 
 router.get('/pacenotes/insights', async (req, res) => {
   try {
-    const { db } = await import('./pipeline/src/lib/firestore.mjs');
+    const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
     
-    // CollectionGroup으로 모든 weeks 조회 (데이터가 방대해질 경우 제한 필요, 현재는 전체 로드 후 필터링)
-    const weeksSnap = await db.collectionGroup('weeks').get();
-    let customTasks = [];
+    const listUsersResult = await auth.listUsers(1000);
     
-    weeksSnap.docs.forEach(doc => {
-      const data = doc.data();
-      if (data.currentPace) {
-        data.currentPace.forEach(task => {
-          if (task.id.startsWith('custom-')) {
-            customTasks.push({
-              weekId: data.weekId,
-              title: task.title,
-              completed: task.completed,
-              createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
-            });
-          }
-        });
-      }
-    });
+    const insightsNested = await Promise.all(
+      listUsersResult.users.map(async (user) => {
+        let userTasks = [];
+        try {
+          const uid = user.uid;
+          const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+            .orderBy('weekId', 'desc')
+            .limit(10)
+            .get();
+            
+          weeksSnap.docs.forEach(doc => {
+            const data = doc.data();
+            if (data.currentPace) {
+              data.currentPace.forEach(task => {
+                if (task.id.startsWith('custom-')) {
+                  userTasks.push({
+                    weekId: data.weekId,
+                    title: task.title,
+                    completed: task.completed,
+                    createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
+                  });
+                }
+              });
+            }
+          });
+        } catch (e) {
+          console.error(`Error fetching insights for uid ${user.uid}:`, e);
+        }
+        return userTasks;
+      })
+    );
+    
+    let customTasks = insightsNested.flat();
     
     // 생성일 기준 최신순 정렬
     customTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
