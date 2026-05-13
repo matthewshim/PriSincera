@@ -277,15 +277,17 @@ export default function PaceNoteDashboard() {
               <div className="pacenote-logged-in-wrap">
                 <div style={{ 
                   display: 'inline-block', 
-                  background: 'rgba(167, 139, 250, 0.1)', 
-                  border: '1px solid rgba(167, 139, 250, 0.5)', 
+                  background: 'rgba(52, 211, 153, 0.1)', 
+                  border: '1px solid rgba(52, 211, 153, 0.5)', 
                   padding: '12px 28px', 
                   borderRadius: '100px', 
-                  color: '#A78BFA', 
+                  color: '#34D399', 
                   fontSize: '1rem', 
-                  fontWeight: '500' 
+                  fontWeight: '500',
+                  boxShadow: 'none',
+                  cursor: 'default'
                 }}>
-                  ⛵ 흔들림 없는 항해를 응원합니다.
+                  ⛵ 흔들림 없는 항해를 응원합니다!
                 </div>
                 <div style={{ marginTop: '16px' }}>
                   <button 
