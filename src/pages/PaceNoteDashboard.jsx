@@ -255,7 +255,7 @@ export default function PaceNoteDashboard() {
           
           <div className="pacenote-auth-action" style={{ marginTop: '32px', textAlign: 'center' }}>
             {!userToken ? (
-              <button className="pacenote-btn-accept" style={{ padding: '16px 32px', fontSize: '1.1rem', background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)', borderRadius: '100px', width: 'auto' }} onClick={handleLoginClick}>
+              <button className="pacenote-auth-btn" onClick={handleLoginClick}>
                 ✨ 3초 만에 로그인하고 나만의 궤도 만들기
               </button>
             ) : (

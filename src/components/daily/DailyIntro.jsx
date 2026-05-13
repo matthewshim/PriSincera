@@ -143,7 +143,6 @@ export default function DailyIntro() {
           }}
         >
           🚀 오늘의 다이제스트 보러가기
-          <div className="cta-glow"></div>
         </button>
       </section>
 
