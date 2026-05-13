@@ -455,8 +455,9 @@
 }
 
 .nav-huge-num.future {
-  background: #6B7280;
+  background: none;
   -webkit-text-fill-color: #6B7280;
+  color: #6B7280;
   opacity: 0.5;
 }
 

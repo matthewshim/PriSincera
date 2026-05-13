@@ -319,7 +319,7 @@ export default function PaceNoteDashboard() {
                     <span className="nav-year">{parseWeekInfo(selectedWeekId).year}</span>
                     <span className="nav-label">주차</span>
                   </div>
-                  <div className="nav-status-badge">
+                  <div className={`nav-status-badge ${parseWeekInfo(selectedWeekId).isFuture ? 'locked' : parseWeekInfo(selectedWeekId).isCurrent ? '' : 'past'}`}>
                     {parseWeekInfo(selectedWeekId).isCurrent ? '항해 중 ⛵' : parseWeekInfo(selectedWeekId).isFuture ? '🔒 대기 중' : '✓ 완료'}
                   </div>
                 </div>
