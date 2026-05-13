@@ -379,6 +379,20 @@
   font-size: 1.2rem;
 }
 
+.daily-tab-panel {
+  position: relative;
+  min-height: 400px;
+}
+.daily-tab-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 600px; height: 100%;
+  background: radial-gradient(circle at top center, rgba(139, 92, 246, 0.15), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* ── Archive List View ── */
 .archive-container {
   max-width: 1000px;
