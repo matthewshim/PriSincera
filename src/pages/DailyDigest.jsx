@@ -249,23 +249,24 @@ export default function DailyDigest() {
               disabled={subStatus === 'loading' || subStatus === 'success' || subStatus === 'already_subscribed'}
             >
               {subStatus === 'loading' ? '🚀 시그널 동기화 중...' : 
-               subStatus === 'success' ? '✨ Your Daily Signal is ON : 내일 아침 만나요!' : 
-               subStatus === 'already_subscribed' ? '✨ 이미 구독 중이에요 : 내일 아침 만나요!' : '✨ 하루 5분, 다이제스트 무료 구독'}
+               subStatus === 'success' ? '✨ Your Daily Signal is ON : 매일 아침 8시 새로운 소식으로 만나요!' : 
+               subStatus === 'already_subscribed' ? '✨ 매일 아침 8시 새로운 소식으로 만나요!' : '✨ 하루 5분, 다이제스트 무료 구독'}
             </button>
             
             {(subStatus === 'success' || subStatus === 'already_subscribed') && (
-              <div style={{ marginTop: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ marginTop: '12px', textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
                 <button 
                   onClick={async () => { await signOut(auth); setSubStatus(''); setSubEmail(''); }}
                   style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
                 >
-                  로그아웃 (다른 계정으로 접속)
+                  다른 계정으로 구독 신청
                 </button>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', opacity: 0.5 }}>|</span>
                 <button 
                   onClick={handleUnsubscribe}
                   style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
                 >
-                  더 이상 받아보고 싶지 않으신가요? (구독 해제)
+                  구독 끊기
                 </button>
               </div>
             )}
