@@ -165,7 +165,7 @@ function Header() {
           <span className="nav-wordmark">PriSincera</span>
         </Link>
         <div className="nav-links">
-          <Link to="/" className={`nav-link${location.pathname === '/' ? ' active' : ''}`} id="navHome">Home</Link>
+          <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">Builder's Log</Link>
           <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">Daily Digest</Link>
           <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">Pace Note</Link>
         </div>
@@ -193,7 +193,7 @@ function Header() {
       {/* Mobile Overlay Navigation */}
       <div className={`mobile-nav-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-nav-links">
-          <Link to="/" className={`mobile-nav-link${location.pathname === '/' ? ' active' : ''}`}>Home</Link>
+          <Link to="/builders-log" className={`mobile-nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`}>Builder's Log</Link>
           <Link to="/daily" className={`mobile-nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`}>Daily Digest</Link>
           <Link to="/pacenote" className={`mobile-nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`}>Pace Note</Link>
         </div>

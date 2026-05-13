@@ -7,6 +7,7 @@ const Home = lazy(() => import('./pages/Home'));
 const DailyDigest = lazy(() => import('./pages/DailyDigest'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const PaceNoteDashboard = lazy(() => import('./pages/PaceNoteDashboard'));
+const BuildersLog = lazy(() => import('./pages/BuildersLog'));
 
 
 
@@ -25,6 +26,9 @@ function App() {
         {/* Public — Layout 안 (GNB/Footer) */}
         <Route element={<Layout />}>
           <Route index element={<Home />} />
+          
+          <Route path="builders-log" element={<BuildersLog />} />
+
           {/* Unified Daily Digest Routes */}
           <Route path="daily" element={<DailyDigest />} />
           <Route path="daily/:date" element={<DailyDigest />} />
