@@ -3,11 +3,11 @@
 .builders-log-wrapper {
   position: relative;
   min-height: 100vh;
-  /* background-color: var(--bg-void); -> 전역 배경색 사용을 위해 주석/제거 가능하지만 레이아웃 보호를 위해 transparent 처리 */
-  background-color: transparent;
+  background: var(--bg-void);
+  padding-top: 80px;
   color: var(--text-primary);
+  padding-bottom: 60px;
   overflow: hidden;
-  padding: 140px 0 100px;
   font-family: var(--font-body);
 }
 
