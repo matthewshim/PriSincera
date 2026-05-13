@@ -4,22 +4,36 @@ import { auth, googleProvider } from '../firebase';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import './PaceNoteDashboard.css';
 
-const DUMMY_DATA = {
-  current: {
-    weekId: 'W1',
-    currentPace: [
-      { id: 'd1', title: '아침 30분 달리기 (샘플)', category: 'Health', color: '#10B981', completed: true },
-      { id: 'd2', title: '하루 5분 업무 회고 작성하기 (샘플)', category: 'Productivity', color: '#F472B6', completed: false }
-    ],
-    recommendedPace: [
-      { id: 'r1', title: '이번 주 감사했던 일 3가지 적어보기', category: 'Mindset', color: '#34D399' },
-      { id: 'r2', title: '동료에게 따뜻한 피드백 전달하기', category: 'Networking', color: '#A78BFA' },
-      { id: 'r3', title: '관심 분야 아티클 1편 정독하기', category: 'Learning', color: '#60A5FA' }
+const getCurrentWeekId = () => {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return `${d.getUTCFullYear()}-W${weekNo}`;
+};
+
+const getDummyData = () => {
+  const currentWeekId = getCurrentWeekId();
+  const [year, week] = currentWeekId.split('-W').map(Number);
+  const prevWeekId = week > 1 ? `${year}-W${week - 1}` : `${year - 1}-W52`;
+  
+  return {
+    current: {
+      weekId: currentWeekId,
+      currentPace: [
+        { id: 'd1', title: '아침 30분 달리기 (샘플)', category: 'Health', color: '#10B981', completed: true },
+        { id: 'd2', title: '하루 5분 업무 회고 작성하기 (샘플)', category: 'Productivity', color: '#F472B6', completed: false }
+      ],
+      recommendedPace: [
+        { id: 'r1', title: '이번 주 감사했던 일 3가지 적어보기', category: 'Mindset', color: '#34D399' },
+        { id: 'r2', title: '동료에게 따뜻한 피드백 전달하기', category: 'Networking', color: '#A78BFA' },
+        { id: 'r3', title: '관심 분야 아티클 1편 정독하기', category: 'Learning', color: '#60A5FA' }
+      ]
+    },
+    timeline: [
+      { weekId: prevWeekId, startDate: '지난 주', tasks: [{ id: 'old1', title: '일찍 일어나기', completed: true }] }
     ]
-  },
-  timeline: [
-    { weekId: 'W0', startDate: '지난 주', tasks: [{ id: 'old1', title: '일찍 일어나기', completed: true }] }
-  ]
+  };
 };
 
 export default function PaceNoteDashboard() {
@@ -92,8 +106,9 @@ export default function PaceNoteDashboard() {
         fetchPaceData(token);
       } else {
         setUserToken(null);
-        setData(DUMMY_DATA);
-        setSelectedWeekId(DUMMY_DATA.current.weekId);
+        const dummy = getDummyData();
+        setData(dummy);
+        setSelectedWeekId(dummy.current.weekId);
         setLoading(false);
       }
     });
@@ -320,7 +335,9 @@ export default function PaceNoteDashboard() {
                     <span className="nav-label">주차</span>
                   </div>
                   <div className={`nav-status-badge ${parseWeekInfo(selectedWeekId).isFuture ? 'locked' : parseWeekInfo(selectedWeekId).isCurrent ? '' : 'past'}`}>
-                    {parseWeekInfo(selectedWeekId).isCurrent ? '항해 중 ⛵' : parseWeekInfo(selectedWeekId).isFuture ? '🔒 대기 중' : '✓ 완료'}
+                    {parseWeekInfo(selectedWeekId).isCurrent 
+                      ? (userToken ? '항해 중 ⛵' : '항해 대기 ⛵') 
+                      : parseWeekInfo(selectedWeekId).isFuture ? '🔒 대기 중' : '✓ 완료'}
                   </div>
                 </div>
                 
