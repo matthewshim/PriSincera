@@ -20,9 +20,11 @@
   padding: 0 var(--space-xl);
 }
 
-/* --- Hero Section --- */
+/* --- Hero Section (Matched with Daily Digest) --- */
 .log-hero-section {
   text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
   max-width: 700px;
   margin: 0 auto var(--space-3xl);
   opacity: 0;
@@ -30,47 +32,55 @@
   transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.log-hero-section::after {
+  content: '';
+  position: absolute;
+  top: -80px; left: -50%;
+  width: 200%; height: calc(100% + 80px);
+  background: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .log-hero-section.reveal-active {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
 
-.hero-tag {
-  display: inline-block;
-  padding: 6px 16px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  color: var(--prism-lavender);
-  margin-bottom: var(--space-lg);
-  text-transform: uppercase;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+.log-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.log-hero-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  animation: logFloat 6s ease-in-out infinite;
+}
+
+@keyframes logFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
 .hero-heading {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-md);
-  line-height: 1.1;
-}
-
-.hero-heading .highlight {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-sm);
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 1.1;
 }
 
 .hero-paragraph {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  line-height: 1.7;
+  font-size: 1.15rem;
+  color: var(--crystal-light);
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.9;
   word-break: keep-all;
 }
 

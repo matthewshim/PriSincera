@@ -129,15 +129,18 @@ export default function BuildersLog() {
   return (
     <div className="builders-log-wrapper">
       <div className="log-container">
-        {/* Hero Section */}
-        <div className="log-hero-section" ref={headerRef}>
-          <div className="hero-tag">BEHIND THE SINCERA</div>
-          <h1 className="hero-heading">Builder's <span className="highlight">Log</span></h1>
-          <p className="hero-paragraph">
-            PriSincera가 단순한 포트폴리오를 넘어 완전한 SaaS 플랫폼으로 거듭나기까지.<br/>
-            프로덕트를 설계하고 코드를 쌓아 올린 치열한 항해의 기록을 공유합니다.
-          </p>
-        </div>
+        {/* Hero Section (Matched with Daily Digest) */}
+        <section className="log-hero-section" ref={headerRef}>
+          <div className="log-hero-content">
+            <div className="log-hero-icon">🛠️</div>
+            <h1 className="hero-heading">Builder's Log</h1>
+            <p className="hero-paragraph">
+              PriSincera가 단순한 포트폴리오를 넘어 완전한 SaaS 플랫폼으로 거듭나기까지.<br/>
+              프로덕트를 설계하고 코드를 쌓아 올린 치열한 항해의 기록을 공유합니다.<br/>
+              앞으로도 끊임없이 진화할 새로운 기능과 업데이트 내역을 기대해 주세요.
+            </p>
+          </div>
+        </section>
 
         {/* Bento Grid Timeline */}
         <div className="log-bento-grid">
