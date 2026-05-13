@@ -477,26 +477,21 @@ router.get('/pacenotes/users', async (req, res) => {
   try {
     const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
     
-    // Auth에서 전체 유저 리스트 모두 가져오기 (Pagination)
-    let allUsers = [];
-    let pageToken;
-    do {
-      const listUsersResult = await auth.listUsers(1000, pageToken);
-      allUsers = allUsers.concat(listUsersResult.users);
-      pageToken = listUsersResult.pageToken;
-    } while (pageToken);
+    // Pace Note를 한 번이라도 사용한 유저의 문서 참조 가져오기 (Ghost doc 포함)
+    const userDocs = await db.collection('pacenotes').listDocuments();
+    const debugErrors = [];
     
-    // 각 유저별 최신 주차 데이터를 Chunk 단위로 병렬 조회 (소켓 부족 방지)
+    // 각 유저별 최신 주차 데이터를 Chunk 단위로 병렬 조회
     const CHUNK_SIZE = 50;
     const pacersRaw = [];
     
-    for (let i = 0; i < allUsers.length; i += CHUNK_SIZE) {
-      const chunk = allUsers.slice(i, i + CHUNK_SIZE);
+    for (let i = 0; i < userDocs.length; i += CHUNK_SIZE) {
+      const chunk = userDocs.slice(i, i + CHUNK_SIZE);
       const chunkResults = await Promise.all(
-        chunk.map(async (user) => {
+        chunk.map(async (docRef) => {
           try {
-            const uid = user.uid;
-            const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+            const uid = docRef.id;
+            const weeksSnap = await docRef.collection('weeks')
               .orderBy('weekId', 'desc')
               .limit(1)
               .get();
@@ -506,16 +501,26 @@ router.get('/pacenotes/users', async (req, res) => {
               const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
               const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
               
+              // 유저 이메일 조회 (실패 시 알 수 없음)
+              let email = '알 수 없음';
+              try {
+                const userRec = await auth.getUser(uid);
+                email = userRec.email;
+              } catch (e) {
+                // Auth에 없거나 삭제된 유저
+              }
+              
               return {
                 uid,
-                email: user.email || '알 수 없음',
+                email,
                 lastWeekId: latestWeek.weekId,
                 currentTasks,
                 completedTasks
               };
             }
           } catch (e) {
-            console.error(`Error fetching for uid ${user.uid}:`, e);
+            console.error(`Error fetching for uid ${docRef.id}:`, e);
+            debugErrors.push({ uid: docRef.id, error: e.message });
           }
           return null;
         })
@@ -533,7 +538,7 @@ router.get('/pacenotes/users', async (req, res) => {
       return a.email.localeCompare(b.email);
     });
     
-    res.json({ pacers, debug: { totalAuthUsers: allUsers.length } });
+    res.json({ pacers, debug: { totalDocs: userDocs.length, innerErrors: debugErrors } });
   } catch (err) {
     console.error('[Admin API] Pacers Fetch Error:', err);
     res.status(500).json({ error: `Pace Note 사용자 조회 실패: ${err.message}` });
@@ -542,27 +547,22 @@ router.get('/pacenotes/users', async (req, res) => {
 
 router.get('/pacenotes/insights', async (req, res) => {
   try {
-    const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
+    const { db } = await import('./pipeline/src/lib/firestore.mjs');
     
-    let allUsers = [];
-    let pageToken;
-    do {
-      const listUsersResult = await auth.listUsers(1000, pageToken);
-      allUsers = allUsers.concat(listUsersResult.users);
-      pageToken = listUsersResult.pageToken;
-    } while (pageToken);
+    // Pace Note를 한 번이라도 사용한 유저의 문서 참조 가져오기
+    const userDocs = await db.collection('pacenotes').listDocuments();
     
     const CHUNK_SIZE = 50;
     const insightsNested = [];
+    const debugErrors = [];
     
-    for (let i = 0; i < allUsers.length; i += CHUNK_SIZE) {
-      const chunk = allUsers.slice(i, i + CHUNK_SIZE);
+    for (let i = 0; i < userDocs.length; i += CHUNK_SIZE) {
+      const chunk = userDocs.slice(i, i + CHUNK_SIZE);
       const chunkResults = await Promise.all(
-        chunk.map(async (user) => {
+        chunk.map(async (docRef) => {
           let userTasks = [];
           try {
-            const uid = user.uid;
-            const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+            const weeksSnap = await docRef.collection('weeks')
               .orderBy('weekId', 'desc')
               .limit(10)
               .get();
@@ -583,7 +583,8 @@ router.get('/pacenotes/insights', async (req, res) => {
               }
             });
           } catch (e) {
-            console.error(`Error fetching insights for uid ${user.uid}:`, e);
+            console.error(`Error fetching insights for uid ${docRef.id}:`, e);
+            debugErrors.push({ uid: docRef.id, error: e.message });
           }
           return userTasks;
         })
@@ -597,7 +598,7 @@ router.get('/pacenotes/insights', async (req, res) => {
     customTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     
     // 최신 100개만 반환
-    res.json({ insights: customTasks.slice(0, 100), debug: { totalAuthUsers: allUsers.length } });
+    res.json({ insights: customTasks.slice(0, 100), debug: { totalDocs: userDocs.length, innerErrors: debugErrors } });
   } catch (err) {
     console.error('[Admin API] Insights Fetch Error:', err);
     res.status(500).json({ error: '인사이트 조회 실패' });
