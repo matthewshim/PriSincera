@@ -103,9 +103,24 @@
 .card-streak { grid-column: span 12; flex-direction: row; align-items: center; justify-content: space-between; gap: 40px; }
 
 @media (min-width: 992px) {
-  .card-curation { grid-column: span 8; }
-  .card-prompt { grid-column: span 4; }
-  .card-lang { grid-column: span 5; }
+  .card-curation { 
+    grid-column: span 12; 
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 40px; 
+  }
+  .card-curation .bento-content {
+    flex: 1;
+    max-width: 50%;
+  }
+  .card-curation .bento-visual {
+    flex: 1;
+    width: 100%;
+    margin-top: 0;
+  }
+  .card-prompt { grid-column: span 6; }
+  .card-lang { grid-column: span 6; }
   .card-streak { grid-column: span 7; flex-direction: row; }
 }
 
