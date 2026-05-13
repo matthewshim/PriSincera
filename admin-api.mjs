@@ -477,38 +477,53 @@ router.get('/pacenotes/users', async (req, res) => {
   try {
     const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
     
-    // Auth에서 전체 유저 리스트 가져오기 (최대 1000명 기준)
-    const listUsersResult = await auth.listUsers(1000);
+    // Auth에서 전체 유저 리스트 모두 가져오기 (Pagination)
+    let allUsers = [];
+    let pageToken;
+    do {
+      const listUsersResult = await auth.listUsers(1000, pageToken);
+      allUsers = allUsers.concat(listUsersResult.users);
+      pageToken = listUsersResult.pageToken;
+    } while (pageToken);
     
-    // 각 유저별 최신 주차 데이터를 Promise.all로 병렬 조회 (속도 최적화 및 인덱스 에러 회피)
-    const pacers = (await Promise.all(
-      listUsersResult.users.map(async (user) => {
-        try {
-          const uid = user.uid;
-          const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
-            .orderBy('weekId', 'desc')
-            .limit(1)
-            .get();
-            
-          if (!weeksSnap.empty) {
-            const latestWeek = weeksSnap.docs[0].data();
-            const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
-            const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
-            
-            return {
-              uid,
-              email: user.email || '알 수 없음',
-              lastWeekId: latestWeek.weekId,
-              currentTasks,
-              completedTasks
-            };
+    // 각 유저별 최신 주차 데이터를 Chunk 단위로 병렬 조회 (소켓 부족 방지)
+    const CHUNK_SIZE = 50;
+    const pacersRaw = [];
+    
+    for (let i = 0; i < allUsers.length; i += CHUNK_SIZE) {
+      const chunk = allUsers.slice(i, i + CHUNK_SIZE);
+      const chunkResults = await Promise.all(
+        chunk.map(async (user) => {
+          try {
+            const uid = user.uid;
+            const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+              .orderBy('weekId', 'desc')
+              .limit(1)
+              .get();
+              
+            if (!weeksSnap.empty) {
+              const latestWeek = weeksSnap.docs[0].data();
+              const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
+              const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
+              
+              return {
+                uid,
+                email: user.email || '알 수 없음',
+                lastWeekId: latestWeek.weekId,
+                currentTasks,
+                completedTasks
+              };
+            }
+          } catch (e) {
+            console.error(`Error fetching for uid ${user.uid}:`, e);
           }
-        } catch (e) {
-          console.error(`Error fetching for uid ${user.uid}:`, e);
-        }
-        return null;
-      })
-    )).filter(p => p !== null);
+          return null;
+        })
+      );
+      pacersRaw.push(...chunkResults);
+    }
+    
+    const pacers = pacersRaw.filter(p => p !== null);
     
     // 접속 주차 최신순 정렬, 주차가 같으면 이메일 오름차순
     pacers.sort((a, b) => {
@@ -518,10 +533,10 @@ router.get('/pacenotes/users', async (req, res) => {
       return a.email.localeCompare(b.email);
     });
     
-    res.json({ pacers });
+    res.json({ pacers, debug: { totalAuthUsers: allUsers.length } });
   } catch (err) {
     console.error('[Admin API] Pacers Fetch Error:', err);
-    res.status(500).json({ error: 'Pace Note 사용자 조회 실패' });
+    res.status(500).json({ error: `Pace Note 사용자 조회 실패: ${err.message}` });
   }
 });
 
@@ -529,39 +544,52 @@ router.get('/pacenotes/insights', async (req, res) => {
   try {
     const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
     
-    const listUsersResult = await auth.listUsers(1000);
+    let allUsers = [];
+    let pageToken;
+    do {
+      const listUsersResult = await auth.listUsers(1000, pageToken);
+      allUsers = allUsers.concat(listUsersResult.users);
+      pageToken = listUsersResult.pageToken;
+    } while (pageToken);
     
-    const insightsNested = await Promise.all(
-      listUsersResult.users.map(async (user) => {
-        let userTasks = [];
-        try {
-          const uid = user.uid;
-          const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
-            .orderBy('weekId', 'desc')
-            .limit(10)
-            .get();
-            
-          weeksSnap.docs.forEach(doc => {
-            const data = doc.data();
-            if (data.currentPace) {
-              data.currentPace.forEach(task => {
-                if (task.id.startsWith('custom-')) {
-                  userTasks.push({
-                    weekId: data.weekId,
-                    title: task.title,
-                    completed: task.completed,
-                    createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
-                  });
-                }
-              });
-            }
-          });
-        } catch (e) {
-          console.error(`Error fetching insights for uid ${user.uid}:`, e);
-        }
-        return userTasks;
-      })
-    );
+    const CHUNK_SIZE = 50;
+    const insightsNested = [];
+    
+    for (let i = 0; i < allUsers.length; i += CHUNK_SIZE) {
+      const chunk = allUsers.slice(i, i + CHUNK_SIZE);
+      const chunkResults = await Promise.all(
+        chunk.map(async (user) => {
+          let userTasks = [];
+          try {
+            const uid = user.uid;
+            const weeksSnap = await db.collection('pacenotes').doc(uid).collection('weeks')
+              .orderBy('weekId', 'desc')
+              .limit(10)
+              .get();
+              
+            weeksSnap.docs.forEach(doc => {
+              const data = doc.data();
+              if (data.currentPace) {
+                data.currentPace.forEach(task => {
+                  if (task.id.startsWith('custom-')) {
+                    userTasks.push({
+                      weekId: data.weekId,
+                      title: task.title,
+                      completed: task.completed,
+                      createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
+                    });
+                  }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(`Error fetching insights for uid ${user.uid}:`, e);
+          }
+          return userTasks;
+        })
+      );
+      insightsNested.push(...chunkResults);
+    }
     
     let customTasks = insightsNested.flat();
     
@@ -569,7 +597,7 @@ router.get('/pacenotes/insights', async (req, res) => {
     customTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     
     // 최신 100개만 반환
-    res.json({ insights: customTasks.slice(0, 100) });
+    res.json({ insights: customTasks.slice(0, 100), debug: { totalAuthUsers: allUsers.length } });
   } catch (err) {
     console.error('[Admin API] Insights Fetch Error:', err);
     res.status(500).json({ error: '인사이트 조회 실패' });
