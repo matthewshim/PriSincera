@@ -2,127 +2,96 @@ import { Link } from 'react-router-dom';
 import useScrollReveal from '../../hooks/useScrollReveal';
 import './WorkSection.css';
 
-/**
- * Work Section — Project showcase.
- * Displays PriSincera and Signal as consistent project cards.
- * Follows the same glassmorphic container pattern as Belief/Journey sections.
- */
 export default function WorkSection() {
   const sectionRef = useScrollReveal({ threshold: 0.08 });
 
   return (
     <section className="work reveal-section" id="work" ref={sectionRef}>
       <div className="work-container">
-        <div className="section-label">Work</div>
+        <div className="section-label">Services</div>
 
         <div className="work-header reveal-item" style={{ '--reveal-delay': '0.1s' }}>
           <h2 className="work-title">
-            말보다 <span className="accent">만든 것으로</span>
+            단순한 포트폴리오를 넘어<br />
+            <span className="accent">성장을 돕는 도구로</span>
           </h2>
           <p className="work-subtitle">
-            직접 기획하고, 직접 만듭니다.
+            기획에서 개발까지, 유저의 실질적인 성장을 돕기 위해 만든 서비스들입니다.
           </p>
         </div>
 
-        <div className="work-grid">
-          {/* PriSincera — Personal Branding */}
-          <div className="work-card featured reveal-item" style={{ '--reveal-delay': '0.2s' }}>
-            <div className="work-card-icon">
-              <svg viewBox="0 0 44 44" fill="none">
-                <circle cx="22" cy="22" r="20" fill="none" stroke="url(#g-orbit-work)" strokeWidth="1"
-                        strokeDasharray="120 6" strokeLinecap="round" className="orbit-ring orbit-spin-slow"/>
-                <path d="M22 38 L8 14 L36 14 Z" fill="url(#g-down-work)" stroke="url(#g-edge-work)" strokeWidth="0.8" strokeLinejoin="round"/>
-                <path d="M22 6 L36 30 L8 30 Z" fill="url(#g-up-work)" stroke="url(#g-edge-work)" strokeWidth="0.8" strokeLinejoin="round"/>
-                <circle cx="22" cy="22" r="1.5" fill="#FFFFFF" opacity="0.9"/>
-                <defs>
-                  <linearGradient id="g-up-work" x1="50%" y1="0%" x2="50%" y2="100%">
-                    <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.85"/>
-                    <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.3"/>
-                  </linearGradient>
-                  <linearGradient id="g-down-work" x1="50%" y1="100%" x2="50%" y2="0%">
-                    <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.75"/>
-                    <stop offset="100%" stopColor="#6D28D9" stopOpacity="0.2"/>
-                  </linearGradient>
-                  <linearGradient id="g-edge-work" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.6"/>
-                    <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.3"/>
-                  </linearGradient>
-                  <linearGradient id="g-orbit-work" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.7"/>
-                    <stop offset="50%" stopColor="#67E8F9" stopOpacity="0.3"/>
-                    <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.7"/>
-                  </linearGradient>
-                </defs>
-              </svg>
+        {/* 1. Daily Digest Flagship */}
+        <div className="flagship-card reveal-item" style={{ '--reveal-delay': '0.2s' }}>
+          <div className="flagship-content">
+            <div className="flagship-label">Daily Curation & Learning</div>
+            <h3 className="flagship-title">Daily Digest</h3>
+            <p className="flagship-desc">
+              하루 5분, IT 트렌드 인사이트와 AI 프롬프트, 비즈니스 일본어 학습까지.<br />
+              정보의 홍수 속에서 꼭 필요한 시그널만 모아 매일 아침 전해드립니다.
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">AI Curation</span>
+              <span className="work-tag">Microlearning</span>
+              <span className="work-tag">Newsletter</span>
             </div>
-            <div className="work-card-body">
-              <div className="work-card-label">Personal Branding</div>
-              <div className="work-card-name">
-                PriSincera
-                <span className="work-card-tag">prisincera.com</span>
-              </div>
-              <p className="work-card-desc">
-                이 사이트 자체가 브랜딩 결과물입니다.<br />
-                기획부터 디자인, 개발, 배포까지 — 20년 경험의 태도와 철학을 담아
-                직접 만든 퍼스널 브랜딩 사이트.
-              </p>
-              <div className="work-card-tags">
-                <span className="work-tag">React</span>
-                <span className="work-tag">Vite</span>
-                <span className="work-tag">Canvas</span>
-                <span className="work-tag">GCP Cloud Run</span>
-                <span className="work-tag">Vibe Coding</span>
-              </div>
+            <div className="flagship-cta-wrap">
+              <Link to="/daily" className="flagship-cta-btn">
+                ✨ 하루 5분, 다이제스트 무료 구독
+              </Link>
             </div>
           </div>
-
-          <Link to="/daily" className="work-card prisignal reveal-item" style={{ '--reveal-delay': '0.35s' }} id="priDailyWorkCard">
-            <div className="work-card-icon">
-              <span className="work-card-emoji">📰</span>
+          <div className="flagship-visual">
+            <div className="mockup-placeholder">
+              <span className="work-card-emoji" style={{fontSize: '5rem'}}>📰</span>
             </div>
-            <div className="work-card-body">
-              <div className="work-card-label">Daily Curation & Learning</div>
-              <div className="work-card-name">
-                Daily Digest
-                <span className="work-card-tag">prisincera.com/daily</span>
-              </div>
-              <p className="work-card-desc">
-                하루 5분, IT 트렌드 인사이트와 AI 프롬프트, 그리고 비즈니스 일본어 학습까지.<br/>
-                가장 효율적인 데일리 마이크로 지식 소비를 경험하세요.
-              </p>
-              <div className="work-card-tags">
-                <span className="work-tag">AI Scoring</span>
-                <span className="work-tag">Microlearning</span>
-                <span className="work-tag">Daily Study</span>
-                <span className="work-tag">Unified Pipeline</span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Pace Note — Action & Proof */}
-          <Link to="/pacenote" className="work-card pacenote reveal-item" style={{ '--reveal-delay': '0.5s' }} id="priPaceNoteWorkCard">
-            <div className="work-card-icon">
-              <span className="work-card-emoji">⛵</span>
-            </div>
-            <div className="work-card-body">
-              <div className="work-card-label">Action & Branding</div>
-              <div className="work-card-name">
-                Pace Note
-                <span className="work-card-tag">prisincera.com/pacenote</span>
-              </div>
-              <p className="work-card-desc">
-                조급함을 덜어주고 나만의 궤도를 만들어가는 마이크로 행동 인증 트래커.<br/>
-                AI가 제안하는 나만의 페이스와 함께 매일 올바른 방향으로 나아가세요.
-              </p>
-              <div className="work-card-tags">
-                <span className="work-tag">Personalized</span>
-                <span className="work-tag">Action Tracker</span>
-                <span className="work-tag">AI Guide</span>
-                <span className="work-tag">Timeline</span>
-              </div>
-            </div>
-          </Link>
+          </div>
         </div>
+
+        {/* 2. Pace Note Flagship */}
+        <div className="flagship-card reveal-item" style={{ '--reveal-delay': '0.3s' }}>
+          <div className="flagship-content">
+            <div className="flagship-label">Action & Branding</div>
+            <h3 className="flagship-title">Pace Note</h3>
+            <p className="flagship-desc">
+              조급함을 덜어주고 나만의 궤도를 만들어가는 마이크로 행동 트래커.<br />
+              매일의 작은 인사이트를 실천 과제로 만들고, 흔들림 없는 성장을 기록하세요.
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">Action Tracker</span>
+              <span className="work-tag">AI Guide</span>
+              <span className="work-tag">Timeline</span>
+            </div>
+            <div className="flagship-cta-wrap">
+              <Link to="/pacenote" className="flagship-cta-btn">
+                ✨ 3초 만에 로그인하고 나만의 궤도 만들기
+              </Link>
+            </div>
+          </div>
+          <div className="flagship-visual">
+            <div className="mockup-placeholder">
+              <span className="work-card-emoji" style={{fontSize: '5rem'}}>⛵</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. PriSincera Foundation (Tone down) */}
+        <div className="work-card foundation-card reveal-item" style={{ '--reveal-delay': '0.4s', marginTop: '40px' }}>
+          <div className="work-card-body" style={{ width: '100%' }}>
+            <div className="work-card-label">Platform Foundation</div>
+            <div className="work-card-name" style={{ fontSize: '1.2rem', marginBottom: '8px' }}>
+              PriSincera Base
+            </div>
+            <p className="work-card-desc" style={{ fontSize: '0.9rem', marginBottom: '16px' }}>
+              이 플랫폼 자체가 "vibe coding"과 "기획자의 오너십"을 증명하는 결과물입니다.
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">React / Vite</span>
+              <span className="work-tag">GCP Cloud Run</span>
+              <span className="work-tag">Firebase</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   );

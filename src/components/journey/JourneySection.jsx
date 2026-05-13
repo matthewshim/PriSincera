@@ -9,53 +9,25 @@ import './JourneySection.css';
 
 const MILESTONES = [
   {
-    year: '2004',
-    headline: '성실함으로 시작하다',
-    industry: '웹 에이전시',
-    description: '인턴의 성실함이 정규직 제안으로. 웹 기획의 첫 걸음.',
-    keyword: 'Sincerity',
+    year: 'Past',
+    headline: '경험의 축적',
+    industry: '20 Years of IT',
+    description: '웹 기획부터 글로벌 서비스 리딩까지. 수많은 프로젝트 속에서 "변하지 않는 본질과 태도"의 중요성을 배웠습니다.',
+    keyword: 'Experience',
   },
   {
-    year: '2007',
-    headline: '게임 산업으로 도약',
-    industry: '온라인 게임',
-    description: '기획자에서 PM으로. 라이브 서비스 운영의 오너십을 체득하다.',
-    keyword: 'Ownership',
-  },
-  {
-    year: '2012',
-    headline: '복잡함을 조율하다',
-    industry: 'IT 서비스',
-    description: '본사와 자회사 사이, 흩어진 요구사항을 하나로 정돈하는 가교 역할.',
-    keyword: 'Communication',
-  },
-  {
-    year: '2013',
-    headline: '최전선에서 소통하다',
-    industry: '디지털 에이전시',
-    description: 'C-Level 고객과 직접 마주하며, 전략적 마케팅 기획을 주도.',
-    keyword: 'Challenge',
-  },
-  {
-    year: '2014',
-    headline: '전략적 파트너가 되다',
-    industry: 'HR 플랫폼',
-    description: '7년간 경영진의 비전을 프로덕트로 실현. 서비스 기획 총괄.',
-    keyword: 'Leadership',
-  },
-  {
-    year: '2022',
-    headline: '글로벌을 리딩하다',
-    industry: '글로벌 게임사',
-    description: '웹서비스개발그룹장으로서 글로벌 서비스 전략 및 LATAM 진출을 주도.',
-    keyword: 'Global',
+    year: 'Shift',
+    headline: 'AI와의 조우',
+    industry: 'Vibe Coding',
+    description: '기술의 장벽이 무너지고 있습니다. 기획자의 오너십과 AI가 만나, 머릿속 아이디어를 직접 실현하는 메이커의 시대를 맞이했습니다.',
+    keyword: 'Innovation',
   },
   {
     year: 'Now',
-    headline: 'AI와 함께 새로운 장을 열다',
-    industry: 'Vibe Studio',
-    description: '바이브 코딩으로 프로덕트를 직접 제작. 기획자의 오너십이 AI를 만나다.',
-    keyword: 'Innovation',
+    headline: '성장을 돕는 도구로',
+    industry: 'PriSincera',
+    description: '20년의 경험과 AI 기술이 결합되어, 이제는 당신의 일상과 성장을 직접적으로 돕는 실질적인 웹 서비스로 탄생했습니다.',
+    keyword: 'Service',
     isNow: true,
   },
 ];
@@ -165,8 +137,8 @@ export default function JourneySection() {
             기술은 변해도, <span className="accent">태도는 남습니다.</span>
           </h2>
           <p className="journey-subtitle">
-            Waterfall에서 Agile로, 웹에서 AI로 —
-            강산이 두 번 변하는 동안 변하지 않은 것.
+            20년의 IT 경험이 AI 기술을 만나,<br />
+            당신의 성장을 돕는 도구로 탄생했습니다.
           </p>
           <div className="journey-stats" ref={statsRef}>
             {STATS.map((s) => (
