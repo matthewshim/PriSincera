@@ -84,9 +84,10 @@ function Header() {
     };
   }, []);
 
-  // Auto-pause BGM on /study
+  // Auto-pause BGM on specific routes
   useEffect(() => {
-    if (location.pathname.startsWith('/study')) {
+    const p = location.pathname;
+    if (p.startsWith('/study') || p.startsWith('/daily') || p.startsWith('/pacenote')) {
       const audio = getAudio();
       audio.pause();
       musicIntentRef.current = false;
