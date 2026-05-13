@@ -17,7 +17,7 @@ export default function BeliefIntro() {
       <p className="philosophy-lead reveal-item" style={{ '--reveal-delay': '0.45s' }}>
         수많은 과제와 도구의 변화 속에서도,
         <br/>
-        현재의 문제에 몰입하는 단단한 태도(Attitude)가
+        현재의 문제에 몰입하는 단단한 태도가
         <br/>
         결국 올바른 미래의 방향을 완성합니다.
       </p>

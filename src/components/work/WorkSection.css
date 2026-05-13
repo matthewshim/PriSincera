@@ -52,8 +52,9 @@
     font-size: clamp(0.85rem, 1.3vw, 1rem);
     color: var(--text-muted);
     line-height: 1.7;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
+    word-break: keep-all;
 }
 
 /* --- Project Grid --- */

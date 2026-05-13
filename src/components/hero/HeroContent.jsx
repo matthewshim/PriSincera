@@ -48,9 +48,9 @@ export default function HeroContent({ visible, onIntroComplete }) {
       <p className="hero-sub">
         <strong>"발 아래 꽃, 먼 곳의 별"</strong>
         <br/><br/>
-        멀리 빛나는 목표(별)를 향해 나아가면서도,
+        멀리 빛나는 목표를 향해 나아가면서도,
         <br/>
-        지금 내 앞의 피어난 본질(꽃)에 충실하는 태도.
+        지금 내 앞의 피어난 본질에 충실하는 태도.
         <br/>
         그것이 가장 올바른 길이라 확신합니다.
       </p>
