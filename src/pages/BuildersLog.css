@@ -25,6 +25,7 @@
   text-align: center;
   padding: 60px 20px 40px;
   position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   opacity: 0;
   transform: translateY(30px) scale(0.98);
   transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
