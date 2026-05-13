@@ -25,22 +25,6 @@ export default function DailyIntro() {
 
   return (
     <div className="daily-intro-wrapper">
-      
-      {/* ── 1. Hero Section ── */}
-      <section className="intro-hero reveal-on-scroll">
-        <div className="intro-hero-content">
-          <div className="hero-glow-badge">Daily Digest</div>
-          <h1 className="hero-title">
-            하루 5분, <br className="mobile-only" />
-            <span className="accent-gradient">당신의 성장을 증명하는</span><br />
-            고밀도 인사이트
-          </h1>
-          <p className="hero-desc">
-            매일 아침 배달되는 글로벌 트렌드 큐레이션, 실무 적용을 위한 AI 프롬프트, <br className="desktop-only"/>
-            그리고 비즈니스 어학까지. 읽고 끝나는 지식이 아닌, 실무의 무기로 만드세요.
-          </p>
-        </div>
-      </section>
 
       {/* ── 2. Bento Box Value Props ── */}
       <section className="intro-bento-section">

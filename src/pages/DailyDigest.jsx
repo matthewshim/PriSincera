@@ -242,8 +242,8 @@ export default function DailyDigest() {
           <h1 className="daily-title">Daily Digest</h1>
           <p className="daily-subtitle" style={{ lineHeight: '1.6' }}>
             넘쳐나는 정보 속에서 길을 잃지 마세요.<br/>
-            가장 핵심적인 IT 트렌드와 인사이트만 선별하여 매일 아침 당신의 메일함으로 배달합니다.<br/>
-            하루 단 5분, 성장을 위한 고밀도 지식 습득의 습관을 시작해 보세요.
+            매일 아침 배달되는 글로벌 트렌드 큐레이션, 실무 적용을 위한 AI 프롬프트,<br/>
+            그리고 비즈니스 어학까지. 읽고 끝나는 지식이 아닌, 실무의 무기로 만드세요.
           </p>
           
           <div className="daily-subscribe-wrap">
