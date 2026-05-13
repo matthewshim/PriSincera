@@ -481,6 +481,24 @@ router.get('/pacenotes/users', async (req, res) => {
     const userDocs = await db.collection('pacenotes').listDocuments();
     const debugErrors = [];
     
+    // Auth에서 대량으로 유저 정보(이메일)를 한 번에 가져오기 (최대 100명씩)
+    const uids = userDocs.map(doc => ({ uid: doc.id }));
+    const emailMap = {};
+    
+    // 100개 단위로 쪼개서 getUsers 호출
+    for (let i = 0; i < uids.length; i += 100) {
+      try {
+        const batchUids = uids.slice(i, i + 100);
+        const usersResult = await auth.getUsers(batchUids);
+        usersResult.users.forEach(u => {
+          emailMap[u.uid] = u.email || '이메일 없음';
+        });
+      } catch (e) {
+        console.error('getUsers batch error:', e);
+        debugErrors.push({ type: 'getUsers', error: e.message });
+      }
+    }
+    
     // 각 유저별 최신 주차 데이터를 Chunk 단위로 병렬 조회
     const CHUNK_SIZE = 50;
     const pacersRaw = [];
@@ -501,14 +519,7 @@ router.get('/pacenotes/users', async (req, res) => {
               const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
               const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
               
-              // 유저 이메일 조회 (실패 시 알 수 없음)
-              let email = '알 수 없음';
-              try {
-                const userRec = await auth.getUser(uid);
-                email = userRec.email;
-              } catch (e) {
-                // Auth에 없거나 삭제된 유저
-              }
+              const email = emailMap[uid] || '알 수 없음';
               
               return {
                 uid,
