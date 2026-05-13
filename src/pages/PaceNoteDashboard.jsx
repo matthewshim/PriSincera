@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider } from '../firebase';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
@@ -52,6 +52,31 @@ export default function PaceNoteDashboard() {
   const [selectedWeekId, setSelectedWeekId] = useState(null);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [addingTask, setAddingTask] = useState(false);
+  const [showWeekCalendar, setShowWeekCalendar] = useState(false);
+
+  // 주차 탐색용 데이터 연산
+  const { pastWeeks, currentWeek, futureWeeks, allWeeks } = useMemo(() => {
+    if (!data) return { pastWeeks: [], currentWeek: null, futureWeeks: [], allWeeks: [] };
+    const past = [...(data.timeline || [])].reverse();
+    const curr = data.current?.weekId;
+    const future = generateFutureWeeks(curr, 3);
+    const pastIds = past.map(w => w.weekId);
+    const all = [...pastIds, ...(curr ? [curr] : []), ...future];
+    return { pastWeeks: past, currentWeek: curr, futureWeeks: future, allWeeks: all };
+  }, [data]);
+
+  const currentIndex = allWeeks.indexOf(selectedWeekId);
+  const prevWeekId = currentIndex > 0 ? allWeeks[currentIndex - 1] : null;
+  const nextWeekId = currentIndex !== -1 && currentIndex < allWeeks.length - 1 ? allWeeks[currentIndex + 1] : null;
+
+  const parseWeekInfo = (wId) => {
+    if (!wId) return { year: '', num: '', isFuture: false, isCurrent: false };
+    const isFuture = futureWeeks.includes(wId);
+    const isCurrent = wId === currentWeek;
+    const parts = wId.split('-W');
+    if (parts.length === 2) return { year: `${parts[0]}년`, num: parts[1], isFuture, isCurrent };
+    return { year: '이번 연도', num: wId.replace('W', ''), isFuture, isCurrent };
+  };
 
   useEffect(() => {
     document.title = 'PriSincera Pace Note';
@@ -272,38 +297,43 @@ export default function PaceNoteDashboard() {
           <div className="pacenote-content-wrapper">
             
             {/* ── Top: Week Selector (Timeline) ── */}
-            <div className="pacenote-week-selector">
-              <h2 className="pacenote-selector-title">나의 항해 일지</h2>
-              <div className="pacenote-week-scroll">
-                {[...data.timeline].reverse().map(weekLog => (
-                  <div 
-                    key={weekLog.weekId} 
-                    className={`pacenote-week-btn past ${selectedWeekId === weekLog.weekId ? 'active' : ''}`}
-                    onClick={() => setSelectedWeekId(weekLog.weekId)}
-                  >
-                    <div className="week-id">{weekLog.weekId}</div>
-                    <div className="week-date">{weekLog.startDate}</div>
-                    <div className="week-status">✓ {weekLog.tasks.length} 완료</div>
-                  </div>
-                ))}
-                
-                <div 
-                  className={`pacenote-week-btn current ${selectedWeekId === data.current.weekId ? 'active' : ''}`}
-                  onClick={() => setSelectedWeekId(data.current.weekId)}
-                >
-                  <div className="week-id">{data.current.weekId}</div>
-                  <div className="week-date">이번 주</div>
-                  <div className="week-status">항해 중 ⛵</div>
+            {/* ── Top: Week Selector (Nav Header) ── */}
+            <div className="pacenote-detail-nav-container">
+              <div className="pacenote-detail-nav">
+                <div className="nav-side">
+                  {prevWeekId && (
+                    <button className="nav-arrow prev" onClick={() => setSelectedWeekId(prevWeekId)}>
+                      &lt; {parseWeekInfo(prevWeekId).num}주차
+                    </button>
+                  )}
                 </div>
-
-                {/* ── Future Weeks (Locked) ── */}
-                {generateFutureWeeks(data.current.weekId, 3).map(fw => (
-                  <div key={fw} className="pacenote-week-btn locked">
-                    <div className="week-id">{fw}</div>
-                    <div className="week-date">예정된 항해</div>
-                    <div className="week-status">🔒 대기 중</div>
+                
+                <div className="nav-center" onClick={() => setShowWeekCalendar(true)}>
+                  <span className={`nav-huge-num ${parseWeekInfo(selectedWeekId).isFuture ? 'future' : ''}`}>
+                    {parseWeekInfo(selectedWeekId).num}
+                  </span>
+                  <div className="nav-small-info">
+                    <span className="nav-year">{parseWeekInfo(selectedWeekId).year}</span>
+                    <span className="nav-label">주차</span>
                   </div>
-                ))}
+                  <div className="nav-status-badge">
+                    {parseWeekInfo(selectedWeekId).isCurrent ? '항해 중 ⛵' : parseWeekInfo(selectedWeekId).isFuture ? '🔒 대기 중' : '✓ 완료'}
+                  </div>
+                </div>
+                
+                <div className="nav-side" style={{ textAlign: 'right' }}>
+                  {nextWeekId && (
+                    <button className="nav-arrow next" onClick={() => setSelectedWeekId(nextWeekId)}>
+                      {parseWeekInfo(nextWeekId).num}주차 &gt;
+                    </button>
+                  )}
+                </div>
+              </div>
+              
+              <div className="nav-back-wrap">
+                <button className="nav-back-btn" onClick={() => setShowWeekCalendar(true)}>
+                  ⊞ 전체 항해 일지 보기
+                </button>
               </div>
             </div>
 
@@ -404,6 +434,43 @@ export default function PaceNoteDashboard() {
           <div className="pacenote-loading">데이터를 불러오는 중 오류가 발생했습니다.</div>
         )}
       </div>
+
+      {/* ── Calendar Modal ── */}
+      {showWeekCalendar && (
+        <div className="pacenote-calendar-modal-backdrop" onClick={() => setShowWeekCalendar(false)}>
+          <div className="pacenote-calendar-modal" onClick={e => e.stopPropagation()}>
+            <div className="calendar-modal-header">
+              <h3>항해 일지 모아보기</h3>
+              <button onClick={() => setShowWeekCalendar(false)}>✕</button>
+            </div>
+            <div className="calendar-grid">
+              {allWeeks.map(wId => {
+                const info = parseWeekInfo(wId);
+                const isActive = wId === selectedWeekId;
+                const timelineWeek = pastWeeks.find(t => t.weekId === wId);
+                const taskCount = timelineWeek ? timelineWeek.tasks.length : (info.isCurrent && data?.current ? data.current.currentPace.filter(t => t.completed).length : 0);
+                
+                return (
+                  <div 
+                    key={wId} 
+                    className={`calendar-cell ${isActive ? 'active' : ''} ${info.isFuture ? 'future' : ''} ${info.isCurrent ? 'current' : ''}`}
+                    onClick={() => {
+                      if (!info.isFuture) {
+                        setSelectedWeekId(wId);
+                        setShowWeekCalendar(false);
+                      }
+                    }}
+                  >
+                    <div className="cell-num">{info.num}주차</div>
+                    {!info.isFuture && <div className="cell-count">✓ {taskCount}</div>}
+                    {info.isFuture && <div className="cell-count">🔒</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
