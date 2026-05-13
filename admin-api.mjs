@@ -477,8 +477,9 @@ router.get('/pacenotes/users', async (req, res) => {
   try {
     const { db, auth } = await import('./pipeline/src/lib/firestore.mjs');
     
-    // Pace Note를 한 번이라도 사용한 유저의 문서 참조 가져오기 (Ghost doc 포함)
-    const userDocs = await db.collection('pacenotes').listDocuments();
+    // Pace Note를 한 번이라도 사용한 유저의 전체 컬렉션 데이터 가져오기
+    const userDocsSnap = await db.collection('pacenotes').get();
+    const userDocs = userDocsSnap.docs;
     const debugErrors = [];
     
     // 각 유저별 최신 주차 데이터를 Chunk 단위로 병렬 조회
@@ -488,9 +489,12 @@ router.get('/pacenotes/users', async (req, res) => {
     for (let i = 0; i < userDocs.length; i += CHUNK_SIZE) {
       const chunk = userDocs.slice(i, i + CHUNK_SIZE);
       const chunkResults = await Promise.all(
-        chunk.map(async (docRef) => {
+        chunk.map(async (docSnap) => {
           try {
-            const uid = docRef.id;
+            const uid = docSnap.id;
+            const userData = docSnap.data() || {};
+            const docRef = docSnap.ref;
+            
             const weeksSnap = await docRef.collection('weeks')
               .orderBy('weekId', 'desc')
               .limit(1)
@@ -501,12 +505,14 @@ router.get('/pacenotes/users', async (req, res) => {
               const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
               const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
               
-              let email = '알 수 없음';
-              try {
-                const userRec = await auth.getUser(uid);
-                email = userRec.email || '이메일 정보 없음';
-              } catch (e) {
-                email = `에러: ${e.code || e.message}`;
+              let email = userData.email;
+              if (!email) {
+                try {
+                  const userRec = await auth.getUser(uid);
+                  email = userRec.email || '이메일 정보 없음';
+                } catch (e) {
+                  email = `DB 기록 없음 (에러: ${e.code || e.message})`;
+                }
               }
               
               return {

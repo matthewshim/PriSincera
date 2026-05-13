@@ -89,10 +89,14 @@ function replenishRecommendations(currentPace = [], recommendedPace = [], count 
 pacenoteRouter.get('/', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
+    const email = req.user.email || '이메일 없음';
     const today = new Date();
     const currentWeekId = getWeekNumber(today);
     
     const userRef = db.collection('pacenotes').doc(uid);
+    // 프론트엔드 로그인 세션(토큰)에서 확보한 이메일을 DB에 즉시 저장
+    await userRef.set({ email, lastActive: new Date().toISOString() }, { merge: true });
+    
     const weeksRef = userRef.collection('weeks');
     
     // 현재 주간 데이터 조회
