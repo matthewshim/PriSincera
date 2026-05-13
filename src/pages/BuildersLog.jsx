@@ -24,7 +24,7 @@ const chapters = [
     chapterNo: '01',
     title: 'The Pivot',
     subtitle: 'From Static Portfolio to SaaS Platform',
-    description: `개인의 이력을 정적으로 나열하던 포트폴리오의 한계를 넘어, 실제 유저에게 살아있는 가치를 제공하는 플랫폼으로의 전환을 결심했습니다. Cloud Run과 Firebase 기반의 아키텍처를 설계하고, 자동화된 CI/CD 파이프라인을 구축하여 무중단 서비스의 기반을 다졌습니다.`,
+    description: `개인의 이력을 정적으로 나열하던 포트폴리오의 한계를 넘어, 실제 유저에게 살아있는 가치를 제공하는 플랫폼으로의 전환을 결심했습니다. Cloud Run과 Firebase 기반의 아키텍처를 설계하고, 자동화된 CI/CD 파이프라인을 구축하여 무중단 서비스의 기반을 다졌습니다. 더불어, PriSincera의 '밤 하늘의 별자리를 바라보며 고요히 집중하는 컨셉'에 맞춰, Google Gemini를 활용해 맞춤형 BGM을 직접 기획하고 생성하여 몰입감을 극대화했습니다.`,
     commits: [
       { type: 'feat', hash: 'a2b4c6', msg: '자동화 파이프라인 아키텍처 기반 설계 및 Cloud Build 연동' },
       { type: 'fix', hash: 'b458f1', msg: 'deploy 스크립트 최적화 및 도커 컨테이너 빌드 환경 구축' }
@@ -128,13 +128,6 @@ export default function BuildersLog() {
 
   return (
     <div className="builders-log-wrapper">
-      {/* Dynamic Background */}
-      <div className="log-ambient-bg">
-        <div className="ambient-orb orb-1"></div>
-        <div className="ambient-orb orb-2"></div>
-        <div className="ambient-grid"></div>
-      </div>
-
       <div className="log-container">
         {/* Hero Section */}
         <div className="log-hero-section" ref={headerRef}>

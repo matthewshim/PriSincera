@@ -3,58 +3,12 @@
 .builders-log-wrapper {
   position: relative;
   min-height: 100vh;
-  background-color: var(--bg-void);
+  /* background-color: var(--bg-void); -> 전역 배경색 사용을 위해 주석/제거 가능하지만 레이아웃 보호를 위해 transparent 처리 */
+  background-color: transparent;
   color: var(--text-primary);
   overflow: hidden;
   padding: 140px 0 100px;
   font-family: var(--font-body);
-}
-
-/* --- Ambient Background --- */
-.log-ambient-bg {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.ambient-grid {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: 
-    linear-gradient(var(--glass-border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
-  background-size: 60px 60px;
-  background-position: center;
-  mask-image: radial-gradient(ellipse at top center, black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse at top center, black 0%, transparent 70%);
-}
-
-.ambient-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.15;
-  animation: orbFloat 15s ease-in-out infinite alternate;
-}
-
-.orb-1 {
-  width: 800px; height: 800px;
-  top: -200px; left: -200px;
-  background: var(--gradient-brand);
-}
-
-.orb-2 {
-  width: 600px; height: 600px;
-  bottom: -100px; right: -100px;
-  background: var(--orbit-cyan);
-  animation-delay: -5s;
-  animation-direction: alternate-reverse;
-}
-
-@keyframes orbFloat {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(100px, 50px) scale(1.1); }
 }
 
 /* --- Container --- */
