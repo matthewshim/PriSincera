@@ -21,9 +21,9 @@ export default function WorkSection() {
         </div>
 
         {/* 1. Daily Digest Flagship */}
-        <div className="flagship-card reveal-item" style={{ '--reveal-delay': '0.2s' }}>
+        <div className="flagship-card reveal-item flagship-glow" style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}>
           <div className="flagship-content">
-            <div className="flagship-label">Daily Curation & Learning</div>
+            <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>Daily Curation & Learning</div>
             <h3 className="flagship-title">Daily Digest</h3>
             <p className="flagship-desc">
               하루 5분, IT 트렌드 인사이트와 AI 프롬프트, 비즈니스 일본어 학습까지.<br />
@@ -41,16 +41,31 @@ export default function WorkSection() {
             </div>
           </div>
           <div className="flagship-visual">
-            <div className="mockup-placeholder">
-              <span className="work-card-emoji" style={{fontSize: '5rem'}}>📰</span>
+            <div className="dynamic-mockup daily-mockup">
+              <div className="mockup-header">
+                <div className="mockup-dot"></div><div className="mockup-dot"></div><div className="mockup-dot"></div>
+              </div>
+              <div className="mockup-body">
+                <div className="mockup-skeleton-title"></div>
+                <div className="mockup-skeleton-text"></div>
+                <div className="mockup-skeleton-text short"></div>
+                <div className="mockup-ai-card">
+                  <span className="ai-spark">✨</span>
+                  <div className="ai-lines">
+                    <div className="ai-line"></div>
+                    <div className="ai-line"></div>
+                  </div>
+                </div>
+              </div>
             </div>
+            <div className="visual-blur-orb cyan"></div>
           </div>
         </div>
 
         {/* 2. Pace Note Flagship */}
-        <div className="flagship-card reveal-item" style={{ '--reveal-delay': '0.3s' }}>
+        <div className="flagship-card reveal-item flagship-glow" style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(52, 211, 153, 0.4)' }}>
           <div className="flagship-content">
-            <div className="flagship-label">Action & Branding</div>
+            <div className="flagship-label" style={{ color: '#34D399' }}>Action & Branding</div>
             <h3 className="flagship-title">Pace Note</h3>
             <p className="flagship-desc">
               조급함을 덜어주고 나만의 궤도를 만들어가는 마이크로 행동 트래커.<br />
@@ -62,15 +77,27 @@ export default function WorkSection() {
               <span className="work-tag">Timeline</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/pacenote" className="flagship-cta-btn">
-                ✨ 3초 만에 로그인하고 나만의 궤도 만들기
+              <Link to="/pacenote" className="flagship-cta-btn green">
+                ⛵ 3초 만에 로그인하고 나만의 궤도 만들기
               </Link>
             </div>
           </div>
           <div className="flagship-visual">
-            <div className="mockup-placeholder">
-              <span className="work-card-emoji" style={{fontSize: '5rem'}}>⛵</span>
+            <div className="dynamic-mockup pacenote-mockup">
+              <div className="pacenote-grid">
+                {[...Array(20)].map((_, i) => (
+                  <div key={i} className={`pace-cell ${[5,6,12,14,18].includes(i) ? 'active' : ''} ${i === 14 ? 'pulse' : ''}`}></div>
+                ))}
+              </div>
+              <div className="pace-floating-card">
+                <div className="pace-check">✓</div>
+                <div className="pace-card-lines">
+                  <div className="pace-line"></div>
+                  <div className="pace-line"></div>
+                </div>
+              </div>
             </div>
+            <div className="visual-blur-orb emerald"></div>
           </div>
         </div>
 
