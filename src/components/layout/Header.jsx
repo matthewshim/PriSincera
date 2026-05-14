@@ -168,6 +168,7 @@ function Header() {
           <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">Builder's Log</Link>
           <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">Daily Digest</Link>
           <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">Pace Note</Link>
+          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); alert("앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"); }}>Sylphio</a>
         </div>
         <div className="nav-right">
           {/* BGM toggle — works on all pages */}
@@ -193,9 +194,10 @@ function Header() {
       {/* Mobile Overlay Navigation */}
       <div className={`mobile-nav-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-nav-links">
-          <Link to="/builders-log" className={`mobile-nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`}>Builder's Log</Link>
-          <Link to="/daily" className={`mobile-nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`}>Daily Digest</Link>
-          <Link to="/pacenote" className={`mobile-nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`}>Pace Note</Link>
+          <Link to="/builders-log" className={`mobile-nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Builder's Log</Link>
+          <Link to="/daily" className={`mobile-nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Daily Digest</Link>
+          <Link to="/pacenote" className={`mobile-nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Pace Note</Link>
+          <a href="#" className="mobile-nav-link" onClick={(e) => { e.preventDefault(); setIsMobileMenuOpen(false); alert("앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"); }}>Sylphio</a>
         </div>
       </div>
     </nav>
