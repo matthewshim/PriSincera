@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 
 /* ── Code Splitting: page-level lazy imports ── */
@@ -16,34 +16,47 @@ const PageFallback = (
   <div style={{ minHeight: '100vh', background: 'var(--bg-void, #0A0714)' }} />
 );
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
-    <Suspense fallback={PageFallback}>
-      <Routes>
-        {/* Admin — Layout 밖 (독립 레이아웃) */}
-        <Route path="admin" element={<AdminDashboard />} />
+    <>
+      <ScrollToTop />
+      <Suspense fallback={PageFallback}>
+        <Routes>
+          {/* Admin — Layout 밖 (독립 레이아웃) */}
+          <Route path="admin" element={<AdminDashboard />} />
 
-        {/* Public — Layout 안 (GNB/Footer) */}
-        <Route element={<Layout />}>
-          <Route index element={<Home />} />
-          
-          <Route path="builders-log" element={<BuildersLog />} />
+          {/* Public — Layout 안 (GNB/Footer) */}
+          <Route element={<Layout />}>
+            <Route index element={<Home />} />
+            
+            <Route path="builders-log" element={<BuildersLog />} />
 
-          {/* Unified Daily Digest Routes */}
-          <Route path="daily" element={<DailyDigest />} />
-          <Route path="daily/:date" element={<DailyDigest />} />
+            {/* Unified Daily Digest Routes */}
+            <Route path="daily" element={<DailyDigest />} />
+            <Route path="daily/:date" element={<DailyDigest />} />
 
-          {/* Pace Note Routes */}
-          <Route path="pacenote" element={<PaceNoteDashboard />} />
-          
-          {/* Legacy Redirects */}
-          <Route path="signal/*" element={<Navigate to="/daily" replace />} />
-          <Route path="study/*" element={<Navigate to="/daily" replace />} />
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-    </Suspense>
+            {/* Pace Note Routes */}
+            <Route path="pacenote" element={<PaceNoteDashboard />} />
+            
+            {/* Legacy Redirects */}
+            <Route path="signal/*" element={<Navigate to="/daily" replace />} />
+            <Route path="study/*" element={<Navigate to="/daily" replace />} />
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </>
   );
 }
 
