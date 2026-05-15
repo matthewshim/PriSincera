@@ -381,7 +381,7 @@ app.use(async (req, res) => {
   
   let title = 'PriSincera — Sincerity, Prioritized.';
   let description = 'PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.';
-  let image = `${baseUrl}/favicon-512x512.png`; // Fallback image
+  let image = `${baseUrl}/prisignal-og.png`; // Premium fallback image
 
   try {
     const dailyMatch = req.originalUrl.match(/^\/daily\/(\d{4}-\d{2}-\d{2})/);
@@ -411,6 +411,10 @@ app.use(async (req, res) => {
       description = '매일 아침, 전 세계 비즈니스/테크 동향 중 가장 중요한 시그널과 핵심 실무 지식(Study)을 선별해 전해드립니다.';
     } else if (req.originalUrl.startsWith('/pacenote')) {
       title = 'Pace Note — 목표와 회고 | PriSincera';
+      description = '스스로의 우선순위를 지키기 위한 주간 목표 달성률과 투명한 성찰을 기록하는 페이스 노트입니다.';
+    } else if (req.originalUrl.startsWith('/builders-log')) {
+      title = 'Builders Log — 서비스 구축의 기록 | PriSincera';
+      description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
     }
   } catch(err) {
     console.error('[SEO Proxy] Error generating meta tags:', err.message);
