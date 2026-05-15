@@ -40,7 +40,7 @@
     /* Typography Stack */
     --font-display: 'Inter', 'Pretendard Variable', 'Pretendard', sans-serif;
     --font-body: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-mono: 'JetBrains Mono', 'Pretendard Variable', 'Pretendard', monospace;
 
     /* Geometry & Spatial System (8pt Grid) */
     --space-xs: 4px;
