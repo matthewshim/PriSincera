@@ -528,27 +528,21 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-overview">
             <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h2 style={{ margin: 0 }}>Daily Digest 대시보드</h2>
-              <a 
-                href="https://analytics.google.com/analytics/web/?utm_source=OGB&utm_medium=app&authuser=0#/a391399503p533055438/reports/intelligenthome" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="admin-btn-secondary"
-                style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                📈 구글 애널리틱스 (방문자 통계) ↗
-              </a>
             </div>
             <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
               <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" onClick={() => setActiveTab('subscribers')} />
+              <StatCard label="누적 콘텐츠" value={priStudyStats?.totalContent || 0} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
+              <StatCard label="Pacer 참여자" value={priStudyStats?.totalLearners || 0} icon="⛵" color="var(--admin-green)" onClick={() => setActiveTab('pacenotes')} />
+              <StatCard 
+                label="방문자 통계" 
+                value="GA4" 
+                icon="📈" 
+                color="#60A5FA" 
+                onClick={() => window.open('https://analytics.google.com/analytics/web/?utm_source=OGB&utm_medium=app&authuser=0#/a391399503p533055438/reports/intelligenthome', '_blank')} 
+              />
             </div>
-            {priStudyStats && (
-              <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
-                <StatCard label="누적 콘텐츠" value={priStudyStats.totalContent} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
-                <StatCard label="Pacer 참여자" value={priStudyStats.totalLearners} icon="⛵" color="var(--admin-green)" onClick={() => setActiveTab('pacenotes')} />
-              </div>
-            )}
             {pipeline && (
               <div className="admin-pipeline-summary" style={{ marginBottom: '24px' }}>
                 <h3>데이터 수집 상태</h3>
