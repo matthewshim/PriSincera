@@ -361,6 +361,55 @@ app.get('/api/temp-logs', async (req, res) => {
   }
 });
 
+// --- Dynamic Sitemap for Google/Naver SEO ---
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const { getDailyIndex } = await import('./pipeline/src/repositories/DailyRepository.mjs');
+    const fsIndex = await getDailyIndex();
+    
+    let gcsDates = [];
+    if (storage) {
+      try {
+        const [content] = await storage.bucket(GCS_BUCKET).file('daily/index.json').download();
+        const gcsIndex = JSON.parse(content.toString('utf-8'));
+        gcsDates = gcsIndex.dates || [];
+      } catch (err) {}
+    }
+    
+    const allDates = Array.from(new Set([...fsIndex.dates, ...gcsDates])).sort((a, b) => b.localeCompare(a));
+    
+    const baseUrl = 'https://www.prisincera.com';
+    const staticPages = [
+      { url: '/', changefreq: 'weekly', priority: 1.0 },
+      { url: '/daily', changefreq: 'daily', priority: 0.9 },
+      { url: '/builders-log', changefreq: 'weekly', priority: 0.8 },
+      { url: '/pacenote', changefreq: 'weekly', priority: 0.8 },
+      { url: '/connect', changefreq: 'monthly', priority: 0.5 }
+    ];
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    
+    // Add static pages
+    for (const page of staticPages) {
+      xml += `  <url>\n    <loc>${baseUrl}${page.url}</loc>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
+    }
+
+    // Add daily digest issues
+    for (const date of allDates) {
+      xml += `  <url>\n    <loc>${baseUrl}/daily/${date}</loc>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+    }
+    
+    xml += '</urlset>';
+
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('[Sitemap] Error generating sitemap:', err);
+    res.status(500).end();
+  }
+});
+
 // --- SPA fallback & Dynamic SEO Proxy ---
 let cachedIndexHtml = null;
 
