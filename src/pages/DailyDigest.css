@@ -387,7 +387,7 @@
 
 /* ── Archive List View ── */
 .archive-container {
-  max-width: 1000px;
+  max-width: 1100px; /* Match standard page width */
   margin: var(--space-lg) auto;
   padding: 0 var(--space-md);
 }
