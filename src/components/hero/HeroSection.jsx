@@ -1,42 +1,25 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import useMousePosition from '../../hooks/useMousePosition';
-import StarField from './StarField';
-import ConstellationAssembly from './ConstellationAssembly';
-import EnergyCirculation from './EnergyCirculation';
+import HeroCanvas from '../canvas/HeroCanvas';
 import HeroContent from './HeroContent';
-import SvgDefs from '../common/SvgDefs';
 import './HeroSection.css';
 
 // NOTE: BGM audio is now managed by Header component globally.
 
-/**
- * Hero Section — orchestrates all layers:
- * StarField canvas → Constellation Assembly SVG → Energy Circulation canvas → Text content
- * Floating control panel with music + zodiac toggles.
- *
- * Props:
- * - forceShowAllConstellations: scroll-driven signal to reveal all zodiac constellations
- * - scrollProgress: 0-1 value representing the hero-to-content scroll transition
- *
- * Constellation toggle logic:
- * - User can toggle constellations ON/OFF at any time via the STAR MAP button
- * - Scroll past 30% also triggers constellations ON automatically
- * - effectiveShowAll = forceShowAll OR userToggledOn
- */
 export default function HeroSection({ forceShowAllConstellations = false, contentVisible = false, scrollProgress = 0, onIntroComplete }) {
-  const { raw: rawMouseRef } = useMousePosition();
   const [assemblyDone, setAssemblyDone] = useState(false);
   const [userToggledConstellations, setUserToggledConstellations] = useState(false);
 
-  const onAssemblyComplete = useCallback(() => {
-    setAssemblyDone(true);
+  // Since we replaced the SVG assembly with a 3D Canvas,
+  // we can immediately consider the 'assembly' done, or add a timeout if we want an intro delay.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAssemblyDone(true);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
-
-
-  // Auto-ON: when scroll triggers forceShowAll for the first time, set user toggle ON.
-  // After this, user toggle is the single source of truth (can freely turn off/on).
   const scrollTriggeredRef = useRef(false);
   useEffect(() => {
     if (forceShowAllConstellations && !scrollTriggeredRef.current) {
@@ -45,36 +28,23 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
     }
   }, [forceShowAllConstellations]);
 
-  // Toggle constellation visibility: user click directly toggles on/off
   const toggleConstellations = useCallback(() => {
     setUserToggledConstellations(prev => !prev);
   }, []);
 
-  // User toggle is the single source of truth
-  const effectiveShowAll = userToggledConstellations;
-  // Show as active in button UI
-  const constellationsActive = effectiveShowAll;
+  const constellationsActive = userToggledConstellations;
 
   return (
     <section className="hero" id="hero">
-      <SvgDefs />
-      <StarField
-        rawMouseRef={rawMouseRef}
-        zodiacActive={assemblyDone}
-        zodiacShowAll={effectiveShowAll}
-      />
+      <HeroCanvas scrollProgress={scrollProgress} />
+      
       <div className="hero-center" style={{
         opacity: scrollProgress > 0.95 ? 0 : 1,
         transition: 'opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1)',
         pointerEvents: scrollProgress > 0.95 ? 'none' : 'auto',
       }}>
-        <ConstellationAssembly
-          rawMouseRef={rawMouseRef}
-          onAssemblyComplete={onAssemblyComplete}
-        />
         <HeroContent visible={assemblyDone} onIntroComplete={onIntroComplete} />
       </div>
-      <EnergyCirculation rawMouseRef={rawMouseRef} active={assemblyDone} />
 
 
 

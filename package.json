@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.14.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/three": "^0.184.1",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dompurify": "^3.4.1",
@@ -22,8 +25,10 @@
     "nodemailer": "^8.0.7",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-is": "^19.2.6",
     "react-router-dom": "^7.5.0",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",
