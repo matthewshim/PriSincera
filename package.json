@@ -28,7 +28,7 @@
     "react-is": "^19.2.6",
     "react-router-dom": "^7.5.0",
     "recharts": "^3.8.1",
-    "three": "^0.184.0"
+    "three": "^0.169.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",

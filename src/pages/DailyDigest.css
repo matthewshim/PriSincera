@@ -189,18 +189,21 @@
   display: flex;
   flex-direction: column;
   background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
   overflow: hidden;
   text-decoration: none;
-  transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
-  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 24px 40px -8px rgba(0, 0, 0, 0.3);
+  transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
   height: 100%;
 }
 .signal-article-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.035);
   border-color: var(--glass-border-hover);
-  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.15);
 }
 
 .signal-article-image {
@@ -410,15 +413,18 @@
   display: flex;
   flex-direction: column;
   background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
   padding: var(--space-md);
   text-decoration: none;
   color: inherit;
-  transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 24px 40px -8px rgba(0, 0, 0, 0.3);
+  transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(12px);
   height: 100%;
 }
 .archive-card.premium {
@@ -434,13 +440,12 @@
   transition: opacity var(--duration-fast) var(--ease-out);
 }
 .archive-card:hover {
-  transform: translateY(-3px);
-  background: rgba(26, 16, 53, 0.7);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.035);
   border-color: var(--glass-border-hover);
-  box-shadow: 0 10px 40px rgba(124, 58, 237, 0.2);
 }
 .archive-card.premium:hover {
-  box-shadow: 0 16px 40px rgba(124, 58, 237, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* Retain specific premium hover effects if necessary, or let the base hover apply */
 }
 .archive-card:hover::before {
   opacity: 1;

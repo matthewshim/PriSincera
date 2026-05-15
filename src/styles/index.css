@@ -112,6 +112,26 @@ button { background: none; border: none; font: inherit; color: inherit; }
     50% { opacity: 1; }
 }
 
+/* --- Glassmorphism 2.0 Premium Card --- */
+.premium-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 24px 40px -8px rgba(0, 0, 0, 0.3);
+    transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
+}
+
+.premium-card:hover {
+    background: rgba(255, 255, 255, 0.035);
+    border-color: var(--glass-border-hover);
+    transform: translateY(-2px);
+}
+
 /* --- Responsive default cursor for mobile --- */
 @media (max-width: 768px) {
     body { cursor: auto; }
