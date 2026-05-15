@@ -119,8 +119,8 @@
   justify-content: center;
   padding: 0 var(--space-xl);
   background: rgba(10, 7, 20, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(196, 181, 253, 0.06);
 }
 
@@ -240,8 +240,8 @@
 .pristudy-value-card {
   padding: var(--space-xl);
   background: rgba(26, 16, 53, 0.55);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(196, 181, 253, 0.08);
   border-radius: 16px;
   text-align: center;
@@ -276,8 +276,8 @@
 .pristudy-feature {
   /* same exact styling style as .prisignal-cta-container */
   background: rgba(10, 7, 20, 0.72);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(196, 181, 253, 0.06);
   border-radius: 24px;
   padding: var(--space-2xl);
@@ -440,8 +440,8 @@
 
 .pristudy-card.unified {
   background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 40px 32px;
@@ -469,7 +469,7 @@
 }
 
 .pristudy-audio-btn {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   color: var(--text-secondary);
   border-radius: 100px;
@@ -656,8 +656,8 @@
 /* ── 잔디 심기 (Contribution Graph) ── */
 .pristudy-streak-section {
   background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 32px;
@@ -1058,8 +1058,8 @@
   align-items: center;
   justify-content: space-between;
   background: rgba(26, 16, 53, 0.55);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(196, 181, 253, 0.08);
   border-radius: 24px;
   padding: var(--space-xl);

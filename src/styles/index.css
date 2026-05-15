@@ -5,10 +5,10 @@
 /* --- Design Tokens --- */
 :root {
     /* Base & Surfaces (OLED Black & Slate) */
-    --bg-void: #050505;
-    --bg-deep: #0A0A0A;
-    --bg-surface: #111111;
-    --bg-elevated: #1A1A1A;
+    --bg-void: #000000;
+    --bg-deep: #050505;
+    --bg-surface: #0a0a0a;
+    --bg-elevated: #111111;
 
     /* Brand Accents & Gradients */
     --prism-violet: #6D28D9;
@@ -27,10 +27,10 @@
     --text-secondary: #A1A1AA;
     --text-muted: #71717A;
 
-    /* Glassmorphism 2.0 */
-    --glass-bg: rgba(255, 255, 255, 0.02);
-    --glass-border: rgba(255, 255, 255, 0.05);
-    --glass-border-hover: rgba(167, 139, 250, 0.3);
+    /* Glassmorphism 2.1 (Restrained Authority) */
+    --glass-bg: rgba(17, 17, 17, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.04);
+    --glass-border-hover: rgba(255, 255, 255, 0.1);
 
     /* Premium Gradients */
     --gradient-brand: linear-gradient(135deg, #6D28D9, #A78BFA, #FBCFE8);
@@ -57,13 +57,13 @@
     --radius-lg: 24px;
     --radius-pill: 9999px;
 
-    /* Spring Physics Animation */
+    /* Spring Physics Animation (Heavier, more grounded) */
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
-    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-    --duration-fast: 0.2s;
-    --duration-normal: 0.4s;
-    --duration-slow: 0.8s;
+    --ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 0.3s;
+    --duration-normal: 0.6s;
+    --duration-slow: 1.0s;
 }
 
 /* --- Reset --- */
@@ -112,22 +112,21 @@ button { background: none; border: none; font: inherit; color: inherit; }
     50% { opacity: 1; }
 }
 
-/* --- Glassmorphism 2.0 Premium Card --- */
+/* --- Glassmorphism 2.1 Premium Card (Restrained Authority) --- */
 .premium-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    /* Only use moderate blur to avoid visual noise */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 24px 40px -8px rgba(0, 0, 0, 0.3);
-    transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
+    /* Deep shadow to create pure depth against OLED black */
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+    transition: transform var(--duration-normal) var(--ease-spring), border-color var(--duration-fast);
 }
 
 .premium-card:hover {
-    background: rgba(255, 255, 255, 0.035);
+    background: rgba(26, 26, 26, 0.6);
     border-color: var(--glass-border-hover);
     transform: translateY(-2px);
 }

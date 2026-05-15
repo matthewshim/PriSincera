@@ -117,10 +117,9 @@
 .builder-card-glass {
   position: relative;
   background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   height: 100%;
@@ -241,7 +240,7 @@
   left: 5px;
   width: 1px;
   height: calc(100% + var(--space-md) - 14px);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg);
 }
 
 .commit-node {
