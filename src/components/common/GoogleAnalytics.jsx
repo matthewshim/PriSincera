@@ -10,8 +10,8 @@ export default function GoogleAnalytics() {
   const location = useLocation();
 
   useEffect(() => {
-    // Make sure VITE_GA_MEASUREMENT_ID is set in .env
-    const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
+    // Make sure VITE_GA_MEASUREMENT_ID is set in .env, or use the hardcoded default
+    const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-90RY43JR26';
     
     if (measurementId) {
       if (!ReactGA.isInitialized) {
