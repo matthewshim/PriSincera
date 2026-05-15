@@ -134,7 +134,7 @@
   transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 24px 40px -8px rgba(0, 0, 0, 0.3);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .pacenote-bento-card:hover {
