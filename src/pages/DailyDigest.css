@@ -40,9 +40,13 @@
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 var(--space-sm);
+  color: var(--text-primary);
+}
+.daily-title .accent {
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .daily-subtitle {
   font-size: 1.15rem;

@@ -68,9 +68,13 @@
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 var(--space-sm);
+  color: var(--text-primary);
+}
+.hero-heading .accent {
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-paragraph {

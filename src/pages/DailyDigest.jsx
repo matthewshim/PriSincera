@@ -238,7 +238,7 @@ export default function DailyDigest() {
       <section className="daily-hero">
         <div className="daily-hero-content">
           <div className="daily-hero-icon">☕</div>
-          <h1 className="daily-title">Daily Digest</h1>
+          <h1 className="daily-title">Daily <span className="accent">Digest</span></h1>
           <p className="daily-subtitle" style={{ lineHeight: '1.6' }}>
             넘쳐나는 정보 속에서 길을 잃지 마세요.<br/>
             매일 아침 배달되는 글로벌 트렌드 큐레이션, 실무 적용을 위한 AI 프롬프트,<br/>

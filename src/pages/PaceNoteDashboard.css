@@ -43,10 +43,14 @@
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 16px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+}
+.pacenote-title .accent {
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-family: var(--font-display);
+  background-clip: text;
 }
 
 .pacenote-subtitle {
