@@ -172,4 +172,28 @@
 
 ---
 
-*최종 업데이트: 2026-05-15 (v2.0 Premium Upgrade)*
+## 7. 🌌 3D WebGL & Physics System (Phase 2.0)
+
+PriSincera의 공간 디자인은 2D 평면을 넘어 Three.js 기반의 3D WebGL 영역으로 확장되었습니다. HTML DOM 요소와의 시각적 통일성을 위해 다음의 3D 전용 파라미터(Token)를 엄격히 준수합니다.
+
+### 7-1. Glassmorphism 3.0 (MeshTransmissionMaterial)
+3D 상의 유리(크리스탈) 객체는 단순한 투명도를 넘어 '굴절'과 '산란'을 시뮬레이션해야 합니다.
+* **Transmission (투과율):** `1.0` (완전 투명)
+* **Thickness (두께):** `0.5 ~ 0.8` (얇고 예리한 유리)
+* **Chromatic Aberration (색수차):** `0.15` (과하지 않은 영롱한 산란)
+* **Iridescence (무지갯빛 반사):** `1.0` (빛의 각도에 따른 고급스러운 무지개 반사)
+* **Attenuation Color (내부 굴절색):** `#6D28D9` (브랜드 메인 컬러)
+
+### 7-2. Volumetric Lighting & Space
+* **Point Light (내부 발광):** Intensity `0.5 ~ 0.8`, Color `#A78BFA` (은은한 라벤더)
+* **Ambient Light:** Intensity `0.4` (OLED 블랙 배경과 대비를 유지하기 위한 낮은 조도)
+* **Star Field (우주 배경):** `#C4B5FD` (보랏빛 별)와 `#7C3AED` (브랜드 컬러 먼지) 조합으로 깊이감 연출.
+
+### 7-3. Spring Physics Engine (Lerp & Damping)
+3D와 2D 상호작용의 타격감을 통일하기 위해, 선형적인 이동이 아닌 **감속(Damping)** 기반의 보간을 사용합니다.
+* **마우스 자성(Magnetic Hover):** `lerp(current, target, 0.05)` (매 프레임 5%씩 목표치로 이동, 부드러운 텐션)
+* **스크롤 전진(Zoom-in):** 스크롤 `progress` 값에 비례하여 Z축을 이동시키되, 즉각 반응하지 않고 `lerp`를 거쳐 멀미(Motion Sickness)를 방지합니다.
+
+---
+
+*최종 업데이트: 2026-05-15 (v2.0 Premium Upgrade & 3D WebGL 도입)*
