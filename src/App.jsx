@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import GoogleAnalytics from './components/common/GoogleAnalytics';
 
 /* ── Code Splitting: page-level lazy imports ── */
 const Home = lazy(() => import('./pages/Home'));
@@ -30,6 +31,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
+      <GoogleAnalytics />
       <Suspense fallback={PageFallback}>
         <Routes>
           {/* Admin — Layout 밖 (독립 레이아웃) */}
