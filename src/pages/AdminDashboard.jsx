@@ -542,17 +542,30 @@ function Dashboard({ token, adminEmail, onLogout }) {
                 color="#60A5FA" 
                 onClick={() => window.open('https://analytics.google.com/analytics/web/?utm_source=OGB&utm_medium=app&authuser=0#/a391399503p533055438/reports/intelligenthome', '_blank')} 
               />
-            </div>
-            {pipeline && (
-              <div className="admin-pipeline-summary" style={{ marginBottom: '24px' }}>
-                <h3>데이터 수집 상태</h3>
-                <div className={`admin-pipeline-badge ${pipeline.collector.status}`}>
-                  {pipeline.collector.status === 'success' ? '✅ 오늘 수집 완료' : '⏳ 대기 중'}
+              
+              {/* Pipeline Status Card (Spans 2 columns) */}
+              {pipeline && (
+                <div className="admin-stat-card stat-span-2" style={{ '--card-accent': pipeline.collector.status === 'success' ? '#10B981' : '#F59E0B' }}>
+                  <div className="pipeline-header">
+                    <div className="admin-stat-icon" style={{ margin: 0 }}>⚙️</div>
+                    <div className={`admin-pipeline-badge ${pipeline.collector.status}`}>
+                      {pipeline.collector.status === 'success' ? '✅ 오늘 수집 완료' : '⏳ 대기 중'}
+                    </div>
+                  </div>
+                  <div className="admin-stat-label" style={{ marginBottom: '16px' }}>데이터 수집 상태</div>
+                  <div className="pipeline-details">
+                    <div className="detail-item">
+                      <div className="detail-value">{pipeline.collector.lastRun || 'N/A'}</div>
+                      <div className="detail-label">최근 실행일</div>
+                    </div>
+                    <div className="detail-item">
+                      <div className="detail-value">{pipeline.totalDates}일</div>
+                      <div className="detail-label">누적 데일리</div>
+                    </div>
+                  </div>
                 </div>
-                <p>최근 실행: {pipeline.collector.lastRun || 'N/A'}</p>
-                <p>누적 데일리: {pipeline.totalDates}일</p>
-              </div>
-            )}
+              )}
+            </div>
             
             {/* Chart Area */}
             {emailLogs && emailLogs.length > 0 && (
