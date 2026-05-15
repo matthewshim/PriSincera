@@ -331,36 +331,38 @@
 /* ── Tabs Navigation ── */
 .daily-tabs-nav {
   position: sticky;
-  top: 60px; /* Header height */
+  top: 52px; /* Fixed: Matching exact GNB scrolled height */
   z-index: 100;
-  background: rgba(10, 7, 20, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(5, 5, 5, 0.85); /* Premium OLED Black Glass */
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 var(--space-md);
 }
 .daily-tabs-inner {
   display: flex;
   position: relative;
+  gap: var(--space-sm);
 }
 .daily-tab {
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-family: var(--font-display);
-  font-size: 1rem;
+  font-family: var(--font-body); /* Downgraded to body for hierarchy */
+  font-size: 0.875rem; /* Reduced size */
   font-weight: 500;
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-md); /* Reduced padding */
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-xs); /* 4px */
   transition: all var(--duration-fast) var(--ease-out);
   position: relative;
 }
 .daily-tab:hover {
-  color: var(--crystal-light);
+  color: var(--text-primary);
 }
 .daily-tab.active {
   color: var(--text-primary);
@@ -372,11 +374,11 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: var(--prism-lavender);
+  background: var(--gradient-brand); /* Upgraded to gradient brand */
   border-radius: 2px 2px 0 0;
 }
 .daily-tab-icon {
-  font-size: 1.2rem;
+  font-size: 1rem; /* Reduced icon size */
 }
 
 
@@ -622,8 +624,8 @@
 @media (max-width: 768px) {
   .daily-title { font-size: 2.2rem; }
   .daily-card { padding: 16px; }
-  .daily-tab { padding: 16px 12px; font-size: 0.9rem; }
-  .daily-tabs-nav { top: 52px; } /* GNB 모바일 높이에 맞춤 */
+  .daily-tab { padding: 12px 12px; font-size: 0.8rem; }
+  .daily-tabs-nav { top: 44px; } /* GNB 모바일 높이에 맞춤 (8+28+8=44) */
   
   .signal-articles-masonry, .archive-grid {
     grid-template-columns: 1fr;
