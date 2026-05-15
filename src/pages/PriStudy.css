@@ -326,7 +326,7 @@
   text-align: center;
   width: 100%;
   margin: 0 auto 32px auto;
-  border-bottom: 1px solid rgba(196, 181, 253, 0.1);
+  border-bottom: 1px solid var(--glass-border);
   padding-bottom: 24px;
 }
 
@@ -638,9 +638,9 @@
 }
 
 .pristudy-done-btn:disabled {
-  background: rgba(196, 181, 253, 0.1);
+  background: var(--glass-border);
   color: var(--text-muted);
-  border-color: rgba(196, 181, 253, 0.1);
+  border-color: var(--glass-border);
   box-shadow: none;
   cursor: not-allowed;
   transform: none;

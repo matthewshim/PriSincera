@@ -1,60 +1,69 @@
 /* ============================================
-   PriSincera — Global Design System
+   PriSincera — Premium Design System (v2.0)
    ============================================ */
 
 /* --- Design Tokens --- */
 :root {
-    --bg-void: #0A0714;
-    --bg-deep: #0F0A1E;
-    --bg-surface: #1A1035;
-    --bg-elevated: #231A46;
+    /* Base & Surfaces (OLED Black & Slate) */
+    --bg-void: #050505;
+    --bg-deep: #0A0A0A;
+    --bg-surface: #111111;
+    --bg-elevated: #1A1A1A;
 
-    --prism-violet: #7C3AED;
-    --prism-lavender: #C084FC;
-    --prism-rose: #F0ABFC;
-    --prism-amber: #FDE68A;
+    /* Brand Accents & Gradients */
+    --prism-violet: #6D28D9;
     --prism-deep: #4C1D95;
-    --prism-indigo: #818CF8;
-    --crystal-white: #E9D5FF;
-    --crystal-light: #C4B5FD;
-    --orbit-cyan: #22D3EE;
+    --prism-indigo: #4F46E5;
+    --prism-lavender: #A78BFA;
+    --prism-rose: #FBCFE8;
+    --prism-amber: #FDE68A;
+    --crystal-white: #FAFAFA;
+    --crystal-light: #E4E4E7;
+    --orbit-cyan: #06B6D4;
     --orbit-cyan-light: #67E8F9;
 
-    --text-primary: #F5F3FF;
-    --text-secondary: #A78BFA;
-    --text-muted: #6D5BA3;
+    /* Typography Colors (Maximum Legibility) */
+    --text-primary: #FAFAFA;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
 
-    --glass-bg: rgba(26, 16, 53, 0.5);
-    --glass-border: rgba(196, 181, 253, 0.1);
-    --glass-border-hover: rgba(196, 181, 253, 0.25);
+    /* Glassmorphism 2.0 */
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-border-hover: rgba(167, 139, 250, 0.3);
 
-    --gradient-brand: linear-gradient(135deg, #7C3AED, #C084FC, #F0ABFC, #FDE68A);
-    --gradient-subtle: linear-gradient(135deg, #7C3AED, #C084FC);
-    --gradient-cta: linear-gradient(135deg, #7C3AED, #A855F7, #C084FC);
+    /* Premium Gradients */
+    --gradient-brand: linear-gradient(135deg, #6D28D9, #A78BFA, #FBCFE8);
+    --gradient-subtle: linear-gradient(135deg, #6D28D9, #A78BFA);
+    --gradient-cta: linear-gradient(135deg, rgba(109, 40, 217, 0.15), rgba(167, 139, 250, 0.1));
 
-    --font-display: 'Outfit', 'Noto Sans KR', sans-serif;
-    --font-body: 'Noto Sans KR', 'Inter', sans-serif;
+    /* Typography Stack */
+    --font-display: 'Inter', 'Pretendard Variable', 'Pretendard', sans-serif;
+    --font-body: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    --space-xs: 6px;
-    --space-sm: 12px;
-    --space-md: 24px;
-    --space-lg: 32px;
-    --space-xl: 48px;
-    --space-2xl: 80px;
-    --space-3xl: 120px;
+    /* Geometry & Spatial System (8pt Grid) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 64px;
+    --space-3xl: 128px;
 
-    --radius-sm: 8px;
-    --radius-md: 16px;
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
     --radius-lg: 24px;
-    --radius-pill: 100px;
+    --radius-pill: 9999px;
 
+    /* Spring Physics Animation */
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-    --duration-fast: 0.3s;
-    --duration-normal: 0.6s;
-    --duration-slow: 1s;
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 0.2s;
+    --duration-normal: 0.4s;
+    --duration-slow: 0.8s;
 }
 
 /* --- Reset --- */

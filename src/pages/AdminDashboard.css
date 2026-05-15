@@ -24,8 +24,8 @@
 }
 
 :root {
-  --admin-bg: #0A0714;
-  --admin-surface: #1A1035;
+  --admin-bg: var(--bg-void);
+  --admin-surface: var(--bg-surface);
   --admin-surface-hover: #221645;
   --admin-border: rgba(196, 181, 253, 0.08);
   --admin-border-hover: rgba(196, 181, 253, 0.18);

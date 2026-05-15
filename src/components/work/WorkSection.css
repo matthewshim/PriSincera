@@ -379,7 +379,7 @@
     width: 24px; height: 24px;
     border-radius: 50%;
     background: #34D399;
-    color: #1a1035;
+    color: var(--bg-surface);
     display: flex; align-items: center; justify-content: center;
     font-weight: bold; font-size: 0.8rem;
 }

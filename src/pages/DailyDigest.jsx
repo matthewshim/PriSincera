@@ -100,7 +100,6 @@ export default function DailyDigest() {
                 const digest = await dRes.json();
                 return {
                   date: d,
-                  date: d,
                   theme: digest?.study?.theme || digest?.signal?.articles?.[0]?.category || '',
                   articles: digest?.signal?.articles || [],
                   promptSnippet: digest?.study?.prompt_snippet || '',

@@ -96,7 +96,7 @@
     background: rgba(10, 7, 20, 0.8);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(196, 181, 253, 0.1);
+    border: 1px solid var(--glass-border);
     border-radius: 20px;
     padding: 32px 24px;
     z-index: 1;
@@ -199,7 +199,7 @@
 .milestone.now .milestone-keyword {
     color: #C4B5FD;
     border-color: rgba(196, 181, 253, 0.3);
-    background: rgba(196, 181, 253, 0.1);
+    background: var(--glass-border);
 }
 
 /* --- Scroll Animation --- */

@@ -1,446 +1,175 @@
-# 📐 PriSincera Design System
+# 📐 PriSincera Design System (v2.0: The Premium Evolution)
 
-> 이 문서는 PriSincera 웹사이트의 디자인 시스템을 정리하고,  
-> 메인 페이지와 서브 페이지(PriSignal) 간의 일관성을 보장하기 위한 가이드입니다.
+> **"Sincerity, Prioritized."**
+> 본 문서는 PriSincera 웹사이트가 '세계 최고 수준(World-class)'의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 가이드라인입니다. 
+> 기존의 다소 채도가 높았던 네온(Neon)/퍼플(Purple) 톤을 탈피하고, **Apple, Linear, Vercel** 등 최상위 글로벌 SaaS 브랜드에서 사용하는 **'극도로 정제된 프리미엄 다크 모드(Premium Dark Mode)'**를 기준으로 재설계되었습니다.
 
 ---
 
-## 1. Design Tokens (CSS Custom Properties)
+## 1. 🎨 Color System: Refined & Sophisticated
 
-### 1-1. Color Palette
+**[문제점 분석]** 기존 시스템은 배경(`--bg-void`, `--bg-surface`)과 보조 텍스트(`--text-muted`)에 과도한 보라색이 섞여 있어, 텍스트가 많은 DailyDigest나 PaceNote에서 시각적 피로를 유발하고 명도 대비(Contrast)가 다소 부족했습니다.
+**[개선 방향]** 배경과 텍스트는 채도가 배제된 무채색(Subtle Tint) 흑백 계열로 정제하여 완벽한 가독성을 확보하고, 브랜드 컬러(Violet)는 오직 '결정적인 순간(CTA, 하이라이트)'에만 빛나도록 제한합니다.
 
-| Token | Hex | 용도 |
-|-------|-----|------|
-| `--bg-void` | `#0A0714` | 전역 배경 (가장 어두운 층) |
-| `--bg-deep` | `#0F0A1E` | 딥 배경 |
-| `--bg-surface` | `#1A1035` | 카드·섹션 배경 기본색 |
-| `--bg-elevated` | `#231A46` | 강조 영역 배경 |
-| `--prism-violet` | `#7C3AED` | 브랜드 메인 바이올렛 |
-| `--prism-lavender` | `#C084FC` | 라벤더 보조색 |
-| `--prism-rose` | `#F0ABFC` | 로즈 보조색 |
-| `--prism-amber` | `#FDE68A` | 앰버 액센트 |
-| `--crystal-white` | `#E9D5FF` | 밝은 크리스탈 |
-| `--crystal-light` | `#C4B5FD` | 중간 크리스탈 |
-| `--orbit-cyan` | `#22D3EE` | 시안 액센트 (링크, CTA) |
-| `--orbit-cyan-light` | `#67E8F9` | 밝은 시안 |
-| `--text-primary` | `#F5F3FF` | 주요 텍스트 |
-| `--text-secondary` | `#A78BFA` | 보조 텍스트 (강조) |
-| `--text-muted` | `#6D5BA3` | 보조 설명 텍스트 |
+### 1-1. Base & Surfaces (OLED Black & Slate)
+완벽한 대비를 위해 순수 블랙에 가까운 배경을 사용하고, 카드(Surface)는 투명도와 밝기(Lightness)로만 계층을 나눕니다.
 
-### 1-2. Gradients
+| Token | Hex (New) | 기존 대비 개선점 |
+|-------|-----------|------------------|
+| `--bg-void` | `#050505` | 기존(`#0A0714`)보다 더 깊고 순수한 블랙 (OLED 친화적, 몰입감 극대화) |
+| `--bg-surface` | `#111111` | 채도를 뺀 다크 그레이로 텍스트와의 명도 대비 향상 |
+| `--bg-elevated` | `#1A1A1A` | 플로팅 요소, 모달, 강조 카드 전용 |
+
+### 1-2. Typography Colors (Maximum Legibility)
+보라색 텍스트(`#6D5BA3`)를 배제하고, 철저한 명도 대비 기반의 뉴트럴 텍스트 토큰을 도입합니다.
+
+| Token | Hex / RGBA | 용도 및 기대 효과 |
+|-------|------------|-------------------|
+| `--text-primary` | `#FAFAFA` | 제목, 주요 본문 (순백색 `#FFF`의 눈부심 방지를 위해 오프화이트 사용) |
+| `--text-secondary`| `#A1A1AA` | 보조 텍스트, 서브타이틀 (시각적 안정감이 높은 Neutral Gray) |
+| `--text-muted` | `#71717A` | 비활성 텍스트, 부가 설명 (명도 대비 최소 기준 충족) |
+
+### 1-3. Brand Accents & Gradients (The "Aura")
+형광 느낌을 줄이고, 깊이 있고 우아한(Elegant) 브랜드 아우라를 형성합니다.
+
+| Token | Hex / Value | 용도 |
+|-------|-------------|------|
+| `--prism-violet` | `#6D28D9` | 메인 브랜드 액센트 (기존보다 채도를 살짝 낮춰 고급스러움 확보) |
+| `--prism-lavender`| `#A78BFA` | 서브 라이팅 효과, 상호작용 피드백 |
+| `--orbit-cyan` | `#06B6D4` | 정보성 강조, 테크(Tech) 시그널, 링크 색상 |
+| `--gradient-brand` | `linear-gradient(135deg, #6D28D9, #A78BFA, #FBCFE8)` | **우아한 오로라 그라디언트**. 대형 텍스트 Accent 및 핵심 Hero 요소 전용 |
+
+---
+
+## 2. 🔠 Typography: World-Class Readability
+
+글로벌 수준의 타이포그래피는 '어떤 디바이스에서도 완벽하게, 그리고 아름답게 읽히는 것'을 목표로 합니다.
+
+### 2-1. Font Family Stack (New Proposal)
+* **English / Display**: `Inter`, `Geist`, 혹은 `SF Pro Display` 도입 권장. (현재의 `Outfit`은 트렌디하지만, 가독성과 모던함 측면에서 `Inter` 계열이 압도적입니다.)
+* **Korean**: `Pretendard` 도입 권장. (`Noto Sans KR`의 고질적인 자간/행간 불균형 이슈를 완벽히 해결하는 최신 웹 표준)
+* **Monospace**: `JetBrains Mono` 유지. (디자인적 완성도가 매우 높습니다.)
+
+### 2-2. Dynamic Typography Scale (Fluid & Harmonious)
+단순한 픽셀 단위가 아닌, 기하학적 스케일에 기반한 폰트 시스템을 적용합니다.
+
+| 역할 | 폰트 | 사이즈 | line-height | letter-spacing |
+|------|------|--------|-------------|----------------|
+| **Display (Hero)** | `--font-display` | `clamp(2.5rem, 6vw, 4.5rem)` | `1.1` | `-0.03em` |
+| **Heading 1** | `--font-display` | `clamp(2rem, 4vw, 3rem)` | `1.2` | `-0.02em` |
+| **Heading 2** | `--font-display` | `1.5rem ~ 2rem` | `1.3` | `-0.01em` |
+| **Body Large** | `--font-body` | `1.125rem` (18px) | `1.6` | `0` |
+| **Body Base** | `--font-body` | `1rem` (16px) | `1.6` | `0` |
+| **Caption/Tag** | `--font-mono` | `0.75rem` (12px) | `1.4` | `0.05em` |
+
+---
+
+## 3. 📐 Geometry & Spatial System (The 8-Point Grid)
+
+불규칙한 스페이싱(`6px, 12px, 80px`)을 버리고, **엄격한 4pt / 8pt Grid System**을 도입합니다. 인간의 눈은 수학적 비례에서 무의식적인 편안함과 고급스러움을 느낍니다.
 
 | Token | 값 | 용도 |
 |-------|---|------|
-| `--gradient-brand` | `linear-gradient(135deg, #7C3AED, #C084FC, #F0ABFC, #FDE68A)` | **브랜드 하이라이트 그라디언트** — 제목 accent, 인디케이터 등 |
-| `--gradient-subtle` | `linear-gradient(135deg, #7C3AED, #C084FC)` | 장식 요소, 밑줄, 라인 등 |
-| `--gradient-cta` | `linear-gradient(135deg, #7C3AED, #A855F7, #C084FC)` | CTA 버튼 배경 |
+| `--space-xs` | `4px` | 요소 간 최소 간격 (아이콘과 텍스트) |
+| `--space-sm` | `8px` | 인라인 요소 간격, 작은 버튼 패딩 |
+| `--space-md` | `16px` | 컴포넌트 내부 패딩 (Input, Button) |
+| `--space-lg` | `24px` | 기본 카드 내부 패딩 |
+| `--space-xl` | `32px` | 대형 카드 내부 패딩, 섹션 내 그룹 간격 |
+| `--space-2xl` | `64px` | 주요 섹션 간 간격 |
+| `--space-3xl` | `128px` | 대형 Hero 여백, 페이지 상하단 여백 |
 
-### 1-3. Typography
-
+### 3-1. Border Radius (부드러운 곡선)
 | Token | 값 | 용도 |
 |-------|---|------|
-| `--font-display` | `'Outfit', 'Noto Sans KR', sans-serif` | **제목, 레이블, 강조** |
-| `--font-body` | `'Noto Sans KR', 'Inter', sans-serif` | 본문 텍스트 |
-| `--font-mono` | `'JetBrains Mono', monospace` | 코드, 카운터, 섹션 라벨 |
-
-### 1-4. Spacing Scale
-
-| Token | 값 | 용도 |
-|-------|---|------|
-| `--space-xs` | `6px` | 미세 간격 |
-| `--space-sm` | `12px` | 작은 간격 |
-| `--space-md` | `24px` | 기본 간격 |
-| `--space-lg` | `32px` | 큰 간격 |
-| `--space-xl` | `48px` | 섹션 패딩 |
-| `--space-2xl` | `80px` | 대형 섹션 간격 |
-| `--space-3xl` | `120px` | 최대 여백 |
-
-### 1-5. Border Radius
-
-| Token | 값 | 용도 |
-|-------|---|------|
-| `--radius-sm` | `8px` | 작은 요소 |
-| `--radius-md` | `16px` | 카드, 패널 |
-| `--radius-lg` | `24px` | 대형 컨테이너 |
-| `--radius-pill` | `100px` | 태그, 배지 |
-
-### 1-6. Animation
-
-| Token | 값 | 용도 |
-|-------|---|------|
-| `--ease-out` | `cubic-bezier(0.16, 1, 0.3, 1)` | 표준 ease-out |
-| `--ease-spring` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 바운스 효과 |
-| `--ease-smooth` | `cubic-bezier(0.4, 0, 0.2, 1)` | 부드러운 전환 |
-| `--duration-fast` | `0.3s` | 빠른 인터랙션 |
-| `--duration-normal` | `0.6s` | 일반 전환 |
-| `--duration-slow` | `1s` | 느린 등장 |
+| `--radius-sm` | `6px` | 체크박스, 작은 태그 |
+| `--radius-md` | `12px` | 일반 카드, 액션 버튼 |
+| `--radius-lg` | `24px` | Bento Grid의 대형 패널, 모달 창 |
+| `--radius-full`| `9999px` | Pill 모양 CTA 버튼 |
 
 ---
 
-## 2. Typography Scale (타이포그래피 규격)
+## 4. 🪞 Elevation & Glassmorphism 2.0
 
-### 2-1. 메인 페이지 기준 (정규화된 스케일)
+투명도 높은 보라색 배경에 의존하던 1세대를 넘어, **정밀한 1px 보더(Border)와 다중 그림자(Multi-layer Shadow)**를 활용한 하이엔드 글래스모피즘을 제안합니다.
 
-| 역할 | 폰트 | 사이즈 | weight | 적용 예시 |
-|------|------|--------|--------|----------|
-| **Hero Title** | `--font-display` | `clamp(2rem, 5vw, 3.5rem)` | 700 | "Sincerity, Prioritized." |
-| **Section Title** | `--font-display` | `clamp(1.8rem, 3.5vw, 2.5rem)` | 700 | "우리가 지나온 여정", "프로젝트" |
-| **Philosophy Title** | `--font-display` | `clamp(2rem, 4vw, 2.8rem)` | 700 | "복잡함 속에서, 별은 만들어집니다." |
-| **Body Lead** | `--font-body` | `clamp(1rem, 1.5vw, 1.1rem)` | 400 | 첫 리드 문장 (color: `--text-secondary`) |
-| **Body Text** | `--font-body` | `clamp(0.9rem, 1.3vw, 1rem)` | 400 | 설명 문단 (color: `--text-muted`) |
-| **Card Title** | `--font-display` | `1rem ~ 1.2rem` | 600 | 카드 헤딩 |
-| **Card Desc** | `--font-body` | `0.88rem ~ 0.9rem` | 400 | 카드 설명 |
-| **Section Label** | `--font-mono` | `0.7rem` | 400 | "// PHILOSOPHY" 등 모노 라벨 |
-| **Mono Tag** | `--font-mono` | `0.6rem ~ 0.65rem` | 400 | 태그, 카테고리 |
-| **Subtitle** | `--font-body` | `clamp(0.85rem, 1.3vw, 1rem)` | 400 | 섹션 부제 |
+### 4-1. Premium Card Surface (The "Jewel" Effect)
+기존 `--glass-bg`의 색상 혼입을 줄이고 순수한 화이트 투명도를 사용합니다.
 
-### 2-2. PriSignal 페이지 현재 적용
-
-| 역할 | 현재 사이즈 | 메인 기준 사이즈 | 상태 |
-|------|------------|----------------|------|
-| Hero Title | `clamp(2.2rem, 5vw, 3.5rem)` | `clamp(2rem, 5vw, 3.5rem)` | ✅ 일관 |
-| **Section Title** | `clamp(1.3rem, 2.5vw, 1.8rem)` | `clamp(1.8rem, 3.5vw, 2.5rem)` | ⚠️ **축소됨** |
-| **Value Card Title** | `1.05rem` | `1rem ~ 1.2rem` | ✅ 허용 범위 |
-| **Value Card Desc** | `0.85rem` | `0.88rem ~ 0.9rem` | ⚠️ 미세하게 작음 |
-| **Category Name** | `0.95rem` | `1rem` | ⚠️ 미세하게 작음 |
-| **Category Desc** | `0.8rem` | `0.88rem` | ⚠️ **작음** |
-| **Signal Desc** | `0.8rem` | `0.88rem` | ⚠️ **작음** |
-| **FAQ Question** | `0.95rem` | `1rem` | ⚠️ 미세하게 작음 |
-| **FAQ Answer** | `0.88rem` | `0.88rem` | ✅ 일치 |
-| **CTA Title** | `clamp(1.3rem, 2.5vw, 1.8rem)` | `clamp(1.8rem, 3.5vw, 2.5rem)` | ⚠️ **축소됨** |
-
----
-
-## 3. 텍스트 하이라이트 효과 (Accent Highlight)
-
-### 3-1. 표준 패턴 — 그라디언트 텍스트 하이라이트
-
-메인 페이지에서는 모든 섹션 타이틀에 **핵심 단어를 `gradient-brand`로 하이라이팅** 하는 패턴을 일관되게 사용합니다.
-
-#### CSS 규칙 (공통):
 ```css
-.accent {
-    background: var(--gradient-brand);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.premium-card {
+  /* 배경은 무채색 화이트의 극미한 투명도 */
+  background: rgba(255, 255, 255, 0.02);
+  
+  /* 고급스러운 블러 처리 */
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  
+  /* 테두리: 상단에만 미세하게 더 밝은 빛을 받는 느낌의 하이라이트 보더 */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  
+  /* 다중 그림자로 부유감(Depth) 생성 */
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 24px 40px -8px rgba(0, 0, 0, 0.3);
+    
+  transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
+}
+
+.premium-card:hover {
+  background: rgba(255, 255, 255, 0.035);
+  /* 호버시에만 브랜드 컬러가 은은하게 등장 */
+  border-color: rgba(167, 139, 250, 0.3); 
+  transform: translateY(-2px);
 }
 ```
 
-#### 메인 페이지 적용 현황:
+---
 
-| 섹션 | 텍스트 | accent 적용 |
-|------|--------|------------|
-| Hero | "Sincerity, **Prioritized.**" | ✅ "Prioritized." |
-| Philosophy | "복잡함 속에서, **별은 만들어집니다.**" | ✅ 두 번째 줄 |
-| Journey | "우리가 지나온 **여정**" | ✅ "여정" |
-| Work | "함께 만든 **결과물**" | ✅ "결과물" |
-| Declaration | "이것이 **PriSincera**입니다." | ✅ `<strong>` 그라디언트 |
+## 5. ⚡ Interaction & Animation
 
-#### PriSignal 페이지 적용 현황:
+프리미엄 UI의 핵심은 '물리법칙을 따르는 자연스러운 인터랙션'입니다.
 
-| 섹션 | 텍스트 | accent 적용 |
-|------|--------|------------|
-| Hero Title | "Pri**Signal**" | ✅ 적용됨 |
-| **Value Title** | "왜 PriSignal인가?" | ❌ **누락** |
-| **Categories Title** | "다루는 시그널" | ❌ **누락** |
-| **Signal Title** | "시그널을 고르는 기준" | ❌ **누락** |
-| **CTA Title** | "시그널을 놓치지 마세요" | ❌ **누락** |
-| **FAQ Title** | "자주 묻는 질문" | ❌ **누락** |
-| ~~Archive Title~~ | ~~"최근 시그널"~~ | — **제거됨** (v3, 탭 자체가 레이블) |
-| ~~Daily Title~~ | ~~"데일리 시그널"~~ | — **제거됨** (v3, 날짜가 핵심 정보) |
-
-### 3-2. `<strong>` 하이라이트 패턴
-
-메인에서는 본문 내 강조 텍스트를 `--text-secondary` 색상 또는 `gradient-brand` `<strong>`으로 처리합니다.
+### 5-1. Spring Physics 기반 Transition
+기존의 밋밋한 `ease-out`을 대체하는 텐션 있는 스프링 효과를 기본값으로 사용합니다.
 
 ```css
-/* 본문 내 강조 — Philosophy */
-.philosophy-lead strong {
-    color: var(--text-secondary);  /* #A78BFA */
-    font-weight: 500;
-}
-
-/* 선언문 내 브랜드명 — gradient */
-.declaration-text strong {
-    font-family: var(--font-display);
-    font-weight: 600;
-    background: var(--gradient-brand);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+:root {
+  /* 애플리케이션 전반에 쓰이는 쫀득한 스프링 곡선 */
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
 }
 ```
 
-PriSignal의 본문 텍스트에는 이러한 `<strong>` 하이라이트가 전혀 적용되어 있지 않습니다.
+### 5-2. Micro-Interactions (마이크로 인터랙션)
+- **Button Active State**: 클릭 시 `transform: scale(0.97)`을 주어 물리적 버튼을 누르는 실제적인 타격감을 부여합니다.
+- **Spotlight Glow**: 카드 호버 시 단순히 테두리 색상만 바뀌는 것이 아니라, 카드 내부 마우스 커서 위치를 따라다니는 빛 반사(Glow) 효과를 전역 카드 시스템에 통합합니다.
 
 ---
 
-## 4. Glassmorphism & Card 패턴
+## 6. 🧩 핵심 레이아웃 패턴 (The Unified Bento Grid)
 
-### 4-1. 섹션 컨테이너 (표준)
+현재 `PaceNoteDashboard`와 `BuildersLog`에 파편화된 **Bento Grid**를 메인 공식 UI 패턴으로 승격합니다.
 
-메인 페이지의 모든 콘텐츠 섹션은 **Glassmorphic 컨테이너**를 사용합니다:
-
-```css
-/* 표준 Glassmorphic Container */
-background: rgba(10, 7, 20, 0.72);
-backdrop-filter: blur(24px);
--webkit-backdrop-filter: blur(24px);
-border: 1px solid rgba(196, 181, 253, 0.06);
-border-radius: 24px;
-padding: var(--space-2xl) var(--space-xl);
-box-shadow:
-    0 4px 60px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(196, 181, 253, 0.04);
-```
-
-PriSignal의 경우 이 래핑 컨테이너가 없이 직접 바탕에 콘텐츠를 배치합니다. (의도된 디자인)
-
-### 4-2. 카드 스타일 (표준)
-
-```css
-/* 표준 Inner Card */
-background: rgba(26, 16, 53, 0.55);
-backdrop-filter: blur(16px);
--webkit-backdrop-filter: blur(16px);
-border: 1px solid rgba(196, 181, 253, 0.08);
-border-radius: 16px;
-cursor: pointer;  /* v4: 카드 전체 클릭 */
-```
-
-**Hover 효과 (표준):**
-```css
-border-color: rgba(196, 181, 253, 0.15);
-transform: translateY(-4px);
-box-shadow: 0 12px 40px rgba(124, 58, 237, 0.12),
-            0 0 1px rgba(196, 181, 253, 0.2);
-```
-
-**마우스 추적 글로우 (v4):**
-```css
-.card::before {
-  background: radial-gradient(
-    600px circle at var(--mouse-x) var(--mouse-y),
-    rgba(196,181,253,0.06), transparent 40%
-  );
-}
-```
-- JS에서 `--mouse-x`, `--mouse-y` CSS 변수를 카드에 전달
-
-### 4-3. Left Accent Line (카드 좌측 장식선)
-
-메인 페이지의 카드들은 좌측에 컬러 액센트 라인을 가집니다:
-
-```css
-&::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 20%; bottom: 20%;
-    width: 2px;
-    background: var(--card-accent, #C4B5FD);
-    opacity: 0.3;
-    transition: all var(--duration-normal) var(--ease-out);
-    border-radius: 1px;
-}
-```
-
-PriSignal 카테고리 카드에도 유사하게 적용되어 있어 **일관성 유지됨** ✅
-
-### 4-4. Work 섹션 카드 패턴 (v4 통일)
-
-두 카드 모두 동일한 `work-card` 구조:
-- **레이블**: `var(--font-mono)`, `var(--orbit-cyan)` — 두 카드 동일
-- **구조**: 좌측 아이콘 + 우측 (label > name+tag > desc > tags)
-- **PriSignal 카드**: `work-card.prisignal` 클래스, `--card-accent: var(--orbit-cyan)`
-- **PriSincera 카드**: `work-card.featured` 클래스, `--card-accent: #7C3AED`
+1. **Gaps**: 그리드 간격은 항상 `var(--space-lg)` (24px) 또는 `var(--space-md)` (16px) 유지.
+2. **Spans**: 12-column 그리드 체제를 표준으로 하여, 정보 위계에 따라 `span 8`, `span 4` (비대칭 2:1) 혹은 `span 7`, `span 5` 등 다이내믹한 조합 사용.
+3. **Internal Padding**: Bento 카드 내부는 상단 좌측 정렬을 기본으로 하되, 여백은 항상 `var(--space-lg)` (24px) 또는 `var(--space-xl)` (32px)로 고정하여 시각적 답답함을 원천 해소합니다.
 
 ---
 
-## 5. 섹션 라벨 패턴
+## 💡 요약: 세계 최고 수준의 코드로 거듭나기 위한 Action Plan
 
-### 메인 페이지 — Mono Section Label
+본 가이드라인에 따라 프론트엔드 코드(`index.css`, `App.jsx` 등)에 다음 사항을 순차 적용할 것을 권장합니다.
 
-```css
-.section-label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    opacity: 0.6;
-}
-
-/* Left gradient line */
-.section-label::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 50%;
-    width: 18px; height: 1px;
-    background: var(--gradient-subtle);
-}
-```
-
-**PriSignal**: Section Label 패턴이 사용되지 않음 (각 섹션이 h2 타이틀로 직접 시작). 이는 PriSignal이 랜딩 페이지 스타일이므로 의도된 것일 수 있으나, 일관성을 위해 검토 필요.
+1. **탈(脫) 퍼플 배경 선언**: `index.css`의 `:root` 토큰에서 배경색의 명도를 극도로 낮추고(`OLED Black`), 텍스트의 채도를 뺍니다(`Neutral Gray`). 가독성이 즉각적으로 향상됩니다.
+2. **폰트 스택 업그레이드**: `Pretendard`와 `Inter`를 메인 폰트로 교체하여 엔터프라이즈급 텍스트 렌더링 품질을 확보하세요.
+3. **8pt 그리드 정렬**: CSS 파일 전역에 흩어져 있는 `14px`, `10px`, `6px` 등의 마진/패딩 수치를 찾아내 `8, 16, 24, 32`의 배수로 일괄 조정(Refactoring) 하세요.
+4. **빛과 그림자의 재설계**: 단색 `border` 대신 반투명 화이트(`rgba(255,255,255,0.05)`)와 다중 섀도우를 통해 화면 공간감(Depth)을 혁신적으로 개선하세요.
 
 ---
 
-## 6. 불일치 요약 및 개선 가이드
-
-### 🔴 Critical — 즉시 수정 필요
-
-| 항목 | 현황 | 개선 방향 |
-|------|------|----------|
-| **섹션 타이틀 accent 누락** | 6개 섹션 타이틀에 gradient-brand 하이라이트 없음 | 핵심 키워드에 `.accent` 클래스 적용 |
-| **섹션 타이틀 사이즈** | `clamp(1.3rem, 2.5vw, 1.8rem)` — 메인 대비 축소 | `clamp(1.6rem, 3vw, 2.2rem)` 이상으로 조정 |
-
-### 🟡 Minor — 개선 권장
-
-| 항목 | 현황 | 개선 방향 |
-|------|------|----------|
-| 카드 설명 텍스트 사이즈 | `0.8rem ~ 0.85rem` | `0.88rem`로 통일 |
-| 카테고리 이름 사이즈 | `0.95rem` | `1rem`으로 조정 |
-| FAQ 질문 사이즈 | `0.95rem` | `1rem`으로 조정 |
-| 본문 `<strong>` 효과 | 미적용 | `color: var(--text-secondary)` 적용 검토 |
-
-### ✅ 일관성 유지됨
-
-| 항목 | 상태 |
-|------|------|
-| Hero Title 스케일 | ✅ |
-| 카드 배경 & 테두리 | ✅ |
-| 호버 효과 패턴 | ✅ |
-| 좌측 액센트 라인 | ✅ |
-| 폰트 패밀리 사용 | ✅ |
-| 색상 토큰 사용 | ✅ |
-| 스페이싱 토큰 사용 | ✅ |
-
----
-
-## 7. 섹션 타이틀 Accent 적용 가이드
-
-각 섹션 타이틀에 핵심 키워드를 그라디언트 하이라이팅 하는 표준 패턴:
-
-### JSX 패턴:
-```jsx
-<h2 className="prisignal-value-title">
-  왜 <span className="accent">PriSignal</span>인가?
-</h2>
-```
-
-### CSS 패턴 (이미 PriSignal Hero에 존재):
-```css
-.prisignal-value-title .accent,
-.prisignal-categories-title .accent,
-.prisignal-signal-title .accent,
-.prisignal-cta-title .accent,
-.prisignal-faq-title .accent,
-.prisignal-archive-title .accent {
-    background: var(--gradient-brand);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-```
-
-### 권장 accent 적용:
-
-| 섹션 | 전체 텍스트 | accent 대상 | 상태 |
-|------|-----------|------------|------|
-| Value | "왜 PriSignal인가?" | "PriSignal" | ❌ 미적용 |
-| Categories | "다루는 시그널" | "시그널" | ❌ 미적용 |
-| Signal | "시그널을 고르는 기준" | "기준" | ❌ 미적용 |
-| CTA | "시그널을 놓치지 마세요" | "시그널" | ❌ 미적용 |
-| FAQ | "자주 묻는 질문" | "질문" | ❌ 미적용 |
-| ~~Archive~~ | ~~"최근 시그널"~~ | — | **제거됨** |
-| ~~Daily~~ | ~~"데일리 시그널"~~ | — | **제거됨** |
-
----
-
-## 8. PriSignal Daily Detail — 컴포넌트 패턴
-
-> 파일: `src/pages/PriSignalDaily.jsx`, `src/pages/PriSignalDaily.css`
-
-### 8-1. 헤더 날짜 네비게이션
-
-```
-┌──────────────────────────────────────────────────┐
-│  ‹ 04-20(월)      21  4월 화요일      04-22(수) ›  │
-│                   [Daily List >]                  │
-└──────────────────────────────────────────────────┘
-```
-
-- `justify-content: space-between` — 화살표를 양 끝으로 밀어냄
-- 화살표: ghost 스타일 (테두리/배경 없음), hover 시 `color: --text-primary`
-- 날짜 숫자: `clamp(3rem, 8vw, 4.5rem)` + `--gradient-brand` 텍스트
-- Daily List 버튼: pill 형태, `/prisignal#daily`로 이동
-
-### 8-2. 필터 칩
-
-```
-[ 전체 21 ] [ ● DM 픽 5 ] [ ● AI & Future 7 ] [ ● Global 6 ] ...
-```
-
-- `--chip-color` CSS variable로 컬러 도트 색상 제어
-- DM 픽 필터: `isDmPick === true` 기준 필터링
-- 활성 필터: `rgba(196, 181, 253, 0.15)` 배경 + bold
-
-### 8-3. 아티클 카드
-
-```css
-/* 기본 카드 */
-background: rgba(255, 255, 255, 0.03);
-border: 1px solid rgba(255, 255, 255, 0.06);
-border-radius: 14px;
-
-/* DM Pick 카드 */
-border-color: rgba(196, 181, 253, 0.2);
-background: rgba(196, 181, 253, 0.04);
-```
-
-### 8-4. 에디터 코멘트 (v4 — Editor's Signal)
-
-```css
-border-left: 3px solid rgba(196, 181, 253, 0.3);
-padding-left: 14px;
-/* CSS grid 기반 부드러운 접힘/펼침 */
-display: grid;
-grid-template-rows: 0fr; /* 접힘 */
-grid-template-rows: 1fr; /* 펼침 */
-```
-
-- 큰따옴표(") 아이콘 + "Editor's Signal" 라벨
-- 접힌 상태에서 첫 1줄 프리뷰 노출
-- `stopPropagation()`으로 카드 전체 클릭과 독립 동작
-- 기본 템플릿 문구 자동 필터링 (`isDefaultComment()` 함수)
-
-### 8-5. 구독 메타 텍스트 규칙 (v4)
-
-"매일 발송 · 무료 · 언제든 해지" 텍스트는 UI 안내 텍스트이므로:
-- **폰트**: `var(--font-body)` (Noto Sans KR) — `font-mono` 사용 금지
-- **사이즈**: `0.72rem`, `letter-spacing: 0.02em`
-
-> `--font-mono`는 숫자 카운트, 날짜, 기술 데이터 전용입니다.
-
-### 8-6. 망원경 커서 (v4 최적화)
-
-- 크기: 120px → **80px** (클릭 대상 가시성 향상)
-- React state 0개: `classList` 직접 조작 (리렌더 제거)
-- GPU 가속: `transform: translate()` + `will-change: transform`
-- DOM 쿼리: `getBoundingClientRect()` 30프레임마다 1회
-- `prefers-reduced-motion: reduce` 대응
-
----
-
-## 9. 반응형 브레이크포인트
-
-| 브레이크포인트 | 변경 내용 |
-|--------------|----------|
-| `≤ 1024px` | 2열 그리드 → 1열, 텍스트 패딩 리셋 |
-| `≤ 768px` | 모바일 레이아웃, 패딩 축소, GNB 높이 변경, 망원경 커서 숨김 |
-| `≤ 640px` | Daily Detail: 날짜 폰트 축소(2.5rem), 화살표 라벨 숨김, 카드 패딩 축소, 탭 바 마진 축소 |
-
----
-
-*최종 업데이트: 2026-04-28*
+*최종 업데이트: 2026-05-15 (v2.0 Premium Upgrade)*

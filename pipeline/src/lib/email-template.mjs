@@ -71,7 +71,7 @@ function renderDmPickCard(article, index) {
            style="margin:12px 0 16px;">
       <tr>
         <td style="border-left:3px solid #7C3AED; background:rgba(124,58,237,0.06); padding:10px 14px; border-radius:0 8px 8px 0;">
-          <p style="margin:0; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:13px; color:#A78BFA; line-height:1.6; font-style:italic;">
+          <p style="margin:0; font-family:'Pretendard',-apple-system,sans-serif; font-size:13px; color:#A1A1AA; line-height:1.6; font-style:italic;">
             💬 ${escapeHtml(article.editorComment)}
           </p>
         </td>
@@ -81,7 +81,7 @@ function renderDmPickCard(article, index) {
 
   return `
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
-       style="margin-bottom:16px; background-color:#1A1035; border:1px solid rgba(196,181,253,0.08); border-radius:16px;">
+       style="margin-bottom:16px; background-color:#111111; border:1px solid rgba(255,255,255,0.05); border-top:1px solid rgba(255,255,255,0.1); border-radius:16px;">
   <tr>
     <td style="padding:20px 22px;">
       <!-- Meta row -->
@@ -91,18 +91,18 @@ function renderDmPickCard(article, index) {
             <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:${catColor}; background:rgba(124,58,237,0.12); border:1px solid rgba(124,58,237,0.25); border-radius:100px; padding:3px 12px; letter-spacing:0.02em;">
               ${icon} DM Pick · ${escapeHtml(catName)}
             </span>
-            <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3; margin-left:8px;">
+            <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#71717A; margin-left:8px;">
               ★ ${score}${tierBadge} · ${escapeHtml(article.source)}
             </span>
           </td>
         </tr>
       </table>
       <!-- Title -->
-      <p style="margin:0 0 8px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:16px; font-weight:700; color:#F5F3FF; line-height:1.5;">
+      <p style="margin:0 0 8px; font-family:'Pretendard',-apple-system,sans-serif; font-size:16px; font-weight:700; color:#FFFFFF; line-height:1.5;">
         ${index + 1}. ${escapeHtml(article.title)}
       </p>
       <!-- Summary -->
-      <p style="margin:0 0 4px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#E9D5FF; line-height:1.7;">
+      <p style="margin:0 0 4px; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; color:#FAFAFA; line-height:1.7;">
         ${escapeHtml(article.summary || '')}
       </p>
       ${commentHtml}
@@ -112,7 +112,7 @@ function renderDmPickCard(article, index) {
           <td bgcolor="#7C3AED"
               style="background:linear-gradient(135deg,#7C3AED,#A855F7); border-radius:100px; padding:8px 22px;">
             <a href="${escapeHtml(article.url)}"
-               style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+               style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
               → 원문 읽기
             </a>
           </td>
@@ -134,16 +134,16 @@ function renderMoreSignals(articles, dailyPageUrl) {
        style="margin-top:8px;">
   <tr>
     <td style="padding: 24px; background: rgba(196,181,253,0.05); border: 1px solid rgba(196,181,253,0.1); border-radius: 12px; text-align: center;">
-      <p style="margin:0 0 12px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:16px; font-weight:700; color:#C084FC; line-height:1.3;">
+      <p style="margin:0 0 12px; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:16px; font-weight:700; color:#C084FC; line-height:1.3;">
         ✨ 더 많은 시그널이 기다리고 있어요!
       </p>
-      <p style="margin:0 0 20px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA; line-height:1.5;">
+      <p style="margin:0 0 20px; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; color:#A1A1AA; line-height:1.5;">
         이 외에도 ${otherArticles.length}개의 유익한 IT Tech Signal 아티클이 준비되어 있습니다. 전체 리스트와 상세 인사이트를 웹에서 바로 확인해 보세요.
       </p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
         <tr>
           <td bgcolor="#7C3AED" style="background:linear-gradient(135deg,#7C3AED,#A855F7); border-radius:100px; padding:10px 24px;">
-            <a href="${escapeHtml(dailyPageUrl)}" style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+            <a href="${escapeHtml(dailyPageUrl)}" style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
               → 더 많은 시그널 보러가기
             </a>
           </td>
@@ -162,9 +162,9 @@ function renderPortalCTA(dailyPageUrl) {
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
        style="margin-top:24px;">
   <tr>
-    <td align="center" bgcolor="#1A1035"
+    <td align="center" bgcolor="#111111"
         style="background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.15); border-radius:16px; padding:24px;">
-      <p style="margin:0 0 14px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA;">
+      <p style="margin:0 0 14px; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; color:#A1A1AA;">
         📡 오늘의 전체 시그널을 확인하세요
       </p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0">
@@ -172,7 +172,7 @@ function renderPortalCTA(dailyPageUrl) {
           <td bgcolor="#7C3AED"
               style="background:linear-gradient(135deg,#7C3AED,#A855F7,#C084FC); border-radius:100px; padding:13px 36px;">
             <a href="${escapeHtml(dailyPageUrl)}"
-               style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:14px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+               style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:14px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
               데일리 포털에서 확인하기 →
             </a>
           </td>
@@ -199,7 +199,7 @@ function renderStudySection(studyData, date) {
   </tr>
   <tr>
     <td style="padding: 0 24px;">
-      <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#10B981; line-height:1.3;">
+      <p style="margin:0 0 16px; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#10B981; line-height:1.3;">
         🚀 Skill Up 1-Pick
       </p>
   `;
@@ -208,7 +208,7 @@ function renderStudySection(studyData, date) {
   if (studyData.prompt_snippet) {
     html += `
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
-             style="background-color:#1A1035; border:1px solid rgba(34, 211, 238, 0.15); border-radius:16px; margin-bottom: 16px;">
+             style="background-color:#111111; border:1px solid rgba(34, 211, 238, 0.15); border-radius:16px; margin-bottom: 16px;">
         <tr>
           <td style="padding:20px 22px;">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -217,16 +217,16 @@ function renderStudySection(studyData, date) {
                   <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#22D3EE; background:rgba(34, 211, 238, 0.12); border:1px solid rgba(34, 211, 238, 0.25); border-radius:100px; padding:3px 12px; letter-spacing:0.02em;">
                     🤖 AI 프롬프트 1-Pick
                   </span>
-                  <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3; margin-left:8px;">
+                  <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#71717A; margin-left:8px;">
                     실무 활용 스니펫
                   </span>
                 </td>
               </tr>
             </table>
-            <div style="margin:0 0 12px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#E9D5FF; line-height:1.6; padding: 12px; background: rgba(34, 211, 238, 0.05); border: 1px solid rgba(34,211,238,0.1); border-radius: 8px;">
+            <div style="margin:0 0 12px; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; color:#FAFAFA; line-height:1.6; padding: 12px; background: rgba(34, 211, 238, 0.05); border: 1px solid rgba(34,211,238,0.1); border-radius: 8px;">
               ${escapeHtml(studyData.prompt_snippet).replace(/\\n/g, '<br>')}
             </div>
-            <p style="margin:0; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:13px; color:#A78BFA; line-height:1.6;">
+            <p style="margin:0; font-family:'Pretendard',-apple-system,sans-serif; font-size:13px; color:#A1A1AA; line-height:1.6;">
               ${escapeHtml(studyData.explanation || '')}
             </p>
           </td>
@@ -239,7 +239,7 @@ function renderStudySection(studyData, date) {
   if (studyData.sentence_jp) {
     html += `
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
-             style="background-color:#1A1035; border:1px solid rgba(16,185,129,0.15); border-radius:16px;">
+             style="background-color:#111111; border:1px solid rgba(16,185,129,0.15); border-radius:16px;">
         <tr>
           <td style="padding:20px 22px;">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -248,16 +248,16 @@ function renderStudySection(studyData, date) {
                   <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#10B981; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); border-radius:100px; padding:3px 12px; letter-spacing:0.02em;">
                     🇯🇵 비즈니스 일본어 1-Pick
                   </span>
-                  <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#6D5BA3; margin-left:8px;">
+                  <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#71717A; margin-left:8px;">
                     ${escapeHtml(studyData.theme || '오늘의 표현')}
                   </span>
                 </td>
               </tr>
             </table>
-            <p style="margin:0 0 8px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#F5F3FF; line-height:1.5;">
+            <p style="margin:0 0 8px; font-family:'Pretendard',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#FFFFFF; line-height:1.5;">
               ${escapeHtml(studyData.sentence_jp)}
             </p>
-            <p style="margin:0 0 16px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA; line-height:1.6;">
+            <p style="margin:0 0 16px; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; color:#A1A1AA; line-height:1.6;">
               ${escapeHtml(studyData.sentence_kr)}
             </p>
           </td>
@@ -272,7 +272,7 @@ function renderStudySection(studyData, date) {
           <td bgcolor="#8B5CF6"
               style="background:linear-gradient(135deg,#8B5CF6,#6D28D9); border-radius:100px; padding:8px 22px;">
             <a href="https://www.prisincera.com/pacenote"
-               style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+               style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
               → 나만의 궤도 기록하기 (Pace Note)
             </a>
           </td>
@@ -349,17 +349,17 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
     }
     /* Dark Mode Override */
     @media (prefers-color-scheme: light) {
-      .email-body-outer { background-color: #0A0714 !important; }
+      .email-body-outer { background-color: #050505 !important; }
       .email-container { background-color: transparent !important; }
     }
   </style>
 </head>
-<body style="margin:0; padding:0; background-color:#0A0714; font-family:'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+<body style="margin:0; padding:0; background-color:#050505; font-family:'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
 
   <!-- Wrapper -->
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
          class="email-body-outer"
-         style="background-color:#0A0714;">
+         style="background-color:#050505;">
     <tr>
       <td align="center" style="padding: 0;">
 
@@ -379,14 +379,14 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
                 </tr>
                 <tr>
                   <td align="center">
-                    <h1 style="margin:0; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:28px; font-weight:700; color:#F5F3FF; letter-spacing:-0.02em;">
+                    <h1 style="margin:0; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:28px; font-weight:700; color:#FFFFFF; letter-spacing:-0.02em;">
                       Pri<span style="color:#C084FC;">Sincera</span>
                     </h1>
                   </td>
                 </tr>
                 <tr>
                   <td align="center" style="padding-top: 8px;">
-                    <p style="margin:0; font-family:'Inter','Noto Sans KR',-apple-system,sans-serif; font-size:13px; color:#6D5BA3; line-height:1.5; letter-spacing:0.02em;">
+                    <p style="margin:0; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; color:#71717A; line-height:1.5; letter-spacing:0.02em;">
                       Daily Insights & Study
                     </p>
                   </td>
@@ -398,14 +398,14 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
           <!-- Date + Stats -->
           <tr>
             <td align="center" style="padding: 0 24px 12px;">
-              <p style="margin:0 0 20px; font-family:'Noto Sans KR',-apple-system,sans-serif; font-size:14px; color:#A78BFA; text-align:center;">
+              <p style="margin:0 0 20px; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; color:#A1A1AA; text-align:center;">
                 ${dateKR}, 오늘 하루 성장을 위한 시그널과 배움을 전해드립니다.
               </p>
               <table role="presentation" cellpadding="0" cellspacing="0" border="0"
-                     style="background-color:rgba(26,16,53,0.6); border:1px solid rgba(196,181,253,0.08); border-radius:12px;">
+                     style="background-color:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-top:1px solid rgba(255,255,255,0.1); border-radius:12px;">
                 <tr>
                   <td style="padding:14px 20px; text-align:center;">
-                    <span style="font-family:'Inter',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#E9D5FF;">
+                    <span style="font-family:'Inter',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FAFAFA;">
                       📊 전체 ${totalCount}건
                     </span>
                   </td>
@@ -440,7 +440,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
           <!-- ═══ DM PICK SECTION ═══ -->
           <tr>
             <td style="padding: 0 24px;">
-              <p style="margin:0 0 16px; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#22D3EE; line-height:1.3;">
+              <p style="margin:0 0 16px; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#22D3EE; line-height:1.3;">
                 📰 IT Tech Signal
               </p>
               ${dmPickCards}
@@ -489,7 +489,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
                 <tr>
                   <td align="center" style="padding-bottom: 12px;">
                     <a href="https://www.prisincera.com"
-                       style="font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:13px; color:#A78BFA; text-decoration:none;">
+                       style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; color:#A1A1AA; text-decoration:none;">
                       ✦ prisincera.com
                     </a>
                   </td>
@@ -497,7 +497,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
                 <!-- Tagline -->
                 <tr>
                   <td align="center" style="padding-bottom: 16px;">
-                    <p style="margin:0; font-size:12px; color:#6D5BA3; line-height:1.6;">
+                    <p style="margin:0; font-size:12px; color:#71717A; line-height:1.6;">
                       20년차 PO의 기준으로 설계된 AI 큐레이션 뉴스레터
                     </p>
                   </td>
@@ -508,7 +508,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
                     <p style="margin:0; font-size:11px; color:#4A3D6E;">
                       더 이상 받고 싶지 않으시면
                       <a href="${escapeHtml(unsubscribeUrl)}"
-                         style="color:#6D5BA3; text-decoration:underline;">구독을 해지</a>할 수 있습니다.
+                         style="color:#71717A; text-decoration:underline;">구독을 해지</a>할 수 있습니다.
                     </p>
                   </td>
                 </tr>
@@ -519,7 +519,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
           <!-- ═══ Brand Footer ═══ -->
           <tr>
             <td align="center" style="padding: 8px 24px 40px;">
-              <p style="margin:0; font-family:'Outfit','Noto Sans KR',-apple-system,sans-serif; font-size:11px; color:#4A3D6E; letter-spacing:0.05em;">
+              <p style="margin:0; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:11px; color:#4A3D6E; letter-spacing:0.05em;">
                 © 2026 PriSincera · Sincerity, Prioritized.
               </p>
             </td>

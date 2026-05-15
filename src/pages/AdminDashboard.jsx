@@ -551,7 +551,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             
             {/* Chart Area */}
             {emailLogs && emailLogs.length > 0 && (
-              <div className="admin-chart-container" style={{ background: '#1A1035', padding: '24px', borderRadius: '16px', border: '1px solid rgba(196,181,253,0.1)' }}>
+              <div className="admin-chart-container" style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
                 <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', color: '#E9D5FF' }}>최근 데일리 발송 추이</h3>
                 <div style={{ width: '100%', height: 300 }}>
                   <ResponsiveContainer>
@@ -560,7 +560,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} tickFormatter={str => str.substring(5)} />
                       <YAxis stroke="#9CA3AF" fontSize={12} allowDecimals={false} />
                       <Tooltip 
-                        contentStyle={{ backgroundColor: '#0A0714', borderColor: 'rgba(196,181,253,0.2)', borderRadius: '8px' }}
+                        contentStyle={{ backgroundColor: 'var(--bg-void)', borderColor: 'rgba(196,181,253,0.2)', borderRadius: '8px' }}
                         itemStyle={{ color: '#F5F3FF' }}
                       />
                       <Line type="monotone" name="수신" dataKey="totalRecipients" stroke="#7C3AED" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />

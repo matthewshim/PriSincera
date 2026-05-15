@@ -13,7 +13,7 @@ const BuildersLog = lazy(() => import('./pages/BuildersLog'));
 
 /** Minimal loading fallback — invisible, prevents layout shift */
 const PageFallback = (
-  <div style={{ minHeight: '100vh', background: 'var(--bg-void, #0A0714)' }} />
+  <div style={{ minHeight: '100vh', background: 'var(--bg-void, var(--bg-void))' }} />
 );
 
 function ScrollToTop() {
