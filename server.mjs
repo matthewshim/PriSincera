@@ -384,9 +384,9 @@ app.use(async (req, res) => {
   let image = `${baseUrl}/favicon-512x512.png`; // Fallback image
 
   try {
-    const signalMatch = req.originalUrl.match(/^\/signal\/(\d{4}-\d{2}-\d{2})/);
-    if (signalMatch) {
-      const dateStr = signalMatch[1];
+    const dailyMatch = req.originalUrl.match(/^\/daily\/(\d{4}-\d{2}-\d{2})/);
+    if (dailyMatch) {
+      const dateStr = dailyMatch[1];
       const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
       let signalData = await getDailySignal(dateStr);
       
@@ -400,18 +400,15 @@ app.use(async (req, res) => {
       if (signalData && signalData.articles && signalData.articles.length > 0) {
         // Find top article for SEO representation
         const topArticle = signalData.articles.sort((a,b) => (b.weightedScore||0) - (a.weightedScore||0))[0];
-        title = `${topArticle.title} | Signal — PriSincera`;
+        title = `${topArticle.title} | Daily Digest — PriSincera`;
         description = topArticle.summary ? topArticle.summary.substring(0, 150) + '...' : description;
         image = topArticle.ogImage || image;
       } else {
-        title = `${dateStr}의 시그널 | Signal — PriSincera`;
+        title = `${dateStr} Daily Digest | PriSincera`;
       }
-    } else if (req.originalUrl.startsWith('/signal')) {
-      title = 'Signal — 노이즈 속에서 시그널을 포착하다 | PriSincera';
-      description = 'IT, AI, 비즈니스 분야의 노이즈를 걸러내고 가장 중요한 시그널만 선별하여 매일 아침 전해드립니다.';
-    } else if (req.originalUrl.startsWith('/study')) {
-      title = 'Study — 하루 5분, 실무 지식 1-Pick | PriSincera';
-      description = '매일 핵심 비즈니스 및 테크 지식을 학습하는 PriStudy 공간입니다.';
+    } else if (req.originalUrl.startsWith('/daily')) {
+      title = 'Daily Digest — 노이즈 속의 시그널과 실무 지식 | PriSincera';
+      description = '매일 아침, 전 세계 비즈니스/테크 동향 중 가장 중요한 시그널과 핵심 실무 지식(Study)을 선별해 전해드립니다.';
     } else if (req.originalUrl.startsWith('/pacenote')) {
       title = 'Pace Note — 목표와 회고 | PriSincera';
     }
