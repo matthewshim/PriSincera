@@ -67,6 +67,18 @@ export default function PaceNoteDashboard() {
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [addingTask, setAddingTask] = useState(false);
   const [showWeekCalendar, setShowWeekCalendar] = useState(false);
+  const [omnibarFocused, setOmnibarFocused] = useState(false);
+  const [isRefreshingRecs, setIsRefreshingRecs] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.pacenote-omnibar-container')) {
+        setOmnibarFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // 주차 탐색용 데이터 연산
   const { pastWeeks, currentWeek, futureWeeks, allWeeks } = useMemo(() => {
@@ -236,12 +248,40 @@ export default function PaceNoteDashboard() {
           current: { ...prev.current, currentPace: result.currentPace }
         }));
         setNewTaskTitle('');
+        setOmnibarFocused(false);
       }
     } catch (err) {
       console.error(err);
     } finally {
       setAddingTask(false);
     }
+  };
+
+  const refreshRecommendations = async (e) => {
+    e?.stopPropagation();
+    setIsRefreshingRecs(true);
+    // TODO: Connect to backend API: GET /api/pacenote/recommend
+    // For now, mock the refresh with a new dummy set
+    setTimeout(() => {
+      const DUMMY_POOL = [
+        { id: 'r1', title: '이번 주 감사했던 일 3가지 적어보기', category: 'Mindset', color: '#34D399' },
+        { id: 'r2', title: '동료에게 따뜻한 피드백 전달하기', category: 'Networking', color: '#A78BFA' },
+        { id: 'r3', title: '관심 분야 아티클 1편 정독하기', category: 'Learning', color: '#60A5FA' },
+        { id: 'r4', title: '하루 15분 명상으로 뇌 휴식하기', category: 'Health', color: '#F472B6' },
+        { id: 'r5', title: '업무 자동화 아이디어 1개 구상하기', category: 'Productivity', color: '#FBBF24' },
+        { id: 'r6', title: '오랜만에 지인에게 안부 연락하기', category: 'Networking', color: '#A78BFA' },
+        { id: 'r7', title: '잠들기 전 10분 스트레칭 하기', category: 'Health', color: '#10B981' },
+        { id: 'r8', title: '나만의 우선순위 선언문 작성하기', category: 'Focus', color: '#C084FC' },
+        { id: 'r9', title: '사용하지 않는 앱과 알림 끄기', category: 'Digital Detox', color: '#9CA3AF' }
+      ];
+      // Shuffle and pick 5
+      const shuffled = DUMMY_POOL.sort(() => 0.5 - Math.random()).slice(0, 5);
+      setData(prev => ({
+        ...prev,
+        current: { ...prev.current, recommendedPace: shuffled }
+      }));
+      setIsRefreshingRecs(false);
+    }, 800);
   };
 
   const handleLoginClick = async () => {
@@ -408,48 +448,77 @@ export default function PaceNoteDashboard() {
                         <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>기록된 궤도가 없습니다.</div>
                       )}
                       
-                      {/* Add Custom Task Input */}
+                      {/* ── Omni-Orbit Input (Consolidated Search & AI) ── */}
                       {isCurrent && (
-                        <form className="pacenote-add-form" onSubmit={handleAddTask}>
-                          <span className="add-icon">+</span>
-                          <input 
-                            type="text" 
-                            className="pacenote-add-input"
-                            placeholder="나만의 새로운 목표 궤도를 추가하세요..." 
-                            value={newTaskTitle}
-                            onChange={(e) => setNewTaskTitle(e.target.value)}
-                            disabled={addingTask}
-                          />
-                          <button type="submit" className="pacenote-add-btn" disabled={addingTask || !newTaskTitle.trim()}>
-                            추가
-                          </button>
-                        </form>
-                      )}
-                      
-                      {isCurrent && paceList && paceList.length > 0 && paceList.every(t => t.completed) && (
-                        <div className="pacenote-celebration">
-                          🎉 이번 주 궤도 안착 완료! 단단한 한 걸음이 되었습니다.
-                        </div>
-                      )}
-
-                      {/* ── AI Recommendations (Right below Add Form) ── */}
-                      {isCurrent && data.current.recommendedPace && data.current.recommendedPace.length > 0 && (
-                        <div className="pacenote-ai-section" style={{ marginTop: '32px', marginBottom: '0' }}>
-                          <div className="pacenote-ai-header">
-                            <h2>AI 추천 가이드 <span className="pacenote-ai-badge">✨ Gemini</span></h2>
-                            <p>나의 주도적 성장을 위해 지속적으로 제안하는 새로운 액션입니다.</p>
+                        <div className="pacenote-omnibar-container" onClick={() => setOmnibarFocused(true)}>
+                          <div className={`pacenote-omnibar ${omnibarFocused ? 'focused' : ''}`}>
+                            <span className="omnibar-icon">✨</span>
+                            <input 
+                              type="text" 
+                              className="omnibar-input"
+                              placeholder="새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요..." 
+                              value={newTaskTitle}
+                              onChange={(e) => setNewTaskTitle(e.target.value)}
+                              onFocus={() => setOmnibarFocused(true)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleAddTask(e);
+                              }}
+                              disabled={addingTask}
+                            />
+                            {newTaskTitle.trim() && (
+                              <button className="omnibar-submit-btn" onClick={handleAddTask} disabled={addingTask}>
+                                ↵ 궤도로 추가
+                              </button>
+                            )}
                           </div>
-                          <div className="pacenote-ai-scroll">
-                            {data.current.recommendedPace.map((rec) => (
-                              <div key={rec.id} className="pacenote-recommend-item">
-                                <div className="pacenote-rec-cat" style={{ color: rec.color || '#22D3EE' }}>{rec.category}</div>
-                                <div className="pacenote-rec-title">{rec.title}</div>
-                                <button className="pacenote-btn-accept" onClick={() => acceptRecommend(rec.id)}>
-                                  내 궤도에 추가하기
-                                </button>
+                          
+                          {omnibarFocused && (
+                            <div className="omnibar-dropdown">
+                              <div className="omnibar-dropdown-header">
+                                <span className="omnibar-dropdown-title">
+                                  {newTaskTitle.trim() ? '검색 및 연관 추천' : 'AI 추천 가이드'}
+                                </span>
+                                {!newTaskTitle.trim() && (
+                                  <button className="omnibar-refresh-btn" onClick={refreshRecommendations} disabled={isRefreshingRecs}>
+                                    {isRefreshingRecs ? '🔄 갱신 중...' : '🔄 다른 추천 보기'}
+                                  </button>
+                                )}
                               </div>
-                            ))}
-                          </div>
+                              <div className="omnibar-dropdown-list">
+                                {newTaskTitle.trim() && (
+                                  <div className="omnibar-rec-item add-custom" onClick={handleAddTask}>
+                                    <div className="rec-icon">+</div>
+                                    <div className="rec-content">
+                                      <div className="rec-title">"{newTaskTitle}" 직접 추가하기</div>
+                                      <div className="rec-desc">입력한 내용으로 새로운 궤도를 생성합니다.</div>
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {(() => {
+                                  const currentRecs = data.current.recommendedPace || [];
+                                  const filteredRecs = newTaskTitle.trim() 
+                                    ? currentRecs.filter(r => r.title.includes(newTaskTitle) || r.category.includes(newTaskTitle))
+                                    : currentRecs;
+                                  
+                                  if (filteredRecs.length === 0) {
+                                    return <div className="omnibar-empty">관련된 AI 추천이 없습니다.</div>;
+                                  }
+
+                                  return filteredRecs.map((rec) => (
+                                    <div key={rec.id} className="omnibar-rec-item" onClick={() => acceptRecommend(rec.id)}>
+                                      <div className="rec-icon" style={{ color: rec.color || '#A78BFA' }}>✦</div>
+                                      <div className="rec-content">
+                                        <div className="rec-cat" style={{ color: rec.color || '#A78BFA' }}>{rec.category}</div>
+                                        <div className="rec-title">{rec.title}</div>
+                                      </div>
+                                      <div className="rec-action">추가</div>
+                                    </div>
+                                  ));
+                                })()}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
