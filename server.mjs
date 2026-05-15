@@ -361,14 +361,87 @@ app.get('/api/temp-logs', async (req, res) => {
   }
 });
 
-// --- SPA fallback (Express 5 compatible) ---
-app.use((req, res) => {
+// --- SPA fallback & Dynamic SEO Proxy ---
+let cachedIndexHtml = null;
+
+app.use(async (req, res) => {
   const indexPath = join(DIST_DIR, 'index.html');
-  if (existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.status(404).send('Not Found');
+  if (!existsSync(indexPath)) {
+    return res.status(404).send('Not Found');
   }
+
+  // Cache index.html in memory
+  if (!cachedIndexHtml) {
+    cachedIndexHtml = readFileSync(indexPath, 'utf-8');
+  }
+  let html = cachedIndexHtml;
+
+  const baseUrl = 'https://www.prisincera.com';
+  const currentUrl = baseUrl + req.originalUrl;
+  
+  let title = 'PriSincera — Sincerity, Prioritized.';
+  let description = 'PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.';
+  let image = `${baseUrl}/favicon-512x512.png`; // Fallback image
+
+  try {
+    const signalMatch = req.originalUrl.match(/^\/signal\/(\d{4}-\d{2}-\d{2})/);
+    if (signalMatch) {
+      const dateStr = signalMatch[1];
+      const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
+      let signalData = await getDailySignal(dateStr);
+      
+      if (!signalData && storage) {
+        try {
+          const [content] = await storage.bucket(GCS_BUCKET).file(`daily/${dateStr}.json`).download();
+          signalData = JSON.parse(content.toString('utf-8'));
+        } catch(e) {}
+      }
+      
+      if (signalData && signalData.articles && signalData.articles.length > 0) {
+        // Find top article for SEO representation
+        const topArticle = signalData.articles.sort((a,b) => (b.weightedScore||0) - (a.weightedScore||0))[0];
+        title = `${topArticle.title} | Signal — PriSincera`;
+        description = topArticle.summary ? topArticle.summary.substring(0, 150) + '...' : description;
+        image = topArticle.ogImage || image;
+      } else {
+        title = `${dateStr}의 시그널 | Signal — PriSincera`;
+      }
+    } else if (req.originalUrl.startsWith('/signal')) {
+      title = 'Signal — 노이즈 속에서 시그널을 포착하다 | PriSincera';
+      description = 'IT, AI, 비즈니스 분야의 노이즈를 걸러내고 가장 중요한 시그널만 선별하여 매일 아침 전해드립니다.';
+    } else if (req.originalUrl.startsWith('/study')) {
+      title = 'Study — 하루 5분, 실무 지식 1-Pick | PriSincera';
+      description = '매일 핵심 비즈니스 및 테크 지식을 학습하는 PriStudy 공간입니다.';
+    } else if (req.originalUrl.startsWith('/pacenote')) {
+      title = 'Pace Note — 목표와 회고 | PriSincera';
+    }
+  } catch(err) {
+    console.error('[SEO Proxy] Error generating meta tags:', err.message);
+  }
+
+  // Escape quotes
+  const safeDesc = description.replace(/"/g, '&quot;');
+  
+  const metaTags = `
+    <title>${title}</title>
+    <meta name="description" content="${safeDesc}">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${safeDesc}">
+    <meta property="og:image" content="${image}">
+    <meta property="og:url" content="${currentUrl}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${safeDesc}">
+    <meta name="twitter:image" content="${image}">
+  `;
+
+  // Inject meta tags by replacing the static ones
+  html = html.replace(/<title>.*<\/title>/is, '');
+  html = html.replace(/<meta name="description" content="[^"]*">/is, '');
+  html = html.replace('</head>', `${metaTags}\n</head>`);
+
+  res.send(html);
 });
 
 // --- Start server ---
