@@ -132,7 +132,7 @@ export default function BuildersLog() {
       <section className="log-hero-section" ref={headerRef}>
         <div className="log-hero-content">
           <div className="log-hero-icon">🛠️</div>
-          <h1 className="hero-heading">Builder's <span className="accent">Log</span></h1>
+          <h1 className="hero-heading">Builder's Log</h1>
           <p className="hero-paragraph">
             PriSincera가 단순한 포트폴리오를 넘어 완전한 SaaS 플랫폼으로 거듭나기까지.<br/>
             프로덕트를 설계하고 코드를 쌓아 올린 치열한 항해의 기록을 공유합니다.<br/>

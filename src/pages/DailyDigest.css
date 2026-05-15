@@ -36,13 +36,11 @@
   100% { transform: translateY(0px); }
 }
 .daily-title {
+  display: inline-block; /* Crucial for full gradient span */
   font-family: var(--font-display);
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 var(--space-sm);
-  color: var(--text-primary);
-}
-.daily-title .accent {
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

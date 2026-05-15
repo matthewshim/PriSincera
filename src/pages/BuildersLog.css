@@ -64,13 +64,11 @@
 }
 
 .hero-heading {
+  display: inline-block;
   font-family: var(--font-display);
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 var(--space-sm);
-  color: var(--text-primary);
-}
-.hero-heading .accent {
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
