@@ -526,7 +526,18 @@ function Dashboard({ token, adminEmail, onLogout }) {
         <main className="admin-content">
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
-            <div className="admin-section-header"><h2>Daily Digest 대시보드</h2></div>
+            <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ margin: 0 }}>Daily Digest 대시보드</h2>
+              <a 
+                href="https://analytics.google.com/analytics/web/?utm_source=OGB&utm_medium=app&authuser=0#/a391399503p533055438/reports/intelligenthome" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="admin-btn-secondary"
+                style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                📈 구글 애널리틱스 (방문자 통계) ↗
+              </a>
+            </div>
             <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
               <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
