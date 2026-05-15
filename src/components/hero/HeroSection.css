@@ -10,7 +10,11 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: var(--bg-void);
+    /* Principle 1: Restrained Authority & Focus in Chaos. Deep OLED black with precision lighting */
+    background: #000000;
+    background-image: 
+        radial-gradient(circle at 50% 40%, rgba(109, 40, 217, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 60%, rgba(34, 211, 238, 0.05) 0%, transparent 55%);
 }
 
 /* --- Center Container --- */
@@ -46,16 +50,17 @@
 .hero-glow {
     position: absolute;
     top: 50%; left: 50%;
-    width: 500px; height: 500px;
+    width: 600px; height: 600px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(circle,
-        rgba(124,58,237,0.15) 0%,
-        rgba(124,58,237,0.05) 35%,
-        transparent 70%);
+        rgba(196, 181, 253, 0.15) 0%,
+        rgba(124, 58, 237, 0.08) 25%,
+        transparent 65%);
     opacity: 0;
-    transition: opacity 2.5s ease-in-out;
+    transition: opacity 3s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
+    mix-blend-mode: screen;
 }
 
 .hero-glow.active { opacity: 1; }
@@ -112,20 +117,23 @@
 .word {
     display: inline-block;
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s var(--ease-out);
+    filter: blur(12px);
+    transform: translateY(20px) scale(0.98);
+    transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .word.visible {
     opacity: 1;
-    transform: translateY(0);
+    filter: blur(0px);
+    transform: translateY(0) scale(1);
 }
 
 .word.accent {
-    background: var(--gradient-brand);
+    background: linear-gradient(135deg, #E9D5FF, #C084FC);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 0 30px rgba(192, 132, 252, 0.2);
 }
 
 .hero-sub {
@@ -135,12 +143,14 @@
     max-width: 520px;
     margin: 0 auto var(--space-lg);
     opacity: 0;
+    filter: blur(8px);
     transform: translateY(15px);
-    transition: all 0.8s var(--ease-out) 0.1s;
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
 }
 
 .hero-sub.visible {
     opacity: 1;
+    filter: blur(0px);
     transform: translateY(0);
 }
 
