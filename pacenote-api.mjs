@@ -68,13 +68,13 @@ const AI_RECOMMENDATION_POOL = [
 ];
 
 // 추천 풀에서 필요한 개수만큼 부족한 추천을 채워주는 함수
-function replenishRecommendations(currentPace = [], recommendedPace = [], count = 3) {
+function replenishRecommendations(currentPace = [], recommendedPace = [], pool = [], count = 3) {
   const currentIds = new Set(currentPace.map(p => p.id));
   const recIds = new Set(recommendedPace.map(p => p.id));
   let newRecs = [...recommendedPace];
   
   // 이미 목표나 추천에 없는 항목들 필터링
-  const availablePool = AI_RECOMMENDATION_POOL.filter(item => !currentIds.has(item.id) && !recIds.has(item.id));
+  const availablePool = pool.filter(item => !currentIds.has(item.id) && !recIds.has(item.id));
   
   // 랜덤 셔플
   availablePool.sort(() => 0.5 - Math.random());
@@ -83,6 +83,19 @@ function replenishRecommendations(currentPace = [], recommendedPace = [], count 
     newRecs.push(availablePool.pop());
   }
   return newRecs;
+}
+
+// Daily Pool 조회 유틸 (Firestore에서 가져오되, 실패 시 하드코딩 배열 사용)
+async function getDailyPool() {
+  try {
+    const doc = await db.collection('config').doc('pacenote_daily_pool').get();
+    if (doc.exists && doc.data().pool) {
+      return doc.data().pool;
+    }
+  } catch (err) {
+    console.error('[PaceNote API] Failed to fetch daily pool from config, using fallback.', err.message);
+  }
+  return AI_RECOMMENDATION_POOL;
 }
 
 // 1. 유저의 Pace Note 데이터 조회 (현재 주간 + 과거 타임라인)
@@ -103,6 +116,9 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
     const currentDoc = await weeksRef.doc(currentWeekId).get();
     let currentWeekData = null;
     
+    // DB 혹은 하드코딩 풀 가져오기
+    const dailyPool = await getDailyPool();
+    
     if (!currentDoc.exists) {
       // 데이터가 없으면 기본값 생성
       const { start, end } = getWeekDateRange(currentWeekId);
@@ -119,7 +135,7 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
         startDate: start,
         endDate: end,
         currentPace: defaultCurrentPace,
-        recommendedPace: replenishRecommendations(defaultCurrentPace, [], 3),
+        recommendedPace: replenishRecommendations(defaultCurrentPace, [], dailyPool, 3),
         createdAt: new Date().toISOString()
       };
       await weeksRef.doc(currentWeekId).set(currentWeekData);
@@ -128,7 +144,7 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       // 지속적인 추천 UX 제공을 위해 항상 추천 항목이 3개 미만이면 채워줌
       const oldRecCount = (currentWeekData.recommendedPace || []).length;
       if (oldRecCount < 3) {
-        currentWeekData.recommendedPace = replenishRecommendations(currentWeekData.currentPace, currentWeekData.recommendedPace || [], 3);
+        currentWeekData.recommendedPace = replenishRecommendations(currentWeekData.currentPace, currentWeekData.recommendedPace || [], dailyPool, 3);
         await weeksRef.doc(currentWeekId).update({ recommendedPace: currentWeekData.recommendedPace });
       }
     }
@@ -267,7 +283,8 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
     
     // 부족해진 추천 항목을 다시 3개로 채움
     if (recommendedPace.length < 3) {
-      recommendedPace = replenishRecommendations(currentPace, recommendedPace, 3);
+      const dailyPool = await getDailyPool();
+      recommendedPace = replenishRecommendations(currentPace, recommendedPace, dailyPool, 3);
     }
     
     await docRef.update({ currentPace, recommendedPace });

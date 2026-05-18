@@ -74,18 +74,24 @@ export default function PaceNoteDashboard() {
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [addingTask, setAddingTask] = useState(false);
   const [showWeekCalendar, setShowWeekCalendar] = useState(false);
-  const [omnibarFocused, setOmnibarFocused] = useState(false);
+  const [showOmniModal, setShowOmniModal] = useState(false);
   const [isRefreshingRecs, setIsRefreshingRecs] = useState(false);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!e.target.closest('.pacenote-omnibar-container')) {
-        setOmnibarFocused(false);
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (userToken && selectedWeekId === data?.current?.weekId) {
+          setShowOmniModal(true);
+        }
+      }
+      if (e.key === 'Escape') {
+        setShowOmniModal(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [userToken, selectedWeekId, data]);
 
   // 주차 탐색용 데이터 연산
   const { pastWeeks, currentWeek, futureWeeks, allWeeks } = useMemo(() => {
@@ -220,6 +226,8 @@ export default function PaceNoteDashboard() {
     } catch (err) {
       console.error(err);
       fetchPaceData(userToken);
+    } finally {
+      setShowOmniModal(false);
     }
   };
 
@@ -248,7 +256,7 @@ export default function PaceNoteDashboard() {
           current: { ...prev.current, currentPace: result.currentPace }
         }));
         setNewTaskTitle('');
-        setOmnibarFocused(false);
+        setShowOmniModal(false);
       }
     } catch (err) {
       console.error(err);
@@ -448,78 +456,13 @@ export default function PaceNoteDashboard() {
                         <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>기록된 궤도가 없습니다.</div>
                       )}
                       
-                      {/* ── Omni-Orbit Input (Consolidated Search & AI) ── */}
+                      {/* ── Omni-Orbit Trigger ── */}
                       {isCurrent && (
-                        <div className="pacenote-omnibar-container" onClick={() => setOmnibarFocused(true)}>
-                          <div className={`pacenote-omnibar ${omnibarFocused ? 'focused' : ''}`}>
-                            <span className="omnibar-icon">✨</span>
-                            <input 
-                              type="text" 
-                              className="omnibar-input"
-                              placeholder="새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요..." 
-                              value={newTaskTitle}
-                              onChange={(e) => setNewTaskTitle(e.target.value)}
-                              onFocus={() => setOmnibarFocused(true)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleAddTask(e);
-                              }}
-                              disabled={addingTask}
-                            />
-                            {newTaskTitle.trim() && (
-                              <button className="omnibar-submit-btn" onClick={handleAddTask} disabled={addingTask}>
-                                ↵ 궤도로 추가
-                              </button>
-                            )}
-                          </div>
-                          
-                          {omnibarFocused && (
-                            <div className="omnibar-dropdown">
-                              <div className="omnibar-dropdown-header">
-                                <span className="omnibar-dropdown-title">
-                                  {newTaskTitle.trim() ? '검색 및 연관 추천' : 'AI 추천 가이드'}
-                                </span>
-                                {!newTaskTitle.trim() && (
-                                  <button className="omnibar-refresh-btn" onClick={refreshRecommendations} disabled={isRefreshingRecs}>
-                                    {isRefreshingRecs ? '🔄 갱신 중...' : '🔄 다른 추천 보기'}
-                                  </button>
-                                )}
-                              </div>
-                              <div className="omnibar-dropdown-list">
-                                {newTaskTitle.trim() && (
-                                  <div className="omnibar-rec-item add-custom" onClick={handleAddTask}>
-                                    <div className="rec-icon">+</div>
-                                    <div className="rec-content">
-                                      <div className="rec-title">"{newTaskTitle}" 직접 추가하기</div>
-                                      <div className="rec-desc">입력한 내용으로 새로운 궤도를 생성합니다.</div>
-                                    </div>
-                                  </div>
-                                )}
-                                
-                                {(() => {
-                                  const currentRecs = data.current.recommendedPace || [];
-                                  const filteredRecs = newTaskTitle.trim() 
-                                    ? currentRecs.filter(r => r.title.includes(newTaskTitle) || r.category.includes(newTaskTitle))
-                                    : currentRecs;
-                                  
-                                  if (filteredRecs.length === 0) {
-                                    return <div className="omnibar-empty">관련된 AI 추천이 없습니다.</div>;
-                                  }
-
-                                  return filteredRecs.map((rec) => (
-                                    <div key={rec.id} className="omnibar-rec-item" onClick={() => acceptRecommend(rec.id)}>
-                                      <div className="rec-icon" style={{ color: rec.color || '#A78BFA' }}>✦</div>
-                                      <div className="rec-content">
-                                        <div className="rec-cat" style={{ color: rec.color || '#A78BFA' }}>{rec.category}</div>
-                                        <div className="rec-title">{rec.title}</div>
-                                      </div>
-                                      <div className="rec-action">추가</div>
-                                    </div>
-                                  ));
-                                })()}
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                        <button className="pacenote-omnibar-trigger" onClick={() => setShowOmniModal(true)}>
+                          <span className="omnibar-icon">✨</span>
+                          <span className="omnibar-placeholder">새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요...</span>
+                          <kbd className="omnibar-shortcut">⌘K</kbd>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -534,7 +477,7 @@ export default function PaceNoteDashboard() {
 
       {/* ── Calendar Modal ── */}
       {showWeekCalendar && (
-        <div className="pacenote-calendar-modal-backdrop" onClick={() => setShowWeekCalendar(false)}>
+        <div className="pacenote-modal-backdrop" onClick={() => setShowWeekCalendar(false)}>
           <div className="pacenote-calendar-modal" onClick={e => e.stopPropagation()}>
             <div className="calendar-modal-header">
               <h3>항해 일지 모아보기</h3>
@@ -564,6 +507,78 @@ export default function PaceNoteDashboard() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Omni Modal (Command Palette) ── */}
+      {showOmniModal && (
+        <div className="pacenote-modal-backdrop" onClick={() => setShowOmniModal(false)}>
+          <div className="pacenote-omni-modal" onClick={e => e.stopPropagation()}>
+            <div className="omni-modal-input-area">
+              <span className="omnibar-icon">✨</span>
+              <input 
+                type="text" 
+                className="omnibar-input"
+                placeholder="새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요..." 
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddTask(e);
+                }}
+                disabled={addingTask}
+                autoFocus
+              />
+              {newTaskTitle.trim() && (
+                <button className="omnibar-submit-btn" onClick={handleAddTask} disabled={addingTask}>
+                  ↵ 궤도로 추가
+                </button>
+              )}
+            </div>
+            
+            <div className="omnibar-dropdown-header">
+              <span className="omnibar-dropdown-title">
+                {newTaskTitle.trim() ? '검색 및 연관 추천' : 'AI 추천 가이드'}
+              </span>
+              {!newTaskTitle.trim() && (
+                <button className="omnibar-refresh-btn" onClick={refreshRecommendations} disabled={isRefreshingRecs}>
+                  {isRefreshingRecs ? '🔄 갱신 중...' : '🔄 다른 추천 보기'}
+                </button>
+              )}
+            </div>
+            <div className="omnibar-dropdown-list">
+              {newTaskTitle.trim() && (
+                <div className="omnibar-rec-item add-custom" onClick={handleAddTask}>
+                  <div className="rec-icon">+</div>
+                  <div className="rec-content">
+                    <div className="rec-title">"{newTaskTitle}" 직접 추가하기</div>
+                    <div className="rec-desc">입력한 내용으로 새로운 궤도를 생성합니다.</div>
+                  </div>
+                </div>
+              )}
+              
+              {(() => {
+                const currentRecs = data?.current?.recommendedPace || [];
+                const filteredRecs = newTaskTitle.trim() 
+                  ? currentRecs.filter(r => r.title.includes(newTaskTitle) || r.category.includes(newTaskTitle))
+                  : currentRecs;
+                
+                if (filteredRecs.length === 0) {
+                  return <div className="omnibar-empty">관련된 AI 추천이 없습니다.</div>;
+                }
+
+                return filteredRecs.map((rec) => (
+                  <div key={rec.id} className="omnibar-rec-item" onClick={() => acceptRecommend(rec.id)}>
+                    <div className="rec-icon" style={{ color: rec.color || '#A78BFA' }}>✦</div>
+                    <div className="rec-content">
+                      <div className="rec-cat" style={{ color: rec.color || '#A78BFA' }}>{rec.category}</div>
+                      <div className="rec-title">{rec.title}</div>
+                    </div>
+                    <div className="rec-action">추가</div>
+                  </div>
+                ));
+              })()}
             </div>
           </div>
         </div>
