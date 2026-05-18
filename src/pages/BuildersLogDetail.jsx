@@ -23,6 +23,13 @@ export default function BuildersLogDetail() {
   });
 
   useEffect(() => {
+    document.body.classList.add('hero-ready');
+    return () => {
+      document.body.classList.remove('hero-ready');
+    };
+  }, []);
+
+  useEffect(() => {
     if (!articleMeta) {
       setLoading(false);
       return;
