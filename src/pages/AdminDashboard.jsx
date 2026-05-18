@@ -845,13 +845,17 @@ function Dashboard({ token, adminEmail, onLogout }) {
               <button className="admin-btn-primary" onClick={openCreatePool}>➕ 항목 수동 추가</button>
             </div>
 
-            {paceMeta && paceMeta.lastRunTime && (
-              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #A78BFA' }}>
-                <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#A78BFA', display: 'flex', alignItems: 'center', gap: '8px' }}>🚀 파이프라인 최근 실행 로그</h3>
-                <p style={{ fontSize: '0.9rem', marginBottom: '0.3rem' }}><strong>실행 일시:</strong> {new Date(paceMeta.lastRunTime).toLocaleString()}</p>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.4' }}><strong>상세 내역:</strong> {paceMeta.lastRunLog}</p>
-              </div>
-            )}
+            <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #A78BFA' }}>
+              <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#A78BFA', display: 'flex', alignItems: 'center', gap: '8px' }}>🚀 파이프라인 최근 실행 로그</h3>
+              {paceMeta && paceMeta.lastRunTime ? (
+                <>
+                  <p style={{ fontSize: '0.9rem', marginBottom: '0.3rem' }}><strong>실행 일시:</strong> {new Date(paceMeta.lastRunTime).toLocaleString()}</p>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.4' }}><strong>상세 내역:</strong> {paceMeta.lastRunLog}</p>
+                </>
+              ) : (
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>아직 파이프라인이 실행되지 않아 기록된 로그가 없습니다.</p>
+              )}
+            </div>
             <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
               LLM 파이프라인이 매일 생성하는 목표들이 누적되며, 사용자는 이 풀에서 무작위 3개를 추천받습니다.
             </p>
