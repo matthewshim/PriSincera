@@ -70,8 +70,8 @@
 /* ── 2. Bento Box Grid ── */
 .intro-bento-section {
   max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  margin: 40px auto;
+  padding: 0 var(--space-md);
 }
 .bento-grid {
   display: grid;
