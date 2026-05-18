@@ -337,7 +337,7 @@
   position: sticky;
   top: 52px; /* Fixed: Matching exact GNB scrolled height */
   z-index: 100;
-  background: rgba(5, 5, 5, 0.85); /* Premium OLED Black Glass */
+  background: rgba(0, 0, 0, 0.85); /* Matches var(--bg-void) #000000 with transparency for glass effect */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
