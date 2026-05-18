@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
-import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase';
+import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
 import DailyIntro from '../components/daily/DailyIntro';
 import './DailyDigest.css';
@@ -37,9 +36,11 @@ export default function DailyDigest() {
   const [subEmail, setSubEmail] = useState('');
   const synth = window.speechSynthesis;
 
+  const { user, loginWithGoogle, logout } = useAuth();
+
   // Global Auth Sync
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    async function checkSub() {
       if (user) {
         setSubEmail(user.email);
         try {
@@ -59,9 +60,9 @@ export default function DailyDigest() {
           setSubStatus('');
         }
       }
-    });
-    return () => unsubscribe();
-  }, []);
+    }
+    checkSub();
+  }, [user]);
 
   const todayStr = new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -131,7 +132,7 @@ export default function DailyDigest() {
   const handleGoogleSubscribe = async () => {
     try {
       setSubStatus('loading');
-      const result = await signInWithPopup(auth, googleProvider);
+      const result = await loginWithGoogle();
       const email = result.user.email;
       setSubEmail(email);
       
@@ -266,7 +267,7 @@ export default function DailyDigest() {
             {(subStatus === 'success' || subStatus === 'already_subscribed') && (
               <div style={{ marginTop: '12px', textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
                 <button 
-                  onClick={async () => { await signOut(auth); setSubStatus(''); setSubEmail(''); }}
+                  onClick={async () => { await logout(); setSubStatus(''); setSubEmail(''); }}
                   style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
                 >
                   다른 계정으로 구독 신청

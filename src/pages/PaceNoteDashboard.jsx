@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, googleProvider } from '../firebase';
-import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
 import './PaceNoteDashboard.css';
 
@@ -70,7 +69,7 @@ export default function PaceNoteDashboard() {
     return futureWeeks;
   };
   const [data, setData] = useState(null);
-  const [userToken, setUserToken] = useState(null);
+  const { user, token: userToken, loginWithGoogle, logout } = useAuth();
   const [selectedWeekId, setSelectedWeekId] = useState(null);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [addingTask, setAddingTask] = useState(false);
@@ -118,21 +117,15 @@ export default function PaceNoteDashboard() {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        setUserToken(token);
-        fetchPaceData(token);
-      } else {
-        setUserToken(null);
-        const dummy = getDummyData();
-        setData(dummy);
-        setSelectedWeekId(dummy.current.weekId);
-        setLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+    if (userToken) {
+      fetchPaceData(userToken);
+    } else {
+      const dummy = getDummyData();
+      setData(dummy);
+      setSelectedWeekId(dummy.current.weekId);
+      setLoading(false);
+    }
+  }, [userToken]);
 
   const fetchPaceData = async (token) => {
     try {
@@ -293,14 +286,14 @@ export default function PaceNoteDashboard() {
 
   const handleLoginClick = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      await loginWithGoogle();
     } catch (err) {
       console.error('Login failed', err);
     }
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await logout();
   };
 
   return (
