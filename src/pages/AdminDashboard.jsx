@@ -835,6 +835,71 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
 
+        {activeTab === 'pacenote_pool' && (
+          <div className="admin-subscribers">
+            <div className="admin-section-header">
+              <h2>AI 추천 풀 관리</h2>
+              <button className="admin-btn-primary" onClick={openCreatePool}>➕ 항목 수동 추가</button>
+            </div>
+            <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
+              LLM 파이프라인이 매일 생성하는 목표들이 누적되며, 사용자는 이 풀에서 무작위 3개를 추천받습니다.
+            </p>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>카테고리</th><th>목표 (Title)</th><th>상태</th><th>생성일</th><th>관리</th></tr></thead>
+                <tbody>
+                  {pacePool.map((item, i) => (
+                    <tr key={i}>
+                      <td><span className="admin-date-chip" style={{ backgroundColor: item.color || '#60A5FA', color: '#111' }}>{item.category}</span></td>
+                      <td className="admin-subject-cell" style={{ opacity: item.isActive === false ? 0.5 : 1 }}>{item.title}</td>
+                      <td>{item.isActive !== false ? '✅ 활성' : '❌ 비활성'}</td>
+                      <td>{item.createdAt ? new Date(item.createdAt).toLocaleDateString('ko') : '-'}</td>
+                      <td className="admin-actions-cell">
+                        <button className="admin-action-btn edit" onClick={() => openEditPool(item)} title="수정">✏️</button>
+                        <button className="admin-action-btn delete" onClick={() => handleDeletePool(item.id)} title="삭제">🗑️</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {pacePool.length === 0 && (<tr><td colSpan={5} className="admin-empty">추천 항목이 없습니다.</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Pool Modal */}
+        {poolModal && (
+          <div className="admin-modal-overlay" onClick={() => setPoolModal(null)}>
+            <div className="admin-modal" onClick={e => e.stopPropagation()}>
+              <div className="admin-modal-header">
+                <h3>{poolModal === 'create' ? '추천 항목 추가' : '추천 항목 수정'}</h3>
+                <button className="admin-modal-close" onClick={() => setPoolModal(null)}>✕</button>
+              </div>
+              <form onSubmit={handlePoolSubmit}>
+                <div className="admin-modal-body">
+                  <label className="admin-form-label">목표 (Title)
+                    <input type="text" required value={poolForm.title} onChange={e => setPoolForm({ ...poolForm, title: e.target.value })} />
+                  </label>
+                  <label className="admin-form-label">카테고리
+                    <input type="text" required value={poolForm.category} onChange={e => setPoolForm({ ...poolForm, category: e.target.value })} />
+                  </label>
+                  <label className="admin-form-label">컬러 (Hex)
+                    <input type="text" required value={poolForm.color} onChange={e => setPoolForm({ ...poolForm, color: e.target.value })} />
+                  </label>
+                  <label className="admin-form-label" style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    활성화 여부 (추천 리스트 노출)
+                    <input type="checkbox" style={{ width: 'auto', marginLeft: '12px' }} checked={poolForm.isActive} onChange={e => setPoolForm({ ...poolForm, isActive: e.target.checked })} />
+                  </label>
+                </div>
+                <div className="admin-modal-footer">
+                  <button type="button" className="admin-btn-secondary" onClick={() => setPoolModal(null)}>취소</button>
+                  <button type="submit" className="admin-btn-primary">저장</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         {/* Admin Create/Edit Modal */}
         {adminModal && (
           <AdminModal
