@@ -158,6 +158,9 @@ function Dashboard({ token, adminEmail, onLogout }) {
   // Pace Note
   const [pacers, setPacers] = useState([]);
   const [paceInsights, setPaceInsights] = useState([]);
+  const [pacePool, setPacePool] = useState([]);
+  const [poolModal, setPoolModal] = useState(null);
+  const [poolForm, setPoolForm] = useState({ id: '', title: '', category: '', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
 
   const isSuperAdmin = role === 'super_admin';
 
@@ -328,6 +331,48 @@ function Dashboard({ token, adminEmail, onLogout }) {
     } catch (err) { setPaceInsights([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
+  async function loadPacePool() {
+    try {
+      const data = await fetchApi('/pacenotes/pool');
+      setPacePool(data.pool || []);
+    } catch (err) { setPacePool([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
+  function openCreatePool() {
+    setPoolForm({ id: `rec-${Date.now()}`, title: '', category: 'Mindset', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
+    setPoolModal('create');
+  }
+
+  function openEditPool(item) {
+    setPoolForm({ ...item });
+    setPoolModal({ mode: 'edit', id: item.id });
+  }
+
+  async function handlePoolSubmit(e) {
+    e.preventDefault();
+    try {
+      let newPool = [...pacePool];
+      if (poolModal === 'create') {
+        newPool.unshift({ ...poolForm, createdAt: new Date().toISOString() });
+      } else {
+        newPool = newPool.map(p => p.id === poolModal.id ? { ...poolForm } : p);
+      }
+      await fetchApi('/pacenotes/pool', { method: 'PUT', body: JSON.stringify({ pool: newPool }) });
+      setPoolModal(null);
+      loadPacePool();
+    } catch (err) { alert(err.message); }
+  }
+
+  async function handleDeletePool(id) {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    try {
+      const newPool = pacePool.filter(p => p.id !== id);
+      await fetchApi('/pacenotes/pool', { method: 'PUT', body: JSON.stringify({ pool: newPool }) });
+      loadPacePool();
+    } catch (err) { alert(err.message); }
+  } catch (err) { setPaceInsights([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
   function openEditContent(item) {
     setContentForm({ 
       date: item.date,
@@ -438,6 +483,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'content') loadDailyContent();
     if (activeTab === 'pacenotes') loadPacers();
     if (activeTab === 'pacenote_insights') loadPaceInsights();
+    if (activeTab === 'pacenote_pool') loadPacePool();
   }, [activeTab]);
 
   if (loading) {
@@ -463,6 +509,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       items: [
         { id: 'pacenotes', label: '⛵ Pacer 현황' },
         { id: 'pacenote_insights', label: '💡 유저 목표 인사이트' },
+        { id: 'pacenote_pool', label: '🎯 AI 추천 풀 관리' },
       ]
     },
     ...(isSuperAdmin ? [{

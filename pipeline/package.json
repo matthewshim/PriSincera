@@ -7,7 +7,8 @@
     "collect": "node src/collector.mjs",
     "compose": "node src/composer.mjs",
     "monitor": "node src/monitor.mjs",
-    "study:compose": "node src/study-composer.mjs"
+    "study:compose": "node src/study-composer.mjs",
+    "pacenote:compose": "node src/pacenote-composer.mjs"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.15.0",

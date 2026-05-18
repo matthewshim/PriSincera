@@ -612,6 +612,37 @@ router.get('/pacenotes/insights', async (req, res) => {
   }
 });
 
+// ─── AI 추천 풀 (Pace Note Pool) 관리 ──────────────────────────────
+
+router.get('/pacenotes/pool', async (req, res) => {
+  try {
+    const { db } = await import('./pipeline/src/lib/firestore.mjs');
+    const doc = await db.collection('config').doc('pacenote_daily_pool').get();
+    res.json({ pool: doc.exists ? (doc.data().pool || []) : [] });
+  } catch (err) {
+    console.error('[Admin API] Pool Fetch Error:', err);
+    res.status(500).json({ error: '추천 풀 조회 실패' });
+  }
+});
+
+router.put('/pacenotes/pool', async (req, res) => {
+  try {
+    const { pool } = req.body;
+    if (!Array.isArray(pool)) {
+      return res.status(400).json({ error: 'pool 배열이 필요합니다.' });
+    }
+    const { db } = await import('./pipeline/src/lib/firestore.mjs');
+    await db.collection('config').doc('pacenote_daily_pool').set({
+      pool,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+    res.json({ success: true, pool });
+  } catch (err) {
+    console.error('[Admin API] Pool Update Error:', err);
+    res.status(500).json({ error: '추천 풀 업데이트 실패' });
+  }
+});
+
 // ─── 관리자 CRUD (super_admin 전용) ──────────────
 
 router.get('/admins', requireSuperAdmin, async (req, res) => {
