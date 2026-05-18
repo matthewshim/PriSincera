@@ -158,6 +158,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   // Pace Note
   const [pacers, setPacers] = useState([]);
   const [paceInsights, setPaceInsights] = useState([]);
+  const [poolStats, setPoolStats] = useState({});
   const [pacePool, setPacePool] = useState([]);
   const [poolModal, setPoolModal] = useState(null);
   const [poolForm, setPoolForm] = useState({ id: '', title: '', category: '', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
@@ -328,6 +329,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     try {
       const data = await fetchApi('/pacenotes/insights');
       setPaceInsights(data.insights || []);
+      setPoolStats(data.poolStats || {});
     } catch (err) { setPaceInsights([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
@@ -482,7 +484,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'content') loadDailyContent();
     if (activeTab === 'pacenotes') loadPacers();
     if (activeTab === 'pacenote_insights') loadPaceInsights();
-    if (activeTab === 'pacenote_pool') loadPacePool();
+    if (activeTab === 'pacenote_pool') { loadPacePool(); loadPaceInsights(); }
   }, [activeTab]);
 
   if (loading) {

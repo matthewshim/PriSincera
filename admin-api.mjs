@@ -568,6 +568,7 @@ router.get('/pacenotes/insights', async (req, res) => {
       const chunkResults = await Promise.all(
         chunk.map(async (docRef) => {
           let userTasks = [];
+          let poolPicks = [];
           try {
             const weeksSnap = await docRef.collection('weeks')
               .orderBy('weekId', 'desc')
@@ -585,6 +586,11 @@ router.get('/pacenotes/insights', async (req, res) => {
                       completed: task.completed,
                       createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
                     });
+                  } else {
+                    poolPicks.push({
+                      id: task.id,
+                      completed: task.completed
+                    });
                   }
                 });
               }
@@ -593,19 +599,32 @@ router.get('/pacenotes/insights', async (req, res) => {
             console.error(`Error fetching insights for uid ${docRef.id}:`, e);
             debugErrors.push({ uid: docRef.id, error: e.message });
           }
-          return userTasks;
+          return { userTasks, poolPicks };
         })
       );
       insightsNested.push(...chunkResults);
     }
     
-    let customTasks = insightsNested.flat();
+    let customTasks = insightsNested.flatMap(r => r.userTasks);
+    let allPoolPicks = insightsNested.flatMap(r => r.poolPicks);
     
     // 생성일 기준 최신순 정렬
     customTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     
+    // 추천 풀 통계 집계
+    const poolStats = {};
+    allPoolPicks.forEach(p => {
+      if (!poolStats[p.id]) poolStats[p.id] = { picks: 0, clears: 0 };
+      poolStats[p.id].picks += 1;
+      if (p.completed) poolStats[p.id].clears += 1;
+    });
+    
     // 최신 100개만 반환
-    res.json({ insights: customTasks.slice(0, 100), debug: { totalDocs: userDocs.length, innerErrors: debugErrors } });
+    res.json({ 
+      insights: customTasks.slice(0, 100), 
+      poolStats,
+      debug: { totalDocs: userDocs.length, innerErrors: debugErrors } 
+    });
   } catch (err) {
     console.error('[Admin API] Insights Fetch Error:', err);
     res.status(500).json({ error: '인사이트 조회 실패' });
