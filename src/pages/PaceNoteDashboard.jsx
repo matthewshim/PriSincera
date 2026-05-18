@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider } from '../firebase';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import useSEO from '../hooks/useSEO';
 import './PaceNoteDashboard.css';
 
 const getCurrentWeekId = () => {
@@ -39,6 +40,13 @@ const getDummyData = () => {
 export default function PaceNoteDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+
+  useSEO({
+    title: 'Pace Note',
+    description: '목표 달성을 위한 전략적 마일스톤과 페이스를 조절하는 PriSincera의 Pace Note 대시보드입니다.',
+    keywords: 'PriSincera, Pace Note, 목표 관리, 마일스톤, 성과, 대시보드, 생산성',
+    ogUrl: 'https://www.prisincera.com/pacenote'
+  });
   
   // ISO 주차 계산 (간단한 미래 주차 생성용)
   const generateFutureWeeks = (currentWeekId, count = 3) => {
@@ -105,7 +113,6 @@ export default function PaceNoteDashboard() {
   };
 
   useEffect(() => {
-    document.title = 'PriSincera Pace Note';
     document.body.classList.add('hero-ready');
     return () => document.body.classList.remove('hero-ready');
   }, []);

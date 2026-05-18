@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import useSEO from '../hooks/useSEO';
 import HeroSection from '../components/hero/HeroSection';
 import BeliefSection from '../components/philosophy/PhilosophySection';
 import JourneySection from '../components/journey/JourneySection';
@@ -14,6 +15,13 @@ import './Home.css';
  * appears (all hero content revealed), scrolling is unlocked.
  */
 function Home() {
+  useSEO({
+    title: '', // Empty uses default 'PriSincera — Sincerity, Prioritized.'
+    description: 'PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.',
+    keywords: 'PriSincera, 비즈니스, 전략, 우선순위, 진정성, IT 트렌드',
+    ogUrl: 'https://www.prisincera.com/'
+  });
+
   // Check if CI animation already played this session
   const ciAlreadyPlayed = sessionStorage.getItem('prisincera_ci_played');
 

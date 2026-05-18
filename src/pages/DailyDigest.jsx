@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import useSEO from '../hooks/useSEO';
 import DailyIntro from '../components/daily/DailyIntro';
 import './DailyDigest.css';
 
@@ -22,6 +23,13 @@ export default function DailyDigest() {
   const location = useLocation();
   const navigate = useNavigate();
   
+  useSEO({
+    title: date ? `Daily Digest (${date})` : 'Daily Digest',
+    description: 'PriSincera가 큐레이션 하는 글로벌 IT, 비즈니스, AI 트렌드 및 시그널 데일리 리포트입니다.',
+    keywords: 'PriSincera, 데일리 다이제스트, IT 뉴스, AI 트렌드, 비즈니스 인사이트, 시그널',
+    ogUrl: `https://www.prisincera.com/daily${date ? `/${date}` : ''}`
+  });
+
   const [activeTab, setActiveTab] = useState(window.location.hash === '#daily' ? 'daily' : 'intro');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null); // Detail data or Archive list
@@ -72,7 +80,6 @@ export default function DailyDigest() {
   }, [location.hash]);
 
   useEffect(() => {
-    document.title = 'PriSincera Daily Digest';
     fetchData();
   }, [date]);
 

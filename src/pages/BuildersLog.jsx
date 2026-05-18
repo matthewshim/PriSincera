@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import useSEO from '../hooks/useSEO';
 import './BuildersLog.css';
 
 function useScrollReveal(options = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }) {
@@ -116,6 +117,13 @@ const ChapterCard = ({ chapter, index }) => {
 };
 
 export default function BuildersLog() {
+  useSEO({
+    title: 'Builders Log',
+    description: "PriSincera의 프로덕트 메이킹과 비즈니스 구축 여정을 기록한 빌더스 로그입니다.",
+    keywords: 'PriSincera, 빌더스 로그, 개발 일지, 프로덕트, SaaS, 비즈니스 여정',
+    ogUrl: 'https://www.prisincera.com/builders-log'
+  });
+
   const headerRef = useScrollReveal();
 
   useEffect(() => {
