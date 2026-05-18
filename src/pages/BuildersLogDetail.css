@@ -1,6 +1,6 @@
 .builders-log-detail-wrapper {
   min-height: 100vh;
-  padding: 120px 20px 80px;
+  padding: var(--space-3xl) var(--space-lg) 80px;
   background: var(--bg-void);
   color: var(--text-primary);
   display: flex;
@@ -27,9 +27,9 @@
 }
 
 .detail-header {
-  margin-bottom: 3rem;
+  margin-bottom: 48px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 2rem;
+  padding-bottom: var(--space-xl);
   position: relative;
 }
 
@@ -54,8 +54,8 @@
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.9rem;
-  margin-bottom: 2rem;
-  transition: color 0.2s ease;
+  margin-bottom: var(--space-xl);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
 .back-btn:hover {
@@ -65,8 +65,8 @@
 .detail-meta {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
 }
 
 .date-badge {
@@ -75,20 +75,21 @@
 }
 
 .detail-title {
-  font-size: 2.5rem;
+  font-size: clamp(2.5rem, 6vw, 4.5rem); /* From Design System Hero */
   font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: 0.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-sm);
   background: linear-gradient(135deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .detail-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--text-muted);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-lg);
 }
 
 .detail-tags {
@@ -101,7 +102,7 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   font-size: 0.8rem;
   color: var(--text-muted);
 }
@@ -137,14 +138,14 @@
 }
 
 .markdown-body a {
-  color: var(--prism-indigo);
+  color: var(--orbit-cyan);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-fast) var(--ease-out);
 }
 
 .markdown-body a:hover {
-  border-color: var(--prism-indigo);
+  border-color: var(--orbit-cyan);
 }
 
 .markdown-body ul, 
@@ -158,26 +159,26 @@
 }
 
 .markdown-body blockquote {
-  border-left: 4px solid var(--prism-indigo);
-  margin: 0 0 1.5rem 0;
-  padding: 0.5rem 0 0.5rem 1.5rem;
+  border-left: 4px solid var(--orbit-cyan);
+  margin: 0 0 var(--space-lg) 0;
+  padding: var(--space-sm) 0 var(--space-sm) var(--space-md);
   background: rgba(255, 255, 255, 0.03);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-style: italic;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 /* Highlight.js overriding */
 .markdown-body pre {
-  margin-bottom: 1.5rem;
-  border-radius: 8px;
+  margin-bottom: var(--space-lg);
+  border-radius: var(--radius-md);
   background: #0d1117 !important; /* Deeper dark for code */
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow-x: auto;
 }
 
 .markdown-body code {
-  font-family: 'Fira Code', 'Consolas', monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 0.9rem;
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
@@ -208,14 +209,14 @@
 
 .back-btn-large {
   display: inline-block;
-  padding: 12px 24px;
+  padding: 12px var(--space-lg);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-spring);
 }
 
 .back-btn-large:hover {
