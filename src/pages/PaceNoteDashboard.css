@@ -492,27 +492,30 @@
   opacity: 0.5;
 }
 
-.nav-small-info {
+.nav-week-group {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  margin-top: 4px;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: -6px;
 }
+
 .nav-year {
   font-family: var(--font-display);
   font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 4px;
 }
+
 .nav-label {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .nav-status-badge {
-  margin-top: 12px;
+  margin-top: 8px;
   font-size: 0.85rem;
   font-weight: 600;
   color: #34D399;
@@ -520,6 +523,7 @@
   padding: 6px 14px;
   border-radius: 100px;
   border: 1px solid rgba(52, 211, 153, 0.3);
+  white-space: nowrap;
 }
 
 .nav-status-badge.past {
@@ -964,7 +968,7 @@
   font-style: italic;
 }
 
-/* ¦¡¦¡ Omni Modal Overrides ¦¡¦¡ */
+/* ï¿½ï¿½ï¿½ï¿½ Omni Modal Overrides ï¿½ï¿½ï¿½ï¿½ */
 .pacenote-omnibar-trigger {
   width: 100%;
   display: flex;

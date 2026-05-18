@@ -377,11 +377,11 @@ export default function PaceNoteDashboard() {
                 </div>
                 
                 <div className="nav-center" onClick={() => setShowWeekCalendar(true)}>
-                  <span className={`nav-huge-num ${parseWeekInfo(selectedWeekId).isFuture ? 'future' : ''}`}>
-                    {parseWeekInfo(selectedWeekId).num}
-                  </span>
-                  <div className="nav-small-info">
-                    <span className="nav-year">{parseWeekInfo(selectedWeekId).year}</span>
+                  <div className="nav-year">{parseWeekInfo(selectedWeekId).year}년</div>
+                  <div className="nav-week-group">
+                    <span className={`nav-huge-num ${parseWeekInfo(selectedWeekId).isFuture ? 'future' : ''}`}>
+                      {parseWeekInfo(selectedWeekId).num}
+                    </span>
                     <span className="nav-label">주차</span>
                   </div>
                   <div className={`nav-status-badge ${parseWeekInfo(selectedWeekId).isFuture ? 'locked' : parseWeekInfo(selectedWeekId).isCurrent ? '' : 'past'}`}>
