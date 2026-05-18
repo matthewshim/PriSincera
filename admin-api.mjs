@@ -638,6 +638,7 @@ router.get('/pacenotes/pool', async (req, res) => {
     const { db } = await import('./pipeline/src/lib/firestore.mjs');
     const doc = await db.collection('config').doc('pacenote_daily_pool').get();
     let pool = doc.exists ? (doc.data().pool || []) : [];
+    let meta = doc.exists ? { lastRunLog: doc.data().lastRunLog, lastRunTime: doc.data().lastRunTime } : {};
     
     // 최초 진입 시 데이터베이스가 비어있다면, 기존 하드코딩된 15개 추천 항목으로 자동 시딩(마이그레이션)
     if (pool.length === 0) {
@@ -665,7 +666,7 @@ router.get('/pacenotes/pool', async (req, res) => {
       }, { merge: true });
     }
 
-    res.json({ pool });
+    res.json({ pool, meta });
   } catch (err) {
     console.error('[Admin API] Pool Fetch Error:', err);
     res.status(500).json({ error: '추천 풀 조회 실패' });

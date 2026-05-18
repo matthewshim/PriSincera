@@ -160,6 +160,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [paceInsights, setPaceInsights] = useState([]);
   const [poolStats, setPoolStats] = useState({});
   const [pacePool, setPacePool] = useState([]);
+  const [paceMeta, setPaceMeta] = useState({});
   const [poolModal, setPoolModal] = useState(null);
   const [poolForm, setPoolForm] = useState({ id: '', title: '', category: '', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
 
@@ -337,6 +338,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     try {
       const data = await fetchApi('/pacenotes/pool');
       setPacePool(data.pool || []);
+      setPaceMeta(data.meta || {});
     } catch (err) { setPacePool([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
@@ -842,6 +844,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
               <h2>AI 추천 풀 관리</h2>
               <button className="admin-btn-primary" onClick={openCreatePool}>➕ 항목 수동 추가</button>
             </div>
+
+            {paceMeta && paceMeta.lastRunTime && (
+              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #A78BFA' }}>
+                <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#A78BFA', display: 'flex', alignItems: 'center', gap: '8px' }}>🚀 파이프라인 최근 실행 로그</h3>
+                <p style={{ fontSize: '0.9rem', marginBottom: '0.3rem' }}><strong>실행 일시:</strong> {new Date(paceMeta.lastRunTime).toLocaleString()}</p>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.4' }}><strong>상세 내역:</strong> {paceMeta.lastRunLog}</p>
+              </div>
+            )}
             <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
               LLM 파이프라인이 매일 생성하는 목표들이 누적되며, 사용자는 이 풀에서 무작위 3개를 추천받습니다.
             </p>
