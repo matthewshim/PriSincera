@@ -377,7 +377,7 @@ export default function PaceNoteDashboard() {
                 </div>
                 
                 <div className="nav-center" onClick={() => setShowWeekCalendar(true)}>
-                  <div className="nav-year">{parseWeekInfo(selectedWeekId).year}년</div>
+                  <div className="nav-year">{parseWeekInfo(selectedWeekId).year}</div>
                   <div className="nav-week-group">
                     <span className={`nav-huge-num ${parseWeekInfo(selectedWeekId).isFuture ? 'future' : ''}`}>
                       {parseWeekInfo(selectedWeekId).num}
