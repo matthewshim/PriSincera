@@ -370,7 +370,6 @@ function Dashboard({ token, adminEmail, onLogout }) {
       await fetchApi('/pacenotes/pool', { method: 'PUT', body: JSON.stringify({ pool: newPool }) });
       loadPacePool();
     } catch (err) { alert(err.message); }
-  } catch (err) { setPaceInsights([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
   function openEditContent(item) {
