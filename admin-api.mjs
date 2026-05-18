@@ -618,7 +618,35 @@ router.get('/pacenotes/pool', async (req, res) => {
   try {
     const { db } = await import('./pipeline/src/lib/firestore.mjs');
     const doc = await db.collection('config').doc('pacenote_daily_pool').get();
-    res.json({ pool: doc.exists ? (doc.data().pool || []) : [] });
+    let pool = doc.exists ? (doc.data().pool || []) : [];
+    
+    // 최초 진입 시 데이터베이스가 비어있다면, 기존 하드코딩된 15개 추천 항목으로 자동 시딩(마이그레이션)
+    if (pool.length === 0) {
+      const AI_RECOMMENDATION_POOL = [
+        { id: 'rec-1', title: '아침 출근 전 30분 동안 온전히 나를 위한 명상하기', category: 'Mindset', color: '#34D399', isActive: true },
+        { id: 'rec-2', title: '이번 주 배운 내용을 바탕으로 링크드인에 인사이트 짧게 공유하기', category: 'Branding', color: '#60A5FA', isActive: true },
+        { id: 'rec-3', title: '스마트폰을 끄고 1시간 동안 종이책이나 긴 호흡의 아티클 읽기', category: 'Deep Work', color: '#FBBF24', isActive: true },
+        { id: 'rec-4', title: '관심 있는 분야의 오프라인 네트워킹 모임 찾아보기', category: 'Networking', color: '#A78BFA', isActive: true },
+        { id: 'rec-5', title: '평소 쓰지 않던 새로운 AI 툴 1가지 테스트해보고 후기 남기기', category: 'AI & Future', color: '#22D3EE', isActive: true },
+        { id: 'rec-6', title: '이번 주 나의 업무 프로세스 중 비효율적인 부분 1개 개선하기', category: 'Productivity', color: '#F472B6', isActive: true },
+        { id: 'rec-7', title: '10년 뒤 나의 커리어 모습을 상상하며 한 페이지 에세이 작성하기', category: 'Vision', color: '#818CF8', isActive: true },
+        { id: 'rec-8', title: '업무와 무관한 완전히 새로운 주제의 다큐멘터리 시청하기', category: 'Inspiration', color: '#FCD34D', isActive: true },
+        { id: 'rec-9', title: '이번 주 감사했던 일 3가지를 적고 주변 사람에게 표현하기', category: 'Mindset', color: '#34D399', isActive: true },
+        { id: 'rec-10', title: '책상과 작업 환경을 완전히 새롭게 정리정돈하기', category: 'Environment', color: '#9CA3AF', isActive: true },
+        { id: 'rec-11', title: '이번 주 가장 어려웠던 문제에 대해 왜?를 3번 반복하며 회고하기', category: 'Problem Solving', color: '#FB923C', isActive: true },
+        { id: 'rec-12', title: '평소 연락하지 않던 동료나 멘토에게 먼저 커피챗 제안하기', category: 'Networking', color: '#A78BFA', isActive: true },
+        { id: 'rec-13', title: '이번 주 알게 된 새로운 영단어나 비즈니스 용어 5개 완벽히 암기하기', category: 'Learning', color: '#60A5FA', isActive: true },
+        { id: 'rec-14', title: '잠들기 전 내일 가장 먼저 처리할 핵심 목표 1가지 적어두기', category: 'Productivity', color: '#F472B6', isActive: true },
+        { id: 'rec-15', title: '가벼운 산책을 하며 팟캐스트나 오디오북 청취하기', category: 'Health', color: '#4ADE80', isActive: true }
+      ];
+      pool = AI_RECOMMENDATION_POOL;
+      await db.collection('config').doc('pacenote_daily_pool').set({
+        pool,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+    }
+
+    res.json({ pool });
   } catch (err) {
     console.error('[Admin API] Pool Fetch Error:', err);
     res.status(500).json({ error: '추천 풀 조회 실패' });
