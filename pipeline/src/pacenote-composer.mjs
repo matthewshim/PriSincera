@@ -55,9 +55,80 @@ async function main() {
       createdAt: new Date().toISOString(),
     }));
 
-    // 새 궤도를 풀 앞에 추가 (최신 항목 우선 노출을 위함, 풀은 150개로 제한)
+    // 3.5 통계 데이터 수집 (Velocity 계산)
+    console.log('📊 [PaceNote Composer] 기존 궤도 성과 통계(Picks) 수집 중...');
+    const userDocs = await db.collection('pacenotes').listDocuments();
+    const poolStats = {}; // { id: pickCount }
+    const CHUNK_SIZE = 50;
+    for (let i = 0; i < userDocs.length; i += CHUNK_SIZE) {
+      const chunk = userDocs.slice(i, i + CHUNK_SIZE);
+      await Promise.all(chunk.map(async (docRef) => {
+        try {
+          const weeksSnap = await docRef.collection('weeks').orderBy('weekId', 'desc').limit(10).get();
+          weeksSnap.docs.forEach(doc => {
+            const data = doc.data();
+            if (data.currentPace) {
+              data.currentPace.forEach(task => {
+                if (!task.id.startsWith('custom-')) {
+                  poolStats[task.id] = (poolStats[task.id] || 0) + 1;
+                }
+              });
+            }
+          });
+        } catch (e) {
+          // ignore error for individual user
+        }
+      }));
+    }
+
+    // 3.6 복합 퇴출 알고리즘 적용 (TTL 45일 및 Velocity 기준)
+    console.log('🧹 [PaceNote Composer] 고인물 방지 동적 퇴출(Dynamic Ejection) 진행...');
     const MAX_POOL_SIZE = 150;
-    const updatedPool = [...formattedRecs, ...currentPool].slice(0, MAX_POOL_SIZE);
+    const TTL_DAYS = 45;
+    const now = new Date();
+
+    // 현재 풀에 Velocity Score 부여
+    const scoredPool = currentPool.map(item => {
+      const createdAt = item.createdAt ? new Date(item.createdAt) : now;
+      const daysAlive = Math.max(1, (now - createdAt) / (1000 * 60 * 60 * 24)); // 최소 1일로 설정
+      const picks = poolStats[item.id] || 0;
+      const velocity = picks / daysAlive;
+      return { ...item, daysAlive, velocity };
+    });
+
+    // 1순위 퇴출: 수명(TTL) 초과 항목 삭제
+    let survivingPool = scoredPool.filter(item => item.daysAlive <= TTL_DAYS);
+    const ttlEvicted = currentPool.length - survivingPool.length;
+
+    // 2순위 퇴출: 여전히 최대 용량을 초과한다면, Velocity가 낮은 순서대로 삭제
+    // 신규 추가될 궤도(formattedRecs) 길이를 고려
+    const excessCount = (survivingPool.length + formattedRecs.length) - MAX_POOL_SIZE;
+    let velocityEvicted = 0;
+    
+    if (excessCount > 0) {
+      // Velocity 오름차순 정렬 (낮은 게 먼저 옴)
+      // 단, 생성된 지 7일 미만인 신규 궤도는 평가 기간이 짧으므로 보호(퇴출 1순위에서 제외)
+      survivingPool.sort((a, b) => {
+        const aProtected = a.daysAlive < 7 ? 1 : 0;
+        const bProtected = b.daysAlive < 7 ? 1 : 0;
+        if (aProtected !== bProtected) return aProtected - bProtected; // 보호되지 않은 것(0)이 앞에 옴
+        
+        // 둘 다 보호 상태가 같으면 Velocity 낮은 순으로
+        return a.velocity - b.velocity; 
+      });
+      
+      // 하위 excessCount 개수만큼 삭제 (앞에서부터 자름)
+      survivingPool = survivingPool.slice(excessCount);
+      velocityEvicted = excessCount;
+    }
+
+    // 최종 풀 조합: 최신 궤도 + 살아남은 기존 궤도 (임시 필드 제거)
+    const cleanedSurvivingPool = survivingPool.map(({ daysAlive, velocity, ...rest }) => rest);
+    
+    // 최종 최신순(앞으로) 결합
+    const updatedPool = [...formattedRecs, ...cleanedSurvivingPool];
+    
+    console.log(\`📊 퇴출 결과: TTL 만료 \${ttlEvicted}개 삭제, 실적 저조 \${velocityEvicted}개 삭제\`);
 
     // 4. Firestore 업데이트
     await poolRef.set({
