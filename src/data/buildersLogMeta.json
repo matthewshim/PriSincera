@@ -1,0 +1,31 @@
+[
+  {
+    "id": "ep1",
+    "slug": "ai-pacenote-expansion",
+    "chapterNo": "01",
+    "title": "고인물은 어떻게 AI를 망치는가? 150개 추천 풀 한계 돌파기",
+    "subtitle": "Data-Driven AI Ecosystem",
+    "description": "단순히 API를 호출해 무작위로 목표를 생성하던 초기 모델을 넘어, 유저의 '선택'과 '달성' 데이터를 바탕으로 Velocity를 계산하고 스스로 프롬프트를 진화시키는 플라이휠(Feedback Loop) 구축 과정.",
+    "date": "2026-05-18",
+    "tags": ["AI", "Data", "Backend", "Firestore"],
+    "accent": "var(--prism-indigo)",
+    "commits": [
+      { "type": "feat", "hash": "6cd920f", "msg": "Phase 3 - AI Feedback Loop by injecting Hall of Fame items into Gemini prompt" },
+      { "type": "feat", "hash": "e16b2c0", "msg": "Phase 2 - Dynamic Ejection algorithm preventing chart stagnation" }
+    ]
+  },
+  {
+    "id": "ep2",
+    "slug": "authentication-architecture",
+    "chapterNo": "02",
+    "title": "구글 원클릭 로그인의 숨겨진 함정: 유저와 관리자 세션 완벽히 격리하기",
+    "subtitle": "Authentication & Security",
+    "description": "가입 이탈률을 0으로 만들기 위해 구글 로그인으로 전면 개편하면서 발생한 백오피스 권한 충돌 사태. 다중 Firebase 인스턴스 초기화를 통해 브라우저 세션을 물리적으로 격리한 트러블슈팅 경험.",
+    "date": "2026-05-18",
+    "tags": ["Security", "Firebase Auth", "React"],
+    "accent": "var(--orbit-cyan)",
+    "commits": [
+      { "type": "feat", "hash": "84a6dee", "msg": "PriSincera Authentication Architecture 적용 및 세션 충돌 해결" }
+    ]
+  }
+]

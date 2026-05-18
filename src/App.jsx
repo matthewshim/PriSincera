@@ -9,10 +9,7 @@ const DailyDigest = lazy(() => import('./pages/DailyDigest'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const PaceNoteDashboard = lazy(() => import('./pages/PaceNoteDashboard'));
 const BuildersLog = lazy(() => import('./pages/BuildersLog'));
-
-
-
-/** Minimal loading fallback — invisible, prevents layout shift */
+const BuildersLogDetail = lazy(() => import('./pages/BuildersLogDetail'));/** Minimal loading fallback — invisible, prevents layout shift */
 const PageFallback = (
   <div style={{ minHeight: '100vh', background: 'var(--bg-void, var(--bg-void))' }} />
 );
@@ -40,8 +37,8 @@ function App() {
           {/* Public — Layout 안 (GNB/Footer) */}
           <Route element={<Layout />}>
             <Route index element={<Home />} />
-            
             <Route path="builders-log" element={<BuildersLog />} />
+            <Route path="builders-log/:slug" element={<BuildersLogDetail />} />
 
             {/* Unified Daily Digest Routes */}
             <Route path="daily" element={<DailyDigest />} />
