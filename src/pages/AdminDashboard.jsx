@@ -594,10 +594,24 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   const menuGroups = [
     {
+      id: 'common',
+      label: 'Common',
+      items: [
+        { id: 'overview', label: '📊 대시보드' },
+        ...(isSuperAdmin ? [{ id: 'admins', label: '🔐 관리자' }] : [])
+      ]
+    },
+    {
+      id: 'builderslog_group',
+      label: 'Builder\'s Log',
+      items: [
+        { id: 'builderslog', label: '📝 퍼블리싱 (Publishing)' }
+      ]
+    },
+    {
       id: 'daily',
       label: 'Daily Digest',
       items: [
-        { id: 'overview', label: '📊 대시보드' },
         { id: 'subscribers', label: '👥 구독 및 이메일 발송' },
         { id: 'content', label: '📚 콘텐츠 관리' },
         { id: 'pipeline', label: '⚙️ 파이프라인' },
@@ -611,21 +625,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         { id: 'pacenote_insights', label: '💡 유저 목표 인사이트' },
         { id: 'pacenote_pool', label: '🎯 AI 추천 풀 관리' },
       ]
-    },
-    {
-      id: 'builderslog_group',
-      label: 'Builder\'s Log',
-      items: [
-        { id: 'builderslog', label: '📝 퍼블리싱 (Publishing)' }
-      ]
-    },
-    ...(isSuperAdmin ? [{
-      id: 'common',
-      label: 'Common',
-      items: [
-        { id: 'admins', label: '🔐 관리자' }
-      ]
-    }] : [])
+    }
   ];
 
   return (
