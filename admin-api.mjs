@@ -836,6 +836,47 @@ router.get('/builderslog/meta', async (req, res) => {
   }
 });
 
+router.get('/builderslog/recent-commits', async (req, res) => {
+  try {
+    const githubToken = process.env.GITHUB_TOKEN;
+    const { Octokit } = await import('@octokit/rest');
+    // Token is optional for public repos, but increases rate limit
+    const octokit = githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
+    
+    const owner = 'matthewshim';
+    const repo = 'PriSincera';
+    const branch = 'main';
+
+    const response = await octokit.rest.repos.listCommits({
+      owner,
+      repo,
+      sha: branch,
+      per_page: 10
+    });
+
+    const commits = response.data.map(commit => {
+      const fullMsg = commit.commit.message.split('\n')[0]; // Get first line
+      const hash = commit.sha.substring(0, 7);
+      
+      // Try to parse conventional commit type
+      let type = 'chore';
+      let msg = fullMsg;
+      const match = fullMsg.match(/^([a-z]+)(\([^)]+\))?:\s*(.+)$/);
+      if (match) {
+        type = match[1];
+        msg = match[3];
+      }
+
+      return { type, hash, msg };
+    });
+
+    res.json({ commits });
+  } catch (err) {
+    console.error('[BuildersLog] Fetch commits error:', err);
+    res.status(500).json({ error: '최근 커밋을 불러오는데 실패했습니다.' });
+  }
+});
+
 router.get('/builderslog/content/:slug', async (req, res) => {
   try {
     const { slug } = req.params;

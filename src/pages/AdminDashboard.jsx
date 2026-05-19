@@ -480,6 +480,19 @@ function Dashboard({ token, adminEmail, onLogout }) {
     }
   }
 
+  const handleFetchRecentCommits = async () => {
+    try {
+      setBuildersLogAction({ type: 'loading', msg: '최근 커밋을 불러오는 중...' });
+      const res = await fetchApi('/builderslog/recent-commits');
+      if (res.commits) {
+        setBuildersLogForm(f => ({ ...f, commits: JSON.stringify(res.commits, null, 2) }));
+        setBuildersLogAction({ type: 'success', msg: '최근 커밋 10개를 불러왔습니다. 불필요한 내역은 지워주세요.' });
+      }
+    } catch (err) {
+      setBuildersLogAction({ type: 'error', msg: `커밋 불러오기 실패: ${err.message}` });
+    }
+  };
+
   async function handleBuildersLogSubmit(e) {
     e.preventDefault();
     setBuildersLogAction({ type: 'loading', msg: 'GitHub 배포(Commit & Push) 중...' });
@@ -1131,7 +1144,12 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <input type="text" value={buildersLogForm.tags} onChange={e => setBuildersLogForm(f => ({ ...f, tags: e.target.value }))} placeholder="Design, Architecture, Vercel" />
                   </label>
                   <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    관련 커밋 (JSON 배열 - 옵션)
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span>관련 커밋 (JSON 배열 - 옵션)</span>
+                      <button type="button" onClick={handleFetchRecentCommits} className="admin-btn-secondary" style={{ padding: '4px 8px', fontSize: '0.8rem', height: 'auto' }}>
+                        최근 커밋 10개 불러오기 ⬇️
+                      </button>
+                    </div>
                     <textarea rows={3} value={buildersLogForm.commits} onChange={e => setBuildersLogForm(f => ({ ...f, commits: e.target.value }))} placeholder='[{"message": "feat: init", "url": "https..."}]' />
                   </label>
                 </div>
