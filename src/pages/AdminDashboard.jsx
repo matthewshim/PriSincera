@@ -1073,10 +1073,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
                                 title: res.title || f.title,
                                 subtitle: res.subtitle || f.subtitle,
                                 slug: res.slug || f.slug,
-                                tags: res.tags ? res.tags.join(', ') : f.tags,
+                                tags: res.tags && res.tags.length > 0 ? res.tags.join(', ') : f.tags,
                                 markdown: res.refinedMarkdown || rawMarkdown
                               }));
-                              setBuildersLogAction({ type: 'success', msg: '✨ AI 분석 및 자동 작성 완료. 내용을 확인하고 Publish를 눌러주세요.' });
+                              if (res._warning) {
+                                setBuildersLogAction({ type: 'warning', msg: `⚠️ ${res._warning}` });
+                              } else {
+                                setBuildersLogAction({ type: 'success', msg: '✨ AI 분석 및 자동 작성 완료. 내용을 확인하고 Publish를 눌러주세요.' });
+                              }
                             } catch(err) {
                               setBuildersLogAction({ type: 'error', msg: `AI 분석 실패: ${err.message}` });
                             }

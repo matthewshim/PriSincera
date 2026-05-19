@@ -853,7 +853,15 @@ router.post('/builderslog/analyze', async (req, res) => {
   try {
     const { markdown } = req.body;
     if (!process.env.GEMINI_API_KEY) {
-      return res.status(400).json({ error: 'GEMINI_API_KEY가 설정되지 않아 AI 분석을 사용할 수 없습니다.' });
+      // Graceful fallback
+      return res.json({
+        title: '',
+        subtitle: '',
+        slug: '',
+        tags: [],
+        refinedMarkdown: markdown,
+        _warning: 'GEMINI_API_KEY가 설정되지 않아 AI 윤문 및 메타데이터 자동 추출이 생략되었습니다.'
+      });
     }
 
     const { GoogleGenAI } = await import('@google/genai');
