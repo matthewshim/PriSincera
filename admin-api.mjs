@@ -981,7 +981,11 @@ ${recentCommitsText}
     }
   } catch (err) {
     console.error('[BuildersLog] AI Analyze error:', err.message);
-    res.status(500).json({ error: err.message || 'AI 분석 실패' });
+    let errMsg = err.message || 'AI 분석 실패';
+    if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED')) {
+      errMsg = 'AI API 무료 제공량(분당 호출/토큰 제한)을 초과했습니다. 약 1분 뒤에 다시 파일을 업로드해 주세요.';
+    }
+    res.status(500).json({ error: errMsg });
   }
 });
 
