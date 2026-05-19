@@ -21,6 +21,8 @@ COPY admin-api.mjs ./
 COPY study-api.mjs ./
 COPY pacenote-api.mjs ./
 COPY pipeline/ ./pipeline/
+COPY src/data/ ./src/data/
+COPY public/content/ ./public/content/
 COPY package*.json ./
 RUN npm ci --omit=dev && npm install --prefix pipeline --omit=dev && npm cache clean --force
 
