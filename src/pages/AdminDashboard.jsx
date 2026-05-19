@@ -1086,7 +1086,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       />
                     </label>
                   </div>
-                  <textarea required rows={15} value={buildersLogForm.markdown} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: e.target.value }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)' }} />
+                  <textarea required rows={15} value={buildersLogForm.markdown} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: e.target.value }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)', color: '#FFF', padding: '12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
 
                   {buildersLogAction && (
                     <div className={`admin-send-status ${buildersLogAction.type}`} style={{ gridColumn: 'span 2' }}>{buildersLogAction.msg}</div>
