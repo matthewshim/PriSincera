@@ -8,7 +8,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'https://www.prisincera.com',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
       }
