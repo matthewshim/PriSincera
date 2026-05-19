@@ -51,7 +51,21 @@ Admin 인증 미들웨어가 적용된 API 엔드포인트를 신설합니다. (
 
 ---
 
-## 4. 진행 마일스톤 (Milestone)
+## 4. 보안 및 품질 관리 (AI & Security Middleware)
+
+GitHub 푸시 이전(Pre-publish) 단계에서 **톤앤매너 유지**와 **민감 정보(Secrets) 유출 방지**를 위해 백엔드 파이프라인에 미들웨어를 구축합니다.
+
+* **1단계: AI 윤문 및 문맥 필터링 (Contextual Redaction)**
+  - Gemini API 등을 활용하여 업로드 전 원본 텍스트를 교정합니다.
+  - "PriSincera 기술 블로그 특유의 전문적인 프리미엄 SaaS 톤 유지" 및 "코드 내 포함된 IP, 실제 유저 데이터 등 문맥적 보안 사항 `[REDACTED]` 처리"를 프롬프트로 강제합니다.
+* **2단계: 정규식 기반 시크릿 스캐너 (Regex Secret Scanner)**
+  - Firebase API Key, AWS Secret, JWT 토큰, 이메일, 전화번호 등 치명적인 민감 정보 패턴을 정규식으로 1차 차단(Block)하여 커밋 자체를 중단(Abort)시킵니다.
+* **3단계: GitHub Secret Scanning (안전망)**
+  - GitHub 푸시 직후 레포지토리 단에서 지원하는 보안 스캐닝을 통해 2중으로 검열합니다.
+
+---
+
+## 5. 진행 마일스톤 (Milestone)
 
 1. **Phase 1: 인프라 준비**
    - GitHub Personal Access Token (PAT) 발급 및 `.env` 환경 변수(`GITHUB_TOKEN`) 등록
