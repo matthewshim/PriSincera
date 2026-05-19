@@ -43,7 +43,9 @@ function Header() {
   }, []);
 
   // Auto-play BGM when hero-ready (GNB visible)
+  // 메인(Index) 페이지에서만 자동 재생을 시도하도록 제한
   useEffect(() => {
+    if (location.pathname !== '/') return;
     if (!musicIntentRef.current) return;
 
     const tryAutoplay = () => {
@@ -71,7 +73,7 @@ function Header() {
     });
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
-  }, [getAudio]);
+  }, [getAudio, location.pathname]);
 
   // Cleanup audio resource on unmount
   useEffect(() => {
