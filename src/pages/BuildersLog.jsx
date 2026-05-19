@@ -26,48 +26,50 @@ const ChapterCard = ({ chapter, index }) => {
   
   return (
     <div className={`builder-card builder-card-${index}`} ref={ref}>
-      <div className="builder-card-glass" style={{ '--accent-color': chapter.accent }}>
-        <div className="card-glow-bg"></div>
-        
-        <div className="card-header">
-          <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
-          <h2 className="chapter-title">{chapter.title}</h2>
-          <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
-          <div className="chapter-date">{new Date(chapter.date).toLocaleDateString()}</div>
-        </div>
-        
-        <div className="card-body">
-          <p className="chapter-desc">{chapter.description}</p>
-        </div>
-        
-        <div className="card-commits">
-          <div className="commits-label">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Key Shipments
+      <Link to={`/builders-log/${chapter.slug}`} className="builder-card-link-wrapper">
+        <div className="builder-card-glass" style={{ '--accent-color': chapter.accent }}>
+          <div className="card-glow-bg"></div>
+          
+          <div className="card-header">
+            <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
+            <h2 className="chapter-title">{chapter.title}</h2>
+            <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
+            <div className="chapter-date">{new Date(chapter.date).toLocaleDateString()}</div>
           </div>
-          <div className="commits-list">
-            {chapter.commits && chapter.commits.map((commit, i) => (
-              <div className="commit-item" key={i}>
-                <div className="commit-node" style={{ borderColor: chapter.accent }}></div>
-                <div className="commit-content">
-                  <div className="commit-meta">
-                    <span className="commit-hash">{commit.hash}</span>
-                    <span className={`commit-type type-${commit.type}`}>{commit.type}</span>
+          
+          <div className="card-body">
+            <p className="chapter-desc">{chapter.description}</p>
+          </div>
+          
+          <div className="card-commits">
+            <div className="commits-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Key Shipments
+            </div>
+            <div className="commits-list">
+              {chapter.commits && chapter.commits.map((commit, i) => (
+                <div className="commit-item" key={i}>
+                  <div className="commit-node" style={{ borderColor: chapter.accent }}></div>
+                  <div className="commit-content">
+                    <div className="commit-meta">
+                      <span className="commit-hash">{commit.hash}</span>
+                      <span className={`commit-type type-${commit.type}`}>{commit.type}</span>
+                    </div>
+                    <div className="commit-msg">{commit.msg}</div>
                   </div>
-                  <div className="commit-msg">{commit.msg}</div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+          <div className="card-footer" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
+            <span className="read-more-btn">
+              Read Article →
+            </span>
           </div>
         </div>
-        <div className="card-footer" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
-          <Link to={`/builders-log/${chapter.slug}`} className="read-more-btn">
-            Read Article →
-          </Link>
-        </div>
-      </div>
+      </Link>
     </div>
   );
 };
