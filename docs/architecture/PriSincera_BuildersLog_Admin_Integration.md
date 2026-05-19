@@ -28,9 +28,10 @@
   - 기존 `buildersLogMeta.json`을 테이블 형태로 렌더링 (Chapter, Title, Slug, Date 표시)
   - 수정(Edit), 신규 발행(Create) 버튼 제공
 * **통합 에디터 모달 (Editor Modal):**
-  - **메타데이터 폼:** Title, Subtitle, Slug, Accent Color, Tags(배열), Commits(배열)
-  - **마크다운 에디터:** 본문 Markdown을 작성할 수 있는 텍스트 에어리어 (추후 렌더링 프리뷰 탭 지원)
-  - **상태 관리:** API 호출 시 "GitHub에 커밋 및 배포 중..." 로딩 스피너 UI 제공
+  - **.md 파일 자동 분석기:** 로컬 `.md` 초안 파일을 업로드하면 AI가 분석하여 Title, Subtitle, Slug, Tags 등 메타데이터 폼을 자동 생성 및 채움
+  - **메타데이터 폼:** AI가 채워준 메타데이터를 관리자가 휴먼 리뷰(Human Review) 및 수정 가능
+  - **마크다운 에디터:** 톤앤매너가 교정된 본문 Markdown을 확인하고 직접 수정할 수 있는 텍스트 에어리어
+  - **상태 관리:** 파일 분석 및 퍼블리싱 시 "AI 분석 중...", "GitHub에 커밋 중..." 상태 피드백 UI 제공
 
 ---
 
@@ -42,8 +43,11 @@ Admin 인증 미들웨어가 적용된 API 엔드포인트를 신설합니다. (
   - GitHub API 또는 서버 로컬에 존재하는 `src/data/buildersLogMeta.json` 파일의 최신 내용을 반환
 * **`GET /admin/api/builderslog/content/:slug`**
   - `public/content/logs/{slug}.md` 파일의 마크다운 텍스트 원문을 반환
+* **`POST /admin/api/builderslog/analyze`**
+  - **Request Body:** `{ markdown: "..." }`
+  - **Action:** Gemini AI를 호출하여 업로드된 초안 마크다운의 톤앤매너 교정, 민감정보 마스킹, 제목/태그 등 메타데이터를 추출해 JSON 형태로 반환 (휴먼 리뷰용)
 * **`POST /admin/api/builderslog/publish`**
-  - **Request Body:** `{ meta: { ... }, markdown: "..." }`
+  - **Request Body:** `{ metaArray: [ ... ], currentSlug: "...", markdown: "..." }`
   - **Action:** 
     1. GitHub API를 통해 `src/data/buildersLogMeta.json` 파일의 내용을 업데이트
     2. GitHub API를 통해 `public/content/logs/{slug}.md` 파일을 생성 또는 수정
@@ -51,16 +55,18 @@ Admin 인증 미들웨어가 적용된 API 엔드포인트를 신설합니다. (
 
 ---
 
-## 4. 보안 및 품질 관리 (AI & Security Middleware)
+## 4. 보안 및 품질 관리 (AI & Security Workflow)
 
-GitHub 푸시 이전(Pre-publish) 단계에서 **톤앤매너 유지**와 **민감 정보(Secrets) 유출 방지**를 위해 백엔드 파이프라인에 미들웨어를 구축합니다.
+콘텐츠 생산 프로세스 개선과 보안 강화를 위해 **휴먼 리뷰가 결합된 자동화 파이프라인(Human-in-the-Loop)**을 구축합니다.
 
-* **1단계: AI 윤문 및 문맥 필터링 (Contextual Redaction)**
-  - Gemini API 등을 활용하여 업로드 전 원본 텍스트를 교정합니다.
-  - "PriSincera 기술 블로그 특유의 전문적인 프리미엄 SaaS 톤 유지" 및 "코드 내 포함된 IP, 실제 유저 데이터 등 문맥적 보안 사항 `[REDACTED]` 처리"를 프롬프트로 강제합니다.
-* **2단계: 정규식 기반 시크릿 스캐너 (Regex Secret Scanner)**
-  - Firebase API Key, AWS Secret, JWT 토큰, 이메일, 전화번호 등 치명적인 민감 정보 패턴을 정규식으로 1차 차단(Block)하여 커밋 자체를 중단(Abort)시킵니다.
-* **3단계: GitHub Secret Scanning (안전망)**
+* **1단계: AI 분석 및 톤앤매너 교정 (Analyze Phase)**
+  - 관리자가 `.md` 초안 파일을 업로드하면 `POST /analyze` 엔드포인트를 통해 Gemini API가 즉시 텍스트를 교정합니다.
+  - "PriSincera 특유의 프리미엄 SaaS 톤 유지" 및 "코드 내 포함된 IP, 실제 유저 데이터 등 문맥적 보안 사항 `[REDACTED]` 처리"가 적용된 결과와 추천 메타데이터(제목, 슬러그 등)를 화면에 미리 채워줍니다.
+* **2단계: 관리자 최종 검토 (Human Review)**
+  - AI가 작성한 본문과 추출한 데이터를 관리자가 브라우저에서 직접 읽어보고 필요시 수정합니다.
+* **3단계: 정규식 기반 시크릿 스캐너 (Publish Phase)**
+  - 배포(`POST /publish`) 직전, Firebase API Key, AWS Secret, 토큰 등 치명적인 민감 정보 패턴을 백엔드 정규식(Regex)으로 1차 차단하여 커밋을 중단(Abort)시킵니다.
+* **4단계: GitHub Secret Scanning (안전망)**
   - GitHub 푸시 직후 레포지토리 단에서 지원하는 보안 스캐닝을 통해 2중으로 검열합니다.
 
 ---
