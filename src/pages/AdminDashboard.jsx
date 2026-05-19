@@ -743,51 +743,62 @@ function Dashboard({ token, adminEmail, onLogout }) {
             </div>
             
             <div className="admin-overview-section" style={{ marginTop: '2rem' }}>
-              <h2>Builder's Log 성과</h2>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>아티클 누적 조회수 현황 (조회수가 높은 순서로 정렬됩니다)</p>
-              <div className="admin-table-wrap">
-                <table className="admin-table">
-                  <thead>
-                    <tr><th>아티클 (Title)</th><th>Slug</th><th>조회수</th></tr>
-                  </thead>
-                  <tbody>
-                    {buildersLogMeta
-                      .map(article => ({ ...article, views: buildersLogStats[article.slug] || 0 }))
-                      .sort((a, b) => b.views - a.views)
-                      .slice(0, 10) // Top 10만 노출
-                      .map((article, i) => (
-                        <tr key={i}>
-                          <td className="admin-subject-cell">{article.title}</td>
-                          <td style={{ color: 'var(--text-muted)' }}>{article.slug}</td>
-                          <td><strong style={{ color: 'var(--admin-blue)' }}>{article.views.toLocaleString()}회</strong></td>
-                        </tr>
-                      ))}
-                    {buildersLogMeta.length === 0 && (
-                      <tr><td colSpan={3} className="admin-empty">퍼블리싱된 아티클이 없습니다.</td></tr>
-                    )}
-                  </tbody>
-                </table>
+              <div className="admin-chart-container" style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
+                <h3 style={{ marginTop: 0, marginBottom: '8px', fontSize: '1.1rem', color: '#E9D5FF' }}>Builder's Log 성과</h3>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '20px', fontSize: '0.9rem' }}>아티클 누적 및 일일 조회수 현황 (누적 조회수가 높은 순서로 정렬됩니다)</p>
+                <div className="admin-table-wrap">
+                  <table className="admin-table">
+                    <thead>
+                      <tr><th>아티클 (Title)</th><th>Slug</th><th>일일 조회수 (오늘)</th><th>누적 조회수</th></tr>
+                    </thead>
+                    <tbody>
+                      {buildersLogMeta
+                        .map(article => {
+                          const stat = buildersLogStats[article.slug] || { total: 0, daily: 0 };
+                          // stats endpoint returns { total: X, daily: Y } for each slug
+                          const total = stat.total !== undefined ? stat.total : (stat || 0);
+                          const daily = stat.daily !== undefined ? stat.daily : 0;
+                          return { ...article, totalViews: total, dailyViews: daily };
+                        })
+                        .sort((a, b) => b.totalViews - a.totalViews)
+                        .slice(0, 10) // Top 10만 노출
+                        .map((article, i) => (
+                          <tr key={i}>
+                            <td className="admin-subject-cell">{article.title}</td>
+                            <td style={{ color: 'var(--text-muted)' }}>{article.slug}</td>
+                            <td><strong style={{ color: 'var(--admin-green)' }}>{article.dailyViews.toLocaleString()}회</strong></td>
+                            <td><strong style={{ color: 'var(--admin-blue)' }}>{article.totalViews.toLocaleString()}회</strong></td>
+                          </tr>
+                        ))}
+                      {buildersLogMeta.length === 0 && (
+                        <tr><td colSpan={4} className="admin-empty">퍼블리싱된 아티클이 없습니다.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
             {/* Chart Area */}
             {emailLogs && emailLogs.length > 0 && (
-              <div className="admin-chart-container" style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
-                <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', color: '#E9D5FF' }}>최근 데일리 발송 추이</h3>
-                <div style={{ width: '100%', height: 300 }}>
-                  <ResponsiveContainer>
-                    <LineChart data={[...emailLogs].reverse().slice(-14)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                      <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} tickFormatter={str => str.substring(5)} />
-                      <YAxis stroke="#9CA3AF" fontSize={12} allowDecimals={false} />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: 'var(--bg-void)', borderColor: 'rgba(196,181,253,0.2)', borderRadius: '8px' }}
-                        itemStyle={{ color: '#F5F3FF' }}
-                      />
-                      <Line type="monotone" name="수신" dataKey="totalRecipients" stroke="#7C3AED" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                      <Line type="monotone" name="성공" dataKey="successCount" stroke="#10B981" strokeWidth={2} dot={{ r: 4 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+              <div className="admin-overview-section" style={{ marginTop: '2rem' }}>
+                <div className="admin-chart-container" style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
+                  <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', color: '#E9D5FF' }}>최근 데일리 발송 추이</h3>
+                  <div style={{ width: '100%', height: 300 }}>
+                    <ResponsiveContainer>
+                      <LineChart data={[...emailLogs].reverse().slice(-14)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                        <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} tickFormatter={str => str.substring(5)} />
+                        <YAxis stroke="#9CA3AF" fontSize={12} allowDecimals={false} />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: 'var(--bg-void)', borderColor: 'rgba(196,181,253,0.2)', borderRadius: '8px' }}
+                          itemStyle={{ color: '#F5F3FF' }}
+                        />
+                        <Line type="monotone" name="수신" dataKey="totalRecipients" stroke="#7C3AED" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                        <Line type="monotone" name="성공" dataKey="successCount" stroke="#10B981" strokeWidth={2} dot={{ r: 4 }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
             )}

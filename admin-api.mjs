@@ -1083,8 +1083,13 @@ router.get('/builderslog/stats', async (req, res) => {
     const { db } = await import('./pipeline/src/lib/firestore.mjs');
     const snapshot = await db.collection('builderslog_stats').get();
     const stats = {};
+    const kstDate = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0];
     snapshot.forEach(doc => {
-      stats[doc.id] = doc.data().views || 0;
+      const data = doc.data();
+      stats[doc.id] = {
+        total: data.totalViews || data.views || 0,
+        daily: data.dailyViews ? (data.dailyViews[kstDate] || 0) : 0
+      };
     });
     res.json(stats);
   } catch (err) {

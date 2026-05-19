@@ -132,8 +132,14 @@ app.post('/api/builderslog/:slug/view', apiLimiter, express.json(), async (req, 
     if (!slug) return res.status(400).json({ error: 'Slug required' });
     const { db } = await import('./pipeline/src/lib/firestore.mjs');
     const { FieldValue } = await import('firebase-admin/firestore');
+    
+    const kstDate = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0];
     const docRef = db.collection('builderslog_stats').doc(slug);
-    await docRef.set({ views: FieldValue.increment(1) }, { merge: true });
+    await docRef.set({ 
+      totalViews: FieldValue.increment(1),
+      [`dailyViews.${kstDate}`]: FieldValue.increment(1)
+    }, { merge: true });
+    
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'View record failed' });
