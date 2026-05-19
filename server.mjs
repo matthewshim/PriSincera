@@ -115,7 +115,7 @@ app.use(express.static(DIST_DIR, {
 }));
 
 // --- Admin API (Firebase Auth protected) ---
-app.use('/admin/api', adminLimiter, express.json({ limit: '10kb' }), adminRouter);
+app.use('/admin/api', adminLimiter, express.json({ limit: '1mb' }), adminRouter);
 
 // --- PriStudy API ---
 app.use('/api/study', apiLimiter, express.json({ limit: '5kb' }), studyRouter);
