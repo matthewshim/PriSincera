@@ -963,12 +963,25 @@ ${recentCommitsText}
       config: { responseMimeType: "application/json" }
     });
 
-    const resultText = response.text;
-    const parsed = JSON.parse(resultText);
-    res.json(parsed);
+    let resultText = response.text;
+    if (!resultText) {
+      throw new Error("Gemini returned empty response text (Safety filter or hallucination).");
+    }
+
+    // Strip markdown formatting if Gemini hallucinated it
+    resultText = resultText.replace(/^```(json)?\n?/i, '').replace(/```$/i, '').trim();
+
+    try {
+      const parsed = JSON.parse(resultText);
+      res.json(parsed);
+    } catch (parseError) {
+      console.error('[BuildersLog] AI JSON Parse error:', parseError.message);
+      console.error('[BuildersLog] Raw result text:', resultText);
+      throw new Error(`JSON 파싱 오류: ${parseError.message}`);
+    }
   } catch (err) {
-    console.error('[BuildersLog] AI Analyze error:', err);
-    res.status(500).json({ error: 'AI 분석 실패' });
+    console.error('[BuildersLog] AI Analyze error:', err.message);
+    res.status(500).json({ error: err.message || 'AI 분석 실패' });
   }
 });
 
