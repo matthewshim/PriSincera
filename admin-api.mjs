@@ -958,9 +958,9 @@ ${recentCommitsText}
 
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const modelsToTry = ['gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-2.5-flash', 'gemini-pro'];
+    const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-2.5-flash'];
     let resultText = null;
-    let lastError = null;
+    let errors = [];
 
     for (const modelName of modelsToTry) {
       try {
@@ -973,12 +973,20 @@ ${recentCommitsText}
         if (resultText) break; // Success!
       } catch (err) {
         console.warn(`[BuildersLog] Model ${modelName} failed:`, err.message);
-        lastError = err;
+        errors.push(`[${modelName}]: ${err.message}`);
       }
     }
 
     if (!resultText) {
-      throw new Error(`모든 모델( ${modelsToTry.join(', ')} ) 호출 실패. 마지막 에러: ${lastError?.message}`);
+      console.error(`[BuildersLog] 모든 AI 모델 호출 실패.\n${errors.join('\n')}`);
+      return res.json({
+        title: '',
+        subtitle: '',
+        slug: '',
+        tags: [],
+        refinedMarkdown: markdown,
+        _warning: 'AI API 호출에 실패했습니다 (할당량 부족 또는 API 키 문제). 초안이 그대로 반환되었습니다. 제목과 메타데이터를 수동으로 입력해주세요.'
+      });
     }
 
     // Strip markdown formatting if Gemini hallucinated it
@@ -994,11 +1002,7 @@ ${recentCommitsText}
     }
   } catch (err) {
     console.error('[BuildersLog] AI Analyze error:', err.message);
-    let errMsg = err.message || 'AI 분석 실패';
-    if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED')) {
-      errMsg = `AI API 무료 제공량을 초과했습니다. 약 1분 뒤에 다시 시도해주세요. (상세: ${err.message})`;
-    }
-    res.status(500).json({ error: errMsg });
+    res.status(500).json({ error: `서버 에러가 발생했습니다: ${err.message}` });
   }
 });
 
