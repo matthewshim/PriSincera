@@ -443,7 +443,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
     try {
       const data = await fetchApi('/builderslog/meta');
       setBuildersLogMeta(data.meta || []);
-    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+      if (!data.meta || data.meta.length === 0) {
+        console.warn('API returned empty meta array.', data);
+      }
+    } catch (err) { 
+      console.error('[loadBuildersLogMeta error]', err);
+      alert(`데이터를 불러오는 중 오류가 발생했습니다: ${err.message}`);
+      if (err.message === 'AUTH_EXPIRED') onLogout(); 
+    }
   }
 
   function openCreateBuildersLog() {
