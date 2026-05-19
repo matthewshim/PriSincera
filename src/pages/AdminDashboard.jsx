@@ -1087,7 +1087,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                                 subtitle: res.subtitle || f.subtitle,
                                 slug: res.slug || f.slug,
                                 tags: res.tags && res.tags.length > 0 ? res.tags.join(', ') : f.tags,
-                                markdown: res.refinedMarkdown || rawMarkdown
+                                markdown: res.refinedMarkdown || rawMarkdown,
+                                commits: res.commits && res.commits.length > 0 ? JSON.stringify(res.commits, null, 2) : f.commits
                               }));
                               if (res._warning) {
                                 setBuildersLogAction({ type: 'warning', msg: `⚠️ ${res._warning}` });
