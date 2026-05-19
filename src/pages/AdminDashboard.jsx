@@ -1074,10 +1074,29 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <textarea rows={3} value={buildersLogForm.commits} onChange={e => setBuildersLogForm(f => ({ ...f, commits: e.target.value }))} placeholder='[{"message": "feat: init", "url": "https..."}]' />
                   </label>
                   
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2', marginTop: '1rem' }}>
-                    본문 Markdown (AI 윤문 및 검열 파이프라인 연동)
-                    <textarea required rows={15} value={buildersLogForm.markdown} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: e.target.value }))} placeholder="# 내용 입력..." style={{ fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)' }} />
-                  </label>
+                  <div style={{ gridColumn: 'span 2', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <label className="admin-form-label" style={{ marginBottom: 0, width: '100%' }}>
+                      본문 Markdown (AI 윤문 및 검열 파이프라인 연동)
+                    </label>
+                    <label className="admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', padding: '4px 12px', fontSize: '12px' }}>
+                      📁 .md 파일 불러오기
+                      <input 
+                        type="file" 
+                        accept=".md" 
+                        style={{ display: 'none' }} 
+                        onChange={e => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (evt) => {
+                            setBuildersLogForm(f => ({ ...f, markdown: evt.target.result }));
+                          };
+                          reader.readAsText(file);
+                        }} 
+                      />
+                    </label>
+                  </div>
+                  <textarea required rows={15} value={buildersLogForm.markdown} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: e.target.value }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)' }} />
                   
                   {buildersLogAction && (
                     <div className={`admin-send-status ${buildersLogAction.type}`} style={{ gridColumn: 'span 2' }}>{buildersLogAction.msg}</div>
