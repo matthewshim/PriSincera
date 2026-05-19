@@ -958,15 +958,27 @@ ${recentCommitsText}
 
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      generationConfig: { responseMimeType: "application/json" }
-    });
+    const modelsToTry = ['gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-2.5-flash', 'gemini-pro'];
+    let resultText = null;
+    let lastError = null;
 
-    const response = await model.generateContent(prompt);
-    let resultText = response.response.text();
+    for (const modelName of modelsToTry) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: { responseMimeType: "application/json" }
+        });
+        const response = await model.generateContent(prompt);
+        resultText = response.response.text();
+        if (resultText) break; // Success!
+      } catch (err) {
+        console.warn(`[BuildersLog] Model ${modelName} failed:`, err.message);
+        lastError = err;
+      }
+    }
+
     if (!resultText) {
-      throw new Error("Gemini returned empty response text (Safety filter or hallucination).");
+      throw new Error(`모든 모델( ${modelsToTry.join(', ')} ) 호출 실패. 마지막 에러: ${lastError?.message}`);
     }
 
     // Strip markdown formatting if Gemini hallucinated it
@@ -997,14 +1009,23 @@ router.post('/builderslog/publish', async (req, res) => {
 
     // 1. AI 윤문 및 문맥 필터링 (Gemini)
     if (!skipAiReview && process.env.GEMINI_API_KEY) {
-      try {
-        const { GoogleGenerativeAI } = await import('@google/generative-ai');
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-        const response = await model.generateContent(prompt);
-        if (response.response.text()) finalMarkdown = response.response.text();
-      } catch (aiErr) {
-        console.warn('[BuildersLog] AI Review failed, proceeding with original:', aiErr.message);
+      const { GoogleGenerativeAI } = await import('@google/generative-ai');
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+      const modelsToTry = ['gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-2.5-flash', 'gemini-pro'];
+      
+      const prompt = `너는 PriSincera의 수석 테크니컬 라이터야. 다음 마크다운 문서를 읽고 전문적이고 프리미엄한 SaaS 기술 블로그 톤으로 교정해줘. H1은 제외하고 H2, H3와 Blockquote(>)를 적절히 사용해. 본문의 원래 의미를 훼손하지 마. 또한 코드 내 IP, 실명 등 민감 정보가 있다면 [REDACTED] 처리해.\n\n${markdown}`;
+
+      for (const modelName of modelsToTry) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          const response = await model.generateContent(prompt);
+          if (response.response.text()) {
+            finalMarkdown = response.response.text();
+            break; // Success
+          }
+        } catch (aiErr) {
+          console.warn(`[BuildersLog Publish] Model ${modelName} Review failed:`, aiErr.message);
+        }
       }
     }
 
