@@ -133,18 +133,28 @@ async function main() {
     const cleanedSurvivingPool = survivingPool.map(({ daysAlive, velocity, ...rest }) => rest);
     const updatedPool = [...formattedRecs, ...cleanedSurvivingPool];
     
-    console.log(\`📊 퇴출 결과: TTL 만료 \${ttlEvicted}개 삭제, 실적 저조 \${velocityEvicted}개 삭제\`);
+    console.log(`📊 퇴출 결과: TTL 만료 ${ttlEvicted}개 삭제, 실적 저조 ${velocityEvicted}개 삭제`);
 
     // 5. Firestore 업데이트
+    const runLog = `✅ 3개 신규 생성 (명예의 전당 ${hallOfFame.length}개 참조). TTL 퇴출: ${ttlEvicted}개, 실적 저조 퇴출: ${velocityEvicted}개.`;
     await poolRef.set({
       pool: updatedPool,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      lastRunTime: new Date().toISOString(),
+      lastRunLog: runLog
     }, { merge: true });
 
-    console.log(\`🎉 [PaceNote Composer] 성공적으로 업데이트 완료. (현재 풀 크기: \${updatedPool.length})\`);
+    console.log(`🎉 [PaceNote Composer] 성공적으로 업데이트 완료. (현재 풀 크기: ${updatedPool.length})`);
 
   } catch (error) {
     console.error('❌ [PaceNote Composer] 실패:', error.message);
+    try {
+      const poolRef = db.collection('config').doc('pacenote_daily_pool');
+      await poolRef.set({
+        lastRunTime: new Date().toISOString(),
+        lastRunLog: `❌ 에러 발생: ${error.message}`
+      }, { merge: true });
+    } catch (e) {}
     process.exit(1);
   }
 }

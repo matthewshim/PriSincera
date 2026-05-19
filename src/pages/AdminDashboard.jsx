@@ -6,6 +6,21 @@ import './AdminDashboard.css';
 
 const API_BASE = '/admin/api';
 
+const PACENOTE_CATEGORIES = [
+  'Mindset',
+  'Branding',
+  'Deep Work',
+  'Networking',
+  'Productivity',
+  'AI & Future',
+  'Vision',
+  'Inspiration',
+  'Environment',
+  'Problem Solving',
+  'Learning',
+  'Health'
+];
+
 /**
  * Firebase Auth — REST API 인증
  */
@@ -1028,7 +1043,12 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <input type="text" required value={poolForm.title} onChange={e => setPoolForm({ ...poolForm, title: e.target.value })} />
                   </label>
                   <label className="admin-form-label">카테고리
-                    <input type="text" required value={poolForm.category} onChange={e => setPoolForm({ ...poolForm, category: e.target.value })} />
+                    <select required value={poolForm.category} onChange={e => setPoolForm({ ...poolForm, category: e.target.value })} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--surface-bg)', color: 'var(--text-primary)', marginTop: '6px' }}>
+                      <option value="">카테고리 선택</option>
+                      {PACENOTE_CATEGORIES.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
                   </label>
                   <label className="admin-form-label">컬러 (Hex)
                     <input type="text" required value={poolForm.color} onChange={e => setPoolForm({ ...poolForm, color: e.target.value })} />
