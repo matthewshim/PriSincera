@@ -475,7 +475,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   async function handleBuildersLogSubmit(e) {
     e.preventDefault();
-    setBuildersLogAction({ type: 'loading', msg: 'AI 검수 및 GitHub 배포 중...' });
+    setBuildersLogAction({ type: 'loading', msg: 'GitHub 배포(Commit & Push) 중...' });
     try {
       let parsedTags = buildersLogForm.tags.split(',').map(s => s.trim()).filter(Boolean);
       let parsedCommits = [];
@@ -496,7 +496,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
       const body = {
         metaArray: updatedMetaArray, currentSlug: buildersLogForm.slug,
-        markdown: buildersLogForm.markdown, skipAiReview: false
+        markdown: buildersLogForm.markdown, skipAiReview: true // AI 검수는 파일 업로드 시 선행됨
       };
 
       const result = await fetchApi('/builderslog/publish', { method: 'POST', body: JSON.stringify(body) });
@@ -1084,12 +1084,31 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         type="file" 
                         accept=".md" 
                         style={{ display: 'none' }} 
-                        onChange={e => {
+                        onChange={async e => {
                           const file = e.target.files[0];
                           if (!file) return;
                           const reader = new FileReader();
-                          reader.onload = (evt) => {
-                            setBuildersLogForm(f => ({ ...f, markdown: evt.target.result }));
+                          reader.onload = async (evt) => {
+                            const rawMarkdown = evt.target.result;
+                            setBuildersLogForm(f => ({ ...f, markdown: rawMarkdown }));
+                            setBuildersLogAction({ type: 'loading', msg: 'AI가 초안을 분석하여 톤앤매너 교정 및 항목을 자동 작성 중입니다...' });
+                            try {
+                              const res = await fetchApi('/builderslog/analyze', { 
+                                method: 'POST', 
+                                body: JSON.stringify({ markdown: rawMarkdown }) 
+                              });
+                              setBuildersLogForm(f => ({
+                                ...f,
+                                title: res.title || f.title,
+                                subtitle: res.subtitle || f.subtitle,
+                                slug: res.slug || f.slug,
+                                tags: res.tags ? res.tags.join(', ') : f.tags,
+                                markdown: res.refinedMarkdown || rawMarkdown
+                              }));
+                              setBuildersLogAction({ type: 'success', msg: '✨ AI 분석 및 자동 작성 완료. 내용을 확인하고 Publish를 눌러주세요.' });
+                            } catch(err) {
+                              setBuildersLogAction({ type: 'error', msg: `AI 분석 실패: ${err.message}` });
+                            }
                           };
                           reader.readAsText(file);
                         }} 

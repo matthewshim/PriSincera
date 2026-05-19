@@ -849,6 +849,50 @@ router.get('/builderslog/content/:slug', async (req, res) => {
   }
 });
 
+router.post('/builderslog/analyze', async (req, res) => {
+  try {
+    const { markdown } = req.body;
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(400).json({ error: 'GEMINI_API_KEY가 설정되지 않아 AI 분석을 사용할 수 없습니다.' });
+    }
+
+    const { GoogleGenAI } = await import('@google/genai');
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    
+    const prompt = `
+너는 PriSincera의 수석 테크니컬 라이터야. 전달된 초안 마크다운 문서를 분석해서 다음 작업을 수행해:
+1. 초안의 내용과 의도를 파악하여 "전문적이고 프리미엄한 SaaS 기술 블로그 톤"으로 마크다운 본문을 재작성(윤문)해. (H1은 쓰지 말고 H2, H3, Blockquote 사용)
+2. 코드나 본문에 포함된 IP, 주민등록번호, 실제 유저 이메일 등 민감한 개인정보/보안 데이터는 [REDACTED] 처리해.
+3. 이 아티클에 가장 어울리는 Title, Subtitle, 영문 Slug(소문자와 하이픈만), Tags(최대 4개)를 추출해.
+
+반드시 아래 JSON 형식으로만 응답해 (Markdown code block 표시 없이 순수 JSON 문자열만 출력):
+{
+  "title": "추출한 제목",
+  "subtitle": "추출한 부제목",
+  "slug": "extracted-english-slug",
+  "tags": ["Tag1", "Tag2"],
+  "refinedMarkdown": "윤문 및 검열이 완료된 마크다운 본문..."
+}
+
+[원본 초안]
+${markdown}
+`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: { responseMimeType: "application/json" }
+    });
+
+    const resultText = response.text;
+    const parsed = JSON.parse(resultText);
+    res.json(parsed);
+  } catch (err) {
+    console.error('[BuildersLog] AI Analyze error:', err);
+    res.status(500).json({ error: 'AI 분석 실패' });
+  }
+});
+
 router.post('/builderslog/publish', async (req, res) => {
   try {
     const { metaArray, currentSlug, markdown, skipAiReview } = req.body;
