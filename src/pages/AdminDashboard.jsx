@@ -1037,44 +1037,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </div>
               <form onSubmit={handleBuildersLogSubmit}>
                 <div className="admin-modal-body" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr', maxHeight: '70vh', overflowY: 'auto' }}>
-                  <label className="admin-form-label">
-                    ID (자동)
-                    <input type="text" value={buildersLogForm.id} disabled />
-                  </label>
-                  <label className="admin-form-label">
-                    Chapter No (예: 01)
-                    <input type="text" required value={buildersLogForm.chapterNo} onChange={e => setBuildersLogForm(f => ({ ...f, chapterNo: e.target.value }))} />
-                  </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    Slug (URL 경로, 영문/하이픈)
-                    <input type="text" required value={buildersLogForm.slug} onChange={e => setBuildersLogForm(f => ({ ...f, slug: e.target.value }))} placeholder="my-awesome-update" />
-                  </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    Title (메인 제목)
-                    <input type="text" required value={buildersLogForm.title} onChange={e => setBuildersLogForm(f => ({ ...f, title: e.target.value }))} />
-                  </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    Subtitle (부제목/요약)
-                    <input type="text" value={buildersLogForm.subtitle} onChange={e => setBuildersLogForm(f => ({ ...f, subtitle: e.target.value }))} />
-                  </label>
-                  <label className="admin-form-label">
-                    Date (YYYY-MM-DD)
-                    <input type="date" required value={buildersLogForm.date} onChange={e => setBuildersLogForm(f => ({ ...f, date: e.target.value }))} />
-                  </label>
-                  <label className="admin-form-label">
-                    Accent Color (Hex)
-                    <input type="text" value={buildersLogForm.accent} onChange={e => setBuildersLogForm(f => ({ ...f, accent: e.target.value }))} />
-                  </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    Tags (콤마 분리)
-                    <input type="text" value={buildersLogForm.tags} onChange={e => setBuildersLogForm(f => ({ ...f, tags: e.target.value }))} placeholder="Design, Architecture, Vercel" />
-                  </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    관련 커밋 (JSON 배열 - 옵션)
-                    <textarea rows={3} value={buildersLogForm.commits} onChange={e => setBuildersLogForm(f => ({ ...f, commits: e.target.value }))} placeholder='[{"message": "feat: init", "url": "https..."}]' />
-                  </label>
                   
-                  <div style={{ gridColumn: 'span 2', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                     <label className="admin-form-label" style={{ marginBottom: 0, width: '100%' }}>
                       본문 Markdown (AI 윤문 및 검열 파이프라인 연동)
                     </label>
@@ -1116,10 +1080,49 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     </label>
                   </div>
                   <textarea required rows={15} value={buildersLogForm.markdown} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: e.target.value }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)' }} />
-                  
+
                   {buildersLogAction && (
                     <div className={`admin-send-status ${buildersLogAction.type}`} style={{ gridColumn: 'span 2' }}>{buildersLogAction.msg}</div>
                   )}
+
+                  <hr style={{ gridColumn: 'span 2', borderColor: 'rgba(255,255,255,0.1)', margin: '0.5rem 0' }} />
+
+                  <label className="admin-form-label">
+                    ID (자동)
+                    <input type="text" value={buildersLogForm.id} disabled />
+                  </label>
+                  <label className="admin-form-label">
+                    Chapter No (예: 01)
+                    <input type="text" required value={buildersLogForm.chapterNo} onChange={e => setBuildersLogForm(f => ({ ...f, chapterNo: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Slug (URL 경로, 영문/하이픈)
+                    <input type="text" required value={buildersLogForm.slug} onChange={e => setBuildersLogForm(f => ({ ...f, slug: e.target.value }))} placeholder="my-awesome-update" />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Title (메인 제목)
+                    <input type="text" required value={buildersLogForm.title} onChange={e => setBuildersLogForm(f => ({ ...f, title: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Subtitle (부제목/요약)
+                    <input type="text" value={buildersLogForm.subtitle} onChange={e => setBuildersLogForm(f => ({ ...f, subtitle: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label">
+                    Date (YYYY-MM-DD)
+                    <input type="date" required value={buildersLogForm.date} onChange={e => setBuildersLogForm(f => ({ ...f, date: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label">
+                    Accent Color (Hex)
+                    <input type="text" value={buildersLogForm.accent} onChange={e => setBuildersLogForm(f => ({ ...f, accent: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Tags (콤마 분리)
+                    <input type="text" value={buildersLogForm.tags} onChange={e => setBuildersLogForm(f => ({ ...f, tags: e.target.value }))} placeholder="Design, Architecture, Vercel" />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    관련 커밋 (JSON 배열 - 옵션)
+                    <textarea rows={3} value={buildersLogForm.commits} onChange={e => setBuildersLogForm(f => ({ ...f, commits: e.target.value }))} placeholder='[{"message": "feat: init", "url": "https..."}]' />
+                  </label>
                 </div>
                 <div className="admin-modal-footer">
                   <button type="button" className="admin-btn-secondary" onClick={() => setBuildersLogModal(null)}>취소</button>
