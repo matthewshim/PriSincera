@@ -958,7 +958,7 @@ ${recentCommitsText}
 `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash-8b',
       contents: prompt,
       config: { responseMimeType: "application/json" }
     });
@@ -983,7 +983,7 @@ ${recentCommitsText}
     console.error('[BuildersLog] AI Analyze error:', err.message);
     let errMsg = err.message || 'AI 분석 실패';
     if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED')) {
-      errMsg = 'AI API 무료 제공량(분당 호출/토큰 제한)을 초과했습니다. 약 1분 뒤에 다시 파일을 업로드해 주세요.';
+      errMsg = `AI API 무료 제공량을 초과했습니다. 약 1분 뒤에 다시 시도해주세요. (상세: ${err.message})`;
     }
     res.status(500).json({ error: errMsg });
   }
