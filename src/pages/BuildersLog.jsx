@@ -65,7 +65,7 @@ const ChapterCard = ({ chapter, index }) => {
           </div>
           <div className="card-footer" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
             <span className="read-more-btn">
-              Read Article →
+              Read Article <span className="read-more-arrow">→</span>
             </span>
           </div>
         </div>

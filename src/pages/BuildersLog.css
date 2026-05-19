@@ -308,22 +308,26 @@
 
 /* --- Buttons --- */
 .read-more-btn {
-  display: inline-block;
-  padding: var(--space-sm) var(--space-md);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-  text-decoration: none;
-  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
   font-size: 0.9rem;
   font-weight: 500;
-  transition: all var(--duration-fast) var(--ease-spring);
+  transition: color var(--duration-fast) var(--ease-spring);
+}
+
+.read-more-arrow {
+  display: inline-block;
+  transition: transform var(--duration-fast) var(--ease-spring);
 }
 
 .builder-card:hover .read-more-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--accent-color);
-  color: var(--text-primary);
+  color: var(--accent-color);
+}
+
+.builder-card:hover .read-more-arrow {
+  transform: translateX(4px);
 }
 
 .builder-card-link-wrapper:active .builder-card-glass {
