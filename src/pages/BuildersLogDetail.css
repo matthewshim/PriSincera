@@ -1,6 +1,6 @@
 .builders-log-detail-wrapper {
   min-height: 100vh;
-  padding: var(--space-3xl) var(--space-lg) 80px;
+  padding: var(--space-3xl) var(--space-lg) var(--space-2xl);
   background: var(--bg-void);
   color: var(--text-primary);
   display: flex;
@@ -101,7 +101,7 @@
 .tag-pill {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 4px 12px;
+  padding: var(--space-xs) var(--space-md);
   border-radius: var(--radius-full);
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -187,7 +187,7 @@
 
 .markdown-body pre code {
   background: transparent;
-  padding: 1.25rem;
+  padding: var(--space-lg);
   display: block;
 }
 
@@ -195,21 +195,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 4rem 0;
+  gap: var(--space-md);
+  padding: var(--space-2xl) 0;
   color: var(--text-muted);
 }
 
 .detail-footer {
-  margin-top: 4rem;
-  padding-top: 2rem;
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-xl);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
 }
 
 .back-btn-large {
   display: inline-block;
-  padding: 12px var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
@@ -224,6 +224,10 @@
   transform: translateY(-2px);
 }
 
+.back-btn-large:active {
+  transform: scale(0.97);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .detail-title {
@@ -233,6 +237,8 @@
     font-size: 1.1rem;
   }
   .builders-log-detail-wrapper {
-    padding-top: 100px;
+    padding-top: 96px;
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
   }
 }
