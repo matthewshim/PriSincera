@@ -1,5 +1,5 @@
 /**
- * PriSignal HTML 이메일 템플릿 엔진
+ * Daily Digest HTML 이메일 템플릿 엔진
  *
  * 기존 prisignal-email-template.html + prisignal-email-preview.html의
  * 디자인을 프로그래매틱으로 구현. Buttondown {{ body }} 제약 없이
@@ -184,7 +184,7 @@ function renderPortalCTA(dailyPageUrl) {
 }
 
 /**
- * PriStudy 오늘의 1문장 섹션
+ * Daily Digest 오늘의 1문장 섹션
  */
 function renderStudySection(studyData, date) {
   if (!studyData) return '';
@@ -288,7 +288,7 @@ function renderStudySection(studyData, date) {
 // ─── Main Render ─────────────────────────────────
 
 /**
- * PriSignal Daily 이메일 HTML을 렌더링합니다.
+ * Daily Digest Daily 이메일 HTML을 렌더링합니다.
  *
  * @param {Object} params
  * @param {string} params.date - "2026-04-29" 형식
@@ -296,7 +296,7 @@ function renderStudySection(studyData, date) {
  * @param {number} params.totalCount - 전체 아티클 수
  * @param {string} params.dailyPageUrl - 데일리 포털 URL
  * @param {string} params.unsubscribeUrl - 구독 해지 URL (개인화)
- * @param {Object} [params.studyData] - PriStudy 오늘의 1문장 데이터
+ * @param {Object} [params.studyData] - Daily Digest 오늘의 1문장 데이터
  * @returns {string} 완전한 HTML 이메일 문자열
  */
 export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, unsubscribeUrl, studyData }) {
@@ -311,7 +311,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
   // More Signals
   const moreSignalsHtml = renderMoreSignals(articles, dailyPageUrl);
 
-  // PriStudy Section
+  // Daily Digest Section
   const studyHtml = renderStudySection(studyData, date);
 
   // Portal CTA
@@ -326,7 +326,7 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
   <meta name="supported-color-schemes" content="light dark">
   <!--
     ═══════════════════════════════════════════════════════════
-    PriSignal — Cloud Run 자체 발송 이메일 템플릿
+    Daily Digest — Cloud Run 자체 발송 이메일 템플릿
     ═══════════════════════════════════════════════════════════
   -->
   <style>

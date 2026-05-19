@@ -1,5 +1,5 @@
 /**
- * PriSignal 구독자 관리 — Firestore 기반 (v2)
+ * Daily Digest 구독자 관리 — Firestore 기반 (v2)
  *
  * Firestore 컬렉션: subscribers/{emailHash}
  *   - email, status, subscribedAt, source, unsubscribedAt
@@ -176,6 +176,6 @@ export function buildUnsubscribeUrl(email) {
     return `https://www.prisincera.com/api/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
   } catch (err) {
     console.error('[Subscribers] buildUnsubscribeUrl 실패:', err.message);
-    return `https://www.prisincera.com/prisignal`;
+    return `https://www.prisincera.com/daily`;
   }
 }
