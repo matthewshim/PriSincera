@@ -816,4 +816,126 @@ router.delete('/admins/:uid', requireSuperAdmin, async (req, res) => {
   }
 });
 
+// ─── Builder's Log (AI & Security Pipeline) ──────────────
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+router.get('/builderslog/meta', async (req, res) => {
+  try {
+    const metaPath = path.join(__dirname, 'src', 'data', 'buildersLogMeta.json');
+    if (!fs.existsSync(metaPath)) return res.json({ meta: [] });
+    const data = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+    res.json({ meta: data });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '메타데이터 조회 실패' });
+  }
+});
+
+router.get('/builderslog/content/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const contentPath = path.join(__dirname, 'public', 'content', 'logs', `${slug}.md`);
+    if (!fs.existsSync(contentPath)) return res.json({ content: '' });
+    const content = fs.readFileSync(contentPath, 'utf8');
+    res.json({ content });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '본문 내용 조회 실패' });
+  }
+});
+
+router.post('/builderslog/publish', async (req, res) => {
+  try {
+    const { metaArray, currentSlug, markdown, skipAiReview } = req.body;
+    let finalMarkdown = markdown;
+
+    // 1. AI 윤문 및 문맥 필터링 (Gemini)
+    if (!skipAiReview && process.env.GEMINI_API_KEY) {
+      try {
+        const { GoogleGenAI } = await import('@google/genai');
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+        const prompt = `너는 PriSincera의 수석 테크니컬 라이터야. 다음 마크다운 문서를 읽고 전문적이고 프리미엄한 SaaS 기술 블로그 톤으로 교정해줘. H1은 제외하고 H2, H3와 Blockquote(>)를 적절히 사용해. 본문의 원래 의미를 훼손하지 마. 또한 코드 내 IP, 실명 등 민감 정보가 있다면 [REDACTED] 처리해.\n\n${markdown}`;
+        
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: prompt,
+        });
+        if (response.text) finalMarkdown = response.text;
+      } catch (aiErr) {
+        console.warn('[BuildersLog] AI Review failed, proceeding with original:', aiErr.message);
+      }
+    }
+
+    // 2. 정규식 기반 시크릿 스캐너
+    const secretPatterns = [
+      /AIza[0-9A-Za-z-_]{35}/, // Firebase API Key (Though sometimes public, best to warn, but let's just use strict regex for other things if needed)
+      /ghp_[a-zA-Z0-9]{36}/, // GitHub PAT
+      /xox[baprs]-[a-zA-Z0-9]{10,48}/ // Slack Token
+    ];
+    for (const pattern of secretPatterns) {
+      if (pattern.test(finalMarkdown)) {
+        return res.status(400).json({ error: '보안 위반: 민감 정보(Secret) 패턴이 발견되어 퍼블리싱이 차단되었습니다.' });
+      }
+    }
+
+    // 3. GitHub API를 통한 커밋 푸시
+    const githubToken = process.env.GITHUB_TOKEN;
+    if (!githubToken) {
+      // 로컬 테스트용: 직접 파일 쓰기
+      const metaPath = path.join(__dirname, 'src', 'data', 'buildersLogMeta.json');
+      fs.writeFileSync(metaPath, JSON.stringify(metaArray, null, 2));
+      const contentDir = path.join(__dirname, 'public', 'content', 'logs');
+      if (!fs.existsSync(contentDir)) fs.mkdirSync(contentDir, { recursive: true });
+      const contentPath = path.join(contentDir, `${currentSlug}.md`);
+      fs.writeFileSync(contentPath, finalMarkdown);
+      return res.json({ success: true, message: '로컬 환경에 성공적으로 저장되었습니다 (GITHUB_TOKEN 없음).' });
+    }
+
+    const { Octokit } = await import('@octokit/rest');
+    const octokit = new Octokit({ auth: githubToken });
+    const owner = 'matthewshim';
+    const repo = 'PriSincera';
+    const branch = 'main';
+
+    const ref = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
+    const commitSha = ref.data.object.sha;
+    const commit = await octokit.rest.git.getCommit({ owner, repo, commit_sha: commitSha });
+    const treeSha = commit.data.tree.sha;
+
+    const metaBlob = await octokit.rest.git.createBlob({
+      owner, repo, content: JSON.stringify(metaArray, null, 2), encoding: 'utf-8'
+    });
+    const markdownBlob = await octokit.rest.git.createBlob({
+      owner, repo, content: finalMarkdown, encoding: 'utf-8'
+    });
+
+    const newTree = await octokit.rest.git.createTree({
+      owner, repo, base_tree: treeSha,
+      tree: [
+        { path: 'src/data/buildersLogMeta.json', mode: '100644', type: 'blob', sha: metaBlob.data.sha },
+        { path: `public/content/logs/${currentSlug}.md`, mode: '100644', type: 'blob', sha: markdownBlob.data.sha }
+      ]
+    });
+
+    const newCommit = await octokit.rest.git.createCommit({
+      owner, repo, message: `feat(builders-log): publish ${currentSlug} via Admin`,
+      tree: newTree.data.sha, parents: [commitSha]
+    });
+
+    await octokit.rest.git.updateRef({
+      owner, repo, ref: `heads/${branch}`, sha: newCommit.data.sha
+    });
+
+    res.json({ success: true, message: 'GitHub main 브랜치에 성공적으로 커밋되었습니다.' });
+  } catch (err) {
+    console.error('[BuildersLog] Publish error:', err);
+    res.status(500).json({ error: `퍼블리싱 실패: ${err.message}` });
+  }
+});
+
 export default router;

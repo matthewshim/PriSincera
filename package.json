@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.14.0",
+    "@google/genai": "^2.4.0",
+    "@octokit/rest": "^22.0.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@types/three": "^0.184.1",

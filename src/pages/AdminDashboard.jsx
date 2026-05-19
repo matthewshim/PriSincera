@@ -164,6 +164,12 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [poolModal, setPoolModal] = useState(null);
   const [poolForm, setPoolForm] = useState({ id: '', title: '', category: '', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
 
+  // Builder's Log
+  const [buildersLogMeta, setBuildersLogMeta] = useState([]);
+  const [buildersLogModal, setBuildersLogModal] = useState(null);
+  const [buildersLogForm, setBuildersLogForm] = useState({ id: '', slug: '', chapterNo: '', title: '', subtitle: '', description: '', date: '', tags: '', accent: '#6D28D9', commits: '', markdown: '' });
+  const [buildersLogAction, setBuildersLogAction] = useState(null);
+
   const isSuperAdmin = role === 'super_admin';
 
   useEffect(() => { loadDashboard(); }, []);
@@ -431,6 +437,76 @@ function Dashboard({ token, adminEmail, onLogout }) {
     }
   }
 
+  // ─── Builder's Log Loaders & Handlers ─────────
+  
+  async function loadBuildersLogMeta() {
+    try {
+      const data = await fetchApi('/builderslog/meta');
+      setBuildersLogMeta(data.meta || []);
+    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
+  function openCreateBuildersLog() {
+    const today = new Date().toISOString().split('T')[0];
+    setBuildersLogForm({
+      id: `ep${buildersLogMeta.length + 1}`, slug: '', chapterNo: String(buildersLogMeta.length + 1).padStart(2, '0'),
+      title: '', subtitle: '', description: '', date: today, tags: '', accent: '#6D28D9', commits: '[]', markdown: ''
+    });
+    setBuildersLogAction(null);
+    setBuildersLogModal('create');
+  }
+
+  async function openEditBuildersLog(item) {
+    setBuildersLogAction({ type: 'loading', msg: '마크다운 불러오는 중...' });
+    setBuildersLogModal({ mode: 'edit', slug: item.slug });
+    setBuildersLogForm({
+      id: item.id, slug: item.slug, chapterNo: item.chapterNo, title: item.title, subtitle: item.subtitle || '',
+      description: item.description || '', date: item.date, tags: (item.tags || []).join(', '),
+      accent: item.accent || '#6D28D9', commits: JSON.stringify(item.commits || [], null, 2), markdown: ''
+    });
+    try {
+      const data = await fetchApi(`/builderslog/content/${item.slug}`);
+      setBuildersLogForm(prev => ({ ...prev, markdown: data.content || '' }));
+      setBuildersLogAction(null);
+    } catch (err) {
+      setBuildersLogAction({ type: 'error', msg: `본문 로드 실패: ${err.message}` });
+    }
+  }
+
+  async function handleBuildersLogSubmit(e) {
+    e.preventDefault();
+    setBuildersLogAction({ type: 'loading', msg: 'AI 검수 및 GitHub 배포 중...' });
+    try {
+      let parsedTags = buildersLogForm.tags.split(',').map(s => s.trim()).filter(Boolean);
+      let parsedCommits = [];
+      try { if (buildersLogForm.commits) parsedCommits = JSON.parse(buildersLogForm.commits); } catch (e) {}
+
+      const newMetaObj = {
+        id: buildersLogForm.id, slug: buildersLogForm.slug, chapterNo: buildersLogForm.chapterNo,
+        title: buildersLogForm.title, subtitle: buildersLogForm.subtitle, description: buildersLogForm.description,
+        date: buildersLogForm.date, tags: parsedTags, accent: buildersLogForm.accent, commits: parsedCommits
+      };
+
+      let updatedMetaArray = [...buildersLogMeta];
+      if (buildersLogModal === 'create') {
+        updatedMetaArray.unshift(newMetaObj);
+      } else {
+        updatedMetaArray = updatedMetaArray.map(m => m.id === newMetaObj.id ? newMetaObj : m);
+      }
+
+      const body = {
+        metaArray: updatedMetaArray, currentSlug: buildersLogForm.slug,
+        markdown: buildersLogForm.markdown, skipAiReview: false
+      };
+
+      const result = await fetchApi('/builderslog/publish', { method: 'POST', body: JSON.stringify(body) });
+      setBuildersLogAction({ type: 'success', msg: result.message || '✅ 배포 완료' });
+      setTimeout(() => { setBuildersLogModal(null); loadBuildersLogMeta(); }, 1500);
+    } catch (err) {
+      setBuildersLogAction({ type: 'error', msg: `❌ ${err.message}` });
+    }
+  }
+
   // ─── Admin CRUD ───────────────────────────────
 
   async function loadAdmins() {
@@ -487,6 +563,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'pacenotes') loadPacers();
     if (activeTab === 'pacenote_insights') loadPaceInsights();
     if (activeTab === 'pacenote_pool') { loadPacePool(); loadPaceInsights(); }
+    if (activeTab === 'builderslog') loadBuildersLogMeta();
   }, [activeTab]);
 
   if (loading) {
@@ -513,6 +590,13 @@ function Dashboard({ token, adminEmail, onLogout }) {
         { id: 'pacenotes', label: '⛵ Pacer 현황' },
         { id: 'pacenote_insights', label: '💡 유저 목표 인사이트' },
         { id: 'pacenote_pool', label: '🎯 AI 추천 풀 관리' },
+      ]
+    },
+    {
+      id: 'builderslog_group',
+      label: 'Builder\'s Log',
+      items: [
+        { id: 'builderslog', label: '📝 퍼블리싱 (Publishing)' }
       ]
     },
     ...(isSuperAdmin ? [{
@@ -882,6 +966,34 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
 
+        {activeTab === 'builderslog' && (
+          <div className="admin-builderslog">
+            <div className="admin-section-header">
+              <h2>Builder's Log 퍼블리싱</h2>
+              <button className="admin-btn-primary" onClick={openCreateBuildersLog}>📝 새 아티클 작성</button>
+            </div>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>Chapter</th><th>Slug</th><th>Title</th><th>Date</th><th>관리</th></tr></thead>
+                <tbody>
+                  {buildersLogMeta.map((item, i) => (
+                    <tr key={i}>
+                      <td><span className="admin-date-chip" style={{ backgroundColor: item.accent || '#6D28D9', color: '#fff' }}>EP. {item.chapterNo}</span></td>
+                      <td style={{ color: '#9CA3AF' }}>{item.slug}</td>
+                      <td className="admin-subject-cell">{item.title}</td>
+                      <td>{item.date}</td>
+                      <td className="admin-actions-cell">
+                        <button className="admin-action-btn edit" onClick={() => openEditBuildersLog(item)} title="수정/배포">✏️</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {buildersLogMeta.length === 0 && (<tr><td colSpan={5} className="admin-empty">아티클이 없습니다.</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* Pool Modal */}
         {poolModal && (
           <div className="admin-modal-overlay" onClick={() => setPoolModal(null)}>
@@ -909,6 +1021,73 @@ function Dashboard({ token, adminEmail, onLogout }) {
                 <div className="admin-modal-footer">
                   <button type="button" className="admin-btn-secondary" onClick={() => setPoolModal(null)}>취소</button>
                   <button type="submit" className="admin-btn-primary">저장</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Builders Log Modal */}
+        {buildersLogModal && (
+          <div className="admin-modal-overlay admin-content-modal" onClick={() => setBuildersLogModal(null)}>
+            <div className="admin-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px', width: '90%' }}>
+              <div className="admin-modal-header">
+                <h3>{buildersLogModal === 'create' ? '새 아티클 작성' : '아티클 수정 및 재배포'}</h3>
+                <button className="admin-modal-close" onClick={() => setBuildersLogModal(null)}>✕</button>
+              </div>
+              <form onSubmit={handleBuildersLogSubmit}>
+                <div className="admin-modal-body" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr', maxHeight: '70vh', overflowY: 'auto' }}>
+                  <label className="admin-form-label">
+                    ID (자동)
+                    <input type="text" value={buildersLogForm.id} disabled />
+                  </label>
+                  <label className="admin-form-label">
+                    Chapter No (예: 01)
+                    <input type="text" required value={buildersLogForm.chapterNo} onChange={e => setBuildersLogForm(f => ({ ...f, chapterNo: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Slug (URL 경로, 영문/하이픈)
+                    <input type="text" required value={buildersLogForm.slug} onChange={e => setBuildersLogForm(f => ({ ...f, slug: e.target.value }))} placeholder="my-awesome-update" />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Title (메인 제목)
+                    <input type="text" required value={buildersLogForm.title} onChange={e => setBuildersLogForm(f => ({ ...f, title: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Subtitle (부제목/요약)
+                    <input type="text" value={buildersLogForm.subtitle} onChange={e => setBuildersLogForm(f => ({ ...f, subtitle: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label">
+                    Date (YYYY-MM-DD)
+                    <input type="date" required value={buildersLogForm.date} onChange={e => setBuildersLogForm(f => ({ ...f, date: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label">
+                    Accent Color (Hex)
+                    <input type="text" value={buildersLogForm.accent} onChange={e => setBuildersLogForm(f => ({ ...f, accent: e.target.value }))} />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Tags (콤마 분리)
+                    <input type="text" value={buildersLogForm.tags} onChange={e => setBuildersLogForm(f => ({ ...f, tags: e.target.value }))} placeholder="Design, Architecture, Vercel" />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    관련 커밋 (JSON 배열 - 옵션)
+                    <textarea rows={3} value={buildersLogForm.commits} onChange={e => setBuildersLogForm(f => ({ ...f, commits: e.target.value }))} placeholder='[{"message": "feat: init", "url": "https..."}]' />
+                  </label>
+                  
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2', marginTop: '1rem' }}>
+                    본문 Markdown (AI 윤문 및 검열 파이프라인 연동)
+                    <textarea required rows={15} value={buildersLogForm.markdown} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: e.target.value }))} placeholder="# 내용 입력..." style={{ fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)' }} />
+                  </label>
+                  
+                  {buildersLogAction && (
+                    <div className={`admin-send-status ${buildersLogAction.type}`} style={{ gridColumn: 'span 2' }}>{buildersLogAction.msg}</div>
+                  )}
+                </div>
+                <div className="admin-modal-footer">
+                  <button type="button" className="admin-btn-secondary" onClick={() => setBuildersLogModal(null)}>취소</button>
+                  <button type="submit" className="admin-btn-primary" disabled={buildersLogAction?.type === 'loading'}>
+                    {buildersLogAction?.type === 'loading' ? '배포 중...' : 'GitHub에 커밋 및 배포 (Publish)'}
+                  </button>
                 </div>
               </form>
             </div>
