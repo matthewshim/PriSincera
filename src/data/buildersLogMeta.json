@@ -1,5 +1,48 @@
 [
   {
+    "id": "ep3",
+    "slug": "prisincera-builders-log-admin-integration-pipeline-enhancement",
+    "chapterNo": "03",
+    "title": "PriSincera Builder's Log: 관리자 통합을 통한 콘텐츠 발행 파이프라인 고도화",
+    "subtitle": "안정성과 효율성을 극대화한 AI 기반 GitHub 연동 자동화 시스템 구현 방안",
+    "description": "",
+    "date": "2026-05-19",
+    "tags": [
+      "Builder's Log",
+      "GitHub API",
+      "AI Automation",
+      "Admin Dashboard"
+    ],
+    "accent": "#6D28D9",
+    "commits": [
+      {
+        "type": "feat",
+        "hash": "fc50298",
+        "msg": "integrate Builder's Log publishing pipeline with GitHub API"
+      },
+      {
+        "type": "docs",
+        "hash": "935142d",
+        "msg": "update builders log admin integration with AI quota splitting and GitHub token details"
+      },
+      {
+        "type": "feat",
+        "hash": "c9b0a72",
+        "msg": "split admin and pipeline gemini api keys for doubled quota"
+      },
+      {
+        "type": "feat",
+        "hash": "97cd0b6",
+        "msg": "gracefully fallback and allow manual publishing when all AI models fail"
+      },
+      {
+        "type": "feat",
+        "hash": "8ddb560",
+        "msg": "implement scalable view tracking and dashboard display"
+      }
+    ]
+  },
+  {
     "id": "ep1",
     "slug": "ai-pacenote-expansion",
     "chapterNo": "01",
@@ -7,11 +50,24 @@
     "subtitle": "Data-Driven AI Ecosystem",
     "description": "단순히 API를 호출해 무작위로 목표를 생성하던 초기 모델을 넘어, 유저의 '선택'과 '달성' 데이터를 바탕으로 Velocity를 계산하고 스스로 프롬프트를 진화시키는 플라이휠(Feedback Loop) 구축 과정.",
     "date": "2026-05-18",
-    "tags": ["AI", "Data", "Backend", "Firestore"],
+    "tags": [
+      "AI",
+      "Data",
+      "Backend",
+      "Firestore"
+    ],
     "accent": "var(--prism-indigo)",
     "commits": [
-      { "type": "feat", "hash": "6cd920f", "msg": "Phase 3 - AI Feedback Loop by injecting Hall of Fame items into Gemini prompt" },
-      { "type": "feat", "hash": "e16b2c0", "msg": "Phase 2 - Dynamic Ejection algorithm preventing chart stagnation" }
+      {
+        "type": "feat",
+        "hash": "6cd920f",
+        "msg": "Phase 3 - AI Feedback Loop by injecting Hall of Fame items into Gemini prompt"
+      },
+      {
+        "type": "feat",
+        "hash": "e16b2c0",
+        "msg": "Phase 2 - Dynamic Ejection algorithm preventing chart stagnation"
+      }
     ]
   },
   {
@@ -22,10 +78,18 @@
     "subtitle": "Authentication & Security",
     "description": "가입 이탈률을 0으로 만들기 위해 구글 로그인으로 전면 개편하면서 발생한 백오피스 권한 충돌 사태. 다중 Firebase 인스턴스 초기화를 통해 브라우저 세션을 물리적으로 격리한 트러블슈팅 경험.",
     "date": "2026-05-18",
-    "tags": ["Security", "Firebase Auth", "React"],
+    "tags": [
+      "Security",
+      "Firebase Auth",
+      "React"
+    ],
     "accent": "var(--orbit-cyan)",
     "commits": [
-      { "type": "feat", "hash": "84a6dee", "msg": "PriSincera Authentication Architecture 적용 및 세션 충돌 해결" }
+      {
+        "type": "feat",
+        "hash": "84a6dee",
+        "msg": "PriSincera Authentication Architecture 적용 및 세션 충돌 해결"
+      }
     ]
   }
 ]
