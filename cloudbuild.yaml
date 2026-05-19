@@ -55,6 +55,8 @@ steps:
       - '5'
       - '--concurrency'
       - '80'
+      - '--set-secrets'
+      - 'GEMINI_API_KEY=GEMINI_API_KEY:latest'
 
   # ==========================================
   # [Part 2] Backend Pipeline (Cloud Run Jobs)
