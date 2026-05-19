@@ -82,3 +82,25 @@ Admin 인증 미들웨어가 적용된 API 엔드포인트를 신설합니다. (
    - `AdminDashboard.jsx`에 UI/UX 구축 및 에디터 폼 바인딩
 4. **Phase 4: 배포 테스트**
    - 어드민 패널에서 실제 테스트 아티클 발행 후 Vercel 자동 빌드 모니터링
+
+---
+
+## 6. 추가 구현 및 개선 사항 (최근 업데이트)
+
+최근 고도화를 통해 기획 초기에 제안된 기본 기능을 넘어 아래와 같이 **데이터 분석 및 UI/UX 성능**이 대폭 향상되었습니다.
+
+*   **아티클 조회수 추적 고도화 (Firestore 기반):**
+    *   단순 누적 방식에서 벗어나, `totalViews`(누적)와 `dailyViews`(일일별 Map: `YYYY-MM-DD`) 구조를 분리하여 데이터베이스 스키마를 고도화했습니다.
+    *   API를 통해 KST 타임존 기준으로 오늘 발생한 트래픽만 별도로 카운팅 및 랭킹 산정이 가능해졌습니다.
+*   **어드민 대시보드 UI/UX 통일 (성과 가시성):**
+    *   Builder's Log의 조회수 성과 테이블을 기존 '데일리 메일 발송 차트'와 **완전히 동일한 다크 글래스모피즘 컨테이너 규칙 (Padding, Border-radius, 여백 등)**으로 일치시켰습니다.
+    *   테이블 항목을 `[일일 조회수 (오늘)]`과 `[누적 조회수]`로 분리 노출하여 단기/장기 트렌드 파악이 직관적으로 가능합니다.
+*   **AI 모델 다중 우회(Fallback) 시스템 및 수동 전환(Graceful Degradation) 도입:**
+    *   특정 모델의 할당량(Quota) 초과 시 서버가 마비되는 것을 방지하기 위해, `gemini-2.5-flash` → `2.0-flash` → `1.5-flash` 순으로 순차 재시도하는 강력한 Fallback 루프를 `admin-api.mjs`와 파이프라인 코어(`lib/gemini.mjs`) 전체에 구축했습니다.
+    *   모든 AI 모델이 한도를 초과해 실패하더라도 시스템이 에러를 뱉는 대신, 사용자가 작성한 마크다운 원본을 유지한 채 **'수동 퍼블리싱 모드'**로 부드럽게 넘어갑니다.
+*   **API 할당량(Quota) 분리 설계 (사용량 2배 확장):**
+    *   매일 밤 대규모 트래픽을 처리하는 백그라운드 파이프라인(PriSignal, Pace Note, PriStudy)은 기존 `prisincera` 프로젝트 키(`GEMINI_API_KEY`)를 전담으로 사용합니다.
+    *   Admin 대시보드의 Builder's Log 퍼블리싱 기능은 완전히 독립된 신규 GCP 프로젝트(`Article Publishing`)의 전용 키(`GEMINI_ADMIN_API_KEY`)를 할당받아, 전체 시스템의 API 한도 제약을 물리적으로 2배 확보했습니다.
+*   **GitHub API 원격 커밋 (EACCES 에러 완벽 해결):**
+    *   Cloud Run 컨테이너의 파일 시스템이 읽기 전용(Read-Only) 환경임을 고려하여, 로컬 파일 시스템 저장 대신 `@octokit/rest`를 활용한 100% 원격 GitHub 트리/블랍 생성 방식을 채택했습니다.
+    *   구글 클라우드 `Secret Manager`를 통해 `GITHUB_TOKEN` (Personal Access Token)을 암호화하여 환경 변수로 주입함으로써, Admin 패널에서 클릭 한 번으로 무중단 라이브 배포가 가능해졌습니다.
