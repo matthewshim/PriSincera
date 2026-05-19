@@ -13,15 +13,7 @@ const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || '').trim();
 if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({
-  model: 'gemini-2.5-flash',
-  generationConfig: {
-    temperature: 0.7,
-    topP: 0.9,
-    maxOutputTokens: 4096,
-    responseMimeType: 'application/json',
-  },
-});
+    // We will initialize models dynamically in callGemini 
 
 /**
  * 프롬프트 템플릿을 로드합니다.
@@ -34,20 +26,36 @@ function loadTemplate(name) {
  * Gemini 호출 + JSON 파싱 (재시도 포함)
  */
 export async function callGemini(prompt, maxRetries = 3) {
+  const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-pro'];
+  const generationConfig = {
+    temperature: 0.7,
+    topP: 0.9,
+    maxOutputTokens: 4096,
+    responseMimeType: 'application/json',
+  };
+
+  let lastError;
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const result = await model.generateContent(prompt);
-      const text = result.response.text();
-      // JSON 블록 추출 (```json ... ``` 감싸기 대응)
-      const jsonMatch = text.match(/```json\s*([\s\S]*?)```/) || [null, text];
-      return JSON.parse(jsonMatch[1].trim());
-    } catch (err) {
-      console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} 실패: ${err.message}`);
-      if (attempt === maxRetries) throw err;
-      // 재시도 전 대기 (레이트 리밋 대응)
+    for (const modelName of modelsToTry) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName, generationConfig });
+        const result = await model.generateContent(prompt);
+        const text = result.response.text();
+        const jsonMatch = text.match(/```json\s*([\s\S]*?)```/) || [null, text];
+        return JSON.parse(jsonMatch[1].trim());
+      } catch (err) {
+        console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} (${modelName}) 실패: ${err.message}`);
+        lastError = err;
+      }
+    }
+    // If all models fail in this attempt, wait before next attempt
+    if (attempt < maxRetries) {
       await new Promise(r => setTimeout(r, 2000 * attempt));
     }
   }
+  
+  throw lastError || new Error("모든 제미나이 모델 호출에 실패했습니다.");
 }
 
 /**
