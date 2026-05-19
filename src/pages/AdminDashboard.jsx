@@ -181,6 +181,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   // Builder's Log
   const [buildersLogMeta, setBuildersLogMeta] = useState([]);
+  const [buildersLogStats, setBuildersLogStats] = useState({});
   const [buildersLogModal, setBuildersLogModal] = useState(null);
   const [buildersLogForm, setBuildersLogForm] = useState({ id: '', slug: '', chapterNo: '', title: '', subtitle: '', description: '', date: '', tags: '', accent: '#6D28D9', commits: '', markdown: '' });
   const [buildersLogAction, setBuildersLogAction] = useState(null);
@@ -328,9 +329,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
   
   async function loadPriStudyStats() {
     try {
-      const data = await fetchApi('/pristudy/stats');
-      setPriStudyStats(data);
-    } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+      const res = await fetchApi('/pristudy/stats');
+      setPriStudyStats(res);
+      // Fetch Builder's Log stats as well
+      const logRes = await fetchApi('/builderslog/stats');
+      setBuildersLogStats(logRes);
+    } catch (e) {
+      if (e.message === 'AUTH_EXPIRED') onLogout();
+    }
   }
 
   async function loadDailyContent() {
@@ -593,7 +599,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   useEffect(() => {
     if (activeTab === 'subscribers') { loadSubscribers(); loadEmailLogs(); }
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
-    if (activeTab === 'overview') { loadPriStudyStats(); loadEmailLogs(); }
+    if (activeTab === 'overview') { loadPriStudyStats(); loadBuildersLogMeta(); loadEmailLogs(); }
     if (activeTab === 'content') loadDailyContent();
     if (activeTab === 'pacenotes') loadPacers();
     if (activeTab === 'pacenote_insights') loadPaceInsights();
@@ -703,7 +709,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
               <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="누적 콘텐츠" value={priStudyStats?.totalContent || 0} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
-              <StatCard label="Pacer 참여자" value={priStudyStats?.totalLearners || 0} icon="⛵" color="var(--admin-green)" onClick={() => setActiveTab('pacenotes')} />
+              <StatCard label="Pacer 참여자" value={`${priStudyStats?.totalLearners || 0}명`} icon="⛵" color="var(--admin-blue)" onClick={() => setActiveTab('pacenotes')} />
               <StatCard 
                 label="방문자 통계" 
                 value="GA4" 
@@ -736,6 +742,34 @@ function Dashboard({ token, adminEmail, onLogout }) {
               )}
             </div>
             
+            <div className="admin-overview-section" style={{ marginTop: '2rem' }}>
+              <h2>Builder's Log 성과</h2>
+              <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>아티클 누적 조회수 현황 (조회수가 높은 순서로 정렬됩니다)</p>
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr><th>아티클 (Title)</th><th>Slug</th><th>조회수</th></tr>
+                  </thead>
+                  <tbody>
+                    {buildersLogMeta
+                      .map(article => ({ ...article, views: buildersLogStats[article.slug] || 0 }))
+                      .sort((a, b) => b.views - a.views)
+                      .slice(0, 10) // Top 10만 노출
+                      .map((article, i) => (
+                        <tr key={i}>
+                          <td className="admin-subject-cell">{article.title}</td>
+                          <td style={{ color: 'var(--text-muted)' }}>{article.slug}</td>
+                          <td><strong style={{ color: 'var(--admin-blue)' }}>{article.views.toLocaleString()}회</strong></td>
+                        </tr>
+                      ))}
+                    {buildersLogMeta.length === 0 && (
+                      <tr><td colSpan={3} className="admin-empty">퍼블리싱된 아티클이 없습니다.</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
             {/* Chart Area */}
             {emailLogs && emailLogs.length > 0 && (
               <div className="admin-chart-container" style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>

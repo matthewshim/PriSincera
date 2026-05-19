@@ -125,6 +125,21 @@ app.use('/api/pristudy', apiLimiter, express.json({ limit: '5kb' }), studyRouter
 // --- Pace Note API ---
 app.use('/api/pacenote', apiLimiter, express.json({ limit: '5kb' }), pacenoteRouter);
 
+// --- BuildersLog API ---
+app.post('/api/builderslog/:slug/view', apiLimiter, express.json(), async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    if (!slug) return res.status(400).json({ error: 'Slug required' });
+    const { db } = await import('./pipeline/src/lib/firestore.mjs');
+    const { FieldValue } = await import('firebase-admin/firestore');
+    const docRef = db.collection('builderslog_stats').doc(slug);
+    await docRef.set({ views: FieldValue.increment(1) }, { merge: true });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'View record failed' });
+  }
+});
+
 // --- Subscriber Management (GCS JSON / Firestore) ---
 
 // Subscribe — GCS 직접 저장

@@ -50,6 +50,9 @@ export default function BuildersLogDetail() {
         setContent('아티클을 불러오는데 실패했습니다.');
         setLoading(false);
       });
+
+    // Record view count
+    fetch(`/api/builderslog/${slug}/view`, { method: 'POST' }).catch(e => console.error(e));
   }, [slug, articleMeta]);
 
   if (!articleMeta) {

@@ -1073,8 +1073,23 @@ router.post('/builderslog/publish', async (req, res) => {
 
     res.json({ success: true, message: 'GitHub main 브랜치에 성공적으로 커밋되었습니다.' });
   } catch (err) {
-    console.error('[BuildersLog] Publish error:', err);
-    res.status(500).json({ error: `퍼블리싱 실패: ${err.message}` });
+    console.error('[BuildersLog] Final Publish error:', err);
+    res.status(500).json({ error: `아티클 저장 중 서버 에러가 발생했습니다: ${err.message}` });
+  }
+});
+
+router.get('/builderslog/stats', async (req, res) => {
+  try {
+    const { db } = await import('./pipeline/src/lib/firestore.mjs');
+    const snapshot = await db.collection('builderslog_stats').get();
+    const stats = {};
+    snapshot.forEach(doc => {
+      stats[doc.id] = doc.data().views || 0;
+    });
+    res.json(stats);
+  } catch (err) {
+    console.error('[Admin API] BuildersLog stats fetch error:', err);
+    res.status(500).json({ error: 'Failed to fetch BuildersLog stats' });
   }
 });
 
