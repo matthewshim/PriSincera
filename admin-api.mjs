@@ -851,7 +851,7 @@ router.get('/builderslog/recent-commits', async (req, res) => {
       owner,
       repo,
       sha: branch,
-      per_page: 10
+      per_page: 100
     });
 
     const commits = response.data.map(commit => {
@@ -915,7 +915,7 @@ router.post('/builderslog/analyze', async (req, res) => {
       const { Octokit } = await import('@octokit/rest');
       const octokit = githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
       const response = await octokit.rest.repos.listCommits({
-        owner: 'matthewshim', repo: 'PriSincera', sha: 'main', per_page: 30
+        owner: 'matthewshim', repo: 'PriSincera', sha: 'main', per_page: 100
       });
       const commitsList = response.data.map(c => {
         const fullMsg = c.commit.message.split('\n')[0];
