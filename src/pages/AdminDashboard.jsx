@@ -626,7 +626,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       id: 'builderslog_group',
       label: 'Builder\'s Log',
       items: [
-        { id: 'builderslog', label: '📝 퍼블리싱 (Publishing)' }
+        { id: 'builderslog', label: '📝 아티클 퍼블리싱' }
       ]
     },
     {
@@ -1222,7 +1222,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                 <div className="admin-modal-footer">
                   <button type="button" className="admin-btn-secondary" onClick={() => setBuildersLogModal(null)}>취소</button>
                   <button type="submit" className="admin-btn-primary" disabled={buildersLogAction?.type === 'loading'}>
-                    {buildersLogAction?.type === 'loading' ? '배포 중...' : 'GitHub에 커밋 및 배포 (Publish)'}
+                    {buildersLogAction?.type === 'loading' ? '배포 중...' : 'GitHub 커밋 및 배포'}
                   </button>
                 </div>
               </form>
