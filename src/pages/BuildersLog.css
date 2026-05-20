@@ -113,11 +113,18 @@
 .builder-card-0 { grid-column: span 12; }
 .builder-card-1 { grid-column: span 7; }
 .builder-card-2 { grid-column: span 5; }
-.builder-card-3 { grid-column: span 12; }
+.builder-card-3 { grid-column: span 5; }
+.builder-card-4 { grid-column: span 7; }
+
+/* Future-proofing slots up to 10 items */
+.builder-card-5 { grid-column: span 12; }
+.builder-card-6 { grid-column: span 7; }
+.builder-card-7 { grid-column: span 5; }
+.builder-card-8 { grid-column: span 5; }
+.builder-card-9 { grid-column: span 7; }
 
 @media (max-width: 992px) {
-  .builder-card-1 { grid-column: span 12; }
-  .builder-card-2 { grid-column: span 12; }
+  .builder-card { grid-column: span 12 !important; }
 }
 
 /* --- Glassmorphism Card --- */
