@@ -494,3 +494,18 @@ export default function PaceNoteChronoRibbon({
   * 글래스모피즘 벨트 스킨 및 세그먼트 버튼 트랜지션 곡선(`cubic-bezier(0.16, 1, 0.3, 1)`) 선언.
 * **가로 스크롤 스킨 및 드래그**: `.ribbon-viewport`
   * 가로 스크롤 활성화 및 스크롤바 감춤 처리 (`scrollbar-width: none;`, `::-webkit-scrollbar { display: none; }`).
+
+### 8-5. 가로 뷰포트 정중앙 정렬 스펙 (Viewport Auto-Centering Alignment Specification)
+
+사용자가 분기를 전환하거나 특정 주차를 선택했을 때, 뷰포트 범위 밖으로 카드가 벗어나거나 가장자리에 치우쳐 나타나는 시각적 단절을 해소하기 위해 **가로 뷰포트 정중앙 자동 정렬 알고리즘**을 탑재합니다.
+
+* **동적 정렬 대상 판별 로직**:
+  1. 현재 선택된 주차(`selectedWeekId`)가 해당 분기 내에 존재할 경우, 해당 주차 카드를 타겟으로 지정합니다.
+  2. 선택된 주차가 해당 분기 내에 없을 경우(예: 현재 주차는 Q2에 있으나 유저가 과거 완료 이력을 보기 위해 Q1 Voyage로 탭을 이동한 경우), 뷰포트의 시각적 균형을 지키기 위해 **해당 분기 주차 목록의 정중앙에 위치한 주차 카드**(예: 13주 중 7주차 카드)를 자동으로 타겟팅합니다.
+* **좌표 연산 공식 (Coordinate Calculation)**:
+  부모 컨테이너의 레이아웃 스타일(예: `position: relative/absolute` 등)에 영향을 받지 않고 절대적인 물리 화면 좌표를 추출하기 위해, 브라우저 뷰포트 기준 좌표인 `getBoundingClientRect()`를 사용해 정렬 오프셋을 산출합니다.
+  $$\text{TargetScrollLeft} = (\text{Element.left} - \text{Container.left}) + \text{Container.scrollLeft} - \frac{\text{Container.width}}{2} + \frac{\text{Element.width}}{2}$$
+* **스크롤 연동 방식 (Scroll Behavior Branching)**:
+  * **최초 진입 시 (Snap)**: 컴포넌트 마운트 첫 시점에는 스크롤 애니메이션 없이 즉각 스냅 스크롤(`behavior: 'auto'`)하여 깜빡임과 로딩 불안감을 제거합니다.
+  * **인터랙션 시 (Smooth Scroll)**: 분기 탭을 누르거나 주차를 바꿀 때는 부드러운 글라이딩 스크롤(`behavior: 'smooth'`)을 적용해 화면 전환 피로도를 낮추고 자연스럽게 포커스를 이동시킵니다.
+  * **터치 스레드 간섭 방지**: 모바일 뷰포트의 드래그 스크롤과 충돌하거나 스크롤 중복 호출을 막기 위해, 리렌더링 틱과 UI 스레드를 `100ms` 디바운싱 타이머(`setTimeout`)로 격리하여 렌더링 부하를 예방합니다.
