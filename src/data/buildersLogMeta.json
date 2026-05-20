@@ -1,5 +1,48 @@
 [
   {
+    "id": "ep4",
+    "slug": "mastering-your-growth-journey-with-prisincera-pace-note",
+    "chapterNo": "04",
+    "title": "나만의 속도로 완성하는 성장 여정: PriSincera Pace Note",
+    "subtitle": "획일적인 기준에 휩쓸리지 않고, 오직 자신만의 템포와 방향을 추구하는 이들을 위해 PriSincera가 AI 기반의 퍼스널 브랜딩 액션 플랫폼, Pace Note를 선보입니다.",
+    "description": "",
+    "date": "2026-05-20",
+    "tags": [
+      "Pace Note",
+      "Personal Branding",
+      "AI Productivity",
+      "Growth Tracking"
+    ],
+    "accent": "#6D28D9",
+    "commits": [
+      {
+        "type": "feat",
+        "hash": "6cd920f",
+        "msg": "implement Phase 3 - AI Feedback Loop by injecting Hall of Fame items into Gemini prompt"
+      },
+      {
+        "type": "docs",
+        "hash": "6fca441",
+        "msg": "comprehensively update PaceNote AI expansion architecture reflecting data-driven Phase 1~3 implementations"
+      },
+      {
+        "type": "feat",
+        "hash": "5df0f13",
+        "msg": "publish ai-pacenote-expansion via Admin"
+      },
+      {
+        "type": "feat",
+        "hash": "6620476",
+        "msg": "implement PaceNote admin management and LLM composer pipeline"
+      },
+      {
+        "type": "feat",
+        "hash": "6db1322",
+        "msg": "implement pacenote omni modal ui and decouple ai recommendations to firestore"
+      }
+    ]
+  },
+  {
     "id": "ep3",
     "slug": "prisincera-builders-log-admin-integration-pipeline-enhancement",
     "chapterNo": "03",
