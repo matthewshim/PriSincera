@@ -1,5 +1,48 @@
 [
   {
+    "id": "ep5",
+    "slug": "prisincera-web-service-security-audit-remediation-report",
+    "chapterNo": "05",
+    "title": "PriSincera: Comprehensive Web Service Security Audit & Remediation Report",
+    "subtitle": "A detailed overview of architectural enhancements and 100% resolution of identified vulnerabilities, ensuring robust protection of user data and platform integrity.",
+    "description": "",
+    "date": "2026-05-20",
+    "tags": [
+      "Web Security",
+      "SaaS",
+      "OWASP Top 10",
+      "Vulnerability Management"
+    ],
+    "accent": "#6D28D9",
+    "commits": [
+      {
+        "type": "security",
+        "hash": "65550aa",
+        "msg": "increase json limit to 1mb for markdown uploads"
+      },
+      {
+        "type": "fix",
+        "hash": "029cb4f",
+        "msg": "grant secret accessor role for admin api key and re-trigger deploy"
+      },
+      {
+        "type": "fix",
+        "hash": "346966c",
+        "msg": "handle Gemini API rate limit error gracefully"
+      },
+      {
+        "type": "docs",
+        "hash": "7866e9a",
+        "msg": "wrap ASCII diagram in code block and audit security"
+      },
+      {
+        "type": "docs",
+        "hash": "5952578",
+        "msg": "add AI & Security Middleware section to Builders Log pipeline"
+      }
+    ]
+  },
+  {
     "id": "ep4",
     "slug": "mastering-your-growth-journey-with-prisincera-pace-note",
     "chapterNo": "04",
