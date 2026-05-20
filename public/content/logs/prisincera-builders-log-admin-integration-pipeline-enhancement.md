@@ -15,37 +15,37 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 ### 🔄 전체 동작 파이프라인 (Data Flow)
 
 ```text
-┌────────────────────────┐
-│    Admin Dashboard     │  ──► (Publish Article Request)
-└───────────┬────────────┘
-            │
-            ▼
-┌────────────────────────┐
-│    Express Backend     │  ──► (Secret Masking & AI Core Polish)
-└───────────┬────────────┘
-            │
-            ├───────────────► ┌─────────────────────┐
-            │                 │  GitHub REST API    │  ──► (In-Memory Tree/Blob)
-            │                 └──────────┬──────────┘
-            │                            │
-            │                            ▼
-            │                 ┌─────────────────────┐
-            │                 │  Git Commit & Push  │  ──► (Git-less Remote Push)
-            │                 └─────────────────────┘
-            ▼
-┌────────────────────────┐
-│     GitHub Webhook     │  ──► (Instant Trigger Payload)
-└───────────┬────────────┘
-            │
-            ▼
-┌────────────────────────┐
-│      CI/CD Build       │  ──► (Google Cloud Build System)
-└───────────┬────────────┘
-            │
-            ▼
-┌────────────────────────┐
-│    Live Deployment     │  ──► (Google Cloud Run Live Container)
-└────────────────────────┘
++------------------------+
+|    Admin Dashboard     |  --> (Publish Article Request)
++-----------+------------+
+            |
+            v
++------------------------+
+|    Express Backend     |  --> (Secret Masking & AI Core Polish)
++-----------+------------+
+            |
+            +----------------> +---------------------+
+            |                  |  GitHub REST API    |  --> (In-Memory Tree/Blob)
+            |                  +----------+----------+
+            |                             |
+            |                             v
+            |                  +---------------------+
+            |                  |  Git Commit & Push  |  --> (Git-less Remote Push)
+            |                  +---------------------+
+            v
++------------------------+
+|     GitHub Webhook     |  --> (Instant Trigger Payload)
++-----------+------------+
+            |
+            v
++------------------------+
+|      CI/CD Build       |  --> (Google Cloud Build System)
++-----------+------------+
+            |
+            v
++------------------------+
+|    Live Deployment     |  --> (Google Cloud Run Live Container)
++------------------------+
 ```
 
 > 💡 **단계별 데이터 흐름 요약 (Data Flow Steps)**
@@ -90,7 +90,7 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 정적 CMS의 안정성과 소스코드 유출 차단을 위해, 자동화 스캐너와 사람의 직관이 조화롭게 결합된 **Human-in-the-Loop(HITL) 자동 검증 시스템**을 설계했습니다.
 
 ```text
-[Draft Upload] ──► [AI Scan & Redaction] ──► [Human Review (HITL)] ──► [Regex Secret Scan] ──► [GitHub Security Scanning]
+[Draft Upload] --> [AI Scan & Redaction] --> [Human Review (HITL)] --> [Regex Secret Scan] --> [GitHub Security Scanning]
 ```
 
 1.  **1단계 (AI 톤앤매너 교정 & Context 검열):** 초안이 업로드되면 AI가 PriSincera 특유의 프리미엄 테크 톤으로 본문을 다듬습니다. 이때 본문 내에 숨어 있는 내부 IP 주소나 실제 유저 개인 정보 등 보안 유출 우려 항목을 문맥적으로 식별하여 즉시 `[REDACTED]` 처리합니다.
@@ -178,12 +178,16 @@ await octokit.rest.git.updateRef({
 
 ```text
 builderslog_stats (Collection)
-   └─ [article_slug] (Document)
-         ├─ totalViews: 1420
-         └─ dailyViews (Map)
-               ├─ 2026-05-18: 45
-               ├─ 2026-05-19: 78
-               └─ 2026-05-20: 32  <-- KST 타임존 동기화 처리
+   |
+   +-- [article_slug] (Document)
+         |
+         +-- totalViews: 1420
+         |
+         +-- dailyViews (Map)
+               |
+               +-- 2026-05-18: 45
+               +-- 2026-05-19: 78
+               +-- 2026-05-20: 32  <-- KST 타임존 동기화 처리
 ```
 
 대한민국 표준시(KST)를 기준으로 한 일별 트래픽 맵을 관리함으로써, 누적 추이뿐 아니라 오늘 배포된 새로운 아티클의 단기 트래픽 변동 추세를 관리자 대시보드 그래프에서 즉각적이고 정밀하게 파악할 수 있는 데이터 가치를 확보하였습니다.
