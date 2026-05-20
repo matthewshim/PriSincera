@@ -52,6 +52,51 @@ export default function PaceNoteChronoRibbon({
     setActiveQuarter(getQuarterFromWeekId(selectedWeekId));
   }, [selectedWeekId]);
 
+  const isFirstRender = useRef(true);
+
+  const centerActiveWeek = (behavior = 'smooth') => {
+    if (!ribbonRef.current) return;
+    
+    // Determine which week to target for centering
+    let targetWeekId = selectedWeekId;
+    if (!weeksInView.includes(targetWeekId)) {
+      targetWeekId = currentWeekId;
+    }
+    if (!weeksInView.includes(targetWeekId) && weeksInView.length > 0) {
+      const midIndex = Math.floor(weeksInView.length / 2);
+      targetWeekId = weeksInView[midIndex];
+    }
+    
+    if (!targetWeekId) return;
+    
+    const activeEl = ribbonRef.current.querySelector(`[data-week-id="${targetWeekId}"]`);
+    if (activeEl) {
+      const container = ribbonRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = activeEl.getBoundingClientRect();
+      
+      const elementLeftInContainer = elementRect.left - containerRect.left + container.scrollLeft;
+      const targetScrollLeft = elementLeftInContainer - (containerRect.width / 2) + (elementRect.width / 2);
+      
+      container.scrollTo({
+        left: targetScrollLeft,
+        behavior
+      });
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isFirstRender.current) {
+        centerActiveWeek('auto'); // snap instantly on first load
+        isFirstRender.current = false;
+      } else {
+        centerActiveWeek('smooth'); // smooth scroll on updates
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [activeQuarter, selectedWeekId, weeksInView]);
+
   // 4. 강제 생성한 53개 주차를 분기별(Q1~Q4)로 그룹핑
   const quarterWeeks = useMemo(() => {
     const quarters = { Q1: [], Q2: [], Q3: [], Q4: [] };
@@ -157,6 +202,7 @@ export default function PaceNoteChronoRibbon({
             return (
               <button
                 key={wId}
+                data-week-id={wId}
                 className={cardClass}
                 onClick={() => !isUnoperated && !isLocked && onSelectWeek(wId)}
                 disabled={isUnoperated || isLocked}
