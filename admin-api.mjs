@@ -890,6 +890,45 @@ router.get('/builderslog/content/:slug', async (req, res) => {
   }
 });
 
+/**
+ * JSON 문자열 내의 유효하지 않은 백슬래시 이스케이프 시퀀스를 감지하여 이중 이스케이프 처리 (자가 치유)
+ */
+function repairJSONBackslashes(str) {
+  let result = '';
+  let i = 0;
+  while (i < str.length) {
+    if (str[i] === '\\') {
+      const next = str[i + 1];
+      if (next === undefined) {
+        result += '\\\\';
+        i++;
+      } else if (next === '\\') {
+        result += '\\\\';
+        i += 2;
+      } else if (['"', '/', 'b', 'f', 'n', 'r', 't'].includes(next)) {
+        result += '\\' + next;
+        i += 2;
+      } else if (next === 'u') {
+        const hex = str.slice(i + 2, i + 6);
+        if (/^[0-9a-fA-F]{4}$/.test(hex)) {
+          result += '\\u' + hex;
+          i += 6;
+        } else {
+          result += '\\\\u';
+          i += 2;
+        }
+      } else {
+        result += '\\\\' + next;
+        i += 2;
+      }
+    } else {
+      result += str[i];
+      i++;
+    }
+  }
+  return result;
+}
+
 router.post('/builderslog/analyze', async (req, res) => {
   try {
     const { markdown } = req.body;
@@ -996,9 +1035,18 @@ ${recentCommitsText}
       const parsed = JSON.parse(resultText);
       res.json(parsed);
     } catch (parseError) {
-      console.error('[BuildersLog] AI JSON Parse error:', parseError.message);
-      console.error('[BuildersLog] Raw result text:', resultText);
-      throw new Error(`JSON 파싱 오류: ${parseError.message}`);
+      console.warn('[BuildersLog] AI JSON Parse failed, initiating self-healing recovery...');
+      try {
+        // Automatically escape invalid backslashes (like in Windows paths d:\... or markdown escapes \*,\#)
+        const recoveredText = repairJSONBackslashes(resultText);
+        const parsed = JSON.parse(recoveredText);
+        console.log('[BuildersLog] AI JSON Parse successfully recovered and parsed via self-healing!');
+        res.json(parsed);
+      } catch (recoveryError) {
+        console.error('[BuildersLog] AI JSON Parse recovery also failed:', recoveryError.message);
+        console.error('[BuildersLog] Raw result text:', resultText);
+        throw new Error(`JSON 파싱 오류: ${parseError.message}`);
+      }
     }
   } catch (err) {
     console.error('[BuildersLog] AI Analyze error:', err.message);
