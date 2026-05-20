@@ -35,8 +35,8 @@ export default function BuildersLogDetail() {
       return;
     }
     
-    // Fetch markdown content from public folder
-    fetch(`/content/logs/${slug}.md`)
+    // Fetch markdown content from public folder with cache-busting timestamp
+    fetch(`/content/logs/${slug}.md?t=${Date.now()}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch article');
         return res.text();
