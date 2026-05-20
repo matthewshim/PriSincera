@@ -306,6 +306,84 @@
   line-height: 1.5;
 }
 
+/* Commits Toggle Button */
+.commits-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-spring);
+  backdrop-filter: blur(8px);
+  outline: none;
+}
+
+.commits-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(167, 139, 250, 0.3);
+  color: var(--text-primary);
+  box-shadow: 0 0 12px rgba(167, 139, 250, 0.15);
+}
+
+.commits-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.more-count {
+  font-family: var(--font-mono);
+  color: var(--accent-color);
+}
+
+.chevron-icon {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.commits-toggle-btn.expanded .chevron-icon {
+  transform: rotate(180deg);
+}
+
+/* Commit List Expand/Collapse Animation */
+.commit-item {
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.commit-item::before {
+  transition: opacity 0.3s ease, height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.commit-item.line-hidden::before {
+  opacity: 0;
+  height: 0 !important;
+}
+
+.commit-item-extra {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease,
+              margin-top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.commit-item-extra.show {
+  max-height: 120px;
+  opacity: 1;
+  margin-top: var(--space-md);
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+
 /* --- Buttons --- */
 .read-more-btn {
   display: inline-flex;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import logMeta from '../data/buildersLogMeta.json';
@@ -23,6 +23,9 @@ function useScrollReveal(options = { threshold: 0.1, rootMargin: '0px 0px -100px
 
 const ChapterCard = ({ chapter, index }) => {
   const ref = useScrollReveal();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const commits = chapter.commits || [];
+  const hasMore = commits.length > 1;
   
   return (
     <div className={`builder-card builder-card-${index}`} ref={ref}>
@@ -41,26 +44,64 @@ const ChapterCard = ({ chapter, index }) => {
             <p className="chapter-desc">{chapter.description}</p>
           </div>
           
-          <div className="card-commits">
-            <div className="commits-label">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Key Shipments
+          <div className="card-commits" onClick={(e) => {
+            // Prevent accidental navigation when clicking anywhere inside the commits block
+            e.stopPropagation();
+          }}>
+            <div className="commits-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Key Shipments
+              </div>
+              {hasMore && (
+                <button 
+                  className={`commits-toggle-btn ${isExpanded ? 'expanded' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsExpanded(!isExpanded);
+                  }}
+                  title={isExpanded ? "Collapse" : "Expand"}
+                >
+                  {!isExpanded && <span className="more-count">+{commits.length - 1}</span>}
+                  <svg 
+                    className="chevron-icon" 
+                    width="12" 
+                    height="12" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="3" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+              )}
             </div>
             <div className="commits-list">
-              {chapter.commits && chapter.commits.map((commit, i) => (
-                <div className="commit-item" key={i}>
-                  <div className="commit-node" style={{ borderColor: chapter.accent }}></div>
-                  <div className="commit-content">
-                    <div className="commit-meta">
-                      <span className="commit-hash">{commit.hash}</span>
-                      <span className={`commit-type type-${commit.type}`}>{commit.type}</span>
+              {commits.map((commit, i) => {
+                const isExtra = i > 0;
+                const isLineHidden = !isExpanded && i === 0 && hasMore;
+                return (
+                  <div 
+                    className={`commit-item ${isExtra ? 'commit-item-extra' : ''} ${isExtra && isExpanded ? 'show' : ''} ${isLineHidden ? 'line-hidden' : ''}`} 
+                    key={i}
+                  >
+                    <div className="commit-node" style={{ borderColor: chapter.accent }}></div>
+                    <div className="commit-content">
+                      <div className="commit-meta">
+                        <span className="commit-hash">{commit.hash}</span>
+                        <span className={`commit-type type-${commit.type}`}>{commit.type}</span>
+                      </div>
+                      <div className="commit-msg">{commit.msg}</div>
                     </div>
-                    <div className="commit-msg">{commit.msg}</div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
           <div className="card-footer" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
