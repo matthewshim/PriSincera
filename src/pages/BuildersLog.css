@@ -306,43 +306,87 @@
   line-height: 1.5;
 }
 
-/* Commits Bottom Toggle Button */
-.commits-bottom-toggle-btn {
+/* Commit Timeline Toggle Item */
+.commit-toggle-item {
+  margin-top: var(--space-sm);
+  transition: all 0.3s ease;
+}
+
+.toggle-node {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px dashed; /* Dashed border signifies interactivity */
+  background: var(--bg-deep);
+  margin-top: 4px;
+  position: relative;
+  z-index: 2;
+  transition: all var(--duration-fast) var(--ease-spring);
+}
+
+.commit-toggle-item:hover .toggle-node {
+  border-style: solid;
+  transform: scale(1.2);
+  box-shadow: 0 0 14px var(--accent-color);
+}
+
+.node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  color: inherit;
+  transform: translateY(-0.5px);
+  user-select: none;
+}
+
+.commit-inline-toggle-btn {
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
-  margin-top: var(--space-md);
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  margin-left: -8px; /* Offset padding to align perfectly with timeline text */
   color: var(--text-muted);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
+  border-radius: 4px;
   transition: all var(--duration-fast) var(--ease-spring);
   outline: none;
 }
 
-.commits-bottom-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(167, 139, 250, 0.25);
+.commit-inline-toggle-btn:hover {
   color: var(--text-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.commits-bottom-toggle-btn:active {
+.commit-inline-toggle-btn:active {
   transform: scale(0.98);
 }
 
 .chevron-icon {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.7;
 }
 
-.commits-bottom-toggle-btn.expanded .chevron-icon {
+.commit-inline-toggle-btn:hover .chevron-icon {
+  opacity: 1;
+  transform: translateY(1px);
+}
+
+.commit-toggle-item.expanded .chevron-icon {
   transform: rotate(180deg);
+}
+
+.commit-toggle-item.expanded:hover .chevron-icon {
+  transform: rotate(180deg) translateY(-1px);
 }
 
 /* Commit List Expand/Collapse Animation */
@@ -355,8 +399,9 @@
 }
 
 .commit-item.line-hidden::before {
-  opacity: 0;
-  height: 0 !important;
+  opacity: 0.3; /* Keep a subtle dotted/transparent line connecting to the toggle node */
+  border-left: 1px dashed rgba(255, 255, 255, 0.1);
+  background: none !important;
 }
 
 .commit-item-extra {

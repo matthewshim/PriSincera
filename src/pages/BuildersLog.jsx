@@ -58,6 +58,8 @@ const ChapterCard = ({ chapter, index }) => {
             <div className="commits-list">
               {commits.map((commit, i) => {
                 const isExtra = i > 0;
+                // Since the toggle button is now part of the timeline list,
+                // we don't hide the first commit's line unless there are no more commits.
                 const isLineHidden = !isExpanded && i === 0 && hasMore;
                 return (
                   <div 
@@ -75,37 +77,50 @@ const ChapterCard = ({ chapter, index }) => {
                   </div>
                 );
               })}
-            </div>
 
-            {hasMore && (
-              <button 
-                className={`commits-bottom-toggle-btn ${isExpanded ? 'expanded' : ''}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setIsExpanded(!isExpanded);
-                }}
-              >
-                <span>
-                  {isExpanded ? "Show Less" : `Show +${commits.length - 1} More Shipments`}
-                </span>
-                <svg 
-                  className="chevron-icon" 
-                  width="12" 
-                  height="12" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="3" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </button>
-            )}
+              {hasMore && (
+                <div className={`commit-item commit-toggle-item ${isExpanded ? 'expanded' : ''}`}>
+                  <div 
+                    className="commit-node toggle-node" 
+                    style={{ 
+                      borderColor: chapter.accent,
+                      boxShadow: `0 0 8px ${chapter.accent}40`
+                    }}
+                  >
+                    <span className="node-icon">{isExpanded ? '−' : '+'}</span>
+                  </div>
+                  <div className="commit-content">
+                    <button 
+                      className="commit-inline-toggle-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsExpanded(!isExpanded);
+                      }}
+                    >
+                      <span>
+                        {isExpanded ? "Show Less" : `Show +${commits.length - 1} More Shipments`}
+                      </span>
+                      <svg 
+                        className="chevron-icon" 
+                        width="10" 
+                        height="10" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="3" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                      >
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="card-footer" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
+          <div className="card-footer" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
             <span className="read-more-btn">
               Read Article <span className="read-more-arrow">→</span>
             </span>
