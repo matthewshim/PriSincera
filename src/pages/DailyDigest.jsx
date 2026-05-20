@@ -34,7 +34,19 @@ export default function DailyDigest() {
   const [data, setData] = useState(null); // Detail data or Archive list
   const [subStatus, setSubStatus] = useState('');
   const [subEmail, setSubEmail] = useState('');
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [detailTab, setDetailTab] = useState('signal');
   const synth = window.speechSynthesis;
+
+  const copyToClipboard = (text) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedPrompt(true);
+      setTimeout(() => setCopiedPrompt(false), 2000);
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
 
   const { user, loginWithGoogle, logout } = useAuth();
 
@@ -90,7 +102,17 @@ export default function DailyDigest() {
       if (date) {
         const res = await fetch(`/api/daily/${date}`);
         if (res.ok) {
-          setData(await res.json());
+          const digest = await res.json();
+          setData(digest);
+          if (digest) {
+            if (digest.signal && digest.signal.articles && digest.signal.articles.length > 0) {
+              setDetailTab('signal');
+            } else if (digest.study && digest.study.prompt_snippet) {
+              setDetailTab('prompt');
+            } else if (digest.study && digest.study.sentence_jp) {
+              setDetailTab('japanese');
+            }
+          }
         } else {
           setData(null);
         }
@@ -326,44 +348,59 @@ export default function DailyDigest() {
               {loading ? (
                 <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px' }}>목록을 불러오는 중입니다...</div>
               ) : Array.isArray(data) && data.length > 0 ? (
-                data.map((item) => (
-                  <Link to={`/daily/${item.date}`} className="archive-card premium" key={item.date}>
-                    <div className="archive-card-header">
-                      <span className="archive-date">{item.date}</span>
-                      {item.theme && <span className="archive-badge" style={getCategoryStyles(item.theme)}>{item.theme}</span>}
-                    </div>
-                    
-                    <div className="archive-card-body">
-                      {item.articles && item.articles.slice(0, 2).map((article, i) => (
-                        <div className="archive-flat-item" key={`art-${i}`}>
-                          <span className="flat-icon" style={{color: getCategoryStyles(article.category).color || '#A78BFA'}}>✦</span>
-                          <span className="flat-text">{article.title}</span>
-                        </div>
-                      ))}
+                data.map((item) => {
+                  const themeStyles = getCategoryStyles(item.theme);
+                  const themeColor = themeStyles.color || 'var(--prism-lavender)';
+                  const themeColorSemi = themeStyles.color ? `${themeStyles.color}40` : 'rgba(192, 132, 252, 0.25)';
+                  const themeColorGlow = themeStyles.color ? `${themeStyles.color}1a` : 'rgba(192, 132, 252, 0.1)';
+                  return (
+                    <Link 
+                      to={`/daily/${item.date}`} 
+                      className="archive-card premium" 
+                      key={item.date}
+                      style={{
+                        '--theme-color': themeColor,
+                        '--theme-color-semi': themeColorSemi,
+                        '--theme-color-glow': themeColorGlow,
+                      }}
+                    >
+                      <div className="archive-card-header">
+                        <span className="archive-date">{item.date}</span>
+                        {item.theme && <span className="archive-badge" style={themeStyles}>{item.theme}</span>}
+                      </div>
                       
-                      {item.articles && item.articles.length > 2 && (
-                        <div className="archive-flat-more">
-                          <span className="flat-more-line"></span>
-                          <span className="flat-more-text">+{item.articles.length - 2} more signals</span>
-                        </div>
-                      )}
+                      <div className="archive-card-body">
+                        {item.articles && item.articles.slice(0, 2).map((article, i) => (
+                          <div className="archive-flat-item" key={`art-${i}`}>
+                            <span className="flat-icon" style={{color: getCategoryStyles(article.category).color || '#A78BFA'}}>✦</span>
+                            <span className="flat-text">{article.title}</span>
+                          </div>
+                        ))}
+                        
+                        {item.articles && item.articles.length > 2 && (
+                          <div className="archive-flat-more">
+                            <span className="flat-more-line"></span>
+                            <span className="flat-more-text">+{item.articles.length - 2} more signals</span>
+                          </div>
+                        )}
 
-                      {item.promptSnippet && (
-                        <div className="archive-flat-item highlight-ai">
-                          <span className="flat-icon">🤖</span>
-                          <span className="flat-text ai-text">{item.promptSnippet.substring(0, 45)}{item.promptSnippet.length > 45 ? '...' : ''}</span>
-                        </div>
-                      )}
+                        {item.promptSnippet && (
+                          <div className="archive-flat-item highlight-ai">
+                            <span className="flat-icon">🤖</span>
+                            <span className="flat-text ai-text">{item.promptSnippet.substring(0, 45)}{item.promptSnippet.length > 45 ? '...' : ''}</span>
+                          </div>
+                        )}
 
-                      {item.jpSentence && (
-                        <div className="archive-flat-item highlight-jp">
-                          <span className="flat-icon">🇯🇵</span>
-                          <span className="flat-text jp-text">{item.jpSentence}</span>
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                ))
+                        {item.jpSentence && (
+                          <div className="archive-flat-item highlight-jp">
+                            <span className="flat-icon">🇯🇵</span>
+                            <span className="flat-text jp-text">{item.jpSentence}</span>
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })
               ) : (
                 <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px' }}>아직 발행된 피드가 없습니다.</div>
               )}
@@ -448,21 +485,63 @@ export default function DailyDigest() {
         </div>
       </div>
 
-      <div className="daily-feed-container">
+      <div className={`daily-feed-container theme-${detailTab}`}>
         {loading ? (
-          <div style={{ textAlign: 'center', color: '#9CA3AF' }}>데이터를 불러오는 중입니다...</div>
+          <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px 0' }}>데이터를 불러오는 중입니다...</div>
         ) : !data ? (
-          <div style={{ textAlign: 'center', color: '#9CA3AF' }}>해당 날짜의 데이터가 없습니다.</div>
+          <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px 0' }}>해당 날짜의 데이터가 없습니다.</div>
         ) : (
           <>
-            {/* 1. IT Tech Signal */}
-            {data.signal && (
-              <div className="daily-section">
-                <div className="daily-section-header">
-                  <span className="daily-section-icon">📰</span>
-                  <h2 className="daily-section-title">IT Tech Signal</h2>
-                </div>
-                  <div className="signal-articles-masonry">
+            {/* ── Workspace Segmented Tab Switcher ── */}
+            <div className="workspace-tab-switcher">
+              {data.signal && data.signal.articles && data.signal.articles.length > 0 && (
+                <button 
+                  className={`workspace-tab-btn ${detailTab === 'signal' ? 'active' : ''}`}
+                  onClick={() => setDetailTab('signal')}
+                >
+                  <span className="btn-icon">📰</span>
+                  <div className="btn-label-group">
+                    <span className="btn-title">IT Tech Signal</span>
+                    <span className="btn-meta">{data.signal.articles.length} Signals</span>
+                  </div>
+                </button>
+              )}
+              {data.study?.prompt_snippet && (
+                <button 
+                  className={`workspace-tab-btn ${detailTab === 'prompt' ? 'active' : ''}`}
+                  onClick={() => setDetailTab('prompt')}
+                >
+                  <span className="btn-icon">🤖</span>
+                  <div className="btn-label-group">
+                    <span className="btn-title">AI Workstation</span>
+                    <span className="btn-meta">Prompt Terminal</span>
+                  </div>
+                </button>
+              )}
+              {data.study?.sentence_jp && (
+                <button 
+                  className={`workspace-tab-btn ${detailTab === 'japanese' ? 'active' : ''}`}
+                  onClick={() => setDetailTab('japanese')}
+                >
+                  <span className="btn-icon">🇯🇵</span>
+                  <div className="btn-label-group">
+                    <span className="btn-title">Language Dojo</span>
+                    <span className="btn-meta">Business Study</span>
+                  </div>
+                </button>
+              )}
+            </div>
+
+            {/* ── Active Workspace Panels ── */}
+            <div className="workspace-content-pane">
+              {/* 1. IT Tech Signal */}
+              {detailTab === 'signal' && data.signal && (
+                <div className="daily-section fade-in">
+                  <div className="daily-section-header">
+                    <span className="daily-section-icon">📰</span>
+                    <h2 className="daily-section-title">IT Tech Signal</h2>
+                  </div>
+                  <div className="signal-articles-grid">
                     {[...(data.signal.articles || [])]
                       .sort((a, b) => {
                         if (a.isDmPick && !b.isDmPick) return -1;
@@ -470,7 +549,7 @@ export default function DailyDigest() {
                         return b.weightedScore - a.weightedScore;
                       })
                       .map((article, idx) => (
-                      <a href={article.url} target="_blank" rel="noopener noreferrer" className={`signal-article-card ${article.isDmPick ? 'dm-pick' : ''}`} key={idx}>
+                      <a href={article.url} target="_blank" rel="noopener noreferrer" className={`signal-article-card ${article.isDmPick ? 'dm-featured-card' : ''}`} key={idx}>
                         {article.og_image && (
                           <div className="signal-article-image">
                             <img src={article.og_image} alt={article.title} loading="lazy" />
@@ -479,12 +558,8 @@ export default function DailyDigest() {
                         <div className="signal-article-body">
                           <div className="signal-article-meta-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
                             {article.isDmPick && (
-                              <span style={{
-                                fontFamily: 'var(--font-display)', fontSize: '0.75rem', fontWeight: 700,
-                                color: '#10B981', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)',
-                                padding: '2px 8px', borderRadius: '100px',
-                              }}>
-                                DM Pick
+                              <span className="dm-pick-badge">
+                                ✦ DM Pick
                               </span>
                             )}
                             {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
@@ -496,7 +571,7 @@ export default function DailyDigest() {
                                 </span>
                               )}
                               {article.weightedScore && article.source && <span style={{ opacity: 0.3 }}>|</span>}
-                              {article.source && <span style={{ color: 'var(--prism-lavender)', fontWeight: 500 }}>{article.source}</span>}
+                              {article.source && <span className="article-source-name">{article.source}</span>}
                             </div>
                           </div>
                           <h3>{article.title}</h3>
@@ -507,84 +582,134 @@ export default function DailyDigest() {
                       </a>
                     ))}
                   </div>
-              </div>
-            )}
-
-            {/* 2. AI Prompt */}
-            {data.study?.prompt_snippet && (
-              <div className="daily-section">
-                <div className="daily-section-header">
-                  <span className="daily-section-icon">🤖</span>
-                  <h2 className="daily-section-title">AI 프롬프트 1-Pick</h2>
                 </div>
-                <div className="daily-card">
-                  <div className="study-snippet">{data.study.prompt_snippet}</div>
-                  {data.study.explanation && <div className="study-kr">{data.study.explanation}</div>}
-                  {data.study.business_context && (
-                    <div className="signal-insight" style={{ borderColor: '#F59E0B' }}>
-                      💡 실무 활용 팁: {data.study.business_context}
+              )}
+
+              {/* 2. AI Prompt */}
+              {detailTab === 'prompt' && data.study?.prompt_snippet && (
+                <div className="daily-section fade-in">
+                  <div className="daily-section-header">
+                    <span className="daily-section-icon">🤖</span>
+                    <h2 className="daily-section-title">AI 프롬프트 1-Pick</h2>
+                  </div>
+                  <div className="ai-prompt-card">
+                    <div className="terminal-header">
+                      <div className="terminal-dots">
+                        <span className="dot red"></span>
+                        <span className="dot yellow"></span>
+                        <span className="dot green"></span>
+                      </div>
+                      <div className="terminal-title">SYSTEM PROMPT // terminal</div>
+                      <button className={`terminal-copy-btn ${copiedPrompt ? 'copied' : ''}`} onClick={() => copyToClipboard(data.study.prompt_snippet)}>
+                        {copiedPrompt ? '✓ 복사완료' : '🗎 복사하기'}
+                      </button>
                     </div>
-                  )}
-                  {data.study.parameters && data.study.parameters.length > 0 && (
-                    <div style={{ marginTop: '16px' }}>
-                      <strong style={{ color: '#F3F4F6', fontSize: '0.9rem' }}>⚙️ 파라미터:</strong>
-                      <ul style={{ color: '#9CA3AF', fontSize: '0.9rem', paddingLeft: '20px', margin: '8px 0 0' }}>
-                        {data.study.parameters.map((p, i) => (
-                          <li key={i}><strong style={{ color: '#FCD34D' }}>[{p.name}]</strong> {p.description}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* 3. Business Japanese */}
-            {data.study?.sentence_jp && (
-              <div className="daily-section">
-                <div className="daily-section-header">
-                  <span className="daily-section-icon">🇯🇵</span>
-                  <h2 className="daily-section-title">비즈니스 일본어 1-Pick</h2>
-                  <button onClick={() => playAudio(data.study.sentence_jp)} style={{ marginLeft: 'auto', background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: '#FFF', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer' }}>
-                    🔊 발음 듣기
-                  </button>
-                </div>
-                <div className="daily-card">
-                  <div className="study-jp">{data.study.sentence_jp}</div>
-                  <div className="study-furigana">{data.study.sentence_furigana}</div>
-                  {data.study.sentence_pronunciation_kr && <div className="study-kr" style={{ color: '#9CA3AF', fontSize: '0.9rem' }}>[{data.study.sentence_pronunciation_kr}]</div>}
-                  <div className="study-kr" style={{ marginTop: '12px' }}>{data.study.sentence_kr}</div>
-                  
-                  {(!data.study.prompt_snippet && data.study.business_context) && (
-                     <div className="signal-insight" style={{ borderColor: '#3B82F6', marginTop: '16px' }}>
-                       💡 {data.study.business_context}
-                     </div>
-                  )}
-
-                  {data.study.vocabulary && data.study.vocabulary.length > 0 && (
-                    <div style={{ marginTop: '24px' }}>
-                      <strong style={{ color: '#F3F4F6', fontSize: '1rem', display: 'block', marginBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px' }}>📚 핵심 단어장</strong>
-                      <div className="study-vocab-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {data.study.vocabulary.map((v, i) => (
-                          <div key={i} className="study-vocab-item" style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                              <span style={{ fontSize: '1.1rem', color: '#F9FAFB', fontWeight: 'bold' }}>{v.word}</span>
-                              <span style={{ color: '#9CA3AF', fontSize: '0.9rem', marginLeft: '8px' }}>({v.reading})</span>
-                              {v.pronunciation_kr && <span style={{ color: '#60A5FA', fontSize: '0.85rem', marginLeft: '8px' }}>[{v.pronunciation_kr}]</span>}
-                              <div style={{ color: '#D1D5DB', fontSize: '0.95rem', marginTop: '4px' }}>- {v.meaning}</div>
+                    <div className="terminal-body">
+                      <div className="study-snippet-container">
+                        <pre className="study-snippet"><code>{data.study.prompt_snippet}</code></pre>
+                      </div>
+                      {data.study.explanation && <div className="study-kr">{data.study.explanation}</div>}
+                      {data.study.business_context && (
+                        <div className="signal-insight ai-insight">
+                          <div className="insight-badge">💡 실무 활용 팁</div>
+                          <p>{data.study.business_context}</p>
+                        </div>
+                      )}
+                      {data.study.parameters && data.study.parameters.length > 0 && (
+                        <div className="prompt-params-container">
+                          <div className="params-header">⚙️ PROMPT PARAMETERS</div>
+                          <div className="params-table">
+                            <div className="params-table-header">
+                              <span className="col-name">NAME</span>
+                              <span className="col-desc">DESCRIPTION</span>
                             </div>
-                            <button onClick={() => playAudio(v.word)} style={{ background: 'rgba(139, 92, 246, 0.2)', border: 'none', color: '#C4B5FD', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }} title="발음 듣기">
-                              🔊
-                            </button>
+                            <div className="params-list">
+                              {data.study.parameters.map((p, i) => (
+                                <div key={i} className="param-row">
+                                  <span className="param-name">[{p.name}]</span>
+                                  <span className="param-desc">{p.description}</span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 3. Business Japanese */}
+              {detailTab === 'japanese' && data.study?.sentence_jp && (
+                <div className="daily-section fade-in">
+                  <div className="daily-section-header">
+                    <span className="daily-section-icon">🇯🇵</span>
+                    <h2 className="daily-section-title">비즈니스 일본어 1-Pick</h2>
+                    <button className="japanese-audio-play-main" onClick={() => playAudio(data.study.sentence_jp)}>
+                      <svg viewBox="0 0 24 24" width="14" height="14" style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }}>
+                        <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.45v2.06c2.89.86 5 3.54 5 6.49s-2.11 5.63-5 6.49v2.06c4.01-.91 7-4.49 7-8.55s-2.99-7.64-7-8.55z"/>
+                      </svg>
+                      전체 발음 듣기
+                    </button>
+                  </div>
+                  <div className="japanese-study-card">
+                    <div className="japanese-hero-block">
+                      <div className="japanese-sentence-box">
+                        <div className="study-jp">{data.study.sentence_jp}</div>
+                        <div className="study-furigana">{data.study.sentence_furigana}</div>
+                      </div>
+                      {data.study.sentence_pronunciation_kr && (
+                        <div className="study-pronunciation">
+                          <span className="pronunciation-label">한글 발음</span>
+                          <span className="pronunciation-text">[{data.study.sentence_pronunciation_kr}]</span>
+                        </div>
+                      )}
+                      <div className="study-translation">
+                        {data.study.sentence_kr}
                       </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            )}
+                    
+                    {(!data.study.prompt_snippet && data.study.business_context) && (
+                       <div className="signal-insight jp-insight">
+                         <div className="insight-badge">💡 비즈니스 상황 팁</div>
+                         <p>{data.study.business_context}</p>
+                       </div>
+                    )}
 
+                    {data.study.vocabulary && data.study.vocabulary.length > 0 && (
+                      <div className="vocab-section">
+                        <h3 className="vocab-title">📚 핵심 단어장</h3>
+                        <div className="study-vocab-grid">
+                          {data.study.vocabulary.map((v, i) => (
+                            <div key={i} className="study-vocab-card">
+                              <div className="vocab-card-header">
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <span className="vocab-word">{v.word}</span>
+                                  <span className="vocab-reading">[{v.reading}]</span>
+                                </div>
+                                <button 
+                                  className="vocab-audio-btn" 
+                                  onClick={() => playAudio(v.word)}
+                                  title="발음 듣기"
+                                >
+                                  <svg className="play-svg" viewBox="0 0 24 24" width="12" height="12">
+                                    <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                  </svg>
+                                </button>
+                              </div>
+                              {v.pronunciation_kr && (
+                                <span className="vocab-pronunciation">[{v.pronunciation_kr}]</span>
+                              )}
+                              <div className="vocab-meaning">{v.meaning}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>
