@@ -1,113 +1,42 @@
-# PriSincera PaceNote Weekly Calendar & Voyage UX Renewal Proposal
+# PriSincera PaceNote Bento Weekly Calendar & Voyage Horizon UI Specification
 
-## 1. 배경 및 개선 필요성
+본 문서는 사용자가 주차별 목표를 수립하고 달성해나가는 **'전략적 마일스톤 관리(나만의 궤도) 플랫폼'**인 PaceNote 서비스(`/pacenote`)의 **주차별 캘린더 & 항해 지평선 UI/UX (Bento Weekly Route & Voyage Horizon)**의 최종 구현 사양서입니다. 
 
-현재 PaceNote 서비스(`/pacenote`)는 사용자가 주차별 목표를 수립하고 이를 달성해나가는 **'전략적 마일스톤 관리(나만의 궤도) 플랫폼'**입니다. 
-* **현재 상태**: '이번 주 나의 궤도' 카드 상단에 단순 화살표(이전/다음 주차) 내비게이션과 모달 팝업 형태의 평면적인 '전체 항해 일지 보기' 그리드를 제공하고 있습니다.
-* **문제점**: 
-  1. **탐색 피로도**: 주차가 쌓일수록 단순 평면 그리드 모달은 복잡도가 올라가며 직관적인 정보 탐색이 어렵습니다.
-  2. **데일리 다이제스트와의 통일성 결여**: 최근 리뉴얼되어 찬사를 받은 **Daily Digest의 프리미엄 Bento Chrono-Calendar** 디자인에 비해, PaceNote의 주차 이동 및 일지 탐색 UI는 상대적으로 단조롭고 정적인 모달 형태로 머물러 있어 일관된 브랜드 경험(Premium UX)을 저해합니다.
-  3. **주차별 메트릭 인지 부족**: 각 주차별 달성도(완료한 Task 비율)가 모달 내 단순 텍스트(`✓ 3`)로만 표시되어, 사용자가 지난 주차들의 성장 궤적을 거시적으로 느끼기 어렵습니다.
-
-### 💡 개선 방향
-PaceNote의 핵심 아이덴티티인 **"항해(Voyage)"**와 **"궤도(Orbit)"** 콘셉트를 물리적 인터랙션으로 구현합니다. 주차별(Weekly) 서비스 특성에 최적화된 **'주차별 캘린더 UI/UX(Bento Weekly Route & Infinite Voyage Horizon)'** 제안을 통해 사용자가 자신의 성장 궤적을 우주를 유영하듯 유려하게 탐색할 수 있도록 리뉴얼합니다.
+기존의 평면적인 단순 그리드 모달 내비게이션을 전면 개편하고, 2026년 5월 20일 **Concept A. Chrono-Quarterly Bento Matrix**를 기반으로 성공적으로 구현 완료 및 프로덕션 환경에 완전 릴리즈되었습니다.
 
 ---
 
-## 2. 핵심 UI/UX 리뉴얼 콘셉트 (3가지 방안)
+## 1. 배경 및 구현 개요
 
-PaceNote는 일(Day) 단위가 아닌 **주(Week - ISO 8601 기준 `YYYY-Wxx`)** 단위로 운용되므로, 기존 Gregorian 월 달력과는 다른 새로운 차원의 시간 시각화 레이아웃이 필요합니다.
+PaceNote는 일(Day) 단위가 아닌 **주(Week - ISO 8601 기준 `YYYY-Wxx`)** 단위로 운용되는 서비스 특성을 지닙니다. 이에 따라 기존 Gregorian 월 달력과는 완전히 다른 주간 단위의 시간 시각화 레이아웃과 감각적인 성장 궤적 추적이 요구되었습니다.
 
-### 🚀 Concept A. "Chrono-Quarterly Bento Matrix" (분기별 13주차 벤트 매트릭스) - (추천)
+* **최종 채택 사양**: **Concept A. "Chrono-Quarterly Bento Matrix" (분기별 13주차 벤트 매트릭스)**
+* **릴리즈 일자**: 2026-05-20
+* **구현 컴포넌트**:
+  * [PaceNoteWeeklyCalendar.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.jsx) - 분기 벤트 구조화 및 150ms 디바운스 호버 피크 로직 구현.
+  * [PaceNoteWeeklyCalendar.css](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.css) - 글래스모피즘 스킨, 네온 오로라 아우라(pulseAura), GPU 렌더링 가속 및 CLS 방지 스타일링.
+* **통합 대상**: `PaceNoteDashboard.jsx` 대시보드 내 모달 영역 확장 통합 (1000px 규격으로 개방감 확장 및 레이아웃 시프트 방지 패딩 설계).
+
+---
+
+## 2. UI/UX 디자인 핵심 콘셉트 (최종 채택)
+
+### 🚀 Concept A. "Chrono-Quarterly Bento Matrix"
 > **"1년 52주를 분기(Q1~Q4) 단위의 Bento 박스로 구조화하여 성장의 매크로 로드맵을 시각화합니다."**
 
-```
-+---------------------------------------------------------------------------------+
-|                                 [항해 일지 모아보기]                            |
-|  2026년 항해 로드맵 (달성률 84%)                                                 |
-|                                                                                 |
-|  +-------------------------------------+ +-------------------------------------+  |
-|  | Q1 VOYAGE (1~13주차)                | | Q2 VOYAGE (14~26주차)  [ACTIVE ROUTE] |  |
-|  | [■■■■■■■■■■■■■] 100%               | | [■■■■■■■■■░░░░] 62%                   |  |
-|  |                                     | |                                     |  |
-|  | [W01:✓] [W02:✓] [W03:✓] [W04:✓]     | | [W14:✓] [W15:✓] [W16:✓] [W17:✓]     |  |
-|  | [W05:✓] [W06:✓] [W07:✓] [W08:✓]     | | [W18:✓] [W19:✓] [W20:✓] [W21:●]     |  |
-|  | [W09:✓] [W10:✓] [W11:✓] [W12:✓]     | | [W22:🔒] [W23:🔒] [W24:🔒] [W25:🔒] |  |
-|  | [W13:✓]                             | | [W26:🔒]                            |  |
-|  +-------------------------------------+ +-------------------------------------+  |
-+---------------------------------------------------------------------------------+
-```
-
 * **구조 및 레이아웃**:
-  * 화면을 4개의 큰 **Bento Box(Q1, Q2, Q3, Q4)** 영역으로 나눕니다.
-  * 한 분기는 정확히 **13주**로 이루어지므로, 각 Bento Box 내부에 13개의 글래스모피즘 주차 카드를 조밀하고 정교한 그리드(`4 x 3` 및 마지막 `1` 행)로 조화롭게 배치합니다.
-* **디자인 & 상태 비주얼**:
-  * **과거 완료 주차 (Past Completed)**: 투명도 높은 화이트 글래스 카드에 은은한 실버/바이올렛 테두리. 달성률(Task 완료비)에 따라 하단에 마이크로 그라데이션 게이지 바 노출.
-  * **현재 항해 주차 (Current Active)**: 사이버 사이언(Cyber Cyan, `#22D3EE`) 및 네온 아우라 글로우가 맥동(Pulse)하는 테두리. 카드 내부에 `ACTIVE` 마이크로 배지 및 라이브 이펙트.
-  * **미래 대기 주차 (Future Locked)**: 딤드(Dimmed, 투명도 0.15) 처리된 블랙 쉴드 카드 위에 정교한 자물쇠(`🔒`) 아이콘 및 점선 테두리 배치.
-* **기대 효과**: 사용자가 1년 전체를 바라보며 분기별 슬라이스 계획과 달성률을 유기적으로 파악할 수 있으며, 데일리 다이제스트의 캘린더와 정합성이 뛰어납니다.
+  * 화면을 4개의 큰 **Bento Box(Q1, Q2, Q3, Q4)** 영역으로 양분하여 데스크톱 2x2 그리드로 대칭 배치합니다.
+  * 한 분기는 정확히 **13주**로 이루어지므로, 각 Bento Box 내부에 13개의 글래스모피즘 주차 카드를 정교한 격자 그리드(`4 x 3` 및 마지막 `1` 행)로 안정감 있게 배치합니다.
+* **디자인 & 상태 비주얼 (Weekly Cell States)**:
+  1. **과거 완료 주차 (Past Completed)**: 투명도 높은 글래스모피즘 스킨(`background: rgba(0, 0, 0, 0.25)`, `border: 1px solid rgba(255, 255, 255, 0.06)`). 해당 주차의 실시간 Task 달성도(완료 테스크 / 총 테스크)에 비례한 하단 마이크로 게이지바(`.cell-progress-fill`) 탑재.
+  2. **현재 개척 주차 (Current Active)**: 사이버 사이언 네온 아우라 테두리(`#22D3EE`). 2초 주기로 테두리가 부드럽게 펄싱되는 외곽 글로우 애니메이션(`pulseAura`)과 우측 상단 중앙의 맥동 도트 인디케이터(`.pulse-indicator`) 연동.
+  3. **미래 대기 주차 (Future Locked)**: 딤드 처리(`opacity: 0.25`), 포인터 및 클릭 차단(`disabled`), 점선 테두리(`border-style: dashed`), 자물쇠 아이콘(`🔒`) 노출.
 
 ---
 
-### 🌌 Concept B. "Orbit Horizon Scroll" (수평 인피니트 궤도 타임라인)
-> **"나만의 궤도를 수평 방향의 흐름으로 배치하여, 마우스 휠이나 스와이프를 통해 무한한 시간의 수평선을 탐색하듯 내비게이션합니다."**
+## 3. 인터랙션 및 상태 관리 흐름
 
-```
-   <- PAST WEEK                                                      FUTURE WEEK ->
- +-------------+   +-------------+   +---------------+   +-------------+   +-------------+
- |  20주차      |   |  21주차      |   |  22주차        |   |  23주차      |   |  24주차      |
- |  05/11~05/17|   |  05/18~05/24|   |  05/25~05/31  |   |  06/01~06/07|   |  06/08~06/14|
- |             |   |             |   |  [ACTIVE]     |   |             |   |             |
- |  [✓ 5/5]    |   |  [✓ 4/5]    |   |   ( 80% )     |   |  [ 🔒 ]     |   |  [ 🔒 ]     |
- |  ●●●●●      |   |  ●●●●○      |   |   ●●●●○       |   |             |   |             |
- |  [완료]      |   |  [완료]      |   |   [항해 중]    |   |  [대기]      |   |  [대기]      |
- +-------------+   +-------------+   +---------------+   +-------------+   +-------------+
-```
-
-* **구조 및 레이아웃**:
-  * 화면 상단 혹은 상세 카드의 바로 위에 배치되는 1단 슬라이드 형식의 **인피니트 가로 스크롤 타임라인**입니다.
-  * 마우스 휠을 굴리거나 드래그하면 탄성(Inertia Friction) 있는 부드러운 스크롤 물리 효과가 적용됩니다.
-* **디자인 & 상태 비주얼**:
-  * 현재 선택된 주차가 **정중앙(Center Anchor)**에 오고 좌우 주차들은 뒤로 갈수록 원근감(Scale & Opacity) 있게 작아지며 입체적 뎁스(3D Space depth)를 부여합니다.
-  * 각 카드 내부에는 **'주차명(W22)', '해당 주차 날짜 범위(05.18~05.24)', '마이크로 오비탈 도트(완료한 Task 수만큼 불이 들어오는 구체 도트)'**를 내장하여 글래스모피즘 테마의 정수를 보여줍니다.
-* **기대 효과**: 페이지 전환이나 모달 팝업을 열지 않고도 대시보드 내에서 즉각적으로 이전 주차와 다음 주차의 상태를 스캔하고 이동할 수 있는 극단적인 탐색 편의성을 자랑합니다.
-
----
-
-### ⚓ Concept C. "Constellation Orbit Trail" (마일스톤 성운 트랙커)
-> **"목표 달성과 성장을 은하계의 성운과 별자리(Constellation) 트레일 형태로 맵핑하여 탐색 자체를 게이미피케이션(Gamification)합니다."**
-
-```
-                  W24 [🔒]
-                  /
-                 /
-          W23 [🔒]
-            /
-           /
-   W22 [● Active] 🌟 (현재 나의 위치)
-         \
-          \
-         W21 [✓] 
-           \
-            \
-            W20 [✓] ----- W19 [✓]
-```
-
-* **구조 및 레이아웃**:
-  * 캘린더 모달 진입 시 별빛이 부드럽게 흐르는 우주성운(Cosmic Nebula) 이펙트를 바탕화면에 투사합니다.
-  * 주차별 달성 성과가 수직/대각선 방향의 **구불구불 연결된 밤하늘의 궤도선(Milestone Trail)**으로 표현되며, 각 주차는 궤도 위의 빛나는 별(Star Nodes)로 매핑됩니다.
-* **디자인 & 상태 비주얼**:
-  * **완성된 별 (Past Completed)**: 찬란하게 빛나는 프리즘 퍼플/엠버 광원을 발산하며 주차 내 미니 별자리를 이룹니다.
-  * **진행중인 별 (Active Star)**: 사이버 사이언 컬러로 격렬히 펄싱(Pulse)하며, 호버 시 그 주에 수립된 핵심 문장(Pace Statement)이 성운의 꼬리 이펙트처럼 말풍선 툴팁으로 로드됩니다.
-  * **미래의 어두운 별 (Locked Node)**: 아직 은하선이 연결되지 않아 어둡게 잠겨있는 회색 성체.
-* **기대 효과**: 자신의 노력이 시각적인 '별자리 성운'으로 누적되는 모습을 보며 성취감을 만끽하고 감성적인 몰입도를 극대화할 수 있습니다.
-
----
-
-## 3. 인터랙션 및 상태 관리 흐름 (Mermaid Flow)
-
-PaceNote 캘린더 리뉴얼 시 적용되는 데이터 로딩 및 사용자 액션 흐름도입니다. 
-Daily Digest와 마찬가지로 **0-Lag Performance (초기 경량 로드 후 호버 시 디바운스 Lazy fetch)** 사양을 그대로 채택하여 쾌적한 런타임을 구현합니다.
+PaceNote 캘린더는 불필요한 API 호출을 최소화하고 CPU 및 렌더링 부하를 제어하는 **0-Lag Performance** 사양을 완벽히 충족합니다.
 
 ```mermaid
 graph TD
@@ -119,27 +48,30 @@ graph TD
     E -->|Bento Matrix 모달 진입| F[분기별 13주 Bento Grid 팝업 노출]
     
     F --> G{사용자 주차 카드 호버}
-    G -->|Debounce 150ms 대기| H[해당 주차 퀵피크 API /api/pacenote/peek?weekId= 호출]
-    H --> I[모달 내 미니 정보창에 핵심 성과 및 Task 리스트 렌더링]
+    G -->|Debounce 150ms 대기| H[해당 주차 데이터 실시간 요약 연산]
+    H --> I[하단 오버레이 패널에 체크리스트 달성률 및 Statement 렌더링]
     
     F --> J{사용자 주차 카드 클릭}
-    J -->|과거/현재 주차 선택| K[대시보드의 selectedWeekId 상태 업데이트 후 즉시 렌더링 전환]
-    J -->|미래 주차 선택| L[Locked 안내 토스트 메시지 투사 및 액션 차단]
+    J -->|과거/현재 주차 선택| K[selectedWeekId 상태 업데이트 후 대시보드 뷰 즉시 전환]
+    J -->|미래 주차 선택| L[Disabled 상태로 클릭 액션 완전 차단]
     
     K --> M[대시보드 주차 데이터 전환 완료 및 모달 닫힘]
 ```
 
+### 💡 150ms Debounced Hover & Dynamic Summary
+* **렌더링 부하 보호**: 사용자가 마우스를 캘린더 그리드 상에서 빠르게 스쳐 지나갈 때 생기는 무의식적 호버 이벤트를 무시하기 위해 `150ms` 디바운싱 타이머를 완벽히 장착했습니다. `onMouseEnter` 시 타이머를 작동시켜 150ms 이상 커서가 머물렀을 때에만 하단 정보 패널을 활성화합니다.
+* **실시간 통계 연산**: `pastWeeksData`와 `currentWeekTasks` 데이터를 기반으로 전체 항해의 진척도(총 테스크 수 대비 완료 테스크 수)를 동적으로 실시간 연산하여, 하드코딩 없는 라이브 진척도 바(Progress Bar)를 구현합니다.
+
 ---
 
-## 4. 컴포넌트 구조 및 마크업 설계 사안
+## 4. 컴포넌트 마크업 설계 실질 구현
 
-제시된 **Concept A (Bento Matrix)**를 실질적으로 구현하기 위한 React 컴포넌트 마크업 설계입니다.
-새로운 파일 [PaceNoteWeeklyCalendar.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.jsx) 및 [PaceNoteWeeklyCalendar.css](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.css)를 신설하는 사양입니다.
+신설되어 프로덕션에 완벽히 정합된 `PaceNoteWeeklyCalendar.jsx` 소스 코드 스니펫입니다.
 
-### 📂 [NEW] [PaceNoteWeeklyCalendar.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.jsx) 마크업 사양
+### 📂 [PaceNoteWeeklyCalendar.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.jsx)
 
 ```jsx
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import './PaceNoteWeeklyCalendar.css';
 
 export default function PaceNoteWeeklyCalendar({ 
@@ -147,17 +79,26 @@ export default function PaceNoteWeeklyCalendar({
   currentWeekId, 
   selectedWeekId, 
   pastWeeksData = [], // 과거 Task 완성률 정보 매핑용
+  currentWeekTasks = [], // 이번 주 실시간 Task
   onSelectWeek 
 }) {
   const [hoveredWeekInfo, setHoveredWeekInfo] = useState(null);
+  const [hoverTimeoutId, setHoverTimeoutId] = useState(null);
   
-  // 1년의 주차들을 4개 분기(Q1: 1~13, Q2: 14~26, Q3: 27~39, Q4: 40~52)로 그룹핑
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutId) clearTimeout(hoverTimeoutId);
+    };
+  }, [hoverTimeoutId]);
+
+  // 1년의 주차들을 4개 분기(Q1: 1~13, Q2: 14~26, Q3: 27~39, Q4: 40~53)로 그룹핑
   const quarterlyGroups = useMemo(() => {
     const quarters = {
       Q1: { title: "Q1 Voyage (1~13주차)", weeks: [] },
       Q2: { title: "Q2 Voyage (14~26주차)", weeks: [] },
       Q3: { title: "Q3 Voyage (27~39주차)", weeks: [] },
-      Q4: { title: "Q4 Voyage (40~52주차)", weeks: [] },
+      Q4: { title: "Q4 Voyage (40~53주차)", weeks: [] },
     };
 
     allWeekIds.forEach(wId => {
@@ -168,29 +109,80 @@ export default function PaceNoteWeeklyCalendar({
       if (weekNum >= 1 && weekNum <= 13) quarters.Q1.weeks.push(wId);
       else if (weekNum >= 14 && weekNum <= 26) quarters.Q2.weeks.push(wId);
       else if (weekNum >= 27 && weekNum <= 39) quarters.Q3.weeks.push(wId);
-      else if (weekNum >= 40 && weekNum <= 53) quarters.Q4.weeks.push(wId); // 53주차 대응
+      else if (weekNum >= 40 && weekNum <= 53) quarters.Q4.weeks.push(wId);
     });
 
     return quarters;
   }, [allWeekIds]);
 
-  const handleWeekHover = (wId, e) => {
-    const timelineWeek = pastWeeksData.find(p => p.weekId === wId);
-    const isCurrent = wId === currentWeekId;
-    const isFuture = !isCurrent && !timelineWeek;
+  // 전체 항해 진척도 동적 연산
+  const totalStats = useMemo(() => {
+    let totalTasksCount = 0;
+    let completedTasksCount = 0;
 
-    if (isFuture) {
-      setHoveredWeekInfo({ wId, isFuture: true });
-      return;
+    pastWeeksData.forEach(pw => {
+      if (pw.tasks) {
+        totalTasksCount += pw.tasks.length;
+        completedTasksCount += pw.tasks.filter(t => t.completed).length;
+      }
+    });
+
+    if (currentWeekTasks) {
+      totalTasksCount += currentWeekTasks.length;
+      completedTasksCount += currentWeekTasks.filter(t => t.completed).length;
     }
 
-    setHoveredWeekInfo({
-      wId,
-      isCurrent,
-      total: timelineWeek ? timelineWeek.tasks.length : 0,
-      completed: timelineWeek ? timelineWeek.tasks.filter(t => t.completed).length : 0,
-      statement: timelineWeek?.statement || "진행된 기록이 있는 항해 경로입니다."
-    });
+    const percent = totalTasksCount > 0 ? Math.round((completedTasksCount / totalTasksCount) * 100) : 0;
+    return {
+      total: totalTasksCount,
+      completed: completedTasksCount,
+      percent
+    };
+  }, [pastWeeksData, currentWeekTasks]);
+
+  const handleWeekHover = (wId) => {
+    if (hoverTimeoutId) clearTimeout(hoverTimeoutId);
+
+    const timer = setTimeout(() => {
+      const timelineWeek = pastWeeksData.find(p => p.weekId === wId);
+      const isCurrent = wId === currentWeekId;
+      const isFuture = !isCurrent && !timelineWeek;
+
+      if (isFuture) {
+        setHoveredWeekInfo({ wId, isFuture: true });
+        return;
+      }
+
+      let total = 0;
+      let completed = 0;
+      let statement = "진행된 기록이 있는 항해 경로입니다.";
+
+      if (isCurrent) {
+        total = currentWeekTasks.length;
+        completed = currentWeekTasks.filter(t => t.completed).length;
+        statement = "현재 치열하게 개척 중인 이번 주 궤도입니다.";
+      } else if (timelineWeek) {
+        total = timelineWeek.tasks ? timelineWeek.tasks.length : 0;
+        completed = timelineWeek.tasks ? timelineWeek.tasks.filter(t => t.completed).length : 0;
+        statement = timelineWeek.statement || "완료된 기록이 안전하게 저장된 항해 경로입니다.";
+      }
+
+      setHoveredWeekInfo({
+        wId,
+        isFuture: false,
+        isCurrent,
+        total,
+        completed,
+        statement
+      });
+    }, 150); // 150ms debounce
+
+    setHoverTimeoutId(timer);
+  };
+
+  const handleWeekLeave = () => {
+    if (hoverTimeoutId) clearTimeout(hoverTimeoutId);
+    setHoveredWeekInfo(null);
   };
 
   return (
@@ -199,8 +191,8 @@ export default function PaceNoteWeeklyCalendar({
       <div className="chrono-weekly-summary">
         <span className="summary-title">⛵ 전체 항해 진척도</span>
         <div className="summary-bar-wrapper">
-          <div className="summary-progress-fill" style={{ width: '74%' }}></div>
-          <span className="summary-percent">74% Completed</span>
+          <div className="summary-progress-fill" style={{ width: `${totalStats.percent}%` }}></div>
+          <span className="summary-percent">{totalStats.percent}% Completed ({totalStats.completed}/{totalStats.total})</span>
         </div>
       </div>
 
@@ -227,22 +219,29 @@ export default function PaceNoteWeeklyCalendar({
                   if (isSelected) cardClass += " selected";
                   if (isFuture) cardClass += " locked";
 
-                  // 완료 비 계산
-                  const pct = timelineWeek && timelineWeek.tasks.length > 0
-                    ? Math.round((timelineWeek.tasks.filter(t => t.completed).length / timelineWeek.tasks.length) * 100)
-                    : (isCurrent ? 50 : 0);
+                  // 완료 비율 계산
+                  let pct = 0;
+                  if (isCurrent) {
+                    pct = currentWeekTasks.length > 0
+                      ? Math.round((currentWeekTasks.filter(t => t.completed).length / currentWeekTasks.length) * 100)
+                      : 0;
+                  } else if (timelineWeek) {
+                    pct = timelineWeek.tasks && timelineWeek.tasks.length > 0
+                      ? Math.round((timelineWeek.tasks.filter(t => t.completed).length / timelineWeek.tasks.length) * 100)
+                      : 0;
+                  }
 
                   return (
                     <button
                       key={wId}
                       className={cardClass}
                       onClick={() => !isFuture && onSelectWeek(wId)}
-                      onMouseEnter={(e) => handleWeekHover(wId, e)}
-                      onMouseLeave={() => setHoveredWeekInfo(null)}
+                      onMouseEnter={() => handleWeekHover(wId)}
+                      onMouseLeave={handleWeekLeave}
                       disabled={isFuture}
                     >
                       <div className="cell-top">
-                        <span className="week-label">{wNum}주</span>
+                        <span className="week-label">{wNum}주차</span>
                         {isFuture && <span className="lock-icon">🔒</span>}
                         {isCurrent && <span className="pulse-indicator"></span>}
                       </div>
@@ -271,7 +270,7 @@ export default function PaceNoteWeeklyCalendar({
               <p className="peek-desc">🔒 미개척 항해 주차입니다. 해당 주간에 궤도가 오픈됩니다.</p>
             ) : (
               <div className="peek-metrics">
-                <span className="metric-item">체크리스트: {hoveredWeekInfo.completed} / {hoveredWeekInfo.total} 달성</span>
+                <span className="metric-item">체크리스트 달성률: {hoveredWeekInfo.completed} / {hoveredWeekInfo.total} 완료</span>
                 <p className="peek-statement">"{hoveredWeekInfo.statement}"</p>
               </div>
             )}
@@ -285,31 +284,81 @@ export default function PaceNoteWeeklyCalendar({
 
 ---
 
-## 5. 미디어 쿼리 및 성능 최적화 전략 (Responsive & Performance)
+## 5. CSS 정밀 스타일링 및 CLS/성능 방어 가이드
+
+PaceNote 주차별 캘린더는 다수의 글래스 카드가 존재하므로, 스크롤 및 호버 시 초당 60프레임(60fps)을 보존하기 위해 하드웨어 GPU 가속을 적극 유도하며 레이아웃 시프트를 사전에 완벽히 방어합니다.
+
+### 1) 레이아웃 시프트 방지 (`padding-bottom`)
+* **현상**: 하단의 실시간 호버 퀵피크 오버레이 패널(`.weekly-hover-peek-panel`)은 절대 위치(`position: absolute; bottom: -90px;`)로 배치됩니다. 이때 호버 시 동적으로 카드가 나타날 때, 모달 창 바닥이 잘리거나 레이아웃이 튕겨 시프트(CLS)가 발생할 수 있습니다.
+* **해결책**: 부모 컨테이너 `.pacenote-weekly-chrono-container`에 명시적인 `padding-bottom: 110px`과 `min-height: 400px`을 지정하여 팝업 패널이 위치할 넉넉한 공간을 미리 할당해 레이아웃 변형을 완전 차단합니다.
+
+### 2) 맥동 오라 이펙트 (Aura Pulse Animation)
+현재 주차 활성 시 사이버 사이언 컬러로 테두리가 고동치는 맥동 광원을 표현하기 위해 `::after` 가상 요소를 띄워 브라우저 성능 부하 없이 3D 부유 레이어를 연출합니다.
+
+```css
+.week-matrix-cell.current::after {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px; bottom: -1px;
+  border-radius: 12px;
+  border: 1px solid #22D3EE;
+  pointer-events: none;
+  animation: pulseAura 2s infinite ease-in-out;
+}
+
+@keyframes pulseAura {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+```
+
+### 3) GPU 가속 적용
+오비탈 펄스 애니메이션은 저사양 기기나 모바일에서 미세한 렉을 차단할 수 있도록 GPU 가속 레이어(`will-change: transform, opacity`)를 백그라운드로 작동시킵니다.
+
+---
+
+## 6. 레이아웃 안정성 및 모바일 리플로우 가이드
 
 ### 1) 모바일 레이아웃 최적화 (`@media (max-width: 768px)`)
 * **데스크톱**: 분기별 2x2 Bento Box 레이아웃으로 넓고 시원하게 정보를 격자 배열합니다.
-* **모바일**: 
-  * 분기별 Bento Box가 수직 1열 종대로 쾌적하게 스택 정렬됩니다.
-  * 내부 13주차 카드의 크기가 터치 타겟 규격(최소 가로세로 44px 이상)에 맞춰 유동적으로 조절되며, 세로 쏠림을 막기 위해 가로 스크롤 캐러셀 뷰포트로의 하이브리드 전환도 검토합니다.
+* **모바일**:
+  * 분기별 Bento Box가 수직 1열 종대로 스택 정렬되어 화면 폭에 구애받지 않고 가독성을 수호합니다.
+  * 한 줄에 4개씩 격자 배치(`grid-template-columns: repeat(4, 1fr)`)되는 주차 카드의 넓이를 유동적으로 조정하며, 초소형 화면(480px 이하)에서는 한 줄에 3개씩 배치(`grid-template-columns: repeat(3, 1fr)`)되도록 자동 리플로우되어 터치 미스를 원천 예방합니다.
 
-### 2) CLS (Layout Shift) 및 렌더링 성능 보호
-* **달력 크기 정규화**: 주간 개수가 윤년 등에 의해 미세하게 변하더라도(예: 52주 vs 53주), Bento Box 내부의 격자 그리드는 항상 일정한 최소 높이(`min-height`)를 가져 레이아웃 시프트를 완전히 방지합니다.
-* **CPU/Glow 가속화**: 오비탈 맥동(Pulse) 애니메이션과 성운 글로우 효과가 다량의 주차 노드에 동시 적용되더라도 GPU 가속(`transform: translate3d`, `will-change: transform, opacity`)을 활성화하여 저사양 기기에서도 60fps에 달하는 매끄러운 렌더링 프레임을 지켜냅니다.
+```css
+@media (max-width: 768px) {
+  .bento-quarterly-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .quarter-weeks-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .weekly-hover-peek-panel {
+    bottom: -110px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quarter-weeks-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+```
 
 ---
 
-## 6. 단계별 구축 및 통합 마일스톤
+## 7. 비채택 및 대안 검토 아카이브 (Alternative Concepts Checked)
 
-| 단계 | 주요 태스크 | 세부 내용 |
-| :--- | :--- | :--- |
-| **1단계: API 데이터 설계** | `api/pacenote` 데이터 구조화 | 과거 주차별 총 태스크 개수 및 완료율 메타데이터 필드 추가 패치 |
-| **2단계: 신규 컴포넌트 생성** | `PaceNoteWeeklyCalendar` 빌드 | 4개 분기 Bento Matrix 뼈대 마크업 구축 및 Props 바인딩 |
-| **3단계: CSS 정밀 스타일링** | 프리미엄 다크모드 무드 주입 | 유리 질감 글래스모피즘, 맥동 네온 글로우 및 완료 게이지 스타일 완성 |
-| **4단계: 모달 대체 및 결합** | 대시보드 내비게이션 교체 | 기존 '전체 항해 일지 보기' 텍스트 모달을 신규 주차 캘린더 모달로 대체 연결 |
-| **5단계: 모바일 검증 & 배포** | 크로스 브라우저 린트 & 빌드 | 빌드 타임 컴파일 무결성 체크(`npm run build`) 후 Git 통합 배포 |
+디자인 설계 과정에서 검토되었으나 최종 탈락 혹은 추후 확장 시나리오로 이관된 대안 콘셉트들입니다.
 
----
-> [!IMPORTANT]
-> **디자인 원칙**: 화려하되 절제되어야 하며, 로딩 지연 없는 극단의 퍼포먼스를 고수합니다. 
-> 궤도 내비게이션의 물리적 반응 속도는 150ms 디바운스로 통제되어 사용자가 피로감 없이 부드럽게 과거 궤적을 횡단할 수 있어야 합니다.
+### 🌌 Concept B. "Orbit Horizon Scroll" (수평 인피니트 궤도 타임라인)
+* **내용**: 1단 슬라이드 형식의 무한 수평 스크롤 타임라인. 휠과 스와이프를 지원하며 중앙 주차가 스케일 업(Scale up)되는 원근법 뷰.
+* **비채택 사유**: 탐색 속도는 빠르나, 전체 1년 단위의 52주차 매크로 성장 로드맵을 한 번에 조망하기 어렵고 데일리 다이제스트 캘린더 뷰와의 일관성이 Bento 방식에 비해 다소 떨어진다는 판정을 받음.
+
+### ⚓ Concept C. "Constellation Orbit Trail" (마일스톤 성운 트랙커)
+* **내용**: 밤하늘의 궤도선과 별자리를 그리드로 형상화하여 우주 성운 이펙트와 함께 게임의 로드맵처럼 별 노드를 연결해 나가는 게이밍 기획.
+* **비채택 사유**: 감성적 몰입도는 매우 뛰어나나, React 런타임 성능 보장 대비 리소스 비용이 무겁고 UI가 다소 복잡하여 사용자 정보 탐색의 피로도가 증가할 위험이 존재함.
