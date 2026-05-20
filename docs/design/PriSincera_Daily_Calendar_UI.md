@@ -142,3 +142,54 @@ export default function DailyCalendar({ publishedDates, onSelectDate, onHoverDat
    * 768px 미만 스크린에서 캘린더 그리드가 깨지지 않도록 터치 그리드 에어리어 조정 및 1열 종대 배치 확인.
 5. **5단계: 린트 및 빌드 검증**
    * `cmd /c npm run build` 컴파일 무오류 상태 최종 리포트.
+
+---
+
+## 6. Layout Resiliency & Grid Alignment Constraints
+
+캘린더와 우측 퀵 피크 미리보기 영역은 데스크톱에서 하나의 큰 그리드(`.daily-bento-portal`)로 묶여 동작합니다. 우측 퀵 피크 미리보기의 콘텐츠가 길어져 높이가 무한히 확장되는 경우, 좌측의 캘린더 컴포넌트가 영향을 받아 늘어지거나 깨지는 현상을 차단하기 위해 아래와 같은 CSS 정렬 규칙을 준수합니다.
+
+### 1) 그리드 및 플렉스 Stretching 차단
+* **현상**: CSS Grid나 Flex container는 자식 요소를 기본적으로 수직 정렬(`align-items: stretch`) 처리하므로, 한쪽 행이 길어지면 반대쪽도 강제로 같이 늘어납니다.
+* **해결책**:
+  * 좌측 캘린더 영역을 감싸는 `.bento-calendar-section` 플렉스 컨테이너와 우측 퀵 피크 영역 `.bento-quick-peek-section`에 각각 `align-items: start;` 및 `align-self: start;` 속성을 지정합니다.
+  * 이렇게 함으로써 각 칼럼은 자신의 고유 콘텐츠 높이(`fit-content`)만을 가집니다.
+
+```css
+.bento-calendar-section {
+  display: flex;
+  justify-content: center;
+  align-items: start; /* 수직 늘어남(stretch) 차단 */
+  width: 100%;
+  align-self: start;  /* 그리드 트랙 상단 정렬 고수 */
+}
+
+.bento-quick-peek-section {
+  width: 100%;
+  position: sticky;
+  top: 120px;
+  align-self: start;  /* 스티키 동작을 위해 수직 정렬을 상단으로 제한 */
+}
+```
+
+### 2) 캘린더 날짜 셀 기하구조 보장 (`aspect-ratio: 1`)
+* **현상**: 브라우저는 수직 정렬이 `stretch`일 때 `aspect-ratio`를 무시하고 요소를 늘리는 경향이 있습니다.
+* **해결책**:
+  * `.chrono-calendar-wrapper`에 `height: fit-content;`를 설정하여 캘린더 전체 틀의 유동성을 강제합니다.
+  * `.calendar-grid`에 `align-items: start;`를 설정하여 42개 날짜 셀(`button.calendar-day-cell`)이 상하로 강제 견인되는 힘을 완전히 차단합니다. 이를 통해 날짜 셀의 `aspect-ratio: 1` 정방형 비율이 어떠한 극한 상황에서도 기하학적으로 완벽히 유지됩니다.
+
+```css
+.chrono-calendar-wrapper {
+  /* ... 기존 속성 */
+  height: fit-content; /* 세로 늘어남 방지 */
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  justify-items: stretch;
+  align-items: start; /* 셀의 1:1 종횡비를 지키기 위한 절대적 장치 */
+}
+```
+

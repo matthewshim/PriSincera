@@ -1407,13 +1407,16 @@
 .bento-calendar-section {
   display: flex;
   justify-content: center;
+  align-items: start; /* Prevents vertical stretching of the child calendar wrapper */
   width: 100%;
+  align-self: start; /* Safeguard inside grid tracks */
 }
 
 .bento-quick-peek-section {
   width: 100%;
   position: sticky;
   top: 120px;
+  align-self: start; /* Required for sticky floating to operate properly in CSS grid tracks */
 }
 
 /* ── Quick Peek Welcome State ── */

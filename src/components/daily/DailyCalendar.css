@@ -13,6 +13,7 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  height: fit-content; /* Prevent vertical stretching when side preview content elongates */
 }
 
 .chrono-calendar-wrapper:hover {
@@ -88,6 +89,7 @@
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
   justify-items: stretch;
+  align-items: start; /* Prevents cell heights from stretching to maintain perfect 1:1 aspect ratio */
 }
 
 /* Weekdays */
