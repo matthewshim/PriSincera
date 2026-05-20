@@ -1,63 +1,89 @@
-/* PaceNoteChronoRibbon.css - Premium Glassmorphism Theme with Neon Aura */
+/* PaceNoteChronoRibbon.css - Premium Open-Air Chrono Segmented Ribbon */
 
+/* ── 0. 전역 애니메이션 정의 ── */
+@keyframes pulseDot {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes goldPulse {
+  0% {
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.08), inset 0 0 8px rgba(245, 158, 11, 0.02);
+    border-color: rgba(245, 158, 11, 0.35);
+  }
+  100% {
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.22), inset 0 0 12px rgba(245, 158, 11, 0.05);
+    border-color: rgba(245, 158, 11, 0.6);
+  }
+}
+
+@keyframes trophyFloat {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+/* ── 1. 컨테이너: 오픈에어 (박스 배제형 라인 구분 레이아웃) ── */
 .pacenote-chrono-ribbon-container {
   display: flex;
   flex-direction: column;
-  background: rgba(17, 24, 39, 0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 16px 20px;
+  background: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  padding: 24px 0 28px 0;
   margin: 0 auto 32px auto;
   max-width: 1000px;
   width: 100%;
   box-sizing: border-box;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: none;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── 1단: 분기 세그먼트 벨트 ── */
+/* ── 2단 구조 간격 조정 ── */
 .quarter-segment-belt {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  margin-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  padding-bottom: 12px;
+  margin-bottom: 24px;
 }
 
+/* 분기 세그먼트 버튼 (Premium Pill shape) */
 .quarter-segment-btn {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 8px 16px;
+  border-radius: 9999px; /* 완벽한 필 형태 */
+  padding: 8px 18px;
   color: var(--text-muted, #9CA3AF);
+  font-family: var(--font-display, 'Outfit', sans-serif);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   position: relative;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .quarter-segment-btn:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.15);
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .quarter-segment-btn.active {
-  background: rgba(34, 211, 238, 0.1);
+  background: rgba(34, 211, 238, 0.08);
   border-color: rgba(34, 211, 238, 0.4);
   color: #22D3EE;
   font-weight: 600;
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.15);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.12);
 }
 
-/* 현재 진행 중인 분기 도트 인디케이터 */
 .quarter-segment-btn.current-voyage .current-dot {
   width: 6px;
   height: 6px;
@@ -68,51 +94,52 @@
   animation: pulseDot 2s infinite;
 }
 
-@keyframes pulseDot {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.5; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* ── 2단: 13주 가로 스크롤 타임라인 ── */
+/* ── 3. 13주 가로 스크롤 타임라인 ── */
 .chrono-ribbon-timeline {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   position: relative;
 }
 
+/* 타임라인 좌우 화살표 */
 .ribbon-arrow {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-muted, #9CA3AF);
   cursor: pointer;
   font-size: 0.75rem;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   flex-shrink: 0;
 }
 
 .ribbon-arrow:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  transform: scale(1.05);
+  background: rgba(34, 211, 238, 0.08);
+  border-color: rgba(34, 211, 238, 0.3);
+  color: #22D3EE;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.15);
 }
 
+.ribbon-arrow:active {
+  transform: scale(0.95);
+}
+
+/* 카드를 담는 뷰포트 - 스크롤바 감추고 카드 호버 영역 보존 */
 .ribbon-viewport {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
   scroll-behavior: smooth;
-  padding: 8px 4px;
+  padding: 12px 6px; /* 호버 시 카드 쉐도우 및 스케일이 잘리지 않도록 충분한 세로 여백 부여 */
   width: 100%;
   box-sizing: border-box;
 }
@@ -121,133 +148,304 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
-/* 주차 카드 디자인 */
+/* ── 4. 주차 카드 핵심 디자인 ── */
 .ribbon-week-card {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 12px;
-  padding: 12px 16px;
-  min-width: 100px;
+  padding: 14px 16px;
+  min-width: 110px;
   flex-shrink: 0;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   text-align: left;
   position: relative;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  outline: none;
 }
 
-.ribbon-week-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
+/* 카드 호버 인터랙션 */
+.ribbon-week-card:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
-.ribbon-week-card:disabled {
+/* ── 5. 주차 카드 상태별 스타일 및 맥동 효과 ── */
+
+/* ① unoperated: 서비스 미운영 / 론칭 전 */
+.ribbon-week-card.unoperated {
+  opacity: 0.18;
+  background: rgba(255, 255, 255, 0.005);
+  border: 1px solid rgba(255, 255, 255, 0.02);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* 카드 상태별 스타일 */
-.ribbon-week-card.current {
-  border-color: rgba(34, 211, 238, 0.3);
-  background: rgba(34, 211, 238, 0.02);
+.ribbon-week-card.unoperated .ribbon-card-week-label {
+  color: rgba(255, 255, 255, 0.25);
 }
 
-.ribbon-week-card.selected {
-  background: rgba(34, 211, 238, 0.08);
-  border-color: #22D3EE;
-  transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 0 16px rgba(34, 211, 238, 0.2);
-  z-index: 2;
+.ribbon-week-card.unoperated:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.005);
+  border-color: rgba(255, 255, 255, 0.02);
 }
 
+/* ② locked: 미래 대기 주차 */
 .ribbon-week-card.locked {
-  opacity: 0.3;
+  opacity: 0.35;
   border-style: dashed;
-  background: rgba(255, 255, 255, 0.01);
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.008);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* 카드 내부 구조 */
-.ribbon-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.ribbon-week-card.locked:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.008);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-.ribbon-card-week-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #E5E7EB;
+/* ③ current: 현재 진행/항해 중 주차 */
+.ribbon-week-card.current {
+  border-color: rgba(34, 211, 238, 0.35);
+  background: rgba(34, 211, 238, 0.02);
+  box-shadow: inset 0 0 12px rgba(34, 211, 238, 0.05);
+}
+
+.ribbon-week-card.current .ribbon-card-week-label {
+  color: #22D3EE;
+}
+
+/* ④ completed: 기록 완료 과거 주차 (데이터 있음) */
+.ribbon-week-card.completed {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ⑤ unrecorded: 미기록 공백 과거 주차 (기록 작성 가능하도록 클릭 허용) */
+.ribbon-week-card.unrecorded {
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.008);
+}
+
+.ribbon-week-card.unrecorded .ribbon-card-week-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ribbon-week-card.unrecorded:hover {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ⑥ selected: 현재 대시보드 뷰로 선택 활성화 됨 */
+.ribbon-week-card.selected {
+  background: rgba(34, 211, 238, 0.09);
+  border-color: #22D3EE;
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 
+    0 10px 30px rgba(34, 211, 238, 0.2), 
+    inset 0 0 15px rgba(34, 211, 238, 0.08);
+  z-index: 5;
 }
 
 .ribbon-week-card.selected .ribbon-card-week-label {
   color: #22D3EE;
+  font-weight: 700;
+}
+
+/* 🏆 ⑦ all-completed: 달성 100% 완수 (황금 맥동 및 골드 그라데이션) */
+.ribbon-week-card.all-completed {
+  border-color: rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.03);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.08);
+  animation: goldPulse 3s infinite alternate ease-in-out;
+}
+
+.ribbon-week-card.all-completed:hover:not(:disabled) {
+  border-color: rgba(245, 158, 11, 0.8);
+  box-shadow: 
+    0 10px 25px rgba(245, 158, 11, 0.25),
+    0 8px 25px rgba(0, 0, 0, 0.25);
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* selected 상태이면서 100% 달성한 경우 */
+.ribbon-week-card.all-completed.selected {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: #F59E0B;
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 
+    0 12px 35px rgba(245, 158, 11, 0.32), 
+    inset 0 0 15px rgba(245, 158, 11, 0.12);
+  animation: none; /* selected 상태 시에는 solid 골드로 고정하여 펄싱 분산 방지 */
+}
+
+.ribbon-week-card.all-completed .ribbon-card-week-label {
+  color: #FBBF24;
+}
+
+/* ── 6. 카드 내부 구조 스타일링 ── */
+.ribbon-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.ribbon-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ribbon-card-week-label {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s ease;
+}
+
+/* 우측 뱃지 영역 (달성률 백분율, 🔒 자물쇠, 🏆 트로피) */
+.ribbon-card-badge-area {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 16px;
+}
+
+.ribbon-pct-text {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+}
+
+.ribbon-week-card.current .ribbon-pct-text,
+.ribbon-week-card.selected .ribbon-pct-text {
+  color: #22D3EE;
+}
+
+.ribbon-badge-text {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1px 6px;
+  border-radius: 4px;
 }
 
 .ribbon-lock-icon {
   font-size: 0.75rem;
+  opacity: 0.6;
 }
 
-/* 실시간 맥동 애니메이션 */
+.ribbon-trophy-icon {
+  font-size: 0.9rem;
+  filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.6));
+  display: inline-block;
+  animation: trophyFloat 2.5s infinite ease-in-out;
+}
+
+/* 실시간 맥동 도트 (현재 주차에 표시) */
 .ribbon-pulse-indicator {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background-color: #22D3EE;
   border-radius: 50%;
   box-shadow: 0 0 8px #22D3EE;
   animation: pulseDot 2s infinite;
 }
 
-/* 완료 비율 트랙 및 바 */
+/* 프로그레스 달성 촉진 트랙 및 필 */
 .ribbon-progress-track {
   width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.08);
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 2px;
   overflow: hidden;
+  margin-top: auto;
 }
 
 .ribbon-progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #06B6D4, #22D3EE);
   border-radius: 2px;
-  transition: width 0.4s ease-out;
+  transition: width 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
 }
 
 .ribbon-week-card.selected .ribbon-progress-fill {
   background: linear-gradient(90deg, #22D3EE, #67E8F9);
 }
 
-/* 모바일 가로 반응형 */
-@media (max-width: 640px) {
+/* 골드 프로그레스바 */
+.ribbon-week-card.all-completed .ribbon-progress-fill {
+  background: linear-gradient(90deg, #F59E0B, #FBBF24);
+}
+
+/* 카드 최하단 딤드 레이블 (상태 텍스트 설명) */
+.ribbon-status-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 2px;
+  letter-spacing: -0.02em;
+}
+
+.ribbon-status-label.unrec {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── 7. 모바일 및 태블릿 반응형 ── */
+@media (max-width: 768px) {
   .pacenote-chrono-ribbon-container {
-    padding: 12px 14px;
+    padding: 16px 0 20px 0;
     margin-bottom: 24px;
-    border-radius: 12px;
   }
   
   .quarter-segment-belt {
-    gap: 6px;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
+    gap: 8px;
+    margin-bottom: 16px;
   }
   
   .quarter-segment-btn {
-    padding: 6px 12px;
+    padding: 6px 14px;
     font-size: 0.75rem;
   }
   
   .ribbon-week-card {
-    min-width: 85px;
+    min-width: 95px;
     padding: 10px 12px;
+    gap: 8px;
   }
   
   .ribbon-card-week-label {
     font-size: 0.75rem;
   }
   
+  .ribbon-status-label {
+    font-size: 0.65rem;
+  }
+  
   .ribbon-arrow {
-    display: none; /* 모바일은 손가락 드래그 스크롤로 대체 */
+    display: none; /* 모바일 디바이스는 플루이드 스와이프 터치 스크롤로 대체 */
+  }
+  
+  .chrono-ribbon-timeline {
+    gap: 0;
+  }
+  
+  .ribbon-viewport {
+    padding: 8px 4px;
+    gap: 10px;
   }
 }
