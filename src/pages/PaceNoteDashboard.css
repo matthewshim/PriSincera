@@ -577,9 +577,9 @@
   background: #110A23;
   border: 1px solid rgba(196, 181, 253, 0.2);
   border-radius: 20px;
-  width: 100%;
-  max-width: 500px;
-  max-height: 80vh;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
   animation: modalFadeIn 0.3s ease-out forwards;

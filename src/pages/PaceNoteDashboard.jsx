@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
+import PaceNoteWeeklyCalendar from '../components/pacenote/PaceNoteWeeklyCalendar';
 import './PaceNoteDashboard.css';
 
 const getCurrentWeekId = () => {
@@ -483,30 +484,18 @@ export default function PaceNoteDashboard() {
               <h3>항해 일지 모아보기</h3>
               <button onClick={() => setShowWeekCalendar(false)}>✕</button>
             </div>
-            <div className="calendar-grid">
-              {allWeeks.map(wId => {
-                const info = parseWeekInfo(wId);
-                const isActive = wId === selectedWeekId;
-                const timelineWeek = pastWeeks.find(t => t.weekId === wId);
-                const taskCount = timelineWeek ? timelineWeek.tasks.length : (info.isCurrent && data?.current ? data.current.currentPace.filter(t => t.completed).length : 0);
-                
-                return (
-                  <div 
-                    key={wId} 
-                    className={`calendar-cell ${isActive ? 'active' : ''} ${info.isFuture ? 'future' : ''} ${info.isCurrent ? 'current' : ''}`}
-                    onClick={() => {
-                      if (!info.isFuture) {
-                        setSelectedWeekId(wId);
-                        setShowWeekCalendar(false);
-                      }
-                    }}
-                  >
-                    <div className="cell-num">{info.num}주차</div>
-                    {!info.isFuture && <div className="cell-count">✓ {taskCount}</div>}
-                    {info.isFuture && <div className="cell-count">🔒</div>}
-                  </div>
-                );
-              })}
+            <div style={{ padding: '24px' }}>
+              <PaceNoteWeeklyCalendar
+                allWeekIds={allWeeks}
+                currentWeekId={currentWeek}
+                selectedWeekId={selectedWeekId}
+                pastWeeksData={pastWeeks}
+                currentWeekTasks={data?.current?.currentPace || []}
+                onSelectWeek={(wId) => {
+                  setSelectedWeekId(wId);
+                  setShowWeekCalendar(false);
+                }}
+              />
             </div>
           </div>
         </div>

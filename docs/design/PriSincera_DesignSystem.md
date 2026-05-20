@@ -238,4 +238,22 @@ Daily Digest 아카이브 개편과 3-Tab 워크스페이스 리뉴얼 과정에
 
 ---
 
-*최종 업데이트: 2026-05-20 (v2.5 Bento Chrono-Calendar & 3-Tab Workstation System 도입)*
+### 8-5. ⛵ PaceNote Bento Weekly Calendar & Voyage Horizon (v2.6)
+
+PaceNote 서비스(`/pacenote`)의 주차별(Weekly) 타임라인 운용 방식을 극대화하기 위해 설계된 **분기별 13주차 벤트 매트릭스(Chrono-Quarterly Bento Matrix)** 디자인 시스템 가이드라인입니다.
+
+* **Chrono-Quarterly Bento Layout**: 1년 52주를 Gregorian 달 모양 대신, 분기별(Q1~Q4) **4개의 Bento 박스**로 시각화합니다. 한 분기는 정확히 **13주**로 매칭되므로 `4 x 3 + 1` 형태의 균일하고 미려한 Bento 격자 그리드를 유지합니다.
+  * **데스크톱**: `display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;` (Q1~Q4가 2x2 대칭 배치)
+  * **모바일/태블릿**: `grid-template-columns: 1fr;`로 리플로우되어 세로 스택형 Bento 레이아웃 정렬.
+* **주차별 셀 비주얼 상태 스펙 (Weekly Cell States)**:
+  1. **과거 완료 주차 (Past Completed)**: 투명도 높은 글래스모피즘 스킨(`background: rgba(0, 0, 0, 0.25)`, `border: 1px solid rgba(255, 255, 255, 0.06)`). 해당 주차의 실시간 Task 달성도(완료한 테스크 / 총 테스크)에 비례한 하단 마이크로 게이지바(`cell-progress-fill`) 탑재.
+  2. **현재 개척 주차 (Current Active)**: 사이버 사이언 네온 아우라 테두리(`#22D3EE`). 2초 주기로 테두리가 부드럽게 펄싱되는 외곽 글로우 애니메이션(`pulseAura`)과 중앙의 맥동 도트 인디케이터(`pulse-indicator`) 연동.
+  3. **미래 대기 주차 (Future Locked)**: 딤드 처리(`opacity: 0.25`), 포인터 및 클릭 차단(`disabled`), 점선 테두리(`border-style: dashed`), 자물쇠 아이콘(`🔒`) 노출.
+* **0-Lag Debounced Hover Peek (150ms)**:
+  * 마우스 호버 시 `150ms` 동안 커서가 멈춘 경우에만 궤도 상세 요약 오버레이 패널(`weekly-hover-peek-panel`)을 부드럽게 슬라이드업(`peekSlideUp`) 시켜 렌더링 부하를 예방합니다.
+* **CLS 방지 및 공간 정규화**:
+  * 각 13주 격자 카드는 고정 높이(`height: 62px`)와 일정한 최소 높이를 확보하여, 주차가 갱신되거나 탐색할 때 레이아웃 시프트가 전혀 발생하지 않도록 공간을 보호합니다.
+
+---
+
+*최종 업데이트: 2026-05-20 (v2.6 PaceNote Chrono-Quarterly Bento Weekly Calendar 가이드라인 추가)*
