@@ -1,0 +1,278 @@
+/* ── Bento Chrono-Calendar Container ── */
+.chrono-calendar-wrapper {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-lg, 16px);
+  padding: 24px;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.chrono-calendar-wrapper:hover {
+  border-color: rgba(167, 139, 250, 0.15);
+  box-shadow: 
+    0 16px 50px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(167, 139, 250, 0.05);
+}
+
+/* ── Calendar Header ── */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.calendar-month-title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-weight: 700;
+  color: var(--text-primary, #ffffff);
+}
+
+.calendar-year {
+  font-size: 1rem;
+  opacity: 0.6;
+  font-family: var(--font-mono, monospace);
+}
+
+.calendar-month {
+  font-size: 1.4rem;
+  background: var(--gradient-brand, linear-gradient(135deg, #a78bfa, #c084fc));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+.calendar-nav-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary, #9ca3af);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.calendar-nav-btn:hover:not(.disabled) {
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.3);
+  color: var(--text-primary, #ffffff);
+  transform: scale(1.05);
+}
+
+.calendar-nav-btn.disabled {
+  opacity: 0.15;
+  cursor: not-allowed;
+}
+
+/* ── Calendar Grid ── */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  justify-items: stretch;
+}
+
+/* Weekdays */
+.grid-weekday {
+  text-align: center;
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted, #6b7280);
+  padding-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.grid-weekday.sun {
+  color: rgba(248, 113, 113, 0.8); /* Red tint for Sunday */
+}
+
+.grid-weekday.sat {
+  color: rgba(96, 165, 250, 0.8); /* Blue tint for Saturday */
+}
+
+/* Day Cells */
+.calendar-day-cell {
+  background: rgba(255, 255, 255, 0.005);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md, 12px);
+  aspect-ratio: 1;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy physical bounce */
+  cursor: default;
+  outline: none;
+}
+
+/* Other month damping */
+.calendar-day-cell.other-month {
+  opacity: 0.2;
+}
+
+/* Disabled state for non-active dates */
+.calendar-day-cell:not(.active) {
+  pointer-events: none;
+  background: transparent;
+  border-color: transparent;
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.calendar-day-cell:not(.active).other-month {
+  color: rgba(255, 255, 255, 0.05);
+}
+
+/* Active dates styling */
+.calendar-day-cell.active {
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary, #ffffff);
+  cursor: pointer;
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.01);
+}
+
+.calendar-day-cell.active:hover {
+  background: rgba(167, 139, 250, 0.05);
+  border-color: rgba(167, 139, 250, 0.4);
+  transform: scale(1.08);
+  box-shadow: 
+    0 8px 24px rgba(124, 58, 237, 0.15),
+    inset 0 0 8px rgba(167, 139, 250, 0.05);
+  z-index: 10;
+}
+
+.calendar-day-cell.active:active {
+  transform: scale(0.95);
+}
+
+/* ── Today Marker ── */
+.calendar-day-cell.today {
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.02);
+}
+
+.calendar-day-cell.today.active {
+  border-color: rgba(251, 191, 36, 0.6);
+  box-shadow: inset 0 0 8px rgba(251, 191, 36, 0.05);
+}
+
+.day-number-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.day-number {
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.today-badge {
+  font-size: 0.5rem;
+  font-weight: 800;
+  color: #FBBF24;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+  transform: scale(0.85);
+  transform-origin: top center;
+  font-family: var(--font-mono, monospace);
+}
+
+/* ── Hotspot (Active indicator) ── */
+.hotspot-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4px;
+  height: 6px;
+}
+
+.hotspot-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--prism-lavender, #c084fc);
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.hotspot-glow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.5) 0%, transparent 70%);
+  opacity: 0.6;
+  z-index: 1;
+  animation: hotspotPulse 2s infinite ease-in-out;
+}
+
+.calendar-day-cell.active:hover .hotspot-dot {
+  background-color: #ffffff;
+  transform: scale(1.5);
+}
+
+.calendar-day-cell.active:hover .hotspot-glow {
+  opacity: 1;
+  transform: scale(1.6);
+}
+
+@keyframes hotspotPulse {
+  0% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.4); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 0.4; }
+}
+
+/* ── Responsive Styling ── */
+@media (max-width: 480px) {
+  .chrono-calendar-wrapper {
+    padding: 16px;
+  }
+  
+  .calendar-header {
+    margin-bottom: 16px;
+  }
+  
+  .calendar-grid {
+    gap: 6px;
+  }
+  
+  .calendar-day-cell {
+    padding: 4px;
+  }
+  
+  .day-number {
+    font-size: 0.85rem;
+  }
+  
+  .today-badge {
+    display: none; /* Hide in very small screens to avoid congestion */
+  }
+}

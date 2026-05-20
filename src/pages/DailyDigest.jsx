@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
 import DailyIntro from '../components/daily/DailyIntro';
+import DailyCalendar from '../components/daily/DailyCalendar';
 import './DailyDigest.css';
 
 const TABS = [
@@ -36,6 +37,64 @@ export default function DailyDigest() {
   const [subEmail, setSubEmail] = useState('');
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [detailTab, setDetailTab] = useState('signal');
+  
+  const [publishedDates, setPublishedDates] = useState([]);
+  const [quickPeekDate, setQuickPeekDate] = useState('');
+  const [quickPeekData, setQuickPeekData] = useState(null);
+  const [quickPeekLoading, setQuickPeekLoading] = useState(false);
+  const debounceTimerRef = useRef(null);
+
+  const fetchQuickPeekData = async (targetDate) => {
+    setQuickPeekLoading(true);
+    try {
+      const res = await fetch(`/api/daily/${targetDate}`);
+      if (res.ok) {
+        const digest = await res.json();
+        setQuickPeekData(digest);
+      } else {
+        setQuickPeekData(null);
+      }
+    } catch (err) {
+      console.error('Failed to fetch quick peek data', err);
+      setQuickPeekData(null);
+    } finally {
+      setQuickPeekLoading(false);
+    }
+  };
+
+  const handleHoverDate = (hoveredDate) => {
+    if (hoveredDate === quickPeekDate) return;
+    
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    debounceTimerRef.current = setTimeout(() => {
+      setQuickPeekDate(hoveredDate);
+      fetchQuickPeekData(hoveredDate);
+    }, 150);
+  };
+
+  const handleSelectDate = (selectedDate) => {
+    if (window.innerWidth < 768) {
+      setQuickPeekDate(selectedDate);
+      fetchQuickPeekData(selectedDate);
+      setTimeout(() => {
+        document.getElementById('mobile-quick-peek')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      navigate(`/daily/${selectedDate}`);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
   const synth = window.speechSynthesis;
 
   const copyToClipboard = (text) => {
@@ -117,29 +176,20 @@ export default function DailyDigest() {
           setData(null);
         }
       } else {
-        // Fetch archive list
+        // Fetch archive list index
         const res = await fetch('/api/daily/index');
         if (res.ok) {
           const indexData = await res.json();
-          // Fetch summary for top 10 items for the list
-          const recentDates = indexData.dates.slice(0, 10);
-          const summaries = await Promise.all(
-            recentDates.map(async (d) => {
-              const dRes = await fetch(`/api/daily/${d}`);
-              if (dRes.ok) {
-                const digest = await dRes.json();
-                return {
-                  date: d,
-                  theme: digest?.study?.theme || digest?.signal?.articles?.[0]?.category || '',
-                  articles: digest?.signal?.articles || [],
-                  promptSnippet: digest?.study?.prompt_snippet || '',
-                  jpSentence: digest?.study?.sentence_jp || ''
-                };
-              }
-              return { date: d };
-            })
-          );
-          setData(summaries);
+          const dates = indexData.dates || [];
+          setPublishedDates(dates);
+          setData(dates); // Use dates directly as proof of data existence
+          
+          // Initial Quick Peek: fetch the most recent date's details
+          if (dates.length > 0) {
+            const mostRecentDate = dates[0];
+            setQuickPeekDate(mostRecentDate);
+            fetchQuickPeekData(mostRecentDate);
+          }
         }
       }
     } catch (err) {
@@ -343,66 +393,99 @@ export default function DailyDigest() {
         </div>
 
         <div className="daily-tab-panel" hidden={activeTab !== 'daily'}>
-          <div className="archive-container">
-            <div className="archive-grid">
+          <div className="daily-bento-portal">
+            <div className="bento-calendar-section">
               {loading ? (
-                <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px' }}>목록을 불러오는 중입니다...</div>
-              ) : Array.isArray(data) && data.length > 0 ? (
-                data.map((item) => {
-                  const themeStyles = getCategoryStyles(item.theme);
-                  const themeColor = themeStyles.color || 'var(--prism-lavender)';
-                  const themeColorSemi = themeStyles.color ? `${themeStyles.color}40` : 'rgba(192, 132, 252, 0.25)';
-                  const themeColorGlow = themeStyles.color ? `${themeStyles.color}1a` : 'rgba(192, 132, 252, 0.1)';
-                  return (
-                    <Link 
-                      to={`/daily/${item.date}`} 
-                      className="archive-card premium" 
-                      key={item.date}
-                      style={{
-                        '--theme-color': themeColor,
-                        '--theme-color-semi': themeColorSemi,
-                        '--theme-color-glow': themeColorGlow,
-                      }}
-                    >
-                      <div className="archive-card-header">
-                        <span className="archive-date">{item.date}</span>
-                        {item.theme && <span className="archive-badge" style={themeStyles}>{item.theme}</span>}
-                      </div>
-                      
-                      <div className="archive-card-body">
-                        {item.articles && item.articles.slice(0, 2).map((article, i) => (
-                          <div className="archive-flat-item" key={`art-${i}`}>
-                            <span className="flat-icon" style={{color: getCategoryStyles(article.category).color || '#A78BFA'}}>✦</span>
-                            <span className="flat-text">{article.title}</span>
-                          </div>
-                        ))}
-                        
-                        {item.articles && item.articles.length > 2 && (
-                          <div className="archive-flat-more">
-                            <span className="flat-more-line"></span>
-                            <span className="flat-more-text">+{item.articles.length - 2} more signals</span>
-                          </div>
-                        )}
-
-                        {item.promptSnippet && (
-                          <div className="archive-flat-item highlight-ai">
-                            <span className="flat-icon">🤖</span>
-                            <span className="flat-text ai-text">{item.promptSnippet.substring(0, 45)}{item.promptSnippet.length > 45 ? '...' : ''}</span>
-                          </div>
-                        )}
-
-                        {item.jpSentence && (
-                          <div className="archive-flat-item highlight-jp">
-                            <span className="flat-icon">🇯🇵</span>
-                            <span className="flat-text jp-text">{item.jpSentence}</span>
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '60px 0' }}>캘린더를 로드하는 중입니다...</div>
               ) : (
-                <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px' }}>아직 발행된 피드가 없습니다.</div>
+                <DailyCalendar 
+                  publishedDates={publishedDates} 
+                  onSelectDate={handleSelectDate} 
+                  onHoverDate={handleHoverDate} 
+                />
+              )}
+            </div>
+            
+            <div className="bento-quick-peek-section" id="mobile-quick-peek">
+              {quickPeekDate ? (
+                <div className="quick-peek-card-wrapper">
+                  <div className="quick-peek-header">
+                    <span className="quick-peek-label">★ Quick Peek</span>
+                    <span className="quick-peek-date">{quickPeekDate}</span>
+                  </div>
+                  
+                  <div className={`quick-peek-body-container ${quickPeekLoading ? 'loading' : ''}`}>
+                    {quickPeekLoading && (
+                      <div className="quick-peek-blur-loader">
+                        <div className="spinner"></div>
+                        <span>데이터 분석 중...</span>
+                      </div>
+                    )}
+                    
+                    {quickPeekData ? (
+                      <div className="quick-peek-data-pane">
+                        {/* 1. IT Tech Signals */}
+                        {quickPeekData.signal?.articles && quickPeekData.signal.articles.length > 0 && (
+                          <div className="quick-peek-group signal">
+                            <h4 className="group-title">📰 IT Tech Signals</h4>
+                            <div className="group-items">
+                              {quickPeekData.signal.articles.slice(0, 2).map((art, idx) => (
+                                <div key={idx} className="peek-item flat">
+                                  <span className="peek-bullet" style={{ color: getCategoryStyles(art.category).color || '#A78BFA' }}>✦</span>
+                                  <span className="peek-text">{art.title}</span>
+                                </div>
+                              ))}
+                              {quickPeekData.signal.articles.length > 2 && (
+                                <span className="peek-more-indicator">+{quickPeekData.signal.articles.length - 2} more signals in full digest</span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* 2. AI Workstation */}
+                        {quickPeekData.study?.prompt_snippet && (
+                          <div className="quick-peek-group prompt">
+                            <h4 className="group-title">🤖 AI Workstation</h4>
+                            <div className="peek-item highlight-ai">
+                              <span className="peek-icon">⚡</span>
+                              <span className="peek-text ai-text">
+                                {quickPeekData.study.prompt_snippet.substring(0, 80)}
+                                {quickPeekData.study.prompt_snippet.length > 80 ? '...' : ''}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* 3. Japanese Sentence */}
+                        {quickPeekData.study?.sentence_jp && (
+                          <div className="quick-peek-group japanese">
+                            <h4 className="group-title">🇯🇵 Language Dojo</h4>
+                            <div className="peek-item highlight-jp">
+                              <span className="peek-icon">🎌</span>
+                              <span className="peek-text jp-text">{quickPeekData.study.sentence_jp}</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Read Full Button */}
+                        <button 
+                          onClick={() => navigate(`/daily/${quickPeekDate}`)}
+                          className="quick-peek-action-btn"
+                        >
+                          전체 콘텐츠 상세히 보기 →
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="quick-peek-empty">해당 날짜의 상세 요약 정보가 없습니다.</div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="quick-peek-welcome">
+                  <div className="welcome-icon">📅</div>
+                  <h4>Chrono-Calendar Portal</h4>
+                  <p>달력의 활성화된 일자(Ambient Glow)에 마우스를 올리시면 해당 날짜의 다이제스트 핵심 브리핑을 퀵 피크로 빠르게 스캔할 수 있습니다.</p>
+                </div>
               )}
             </div>
           </div>
