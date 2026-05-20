@@ -15,38 +15,45 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 ### 🔄 전체 동작 파이프라인 (Data Flow)
 
 ```text
-┌───────────────────┐
-│  Admin Dashboard  │ (아티클 업로드 & Publish 클릭)
-└─────────┬─────────┘
-          │
-          ▼
-┌───────────────────┐
-│  Express Backend  │ (Secret 스캔 및 AI 교정 수행)
-└─────────┬─────────┘
-          │
-          ├───────────────► ┌───────────────────┐
-          │                 │ GitHub API (Octo) │ (Tree/Blob 원격 생성)
-          │                 └─────────┬─────────┘
-          │                           │
-          │                           ▼
-          │                 ┌───────────────────┐
-          │                 │ Git Commit & Push │ (main 브랜치 원격 반영)
-          │                 └───────────────────┘
-          ▼
-┌───────────────────┐
-│  GitHub Webhook   │
-└─────────┬─────────┘
-          │
-          ▼
-┌───────────────────┐
-│    CI/CD Build    │ (Google Cloud Build 정밀 빌드)
-└─────────┬─────────┘
-          │
-          ▼
-┌───────────────────┐
-│   Live Deployment │ 🚀 (Cloud Run 실시간 배포 완료)
-└───────────────────┘
+┌────────────────────────┐
+│    Admin Dashboard     │  ──► (Publish Article Request)
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│    Express Backend     │  ──► (Secret Masking & AI Core Polish)
+└───────────┬────────────┘
+            │
+            ├───────────────► ┌─────────────────────┐
+            │                 │  GitHub REST API    │  ──► (In-Memory Tree/Blob)
+            │                 └──────────┬──────────┘
+            │                            │
+            │                            ▼
+            │                 ┌─────────────────────┐
+            │                 │  Git Commit & Push  │  ──► (Git-less Remote Push)
+            │                 └─────────────────────┘
+            ▼
+┌────────────────────────┐
+│     GitHub Webhook     │  ──► (Instant Trigger Payload)
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│      CI/CD Build       │  ──► (Google Cloud Build System)
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│    Live Deployment     │  ──► (Google Cloud Run Live Container)
+└────────────────────────┘
 ```
+
+> 💡 **단계별 데이터 흐름 요약 (Data Flow Steps)**
+> *   **Admin Dashboard:** 관리자가 웹 브라우저에서 포스트 발행(`Publish`) 버튼을 클릭하여 파이프라인을 기동합니다.
+> *   **Express Backend:** 입력받은 아티클의 시크릿 정보 마스킹 및 AI 엔진 기반 자동 문맥 교정을 수행합니다.
+> *   **GitHub REST API & Commit/Push:** 로컬 디스크 파일 쓰기를 거치지 않고, 인메모리 상에서 GitHub API를 다이렉트로 연동해 Git-less 원격 커밋을 밀어 넣습니다.
+> *   **GitHub Webhook & CI/CD Build:** 커밋이 리포지토리에 반영되는 즉시 웹훅이 돌며 Google Cloud Build가 가동되어 소스 코드를 빌드하고 최신 도커 이미지를 제작합니다.
+> *   **Live Deployment:** 최종 제작된 경량 컨테이너가 Google Cloud Run을 통해 무중단으로 신속 배포되어 유저에게 최신 콘텐츠가 서비스됩니다.
 
 ---
 
@@ -83,7 +90,7 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 정적 CMS의 안정성과 소스코드 유출 차단을 위해, 자동화 스캐너와 사람의 직관이 조화롭게 결합된 **Human-in-the-Loop(HITL) 자동 검증 시스템**을 설계했습니다.
 
 ```text
-[초안 업로드] ──► [AI 교정 & 1차 검열] ──► [관리자 최종 승인 (HITL)] ──► [정규식 Secret 스캐너] ──► [GitHub Secret Scanning]
+[Draft Upload] ──► [AI Scan & Redaction] ──► [Human Review (HITL)] ──► [Regex Secret Scan] ──► [GitHub Security Scanning]
 ```
 
 1.  **1단계 (AI 톤앤매너 교정 & Context 검열):** 초안이 업로드되면 AI가 PriSincera 특유의 프리미엄 테크 톤으로 본문을 다듬습니다. 이때 본문 내에 숨어 있는 내부 IP 주소나 실제 유저 개인 정보 등 보안 유출 우려 항목을 문맥적으로 식별하여 즉시 `[REDACTED]` 처리합니다.
