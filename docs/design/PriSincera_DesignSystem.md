@@ -196,4 +196,46 @@ PriSincera의 공간 디자인은 2D 평면을 넘어 Three.js 기반의 3D WebG
 
 ---
 
-*최종 업데이트: 2026-05-15 (v2.0 Premium Upgrade & 3D WebGL 도입)*
+## 8. 🗓️ Bento Chrono-Calendar & Themed Workstation System (v2.5)
+
+Daily Digest 아카이브 개편과 3-Tab 워크스페이스 리뉴얼 과정에서 정립된 **Bento Chrono-Calendar**와 **3-Tab 워크스테이션 테마 시스템**의 표준 가이드라인입니다. 다른 개발자나 AI가 즉시 이해하고 코드로 이식할 수 있도록 구현 패턴과 세부 설계 토큰을 완벽히 규격화합니다.
+
+### 8-1. Chrono-Calendar Grid Specification (레이아웃 시프트 방지)
+* **CLS(Cumulative Layout Shift) 제어**: 달 변경(Prev/Next Navigation) 시 화면 높이가 출렁이는 것을 방지하기 위해, 모든 연/월에 관계없이 항상 6주 분량인 **42개의 격자 셀(Grid Cells)**을 유지합니다. 이전 달의 잔여일과 다음 달의 시작일을 더미 셀로 패딩하되, 불투명도(`opacity: 0.2` 또는 `0.05`)로 시각 계층을 구별합니다.
+* **그리드 레이아웃**: `display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;`
+* **셀 상태 정의 (Cell States)**:
+  * **미발행일(Inactive)**: 마우스 및 포인터 이벤트 원천 차단 (`pointer-events: none`), 연하게 투명화(`rgba(255, 255, 255, 0.15)`).
+  * **발행일(Active)**: 포인터 활성화, 글래스모피즘 스킨(`background: rgba(255,255,255,0.025)`, `border: 1px solid rgba(255,255,255,0.06)`).
+  * **당일 표시(Today)**: 골드 보더 액센트(`border: 1px solid rgba(251, 191, 36, 0.4)`), 당일 텍스트 가시화(`.today-badge { color: #FBBF24 }`).
+* **Active Hotspot & Pulse Glow**:
+  * 발행일 중앙 하단에 4px 원형 도트(`.hotspot-dot`)와 12px 반경의 흐릿한 아우라(`.hotspot-glow`)를 오버레이합니다.
+  * `.hotspot-glow`는 `scale(1.0)` -> `scale(1.4)`로 2초 주기의 부드러운 키프레임 맥박 애니메이션(`hotspotPulse`)을 지속 수행합니다.
+  * **마우스 호버**: 셀 자체는 `scale(1.08)` 물리 바운스 효과(`--ease-spring`), 테두리는 보라색(`rgba(167, 139, 250, 0.4)`)으로 빛나며, 내부의 `.hotspot-dot`은 `scale(1.5)`로 확장되고 흰색(`#ffffff`)으로 모핑 전환됩니다.
+
+### 8-2. 150ms Hover Debounce & Lazy-Load Architecture
+* **API 호출 과부하 방지**: 아카이브 메인 진입 시 고용량의 전체 아티클 리스트를 한번에 가져오는 대신, 발행일 인덱스(`/api/daily/index`)만 가볍게 1회 페치합니다.
+* **디바운싱 지연 로드 (Debounce Lazy Load)**:
+  * 마우스가 활성 날짜를 스쳐 지나갈 때마다 API를 유발하지 않도록, `150ms` 디바운싱 타이머를 적용합니다.
+  * 마우스 진입(`onMouseEnter`) 시 이전 타이머를 즉각 `clearTimeout`하고, `150ms` 동안 커서가 머물 때에만 백그라운드로 `/api/daily/{date}`를 호출하여 우측 퀵 피크 상세 정보를 동적 바인딩합니다.
+
+### 8-3. 3-Tab Workstation Segmented & Ambient Morphing
+상세 페이지(`/daily/{date}`)에서 IT Tech, AI Workstation, Language Dojo의 3개 워크스페이스를 즉각 스캔하기 위한 벨트 레이아웃입니다.
+* **Segmented Belt**: `display: flex; gap: 16px; justify-content: center; width: 100%;`
+* **벨트 버튼 인터랙션**: 호버 시 아이콘은 미세 회전(`rotate(3deg) scale(1.12)`), 액티브 상태 돌입 시 `translateY(-2px)`와 함께 개별 테마 컬러가 은은한 글로우로 번집니다.
+* **백라이트 아우라 모핑 (Ambient Morphing Backdrop)**:
+  * 컨테이너(`.daily-feed-container`) 뒷면에 `filter: blur(140px)`가 적용된 큰 가상 요소(`::before`)를 배치합니다.
+  * 탭이 바뀔 때마다 테마의 대표광(대표 색상)을 배경 그라디언트로 부드럽게 페이드 전환시킵니다.
+    * **IT Tech (Signal)**: 라벤더 아우라 (`rgba(167, 139, 250, 0.08)`)
+    * **AI Workstation (Prompt)**: 사이언 아우라 (`rgba(6, 182, 212, 0.08)`)
+    * **Language Dojo (Japanese)**: 로즈 아우라 (`rgba(251, 207, 232, 0.08)`)
+  * 트랜지션 필터: `transition: background 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.8s ease-in-out;`
+
+### 8-4. 2-Stage Mobile Tap UX Flow (모바일 오터치 차단)
+* **모바일 그리드 리플로우**: 768px 미만 미디어 쿼리 적용 시 데스크톱의 6:4 분할 그리드를 `grid-template-columns: 1fr` 세로 1열 종대로 전환합니다.
+* **Accidental Navigation 방지**: 모바일 터치 실수로 상세 분석 페이지로 다이렉트 이탈하는 피로도를 해소하기 위해 2단계 검증 플로우를 적용합니다.
+  1. **1단계 (1st Tap)**: 모바일에서 캘린더의 활성 날짜를 터치하면 이동하는 대신 하단의 **Quick Peek 요약 패널**에 데이터를 바인딩한 후, 해당 퀵 피크 위치로 `scrollIntoView({ behavior: 'smooth' })` 부드러운 스크롤을 시동합니다.
+  2. **2단계 (2nd Tap)**: 퀵 피크 카드 내부에 강조 배치된 **"전체 콘텐츠 상세히 보기 →"** 액션 버튼을 2차 터치할 때 최종 상세 화면(`/daily/{date}`)으로 이송합니다.
+
+---
+
+*최종 업데이트: 2026-05-20 (v2.5 Bento Chrono-Calendar & 3-Tab Workstation System 도입)*
