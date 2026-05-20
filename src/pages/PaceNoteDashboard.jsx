@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
-import PaceNoteWeeklyCalendar from '../components/pacenote/PaceNoteWeeklyCalendar';
+import PaceNoteChronoRibbon from '../components/pacenote/PaceNoteChronoRibbon';
 import './PaceNoteDashboard.css';
 
 const getCurrentWeekId = () => {
@@ -74,7 +74,6 @@ export default function PaceNoteDashboard() {
   const [selectedWeekId, setSelectedWeekId] = useState(null);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [addingTask, setAddingTask] = useState(false);
-  const [showWeekCalendar, setShowWeekCalendar] = useState(false);
   const [showOmniModal, setShowOmniModal] = useState(false);
   const [isRefreshingRecs, setIsRefreshingRecs] = useState(false);
 
@@ -364,55 +363,14 @@ export default function PaceNoteDashboard() {
             
             {/* ── Top: Week Selector (Timeline) ── */}
             {/* ── Top: Week Selector (Nav Header) ── */}
-            <div className="pacenote-detail-nav-container">
-              <div className="pacenote-detail-nav">
-                <div className="nav-side">
-                  {prevWeekId && (
-                    <button className="nav-arrow prev" onClick={() => setSelectedWeekId(prevWeekId)}>
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      <span className="nav-arrow-label">{parseWeekInfo(prevWeekId).num}주차</span>
-                    </button>
-                  )}
-                </div>
-                
-                <div className="nav-center" onClick={() => setShowWeekCalendar(true)}>
-                  <div className="nav-year">{parseWeekInfo(selectedWeekId).year}</div>
-                  <div className="nav-week-group">
-                    <span className={`nav-huge-num ${parseWeekInfo(selectedWeekId).isFuture ? 'future' : ''}`}>
-                      {parseWeekInfo(selectedWeekId).num}
-                    </span>
-                    <span className="nav-label">주차</span>
-                  </div>
-                  <div className={`nav-status-badge ${parseWeekInfo(selectedWeekId).isFuture ? 'locked' : parseWeekInfo(selectedWeekId).isCurrent ? '' : 'past'}`}>
-                    {parseWeekInfo(selectedWeekId).isCurrent 
-                      ? (userToken ? '항해 중 ⛵' : '항해 대기 ⛵') 
-                      : parseWeekInfo(selectedWeekId).isFuture ? '🔒 대기 중' : '✓ 완료'}
-                  </div>
-                </div>
-                
-                <div className="nav-side" style={{ justifyContent: 'flex-end' }}>
-                  {nextWeekId && (
-                    <button className="nav-arrow next" onClick={() => setSelectedWeekId(nextWeekId)}>
-                      <span className="nav-arrow-label">{parseWeekInfo(nextWeekId).num}주차</span>
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  )}
-                </div>
-              </div>
-              
-              <div className="nav-back-wrap">
-                <button className="nav-back-btn" onClick={() => setShowWeekCalendar(true)}>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                    <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <span>전체 항해 일지 보기</span>
-                </button>
-              </div>
-            </div>
+            <PaceNoteChronoRibbon
+              allWeekIds={allWeeks}
+              currentWeekId={currentWeek}
+              selectedWeekId={selectedWeekId}
+              pastWeeksData={pastWeeks}
+              currentWeekTasks={data?.current?.currentPace || []}
+              onSelectWeek={(wId) => setSelectedWeekId(wId)}
+            />
 
             {/* ── Pace Tracker & AI Recommendations ── */}
             <div className={`pacenote-tracker-section ${selectedWeekId !== data.current.weekId ? 'past-view' : ''}`}>
@@ -476,30 +434,7 @@ export default function PaceNoteDashboard() {
         )}
       </div>
 
-      {/* ── Calendar Modal ── */}
-      {showWeekCalendar && (
-        <div className="pacenote-modal-backdrop" onClick={() => setShowWeekCalendar(false)}>
-          <div className="pacenote-calendar-modal" onClick={e => e.stopPropagation()}>
-            <div className="calendar-modal-header">
-              <h3>항해 일지 모아보기</h3>
-              <button onClick={() => setShowWeekCalendar(false)}>✕</button>
-            </div>
-            <div style={{ padding: '24px' }}>
-              <PaceNoteWeeklyCalendar
-                allWeekIds={allWeeks}
-                currentWeekId={currentWeek}
-                selectedWeekId={selectedWeekId}
-                pastWeeksData={pastWeeks}
-                currentWeekTasks={data?.current?.currentPace || []}
-                onSelectWeek={(wId) => {
-                  setSelectedWeekId(wId);
-                  setShowWeekCalendar(false);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* ── Omni Modal (Command Palette) ── */}
       {showOmniModal && (
