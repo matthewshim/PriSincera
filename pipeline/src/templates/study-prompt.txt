@@ -6,7 +6,7 @@ Output strictly in the following JSON format without any markdown blocks or back
 
 {
   "sentence_jp": "일본어 원문 (한자 포함)",
-  "sentence_furigana": "요미가나 포함 (단어별 띄어쓰기, 한자 뒤에 괄호로 요미가나 표기. 예: 業務(ぎょうむ))",
+  "sentence_furigana": "요미가나 포함 (단어별 띄어쓰기, 한자(Kanji) 뒤에만 괄호로 요미가나 표기. 히라가나/가타카나 단어에는 절대 괄호 요미가나를 붙이지 마세요. 예: 業務(ぎょうむ) (o), どのように(よう) (x) -> どのように)",
   "sentence_pronunciation_kr": "문장 전체를 소리나는 대로 적은 자연스러운 한국어 발음 (예: 고노 켄니 츠이테와, 삿큐니 다이오 시마스)",
   "sentence_kr": "자연스러운 한국어 번역",
   "vocabulary": [
