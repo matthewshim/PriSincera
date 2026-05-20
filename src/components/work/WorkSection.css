@@ -405,6 +405,100 @@
     box-shadow: 0 8px 30px rgba(52, 211, 153, 0.3);
 }
 
+.flagship-cta-btn.indigo {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.1));
+    border-color: rgba(124, 58, 237, 0.4);
+}
+.flagship-cta-btn.indigo:hover {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(139, 92, 246, 0.2));
+    border-color: rgba(124, 58, 237, 0.6);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+}
+
+/* Builders Log Mockup CSS Art */
+.builderslog-mockup {
+    width: 290px;
+    height: 290px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px;
+}
+
+.mockup-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 20px;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 4px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, #8B5CF6 0%, rgba(139, 92, 246, 0.1) 100%);
+    opacity: 0.5;
+}
+
+.timeline-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    opacity: 0.65;
+    transition: all 0.3s ease;
+}
+
+.timeline-node.active {
+    opacity: 1;
+}
+
+.node-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.4);
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    position: absolute;
+    left: -20px;
+    top: 5px;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.timeline-node.active .node-dot {
+    background: #8B5CF6;
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px #8B5CF6;
+    transform: scale(1.2);
+}
+
+.node-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.node-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.node-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.visual-blur-orb.indigo {
+    background: #8B5CF6;
+    top: 20%;
+    left: 20%;
+}
+
 /* --- Card Icon --- */
 .work-card-icon {
     flex-shrink: 0;

@@ -101,8 +101,59 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 3. PriSincera Foundation (Tone down) */}
-        <div className="work-card foundation-card reveal-item" style={{ '--reveal-delay': '0.4s', marginTop: '40px' }}>
+        {/* 3. Builder's Log Flagship */}
+        <div className="flagship-card reveal-item flagship-glow" style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}>
+          <div className="flagship-content">
+            <div className="flagship-label" style={{ color: '#8B5CF6' }}>Engineering & Growth Logs</div>
+            <h3 className="flagship-title">Builder's Log</h3>
+            <p className="flagship-desc">
+              Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.<br />
+              어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">Tech Blog</span>
+              <span className="work-tag">Architecture</span>
+              <span className="work-tag">Troubleshooting</span>
+            </div>
+            <div className="flagship-cta-wrap">
+              <Link to="/builders-log" className="flagship-cta-btn indigo">
+                🚀 개발 여정 및 엔지니어링 성장기 읽기
+              </Link>
+            </div>
+          </div>
+          <div className="flagship-visual">
+            <div className="dynamic-mockup builderslog-mockup">
+              <div className="mockup-timeline">
+                <div className="timeline-line"></div>
+                <div className="timeline-node active">
+                  <div className="node-dot"></div>
+                  <div className="node-info">
+                    <div className="node-title">Admin Integration</div>
+                    <div className="node-meta">Chapter 3 · May 20</div>
+                  </div>
+                </div>
+                <div className="timeline-node">
+                  <div className="node-dot"></div>
+                  <div className="node-info">
+                    <div className="node-title">Auth Session Isolation</div>
+                    <div className="node-meta">Chapter 2 · May 18</div>
+                  </div>
+                </div>
+                <div className="timeline-node">
+                  <div className="node-dot"></div>
+                  <div className="node-info">
+                    <div className="node-title">Pace Note Architecture</div>
+                    <div className="node-meta">Chapter 1 · May 15</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="visual-blur-orb indigo"></div>
+          </div>
+        </div>
+
+        {/* 4. PriSincera Foundation (Tone down) */}
+        <div className="work-card foundation-card reveal-item" style={{ '--reveal-delay': '0.5s', marginTop: '40px' }}>
           <div className="work-card-body" style={{ width: '100%' }}>
             <div className="work-card-label">Platform Foundation</div>
             <div className="work-card-name" style={{ fontSize: '1.2rem', marginBottom: '8px' }}>
