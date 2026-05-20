@@ -186,6 +186,7 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
     const uid = req.user.uid;
     const { title } = req.body;
     if (!title || !title.trim()) return res.status(400).json({ error: 'title is required' });
+    if (title.trim().length > 100) return res.status(400).json({ error: 'Title must be 100 characters or less' });
 
     const today = new Date();
     const currentWeekId = getWeekNumber(today);

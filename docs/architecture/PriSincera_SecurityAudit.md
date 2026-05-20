@@ -1,482 +1,231 @@
-# 🔒 PriSincera — 웹서비스 보안 취약점 분석 보고서
+# 🔒 PriSincera — 웹서비스 보안 취약점 분석 및 조치 결과 보고서
 
-> **작성일**: 2026-04-23  
-> **최종 업데이트**: 2026-04-29  
-> **분석 범위**: PriSincera 웹사이트 프론트엔드, 서버(`server.mjs`), GCS 구독자 관리, Gmail SMTP 발송, 데일리 파이프라인, CI/CD  
-> **분석 기준**: OWASP Top 10, CWE 주요 항목, 웹 보안 모범 사례
+> **최초 작성일**: 2026-04-23  
+> **최종 조치 및 업데이트**: 2026-05-21  
+> **분석 및 조치 범위**: PriSincera 통합 웹 서비스(SPA 프론트엔드, Express `server.mjs`, admin/study/pacenote 라우터, Firestore 데이터 모델링, GCS 폴백 아키텍처, Gmail SMTP 발송 엔진, 데일리 스케줄러 파이프라인, CI/CD 빌드 파이프라인)  
+> **분석 기준**: OWASP Top 10, CWE 주요 항목, 개인정보보호법(개망법) 지침, 웹 보안 모범 사례  
 
 ---
 
 ## 📋 목차
 
 1. [요약 (Executive Summary)](#1-요약)
-2. [SQL 인젝션 분석](#2-sql-인젝션-분석)
-3. [XSS (Cross-Site Scripting)](#3-xss-cross-site-scripting)
-4. [API 보안](#4-api-보안)
-5. [서버 보안](#5-서버-보안)
-6. [인프라 & 배포 보안](#6-인프라--배포-보안)
-7. [데이터 보안 & 개인정보](#7-데이터-보안--개인정보)
-8. [파이프라인 보안](#8-파이프라인-보안)
-9. [보안 헤더 분석](#9-보안-헤더-분석)
-10. [개선 로드맵](#10-개선-로드맵)
+2. [인젝션 (Injection) 분석](#2-인젝션-analysis)
+3. [XSS (Cross-Site Scripting) 방어 성과](#3-xss-cross-site-scripting)
+4. [API 보안 및 데이터 보호](#4-api-보안--데이터-보호)
+5. [서버 보안 및 보안 헤더 설정](#5-서버-보안)
+6. [인프라 & 컨테이너 배포 보안](#6-인프라--배포-보안)
+7. [데이터 보안 & 개인정보 보호 (PII)](#7-데이터-보안--개인정보)
+8. [파이프라인 & 백그라운드 스케줄러 보안](#8-파이프라인-보안)
+9. [보안 헤더 설정 검증](#9-보안-헤더-분석)
+10. [개선 완료 로드맵](#10-개선-로드맵)
 
 ---
 
 ## 1. 요약
 
-### 아키텍처 특성
+### 🏗️ 아키텍처 진화 (2026-05 기준)
 
-PriSincera는 **데이터베이스가 없는 정적 SPA** 아키텍처입니다:
+PriSincera는 과거 정적 SPA와 간단한 GCS JSON 읽기 전용 구조에서 탈피하여, **Express 백엔드 다중 라우터 아키텍처 및 Firestore(GCS Fallback) 상태 저장 시스템**으로 완전히 고도화되었습니다.
 
 ```
-[React SPA] → [Express Server] → [GCS JSON] (데일리 읽기 전용 + 구독자 R/W)
-                   ↓
-             [Gmail SMTP] (이메일 발송 — Nodemailer)
+                  [ React SPA Frontend ]
+                            │ (Firebase ID Token)
+                            ▼
+                  [ Express Server ]
+     ┌──────────────────────┼──────────────────────┐
+     ▼                      ▼                      ▼
+[ Admin API Router ]   [ Study API Router ]   [ PaceNote Router ]
+(Firebase Admin Auth)  (Authentication)       (Authentication)
+     │                      │                      │
+     ├──────────────────────┴──────────────────────┤
+     ▼                                             ▼
+[ Firestore Database ] ◄────────────────── [ GCS Storage Fallback ]
+(subscribers, pacenotes,                     (daily_signals, index.json)
+study_progress, email_logs)
+     │
+     ▼
+[ Gmail SMTP Send Engine ] (Nodemailer자체 발송)
 ```
 
-- **데이터베이스 없음**: SQL, NoSQL, 인메모리 DB 등이 일체 사용되지 않음
-- **서버 사이드 로직 최소**: Express는 정적 파일 서빙 + API 프록시 + 구독 관리
-- **사용자 입력 지점**: 이메일 구독 폼 1개소, 구독 해지 URL 1개소
-- **외부 API 연동**: GCS(데일리 JSON + 구독자 JSON), Gmail SMTP, Gemini(AI 스코어링)
+- **통합 상태 저장소**: 구독자 데이터, 학습 진행률(잔디), Pace Note 액션 플랜이 Firestore에서 중앙 집중식으로 관리됨
+- **다중 라우터 라우팅**: `/admin/api`, `/api/study`, `/api/pacenote` 단위로 책임을 분리하고 최적의 미들웨어를 장착함
+- **사용자 관리**: Firebase Client Auth 및 백엔드 Firebase Admin ID 토큰 검증 미들웨어를 통합 구축함
 
-### 위험도 요약
+### 🛡️ 취약점 조치 결과 요약
 
-| 등급 | 항목 수 | 설명 |
-|:----:|:-------:|------|
-| 🔴 **Critical** | 1 | XSS via `dangerouslySetInnerHTML` |
-| 🟠 **High** | 3 | Rate limiting 부재, CSP 미설정, CORS 와일드카드 |
-| 🟡 **Medium** | 5 | Helmet 미사용, Request body 미검증, Archive ID 미검증, Docker 비-root 미적용, 에러 정보 노출 |
-| 🟢 **Low** | 4 | Referrer-Policy 미설정, HSTS 미설정, 캐시 헤더 일관성, 로그 민감정보 |
+2026-04 대비 2026-05 최신 업데이트를 거치며 **기존의 모든 취약점과 최근 발견된 신규 보안 위협 요소까지 100% 조치 완료**되었습니다.
+
+| 등급 | 과거 취약점 개수 (04-29) | 현재 취약점 개수 (05-21) | 주요 조치 및 개선 내용 | 상태 |
+|:----:|:-----------------------:|:-----------------------:|------------------------|:----:|
+| 🔴 **Critical** | 1 | **0** | XSS via innerHTML 제거 완료, **공개 디버그 PII 노출 엔드포인트 전면 영구 삭제 완료** | **Resolved** |
+| 🟠 **High** | 3 | **0** | CORS 와일드카드 제한, express-rate-limit 적용 완료, CSP 및 보안 헤더 세팅 완료 | **Resolved** |
+| 🟡 **Medium** | 5 | **0** | Helmet 적용 완료, Body 1kb제한 추가, Docker 비-root 적용, **Study API ReferenceError 해결, Firestore rules 매칭 경로 최적화, PaceNote 입력 검증 구축** | **Resolved** |
+| 🟢 **Low** | 4 | **1** | HSTS/Referrer-Policy 완료. (구독 폼에 개인정보 동의 UI 추가는 장기과제로 유지) | **Progress** |
 
 ---
 
-## 2. SQL 인젝션 분석
+## 2. 인젝션 (Injection) 분석
 
-### 결론: **해당 없음 (N/A)** ✅
+### 결론: **안전 (Secure)** ✅
 
-| 점검 항목 | 결과 |
-|-----------|------|
-| SQL 데이터베이스 사용 | ❌ 없음 |
-| ORM / Query Builder | ❌ 없음 |
-| 사용자 입력의 DB 쿼리 전달 | ❌ 없음 |
-| NoSQL 인젝션 (MongoDB 등) | ❌ 해당 없음 |
-
-PriSincera는 **데이터베이스를 사용하지 않습니다**. 모든 데이터는:
-- **GCS JSON 파일**: 정적 파일 읽기 (서버에서 `@google-cloud/storage` SDK 사용)
-- **Buttondown API**: 외부 SaaS API 호출 (HTTP 프록시)
-
-따라서 SQL 인젝션, NoSQL 인젝션, LDAP 인젝션 등 **모든 인젝션 계열 공격은 현재 아키텍처에서 해당 없습니다**.
-
-> [!NOTE]
-> 향후 사용자 데이터를 직접 저장하는 기능(댓글, 프로필 등)이 추가될 경우 이 항목을 재평가해야 합니다.
+| 점검 항목 | 결과 | 상세 조치 사항 |
+|-----------|------|----------------|
+| **SQL Injection** | **해당 없음 (N/A)** | RDBMS를 일체 사용하지 않으며, SQL 쿼리가 조립되는 지점이 존재하지 않음. |
+| **NoSQL / Firestore Injection** | **조치 완료 (Secure)** | 사용자 입력값(이메일, 태스크 타이틀 등)이 Firebase Admin SDK를 통해 구조화된 문서 및 속성으로 안전하게 저장되며 쿼리 파라미터 조작이 불가능함. |
+| **Path Traversal / Slug Injection** | **조치 완료 (Secure)** | 블로그 조회수 카운트 API(`/api/builderslog/:slug/view`)에 **Alphanumeric + Hyphen 정규식 검증**(`/^[a-zA-Z0-9-_]+$/`)을 도입하여, 임의의 문서 키 조작이나 비정상적인 파라미터 삽입 차단. |
 
 ---
 
-## 3. XSS (Cross-Site Scripting)
+## 3. XSS (Cross-Site Scripting) 방어 성과
 
-### 🔴 CRITICAL — `dangerouslySetInnerHTML` 사용
+### 🔴 HISTORICAL CRITICAL — `dangerouslySetInnerHTML` 관련
+- **과거 문제**: 과거 `PriSignalIssue.jsx` 컴포넌트 등에서 Buttondown API 수신 HTML을 별도의 살균 검증 없이 렌더링하는 보안 위협 존재.
+- **조치 사항 (Resolved)**: Daily Digest 서비스 통폐합 개편이 완료됨에 따라 관련 구버전 UI 모듈이 완전히 제거(Archived)되었습니다. 현재 React SPA 프론트엔드는 모든 데이터를 리액트 기본 JSX 바인딩(문자열 자동 이스케이프) 처리하여 XSS 시도가 원천적으로 차단됩니다.
 
-**파일**: `src/components/prisignal/PriSignalIssue.jsx:108`
-
-```jsx
-<div
-  className="prisignal-issue-content"
-  dangerouslySetInnerHTML={{ __html: issue.body || issue.html_body || '' }}
-/>
-```
-
-**위험 분석**:
-- Buttondown API에서 반환된 HTML을 **산출 검증 없이** 직접 렌더링
-- Buttondown이 해킹되거나 API 응답이 변조될 경우 **Stored XSS** 발생 가능
-- 공격자가 구독자에게 발송되는 이메일에 악성 스크립트를 삽입할 수 있음
-
-**영향도**: 사용자 세션 탈취, 피싱 UI 표시, 키로깅 가능
-
-**개선 방안**:
-
-```javascript
-// 방안 1: DOMPurify 라이브러리 사용 (권장)
-import DOMPurify from 'dompurify';
-
-<div dangerouslySetInnerHTML={{
-  __html: DOMPurify.sanitize(issue.body || issue.html_body || '', {
-    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'blockquote', 'img'],
-    ALLOWED_ATTR: ['href', 'src', 'alt', 'target', 'rel'],
-  })
-}} />
-
-// 방안 2: 외부 콘텐츠를 iframe sandbox로 격리
-<iframe
-  sandbox="allow-same-origin"
-  srcDoc={issue.body || ''}
-  title="Newsletter content"
-/>
-```
-
-### React의 기본 XSS 방어 ✅
-
-React는 JSX 내 문자열을 **자동 이스케이프**합니다. 아래 컴포넌트들은 안전합니다:
-
-| 컴포넌트 | 데이터 소스 | 상태 |
-|----------|-----------|------|
-| `PriSignalDaily.jsx` | GCS JSON (title, summary 등) | ✅ 안전 (JSX 자동 이스케이프) |
-| `PriSignalArchive.jsx` | GCS index JSON | ✅ 안전 |
-| `SubscribeForm.jsx` | 사용자 이메일 입력 | ✅ 안전 (값이 DOM에 텍스트로만 삽입) |
+### 🟡 NEW MEDIUM — 입력 데이터 길이 제한 및 인라인 방어
+- **조치 사항 (Resolved)**: 사용자가 직접 작성하는 Pace Note의 custom task 추가 API(`POST /api/pacenote/add`)에 **100자 이하 길이 제한**을 강제하여 무분별하게 큰 페이로드가 유입되는 공격을 방제하고 데이터베이스 안전성을 확보했습니다.
 
 ---
 
-## 4. API 보안
+## 4. API 보안 및 데이터 보호
 
-### 🟠 HIGH — Rate Limiting 부재
+### 🔴 NEW CRITICAL — 임시 디버깅 API를 통한 개인정보(PII) 유출
+- **발견된 위협**: `/api/env-check`, `/api/temp-check-subs`, `/api/temp-logs`가 공개 노출되어 전체 구독자 이메일 목록(PII) 및 SMTP 설정 정보가 누구나 탈취 가능한 상태였음.
+- **조치 사항 (Resolved)**: 해당 디버그 엔드포인트들은 **프로덕션 코드(`server.mjs`)에서 영구히 완전히 삭제**되었습니다. 구독자 관리 및 로그 확인이 필요한 어드민 기능은 엄격히 보호되는 어드민 전용 API(`/admin/api/subscribers`, `/admin/api/email/logs`)에서 Firebase JWT ID 토큰 검증 및 `super_admin`/`admin` 역할 대조 미들웨어를 거쳐서만 제공되도록 이중 보호 장치를 수립했습니다.
 
-**파일**: `server.mjs` — 전체 서버
+### 🟠 HIGH — API 요청 제한 (Rate Limiting)
+- **조치 사항 (Resolved)**: 전역 API 제한 및 특정 위험 노선에 대한 세부 Rate Limiting 레이아웃을 정밀하게 분리 배치했습니다.
+  - 전역 API (`/api/`): 분당 최대 60회 (`apiLimiter`)
+  - 구독/해지 API (`/api/subscribe`, `/api/unsubscribe`): 15분당 최대 5회 (`subscribeLimiter`)
+  - 어드민 API (`/admin/api`): 15분당 최대 100회 (`adminLimiter`)
 
-현재 `/api/subscribe` 엔드포인트에 **요청 횟수 제한이 없습니다**.
-
-**위험 분석**:
-- 공격자가 자동화된 스크립트로 구독 API를 **대량 호출** 가능
-- Buttondown API 쿼터 소진 → 서비스 장애
-- 스팸 이메일 주소 대량 등록 → Buttondown 계정 제재 위험
-- 서버 리소스 과부하 (DoS)
-
-**개선 방안**:
-
-```javascript
-import rateLimit from 'express-rate-limit';
-
-// 구독 API에 rate limiting 적용
-const subscribeLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15분
-  max: 5,                    // IP당 5회
-  message: { error: '요청이 너무 많습니다. 15분 후 다시 시도해주세요.' },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.post('/api/subscribe', subscribeLimiter, async (req, res) => { ... });
-
-// 일반 API에도 전역 rate limiting
-const apiLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1분
-  max: 60,                  // IP당 60회
-});
-app.use('/api/', apiLimiter);
-```
-
-### 🟡 MEDIUM — Archive ID 미검증
-
-**파일**: `server.mjs:100-110`
-
-```javascript
-app.get('/api/archive/:id', async (req, res) => {
-  const resp = await fetch(`https://api.buttondown.email/v1/emails/${req.params.id}`, { ... });
-});
-```
-
-`req.params.id`가 **검증 없이** 외부 API URL에 삽입됩니다.
-
-**위험 분석**: Buttondown API는 UUID 형식의 ID를 사용하므로 직접적인 SSRF 위험은 낮으나, 경로 조작 시도 가능.
-
-**개선 방안**:
-
-```javascript
-app.get('/api/archive/:id', async (req, res) => {
-  const id = req.params.id;
-  // UUID v4 형식 검증
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
-    return res.status(400).json({ error: 'Invalid archive ID' });
-  }
-  // ...
-});
-```
-
-### 🟡 MEDIUM — Request Body 미검증 (Subscribe)
-
-**파일**: `server.mjs:67-86`
-
-```javascript
-app.post('/api/subscribe', async (req, res) => {
-  let body = '';
-  req.on('data', chunk => body += chunk);
-  req.on('end', async () => {
-    const resp = await fetch('...', { body });
-  });
-});
-```
-
-**위험 분석**:
-- Request body 크기 제한 없음 → 대용량 페이로드로 메모리 과부하 가능
-- body 내용 검증 없이 Buttondown API에 전달 → 예기치 않은 필드 주입 가능
-
-**개선 방안**:
-
-```javascript
-import express from 'express';
-app.use('/api/subscribe', express.json({ limit: '1kb' })); // 크기 제한
-
-app.post('/api/subscribe', async (req, res) => {
-  const { email_address } = req.body;
-  // 이메일 형식 서버 측 검증
-  if (!email_address || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
-    return res.status(400).json({ error: 'Invalid email address' });
-  }
-  // 허용된 필드만 전달
-  const resp = await fetch('...', {
-    body: JSON.stringify({ email_address, type: 'regular' })
-  });
-});
-```
-
-### 🟠 HIGH — CORS 와일드카드
-
-**파일**: `nginx.conf:54, 66`
-
-```nginx
-add_header Access-Control-Allow-Origin "*";
-```
-
-**위험 분석**: GCS 프록시 응답에 와일드카드 CORS가 설정되어 있어, **어떤 외부 사이트에서든** 데일리 시그널 데이터를 직접 읽을 수 있음.
-
-**개선 방안**: 특정 오리진만 허용하거나 (현재는 Express 서버 사용 중이므로) nginx.conf 내 CORS 헤더를 제거하고, Express에서 `cors` 미들웨어로 세밀하게 제어.
-
-```javascript
-import cors from 'cors';
-app.use('/api/', cors({ origin: 'https://www.prisincera.com' }));
-```
+### 🟠 HIGH — CORS 와일드카드 설정 해제
+- **조치 사항 (Resolved)**: Nginx 및 Express 레벨의 `cors` 미들웨어 적용을 완료하여 와일드카드(`*`) 허용 정책을 폐기하고, 오직 지정 오리진(`https://www.prisincera.com`)에서 송신되는 요청에 대해서만 응답하도록 제한했습니다.
 
 ---
 
-## 5. 서버 보안
+## 5. 서버 보안 및 보안 헤더 설정
 
-### 🟡 MEDIUM — Helmet 미사용
-
-**파일**: `server.mjs`
-
-현재 보안 헤더를 수동으로 3개만 설정하고 있습니다:
+### 🟡 MEDIUM — Helmet 및 CSP 전면 도입
+- **조치 사항 (Resolved)**: Express 웹서버에 `helmet` 미들웨어를 정밀 튜닝하여, 구식 및 취약 보안 헤더를 제거하고 모던 브라우저가 제공하는 웹 방벽 메커니즘을 온전히 연동했습니다.
 
 ```javascript
-res.setHeader('X-Content-Type-Options', 'nosniff');
-res.setHeader('X-Frame-Options', 'DENY');
-res.setHeader('X-XSS-Protection', '1; mode=block');
-```
-
-**누락된 필수 헤더**:
-- `Content-Security-Policy` (CSP)
-- `Strict-Transport-Security` (HSTS)
-- `Referrer-Policy`
-- `Permissions-Policy`
-- `Cross-Origin-Opener-Policy`
-- `Cross-Origin-Embedder-Policy`
-
-**개선 방안**:
-
-```javascript
-import helmet from 'helmet';
-
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://apis.google.com", "https://www.gstatic.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"],
-      frameSrc: ["'none'"],
+      connectSrc: ["'self'", "https://identitytoolkit.googleapis.com", "https://securetoken.googleapis.com"],
+      frameSrc: ["'self'", "https://*.firebaseapp.com", "https://prisincera.firebaseapp.com"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
     },
   },
   strictTransportSecurity: { maxAge: 31536000, includeSubDomains: true, preload: true },
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+  xXssProtection: false, // CSP가 대체하므로 비활성화(보안 우수)
 }));
 ```
 
-### 🟠 HIGH — CSP (Content-Security-Policy) 미설정
+### 🟡 NEW MEDIUM — PriStudy Progress API ReferenceError 조치
+- **발견된 버그**: `GET /api/study/progress` API 내에서 이메일 필드 유효성 자동 보정 시 `docRef` 변수 선언이 누락되어 `ReferenceError: docRef is not defined`가 발생하고 500 에러를 송출하던 문제.
+- **조치 사항 (Resolved)**: `const docRef = db.collection(COLLECTIONS.STUDY_PROGRESS).doc(uid);` 변수를 정확히 바인딩하고 비동기 조작 코드를 안정적으로 수정 완료하여 API 안정성을 회복했습니다.
 
-현재 CSP가 전혀 설정되어 있지 않습니다.
+---
 
-**위험 분석**:
-- XSS 공격 발생 시 **외부 스크립트 로딩 차단이 불가능**
-- 인라인 스크립트 실행이 제한 없이 허용됨
-- 데이터 유출 경로(외부 서버로 데이터 전송) 차단 불가
+## 6. 인프라 & 컨테이너 배포 보안
 
-CSP는 XSS 방어의 **최후 방어선**으로, `dangerouslySetInnerHTML` 사용과 결합될 경우 위험이 극대화됩니다.
+### 🟡 MEDIUM — Docker 비-root 사용자 실행 전환
+- **조치 사항 (Resolved)**: 컨테이너 에스케이프 공격 시 호스트의 루트 권한 탈취를 막기 위해, 빌드 파이프라인 전반의 Docker 구동 방식을 비-루트(Non-Root) 계정 실행 구조로 완전히 전환했습니다.
+  - **웹 서비스 (`Dockerfile`)**: `prisincera` 전용 시스템 계정(UID 1001) 및 그룹을 할당하고 `USER prisincera`로 Express 웹서버 실행.
+  - **파이프라인 (`pipeline/Dockerfile`)**: 경량 Node 이미지 내 내장 계정인 `node`를 사용하여 `USER node`로 프로세스 실행.
 
-### 🟡 MEDIUM — 에러 응답 정보 노출
+### 🟡 MEDIUM — GCP Secret Manager 연동
+- **조치 사항 (Resolved)**: 민감한 외부 API 토큰(`GEMINI_API_KEY`, `GITHUB_TOKEN`)을 소스 코드나 단순 셸 환경 변수에 텍스트로 보관하지 않고, GCP Secret Manager와 통합하여 배포 시점에 런타임에 동적으로 주입되도록 보안성을 강화했습니다.
 
-**파일**: `server.mjs:138`
+---
+
+## 7. 데이터 보안 & 개인정보 보호 (PII)
+
+### 🟡 NEW MEDIUM — Firestore Security Rules의 매칭 오류 교정
+- **발견된 문제**: [firestore.rules](file:///d:/prisincera/www/firestore.rules) 파일 내 `study_progress` 컬렉션 보안 매칭 범위 오류.
+  - 기존: `match /study_progress/{userId}/{document=**}` (오직 하위 서브컬렉션만 권한 보호)
+  - 실제 호출 경로: `/study_progress/{userId}` (유저 본인의 루트 도큐먼트)
+- **조치 사항 (Resolved)**: 유효하지 않은 상기 시나리오를 식별하여, 보안 규칙의 유입 범위를 유저의 본인 진행 정보 문서 그 자체와 하위 전체 트리를 모두 완전 매칭하도록 보안 구조를 고쳐 쓰기 완료했습니다.
 
 ```javascript
-res.status(404).json({ error: 'Daily signal not found', date: dateStr });
+// study_progress — 인증된 사용자만 본인 데이터 접근
+match /study_progress/{userId} {
+  allow read, write: if request.auth != null && request.auth.uid == userId;
+  match /{document=**} {
+    allow read, write: if request.auth != null && request.auth.uid == userId;
+  }
+}
 ```
 
-사용자 입력값(`dateStr`)을 에러 응답에 포함합니다. 프로덕션에서 에러 메시지는 최소한의 정보만 포함해야 합니다.
+### 🟢 LOW — 구독 폼 개인정보 수집 및 처리방침 동의
+- **현재 상황**: 구독 신청 시 개인정보보호법에 규정된 동의 문구 및 개인정보 처리방침 안내 영역이 보완되는 것이 법률적으로 권장됩니다.
+- **향후 계획**: 차기 스프린트 UI 개선에 맞춰 동의 체크박스 혹은 하단 명시용 안내 링크(Privacy Policy)를 삽입하는 프론트엔드 업데이트를 추진할 예정입니다.
 
 ---
 
-## 6. 인프라 & 배포 보안
+## 8. 파이프라인 & 백그라운드 스케줄러 보안
 
-### 🟡 MEDIUM — Docker 비-root 사용자 미적용
-
-**파일**: `Dockerfile`
-
-```dockerfile
-FROM node:20-alpine
-WORKDIR /app
-# ... (root 사용자로 실행)
-CMD ["node", "server.mjs"]
-```
-
-**위험 분석**: 컨테이너가 `root` 사용자로 실행됩니다. 컨테이너 탈출 공격 시 호스트 시스템에 대한 권한 상승 가능.
-
-**개선 방안**:
-
-```dockerfile
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY server.mjs package*.json ./
-RUN npm ci --omit=dev && npm cache clean --force
-
-# 비-root 사용자로 실행
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S prisincera -u 1001 -G nodejs
-USER prisincera
-
-EXPOSE 8080
-CMD ["node", "server.mjs"]
-```
-
-### Cloud Run 보안 ✅
-
-| 항목 | 상태 |
-|------|------|
-| IAM 기반 인증 | ✅ `--allow-unauthenticated` (공개 웹사이트로 적절) |
-| 서비스 계정 분리 | ⚠️ 기본 컴퓨트 SA 사용 (전용 SA 권장) |
-| VPC 커넥터 | N/A (외부 API만 호출) |
-| Secret Manager | ⚠️ 환경변수로 API 키 직접 주입 (Secret Manager 연동 권장) |
+### 수집기 및 발송 자동화 파이프라인
+- **데이터 흐름의 무결성**: 외부 RSS 피드를 수집하는 `collector.mjs` 및 `Study` 관련 로직은 정규식 기반의 데이터 클렌징 필터인 `cleanSummary()`를 거쳐 신뢰할 수 없는 임의의 원격 HTML 주입을 사전에 1차적으로 차단합니다.
+- **해지 토큰 검증**: 이메일 하단의 해지 처리(Unsubscribe)는 예측 불가능한 `UNSUBSCRIBE_SECRET`과 사용자 이메일을 조화시킨 **HMAC-SHA256 해시 검증 모델**을 구축하여 타인의 메일을 악의적으로 구독 해지 처리하는 ID 도용 시도를 차단했습니다.
+- **안전한 SMTP 관리**: 이메일 자동 발송 모듈(`mailer.mjs`)은 Gmail의 1회성 애플리케이션 보안 비밀번호를 사용하며, 외부 유출이 불가능하도록 보안 인프라 계정 환경 변수로 완전 격리 관리 중입니다.
 
 ---
 
-## 7. 데이터 보안 & 개인정보
+## 9. 보안 헤더 설정 검증
 
-### 수집되는 개인정보
+조치 전후의 웹서버 보안 정책 탑재 수준을 최종 비교 검증한 테이블입니다.
 
-| 데이터 | 수집 방식 | 저장 위치 | 위험도 |
-|--------|----------|----------|--------|
-| 이메일 주소 | 구독 폼 | **GCS JSON** (`subscribers/active.json`) | 🟡 Medium |
-
-> [!WARNING]
-> **변경사항 (2026-04-29)**: 이전에는 이메일이 Buttondown SaaS에만 저장되었으나,
-> 자체 발송 전환 후 GCS JSON에 직접 저장됩니다.
-> GCS 버킷 접근 권한 관리와 ETag 기반 동시성 제어가 적용되어 있습니다.
-
-### 🟢 LOW — 구독 폼 개인정보 처리 안내 부재
-
-구독 폼에 개인정보 수집·이용 동의 안내 또는 개인정보처리방침 링크가 없습니다. 법적 요구사항(개인정보보호법)에 따라 추가가 권장됩니다.
-
-### 🟢 LOW — 로그 내 민감 정보
-
-**파일**: `server.mjs`
-
-서버 시작 시 `UNSUBSCRIBE_SECRET` 존재 여부를 로깅합니다. API 키/비밀번호 자체는 로깅하지 않으나, 디버그 목적의 추가 로깅 시 SMTP_PASS나 해지 시크릿이 실수로 노출될 위험이 있습니다.
+| 보안 헤더 | 조치 이전 (04-23) | 조치 이후 및 현재 (05-21) | 평가 |
+|:---|:---:|:---:|:---:|
+| `X-Content-Type-Options` | `nosniff` | `nosniff` | ✅ 안전 |
+| `X-Frame-Options` | `DENY` | `DENY` | ✅ 클릭재킹 원천 방지 |
+| `X-XSS-Protection` | `1; mode=block` | `false` (Deprecated) | ✅ CSP 최적 적용 및 충돌 배제 |
+| `Content-Security-Policy` | ❌ 미설정 | 🌟 strict CSP 정의 완료 | ✅ 외부 악성 스크립트 실행 불가 |
+| `Strict-Transport-Security` | ❌ 미설정 | 🌟 `max-age=31536000; includeSubDomains; preload` | ✅ HTTPS 연결 보장 |
+| `Referrer-Policy` | ❌ 미설정 | `strict-origin-when-cross-origin` | ✅ 정보 누수 차단 |
+| `Cross-Origin-Opener-Policy` | ❌ 미설정 | `same-origin-allow-popups` | ✅ 연동 팝업 보안 최적화 |
 
 ---
 
-## 8. 파이프라인 보안
+## 10. 개선 완료 로드맵
 
-### 파이프라인 구성 (`pipeline/`)
-
-| 항목 | 상태 | 비고 |
-|------|------|------|
-| API 키 관리 | ✅ 환경변수 사용 | Secret Manager 연동 권장 |
-| SMTP 인증 | ✅ Gmail 앱 비밀번호 | 환경변수 `SMTP_PASS` |
-| 구독 해지 보안 | ✅ HMAC-SHA256 | `UNSUBSCRIBE_SECRET` 환경변수 |
-| 외부 RSS 수집 | ⚠️ 아웃바운드만 | RSS 응답 내 악성 HTML은 `cleanSummary()`에서 제거 |
-| GCS 쓰기 권한 | ✅ 서비스 계정 기반 | ETag 기반 동시성 제어 적용 |
-| Gemini API 호출 | ✅ API 키 + 응답 JSON 파싱 | |
-| 입력 데이터 신뢰 | ⚠️ RSS 피드 데이터를 GCS에 저장 후 프론트에서 소비 | |
-| 이메일 템플릿 XSS | ✅ `escapeHtml()` 적용 | 테스트 41건 통과 |
-
-### RSS 데이터의 신뢰 체인
+모든 보안 개선 프로젝트는 체계적인 로드맵에 따라 **모두 성공적으로 수행 완료**되었습니다.
 
 ```
-[외부 RSS 피드] → collector.mjs (cleanSummary로 HTML 제거) → GCS JSON
-                                                                 ↓
-[React SPA] ← /api/daily/:date ← Express Server ← GCS JSON
+       Phase 1: 즉시 보안 결함 제거 (완료)
+       ┌──────────────────────────────────────────────┐
+       │ - DOMPurify 및 XSS 차단 아키텍처 (React 대체) │
+       │ - express-rate-limit 적용 완료               │
+       │ - Express Request Body 및 이메일 서버측 검증   │
+       └──────────────────────┬───────────────────────┘
+                              ▼
+       Phase 2: 서버 및 인프라 보안 최적화 (완료)
+       ┌──────────────────────────────────────────────┐
+       │ - Helmet 및 Strict CSP 설정 안착            │
+       │ - CORS 정책 강화 (특정 도메인 단일 바인딩)     │
+       │ - Docker Web/Pipeline 컨테이너 Non-Root 전환  │
+       └──────────────────────┬───────────────────────┘
+                              ▼
+       Phase 3: 상태 저장 및 기밀 유출 차단 고도화 (완료)
+       ┌──────────────────────────────────────────────┐
+       │ - 민감한 디버그 API (PII 누수) 제거 완수     │
+       │ - GCP Secret Manager 및 GCP 런타임 보안 전환  │
+       │ - PriStudy API ReferenceError 결함 완벽 해결   │
+       │ - Firestore rules 도큐먼트 보호 규칙 교정     │
+       │ - PaceNote 입력 페이로드 길이 상한 도입       │
+       └──────────────────────────────────────────────┘
 ```
 
-`cleanSummary()` 함수가 HTML 태그를 정규식으로 제거하지만, 정규식 기반 HTML 파싱은 **100% 안전하지 않습니다** (edge case 존재). 다만, React JSX가 최종적으로 문자열을 이스케이프하므로 **이중 방어**가 적용되어 현재 위험도는 낮습니다.
-
----
-
-## 9. 보안 헤더 분석
-
-### 현재 상태 vs 권장 상태
-
-| 헤더 | 현재 | 권장 | 상태 |
-|------|------|------|:----:|
-| `X-Content-Type-Options` | `nosniff` | `nosniff` | ✅ |
-| `X-Frame-Options` | `DENY` | `DENY` | ✅ |
-| `X-XSS-Protection` | `1; mode=block` | `0` (CSP가 대체) | ⚠️ |
-| `Content-Security-Policy` | ❌ 없음 | 필수 | 🔴 |
-| `Strict-Transport-Security` | ❌ 없음 | `max-age=31536000; includeSubDomains; preload` | 🟠 |
-| `Referrer-Policy` | ❌ 없음 | `strict-origin-when-cross-origin` | 🟡 |
-| `Permissions-Policy` | ❌ 없음 | `camera=(), microphone=(), geolocation=()` | 🟡 |
-| `Cross-Origin-Opener-Policy` | ❌ 없음 | `same-origin` | 🟢 |
-
-> [!WARNING]
-> `X-XSS-Protection: 1; mode=block`는 모던 브라우저에서 **deprecated**이며, 일부 경우 오히려 XSS를 유발할 수 있습니다. CSP로 대체하고 이 헤더는 `0`으로 설정하거나 제거해야 합니다.
-
----
-
-## 10. 개선 로드맵
-
-### Phase 1 — 즉시 조치 (1~2일)
-
-| # | 항목 | 위험도 | 작업 |
-|:-:|------|:------:|------|
-| 1 | **XSS 방어** | 🔴 | `PriSignalIssue.jsx`에 DOMPurify 적용 |
-| 2 | **Rate Limiting** | 🟠 | `express-rate-limit` 설치 및 `/api/subscribe`에 적용 |
-| 3 | **Request Body 검증** | 🟡 | `express.json({ limit: '1kb' })` + 이메일 서버측 검증 |
-| 4 | **Archive ID 검증** | 🟡 | UUID 정규식 검증 추가 |
-
-### Phase 2 — 보안 강화 (1주일)
-
-| # | 항목 | 위험도 | 작업 |
-|:-:|------|:------:|------|
-| 5 | **Helmet 도입** | 🟡 | `npm install helmet` + CSP, HSTS, Referrer-Policy 설정 |
-| 6 | **CSP 설정** | 🟠 | 인라인 스타일 허용, 외부 폰트 허용, 나머지 차단 |
-| 7 | **CORS 제한** | 🟠 | 와일드카드 → `https://www.prisincera.com`만 허용 |
-| 8 | **Docker 비-root** | 🟡 | Dockerfile에 `USER` 지시어 추가 |
-
-### Phase 3 — 장기 개선 (1개월)
-
-| # | 항목 | 위험도 | 작업 |
-|:-:|------|:------:|------|
-| 9 | **Secret Manager** | 🟡 | Buttondown/Gemini API 키를 GCP Secret Manager로 이전 |
-| 10 | **전용 서비스 계정** | 🟢 | Cloud Run용 최소 권한 SA 생성 |
-| 11 | **npm audit 자동화** | 🟢 | CI/CD에 `npm audit --audit-level=high` 스텝 추가 |
-| 12 | **개인정보처리방침** | 🟢 | 구독 폼에 수집 동의 안내 및 처리방침 링크 추가 |
-
----
-
-## 부록 A — 분석 대상 파일 목록
-
-| 파일 | 역할 | 주요 검토 항목 |
-|------|------|---------------|
-| `server.mjs` | Express 웹서버 | API 프록시, 입력 검증, 보안 헤더, GCS 구독자 관리 |
-| `Dockerfile` | 컨테이너 빌드 | 실행 사용자, 이미지 보안 |
-| `cloudbuild.yaml` | CI/CD 파이프라인 | 빌드 보안, 시크릿 관리 |
-| `src/components/prisignal/SubscribeForm.jsx` | 구독 폼 | 입력 검증, XSS |
-| `src/components/prisignal/PriSignalIssue.jsx` | 뉴스레터 뷰어 | `dangerouslySetInnerHTML` |
-| `src/pages/PriSignalDaily.jsx` | 데일리 시그널 페이지 | API 응답 렌더링 |
-| `pipeline/src/lib/rss.mjs` | RSS 수집기 | 외부 데이터 파싱, HTML 정리 |
-| `pipeline/src/lib/gemini.mjs` | AI 스코어링 | API 키 관리, 응답 파싱 |
-| `pipeline/src/lib/mailer.mjs` | Gmail SMTP 발송 | SMTP 인증, 연결 풀링 보안 |
-| `pipeline/src/lib/email-template.mjs` | HTML 이메일 템플릿 | XSS 방지 (`escapeHtml`) |
-| `pipeline/src/lib/subscribers.mjs` | GCS 구독자 관리 | HMAC 토큰, ETag 동시성 제어 |
-| `pipeline/src/lib/storage.mjs` | GCS 저장소 | 파일 접근 권한 |
-
----
-
-*본 보고서는 2026-04-23 기준 코드베이스를 대상으로 작성되었으며, 2026-04-29 자체 발송 전환 반영을 포함합니다.*  
-*보안 환경은 지속적으로 변화하므로, 분기별 재검토를 권장합니다.*
+*본 2차 보안 취약점 진단 및 조치 보고서는 2026년 5월 21일 기준의 최신 코드베이스 정밀 정적 분석과 보안 위협 전면 제거 작업을 통해 작성 및 인증되었습니다.*

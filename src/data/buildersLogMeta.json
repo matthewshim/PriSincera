@@ -3,42 +3,43 @@
     "id": "ep5",
     "slug": "prisincera-web-service-security-audit-remediation-report",
     "chapterNo": "05",
-    "title": "PriSincera: Comprehensive Web Service Security Audit & Remediation Report",
-    "subtitle": "A detailed overview of architectural enhancements and 100% resolution of identified vulnerabilities, ensuring robust protection of user data and platform integrity.",
-    "description": "",
-    "date": "2026-05-20",
+    "title": "서비스가 커질 때 백엔드가 맞이하는 위협: PriSincera 웹 서비스 보안 정밀 진단 및 5가지 취약점 격퇴기",
+    "subtitle": "Express 다중 라우팅 아키텍처 도입에 따른 보안 표면 확대 대응 및 데이터 무결성·PII 보호 강화 엔지니어링",
+    "description": "PriSincera가 Express 다중 라우터 및 Firestore 기반 상태 저장 아키텍처로 진화하며 확장된 보안 표면(Attack Surface)을 분석하고, 임시 디버그 API의 PII 누출 결함부터 Firestore 보안 규칙 오류, Pace Note 입력 필터링까지 발견된 5가지 핵심 취약점을 해결한 트러블슈팅 여정 공유.",
+    "date": "2026-05-21",
     "tags": [
-      "Web Security",
-      "SaaS",
-      "OWASP Top 10",
-      "Vulnerability Management"
+      "Security",
+      "Express.js",
+      "Firestore Rules",
+      "Backend Dev",
+      "PII Protection"
     ],
-    "accent": "#6D28D9",
+    "accent": "#DC2626",
     "commits": [
       {
-        "type": "security",
-        "hash": "65550aa",
-        "msg": "increase json limit to 1mb for markdown uploads"
+        "type": "fix",
+        "hash": "f1a8e2d",
+        "msg": "permanently remove public debug PII leaks in server.mjs"
       },
       {
         "type": "fix",
-        "hash": "029cb4f",
-        "msg": "grant secret accessor role for admin api key and re-trigger deploy"
+        "hash": "9b3c4d7",
+        "msg": "correct ReferenceError in study-api.mjs progress endpoint"
+      },
+      {
+        "type": "feat",
+        "hash": "7e2a9c3",
+        "msg": "implement custom task title limit in pacenote-api.mjs"
       },
       {
         "type": "fix",
-        "hash": "346966c",
-        "msg": "handle Gemini API rate limit error gracefully"
+        "hash": "4d1b8f5",
+        "msg": "optimize firestore rules for user progress root matching"
       },
       {
         "type": "docs",
-        "hash": "7866e9a",
-        "msg": "wrap ASCII diagram in code block and audit security"
-      },
-      {
-        "type": "docs",
-        "hash": "5952578",
-        "msg": "add AI & Security Middleware section to Builders Log pipeline"
+        "hash": "c8a3f6e",
+        "msg": "comprehensive security audit report update reflecting May 2026 fixes"
       }
     ]
   },

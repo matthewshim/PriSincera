@@ -51,7 +51,8 @@ studyRouter.get('/daily/:date', async (req, res) => {
 studyRouter.get('/progress', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
-    const doc = await db.collection(COLLECTIONS.STUDY_PROGRESS).doc(uid).get();
+    const docRef = db.collection(COLLECTIONS.STUDY_PROGRESS).doc(uid);
+    const doc = await docRef.get();
     if (!doc.exists) {
       return res.json({ completed_dates: [], current_streak: 0, longest_streak: 0 });
     }

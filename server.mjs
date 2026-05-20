@@ -129,7 +129,9 @@ app.use('/api/pacenote', apiLimiter, express.json({ limit: '5kb' }), pacenoteRou
 app.post('/api/builderslog/:slug/view', apiLimiter, express.json(), async (req, res) => {
   try {
     const slug = req.params.slug;
-    if (!slug) return res.status(400).json({ error: 'Slug required' });
+    if (!slug || !/^[a-zA-Z0-9-_]+$/.test(slug)) {
+      return res.status(400).json({ error: 'Invalid slug format' });
+    }
     const { db } = await import('./pipeline/src/lib/firestore.mjs');
     const { FieldValue } = await import('firebase-admin/firestore');
     
@@ -353,35 +355,6 @@ app.get('/api/daily/:date', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch daily signal' });
   }
 });
-
-app.get('/api/env-check', (req, res) => {
-  res.json({
-    smtpUser: process.env.SMTP_USER || 'missing',
-    smtpPass: process.env.SMTP_PASS ? 'exists' : 'missing',
-    fromName: process.env.SMTP_FROM_NAME || 'missing'
-  });
-});
-
-app.get('/api/temp-check-subs', async (req, res) => {
-  try {
-    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-    const snap = await db.collection(COLLECTIONS.SUBSCRIBERS).where('status', '==', 'active').get();
-    res.json({ activeCount: snap.docs.length, emails: snap.docs.map(d => d.data().email) });
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
-app.get('/api/temp-logs', async (req, res) => {
-  try {
-    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-    const snap = await db.collection(COLLECTIONS.EMAIL_LOGS).orderBy('sentAt', 'desc').limit(5).get();
-    res.json(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // --- Dynamic Sitemap for Google/Naver SEO ---
 app.get('/sitemap.xml', async (req, res) => {
   try {
