@@ -14,6 +14,7 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 
 ### 🔄 전체 동작 파이프라인 (Data Flow)
 
+```text
 ┌───────────────────┐
 │  Admin Dashboard  │ (아티클 업로드 & Publish 클릭)
 └─────────┬─────────┘
@@ -45,6 +46,7 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 ┌───────────────────┐
 │   Live Deployment │ 🚀 (Cloud Run 실시간 배포 완료)
 └───────────────────┘
+```
 
 ---
 
