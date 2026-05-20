@@ -48,40 +48,13 @@ const ChapterCard = ({ chapter, index }) => {
             // Prevent accidental navigation when clicking anywhere inside the commits block
             e.stopPropagation();
           }}>
-            <div className="commits-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Key Shipments
-              </div>
-              {hasMore && (
-                <button 
-                  className={`commits-toggle-btn ${isExpanded ? 'expanded' : ''}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setIsExpanded(!isExpanded);
-                  }}
-                  title={isExpanded ? "Collapse" : "Expand"}
-                >
-                  {!isExpanded && <span className="more-count">+{commits.length - 1}</span>}
-                  <svg 
-                    className="chevron-icon" 
-                    width="12" 
-                    height="12" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="3" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </button>
-              )}
+            <div className="commits-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Key Shipments
             </div>
+            
             <div className="commits-list">
               {commits.map((commit, i) => {
                 const isExtra = i > 0;
@@ -103,6 +76,34 @@ const ChapterCard = ({ chapter, index }) => {
                 );
               })}
             </div>
+
+            {hasMore && (
+              <button 
+                className={`commits-bottom-toggle-btn ${isExpanded ? 'expanded' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsExpanded(!isExpanded);
+                }}
+              >
+                <span>
+                  {isExpanded ? "Show Less" : `Show +${commits.length - 1} More Shipments`}
+                </span>
+                <svg 
+                  className="chevron-icon" 
+                  width="12" 
+                  height="12" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="3" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+            )}
           </div>
           <div className="card-footer" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
             <span className="read-more-btn">

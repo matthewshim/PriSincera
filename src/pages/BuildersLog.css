@@ -306,45 +306,42 @@
   line-height: 1.5;
 }
 
-/* Commits Toggle Button */
-.commits-toggle-btn {
-  display: inline-flex;
+/* Commits Bottom Toggle Button */
+.commits-bottom-toggle-btn {
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 4px 8px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-top: var(--space-md);
   color: var(--text-muted);
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--duration-fast) var(--ease-spring);
-  backdrop-filter: blur(8px);
   outline: none;
 }
 
-.commits-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(167, 139, 250, 0.3);
+.commits-bottom-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(167, 139, 250, 0.25);
   color: var(--text-primary);
-  box-shadow: 0 0 12px rgba(167, 139, 250, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.commits-toggle-btn:active {
-  transform: scale(0.95);
-}
-
-.more-count {
-  font-family: var(--font-mono);
-  color: var(--accent-color);
+.commits-bottom-toggle-btn:active {
+  transform: scale(0.98);
 }
 
 .chevron-icon {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.commits-toggle-btn.expanded .chevron-icon {
+.commits-bottom-toggle-btn.expanded .chevron-icon {
   transform: rotate(180deg);
 }
 
