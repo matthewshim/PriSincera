@@ -5,7 +5,7 @@
     "chapterNo": "03",
     "title": "서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남",
     "subtitle": "안정성과 효율성을 극대화한 AI 기반 GitHub 연동 자동화 시스템 구현 방안",
-    "description": "",
+    "description": "서버리스 환경의 쓰기 제한(Read-Only)을 극복하기 위해 물리 디스크 대신 100% 메모리상에서 동작하는 GitHub REST API(Git-less Commit) 파이프라인을 설계하고, AI 톤앤매너 교정 및 보안 검열 루프를 결합하여 완벽하게 제어되는 정적 CMS를 구현한 경험.",
     "date": "2026-05-19",
     "tags": [
       "Builder's Log",
