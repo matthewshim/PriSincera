@@ -52,6 +52,26 @@ export default function PaceNoteChronoRibbon({
     setActiveQuarter(getQuarterFromWeekId(selectedWeekId));
   }, [selectedWeekId]);
 
+  // 4. 강제 생성한 53개 주차를 분기별(Q1~Q4)로 그룹핑
+  const quarterWeeks = useMemo(() => {
+    const quarters = { Q1: [], Q2: [], Q3: [], Q4: [] };
+    
+    fullYearWeeks.forEach(wId => {
+      const parts = wId.split('-W');
+      if (parts.length !== 2) return;
+      const weekNum = parseInt(parts[1], 10);
+      
+      if (weekNum >= 1 && weekNum <= 13) quarters.Q1.push(wId);
+      else if (weekNum >= 14 && weekNum <= 26) quarters.Q2.push(wId);
+      else if (weekNum >= 27 && weekNum <= 39) quarters.Q3.push(wId);
+      else quarters.Q4.push(wId);
+    });
+    
+    return quarters;
+  }, [fullYearWeeks]);
+
+  const weeksInView = quarterWeeks[activeQuarter] || [];
+
   const isFirstRender = useRef(true);
 
   const centerActiveWeek = (behavior = 'smooth') => {
@@ -96,26 +116,6 @@ export default function PaceNoteChronoRibbon({
     }, 100);
     return () => clearTimeout(timer);
   }, [activeQuarter, selectedWeekId, weeksInView]);
-
-  // 4. 강제 생성한 53개 주차를 분기별(Q1~Q4)로 그룹핑
-  const quarterWeeks = useMemo(() => {
-    const quarters = { Q1: [], Q2: [], Q3: [], Q4: [] };
-    
-    fullYearWeeks.forEach(wId => {
-      const parts = wId.split('-W');
-      if (parts.length !== 2) return;
-      const weekNum = parseInt(parts[1], 10);
-      
-      if (weekNum >= 1 && weekNum <= 13) quarters.Q1.push(wId);
-      else if (weekNum >= 14 && weekNum <= 26) quarters.Q2.push(wId);
-      else if (weekNum >= 27 && weekNum <= 39) quarters.Q3.push(wId);
-      else quarters.Q4.push(wId);
-    });
-    
-    return quarters;
-  }, [fullYearWeeks]);
-
-  const weeksInView = quarterWeeks[activeQuarter] || [];
 
   return (
     <div className="pacenote-chrono-ribbon-container">
