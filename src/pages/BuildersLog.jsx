@@ -23,104 +23,103 @@ function useScrollReveal(options = { threshold: 0.1, rootMargin: '0px 0px -100px
 
 const ChapterCard = ({ chapter, index }) => {
   const ref = useScrollReveal();
-  const [isExpanded, setIsExpanded] = useState(false);
   const commits = chapter.commits || [];
-  const hasMore = commits.length > 1;
+  const isFeatured = index === 0;
+  
+  // 한국어 정독 기준 (분당 150자 내외)으로 읽는 시간(Read Time) 산정
+  const calculateReadTime = (desc, commitsList) => {
+    const textLength = (desc || '').length + commitsList.map(c => c.msg).join(' ').length;
+    const minutes = Math.max(1, Math.round(textLength / 180));
+    return `${minutes} min read`;
+  };
+
+  const readTime = calculateReadTime(chapter.description, commits);
   
   return (
-    <div className={`builder-card builder-card-${index}`} ref={ref}>
+    <div 
+      className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'}`} 
+      ref={ref}
+    >
       <Link to={`/builders-log/${chapter.slug}`} className="builder-card-link-wrapper">
         <div className="builder-card-glass" style={{ '--accent-color': chapter.accent }}>
           <div className="card-glow-bg"></div>
           
-          <div className="card-header">
-            <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
-            <h2 className="chapter-title">{chapter.title}</h2>
-            <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
-            <div className="chapter-date">{new Date(chapter.date).toLocaleDateString()}</div>
-          </div>
-          
-          <div className="card-body">
-            <p className="chapter-desc">{chapter.description}</p>
-          </div>
-          
-          <div className="card-commits" onClick={(e) => {
-            // Prevent accidental navigation when clicking anywhere inside the commits block
-            e.stopPropagation();
-          }}>
-            <div className="commits-label">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Key Shipments
-            </div>
-            
-            <div className="commits-list">
-              {commits.map((commit, i) => {
-                const isExtra = i > 0;
-                // Since the toggle button is now part of the timeline list,
-                // we don't hide the first commit's line unless there are no more commits.
-                const isLineHidden = !isExpanded && i === 0 && hasMore;
-                return (
-                  <div 
-                    className={`commit-item ${isExtra ? 'commit-item-extra' : ''} ${isExtra && isExpanded ? 'show' : ''} ${isLineHidden ? 'line-hidden' : ''}`} 
-                    key={i}
-                  >
-                    <div className="commit-node" style={{ borderColor: chapter.accent }}></div>
-                    <div className="commit-content">
-                      <div className="commit-meta">
-                        <span className="commit-hash">{commit.hash}</span>
-                        <span className={`commit-type type-${commit.type}`}>{commit.type}</span>
-                      </div>
-                      <div className="commit-msg">{commit.msg}</div>
-                    </div>
+          <div className="card-layout-split">
+            <div className="card-main-content">
+              <div>
+                <div className="card-header">
+                  <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
+                  <h2 className="chapter-title">{chapter.title}</h2>
+                  <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
+                  <div className="chapter-meta">
+                    <span className="meta-item">{new Date(chapter.date).toLocaleDateString()}</span>
+                    <span className="meta-divider">•</span>
+                    <span className="meta-item">{readTime}</span>
                   </div>
-                );
-              })}
+                </div>
+                
+                <div className="card-body">
+                  <p className="chapter-desc">{chapter.description}</p>
+                </div>
+              </div>
 
-              {hasMore && (
-                <div className={`commit-item commit-toggle-item ${isExpanded ? 'expanded' : ''}`}>
-                  <div 
-                    className="commit-node toggle-node" 
-                    style={{ 
-                      borderColor: chapter.accent,
-                      boxShadow: `0 0 8px ${chapter.accent}40`
-                    }}
-                  >
-                    <span className="node-icon">{isExpanded ? '−' : '+'}</span>
-                  </div>
-                  <div className="commit-content">
-                    <button 
-                      className="commit-inline-toggle-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsExpanded(!isExpanded);
-                      }}
-                    >
-                      <span>
-                        {isExpanded ? "Show Less" : `Show +${commits.length - 1} More Shipments`}
-                      </span>
-                      <svg 
-                        className="chevron-icon" 
-                        width="10" 
-                        height="10" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="3" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                      >
-                        <path d="M6 9l6 6 6-6" />
-                      </svg>
-                    </button>
-                  </div>
+              {chapter.tags && chapter.tags.length > 0 && (
+                <div className="card-tags">
+                  {chapter.tags.map((tag, i) => (
+                    <span key={i} className="tag-chip">
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
+
+            {isFeatured && (
+              <div className="card-visual-content">
+                <div className="visual-glow-sphere" style={{ background: `radial-gradient(circle, ${chapter.accent} 0%, transparent 70%)` }}></div>
+                <div className="visual-meta-card">
+                  <div className="visual-meta-title">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Key Shipments
+                  </div>
+                  <div className="visual-meta-commits">
+                    {commits.slice(0, 3).map((commit, i) => (
+                      <div key={i} className="visual-commit-row">
+                        <span className="visual-commit-hash">{commit.hash}</span>
+                        <span className="visual-commit-msg">{commit.msg}</span>
+                      </div>
+                    ))}
+                    {commits.length > 3 && (
+                      <div className="visual-commit-more">+{commits.length - 3} more shipments</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="card-footer" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+
+          {!isFeatured && commits.length > 0 && (
+            <div className="card-hover-commits-panel">
+              <div className="hover-commits-header">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>Recent Shipments</span>
+              </div>
+              <div className="hover-commits-list">
+                {commits.slice(0, 2).map((commit, i) => (
+                  <div key={i} className="hover-commit-row">
+                    <span className={`commit-type-dot type-${commit.type}`}></span>
+                    <span className="hover-commit-msg">{commit.msg}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="card-footer">
             <span className="read-more-btn">
               Read Article <span className="read-more-arrow">→</span>
             </span>
@@ -163,7 +162,7 @@ export default function BuildersLog() {
 
       <div className="log-container">
         <section className="chapters-section" style={{ marginTop: '20px' }}>
-          <div className="log-bento-grid">
+          <div className="builders-log-grid">
             {logMeta.map((chapter, index) => (
               <ChapterCard key={chapter.id} chapter={chapter} index={index} />
             ))}
