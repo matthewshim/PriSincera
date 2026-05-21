@@ -2,7 +2,7 @@
 status: active
 domain: PaceNote
 last_updated: 2026-05-21
-version: v1.2
+version: v1.3
 target_files:
   - src/components/pacenote/PaceNoteWeeklyCalendar.jsx
   - src/components/pacenote/PaceNoteWeeklyCalendar.css
@@ -19,6 +19,7 @@ target_files:
 | v1.0 | 2026-05-20 | AI Agent | 최초 13주 Bento Grid 캘린더 및 Seamless Chrono-Quarterly Segmented Ribbon 사양 정의 | PaceNote UI |
 | v1.1 | 2026-05-21 | AI Agent | Voyage Log(회고) 실시간 자동저장, 옴니 검색 모달, AI 포트폴리오 내보내기 스펙 추가 및 DDD 폴더 이관 | PaceNote Features |
 | v1.2 | 2026-05-21 | AI Agent | 2단 스플릿 워크스테이션 그리드 개편, SVG 원형 글자수 카운터, spring 애니메이션, progress 지표 추가 | PaceNote Layout & SVG |
+| v1.3 | 2026-05-21 | AI Agent | 실행(나의 궤도)과 회고(항해 일지)를 단일 통합 카드(Consolidated Card)로 결합, 통합 헤더, 수직 디바이더 및 반응형 구조 고도화 | PaceNote Layout & Responsive |
 
 본 문서는 사용자가 주차별 목표를 수립하고 달성해나가는 **'전략적 마일스톤 관리(나만의 궤도) 플랫폼'**인 PaceNote 서비스(`/pacenote`)의 **주차별 캘린더 & 항해 지평선 UI/UX (Bento Weekly Route & Voyage Horizon)**의 최종 구현 사양서 및 상단 대시보드 내비게이션 영역의 **완전 모달-프리 인라인 분기 탭 크로노 리본(Seamless Chrono-Quarterly Segmented Ribbon) 전면 3차 개편 기획서**입니다.
 
@@ -612,8 +613,30 @@ export default function PaceNoteChronoRibbon({
 
 ### 10-3. 체크박스 탄성 애니메이션 및 글래스모피즘 세로 바 스킨
 * **Spring 체크 애니메이션**:
-  * 태스크 달성 체크 시 사용자의 쾌감과 몰입을 돕기 위해, 부드러운 베지에 곡선을 활용한 **탄성(Spring) 팝 스케일 모션**을 내장했습니다.
+  * 태스크 달성 체크 시 사용자의 쾌감และ 몰입을 돕기 위해, 부드러운 베지에 곡선을 활용한 **탄성(Spring) 팝 스케일 모션**을 내장했습니다.
   * `@keyframes popSpring`을 정의하여 체크박스 체크 동작 즉시 `0% { scale(1) } -> 50% { scale(1.25) } -> 100% { scale(1) }` 흐름으로 동작하며, `cubic-bezier(0.34, 1.56, 0.64, 1)` 곡선을 적용해 쫀득하고 생동감 있는 물리 필링을 선사합니다.
 * **카테고리별 다이내믹 세로 바 (Dynamic Category Accent Bar)**:
   * 각 태스크는 컴포넌트 레벨에서 스타일 속성 `--category-theme`에 카테고리 컬러를 바인딩하며, CSS 내 `border-left: 4px solid var(--category-theme)`를 활용하여 개별 카드에 세련된 컬러 바 데코레이션을 동적으로 입힙니다.
+
+
+## 11. [v1.3 Consolidated Card UI/UX Revision] Unified Growth Bento Card & Workstation Layout
+
+PaceNote의 목표 실행과 회고/사색의 유기적 흐름을 극대화하기 위해, 기존의 개별 분리된 '목표 트래커 카드'와 '항해 일지 카드'를 단일 통합형 글래스모피즘 벤토 카드(`.consolidated-pace-card`)로 결합합니다.
+
+### 11-1. 통합 헤더 레이아웃 사양
+* **구조**: 좌우 Flex Row 형태로 배치하여 여백과 상단 공간을 대폭 정돈합니다.
+  * **좌측**: 통합 타이틀(`이번 주 나의 궤도 & 항해 일지`)과 통합 설명글이 위치합니다.
+  * **우측**: 마일스톤 완료율 배지(`🎯 완료율`), 실시간 저장 알림 인디케이터, AI 포트폴리오 내보내기 버튼, 주차 배지(`2026-W21`)를 인라인 배치하여 가로 방향 복잡성을 최소화합니다.
+* **디바이더 수평 진행 바**: 헤더 하단에 단일 수평 진행도 게이지 바(`.pacenote-progress-track-header`)를 배치하여, 한 주간의 실행 진척도를 시각적 디바이더로 기능시킵니다.
+
+### 11-2. 스플릿 인테리어 사양 (Split Workstation)
+* **좌측 패널 (`.consolidated-left-panel`)**: '🏃 실행의 궤도' 서브타이틀 아래에 목표 체크리스트 및 옴니바 트리거를 배치합니다.
+* **수직 디바이더 (`.consolidated-vertical-divider`)**: 좌/우 패널 사이에 `1px` 너비의 그라데이션 라인을 삽입하여 공간을 명확하고 미려하게 구분합니다.
+* **우측 패널 (`.consolidated-right-panel`)**: '✍ 사색의 기록' 서브타이틀 아래에 일지 작성용 에디터 및 글자 수 카운터 SVG, 혹은 read-only blockquote 뷰어를 배치합니다.
+
+### 11-3. 반응형 디바이스 리플로우 규격
+* **데스크톱 해상도 (`width > 1024px`)**: 가로형 그리드 분할 `1.2fr auto 1fr` 및 수직 그라데이션 디바이더가 온전히 렌더링됩니다.
+* **태블릿/모바일 해상도 (`width <= 1024px`)**:
+  * 그리드 구도가 단일 열 `1fr`로 전환되어 두 영역이 세로로 자동 스태킹됩니다.
+  * 수직 디바이더는 `display: none`으로 처리되며, 두 패널의 경계에 은은한 상하 여백과 라인이 동적으로 조정되어 모바일에 완벽히 정합되는 하이엔드 반응형 스킨을 완성합니다.
 

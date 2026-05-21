@@ -567,13 +567,28 @@ export default function PaceNoteDashboard() {
                 
                 return (
                   <>
-                    <div className="pacenote-bento-card tracker-card">
-                      <div className="pacenote-card-header">
-                        <h2>{isCurrent ? '이번 주 나의 궤도' : `${selectedWeekId} 나의 궤도`}</h2>
-                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div className="pacenote-bento-card consolidated-pace-card">
+                      {/* ── Unified Premium Header ── */}
+                      <div className="pacenote-card-header consolidated-header">
+                        <div className="consolidated-header-left">
+                          <h2>{isCurrent ? '이번 주 나의 궤도 & 항해 일지' : `${selectedWeekId} 나의 궤도 & 항해 일지`}</h2>
+                          <p className="pacenote-card-desc" style={{ marginBottom: 0 }}>
+                            {isCurrent 
+                              ? '설정한 작은 행동들의 궤도(실행)와 주간의 깊은 사색(회고)이 결합되어 당신만의 소중한 AI 성장 포트폴리오를 형성합니다.' 
+                              : '과거에 단단하게 다져놓은 나의 실행 궤적과 성찰이 담긴 성장 기록입니다.'}
+                          </p>
+                        </div>
+                        <div className="consolidated-header-actions">
                           {totalCount > 0 && (
                             <span className="pacenote-progress-pill">
                               🎯 {completedCount}/{totalCount} 완료 ({progressPercent}%)
+                            </span>
+                          )}
+                          {isCurrent && userToken && (
+                            <span className={`auto-save-status ${saveStatus}`}>
+                              {saveStatus === 'saving' && '○ 변경 사항 저장 중...'}
+                              {saveStatus === 'saved' && '● 실시간 보존 완료'}
+                              {saveStatus === 'error' && '⚠ 저장 중 오류 발생'}
                             </span>
                           )}
                           {userToken && (
@@ -584,122 +599,116 @@ export default function PaceNoteDashboard() {
                           <span className="pacenote-date-badge">{selectedWeekId}</span>
                         </div>
                       </div>
-                      <p className="pacenote-card-desc">
-                        {isCurrent ? '조급해하지 않고 이번 주에 집중할 작은 행동들입니다.' : '과거에 단단하게 다져놓은 나의 항해 기록입니다.'}
-                      </p>
                       
                       {totalCount > 0 && (
                         <div className="pacenote-progress-track-header">
                           <div className="pacenote-progress-fill-header" style={{ width: `${progressPercent}%` }}></div>
                         </div>
                       )}
-                      
-                      <div className="pacenote-tasks">
-                        {paceList && paceList.length > 0 ? (
-                          paceList.map((task) => {
-                            const isCompleted = task.completed; 
-                            return (
-                              <label 
-                                key={task.id} 
-                                className={`pacenote-task-item ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
-                                style={{ '--category-theme': task.color || '#A78BFA' }}
-                              >
-                                <input 
-                                  type="checkbox" 
-                                  checked={isCompleted} 
-                                  onChange={() => isCurrent && toggleComplete(task.id)} 
-                                  disabled={!isCurrent}
-                                />
-                                <span className="task-custom-checkbox"></span>
-                                <span className="task-text">{task.title}</span>
-                                {task.category && (
-                                  <span className="task-category-badge" style={{ color: task.color || '#A78BFA', borderColor: task.color || '#A78BFA', '--category-theme': task.color || '#A78BFA' }}>
-                                    {task.category}
-                                  </span>
-                                )}
-                              </label>
-                            );
-                          })
-                        ) : (
-                          <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>기록된 궤도가 없습니다.</div>
-                        )}
-                        
-                        {/* ── Omni-Orbit Trigger ── */}
-                        {isCurrent && (
-                          <button className="pacenote-omnibar-trigger" onClick={() => setShowOmniModal(true)}>
-                            <span className="omnibar-icon">✨</span>
-                            <span className="omnibar-placeholder">새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요...</span>
-                            <kbd className="omnibar-shortcut">⌘K</kbd>
-                          </button>
-                        )}
-                      </div>
-                    </div>
 
-                    {/* ── Captain's Logbook ── */}
-                    <div className="pacenote-bento-card logbook-card">
-                      <div className="pacenote-card-header">
-                        <h2>⚓ 주간 항해 일지</h2>
-                        {isCurrent && userToken && (
-                          <span className={`auto-save-status ${saveStatus}`}>
-                            {saveStatus === 'saving' && '○ 변경 사항 저장 중...'}
-                            {saveStatus === 'saved' && '● 실시간 보존 완료'}
-                            {saveStatus === 'error' && '⚠ 저장 중 오류 발생'}
-                          </span>
-                        )}
-                      </div>
-                      <p className="pacenote-card-desc">
-                        단순한 체크박스 달성을 넘어, 이번 주에 느꼈던 고민과 극복의 과정을 솔직하게 기록하세요. 이 사색의 조각들이 모여 당신만의 AI 성장 포트폴리오를 구성합니다.
-                      </p>
-                      
-                      {isCurrent ? (
-                        <div className="logbook-textarea-wrapper">
-                          <textarea
-                            className="logbook-textarea"
-                            value={diaryText}
-                            onChange={(e) => {
-                              if (!userToken) {
-                                alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
-                                return handleLoginClick();
-                              }
-                              if (e.target.value.length <= 1000) {
-                                setDiaryText(e.target.value);
-                              }
-                            }}
-                            placeholder={userToken ? "이번 주 나의 궤도에서 발생한 사색, 어려웠던 일, 깨달은 배움을 자유롭게 적어보세요. (최대 1000자)" : "3초 로그인 후, 실시간으로 저장되는 나만의 주간 회고록을 완성해 보세요."}
-                            disabled={!userToken}
-                          />
-                          <div className="logbook-char-count">
-                            <svg width="24" height="24" className="char-count-svg">
-                              <circle cx="12" cy="12" r="9" className="char-count-bg-circle" />
-                              <circle 
-                                cx="12" 
-                                cy="12" 
-                                r="9" 
-                                className={`char-count-progress-circle ${diaryText.length > 900 ? 'danger' : diaryText.length > 700 ? 'warning' : 'safe'}`}
-                                style={{
-                                  strokeDasharray: 2 * Math.PI * 9,
-                                  strokeDashoffset: (2 * Math.PI * 9) * (1 - Math.min(diaryText.length / 1000, 1))
-                                }}
-                              />
-                            </svg>
-                            <span>{diaryText.length} / 1000자</span>
+                      {/* ── Split Interior Layout ── */}
+                      <div className="consolidated-card-layout">
+                        {/* ── Left Panel: Tracker ── */}
+                        <div className="consolidated-left-panel">
+                          <h3 className="panel-sub-title">🏃 실행의 궤도 (My Checklist)</h3>
+                          <div className="pacenote-tasks">
+                            {paceList && paceList.length > 0 ? (
+                              paceList.map((task) => {
+                                const isCompleted = task.completed; 
+                                return (
+                                  <label 
+                                    key={task.id} 
+                                    className={`pacenote-task-item ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
+                                    style={{ '--category-theme': task.color || '#A78BFA' }}
+                                  >
+                                    <input 
+                                      type="checkbox" 
+                                      checked={isCompleted} 
+                                      onChange={() => isCurrent && toggleComplete(task.id)} 
+                                      disabled={!isCurrent}
+                                    />
+                                    <span className="task-custom-checkbox"></span>
+                                    <span className="task-text">{task.title}</span>
+                                    {task.category && (
+                                      <span className="task-category-badge" style={{ color: task.color || '#A78BFA', borderColor: task.color || '#A78BFA', '--category-theme': task.color || '#A78BFA' }}>
+                                        {task.category}
+                                      </span>
+                                    )}
+                                  </label>
+                                );
+                              })
+                            ) : (
+                              <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>기록된 궤도가 없습니다.</div>
+                            )}
+                            
+                            {/* ── Omni-Orbit Trigger ── */}
+                            {isCurrent && (
+                              <button className="pacenote-omnibar-trigger" onClick={() => setShowOmniModal(true)}>
+                                <span className="omnibar-icon">✨</span>
+                                <span className="omnibar-placeholder">새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요...</span>
+                                <kbd className="omnibar-shortcut">⌘K</kbd>
+                              </button>
+                            )}
                           </div>
                         </div>
-                      ) : (
-                        <div className="logbook-viewer">
-                          {diaryText ? (
-                            <blockquote className="captains-log">
-                              <span className="quote-mark">“</span>
-                              <p className="log-text">{diaryText}</p>
-                              <span className="quote-mark text-right">”</span>
-                            </blockquote>
+
+                        {/* ── Vertical Divider ── */}
+                        <div className="consolidated-vertical-divider"></div>
+
+                        {/* ── Right Panel: Logbook ── */}
+                        <div className="consolidated-right-panel">
+                          <h3 className="panel-sub-title">⚓ 사색의 기록</h3>
+                          {isCurrent ? (
+                            <div className="logbook-textarea-wrapper">
+                              <textarea
+                                className="logbook-textarea"
+                                value={diaryText}
+                                onChange={(e) => {
+                                  if (!userToken) {
+                                    alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+                                    return handleLoginClick();
+                                  }
+                                  if (e.target.value.length <= 1000) {
+                                    setDiaryText(e.target.value);
+                                  }
+                                }}
+                                placeholder={userToken ? "이번 주 나의 궤도에서 발생한 사색, 어려웠던 일, 깨달은 배움을 자유롭게 적어보세요. (최대 1000자)" : "3초 로그인 후, 실시간으로 저장되는 나만의 주간 회고록을 완성해 보세요."}
+                                disabled={!userToken}
+                              />
+                              <div className="logbook-char-count">
+                                <svg width="24" height="24" className="char-count-svg">
+                                  <circle cx="12" cy="12" r="9" className="char-count-bg-circle" />
+                                  <circle 
+                                    cx="12" 
+                                    cy="12" 
+                                    r="9" 
+                                    className={`char-count-progress-circle ${diaryText.length > 900 ? 'danger' : diaryText.length > 700 ? 'warning' : 'safe'}`}
+                                    style={{
+                                      strokeDasharray: 2 * Math.PI * 9,
+                                      strokeDashoffset: (2 * Math.PI * 9) * (1 - Math.min(diaryText.length / 1000, 1))
+                                    }}
+                                  />
+                                </svg>
+                                <span>{diaryText.length} / 1000자</span>
+                              </div>
+                            </div>
                           ) : (
-                            <div className="logbook-empty-view">
-                              ⛵ 이 주간에는 기록된 사색의 항해 일지가 없습니다.
+                            <div className="logbook-viewer">
+                              {diaryText ? (
+                                <blockquote className="captains-log">
+                                  <span className="quote-mark">“</span>
+                                  <p className="log-text">{diaryText}</p>
+                                  <span className="quote-mark text-right">”</span>
+                                </blockquote>
+                              ) : (
+                                <div className="logbook-empty-view">
+                                  ⛵ 이 주간에는 기록된 사색의 항해 일지가 없습니다.
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
-                      )}
+                      </div>
                     </div>
                   </>
                 );
