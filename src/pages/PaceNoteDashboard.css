@@ -348,10 +348,18 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 540px;
   min-height: 540px;
   max-height: 540px;
   overflow-y: auto;
   padding-right: 8px;
+}
+
+/* Past View list height (tasks expanded since search button is hidden) */
+.past-view .pacenote-tasks {
+  height: 610px;
+  min-height: 610px;
+  max-height: 610px;
 }
 
 .pacenote-tasks::-webkit-scrollbar {
@@ -1022,10 +1030,12 @@
   font-style: italic;
 }
 
-/* ���� Omni Modal Overrides ���� */
+/* ──── Omni Modal Overrides ──── */
 .pacenote-omnibar-trigger {
   position: relative;
   width: 100%;
+  height: 54px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   background: rgba(17, 10, 35, 0.6);
@@ -1149,12 +1159,17 @@
 /* Textarea Wrapper & Styles */
 .logbook-textarea-wrapper {
   position: relative;
-  margin-top: 16px;
+  margin-top: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .logbook-textarea {
   width: 100%;
   height: 610px;
+  min-height: 610px;
+  max-height: 610px;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
@@ -1255,8 +1270,11 @@
 
 /* Captain's Logbook Viewer Blockquote */
 .logbook-viewer {
-  margin-top: 16px;
-  padding: 8px 0;
+  margin-top: 0;
+  padding: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .captains-log {
@@ -1269,7 +1287,9 @@
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   overflow: hidden;
+  height: 610px;
   min-height: 610px;
+  max-height: 610px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1326,7 +1346,9 @@
   border: 1px dashed rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.1);
+  height: 610px;
   min-height: 610px;
+  max-height: 610px;
   display: flex;
   align-items: center;
   justify-content: center;
