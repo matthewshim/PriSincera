@@ -4,13 +4,26 @@ import { useTranslation } from '../../contexts/LanguageContext';
 import './Header.css';
 
 function Header() {
-  const { locale, setLocale, t } = useTranslation();
+  const { locale, setLocale, t, SUPPORTED_LANGUAGES } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const audioRef = useRef(null);
+  const dropdownRef = useRef(null);
   const musicIntentRef = useRef(true);
+
+  // Click outside to close custom language select dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -187,24 +200,35 @@ function Header() {
           <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
         </div>
         <div className="nav-right">
-          {/* 다국어 언어 선택 스위치 (KR | EN Capsule) */}
-          <div className="nav-locale-slot" id="gnbLocaleSlot">
+          {/* 다국어 언어 선택 스위치 (OLED Custom Dropdown Select) */}
+          <div className="locale-dropdown-wrapper" ref={dropdownRef} id="gnbLocaleSlot">
             <button
-              className={`gnb-locale-btn ${locale === 'ko' ? 'active' : ''}`}
-              onClick={() => setLocale('ko')}
-              aria-label="Set language to Korean"
+              className={`locale-dropdown-trigger ${isDropdownOpen ? 'active' : ''}`}
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              aria-label="Select Language"
+              aria-expanded={isDropdownOpen}
             >
-              KR
+              <span className="globe-icon">🌐</span>
+              <span className="current-locale-text">{locale.toUpperCase()}</span>
+              <span className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}>▾</span>
             </button>
-            <span className="locale-divider">|</span>
-            <button
-              className={`gnb-locale-btn ${locale === 'en' ? 'active' : ''}`}
-              onClick={() => setLocale('en')}
-              aria-label="Set language to English"
-            >
-              EN
-            </button>
-            <div className={`locale-laser-dot ${locale}`} />
+            {isDropdownOpen && (
+              <div className="locale-dropdown-menu">
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.code}
+                    className={`locale-dropdown-item ${locale === lang.code ? 'active' : ''}`}
+                    onClick={() => {
+                      setLocale(lang.code);
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <span className="locale-laser-dot" />
+                    <span className="locale-label">{lang.nativeLabel}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* BGM toggle — works on all pages */}
@@ -236,20 +260,17 @@ function Header() {
           <a href="#" className="mobile-nav-link" onClick={(e) => { e.preventDefault(); setIsMobileMenuOpen(false); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
         </div>
         
-        {/* 모바일 하단 Thumb Zone 언어 토글 */}
+        {/* 모바일 하단 Thumb Zone 언어 토글 (3단 가로 그리드) */}
         <div className="mobile-nav-locale-footer">
-          <button 
-            className={`mobile-locale-btn ${locale === 'ko' ? 'active' : ''}`}
-            onClick={() => { setLocale('ko'); setIsMobileMenuOpen(false); }}
-          >
-            한국어 (KR)
-          </button>
-          <button 
-            className={`mobile-locale-btn ${locale === 'en' ? 'active' : ''}`}
-            onClick={() => { setLocale('en'); setIsMobileMenuOpen(false); }}
-          >
-            English (EN)
-          </button>
+          {SUPPORTED_LANGUAGES.map((lang) => (
+            <button
+              key={lang.code}
+              className={`mobile-locale-btn ${locale === lang.code ? 'active' : ''}`}
+              onClick={() => { setLocale(lang.code); setIsMobileMenuOpen(false); }}
+            >
+              {lang.nativeLabel}
+            </button>
+          ))}
         </div>
       </div>
     </nav>
