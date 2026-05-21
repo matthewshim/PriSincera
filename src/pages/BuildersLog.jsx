@@ -172,11 +172,28 @@ export default function BuildersLog() {
           )}
           
           {logMeta.length > 1 && (
-            <div className="builders-log-grid">
-              {logMeta.slice(1).map((chapter, index) => (
-                <ChapterCard key={chapter.id} chapter={chapter} index={index + 1} />
-              ))}
-            </div>
+            <>
+              {/* 데스크톱 전용 2열 지그재그(행 우선) 그리드 */}
+              <div className="builders-log-desktop-grid">
+                <div className="builders-log-column">
+                  {logMeta.slice(1).filter((_, idx) => idx % 2 === 0).map((chapter, idx) => (
+                    <ChapterCard key={chapter.id} chapter={chapter} index={1 + (idx * 2)} />
+                  ))}
+                </div>
+                <div className="builders-log-column">
+                  {logMeta.slice(1).filter((_, idx) => idx % 2 === 1).map((chapter, idx) => (
+                    <ChapterCard key={chapter.id} chapter={chapter} index={2 + (idx * 2)} />
+                  ))}
+                </div>
+              </div>
+
+              {/* 모바일/태블릿 전용 단일 플랫 1열 그리드 */}
+              <div className="builders-log-mobile-grid">
+                {logMeta.slice(1).map((chapter, index) => (
+                  <ChapterCard key={chapter.id} chapter={chapter} index={index + 1} />
+                ))}
+              </div>
+            </>
           )}
         </section>
         
