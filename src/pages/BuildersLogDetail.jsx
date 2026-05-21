@@ -45,18 +45,22 @@ export default function BuildersLogDetail() {
     const targetFile = locale && locale !== 'ko' ? `/content/logs/${slug}_${locale}.md` : `/content/logs/${slug}.md`;
     
     fetch(`${targetFile}?t=${Date.now()}`)
-      .then(res => {
-        if (!res.ok) {
+      .then(async res => {
+        const text = await res.text();
+        // SPA Fallback check (if 404 is rerouted to index.html)
+        if (!res.ok || text.trim().toLowerCase().startsWith('<!doctype html>')) {
           if (locale && locale !== 'ko') {
             // Try default Korean file as fallback
-            return fetch(`/content/logs/${slug}.md?t=${Date.now()}`).then(fallbackRes => {
-              if (!fallbackRes.ok) throw new Error('Failed to fetch article');
-              return fallbackRes.text();
-            });
+            const fallbackRes = await fetch(`/content/logs/${slug}.md?t=${Date.now()}`);
+            const fallbackText = await fallbackRes.text();
+            if (!fallbackRes.ok || fallbackText.trim().toLowerCase().startsWith('<!doctype html>')) {
+              throw new Error('Failed to fetch article');
+            }
+            return fallbackText;
           }
           throw new Error('Failed to fetch article');
         }
-        return res.text();
+        return text;
       })
       .then(text => {
         setContent(text);
