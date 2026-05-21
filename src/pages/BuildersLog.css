@@ -84,38 +84,32 @@
   word-break: keep-all;
 }
 
-/* --- Clean Equal Grid System --- */
+/* --- Clean Pinterest Masonry Layout --- */
 .builders-log-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--space-lg);
+  column-count: 2;
+  column-gap: 24px;
+  display: block;
+  width: 100%;
+}
+
+.featured-chapter-container {
+  width: 100%;
+  margin-bottom: 24px;
 }
 
 .builder-card {
   opacity: 0;
   transform: translateY(40px);
   transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+  width: 100%;
+  break-inside: avoid;
+  margin-bottom: 24px;
 }
 
 .builder-card.reveal-active {
   opacity: 1;
   transform: translateY(0);
-}
-
-.builder-card-link-wrapper {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  height: 100%;
-}
-
-/* Equal Columns Assignment */
-.builder-card-featured {
-  grid-column: span 12;
-}
-
-.builder-card-grid {
-  grid-column: span 6;
 }
 
 /* --- Glassmorphism 2.0 Card Skin --- */
@@ -168,10 +162,11 @@
   transform: translateY(-4px);
 }
 
-.builder-card.has-hover-panel:hover .builder-card-glass {
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  border-bottom-color: transparent;
-  z-index: 10;
+.builder-card-link-wrapper {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
 }
 
 .builder-card:hover .card-glow-bg {
@@ -389,80 +384,96 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* --- Interactive Hover Commits Panel --- */
-.card-hover-commits-panel {
-  position: absolute;
-  top: calc(100% - 1px);
-  left: -1px;
-  right: -1px;
-  z-index: 9;
-  background: rgba(13, 8, 28, 0.96);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-top: none;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  padding: 16px 24px;
-  opacity: 0;
-  transform: translateY(-10px);
-  pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s ease;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+/* --- Static Inline Shipments Panel --- */
+.card-shipments-static-panel {
+  margin-top: var(--space-md);
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease;
 }
 
-.builder-card:hover .card-hover-commits-panel {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  border-color: color-mix(in srgb, var(--accent-color) 35%, rgba(255, 255, 255, 0.06));
+.builder-card:hover .card-shipments-static-panel {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
 }
 
-.hover-commits-header {
+.shipments-header {
   display: flex;
   align-items: center;
   gap: 6px;
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-weight: 700;
   margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 6px;
 }
 
-.hover-commits-list {
+.shipments-icon {
+  color: var(--orbit-cyan);
+}
+
+.shipments-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-.hover-commit-row {
+.shipment-item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  font-size: 0.82rem;
+  gap: 8px;
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
-.commit-type-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  margin-top: 6px;
+.shipment-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
   flex-shrink: 0;
+  display: inline-block;
+  margin-top: 1px;
 }
 
-.commit-type-dot.type-feat { background: var(--orbit-cyan); }
-.commit-type-dot.type-fix { background: var(--prism-rose); }
-.commit-type-dot.type-refactor { background: var(--prism-indigo); }
-.commit-type-dot.type-style { background: var(--prism-lavender); }
+.badge-feat {
+  color: #22d3ee;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+}
 
-.hover-commit-msg {
+.badge-fix {
+  color: #fb7185;
+  background: rgba(251, 113, 133, 0.1);
+  border: 1px solid rgba(251, 113, 133, 0.2);
+}
+
+.badge-refactor {
+  color: #818cf8;
+  background: rgba(129, 140, 248, 0.1);
+  border: 1px solid rgba(129, 140, 248, 0.2);
+}
+
+.badge-style, .badge-docs, .badge-chore {
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.1);
+  border: 1px solid rgba(192, 132, 252, 0.2);
+}
+
+.shipment-msg {
   color: var(--text-secondary);
   font-size: 0.82rem;
-  line-height: 1.45;
-  white-space: normal;
   word-break: keep-all;
   overflow-wrap: break-word;
   flex: 1;
@@ -543,7 +554,7 @@
 /* --- 1. Tablet Viewport (768px ~ 1024px) --- */
 @media (max-width: 1024px) {
   .builders-log-grid {
-    gap: var(--space-md);
+    column-count: 1;
   }
 
   .builder-card-glass {

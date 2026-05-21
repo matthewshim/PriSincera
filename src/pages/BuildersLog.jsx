@@ -34,11 +34,10 @@ const ChapterCard = ({ chapter, index }) => {
   };
 
   const readTime = calculateReadTime(chapter.description, commits);
-  const hasHoverPanel = !isFeatured && commits.length > 0;
   
   return (
     <div 
-      className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'} ${hasHoverPanel ? 'has-hover-panel' : ''}`} 
+      className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'}`} 
       ref={ref}
     >
       <Link to={`/builders-log/${chapter.slug}`} className="builder-card-link-wrapper">
@@ -73,6 +72,28 @@ const ChapterCard = ({ chapter, index }) => {
                   ))}
                 </div>
               )}
+
+              {/* Inline Recent Shipments (Static, no longer absolute hover!) */}
+              {!isFeatured && commits.length > 0 && (
+                <div className="card-shipments-static-panel">
+                  <div className="shipments-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="shipments-icon">
+                      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>Recent Shipments</span>
+                  </div>
+                  <div className="shipments-list">
+                    {commits.slice(0, 3).map((commit, i) => (
+                      <div key={i} className="shipment-item">
+                        <span className={`shipment-badge badge-${commit.type}`}>
+                          {commit.type}
+                        </span>
+                        <span className="shipment-msg">{commit.msg}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {isFeatured && (
@@ -100,25 +121,6 @@ const ChapterCard = ({ chapter, index }) => {
               </div>
             )}
           </div>
-
-          {!isFeatured && commits.length > 0 && (
-            <div className="card-hover-commits-panel">
-              <div className="hover-commits-header">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span>Recent Shipments</span>
-              </div>
-              <div className="hover-commits-list">
-                {commits.slice(0, 2).map((commit, i) => (
-                  <div key={i} className="hover-commit-row">
-                    <span className={`commit-type-dot type-${commit.type}`}></span>
-                    <span className="hover-commit-msg">{commit.msg}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div className="card-footer">
             <span className="read-more-btn">
@@ -163,11 +165,19 @@ export default function BuildersLog() {
 
       <div className="log-container">
         <section className="chapters-section" style={{ marginTop: '20px' }}>
-          <div className="builders-log-grid">
-            {logMeta.map((chapter, index) => (
-              <ChapterCard key={chapter.id} chapter={chapter} index={index} />
-            ))}
-          </div>
+          {logMeta.length > 0 && (
+            <div className="featured-chapter-container">
+              <ChapterCard chapter={logMeta[0]} index={0} />
+            </div>
+          )}
+          
+          {logMeta.length > 1 && (
+            <div className="builders-log-grid">
+              {logMeta.slice(1).map((chapter, index) => (
+                <ChapterCard key={chapter.id} chapter={chapter} index={index + 1} />
+              ))}
+            </div>
+          )}
         </section>
         
         <section className="log-footer-note">
