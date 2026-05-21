@@ -432,9 +432,10 @@ export default function PaceNoteDashboard() {
       }
       md += `\n`;
 
-      if (curr.statement) {
+      const currentStatement = diaryText || curr.statement;
+      if (currentStatement) {
         md += `### ⚓ 주간 사색 (Captain's Log)\n`;
-        md += `> ${curr.statement.replace(/\n/g, '\n> ')}\n\n`;
+        md += `> ${currentStatement.replace(/\n/g, '\n> ')}\n\n`;
       }
       md += `---\n\n`;
     }
@@ -579,10 +580,9 @@ export default function PaceNoteDashboard() {
                         <div className="consolidated-header-top-row">
                           <h2>{isCurrent ? '이번 주 나의 궤도 & 항해 일지' : `${selectedWeekId} 나의 궤도 & 항해 일지`}</h2>
                           <div className="consolidated-header-actions">
-                            {isCurrent && userToken && (
+                            {isCurrent && userToken && saveStatus !== 'saved' && (
                               <span className={`auto-save-status ${saveStatus}`}>
                                 {saveStatus === 'saving' && '○ 변경 사항 저장 중...'}
-                                {saveStatus === 'saved' && '● 실시간 보존 완료'}
                                 {saveStatus === 'error' && '⚠ 저장 중 오류 발생'}
                               </span>
                             )}
