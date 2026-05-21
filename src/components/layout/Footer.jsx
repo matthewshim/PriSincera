@@ -48,7 +48,10 @@ function Footer() {
           <div className="footer-col">
             <h4 className="footer-col-title">Navigate</h4>
             <Link to="/" className="footer-link">Home</Link>
+            <Link to="/builders-log" className="footer-link">Builder's Log</Link>
             <Link to="/daily" className="footer-link">Daily Digest</Link>
+            <Link to="/pacenote" className="footer-link">Pace Note</Link>
+            <a href="#" className="footer-link" onClick={(e) => { e.preventDefault(); alert("앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"); }}>Sylphio</a>
           </div>
           <div className="footer-col">
             <h4 className="footer-col-title">Connect</h4>
