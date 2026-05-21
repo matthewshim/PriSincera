@@ -48,16 +48,23 @@ function Header() {
     if (location.pathname !== '/') return;
     if (!musicIntentRef.current) return;
 
+    let resumeListener = null;
+
     const tryAutoplay = () => {
       if (document.body.classList.contains('hero-ready') && musicIntentRef.current) {
         const audio = getAudio();
         audio.play().then(() => setMusicPlaying(true)).catch(() => {
           // Autoplay blocked — wait for user interaction
-          const resume = () => {
-            if (musicIntentRef.current) audio.play().catch(() => {});
-            document.removeEventListener('click', resume);
+          resumeListener = () => {
+            if (musicIntentRef.current && window.location.pathname === '/') {
+              audio.play().then(() => setMusicPlaying(true)).catch(() => {});
+            }
+            if (resumeListener) {
+              document.removeEventListener('click', resumeListener);
+              resumeListener = null;
+            }
           };
-          document.addEventListener('click', resume, { once: true });
+          document.addEventListener('click', resumeListener, { once: true });
         });
         return true;
       }
@@ -72,7 +79,13 @@ function Header() {
       if (tryAutoplay()) observer.disconnect();
     });
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
+    
+    return () => {
+      observer.disconnect();
+      if (resumeListener) {
+        document.removeEventListener('click', resumeListener);
+      }
+    };
   }, [getAudio, location.pathname]);
 
   // Cleanup audio resource on unmount
@@ -86,10 +99,9 @@ function Header() {
     };
   }, []);
 
-  // Auto-pause BGM on specific routes
+  // Auto-pause BGM on all non-main (sub) pages to prevent unwanted auto-play
   useEffect(() => {
-    const p = location.pathname;
-    if (p.startsWith('/study') || p.startsWith('/daily') || p.startsWith('/pacenote')) {
+    if (location.pathname !== '/') {
       const audio = getAudio();
       audio.pause();
       musicIntentRef.current = false;
