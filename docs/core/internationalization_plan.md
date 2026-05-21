@@ -2,7 +2,7 @@
 status: draft
 domain: Core
 last_updated: 2026-05-21
-version: v1.3
+version: v1.4
 target_files:
   - src/components/layout/Header.jsx
   - src/contexts/LanguageContext.jsx
@@ -22,6 +22,7 @@ PriSincera 플랫폼이 글로벌 사용자를 대상으로 다국어(Korean, En
 | v1.1 | 2026-05-21 | Antigravity AI | 누수 리스크 진단, 로케일 감지 우선순위 플로우 및 GNB UI 포지셔닝 스펙 보강 | Global Platform Integration |
 | v1.2 | 2026-05-21 | Antigravity AI | 확장 가능한 셀렉트 드롭다운 UI 사양 도입 및 일본어(JA) 다국어 사전 스펙 추가 | Global Platform Integration |
 | v1.3 | 2026-05-21 | Antigravity AI | 브랜드 정체성 강화를 위해 서비스 및 GNB/Footer 메뉴 명칭을 영문명으로 단일화 반영 | Global Platform Integration |
+| v1.4 | 2026-05-21 | Antigravity AI | 테두리 없는 심플한 언어 선택 버튼 디자인(GNB 최적화) 반영 | Global Platform Integration |
 
 ---
 
@@ -192,7 +193,7 @@ export const useTranslation = () => useContext(LanguageContext);
 ### 6.1 데스크톱(Desktop) 뷰포트 설계
 * **포지션**: GNB(Header) 최우측, BGM 음원 조작 토글 아이콘 바로 좌측 영역.
 * **디자인**:
-  - `🌐 KO`, `🌐 EN`, `🌐 JA` 형태로 현재 활성화된 언어를 간결하게 상시 노출하는 **Premium Glassmorphic Trigger Button** 탑재.
+  - `🌐 KO`, `🌐 EN`, `🌐 JA` 형태로 현재 활성화된 언어를 간결하게 상시 노출하는 **테두리 없는 심플한 트리거 버튼** 탑재.
   - 마우스 클릭 또는 호버 시 하단으로 미세하게 드롭되는 **유리막 컨테이너(Select Dropdown Menu)** 전개.
   - 드롭다운 내부 아이템 호버 시 `var(--glass-bg)` 스케일 업 및 미세 HSL 셰이딩 활성화.
   - 활성화된 로케일 아이템 좌측에 **Active Laser Dot (Active HSL 네온 광원 점)**을 점등하여 정밀 상태 표시.

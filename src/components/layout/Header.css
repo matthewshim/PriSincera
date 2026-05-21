@@ -201,10 +201,9 @@
     align-items: center;
     gap: 6px;
     height: 28px;
-    padding: 0 10px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-pill, 9999px);
+    padding: 0 4px;
+    background: transparent;
+    border: none;
     color: var(--text-muted);
     font-family: var(--font-mono, monospace);
     font-size: 0.72rem;
@@ -215,17 +214,14 @@
 }
 
 .locale-dropdown-trigger:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--glass-border-hover, rgba(255, 255, 255, 0.15));
+    background: transparent;
     color: var(--text-primary);
     transform: scale(1.02);
 }
 
 .locale-dropdown-trigger.active {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(6, 182, 212, 0.4);
+    background: transparent;
     color: var(--text-primary);
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
 }
 
 .locale-dropdown-trigger .globe-icon {
