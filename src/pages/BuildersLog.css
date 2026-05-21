@@ -155,6 +155,11 @@
 }
 
 /* Card Hover Micro-Physics */
+.builder-card:hover {
+  position: relative;
+  z-index: 20;
+}
+
 .builder-card:hover .builder-card-glass {
   background: rgba(255, 255, 255, 0.025);
   border-color: color-mix(in srgb, var(--accent-color) 35%, rgba(255, 255, 255, 0.05));
