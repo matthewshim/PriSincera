@@ -13,6 +13,29 @@ const getCurrentWeekId = () => {
   return `${d.getUTCFullYear()}-W${weekNo}`;
 };
 
+const getSmartCategory = (title) => {
+  const t = title.toLowerCase();
+  
+  if (t.includes('달리기') || t.includes('운동') || t.includes('스트레칭') || t.includes('일어나기') || t.includes('명상') || t.includes('건강') || t.includes('식단') || t.includes('수면') || t.includes('헬스') || t.includes('산책') || t.includes('조깅')) {
+    return { category: 'Health', color: '#10B981' }; // Emerald Green
+  }
+  if (t.includes('회고') || t.includes('업무') || t.includes('코딩') || t.includes('개발') || t.includes('자동화') || t.includes('작업') || t.includes('프로젝트') || t.includes('계획') || t.includes('우선순위') || t.includes('시간 관리') || t.includes('정리')) {
+    return { category: 'Productivity', color: '#F472B6' }; // Rose Pink
+  }
+  if (t.includes('감사') || t.includes('마인드') || t.includes('일기') || t.includes('생각') || t.includes('회상') || t.includes('긍정') || t.includes('행복') || t.includes('사색')) {
+    return { category: 'Mindset', color: '#34D399' }; // Mint Green
+  }
+  if (t.includes('아티클') || t.includes('공부') || t.includes('학습') || t.includes('독서') || t.includes('책') || t.includes('강의') || t.includes('리서치') || t.includes('공유') || t.includes('배움')) {
+    return { category: 'Learning', color: '#60A5FA' }; // Sky Blue
+  }
+  if (t.includes('동료') || t.includes('피드백') || t.includes('연락') || t.includes('지인') || t.includes('커피챗') || t.includes('소통') || t.includes('회의') || t.includes('네트워킹') || t.includes('인사')) {
+    return { category: 'Networking', color: '#A78BFA' }; // Lavender Purple
+  }
+  
+  // Default fallback
+  return { category: 'Life', color: '#C084FC' }; // Purple Accent
+};
+
 const getDummyData = () => {
   const currentWeekId = getCurrentWeekId();
   const [year, week] = currentWeekId.split('-W').map(Number);
@@ -425,7 +448,8 @@ export default function PaceNoteDashboard() {
       if (curr.currentPace && curr.currentPace.length > 0) {
         curr.currentPace.forEach(t => {
           const status = t.completed ? '✅ [완료]' : '⬜ [진행]';
-          md += `- ${status} **${t.title}** \`${t.category || 'My Action'}\`\n`;
+          const cat = t.category || getSmartCategory(t.title).category;
+          md += `- ${status} **${t.title}** \`${cat}\`\n`;
         });
       } else {
         md += `- 설정된 궤도가 아직 없습니다.\n`;
@@ -449,7 +473,8 @@ export default function PaceNoteDashboard() {
         md += `#### 🏃 달성한 궤도\n`;
         if (week.tasks && week.tasks.length > 0) {
           week.tasks.forEach(t => {
-            md += `- ✅ **${t.title}** \`${t.category || 'Action'}\`\n`;
+            const cat = t.category || getSmartCategory(t.title).category;
+            md += `- ✅ **${t.title}** \`${cat}\`\n`;
           });
         } else {
           md += `- 달성한 궤도가 없습니다.\n`;
@@ -566,8 +591,14 @@ export default function PaceNoteDashboard() {
                 const totalCount = paceList ? paceList.length : 0;
                 const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
                 
-                // Sort tasks: uncompleted first, completed last
-                const sortedPaceList = paceList ? [...paceList].sort((a, b) => {
+                // Apply smart categories when missing, then sort tasks: uncompleted first, completed last
+                const sortedPaceList = paceList ? [...paceList].map(task => {
+                  if (!task.category) {
+                    const smart = getSmartCategory(task.title);
+                    return { ...task, category: smart.category, color: smart.color };
+                  }
+                  return task;
+                }).sort((a, b) => {
                   if (a.completed === b.completed) return 0;
                   return a.completed ? 1 : -1;
                 }) : [];

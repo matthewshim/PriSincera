@@ -48,6 +48,30 @@ function getWeekDateRange(weekStr) {
   };
 }
 
+// 스마트 카테고리 매퍼 함수 (제목 기반 자동 매핑)
+function getSmartCategory(title) {
+  const t = title.toLowerCase();
+  
+  if (t.includes('달리기') || t.includes('운동') || t.includes('스트레칭') || t.includes('일어나기') || t.includes('명상') || t.includes('건강') || t.includes('식단') || t.includes('수면') || t.includes('헬스') || t.includes('산책') || t.includes('조깅')) {
+    return { category: 'Health', color: '#10B981' }; // Emerald Green
+  }
+  if (t.includes('회고') || t.includes('업무') || t.includes('코딩') || t.includes('개발') || t.includes('자동화') || t.includes('작업') || t.includes('프로젝트') || t.includes('계획') || t.includes('우선순위') || t.includes('시간 관리') || t.includes('정리') || t.includes('복습') || t.includes('수정') || t.includes('테스트')) {
+    return { category: 'Productivity', color: '#F472B6' }; // Rose Pink
+  }
+  if (t.includes('감사') || t.includes('마인드') || t.includes('일기') || t.includes('생각') || t.includes('회상') || t.includes('긍정') || t.includes('행복') || t.includes('사색') || t.includes('인사이트')) {
+    return { category: 'Mindset', color: '#34D399' }; // Mint Green
+  }
+  if (t.includes('아티클') || t.includes('공부') || t.includes('학습') || t.includes('독서') || t.includes('책') || t.includes('강의') || t.includes('리서치') || t.includes('공유') || t.includes('배움') || t.includes('일본어') || t.includes('영어') || t.includes('암기') || t.includes('읽기') || t.includes('스터디') || t.includes('북마크') || t.includes('메모')) {
+    return { category: 'Learning', color: '#60A5FA' }; // Sky Blue
+  }
+  if (t.includes('동료') || t.includes('피드백') || t.includes('연락') || t.includes('지인') || t.includes('커피챗') || t.includes('소통') || t.includes('회의') || t.includes('네트워킹') || t.includes('인사')) {
+    return { category: 'Networking', color: '#A78BFA' }; // Lavender Purple
+  }
+  
+  // Default fallback
+  return { category: 'Life', color: '#C084FC' }; // Purple Accent
+}
+
 // 다량의 추천 케이스 (지속 추천을 위한 풀)
 const AI_RECOMMENDATION_POOL = [
   { id: 'rec-1', title: '아침 출근 전 30분 동안 온전히 나를 위한 명상하기', category: 'Mindset', color: '#34D399' },
@@ -123,11 +147,11 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       // 데이터가 없으면 기본값 생성
       const { start, end } = getWeekDateRange(currentWeekId);
       const defaultCurrentPace = [
-        { id: 'default-1', title: 'Daily Digest 오늘의 인사이트 1개 이상 읽기', completed: false },
-        { id: 'default-2', title: '이번 주 AI 스터디 프롬프트 직접 실행해보기', completed: false },
-        { id: 'default-3', title: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기', completed: false },
-        { id: 'default-4', title: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기', completed: false },
-        { id: 'default-5', title: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기', completed: false },
+        { id: 'default-1', title: 'Daily Digest 오늘의 인사이트 1개 이상 읽기', category: 'Learning', color: '#60A5FA', completed: false },
+        { id: 'default-2', title: '이번 주 AI 스터디 프롬프트 직접 실행해보기', category: 'Learning', color: '#60A5FA', completed: false },
+        { id: 'default-3', title: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기', category: 'Learning', color: '#60A5FA', completed: false },
+        { id: 'default-4', title: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기', category: 'Productivity', color: '#F472B6', completed: false },
+        { id: 'default-5', title: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기', category: 'Learning', color: '#60A5FA', completed: false },
       ];
       
       currentWeekData = {
@@ -145,6 +169,18 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       if (!currentWeekData.hasOwnProperty('statement')) {
         currentWeekData.statement = '';
       }
+      
+      // 기존 저장된 데이터 중 카테고리가 누락된 항목이 있다면 보정
+      if (currentWeekData.currentPace) {
+        currentWeekData.currentPace = currentWeekData.currentPace.map(task => {
+          if (!task.category) {
+            const smart = getSmartCategory(task.title);
+            return { ...task, category: smart.category, color: smart.color };
+          }
+          return task;
+        });
+      }
+      
       // 지속적인 추천 UX 제공을 위해 항상 추천 항목이 3개 미만이면 채워줌
       const oldRecCount = (currentWeekData.recommendedPace || []).length;
       if (oldRecCount < 3) {
@@ -163,8 +199,16 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
     pastDocs.forEach(doc => {
       const data = doc.data();
       // 완료된 미션들만 타임라인에 표시
-      const completedTasks = (data.currentPace || []).filter(t => t.completed);
+      let completedTasks = (data.currentPace || []).filter(t => t.completed);
       if (completedTasks.length > 0) {
+        // 과거 데이터의 카테고리 누락 보정
+        completedTasks = completedTasks.map(task => {
+          if (!task.category) {
+            const smart = getSmartCategory(task.title);
+            return { ...task, category: smart.category, color: smart.color };
+          }
+          return task;
+        });
         pastLogs.push({
           weekId: data.weekId,
           startDate: data.startDate,
@@ -203,11 +247,12 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
     const data = doc.data();
     const currentPace = data.currentPace || [];
     
+    const smart = getSmartCategory(title.trim());
     const newTask = {
       id: `custom-${Date.now()}`,
       title: title.trim(),
-      category: 'My Action',
-      color: '#C4B5FD',
+      category: smart.category,
+      color: smart.color,
       completed: false
     };
     
