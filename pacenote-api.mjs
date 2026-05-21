@@ -136,11 +136,15 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
         endDate: end,
         currentPace: defaultCurrentPace,
         recommendedPace: replenishRecommendations(defaultCurrentPace, [], dailyPool, 3),
+        statement: '',
         createdAt: new Date().toISOString()
       };
       await weeksRef.doc(currentWeekId).set(currentWeekData);
     } else {
       currentWeekData = currentDoc.data();
+      if (!currentWeekData.hasOwnProperty('statement')) {
+        currentWeekData.statement = '';
+      }
       // 지속적인 추천 UX 제공을 위해 항상 추천 항목이 3개 미만이면 채워줌
       const oldRecCount = (currentWeekData.recommendedPace || []).length;
       if (oldRecCount < 3) {
@@ -165,7 +169,8 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
           weekId: data.weekId,
           startDate: data.startDate,
           endDate: data.endDate,
-          tasks: completedTasks
+          tasks: completedTasks,
+          statement: data.statement || ''
         });
       }
     });
@@ -292,6 +297,33 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
     res.json({ success: true, currentPace, recommendedPace });
   } catch (err) {
     console.error('[PaceNote API] Accept Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 4. 주간 회고/일기 작성 및 저장
+pacenoteRouter.post('/diary', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const { statement } = req.body;
+    
+    if (statement && statement.length > 1000) {
+      return res.status(400).json({ error: 'Diary entry must be 1000 characters or less' });
+    }
+
+    const today = new Date();
+    const currentWeekId = getWeekNumber(today);
+    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+    
+    const cleanStatement = statement ? statement.trim() : '';
+    await docRef.update({ statement: cleanStatement });
+    
+    res.json({ success: true, statement: cleanStatement });
+  } catch (err) {
+    console.error('[PaceNote API] Save Diary Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

@@ -881,3 +881,395 @@
   max-height: 400px;
   overflow-y: auto;
 }
+
+/* ── Premium Weekly Voyage Logbook Card ── */
+.logbook-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.02) 0%, rgba(34, 211, 238, 0.02) 100%), var(--glass-bg);
+  border: 1px solid rgba(16, 185, 129, 0.15) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(16, 185, 129, 0.05) !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.logbook-card:hover {
+  border-color: rgba(34, 211, 238, 0.4) !important;
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4), 0 0 20px rgba(34, 211, 238, 0.1) !important;
+}
+
+/* Auto Save Status Badge */
+.auto-save-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+
+.auto-save-status.saving {
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  animation: saving-pulse 1.5s infinite;
+}
+
+.auto-save-status.saved {
+  color: #34D399;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.auto-save-status.error {
+  color: #F87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+@keyframes saving-pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Textarea Wrapper & Styles */
+.logbook-textarea-wrapper {
+  position: relative;
+  margin-top: 16px;
+}
+
+.logbook-textarea {
+  width: 100%;
+  min-height: 140px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  color: #E9D5FF;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.logbook-textarea:focus {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(34, 211, 238, 0.6);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.logbook-textarea::placeholder {
+  color: rgba(156, 163, 175, 0.4);
+}
+
+.logbook-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.logbook-char-count {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-size: 0.75rem;
+  color: rgba(156, 163, 175, 0.5);
+  pointer-events: none;
+}
+
+/* Captain's Logbook Viewer Blockquote */
+.logbook-viewer {
+  margin-top: 16px;
+  padding: 8px 0;
+}
+
+.captains-log {
+  position: relative;
+  margin: 0;
+  padding: 24px 36px;
+  background: rgba(255, 255, 255, 0.01);
+  border-left: 3px solid #34D399;
+  border-radius: 0 16px 16px 0;
+}
+
+.captains-log::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(90deg, rgba(52, 211, 153, 0.03) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.quote-mark {
+  font-family: 'Georgia', serif;
+  font-size: 3rem;
+  color: rgba(52, 211, 153, 0.15);
+  line-height: 0;
+  position: absolute;
+}
+
+.quote-mark:not(.text-right) {
+  top: 24px;
+  left: 10px;
+}
+
+.quote-mark.text-right {
+  bottom: -4px;
+  right: 16px;
+}
+
+.log-text {
+  font-family: 'Georgia', 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: #E2E8F0;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  margin: 0;
+  word-break: keep-all;
+  white-space: pre-wrap;
+}
+
+.logbook-empty-view {
+  padding: 32px;
+  text-align: center;
+  color: rgba(156, 163, 175, 0.5);
+  font-size: 0.95rem;
+  font-style: italic;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ── Raycast Omni Modal Additions ── */
+.omni-category-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--admin-border);
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.omni-category-tabs::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.omni-cat-tab {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #9CA3AF;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.omni-cat-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFF;
+}
+
+.omni-cat-tab.active {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(34, 211, 238, 0.15) 100%);
+  border-color: rgba(167, 139, 250, 0.4);
+  color: #E9D5FF;
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+}
+
+/* Focus highlighting in dropdown */
+.omnibar-rec-item.focused {
+  background: linear-gradient(90deg, rgba(167, 139, 250, 0.15) 0%, rgba(34, 211, 238, 0.05) 100%) !important;
+  border-left: 3px solid #C4B5FD;
+  padding-left: 13px; /* Compensate border width */
+  transform: scale(1.005);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.omnibar-rec-item.focused .rec-action {
+  opacity: 1 !important;
+  color: #C4B5FD;
+}
+
+/* Omni Footer Shortcuts */
+.omni-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 10px 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid var(--admin-border);
+}
+
+.footer-shortcut-item {
+  font-size: 0.75rem;
+  color: rgba(156, 163, 175, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer-shortcut-item kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  color: rgba(156, 163, 175, 0.8);
+}
+
+/* ── AI Markdown Growth Portfolio Export Modal ── */
+.pacenote-export-modal {
+  background: #110A23;
+  border: 1px solid rgba(196, 181, 253, 0.25);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 720px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.export-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--admin-border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.export-modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #FFF;
+}
+
+.export-modal-header .close-btn {
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.export-modal-header .close-btn:hover {
+  color: #FFF;
+}
+
+.export-modal-body {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.export-desc {
+  font-size: 0.9rem;
+  color: #D1D5DB;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.portfolio-preview-wrapper {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 16px;
+}
+
+.portfolio-preview-textarea {
+  width: 100%;
+  height: 250px;
+  background: transparent;
+  border: none;
+  resize: none;
+  outline: none;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  color: #E2E8F0;
+  line-height: 1.5;
+  scrollbar-width: thin;
+}
+
+.export-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 28px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--admin-border);
+}
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.export-btn.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E2E8F0;
+}
+
+.export-btn.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFF;
+}
+
+.export-btn.btn-primary {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #FFF;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+.export-btn.btn-primary:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+}
+
+.export-btn:active {
+  transform: translateY(0);
+}
+
+/* Glow Export Button styling */
+.pacenote-btn-export {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  color: #A7F3D0 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
+  padding: 6px 16px !important;
+}
+
+.pacenote-btn-export:hover {
+  background: rgba(16, 185, 129, 0.2) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  transform: translateY(-1px);
+}
