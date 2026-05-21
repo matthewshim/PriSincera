@@ -1,8 +1,11 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from '../../contexts/LanguageContext';
 import useScrollReveal from '../../hooks/useScrollReveal';
 import './WorkSection.css';
 
 export default function WorkSection() {
+  const { t } = useTranslation();
   const sectionRef = useScrollReveal({ threshold: 0.08 });
 
   return (
@@ -12,11 +15,16 @@ export default function WorkSection() {
 
         <div className="work-header reveal-item" style={{ '--reveal-delay': '0.1s' }}>
           <h2 className="work-title">
-            단순한 포트폴리오를 넘어<br />
-            <span className="accent">성장을 돕는 도구로</span>
+            {t('home.servicesTitle')}<br />
+            <span className="accent">{t('home.servicesTitleAccent')}</span>
           </h2>
           <p className="work-subtitle">
-            기획에서 개발까지, 유저의 실질적인 성장을 돕기 위해 만든 서비스들입니다.
+            {t('home.servicesSubtitle').split('\n').map((line, idx) => (
+              <React.Fragment key={idx}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
           </p>
         </div>
 
@@ -26,8 +34,12 @@ export default function WorkSection() {
             <div className="flagship-label" style={{ color: '#F59E0B' }}>Platform Foundation & Core Infrastructure</div>
             <h3 className="flagship-title">PriSincera Base</h3>
             <p className="flagship-desc">
-              기획자의 온전한 오너십과 AI 페어 프로그래밍(Vibe Coding)의 시너지를 증명하는 초경량 엔지니어링 코어입니다.<br />
-              React/Vite 클라이언트 아키텍처와 무중단 서버리스 GCP Cloud Run 컨테이너, 다중 Firebase 보안 인프라가 유기적으로 결합된 고성능 아키텍처의 결정체입니다.
+              {t('home.serviceBaseDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </p>
             <div className="work-card-tags">
               <span className="work-tag">React / Vite</span>
@@ -37,7 +49,7 @@ export default function WorkSection() {
             </div>
             <div className="flagship-cta-wrap">
               <a href="https://github.com/matthewshim/PriSincera" target="_blank" rel="noopener noreferrer" className="flagship-cta-btn amber">
-                ⚡ 오픈 소스 및 시스템 아키텍처 살펴보기
+                {t('home.serviceBaseCta')}
               </a>
             </div>
           </div>
@@ -78,8 +90,12 @@ export default function WorkSection() {
             <div className="flagship-label" style={{ color: '#8B5CF6' }}>Engineering & Growth Logs</div>
             <h3 className="flagship-title">Builder's Log</h3>
             <p className="flagship-desc">
-              Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.<br />
-              어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.
+              {t('home.serviceBuildersDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </p>
             <div className="work-card-tags">
               <span className="work-tag">Tech Blog</span>
@@ -88,7 +104,7 @@ export default function WorkSection() {
             </div>
             <div className="flagship-cta-wrap">
               <Link to="/builders-log" className="flagship-cta-btn indigo">
-                🚀 개발 여정 및 엔지니어링 성장기 읽기
+                {t('home.serviceBuildersCta')}
               </Link>
             </div>
           </div>
@@ -129,8 +145,12 @@ export default function WorkSection() {
             <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>Daily Curation & Learning</div>
             <h3 className="flagship-title">Daily Digest</h3>
             <p className="flagship-desc">
-              하루 5분, IT 트렌드 인사이트와 AI 프롬프트, 비즈니스 일본어 학습까지.<br />
-              정보의 홍수 속에서 꼭 필요한 시그널만 모아 매일 아침 전해드립니다.
+              {t('home.serviceDailyDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </p>
             <div className="work-card-tags">
               <span className="work-tag">AI Curation</span>
@@ -139,7 +159,7 @@ export default function WorkSection() {
             </div>
             <div className="flagship-cta-wrap">
               <Link to="/daily" className="flagship-cta-btn">
-                ✨ 하루 5분, 다이제스트 무료 구독
+                {t('home.serviceDailyCta')}
               </Link>
             </div>
           </div>
@@ -171,8 +191,12 @@ export default function WorkSection() {
             <div className="flagship-label" style={{ color: '#34D399' }}>Action & Branding</div>
             <h3 className="flagship-title">Pace Note</h3>
             <p className="flagship-desc">
-              조급함을 덜어주고 나만의 궤도를 만들어가는 마이크로 행동 트래커.<br />
-              매일의 작은 인사이트를 실천 과제로 만들고, 흔들림 없는 성장을 기록하세요.
+              {t('home.servicePaceDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </p>
             <div className="work-card-tags">
               <span className="work-tag">Action Tracker</span>
@@ -181,7 +205,7 @@ export default function WorkSection() {
             </div>
             <div className="flagship-cta-wrap">
               <Link to="/pacenote" className="flagship-cta-btn green">
-                ⛵ 3초 만에 로그인하고 나만의 궤도 만들기
+                {t('home.servicePaceCta')}
               </Link>
             </div>
           </div>

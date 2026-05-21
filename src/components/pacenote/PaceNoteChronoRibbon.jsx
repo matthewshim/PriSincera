@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 import './PaceNoteChronoRibbon.css';
 
 export default function PaceNoteChronoRibbon({
@@ -9,6 +10,7 @@ export default function PaceNoteChronoRibbon({
   currentWeekTasks = [],
   onSelectWeek
 }) {
+  const { t } = useTranslation();
   const ribbonRef = useRef(null);
 
   // 1. 기준 연도 및 론칭 주차 정의
@@ -145,7 +147,7 @@ export default function PaceNoteChronoRibbon({
       <div className="chrono-ribbon-timeline">
         <button className="ribbon-arrow prev" onClick={() => {
           if (ribbonRef.current) ribbonRef.current.scrollBy({ left: -150, behavior: 'smooth' });
-        }} aria-label="이전 주차들">
+        }} aria-label={t('paceNote.chronoPrevWeeks')}>
           ◀
         </button>
 
@@ -206,17 +208,17 @@ export default function PaceNoteChronoRibbon({
                 className={cardClass}
                 onClick={() => !isUnoperated && !isLocked && onSelectWeek(wId)}
                 disabled={isUnoperated || isLocked}
-                title={isUnoperated ? '서비스 론칭 전 주차' : isLocked ? '오픈 대기 주차' : `${wNum}주차 궤도`}
+                title={isUnoperated ? t('paceNote.chronoUnoperatedTooltip') : isLocked ? t('paceNote.chronoLockedTooltip') : t('paceNote.chronoOrbitTooltip', { week: wNum })}
               >
                 <div className="ribbon-card-top">
                   <div className="ribbon-card-header-left">
-                    <span className="ribbon-card-week-label">{wNum}주차</span>
+                    <span className="ribbon-card-week-label">{t('paceNote.chronoWeekLabel', { week: wNum })}</span>
                     {isCurrent && <span className="ribbon-pulse-indicator"></span>}
                   </div>
                   
                   {/* 동적 상태 아이콘 및 트로피 뱃지 노출 */}
                   <div className="ribbon-card-badge-area">
-                    {isUnoperated && <span className="ribbon-badge-text">비대상</span>}
+                    {isUnoperated && <span className="ribbon-badge-text">{t('paceNote.chronoUnoperatedBadge')}</span>}
                     {isLocked && <span className="ribbon-lock-icon">🔒</span>}
                     {isAllCompleted && <span className="ribbon-trophy-icon">🏆</span>}
                     {!isUnoperated && !isLocked && !isAllCompleted && (
@@ -233,9 +235,9 @@ export default function PaceNoteChronoRibbon({
                 )}
                 
                 {/* 론칭 전 / 자물쇠 주차의 하단 딤드 레이블 */}
-                {isUnoperated && <div className="ribbon-status-label">미운영</div>}
-                {isLocked && <div className="ribbon-status-label">오픈 대기</div>}
-                {state === 'unrecorded' && <div className="ribbon-status-label unrec">미기록</div>}
+                {isUnoperated && <div className="ribbon-status-label">{t('paceNote.chronoUnoperatedStatus')}</div>}
+                {isLocked && <div className="ribbon-status-label">{t('paceNote.chronoLockedStatus')}</div>}
+                {state === 'unrecorded' && <div className="ribbon-status-label unrec">{t('paceNote.chronoUnrecordedStatus')}</div>}
               </button>
             );
           })}
@@ -243,7 +245,7 @@ export default function PaceNoteChronoRibbon({
 
         <button className="ribbon-arrow next" onClick={() => {
           if (ribbonRef.current) ribbonRef.current.scrollBy({ left: 150, behavior: 'smooth' });
-        }} aria-label="다음 주차들">
+        }} aria-label={t('paceNote.chronoNextWeeks')}>
           ▶
         </button>
       </div>

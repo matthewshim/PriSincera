@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
@@ -8,22 +8,29 @@ import { useTranslation } from '../contexts/LanguageContext';
 import './DailyDigest.css';
 
 const TABS = [
-  { key: 'intro', label: '서비스 소개', icon: '📋' },
-  { key: 'daily', label: '데일리 다이제스트', icon: '📝' },
+  { key: 'intro', icon: '📋', translationKey: 'dailyDigest.introTab' },
+  { key: 'daily', icon: '📝', translationKey: 'dailyDigest.dailyTab' },
 ];
 
-function formatNavDate(dateStr) {
+function formatNavDate(dateStr, locale = 'ko') {
   const [, m, d] = dateStr.split('-').map(Number);
-  const days = ['일', '월', '화', '수', '목', '금', '토'];
   const dt = new Date(dateStr + 'T00:00:00');
-  return `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}(${days[dt.getDay()]})`;
+  if (locale === 'en') {
+    return dt.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }) + ` (${dt.toLocaleDateString('en-US', { weekday: 'short' })})`;
+  } else if (locale === 'ja') {
+    const days = ['日', '月', '火', '水', '木', '金', '土'];
+    return `${m}月${d}日(${days[dt.getDay()]})`;
+  } else {
+    const days = ['일', '월', '화', '수', '목', '금', '토'];
+    return `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}(${days[dt.getDay()]})`;
+  }
 }
 
 export default function DailyDigest() {
   const { date } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   
   useSEO({
     title: date ? `Daily Digest (${date})` : 'Daily Digest',
@@ -155,7 +162,7 @@ export default function DailyDigest() {
 
   useEffect(() => {
     fetchData();
-  }, [date]);
+  }, [date, locale]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -234,7 +241,7 @@ export default function DailyDigest() {
 
   const handleUnsubscribe = async () => {
     if (!subEmail) return;
-    if (!window.confirm("정말 구독을 해제하시겠어요?\n하루 5분, 성장을 위한 시그널을 놓치게 됩니다. 😢\n\n(계속 받아보시려면 '취소'를 눌러주세요)")) {
+    if (!window.confirm(t('dailyDigest.unsubConfirm'))) {
       return;
     }
     try {
@@ -247,7 +254,7 @@ export default function DailyDigest() {
       if (res.ok) {
         setSubStatus('idle');
         setSubEmail('');
-        alert('구독이 성공적으로 해지되었습니다. 언제든 다시 찾아주세요!');
+        alert(t('dailyDigest.unsubSuccess'));
       } else {
         setSubStatus('error');
       }
@@ -275,7 +282,7 @@ export default function DailyDigest() {
     const cat = category.toLowerCase();
     
     // AI / 인공지능 (Cyan)
-    if (cat.includes('ai') || cat.includes('인공지능')) 
+    if (cat.includes('ai') || cat.includes('인공지능') || cat.includes('intelligence')) 
       return { color: '#22D3EE', background: 'rgba(34, 211, 238, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(34, 211, 238, 0.3)' };
     
     // Attitude / Mindset (Emerald/Green)
@@ -322,9 +329,12 @@ export default function DailyDigest() {
           <div className="daily-hero-icon">☕</div>
           <h1 className="daily-title">Daily Digest</h1>
           <p className="daily-subtitle" style={{ lineHeight: '1.6' }}>
-            넘쳐나는 정보 속에서 길을 잃지 마세요.<br/>
-            매일 아침 배달되는 글로벌 트렌드 큐레이션, 실무 적용을 위한 AI 프롬프트,<br/>
-            그리고 비즈니스 어학까지. 읽고 끝나는 지식이 아닌, 실무의 무기로 만드세요.
+            {t('dailyDigest.heroSubtitle').split('\n').map((line, idx) => (
+              <React.Fragment key={idx}>
+                {line}
+                <br/>
+              </React.Fragment>
+            ))}
           </p>
           
           <div className="daily-subscribe-wrap">
@@ -333,9 +343,9 @@ export default function DailyDigest() {
               onClick={handleGoogleSubscribe} 
               disabled={subStatus === 'loading' || subStatus === 'success' || subStatus === 'already_subscribed'}
             >
-              {subStatus === 'loading' ? '🚀 시그널 동기화 중...' : 
-               subStatus === 'success' ? '✨ Your Daily Signal is ON : 매일 아침 8시 새로운 소식으로 만나요!' : 
-               subStatus === 'already_subscribed' ? '✨ 매일 아침 8시 새로운 소식으로 만나요!' : '✨ 하루 5분, 다이제스트 무료 구독'}
+              {subStatus === 'loading' ? t('dailyDigest.subBtnSyncing') : 
+               subStatus === 'success' ? t('dailyDigest.subBtnSuccess') : 
+               subStatus === 'already_subscribed' ? t('dailyDigest.subBtnAlreadySubbed') : t('dailyDigest.subBtnFreeSub')}
             </button>
             
             {(subStatus === 'success' || subStatus === 'already_subscribed') && (
@@ -344,19 +354,19 @@ export default function DailyDigest() {
                   onClick={async () => { await logout(); setSubStatus(''); setSubEmail(''); }}
                   style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
                 >
-                  다른 계정으로 구독 신청
+                  {t('dailyDigest.subOtherAccount')}
                 </button>
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', opacity: 0.5 }}>|</span>
                 <button 
                   onClick={handleUnsubscribe}
                   style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
                 >
-                  구독 끊기
+                  {t('dailyDigest.subCancel')}
                 </button>
               </div>
             )}
 
-            {subStatus === 'error' && <div className="sub-msg error">앗, 구독 처리 중 오류가 발생했습니다. 다시 시도해 주세요.</div>}
+            {subStatus === 'error' && <div className="sub-msg error">{t('dailyDigest.subError')}</div>}
           </div>
         </div>
       </section>
@@ -375,7 +385,7 @@ export default function DailyDigest() {
                 onClick={() => handleTabChange(tab.key)}
               >
                 <span className="daily-tab-icon">{tab.icon}</span>
-                <span className="daily-tab-label">{tab.label}</span>
+                <span className="daily-tab-label">{t(tab.translationKey)}</span>
               </button>
             );
           })}
@@ -398,7 +408,7 @@ export default function DailyDigest() {
           <div className="daily-bento-portal">
             <div className="bento-calendar-section">
               {loading ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '60px 0' }}>캘린더를 로드하는 중입니다...</div>
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '60px 0' }}>{t('dailyDigest.calendarLoading')}</div>
               ) : (
                 <DailyCalendar 
                   publishedDates={publishedDates} 
@@ -474,19 +484,19 @@ export default function DailyDigest() {
                           onClick={() => navigate(`/daily/${quickPeekDate}`)}
                           className="quick-peek-action-btn"
                         >
-                          전체 콘텐츠 상세히 보기 →
+                          {t('dailyDigest.viewFullContent')}
                         </button>
                       </div>
                     ) : (
-                      <div className="quick-peek-empty">해당 날짜의 상세 요약 정보가 없습니다.</div>
+                      <div className="quick-peek-empty">{t('dailyDigest.noQuickPeekData')}</div>
                     )}
                   </div>
                 </div>
               ) : (
                 <div className="quick-peek-welcome">
                   <div className="welcome-icon">📅</div>
-                  <h4>Chrono-Calendar Portal</h4>
-                  <p>달력의 활성화된 일자(Ambient Glow)에 마우스를 올리시면 해당 날짜의 다이제스트 핵심 브리핑을 퀵 피크로 빠르게 스캔할 수 있습니다.</p>
+                  <h4>{t('dailyDigest.chronoCalendarPortal')}</h4>
+                  <p>{t('dailyDigest.chronoCalendarDesc')}</p>
                 </div>
               )}
             </div>
@@ -495,6 +505,12 @@ export default function DailyDigest() {
       </div>
     );
   }
+
+  // Localized Date Parts
+  const dObj = new Date(date + 'T00:00:00');
+  const monthStr = locale === 'en' ? dObj.toLocaleDateString('en-US', { month: 'short' }) : locale === 'ja' ? `${dObj.getMonth() + 1}月` : `${dObj.getMonth() + 1}월`;
+  const dowStr = locale === 'en' ? dObj.toLocaleDateString('en-US', { weekday: 'short' }) : locale === 'ja' ? `${['日', '月', '火', '水', '木', '金', '土'][dObj.getDay()]}曜日` : `${['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()]}요일`;
+  const dayNum = dObj.getDate();
 
   // Detail View
   return (
@@ -515,15 +531,15 @@ export default function DailyDigest() {
               <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span className="daily-nav-btn-label">
-              {formatNavDate(new Date(new Date(date).setDate(new Date(date).getDate() - 1)).toISOString().slice(0, 10))}
+              {formatNavDate(new Date(new Date(date).setDate(new Date(date).getDate() - 1)).toISOString().slice(0, 10), locale)}
             </span>
           </button>
           
           <div className="daily-date-center">
-            <span className="daily-date-day">{new Date(date).getDate()}</span>
+            <span className="daily-date-day">{dayNum}</span>
             <div className="daily-date-month-dow">
-              <span className="daily-date-month">{new Date(date).getMonth() + 1}월</span>
-              <span className="daily-date-dow">{['일', '월', '화', '수', '목', '금', '토'][new Date(date).getDay()]}요일</span>
+              <span className="daily-date-month">{monthStr}</span>
+              <span className="daily-date-dow">{dowStr}</span>
             </div>
           </div>
 
@@ -540,7 +556,7 @@ export default function DailyDigest() {
                   onClick={() => navigate(`/daily/${nextStr}`)}
                 >
                   <span className="daily-nav-btn-label">
-                    {formatNavDate(nextStr)}
+                    {formatNavDate(nextStr, locale)}
                   </span>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -565,16 +581,16 @@ export default function DailyDigest() {
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
               <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            목록으로 돌아가기
+            {t('dailyDigest.returnToList')}
           </button>
         </div>
       </div>
 
       <div className={`daily-feed-container theme-${detailTab}`}>
         {loading ? (
-          <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px 0' }}>데이터를 불러오는 중입니다...</div>
+          <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px 0' }}>{t('dailyDigest.loadingData')}</div>
         ) : !data ? (
-          <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px 0' }}>해당 날짜의 데이터가 없습니다.</div>
+          <div style={{ textAlign: 'center', color: '#9CA3AF', padding: '40px 0' }}>{t('dailyDigest.noDataForDate')}</div>
         ) : (
           <>
             {/* ── Workspace Segmented Tab Switcher ── */}
@@ -675,7 +691,7 @@ export default function DailyDigest() {
                 <div className="daily-section fade-in">
                   <div className="daily-section-header">
                     <span className="daily-section-icon">🤖</span>
-                    <h2 className="daily-section-title">AI 프롬프트 1-Pick</h2>
+                    <h2 className="daily-section-title">{t('dailyDigest.aiPromptOnePick')}</h2>
                   </div>
                   <div className="ai-prompt-card">
                     <div className="terminal-header">
@@ -686,7 +702,7 @@ export default function DailyDigest() {
                       </div>
                       <div className="terminal-title">SYSTEM PROMPT // terminal</div>
                       <button className={`terminal-copy-btn ${copiedPrompt ? 'copied' : ''}`} onClick={() => copyToClipboard(data.study.prompt_snippet)}>
-                        {copiedPrompt ? '✓ 복사완료' : '🗎 복사하기'}
+                        {copiedPrompt ? t('dailyDigest.copied') : t('dailyDigest.copy')}
                       </button>
                     </div>
                     <div className="terminal-body">
@@ -696,17 +712,17 @@ export default function DailyDigest() {
                       {data.study.explanation && <div className="study-kr">{data.study.explanation}</div>}
                       {data.study.business_context && (
                         <div className="signal-insight ai-insight">
-                          <div className="insight-badge">💡 실무 활용 팁</div>
+                          <div className="insight-badge">{t('dailyDigest.practicalTip')}</div>
                           <p>{data.study.business_context}</p>
                         </div>
                       )}
                       {data.study.parameters && data.study.parameters.length > 0 && (
                         <div className="prompt-params-container">
-                          <div className="params-header">⚙️ PROMPT PARAMETERS</div>
+                          <div className="params-header">{t('dailyDigest.promptParams')}</div>
                           <div className="params-table">
                             <div className="params-table-header">
-                              <span className="col-name">NAME</span>
-                              <span className="col-desc">DESCRIPTION</span>
+                              <span className="col-name">{t('dailyDigest.paramNameCol')}</span>
+                              <span className="col-desc">{t('dailyDigest.paramDescCol')}</span>
                             </div>
                             <div className="params-list">
                               {data.study.parameters.map((p, i) => (
@@ -729,12 +745,12 @@ export default function DailyDigest() {
                 <div className="daily-section fade-in">
                   <div className="daily-section-header">
                     <span className="daily-section-icon">🇯🇵</span>
-                    <h2 className="daily-section-title">비즈니스 일본어 1-Pick</h2>
+                    <h2 className="daily-section-title">{t('dailyDigest.businessJpOnePick')}</h2>
                     <button className="japanese-audio-play-main" onClick={() => playAudio(data.study.sentence_jp)}>
                       <svg viewBox="0 0 24 24" width="14" height="14" style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }}>
                         <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.45v2.06c2.89.86 5 3.54 5 6.49s-2.11 5.63-5 6.49v2.06c4.01-.91 7-4.49 7-8.55s-2.99-7.64-7-8.55z"/>
                       </svg>
-                      전체 발음 듣기
+                      {t('dailyDigest.playFullAudio')}
                     </button>
                   </div>
                   <div className="japanese-study-card">
@@ -745,7 +761,7 @@ export default function DailyDigest() {
                       </div>
                       {data.study.sentence_pronunciation_kr && (
                         <div className="study-pronunciation">
-                          <span className="pronunciation-label">한글 발음</span>
+                          <span className="pronunciation-label">{t('dailyDigest.koreanPronunciation')}</span>
                           <span className="pronunciation-text">[{data.study.sentence_pronunciation_kr}]</span>
                         </div>
                       )}
@@ -756,14 +772,14 @@ export default function DailyDigest() {
                     
                     {(!data.study.prompt_snippet && data.study.business_context) && (
                        <div className="signal-insight jp-insight">
-                         <div className="insight-badge">💡 비즈니스 상황 팁</div>
+                         <div className="insight-badge">{t('dailyDigest.businessContextTip')}</div>
                          <p>{data.study.business_context}</p>
                        </div>
                     )}
 
                     {data.study.vocabulary && data.study.vocabulary.length > 0 && (
                       <div className="vocab-section">
-                        <h3 className="vocab-title">📚 핵심 단어장</h3>
+                        <h3 className="vocab-title">{t('dailyDigest.keyVocab')}</h3>
                         <div className="study-vocab-grid">
                           {data.study.vocabulary.map((v, i) => (
                             <div key={i} className="study-vocab-card">
@@ -775,7 +791,7 @@ export default function DailyDigest() {
                                 <button 
                                   className="vocab-audio-btn" 
                                   onClick={() => playAudio(v.word)}
-                                  title="발음 듣기"
+                                  title={t('dailyDigest.listenPron')}
                                 >
                                   <svg className="play-svg" viewBox="0 0 24 24" width="12" height="12">
                                     <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>

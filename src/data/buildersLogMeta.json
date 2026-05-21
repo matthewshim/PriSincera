@@ -3,9 +3,21 @@
     "id": "ep5",
     "slug": "prisincera-web-service-security-audit-remediation-report",
     "chapterNo": "05",
-    "title": "서비스가 커질 때 백엔드가 맞이하는 위협: PriSincera 웹 서비스 보안 정밀 진단 및 5가지 취약점 격퇴기",
-    "subtitle": "Express 다중 라우팅 아키텍처 도입에 따른 보안 표면 확대 대응 및 데이터 무결성·PII 보호 강화 엔지니어링",
-    "description": "PriSincera가 Express 다중 라우터 및 Firestore 기반 상태 저장 아키텍처로 진화하며 확장된 보안 표면(Attack Surface)을 분석하고, 임시 디버그 API의 PII 누출 결함부터 Firestore 보안 규칙 오류, Pace Note 입력 필터링까지 발견된 5가지 핵심 취약점을 해결한 트러블슈팅 여정 공유.",
+    "title": {
+      "ko": "서비스가 커질 때 백엔드가 맞이하는 위협: PriSincera 웹 서비스 보안 정밀 진단 및 5가지 취약점 격퇴기",
+      "en": "Threats the Backend Faces as the Service Grows: PriSincera Web Service Security Audit and Remediation of 5 Critical Vulnerabilities",
+      "ja": "サービス拡大期にバックエンドが直面する脅威：PriSinceraウェブサービスセキュリティ精密診断と5つの脆弱性撃退記"
+    },
+    "subtitle": {
+      "ko": "Express 다중 라우팅 아키텍처 도입에 따른 보안 표면 확대 대응 및 데이터 무결성·PII 보호 강화 엔지니어링",
+      "en": "Responding to Attack Surface Expansion from Express Multi-Routing Architecture & Engineering Data Integrity and PII Protection",
+      "ja": "Express多重ルーティングアーキテクチャ導入に伴うセキュリティサーフェス拡大への対応、およびデータ整合性・PII保護の強化エンジニアリング"
+    },
+    "description": {
+      "ko": "PriSincera가 Express 다중 라우터 및 Firestore 기반 상태 저장 아키텍처로 진화하며 확장된 보안 표면(Attack Surface)을 분석하고, 임시 디버그 API의 PII 누출 결함부터 Firestore 보안 규칙 오류, Pace Note 입력 필터링까지 발견된 5가지 핵심 취약점을 해결한 트러블슈팅 여정 공유.",
+      "en": "Sharing the troubleshooting journey analyzing PriSincera's expanded attack surface as it evolved into an Express multi-router and Firestore-based stateful architecture, and resolving 5 key vulnerabilities ranging from temporary debug API PII leaks to Firestore security rule errors and Pace Note input filtering.",
+      "ja": "PriSinceraがExpress多重ルーターおよびFirestoreベースの状態保持アーキテクチャへと進化する過程で拡大した攻撃対象領域（Attack Surface）を分析し、一時的なデバッグAPIのPII漏洩欠陥からFirestoreセキュリティルールのエラー、Pace Note入力フィルタリングまで、発見された5つの核心的な脆弱性を解決したトラブルシューティングの旅路を共有。"
+    },
     "date": "2026-05-21",
     "tags": [
       "Security",
@@ -47,9 +59,21 @@
     "id": "ep4",
     "slug": "mastering-your-growth-journey-with-prisincera-pace-note",
     "chapterNo": "04",
-    "title": "나만의 속도로 완성하는 성장 여정: PriSincera Pace Note",
-    "subtitle": "획일적인 기준에 휩쓸리지 않고, 오직 자신만의 템포와 방향을 추구하는 이들을 위해 PriSincera가 AI 기반의 퍼스널 브랜딩 액션 플랫폼, Pace Note를 선보입니다.",
-    "description": "타인의 획일적인 기준에 휩쓸리지 않고, 오직 자신만의 템포와 고유한 브랜딩을 추구하는 메이커들을 위한 AI 기반 액션 플랫폼 Pace Note. 목표 도달률(Velocity)과 액션 데이터를 스스로 학습하여 진화하는 AI 피드백 루프 아키텍처를 도입하고, 실시간으로 최적의 성장을 안내하는 여정을 소개합니다.",
+    "title": {
+      "ko": "나만의 속도로 완성하는 성장 여정: PriSincera Pace Note",
+      "en": "Achieving a Growth Journey at Your Own Speed: PriSincera Pace Note",
+      "ja": "自分だけのペースで完成させる成長の旅：PriSincera Pace Note"
+    },
+    "subtitle": {
+      "ko": "획일적인 기준에 휩쓸리지 않고, 오직 자신만의 템포와 방향을 추구하는 이들을 위해 PriSincera가 AI 기반의 퍼스널 브랜딩 액션 플랫폼, Pace Note를 선보입니다.",
+      "en": "For those who refuse to be swept away by standardized metrics and seek only their own tempo and direction, PriSincera presents Pace Note, an AI-powered personal branding action platform.",
+      "ja": "画一的な基準に流されることなく、自分だけのテンポと方向性を追求する人々のために、PriSinceraがAI基盤のパーソナルブランディングアクションプラットフォーム「Pace Note」をお披露目します。"
+    },
+    "description": {
+      "ko": "타인의 획일적인 기준에 휩쓸리지 않고, 오직 자신만의 템포와 고유한 브랜딩을 추구하는 메이커들을 위한 AI 기반 액션 플랫폼 Pace Note. 목표 도달률(Velocity)과 액션 데이터를 스스로 학습하여 진화하는 AI 피드백 루프 아키텍처를 도입하고, 실시간으로 최적의 성장을 안내하는 여정을 소개합니다.",
+      "en": "Pace Note is an AI-powered action platform for makers pursuing their own tempo and unique branding rather than peer pressure. We introduce our journey of implementing an AI feedback loop architecture that learns from completion rates (velocity) and action data to dynamically guide optimal growth.",
+      "ja": "他人の画一的な基準に流されず、自分だけのテンポと固有のブランディングを追求するメイカーのためのAI基盤アクションプラットフォーム「Pace Note」。目標達成率（Velocity）とアクションデータを自律的に学習して進化するAIフィードバックループアーキテクチャを導入し、リアルタイムで最適な成長を案内する旅路を紹介します。"
+    },
     "date": "2026-05-20",
     "tags": [
       "Pace Note",
@@ -90,9 +114,21 @@
     "id": "ep3",
     "slug": "prisincera-builders-log-admin-integration-pipeline-enhancement",
     "chapterNo": "03",
-    "title": "서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남",
-    "subtitle": "안정성과 효율성을 극대화한 AI 기반 GitHub 연동 자동화 시스템 구현 방안",
-    "description": "서버리스 환경의 쓰기 제한(Read-Only)을 극복하기 위해 물리 디스크 대신 100% 메모리상에서 동작하는 GitHub REST API(Git-less Commit) 파이프라인을 설계하고, AI 톤앤매너 교정 및 보안 검열 루프를 결합하여 완벽하게 제어되는 정적 CMS를 구현한 경험.",
+    "title": {
+      "ko": "서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남",
+      "en": "Perfect Control over a Static Blog (Static CMS) in a Serverless Environment: GitHub API Meets AI",
+      "ja": "サーバーレス環境で静的ブログ（Static CMS）を完璧に制御する：GitHub APIとAIの融合"
+    },
+    "subtitle": {
+      "ko": "안정성과 효율성을 극대화한 AI 기반 GitHub 연동 자동화 시스템 구현 방안",
+      "en": "Implementation of an AI-Driven GitHub Integration Automation System for Maximizing Stability and Efficiency",
+      "ja": "安定性と効率を極大化したAIベースのGitHub連携自動化システムの構築スキーム"
+    },
+    "description": {
+      "ko": "서버리스 환경의 쓰기 제한(Read-Only)을 극복하기 위해 물리 디스크 대신 100% 메모리상에서 동작하는 GitHub REST API(Git-less Commit) 파이프라인을 설계하고, AI 톤앤매너 교정 및 보안 검열 루프를 결합하여 완벽하게 제어되는 정적 CMS를 구현한 경험.",
+      "en": "Overcoming serverless read-only restrictions by designing a 100% in-memory GitHub REST API (Git-less Commit) pipeline instead of relying on a physical disk, and combining an AI tone-and-manner refiner and security censorship loop to achieve a perfectly controlled static CMS.",
+      "ja": "サーバーレス環境の書き込み制限（Read-Only）を克服するため、物理ディスクの代わりに100%メモリ上で動作するGitHub REST API（Git-less Commit）パイプラインを設計し、AIのトーン＆マナー補正やセキュリティ監査ループを結合することで、完璧に制御された静的CMSを具現化した経験。"
+    },
     "date": "2026-05-19",
     "tags": [
       "Builder's Log",
@@ -133,9 +169,21 @@
     "id": "ep1",
     "slug": "ai-pacenote-expansion",
     "chapterNo": "02",
-    "title": "고인물은 어떻게 AI를 망치는가? 150개 추천 풀 한계 돌파기",
-    "subtitle": "Data-Driven AI Ecosystem",
-    "description": "단순히 API를 호출해 무작위로 목표를 생성하던 초기 모델을 넘어, 유저의 '선택'과 '달성' 데이터를 바탕으로 Velocity를 계산하고 스스로 프롬프트를 진화시키는 플라이휠(Feedback Loop) 구축 과정.",
+    "title": {
+      "ko": "고인물은 어떻게 AI를 망치는가? 150개 추천 풀 한계 돌파기",
+      "en": "How Do Experts Break AI? Overcoming the Limits of the 150 Recommendation Pool",
+      "ja": "ベテランはどのようにAIをダメにするのか？150個の推奨プール限界突破記"
+    },
+    "subtitle": {
+      "ko": "Data-Driven AI Ecosystem",
+      "en": "Data-Driven AI Ecosystem",
+      "ja": "Data-Driven AI Ecosystem"
+    },
+    "description": {
+      "ko": "단순히 API를 호출해 무작위로 목표를 생성하던 초기 모델을 넘어, 유저의 '선택'과 '달성' 데이터를 바탕으로 Velocity를 계산하고 스스로 프롬프트를 진화시키는 플라이휠(Feedback Loop) 구축 과정.",
+      "en": "Beyond the initial model that simply called an API to generate random goals, we built a feedback loop flywheel that calculates velocity based on user 'selections' and 'achievements' to dynamically evolve its own prompts.",
+      "ja": "単にAPIを呼び出してランダムに目標を生成していた初期モデルを超え、ユーザーの「選択」と「達成」データに基づいてVelocityを計算し、自律的にプロンプトを進化させるフライホイール（Feedback Loop）の構築プロセス。"
+    },
     "date": "2026-05-18",
     "tags": [
       "AI",
@@ -161,9 +209,21 @@
     "id": "ep2",
     "slug": "authentication-architecture",
     "chapterNo": "01",
-    "title": "구글 원클릭 로그인의 숨겨진 함정: 유저와 관리자 세션 완벽히 격리하기",
-    "subtitle": "Authentication & Security",
-    "description": "가입 이탈률을 0으로 만들기 위해 구글 로그인으로 전면 개편하면서 발생한 백오피스 권한 충돌 사태. 다중 Firebase 인스턴스 초기화를 통해 브라우저 세션을 물리적으로 격리한 트러블슈팅 경험.",
+    "title": {
+      "ko": "구글 원클릭 로그인의 숨겨진 함정: 유저와 관리자 세션 완벽히 격리하기",
+      "en": "The Hidden Trap of Google One-Tap Sign-In: Perfectly Isolating User and Admin Sessions",
+      "ja": "Googleワンクリックログインの隠れた罠：ユーザーと管理者セッションを完璧に隔離する"
+    },
+    "subtitle": {
+      "ko": "Authentication & Security",
+      "en": "Authentication & Security",
+      "ja": "Authentication & Security"
+    },
+    "description": {
+      "ko": "가입 이탈률을 0으로 만들기 위해 구글 로그인으로 전면 개편하면서 발생한 백오피스 권한 충돌 사태. 다중 Firebase 인스턴스 초기화를 통해 브라우저 세션을 물리적으로 격리한 트러블슈팅 경험.",
+      "en": "A back-office privilege conflict crisis arose when revamping to Google sign-in to eliminate sign-up drop-off. Sharing our troubleshooting experience physically isolating browser sessions via multi-Firebase instance initialization.",
+      "ja": "離脱率をゼロにするためにGoogleログインへと全面改修した際に発生した、バックオフィス権限の衝突事態。マルチFirebaseインスタンス初期化を通じて、ブラウザセッションを物理的に隔離したトラブルシューティング経験。"
+    },
     "date": "2026-05-18",
     "tags": [
       "Security",

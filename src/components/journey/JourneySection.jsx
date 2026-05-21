@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 import './JourneySection.css';
 
 /**
@@ -6,31 +7,6 @@ import './JourneySection.css';
  * Dates verified against LinkedIn profile (shimks).
  * Company names replaced with industry/sector labels per user request.
  */
-
-const MILESTONES = [
-  {
-    year: 'Past',
-    headline: '경험의 축적',
-    industry: '20 Years of IT',
-    description: '웹 기획부터 글로벌 서비스 리딩까지. 수많은 프로젝트 속에서 "변하지 않는 본질과 태도"의 중요성을 배웠습니다.',
-    keyword: 'Experience',
-  },
-  {
-    year: 'Shift',
-    headline: 'AI와의 조우',
-    industry: 'Vibe Coding',
-    description: '기술의 장벽이 무너지고 있습니다. 기획자의 오너십과 AI가 만나, 머릿속 아이디어를 직접 실현하는 메이커의 시대를 맞이했습니다.',
-    keyword: 'Innovation',
-  },
-  {
-    year: 'Now',
-    headline: '성장을 돕는 도구로',
-    industry: 'PriSincera',
-    description: '20년의 경험과 AI 기술이 결합되어, 이제는 당신의 일상과 성장을 직접적으로 돕는 실질적인 웹 서비스로 탄생했습니다.',
-    keyword: 'Service',
-    isNow: true,
-  },
-];
 
 const STATS = [
   { target: 20, suffix: '+', label: 'Years' },
@@ -78,10 +54,36 @@ function StatItem({ target, suffix, label, started }) {
 }
 
 export default function JourneySection() {
+  const { t } = useTranslation();
   const sectionRef = useRef(null);
   const milestonesRef = useRef([]);
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
+
+  const MILESTONES = [
+    {
+      year: 'Past',
+      headline: t('home.milestone1.headline'),
+      industry: '20 Years of IT',
+      description: t('home.milestone1.desc'),
+      keyword: 'Experience',
+    },
+    {
+      year: 'Shift',
+      headline: t('home.milestone2.headline'),
+      industry: 'Vibe Coding',
+      description: t('home.milestone2.desc'),
+      keyword: 'Innovation',
+    },
+    {
+      year: 'Now',
+      headline: t('home.milestone3.headline'),
+      industry: 'PriSincera',
+      description: t('home.milestone3.desc'),
+      keyword: 'Service',
+      isNow: true,
+    },
+  ];
 
   // Observe individual milestones for staggered reveal
   useEffect(() => {
@@ -134,11 +136,15 @@ export default function JourneySection() {
 
         <div className="journey-header">
           <h2 className="journey-title">
-            기술은 변해도, <span className="accent">태도는 남습니다.</span>
+            {t('home.journeyTitle')}<span className="accent">{t('home.journeyTitleAccent')}</span>
           </h2>
           <p className="journey-subtitle">
-            20년의 IT 경험이 AI 기술을 만나,<br />
-            당신의 성장을 돕는 도구로 탄생했습니다.
+            {t('home.journeySubtitle').split('\n').map((line, idx) => (
+              <React.Fragment key={idx}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
           </p>
           <div className="journey-stats" ref={statsRef}>
             {STATS.map((s) => (

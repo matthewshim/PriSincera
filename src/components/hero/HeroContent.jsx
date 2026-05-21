@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 
 /**
  * Hero text content — label, title, subtitle.
@@ -7,6 +8,7 @@ import { useEffect, useRef } from 'react';
  */
 export default function HeroContent({ visible, onIntroComplete }) {
   const containerRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!visible) return;
@@ -40,20 +42,22 @@ export default function HeroContent({ visible, onIntroComplete }) {
 
   return (
     <div className="hero-content" ref={containerRef}>
-      <div className="hero-label">✦ Star Prism Identity</div>
+      <div className="hero-label">{t('home.heroLabel')}</div>
       <h1 className="hero-title">
         <span className="word" data-delay="0">Sincerity,</span>
         <span className="word accent" data-delay="1">Prioritized.</span>
       </h1>
       <p className="hero-sub">
-        <strong>"발 아래 꽃, 먼 곳의 별"</strong>
+        <strong>{t('home.heroSubStrong')}</strong>
         <br/><br/>
-        멀리 빛나는 목표를 향해 나아가면서도,
-        <br/>
-        지금 내 앞의 피어난 본질에 충실하는 태도.
-        <br/>
-        그것이 가장 올바른 길이라 확신합니다.
+        {t('home.heroSubText').split('\n').map((line, idx) => (
+          <React.Fragment key={idx}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))}
       </p>
     </div>
   );
 }
+

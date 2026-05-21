@@ -1,3 +1,5 @@
+import React from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 import useScrollReveal from '../../hooks/useScrollReveal';
 import './ConnectSection.css';
 
@@ -6,6 +8,7 @@ import './ConnectSection.css';
  * LinkedIn + Email CTA buttons with gradient glow background.
  */
 export default function ConnectSection() {
+  const { t } = useTranslation();
   const sectionRef = useScrollReveal({ threshold: 0.12 });
 
   return (
@@ -15,11 +18,15 @@ export default function ConnectSection() {
 
         <div className="connect-content">
           <h2 className="connect-title reveal-item" style={{ '--reveal-delay': '0.1s' }}>
-            함께 <span className="accent">이야기합시다.</span>
+            {t('home.connectTitle')} <span className="accent">{t('home.connectTitleAccent')}</span>
           </h2>
           <p className="connect-subtitle reveal-item" style={{ '--reveal-delay': '0.2s' }}>
-            비즈니스든, 커리어든, 태도에 대한 것이든 —<br />
-            편하게 연결해 주세요.
+            {t('home.connectSubtitle').split('\n').map((line, idx) => (
+              <React.Fragment key={idx}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
           </p>
 
           <div className="connect-cta reveal-item" style={{ '--reveal-delay': '0.35s' }}>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
@@ -17,19 +17,19 @@ const getCurrentWeekId = () => {
 const getSmartCategory = (title) => {
   const t = title.toLowerCase();
   
-  if (t.includes('달리기') || t.includes('운동') || t.includes('스트레칭') || t.includes('일어나기') || t.includes('명상') || t.includes('건강') || t.includes('식단') || t.includes('수면') || t.includes('헬스') || t.includes('산책') || t.includes('조깅')) {
+  if (t.includes('달리기') || t.includes('운동') || t.includes('스트레칭') || t.includes('일어나기') || t.includes('명상') || t.includes('건강') || t.includes('식단') || t.includes('수면') || t.includes('헬스') || t.includes('산책') || t.includes('조깅') || t.includes('run') || t.includes('exercise') || t.includes('stretch') || t.includes('meditation') || t.includes('health') || t.includes('sleep')) {
     return { category: 'Health', color: '#10B981' }; // Emerald Green
   }
-  if (t.includes('회고') || t.includes('업무') || t.includes('코딩') || t.includes('개발') || t.includes('자동화') || t.includes('작업') || t.includes('프로젝트') || t.includes('계획') || t.includes('우선순위') || t.includes('시간 관리') || t.includes('정리')) {
+  if (t.includes('회고') || t.includes('업무') || t.includes('코딩') || t.includes('개발') || t.includes('자동화') || t.includes('작업') || t.includes('프로젝트') || t.includes('계획') || t.includes('우선순위') || t.includes('시간 관리') || t.includes('정리') || t.includes('retrospective') || t.includes('coding') || t.includes('automation') || t.includes('plan') || t.includes('priority')) {
     return { category: 'Productivity', color: '#F472B6' }; // Rose Pink
   }
-  if (t.includes('감사') || t.includes('마인드') || t.includes('일기') || t.includes('생각') || t.includes('회상') || t.includes('긍정') || t.includes('행복') || t.includes('사색')) {
+  if (t.includes('감사') || t.includes('마인드') || t.includes('일기') || t.includes('생각') || t.includes('회상') || t.includes('긍정') || t.includes('행복') || t.includes('사색') || t.includes('gratitude') || t.includes('mind') || t.includes('diary') || t.includes('contemplation') || t.includes('happy')) {
     return { category: 'Mindset', color: '#34D399' }; // Mint Green
   }
-  if (t.includes('아티클') || t.includes('공부') || t.includes('학습') || t.includes('독서') || t.includes('책') || t.includes('강의') || t.includes('리서치') || t.includes('공유') || t.includes('배움')) {
+  if (t.includes('아티클') || t.includes('공부') || t.includes('학습') || t.includes('독서') || t.includes('책') || t.includes('강의') || t.includes('리서치') || t.includes('공유') || t.includes('배움') || t.includes('article') || t.includes('read') || t.includes('learn') || t.includes('research') || t.includes('book')) {
     return { category: 'Learning', color: '#60A5FA' }; // Sky Blue
   }
-  if (t.includes('동료') || t.includes('피드백') || t.includes('연락') || t.includes('지인') || t.includes('커피챗') || t.includes('소통') || t.includes('회의') || t.includes('네트워킹') || t.includes('인사')) {
+  if (t.includes('동료') || t.includes('피드백') || t.includes('연락') || t.includes('지인') || t.includes('커피챗') || t.includes('소통') || t.includes('회의') || t.includes('네트워킹') || t.includes('인사') || t.includes('colleague') || t.includes('feedback') || t.includes('networking') || t.includes('connect')) {
     return { category: 'Networking', color: '#A78BFA' }; // Lavender Purple
   }
   
@@ -37,11 +37,91 @@ const getSmartCategory = (title) => {
   return { category: 'Life', color: '#C084FC' }; // Purple Accent
 };
 
-const getDummyData = () => {
+const getDummyPool = (locale) => {
+  if (locale === 'en') {
+    return [
+      { id: 'r1', title: 'Write down 3 things you were grateful for this week', category: 'Mindset', color: '#34D399' },
+      { id: 'r2', title: 'Send warm, positive feedback to a colleague', category: 'Networking', color: '#A78BFA' },
+      { id: 'r3', title: 'Read 1 article in your field of interest', category: 'Learning', color: '#60A5FA' },
+      { id: 'r4', title: 'Rest your brain with a 15-minute daily meditation', category: 'Health', color: '#F472B6' },
+      { id: 'r5', title: 'Draft 1 work automation idea', category: 'Productivity', color: '#FBBF24' },
+      { id: 'r6', title: 'Say hello to an old acquaintance', category: 'Networking', color: '#A78BFA' },
+      { id: 'r7', title: 'Do a 10-minute stretch before sleeping', category: 'Health', color: '#10B981' },
+      { id: 'r8', title: 'Write your own priority statement', category: 'Focus', color: '#C084FC' },
+      { id: 'r9', title: 'Turn off unused apps and notifications', category: 'Digital Detox', color: '#9CA3AF' }
+    ];
+  }
+  if (locale === 'ja') {
+    return [
+      { id: 'r1', title: '今週感謝したことを3つ書き出してみる', category: 'Mindset', color: '#34D399' },
+      { id: 'r2', title: '同僚に温かいフィードバックを伝える', category: 'Networking', color: '#A78BFA' },
+      { id: 'r3', title: '関心分野の記事を1本精読する', category: 'Learning', color: '#60A5FA' },
+      { id: 'r4', title: '1日15分の瞑想で脳を休ませる', category: 'Health', color: '#F472B6' },
+      { id: 'r5', title: '業務効率化・自動化のアイデアを1つ構想する', category: 'Productivity', color: '#FBBF24' },
+      { id: 'r6', title: '久しぶりに知人に挨拶の連絡をする', category: 'Networking', color: '#A78BFA' },
+      { id: 'r7', title: '寝る前に10分間のストレッチをする', category: 'Health', color: '#10B981' },
+      { id: 'r8', title: '自分だけの優先順位宣言書を作成する', category: 'Focus', color: '#C084FC' },
+      { id: 'r9', title: '使っていないアプリと通知をオフにする', category: 'Digital Detox', color: '#9CA3AF' }
+    ];
+  }
+  return [
+    { id: 'r1', title: '이번 주 감사했던 일 3가지 적어보기', category: 'Mindset', color: '#34D399' },
+    { id: 'r2', title: '동료에게 따뜻한 피드백 전달하기', category: 'Networking', color: '#A78BFA' },
+    { id: 'r3', title: '관심 분야 아티클 1편 정독하기', category: 'Learning', color: '#60A5FA' },
+    { id: 'r4', title: '하루 15분 명상으로 뇌 휴식하기', category: 'Health', color: '#F472B6' },
+    { id: 'r5', title: '업무 자동화 아이디어 1개 구상하기', category: 'Productivity', color: '#FBBF24' },
+    { id: 'r6', title: '오랜만에 지인에게 안부 연락하기', category: 'Networking', color: '#A78BFA' },
+    { id: 'r7', title: '잠들기 전 10분 스트레칭 하기', category: 'Health', color: '#10B981' },
+    { id: 'r8', title: '나만의 우선순위 선언문 작성하기', category: 'Focus', color: '#C084FC' },
+    { id: 'r9', title: '사용하지 않는 앱과 알림 끄기', category: 'Digital Detox', color: '#9CA3AF' }
+  ];
+};
+
+const getDummyData = (locale) => {
   const currentWeekId = getCurrentWeekId();
   const [year, week] = currentWeekId.split('-W').map(Number);
   const prevWeekId = week > 1 ? `${year}-W${week - 1}` : `${year - 1}-W52`;
   
+  if (locale === 'en') {
+    return {
+      current: {
+        weekId: currentWeekId,
+        currentPace: [
+          { id: 'd1', title: '30-minute Morning Run (Sample)', category: 'Health', color: '#10B981', completed: true },
+          { id: 'd2', title: 'Write a 5-minute Daily Work Retrospective (Sample)', category: 'Productivity', color: '#F472B6', completed: false }
+        ],
+        recommendedPace: [
+          { id: 'r1', title: 'Write down 3 things you were grateful for this week', category: 'Mindset', color: '#34D399' },
+          { id: 'r2', title: 'Send warm, positive feedback to a colleague', category: 'Networking', color: '#A78BFA' },
+          { id: 'r3', title: 'Read 1 article in your field of interest', category: 'Learning', color: '#60A5FA' }
+        ]
+      },
+      timeline: [
+        { weekId: prevWeekId, startDate: 'Last Week', tasks: [{ id: 'old1', title: 'Wake up early', completed: true }] }
+      ]
+    };
+  }
+  
+  if (locale === 'ja') {
+    return {
+      current: {
+        weekId: currentWeekId,
+        currentPace: [
+          { id: 'd1', title: '朝の30分ランニング（サンプル）', category: 'Health', color: '#10B981', completed: true },
+          { id: 'd2', title: '1日5分間、業務振り返りを書く（サンプル）', category: 'Productivity', color: '#F472B6', completed: false }
+        ],
+        recommendedPace: [
+          { id: 'r1', title: '今週感謝したことを3つ書き出してみる', category: 'Mindset', color: '#34D399' },
+          { id: 'r2', title: '同僚に温かいフィードバックを伝える', category: 'Networking', color: '#A78BFA' },
+          { id: 'r3', title: '関心分野の記事を1本精読する', category: 'Learning', color: '#60A5FA' }
+        ]
+      },
+      timeline: [
+        { weekId: prevWeekId, startDate: '先週', tasks: [{ id: 'old1', title: '早起きする', completed: true }] }
+      ]
+    };
+  }
+
   return {
     current: {
       weekId: currentWeekId,
@@ -64,12 +144,12 @@ const getDummyData = () => {
 export default function PaceNoteDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
 
   useSEO({
     title: 'Pace Note',
-    description: '목표 달성을 위한 전략적 마일스톤과 페이스를 조절하는 PriSincera의 Pace Note 대시보드입니다.',
-    keywords: 'PriSincera, Pace Note, 목표 관리, 마일스톤, 성과, 대시보드, 생산성',
+    description: t('paceNote.heroSubtitle') ? t('paceNote.heroSubtitle').replace(/\n/g, ' ') : 'Pace Note',
+    keywords: t('home.seoKeywords'),
     ogUrl: 'https://www.prisincera.com/pacenote'
   });
   
@@ -237,8 +317,22 @@ export default function PaceNoteDashboard() {
     const isFuture = futureWeeks.includes(wId);
     const isCurrent = wId === currentWeek;
     const parts = wId.split('-W');
-    if (parts.length === 2) return { year: `${parts[0]}년`, num: parts[1], isFuture, isCurrent };
-    return { year: '이번 연도', num: wId.replace('W', ''), isFuture, isCurrent };
+    
+    let yearLabel = '';
+    let defaultYearLabel = '';
+    if (locale === 'en') {
+      yearLabel = parts[0];
+      defaultYearLabel = 'This Year';
+    } else if (locale === 'ja') {
+      yearLabel = `${parts[0]}年`;
+      defaultYearLabel = '今年';
+    } else {
+      yearLabel = `${parts[0]}년`;
+      defaultYearLabel = '이번 연도';
+    }
+    
+    if (parts.length === 2) return { year: yearLabel, num: parts[1], isFuture, isCurrent };
+    return { year: defaultYearLabel, num: wId.replace('W', ''), isFuture, isCurrent };
   };
 
   useEffect(() => {
@@ -250,12 +344,12 @@ export default function PaceNoteDashboard() {
     if (userToken) {
       fetchPaceData(userToken);
     } else {
-      const dummy = getDummyData();
+      const dummy = getDummyData(locale);
       setData(dummy);
       setSelectedWeekId(dummy.current.weekId);
       setLoading(false);
     }
-  }, [userToken]);
+  }, [userToken, locale]);
 
   const fetchPaceData = async (token) => {
     try {
@@ -280,7 +374,7 @@ export default function PaceNoteDashboard() {
 
   const toggleComplete = async (taskId) => {
     if (!userToken) {
-      alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+      alert(t('paceNote.loginToRecord'));
       return handleLoginClick();
     }
 
@@ -310,7 +404,7 @@ export default function PaceNoteDashboard() {
 
   const acceptRecommend = async (taskId) => {
     if (!userToken) {
-      alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+      alert(t('paceNote.loginToRecord'));
       return handleLoginClick();
     }
 
@@ -358,7 +452,7 @@ export default function PaceNoteDashboard() {
   const handleAddTask = async (e) => {
     e.preventDefault();
     if (!userToken) {
-      alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+      alert(t('paceNote.loginToRecord'));
       return handleLoginClick();
     }
     if (!newTaskTitle.trim() || addingTask) return;
@@ -393,21 +487,11 @@ export default function PaceNoteDashboard() {
     e?.stopPropagation();
     setIsRefreshingRecs(true);
     // TODO: Connect to backend API: GET /api/pacenote/recommend
-    // For now, mock the refresh with a new dummy set
+    // For now, mock the refresh with a new dummy pool
     setTimeout(() => {
-      const DUMMY_POOL = [
-        { id: 'r1', title: '이번 주 감사했던 일 3가지 적어보기', category: 'Mindset', color: '#34D399' },
-        { id: 'r2', title: '동료에게 따뜻한 피드백 전달하기', category: 'Networking', color: '#A78BFA' },
-        { id: 'r3', title: '관심 분야 아티클 1편 정독하기', category: 'Learning', color: '#60A5FA' },
-        { id: 'r4', title: '하루 15분 명상으로 뇌 휴식하기', category: 'Health', color: '#F472B6' },
-        { id: 'r5', title: '업무 자동화 아이디어 1개 구상하기', category: 'Productivity', color: '#FBBF24' },
-        { id: 'r6', title: '오랜만에 지인에게 안부 연락하기', category: 'Networking', color: '#A78BFA' },
-        { id: 'r7', title: '잠들기 전 10분 스트레칭 하기', category: 'Health', color: '#10B981' },
-        { id: 'r8', title: '나만의 우선순위 선언문 작성하기', category: 'Focus', color: '#C084FC' },
-        { id: 'r9', title: '사용하지 않는 앱과 알림 끄기', category: 'Digital Detox', color: '#9CA3AF' }
-      ];
+      const pool = getDummyPool(locale);
       // Shuffle and pick 5
-      const shuffled = DUMMY_POOL.sort(() => 0.5 - Math.random()).slice(0, 5);
+      const shuffled = pool.sort(() => 0.5 - Math.random()).slice(0, 5);
       setData(prev => ({
         ...prev,
         current: { ...prev.current, recommendedPace: shuffled }
@@ -431,6 +515,132 @@ export default function PaceNoteDashboard() {
   const generateMarkdownPortfolio = () => {
     if (!data) return '';
     
+    if (locale === 'en') {
+      let md = `# PriSincera AI Growth Portfolio\n\n`;
+      md += `- **Sailor**: ${user?.displayName || 'My Voyager'} (${user?.email || 'No email'})\n`;
+      md += `- **Generated At**: ${new Date().toLocaleString()}\n`;
+      md += `- **Description**: A collection of value-oriented orbits and weekly contemplation logs built through PriSincera Pace Note. Beyond a simple to-do list, this is a unique personal branding asset aligning execution and reflection.\n\n`;
+      md += `---\n\n`;
+
+      const curr = data.current;
+      if (curr) {
+        md += `## ⛵ [${curr.weekId}] Current Orbit of Voyage (${curr.startDate || ''} ~ ${curr.endDate || ''})\n\n`;
+        
+        const completedTasks = (curr.currentPace || []).filter(t => t.completed);
+        const totalTasks = (curr.currentPace || []).length;
+        const pct = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+        
+        md += `### 📈 Weekly Execution Orbits (Completion Rate: ${pct}%)\n`;
+        if (curr.currentPace && curr.currentPace.length > 0) {
+          curr.currentPace.forEach(t => {
+            const status = t.completed ? '✅ [Completed]' : '⬜ [In Progress]';
+            const cat = t.category || getSmartCategory(t.title).category;
+            md += `- ${status} **${t.title}** \`${cat}\`\n`;
+          });
+        } else {
+          md += `- No orbits configured yet.\n`;
+        }
+        md += `\n`;
+
+        const currentStatement = diaryText || curr.statement;
+        if (currentStatement) {
+          md += `### ⚓ Weekly Contemplation (Captain's Log)\n`;
+          md += `> ${currentStatement.replace(/\n/g, '\n> ')}\n\n`;
+        }
+        md += `---\n\n`;
+      }
+
+      if (data.timeline && data.timeline.length > 0) {
+        md += `## 📜 Past Voyages\n\n`;
+        data.timeline.forEach(week => {
+          md += `### ⚓ [${week.weekId}] Weekly Record (${week.startDate} ~ ${week.endDate})\n\n`;
+          
+          md += `#### 🏃 Completed Orbits\n`;
+          if (week.tasks && week.tasks.length > 0) {
+            week.tasks.forEach(t => {
+              const cat = t.category || getSmartCategory(t.title).category;
+              md += `- ✅ **${t.title}** \`${cat}\`\n`;
+            });
+          } else {
+            md += `- No orbits completed.\n`;
+          }
+          md += `\n`;
+
+          if (week.statement) {
+            md += `#### 💡 Weekly Contemplation (Captain's Log)\n`;
+            md += `> ${week.statement.replace(/\n/g, '\n> ')}\n\n`;
+          }
+          md += `---\n\n`;
+        });
+      }
+      
+      md += `*This portfolio was automatically compiled and generated by [PriSincera Pace Note](https://www.prisincera.com/pacenote), helping you manage a sustainable and proactive journey of growth.*`;
+      return md;
+    }
+
+    if (locale === 'ja') {
+      let md = `# PriSincera AI 成長ポートフォリオ (Growth Portfolio)\n\n`;
+      md += `- **成長の主体**: ${user?.displayName || '私の航海士'} (${user?.email || 'メールアドレスなし'})\n`;
+      md += `- **生成日時**: ${new Date().toLocaleString()}\n`;
+      md += `- **説明**: PriSincera Pace Noteを通じて構築した価値中心の軌跡と週次振り返りのコレクションです。単なるToDoリストを超え、実行と思索を整列させたあなただけのユニークなブランディングアセットです。\n\n`;
+      md += `---\n\n`;
+
+      const curr = data.current;
+      if (curr) {
+        md += `## ⛵ [${curr.weekId}] 현재 항해의 궤도 (${curr.startDate || ''} ~ ${curr.endDate || ''})\n\n`;
+        
+        const completedTasks = (curr.currentPace || []).filter(t => t.completed);
+        const totalTasks = (curr.currentPace || []).length;
+        const pct = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+        
+        md += `### 📈 今週の実行軌跡 (達成率: ${pct}%)\n`;
+        if (curr.currentPace && curr.currentPace.length > 0) {
+          curr.currentPace.forEach(t => {
+            const status = t.completed ? '✅ [完了]' : '⬜ [進行中]';
+            const cat = t.category || getSmartCategory(t.title).category;
+            md += `- ${status} **${t.title}** \`${cat}\`\n`;
+          });
+        } else {
+          md += `- 設定된 궤도가 아직 없습니다.\n`;
+        }
+        md += `\n`;
+
+        const currentStatement = diaryText || curr.statement;
+        if (currentStatement) {
+          md += `### ⚓ 週次思索 (Captain's Log)\n`;
+          md += `> ${currentStatement.replace(/\n/g, '\n> ')}\n\n`;
+        }
+        md += `---\n\n`;
+      }
+
+      if (data.timeline && data.timeline.length > 0) {
+        md += `## 📜 過去の航海の栄光 (Past Voyages)\n\n`;
+        data.timeline.forEach(week => {
+          md += `### ⚓ [${week.weekId}] 週次記録 (${week.startDate} ~ ${week.endDate})\n\n`;
+          
+          md += `#### 🏃 達成した軌道\n`;
+          if (week.tasks && week.tasks.length > 0) {
+            week.tasks.forEach(t => {
+              const cat = t.category || getSmartCategory(t.title).category;
+              md += `- ✅ **${t.title}** \`${cat}\`\n`;
+            });
+          } else {
+            md += `- 達成한 궤도가 없습니다.\n`;
+          }
+          md += `\n`;
+
+          if (week.statement) {
+            md += `#### 💡 週次思索 (Captain's Log)\n`;
+            md += `> ${week.statement.replace(/\n/g, '\n> ')}\n\n`;
+          }
+          md += `---\n\n`;
+        });
+      }
+      
+      md += `*このポートフォリオは、[PriSincera Pace Note](https://www.prisincera.com/pacenote)を通じて持続可能で主体的な成長のプロセスを管理し、自動生成されました。*`;
+      return md;
+    }
+
     let md = `# PriSincera AI 성장 포트폴리오 (Growth Portfolio)\n\n`;
     md += `- **성장의 주체**: ${user?.displayName || '나의 항해자'} (${user?.email || '이메일 없음'})\n`;
     md += `- **생성 일시**: ${new Date().toLocaleString()}\n`;
@@ -521,15 +731,14 @@ export default function PaceNoteDashboard() {
         <div className="pacenote-hero-content">
           <div className="pacenote-hero-icon">⛵</div>
           <h1 className="pacenote-title">Pace Note</h1>
-          <p className="pacenote-subtitle" style={{ lineHeight: '1.6' }}>
-            단순히 읽고 넘기지 마세요.<br/>매일 얻은 인사이트를 실천 과제로 만들고, 나만의 궤도(Pace)에 올려 성장 로그를 기록하세요.<br/>
-            남들의 속도에 휩쓸리지 않고, 나만의 호흡과 방향을 잃지 않기 위해.
+          <p className="pacenote-subtitle" style={{ lineHeight: '1.6', whiteSpace: 'pre-line' }}>
+            {t('paceNote.heroSubtitle')}
           </p>
           
           <div className="pacenote-auth-action" style={{ marginTop: '32px', textAlign: 'center' }}>
             {!userToken ? (
               <button className="pacenote-auth-btn" onClick={handleLoginClick}>
-                ✨ 3초 만에 로그인하고 나만의 궤도 만들기
+                {t('paceNote.createMyPace')}
               </button>
             ) : (
               <div className="pacenote-logged-in-wrap">
@@ -545,14 +754,14 @@ export default function PaceNoteDashboard() {
                   boxShadow: 'none',
                   cursor: 'default'
                 }}>
-                  ⛵ 흔들림 없는 항해를 응원합니다!
+                  {t('paceNote.loggedCheer')}
                 </div>
                 <div style={{ marginTop: '16px' }}>
                   <button 
                     onClick={handleLogout}
                     style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', opacity: 0.7 }}
                   >
-                    기록 중단하기
+                    {t('paceNote.stopLogging')}
                   </button>
                 </div>
               </div>
@@ -566,7 +775,7 @@ export default function PaceNoteDashboard() {
         {loading ? (
           <div className="pacenote-loading">
             <div className="pacenote-spinner" />
-            <p>나의 항해 일지를 불러오는 중입니다...</p>
+            <p>{t('paceNote.loadingLog')}</p>
           </div>
         ) : data?.current ? (
           <div className="pacenote-content-wrapper">
@@ -606,7 +815,16 @@ export default function PaceNoteDashboard() {
                 }) : [];
 
                 const weekInfo = parseWeekInfo(selectedWeekId);
-                const titleText = weekInfo.num ? `${weekInfo.num}주차 나의 궤도 & 항해 일지` : '나의 궤도 & 항해 일지';
+                let titleText = t('paceNote.myPaceTitle');
+                if (weekInfo.num) {
+                  if (locale === 'en') {
+                    titleText = `W${weekInfo.num} ${titleText}`;
+                  } else if (locale === 'ja') {
+                    titleText = `${weekInfo.num}週目 ${titleText}`;
+                  } else {
+                    titleText = `${weekInfo.num}주차 ${titleText}`;
+                  }
+                }
 
                 return (
                   <>
@@ -617,23 +835,21 @@ export default function PaceNoteDashboard() {
                           {titleText}
                           {isCurrent && userToken && saveStatus === 'error' && (
                             <span className="auto-save-status error" style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
-                              ⚠ 저장 중 오류 발생
+                              {t('paceNote.saveError')}
                             </span>
                           )}
                         </h2>
                         <p className="pacenote-card-desc">
-                          {isCurrent 
-                            ? '설정한 작은 행동들의 궤도(실행)와 주간의 깊은 사색(회고)이 결합되어 당신만의 소중한 AI 성장 포트폴리오를 형성합니다.' 
-                            : '과거에 단단하게 다져놓은 나의 실행 궤적과 성찰이 담긴 성장 기록입니다.'}
+                          {isCurrent ? t('paceNote.currPaceDesc') : t('paceNote.pastPaceDesc')}
                         </p>
                       </div>
                       
                       {totalCount > 0 && (
                         <div className="pacenote-progress-container-new">
                           <div className="pacenote-progress-info-row">
-                            <span className="pacenote-progress-label">Action Progress</span>
+                            <span className="pacenote-progress-label">{t('paceNote.actionProgress')}</span>
                             <span className="pacenote-progress-status-text">
-                              🎯 {completedCount}/{totalCount} 완료 ({progressPercent}%)
+                              🎯 {completedCount}/{totalCount} {t('paceNote.completed')} ({progressPercent}%)
                             </span>
                           </div>
                           <div className="pacenote-progress-track-header">
@@ -646,13 +862,13 @@ export default function PaceNoteDashboard() {
                       <div className="consolidated-card-layout">
                         {/* ── Left Panel: Tracker ── */}
                         <div className="consolidated-left-panel">
-                          <h3 className="panel-sub-title">🏃 실행의 궤도</h3>
+                          <h3 className="panel-sub-title">{t('paceNote.actionOrbit')}</h3>
                           
                           {/* ── Omni-Orbit Trigger ── */}
                           {isCurrent && (
                             <button className="pacenote-omnibar-trigger" onClick={() => setShowOmniModal(true)}>
                               <span className="omnibar-icon">✨</span>
-                              <span className="omnibar-placeholder">새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요...</span>
+                              <span className="omnibar-placeholder">{t('paceNote.omnibarPlaceholder')}</span>
                               <kbd className="omnibar-shortcut">⌘K</kbd>
                             </button>
                           )}
@@ -686,7 +902,7 @@ export default function PaceNoteDashboard() {
                                 );
                               })
                             ) : (
-                              <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>기록된 궤도가 없습니다.</div>
+                              <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>{t('paceNote.noOrbitsRecorded')}</div>
                             )}
                           </div>
                         </div>
@@ -696,7 +912,7 @@ export default function PaceNoteDashboard() {
 
                         {/* ── Right Panel: Logbook ── */}
                         <div className="consolidated-right-panel">
-                          <h3 className="panel-sub-title">⚓ 사색의 기록</h3>
+                          <h3 className="panel-sub-title">{t('paceNote.retrospectionRecord')}</h3>
                           {isCurrent ? (
                             <div className="logbook-textarea-wrapper">
                               <textarea
@@ -704,14 +920,14 @@ export default function PaceNoteDashboard() {
                                 value={diaryText}
                                 onChange={(e) => {
                                   if (!userToken) {
-                                    alert("나만의 궤도를 기록하려면 먼저 로그인해 주세요.");
+                                    alert(t('paceNote.loginToRecord'));
                                     return handleLoginClick();
                                   }
                                   if (e.target.value.length <= 1000) {
                                     setDiaryText(e.target.value);
                                   }
                                 }}
-                                placeholder={userToken ? "이번 주 나의 궤도에서 발생한 사색, 어려웠던 일, 깨달은 배움을 자유롭게 적어보세요. (최대 1000자)" : "3초 로그인 후, 실시간으로 저장되는 나만의 주간 회고록을 완성해 보세요."}
+                                placeholder={userToken ? t('paceNote.retrospectWritePlaceholder') : t('paceNote.retrospectReadPlaceholder')}
                                 disabled={!userToken}
                               />
                               <div className="logbook-char-count">
@@ -728,7 +944,7 @@ export default function PaceNoteDashboard() {
                                     }}
                                   />
                                 </svg>
-                                <span>{diaryText.length} / 1000자</span>
+                                <span>{diaryText.length} / 1000{t('paceNote.charLimit')}</span>
                               </div>
                             </div>
                           ) : (
@@ -741,7 +957,7 @@ export default function PaceNoteDashboard() {
                                 </blockquote>
                               ) : (
                                 <div className="logbook-empty-view">
-                                  ⛵ 이 주간에는 기록된 사색의 항해 일지가 없습니다.
+                                  {t('paceNote.noRetrospectRecorded')}
                                 </div>
                               )}
                             </div>
@@ -753,7 +969,7 @@ export default function PaceNoteDashboard() {
                       {userToken && (
                         <div className="consolidated-card-footer">
                           <button className="pacenote-btn-export footer-export-btn" onClick={() => setShowExportModal(true)}>
-                            📤 AI 성장 포트폴리오 내보내기
+                            {t('paceNote.exportBtn')}
                           </button>
                         </div>
                       )}
@@ -764,7 +980,7 @@ export default function PaceNoteDashboard() {
             </div>
           </div>
         ) : (
-          <div className="pacenote-loading">데이터를 불러오는 중 오류가 발생했습니다.</div>
+          <div className="pacenote-loading">{t('paceNote.loadError')}</div>
         )}
       </div>
 
@@ -779,7 +995,7 @@ export default function PaceNoteDashboard() {
               <input 
                 type="text" 
                 className="omnibar-input"
-                placeholder="새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요..." 
+                placeholder={t('paceNote.omnibarPlaceholder')}
                 value={newTaskTitle}
                 onChange={(e) => {
                   setNewTaskTitle(e.target.value);
@@ -811,7 +1027,7 @@ export default function PaceNoteDashboard() {
               />
               {newTaskTitle.trim() && (
                 <button className="omnibar-submit-btn" onClick={handleAddTask} disabled={addingTask}>
-                  ↵ 궤도로 추가
+                  ↵ {t('paceNote.enterOrbit')}
                 </button>
               )}
             </div>
@@ -835,7 +1051,7 @@ export default function PaceNoteDashboard() {
                       setFocusedIndex(0);
                     }}
                   >
-                    {labelMap[cat]}
+                    {cat === 'All' ? t('paceNote.allCat') : labelMap[cat]}
                   </button>
                 );
               })}
@@ -843,17 +1059,17 @@ export default function PaceNoteDashboard() {
             
             <div className="omnibar-dropdown-header">
               <span className="omnibar-dropdown-title">
-                {newTaskTitle.trim() ? '검색 및 연관 추천' : 'AI 추천 가이드'}
+                {newTaskTitle.trim() ? t('paceNote.searchOrRec') : t('paceNote.aiRecGuide')}
               </span>
               {!newTaskTitle.trim() && (
                 <button className="omnibar-refresh-btn" onClick={refreshRecommendations} disabled={isRefreshingRecs}>
-                  {isRefreshingRecs ? '🔄 갱신 중...' : '🔄 다른 추천 보기'}
+                  {isRefreshingRecs ? t('paceNote.refreshing') : t('paceNote.otherRecs')}
                 </button>
               )}
             </div>
             <div className="omnibar-dropdown-list">
               {navigableItems.length === 0 ? (
-                <div className="omnibar-empty">해당되는 AI 추천 궤도가 없습니다.</div>
+                <div className="omnibar-empty">{t('paceNote.noMatchedRecs')}</div>
               ) : (
                 navigableItems.map((item, index) => {
                   const isFocused = index === focusedIndex;
@@ -867,10 +1083,10 @@ export default function PaceNoteDashboard() {
                       >
                         <div className="rec-icon">+</div>
                         <div className="rec-content">
-                          <div className="rec-title">"{item.title}" 직접 추가하기</div>
-                          <div className="rec-desc">입력한 내용으로 새로운 궤도를 생성합니다.</div>
+                          <div className="rec-title">"{item.title}" {t('paceNote.addDirectly')}</div>
+                          <div className="rec-desc">{t('paceNote.addDirectlyDesc')}</div>
                         </div>
-                        <div className="rec-action">↵ 추가</div>
+                        <div className="rec-action">{t('paceNote.addBtn')}</div>
                       </div>
                     );
                   }
@@ -887,7 +1103,7 @@ export default function PaceNoteDashboard() {
                         <div className="rec-cat" style={{ color: item.color || '#A78BFA' }}>{item.category}</div>
                         <div className="rec-title">{item.title}</div>
                       </div>
-                      <div className="rec-action">↵ 추가</div>
+                      <div className="rec-action">{t('paceNote.addBtn')}</div>
                     </div>
                   );
                 })
@@ -896,9 +1112,9 @@ export default function PaceNoteDashboard() {
 
             {/* ── Shortcuts Guide Footer ── */}
             <div className="omni-modal-footer">
-              <span className="footer-shortcut-item"><kbd>↑↓</kbd> 이동</span>
-              <span className="footer-shortcut-item"><kbd>Enter</kbd> 추가</span>
-              <span className="footer-shortcut-item"><kbd>ESC</kbd> 닫기</span>
+              <span className="footer-shortcut-item"><kbd>↑↓</kbd> {t('paceNote.shortcutMove')}</span>
+              <span className="footer-shortcut-item"><kbd>Enter</kbd> {t('paceNote.shortcutAdd')}</span>
+              <span className="footer-shortcut-item"><kbd>ESC</kbd> {t('paceNote.shortcutClose')}</span>
             </div>
           </div>
         </div>
@@ -909,14 +1125,13 @@ export default function PaceNoteDashboard() {
         <div className="pacenote-modal-backdrop" onClick={() => setShowExportModal(false)}>
           <div className="pacenote-export-modal" onClick={e => e.stopPropagation()}>
             <div className="export-modal-header">
-              <h3>📤 AI 성장 포트폴리오 내보내기</h3>
+              <h3>{t('paceNote.exportModalTitle')}</h3>
               <button className="close-btn" onClick={() => setShowExportModal(false)}>×</button>
             </div>
             
             <div className="export-modal-body">
               <p className="export-desc">
-                지금까지 묵묵히 쌓아올린 실행의 궤도와 깊이 있는 성찰 일지가 아름다운 마크다운 웹 문서로 컴파일되었습니다. 
-                링크드인, 깃허브 README, 노션 또는 개인 블로그에 붙여넣어 당신만의 독보적인 브랜딩 에셋으로 활용하세요.
+                {t('paceNote.exportModalDesc')}
               </p>
               
               <div className="portfolio-preview-wrapper">
@@ -930,10 +1145,10 @@ export default function PaceNoteDashboard() {
 
             <div className="export-modal-footer">
               <button className="export-btn btn-secondary" onClick={handleDownloadPortfolio}>
-                💾 .md 파일 다운로드
+                {t('paceNote.downloadMd')}
               </button>
               <button className="export-btn btn-primary" onClick={handleCopyPortfolio}>
-                {copyFeedback ? '✔ 클립보드 복사 완료!' : '📋 클립보드 복사'}
+                {copyFeedback ? t('paceNote.copiedClipboard') : t('paceNote.copyClipboard')}
               </button>
             </div>
           </div>
