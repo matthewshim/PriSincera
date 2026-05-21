@@ -61,6 +61,12 @@ async function main() {
       hallOfFame.map((item, idx) => `[${idx+1}] 카테고리: ${item.category} / 목표: ${item.title}`).join('\n');
     }
 
+    const validCategories = [
+      'Mindset', 'Branding', 'Deep Work', 'Networking', 'Productivity', 
+      'AI & Future', 'Vision', 'Inspiration', 'Environment', 'Problem Solving', 
+      'Learning', 'Health & Wellness'
+    ].join(', ');
+
     // 3. Gemini 호출
     const promptSystemPrompt = `당신은 성공적인 커리어 성장과 웰니스를 돕는 코치입니다.
 현대 직장인들을 위한 실질적이고 통찰력 있는 '데일리 미션(궤도)'을 3개 생성해주세요.
@@ -73,7 +79,7 @@ async function main() {
       "en": "English translation of the goal",
       "ja": "Japanese translation of the goal"
     },
-    "category": "Mindset / Branding / Deep Work / Networking / Productivity / AI & Future 등 적합한 카테고리 영문명",
+    "category": "다음 카테고리 중 반드시 하나만 선택하세요: ${validCategories}",
     "color": "카테고리에 어울리는 세련된 HEX 색상코드 (예: #34D399, #60A5FA)"
   }
 ]`;

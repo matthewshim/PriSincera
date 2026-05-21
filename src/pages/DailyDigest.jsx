@@ -430,7 +430,7 @@ export default function DailyDigest() {
                     {quickPeekLoading && (
                       <div className="quick-peek-blur-loader">
                         <div className="spinner"></div>
-                        <span>데이터 분석 중...</span>
+                        <span>{t('dailyDigest.analyzingData')}</span>
                       </div>
                     )}
                     
@@ -439,7 +439,7 @@ export default function DailyDigest() {
                         {/* 1. IT Tech Signals */}
                         {quickPeekData.signal?.articles && quickPeekData.signal.articles.length > 0 && (
                           <div className="quick-peek-group signal">
-                            <h4 className="group-title">📰 IT Tech Signals</h4>
+                            <h4 className="group-title">📰 {t('dailyDigest.tabTechSignals')}</h4>
                             <div className="group-items">
                               {quickPeekData.signal.articles.slice(0, 2).map((art, idx) => (
                                 <div key={idx} className="peek-item flat">
@@ -448,7 +448,7 @@ export default function DailyDigest() {
                                 </div>
                               ))}
                               {quickPeekData.signal.articles.length > 2 && (
-                                <span className="peek-more-indicator">+{quickPeekData.signal.articles.length - 2} more signals in full digest</span>
+                                <span className="peek-more-indicator">{t('dailyDigest.moreSignals').replace('{count}', quickPeekData.signal.articles.length - 2)}</span>
                               )}
                             </div>
                           </div>
@@ -457,7 +457,7 @@ export default function DailyDigest() {
                         {/* 2. AI Workstation */}
                         {quickPeekData.study?.prompt_snippet && (
                           <div className="quick-peek-group prompt">
-                            <h4 className="group-title">🤖 AI Workstation</h4>
+                            <h4 className="group-title">🤖 {t('dailyDigest.tabAiWorkstation')}</h4>
                             <div className="peek-item highlight-ai">
                               <span className="peek-icon">⚡</span>
                               <span className="peek-text ai-text">
@@ -471,7 +471,7 @@ export default function DailyDigest() {
                         {/* 3. Japanese Sentence */}
                         {quickPeekData.study?.sentence_jp && (
                           <div className="quick-peek-group japanese">
-                            <h4 className="group-title">🇯🇵 Language Dojo</h4>
+                            <h4 className="group-title">🇯🇵 {t('dailyDigest.tabLangDojo')}</h4>
                             <div className="peek-item highlight-jp">
                               <span className="peek-icon">🎌</span>
                               <span className="peek-text jp-text">{quickPeekData.study.sentence_jp}</span>
@@ -602,7 +602,7 @@ export default function DailyDigest() {
                 >
                   <span className="btn-icon">📰</span>
                   <div className="btn-label-group">
-                    <span className="btn-title">IT Tech Signal</span>
+                    <span className="btn-title">{t('dailyDigest.tabTechSignals')}</span>
                     <span className="btn-meta">{data.signal.articles.length} Signals</span>
                   </div>
                 </button>
@@ -614,7 +614,7 @@ export default function DailyDigest() {
                 >
                   <span className="btn-icon">🤖</span>
                   <div className="btn-label-group">
-                    <span className="btn-title">AI Workstation</span>
+                    <span className="btn-title">{t('dailyDigest.tabAiWorkstation')}</span>
                     <span className="btn-meta">Prompt Terminal</span>
                   </div>
                 </button>
@@ -626,7 +626,7 @@ export default function DailyDigest() {
                 >
                   <span className="btn-icon">🇯🇵</span>
                   <div className="btn-label-group">
-                    <span className="btn-title">Language Dojo</span>
+                    <span className="btn-title">{t('dailyDigest.tabLangDojo')}</span>
                     <span className="btn-meta">Business Study</span>
                   </div>
                 </button>
