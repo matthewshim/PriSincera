@@ -201,6 +201,11 @@
   justify-content: space-between;
 }
 
+/* Featured Card 6:4 좌우 영역 분배 (데스크톱 기준) */
+.builder-card-featured .card-main-content {
+  flex: 6; /* 60% 비율 점유 */
+}
+
 .card-visual-content {
   flex: 1;
   position: relative;
@@ -211,6 +216,11 @@
   padding-left: var(--space-xl);
   overflow: hidden;
   min-height: 200px;
+}
+
+/* Featured Card 6:4 좌우 영역 분배 (데스크톱 기준) */
+.builder-card-featured .card-visual-content {
+  flex: 4; /* 40% 비율 점유 */
 }
 
 .visual-glow-sphere {
@@ -296,6 +306,23 @@
   margin-bottom: var(--space-md);
 }
 
+.card-header-featured {
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: var(--space-lg);
+  width: 100%;
+}
+
+.card-header-featured::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 160px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-color, var(--orbit-cyan)), transparent);
+}
+
 .chapter-badge {
   display: inline-flex;
   align-items: center;
@@ -325,8 +352,9 @@
 }
 
 .builder-card-featured .chapter-title {
-  font-size: 2.2rem;
-  line-height: 1.25;
+  font-size: 2.4rem;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
 }
 
 .chapter-subtitle {

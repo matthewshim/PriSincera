@@ -44,19 +44,36 @@ const ChapterCard = ({ chapter, index }) => {
         <div className="builder-card-glass" style={{ '--accent-color': chapter.accent }}>
           <div className="card-glow-bg"></div>
           
+          {/* Featured Card 전용 상단 100% 가로 헤더 */}
+          {isFeatured && (
+            <div className="card-header card-header-featured">
+              <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
+              <h2 className="chapter-title">{chapter.title}</h2>
+              <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
+              <div className="chapter-meta">
+                <span className="meta-item">{new Date(chapter.date).toLocaleDateString()}</span>
+                <span className="meta-divider">•</span>
+                <span className="meta-item">{readTime}</span>
+              </div>
+            </div>
+          )}
+
           <div className="card-layout-split">
             <div className="card-main-content">
               <div>
-                <div className="card-header">
-                  <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
-                  <h2 className="chapter-title">{chapter.title}</h2>
-                  <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
-                  <div className="chapter-meta">
-                    <span className="meta-item">{new Date(chapter.date).toLocaleDateString()}</span>
-                    <span className="meta-divider">•</span>
-                    <span className="meta-item">{readTime}</span>
+                {/* 일반 그리드 카드용 인라인 헤더 */}
+                {!isFeatured && (
+                  <div className="card-header">
+                    <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
+                    <h2 className="chapter-title">{chapter.title}</h2>
+                    <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
+                    <div className="chapter-meta">
+                      <span className="meta-item">{new Date(chapter.date).toLocaleDateString()}</span>
+                      <span className="meta-divider">•</span>
+                      <span className="meta-item">{readTime}</span>
+                    </div>
                   </div>
-                </div>
+                )}
                 
                 <div className="card-body">
                   <p className="chapter-desc">{chapter.description}</p>
