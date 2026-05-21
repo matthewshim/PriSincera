@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from '../../contexts/LanguageContext';
 import './Header.css';
 
 function Header() {
+  const { locale, setLocale, t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const [musicPlaying, setMusicPlaying] = useState(false);
@@ -179,12 +181,32 @@ function Header() {
           <span className="nav-wordmark">PriSincera</span>
         </Link>
         <div className="nav-links">
-          <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">Builder's Log</Link>
-          <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">Daily Digest</Link>
-          <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">Pace Note</Link>
-          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); alert("앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"); }}>Sylphio</a>
+          <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">{t('header.buildersLog')}</Link>
+          <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">{t('header.dailyDigest')}</Link>
+          <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">{t('header.paceNote')}</Link>
+          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
         </div>
         <div className="nav-right">
+          {/* 다국어 언어 선택 스위치 (KR | EN Capsule) */}
+          <div className="nav-locale-slot" id="gnbLocaleSlot">
+            <button
+              className={`gnb-locale-btn ${locale === 'ko' ? 'active' : ''}`}
+              onClick={() => setLocale('ko')}
+              aria-label="Set language to Korean"
+            >
+              KR
+            </button>
+            <span className="locale-divider">|</span>
+            <button
+              className={`gnb-locale-btn ${locale === 'en' ? 'active' : ''}`}
+              onClick={() => setLocale('en')}
+              aria-label="Set language to English"
+            >
+              EN
+            </button>
+            <div className={`locale-laser-dot ${locale}`} />
+          </div>
+
           {/* BGM toggle — works on all pages */}
           <div className="nav-bgm-slot" id="gnbBgmSlot">
             <button
@@ -208,10 +230,26 @@ function Header() {
       {/* Mobile Overlay Navigation */}
       <div className={`mobile-nav-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-nav-links">
-          <Link to="/builders-log" className={`mobile-nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Builder's Log</Link>
-          <Link to="/daily" className={`mobile-nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Daily Digest</Link>
-          <Link to="/pacenote" className={`mobile-nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Pace Note</Link>
-          <a href="#" className="mobile-nav-link" onClick={(e) => { e.preventDefault(); setIsMobileMenuOpen(false); alert("앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"); }}>Sylphio</a>
+          <Link to="/builders-log" className={`mobile-nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('header.buildersLog')}</Link>
+          <Link to="/daily" className={`mobile-nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('header.dailyDigest')}</Link>
+          <Link to="/pacenote" className={`mobile-nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('header.paceNote')}</Link>
+          <a href="#" className="mobile-nav-link" onClick={(e) => { e.preventDefault(); setIsMobileMenuOpen(false); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
+        </div>
+        
+        {/* 모바일 하단 Thumb Zone 언어 토글 */}
+        <div className="mobile-nav-locale-footer">
+          <button 
+            className={`mobile-locale-btn ${locale === 'ko' ? 'active' : ''}`}
+            onClick={() => { setLocale('ko'); setIsMobileMenuOpen(false); }}
+          >
+            한국어 (KR)
+          </button>
+          <button 
+            className={`mobile-locale-btn ${locale === 'en' ? 'active' : ''}`}
+            onClick={() => { setLocale('en'); setIsMobileMenuOpen(false); }}
+          >
+            English (EN)
+          </button>
         </div>
       </div>
     </nav>

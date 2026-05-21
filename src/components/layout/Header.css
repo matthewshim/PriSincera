@@ -189,6 +189,75 @@
     100% { transform: scaleY(1); }
 }
 
+
+/* --- Language Locale Switcher (GNB Desktop) --- */
+.nav-locale-slot {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 10px 0 16px; /* Extra padding on the left to house the laser dot */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.nav-locale-slot:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--glass-border-hover);
+    transform: scale(1.02);
+}
+
+.gnb-locale-btn {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.15s var(--ease-smooth);
+    border: none;
+    background: none;
+    z-index: 2;
+}
+
+.gnb-locale-btn:hover {
+    color: var(--text-primary);
+}
+
+.gnb-locale-btn.active {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.locale-divider {
+    color: var(--text-muted);
+    opacity: 0.25;
+    font-size: 0.7rem;
+    margin: 0 4px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.locale-laser-dot {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--orbit-cyan);
+    box-shadow: 0 0 8px var(--orbit-cyan), 0 0 12px var(--prism-lavender);
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
+}
+
+.locale-laser-dot.ko {
+    left: 8px;
+}
+
+.locale-laser-dot.en {
+    left: 36px;
+}
+
 @media (max-width: 768px) {
     .nav { padding: var(--space-sm) var(--space-md); }
     .nav.scrolled { padding: var(--space-sm) var(--space-md); }
@@ -256,5 +325,46 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
         transform: scale(1.05);
+    }
+
+    /* Mobile Hide Desktop Locale Capsule */
+    .nav-locale-slot {
+        display: none;
+    }
+
+    /* Mobile Locale Switcher in Drawer Footer */
+    .mobile-nav-locale-footer {
+        position: absolute;
+        bottom: 40px;
+        left: var(--space-md);
+        right: var(--space-md);
+        display: flex;
+        gap: var(--space-sm);
+        z-index: 1005;
+    }
+
+    .mobile-locale-btn {
+        flex: 1;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        font-family: var(--font-display);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all 0.2s var(--ease-smooth);
+    }
+
+    .mobile-locale-btn:active,
+    .mobile-locale-btn.active {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(6, 182, 212, 0.4);
+        color: var(--text-primary);
+        font-weight: 600;
+        box-shadow: 0 0 15px rgba(6, 182, 212, 0.08);
     }
 }

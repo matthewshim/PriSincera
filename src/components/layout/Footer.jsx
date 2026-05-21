@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from '../../contexts/LanguageContext';
 import './Footer.css';
 
 function Footer() {
+  const { t } = useTranslation();
   const year = new Date().getFullYear();
 
   return (
@@ -42,19 +44,19 @@ function Footer() {
             </svg>
             <span className="footer-wordmark">PriSincera</span>
           </div>
-          <p className="footer-tagline">Sincerity, Prioritized.</p>
+          <p className="footer-tagline">{t('footer.tagline')}</p>
         </div>
         <div className="footer-links">
           <div className="footer-col">
-            <h4 className="footer-col-title">Navigate</h4>
+            <h4 className="footer-col-title">{t('footer.navigate')}</h4>
             <Link to="/" className="footer-link">Home</Link>
-            <Link to="/builders-log" className="footer-link">Builder's Log</Link>
-            <Link to="/daily" className="footer-link">Daily Digest</Link>
-            <Link to="/pacenote" className="footer-link">Pace Note</Link>
-            <a href="#" className="footer-link" onClick={(e) => { e.preventDefault(); alert("앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"); }}>Sylphio</a>
+            <Link to="/builders-log" className="footer-link">{t('header.buildersLog')}</Link>
+            <Link to="/daily" className="footer-link">{t('header.dailyDigest')}</Link>
+            <Link to="/pacenote" className="footer-link">{t('header.paceNote')}</Link>
+            <a href="#" className="footer-link" onClick={(e) => { e.preventDefault(); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
           </div>
           <div className="footer-col">
-            <h4 className="footer-col-title">Connect</h4>
+            <h4 className="footer-col-title">{t('footer.connect')}</h4>
             <a href="https://www.linkedin.com/in/shimks" target="_blank" rel="noopener noreferrer" className="footer-link">LinkedIn</a>
             <a href="mailto:matthew.shim@prisincera.com" className="footer-link">Email</a>
           </div>
