@@ -1,14 +1,14 @@
 {
   "header": {
-    "buildersLog": "빌더스 로그",
-    "dailyDigest": "데일리 다이제스트",
-    "paceNote": "페이스노트",
-    "sylphio": "실피오",
+    "buildersLog": "Builder's Log",
+    "dailyDigest": "Daily Digest",
+    "paceNote": "Pace Note",
+    "sylphio": "Sylphio",
     "sylphioAlert": "앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"
   },
   "footer": {
-    "navigate": "네비게이트",
-    "connect": "커넥트",
+    "navigate": "Navigate",
+    "connect": "Connect",
     "tagline": "Sincerity, Prioritized."
   }
 }
