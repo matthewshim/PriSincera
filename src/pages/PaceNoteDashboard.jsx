@@ -565,44 +565,52 @@ export default function PaceNoteDashboard() {
                 const totalCount = paceList ? paceList.length : 0;
                 const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
                 
+                // Sort tasks: uncompleted first, completed last
+                const sortedPaceList = paceList ? [...paceList].sort((a, b) => {
+                  if (a.completed === b.completed) return 0;
+                  return a.completed ? 1 : -1;
+                }) : [];
+
                 return (
                   <>
                     <div className="pacenote-bento-card consolidated-pace-card">
                       {/* ── Unified Premium Header ── */}
                       <div className="pacenote-card-header consolidated-header">
-                        <div className="consolidated-header-left">
+                        <div className="consolidated-header-top-row">
                           <h2>{isCurrent ? '이번 주 나의 궤도 & 항해 일지' : `${selectedWeekId} 나의 궤도 & 항해 일지`}</h2>
-                          <p className="pacenote-card-desc" style={{ marginBottom: 0 }}>
-                            {isCurrent 
-                              ? '설정한 작은 행동들의 궤도(실행)와 주간의 깊은 사색(회고)이 결합되어 당신만의 소중한 AI 성장 포트폴리오를 형성합니다.' 
-                              : '과거에 단단하게 다져놓은 나의 실행 궤적과 성찰이 담긴 성장 기록입니다.'}
-                          </p>
+                          <div className="consolidated-header-actions">
+                            {isCurrent && userToken && (
+                              <span className={`auto-save-status ${saveStatus}`}>
+                                {saveStatus === 'saving' && '○ 변경 사항 저장 중...'}
+                                {saveStatus === 'saved' && '● 실시간 보존 완료'}
+                                {saveStatus === 'error' && '⚠ 저장 중 오류 발생'}
+                              </span>
+                            )}
+                            {userToken && (
+                              <button className="pacenote-btn-export" onClick={() => setShowExportModal(true)}>
+                                📤 AI 성장 포트폴리오 내보내기
+                              </button>
+                            )}
+                          </div>
                         </div>
-                        <div className="consolidated-header-actions">
-                          {totalCount > 0 && (
-                            <span className="pacenote-progress-pill">
-                              🎯 {completedCount}/{totalCount} 완료 ({progressPercent}%)
-                            </span>
-                          )}
-                          {isCurrent && userToken && (
-                            <span className={`auto-save-status ${saveStatus}`}>
-                              {saveStatus === 'saving' && '○ 변경 사항 저장 중...'}
-                              {saveStatus === 'saved' && '● 실시간 보존 완료'}
-                              {saveStatus === 'error' && '⚠ 저장 중 오류 발생'}
-                            </span>
-                          )}
-                          {userToken && (
-                            <button className="pacenote-btn-export" onClick={() => setShowExportModal(true)}>
-                              📤 AI 성장 포트폴리오 내보내기
-                            </button>
-                          )}
-                          <span className="pacenote-date-badge">{selectedWeekId}</span>
-                        </div>
+                        <p className="pacenote-card-desc">
+                          {isCurrent 
+                            ? '설정한 작은 행동들의 궤도(실행)와 주간의 깊은 사색(회고)이 결합되어 당신만의 소중한 AI 성장 포트폴리오를 형성합니다.' 
+                            : '과거에 단단하게 다져놓은 나의 실행 궤적과 성찰이 담긴 성장 기록입니다.'}
+                        </p>
                       </div>
                       
                       {totalCount > 0 && (
-                        <div className="pacenote-progress-track-header">
-                          <div className="pacenote-progress-fill-header" style={{ width: `${progressPercent}%` }}></div>
+                        <div className="pacenote-progress-container-new">
+                          <div className="pacenote-progress-info-row">
+                            <span className="pacenote-progress-label">Action Progress</span>
+                            <span className="pacenote-progress-status-text">
+                              🎯 {completedCount}/{totalCount} 완료 ({progressPercent}%)
+                            </span>
+                          </div>
+                          <div className="pacenote-progress-track-header">
+                            <div className="pacenote-progress-fill-header" style={{ width: `${progressPercent}%` }}></div>
+                          </div>
                         </div>
                       )}
 
@@ -610,10 +618,20 @@ export default function PaceNoteDashboard() {
                       <div className="consolidated-card-layout">
                         {/* ── Left Panel: Tracker ── */}
                         <div className="consolidated-left-panel">
-                          <h3 className="panel-sub-title">🏃 실행의 궤도 (My Checklist)</h3>
+                          <h3 className="panel-sub-title">🏃 실행의 궤도</h3>
+                          
+                          {/* ── Omni-Orbit Trigger ── */}
+                          {isCurrent && (
+                            <button className="pacenote-omnibar-trigger" onClick={() => setShowOmniModal(true)}>
+                              <span className="omnibar-icon">✨</span>
+                              <span className="omnibar-placeholder">새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요...</span>
+                              <kbd className="omnibar-shortcut">⌘K</kbd>
+                            </button>
+                          )}
+
                           <div className="pacenote-tasks">
-                            {paceList && paceList.length > 0 ? (
-                              paceList.map((task) => {
+                            {sortedPaceList && sortedPaceList.length > 0 ? (
+                              sortedPaceList.map((task) => {
                                 const isCompleted = task.completed; 
                                 return (
                                   <label 
@@ -628,26 +646,19 @@ export default function PaceNoteDashboard() {
                                       disabled={!isCurrent}
                                     />
                                     <span className="task-custom-checkbox"></span>
-                                    <span className="task-text">{task.title}</span>
-                                    {task.category && (
-                                      <span className="task-category-badge" style={{ color: task.color || '#A78BFA', borderColor: task.color || '#A78BFA', '--category-theme': task.color || '#A78BFA' }}>
-                                        {task.category}
-                                      </span>
-                                    )}
+                                    <div className="task-body-content">
+                                      {task.category && (
+                                        <span className="task-category-text" style={{ color: task.color || '#A78BFA' }}>
+                                          {task.category}
+                                        </span>
+                                      )}
+                                      <span className="task-text">{task.title}</span>
+                                    </div>
                                   </label>
                                 );
                               })
                             ) : (
                               <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px' }}>기록된 궤도가 없습니다.</div>
-                            )}
-                            
-                            {/* ── Omni-Orbit Trigger ── */}
-                            {isCurrent && (
-                              <button className="pacenote-omnibar-trigger" onClick={() => setShowOmniModal(true)}>
-                                <span className="omnibar-icon">✨</span>
-                                <span className="omnibar-placeholder">새로운 목표를 입력하거나, AI 추천 궤도를 탐색해 보세요...</span>
-                                <kbd className="omnibar-shortcut">⌘K</kbd>
-                              </button>
                             )}
                           </div>
                         </div>

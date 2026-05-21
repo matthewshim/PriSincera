@@ -34,10 +34,11 @@ const ChapterCard = ({ chapter, index }) => {
   };
 
   const readTime = calculateReadTime(chapter.description, commits);
+  const hasHoverPanel = !isFeatured && commits.length > 0;
   
   return (
     <div 
-      className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'}`} 
+      className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'} ${hasHoverPanel ? 'has-hover-panel' : ''}`} 
       ref={ref}
     >
       <Link to={`/builders-log/${chapter.slug}`} className="builder-card-link-wrapper">

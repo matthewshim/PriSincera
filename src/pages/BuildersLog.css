@@ -132,12 +132,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 24px 40px -8px rgba(0, 0, 0, 0.3);
   transition: transform var(--duration-fast) var(--ease-spring), 
               border-color var(--duration-medium) ease, 
               box-shadow var(--duration-medium) ease,
-              background-color var(--duration-medium) ease;
+              background-color var(--duration-medium) ease,
+              border-radius 0.25s ease;
 }
 
 /* Aurora Radial Glow on Hover */
@@ -160,6 +161,12 @@
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 
               0 0 24px color-mix(in srgb, var(--accent-color) 8%, transparent);
   transform: translateY(-4px);
+}
+
+.builder-card.has-hover-panel:hover .builder-card-glass {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border-bottom-color: transparent;
+  z-index: 10;
 }
 
 .builder-card:hover .card-glow-bg {
@@ -379,27 +386,32 @@
 
 /* --- Interactive Hover Commits Panel --- */
 .card-hover-commits-panel {
-  position: relative;
-  z-index: 2;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
-  max-height: 0;
+  position: absolute;
+  top: calc(100% - 1px);
+  left: -1px;
+  right: -1px;
+  z-index: 9;
+  background: rgba(13, 8, 28, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: 16px 24px;
   opacity: 0;
-  margin-top: 0;
-  overflow: hidden;
+  transform: translateY(-10px);
   pointer-events: none;
-  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.3s ease,
-              margin-top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
 }
 
 .builder-card:hover .card-hover-commits-panel {
-  max-height: 100px;
   opacity: 1;
-  margin-top: var(--space-md);
+  transform: translateY(0);
   pointer-events: auto;
+  border-color: color-mix(in srgb, var(--accent-color) 35%, rgba(255, 255, 255, 0.06));
 }
 
 .hover-commits-header {
@@ -412,25 +424,28 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .hover-commits-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .hover-commit-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
 }
 
 .commit-type-dot {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
 }
 
 .commit-type-dot.type-feat { background: var(--orbit-cyan); }
@@ -440,10 +455,11 @@
 
 .hover-commit-msg {
   color: var(--text-secondary);
-  font-size: 0.78rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
   flex: 1;
 }
 
@@ -601,10 +617,14 @@
     margin-top: var(--space-sm);
   }
 
-  /* Micro Commits Panel compact padding on Mobile */
-  .builder-card:hover .card-hover-commits-panel {
-    max-height: 85px;
-    margin-top: var(--space-sm);
+  /* Micro Commits Panel adjustments on Mobile */
+  .card-hover-commits-panel {
+    padding: 12px 16px;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+
+  .builder-card.has-hover-panel:hover .builder-card-glass {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
 
   .hover-commit-row {
