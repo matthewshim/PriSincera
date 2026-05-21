@@ -9,11 +9,15 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEMPLATES_DIR = join(__dirname, '..', 'templates');
 
-const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || '').trim();
-if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
-
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    // We will initialize models dynamically in callGemini 
+let genAI = null;
+function getGenAI() {
+  const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+  if (!apiKey) throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
+  if (!genAI) {
+    genAI = new GoogleGenerativeAI(apiKey);
+  }
+  return genAI;
+}
 
 /**
  * 프롬프트 템플릿을 로드합니다.
@@ -39,7 +43,7 @@ export async function callGemini(prompt, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     for (const modelName of modelsToTry) {
       try {
-        const model = genAI.getGenerativeModel({ model: modelName, generationConfig });
+        const model = getGenAI().getGenerativeModel({ model: modelName, generationConfig });
         const result = await model.generateContent(prompt);
         const text = result.response.text();
         const jsonMatch = text.match(/```json\s*([\s\S]*?)```/) || [null, text];

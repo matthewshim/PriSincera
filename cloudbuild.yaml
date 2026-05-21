@@ -164,6 +164,27 @@ steps:
       - '--max-retries'
       - '0'
 
+  # Step 10: Update PaceNote Composer Job (daily)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'jobs'
+      - 'update'
+      - 'pacenote-composer'
+      - '--image'
+      - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/pipeline:$SHORT_SHA'
+      - '--region'
+      - 'asia-northeast3'
+      - '--command'
+      - 'node'
+      - '--args'
+      - 'src/pacenote-composer.mjs'
+      - '--task-timeout'
+      - '1800s'
+      - '--max-retries'
+      - '0'
+
 images:
   - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:$SHORT_SHA'
   - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:latest'

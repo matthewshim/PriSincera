@@ -147,6 +147,23 @@ gcloud run jobs update pristudy-composer \
   --image ${IMAGE} \
   --region ${REGION}
 
+# PaceNote Composer Job (매일 AI 추천 목표 풀 갱신)
+gcloud run jobs create pacenote-composer \
+  --image ${IMAGE} \
+  --region ${REGION} \
+  --service-account ${SA_EMAIL} \
+  --command "node" \
+  --args "src/pacenote-composer.mjs" \
+  --set-env-vars "GCS_BUCKET=${BUCKET_NAME}" \
+  --set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest" \
+  --task-timeout 1800s \
+  --max-retries 0 \
+  --memory 512Mi \
+  --cpu 1 2>/dev/null || \
+gcloud run jobs update pacenote-composer \
+  --image ${IMAGE} \
+  --region ${REGION}
+
 # ─── 7. Cloud Scheduler 크론 생성 ───
 echo -e "\n[7/8] Cloud Scheduler 크론 생성..."
 
@@ -190,6 +207,16 @@ gcloud scheduler jobs create http pristudy-compose-daily \
   --oauth-service-account-email ${SA_EMAIL} \
   --description "PriStudy: 매일 일본어 학습 문장 자동 생성" 2>/dev/null || echo "  (이미 존재)"
 
+# 매일 00:00 KST — PaceNote 추천 목표 풀 갱신
+gcloud scheduler jobs create http pacenote-compose-daily \
+  --location ${REGION} \
+  --schedule "0 0 * * *" \
+  --time-zone "Asia/Seoul" \
+  --uri "https://${REGION}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_ID}/jobs/pacenote-composer:run" \
+  --http-method POST \
+  --oauth-service-account-email ${SA_EMAIL} \
+  --description "PaceNote: 매일 AI 추천 목표 풀 자동 갱신" 2>/dev/null || echo "  (이미 존재)"
+
 # ─── 8. Cloud Monitoring 알림 채널 설정 ───
 echo -e "\n[8/8] Cloud Monitoring 알림 설정..."
 
@@ -216,5 +243,6 @@ echo ""
 echo "  3. 수동 테스트 실행:"
 echo "     gcloud run jobs execute prisignal-collector --region ${REGION}"
 echo "     gcloud run jobs execute prisignal-composer --region ${REGION}"
+echo "     gcloud run jobs execute pacenote-composer --region ${REGION}"
 echo ""
 echo "  4. 정상 작동 확인 후 자동 운영 시작!"
