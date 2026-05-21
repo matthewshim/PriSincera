@@ -180,6 +180,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [poolModal, setPoolModal] = useState(null);
   const [poolForm, setPoolForm] = useState({ id: '', title: { ko: '', en: '', ja: '' }, category: '', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
   const [poolFormLocale, setPoolFormLocale] = useState('ko');
+  const [poolAction, setPoolAction] = useState(null);
 
   // Builder's Log
   const [buildersLogMeta, setBuildersLogMeta] = useState([]);
@@ -624,6 +625,33 @@ function Dashboard({ token, adminEmail, onLogout }) {
       setBuildersLogAction({ type: 'error', msg: `커밋 불러오기 실패: ${err.message}` });
     }
   };
+
+  async function handlePoolAiTranslate() {
+    if (!poolForm.title || !poolForm.title.ko) {
+      setPoolAction({ type: 'error', msg: 'AI 완역을 진행하려면 최소한 한국어 목표가 필요합니다.' });
+      return;
+    }
+    setPoolAction({ type: 'loading', msg: 'AI가 한국어 목표를 바탕으로 영어 및 일본어로 자동 완역 중입니다...' });
+    try {
+      const res = await fetchApi('/builderslog/translate', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: poolForm.title.ko
+        })
+      });
+      setPoolForm(prev => ({
+        ...prev,
+        title: {
+          ko: prev.title.ko,
+          en: res.en?.title || prev.title.en || '',
+          ja: res.ja?.title || prev.title.ja || ''
+        }
+      }));
+      setPoolAction({ type: 'success', msg: '✨ AI 번역 완료! 각 탭에서 번역된 내용을 확인하실 수 있습니다.' });
+    } catch (err) {
+      setPoolAction({ type: 'error', msg: `AI 완역 실패: ${err.message}` });
+    }
+  }
 
   async function handleBuildersLogSubmit(e) {
     e.preventDefault();
@@ -1226,17 +1254,33 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </div>
               <form onSubmit={handlePoolSubmit}>
                 <div className="admin-modal-body">
-                  <div className="admin-modal-tabs" style={{ marginBottom: '12px', borderBottom: 'none' }}>
-                    {['ko', 'en', 'ja'].map(lang => (
-                      <button
-                        key={lang}
-                        type="button"
-                        className={`admin-modal-tab ${poolFormLocale === lang ? 'active' : ''}`}
-                        onClick={() => setPoolFormLocale(lang)}
-                      >
-                        {lang.toUpperCase()}
-                      </button>
-                    ))}
+                  <div className="admin-modal-tabs" style={{ marginBottom: '12px', borderBottom: 'none', display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex' }}>
+                      {['ko', 'en', 'ja'].map(lang => (
+                        <button
+                          key={lang}
+                          type="button"
+                          className={`admin-modal-tab ${poolFormLocale === lang ? 'active' : ''}`}
+                          onClick={() => setPoolFormLocale(lang)}
+                        >
+                          {lang.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      className="admin-btn-secondary"
+                      onClick={handlePoolAiTranslate}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '13px',
+                        background: 'linear-gradient(135deg, #7C3AED, #4F46E5)',
+                        color: 'white',
+                        border: 'none'
+                      }}
+                    >
+                      ✨ AI 자동 완역 (en / ja)
+                    </button>
                   </div>
                   <label className="admin-form-label">목표 (Title - {poolFormLocale.toUpperCase()})
                     <input type="text" required value={poolForm.title[poolFormLocale] || ''} onChange={e => setPoolForm({ ...poolForm, title: { ...poolForm.title, [poolFormLocale]: e.target.value } })} />
@@ -1256,6 +1300,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     활성화 여부 (추천 리스트 노출)
                     <input type="checkbox" style={{ width: 'auto', marginLeft: '12px' }} checked={poolForm.isActive} onChange={e => setPoolForm({ ...poolForm, isActive: e.target.checked })} />
                   </label>
+                  {poolAction && <div className={`admin-send-status ${poolAction.type}`}>{poolAction.msg}</div>}
                 </div>
                 <div className="admin-modal-footer">
                   <button type="button" className="admin-btn-secondary" onClick={() => setPoolModal(null)}>취소</button>

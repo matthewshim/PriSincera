@@ -68,7 +68,11 @@ async function main() {
 
 [
   {
-    "title": "목표 내용 (20자~40자 내외의 한국어)",
+    "title": {
+      "ko": "목표 내용 (20자~40자 내외의 한국어)",
+      "en": "English translation of the goal",
+      "ja": "Japanese translation of the goal"
+    },
     "category": "Mindset / Branding / Deep Work / Networking / Productivity / AI & Future 등 적합한 카테고리 영문명",
     "color": "카테고리에 어울리는 세련된 HEX 색상코드 (예: #34D399, #60A5FA)"
   }
@@ -94,7 +98,7 @@ async function main() {
     const timestamp = Date.now();
     const formattedRecs = newRecs.map((rec, index) => ({
       id: `ai-rec-${timestamp}-${index}`,
-      title: rec.title,
+      title: typeof rec.title === 'string' ? { ko: rec.title, en: '', ja: '' } : rec.title,
       category: rec.category || 'Inspiration',
       color: rec.color || '#A78BFA',
       isActive: true,
