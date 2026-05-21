@@ -10,5 +10,14 @@
     "navigate": "Navigate",
     "connect": "Connect",
     "tagline": "Sincerity, Prioritized."
+  },
+  "buildersLog": {
+    "heroParagraph": "From a simple portfolio to a complete SaaS platform.\nWe share the record of our fierce journey of designing products and building code.",
+    "seoDescription": "A tech blog recording PriSincera's product making and business building journey.",
+    "readArticle": "Read Article",
+    "recentShipments": "Recent Shipments",
+    "keyShipments": "Key Shipments",
+    "moreShipments": "+{count} more shipments",
+    "journeyContinues": "The journey continues."
   }
 }

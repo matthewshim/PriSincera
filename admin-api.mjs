@@ -880,7 +880,9 @@ router.get('/builderslog/recent-commits', async (req, res) => {
 router.get('/builderslog/content/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
-    const contentPath = path.join(__dirname, 'public', 'content', 'logs', `${slug}.md`);
+    const lang = req.locale || 'ko';
+    const suffix = lang && lang !== 'ko' ? `_${lang}` : '';
+    const contentPath = path.join(__dirname, 'public', 'content', 'logs', `${slug}${suffix}.md`);
     if (!fs.existsSync(contentPath)) return res.json({ content: '' });
     const content = fs.readFileSync(contentPath, 'utf8');
     res.json({ content });
@@ -1056,7 +1058,7 @@ ${recentCommitsText}
 
 router.post('/builderslog/publish', async (req, res) => {
   try {
-    const { metaArray, currentSlug, markdown, skipAiReview } = req.body;
+    const { metaArray, currentSlug, markdown, skipAiReview, locale } = req.body;
     let finalMarkdown = markdown;
 
     // 1. AI 윤문 및 문맥 필터링 (Gemini)
@@ -1093,6 +1095,8 @@ router.post('/builderslog/publish', async (req, res) => {
       }
     }
 
+    const suffix = locale && locale !== 'ko' ? `_${locale}` : '';
+
     // 3. GitHub API를 통한 커밋 푸시
     const githubToken = process.env.GITHUB_TOKEN;
     if (!githubToken) {
@@ -1101,7 +1105,7 @@ router.post('/builderslog/publish', async (req, res) => {
       fs.writeFileSync(metaPath, JSON.stringify(metaArray, null, 2));
       const contentDir = path.join(__dirname, 'public', 'content', 'logs');
       if (!fs.existsSync(contentDir)) fs.mkdirSync(contentDir, { recursive: true });
-      const contentPath = path.join(contentDir, `${currentSlug}.md`);
+      const contentPath = path.join(contentDir, `${currentSlug}${suffix}.md`);
       fs.writeFileSync(contentPath, finalMarkdown);
       return res.json({ success: true, message: '로컬 환경에 성공적으로 저장되었습니다 (GITHUB_TOKEN 없음).' });
     }
@@ -1128,12 +1132,12 @@ router.post('/builderslog/publish', async (req, res) => {
       owner, repo, base_tree: treeSha,
       tree: [
         { path: 'src/data/buildersLogMeta.json', mode: '100644', type: 'blob', sha: metaBlob.data.sha },
-        { path: `public/content/logs/${currentSlug}.md`, mode: '100644', type: 'blob', sha: markdownBlob.data.sha }
+        { path: `public/content/logs/${currentSlug}${suffix}.md`, mode: '100644', type: 'blob', sha: markdownBlob.data.sha }
       ]
     });
 
     const newCommit = await octokit.rest.git.createCommit({
-      owner, repo, message: `feat(builders-log): publish ${currentSlug} via Admin`,
+      owner, repo, message: `feat(builders-log): publish ${currentSlug}${suffix} via Admin`,
       tree: newTree.data.sha, parents: [commitSha]
     });
 
@@ -1145,6 +1149,88 @@ router.post('/builderslog/publish', async (req, res) => {
   } catch (err) {
     console.error('[BuildersLog] Final Publish error:', err);
     res.status(500).json({ error: `아티클 저장 중 서버 에러가 발생했습니다: ${err.message}` });
+  }
+});
+
+router.post('/builderslog/translate', async (req, res) => {
+  try {
+    const { title, subtitle, description, markdown } = req.body;
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(400).json({ error: 'GEMINI_API_KEY가 설정되지 않아 완역을 기동할 수 없습니다.' });
+    }
+
+    const prompt = `
+너는 PriSincera의 다국어 번역 전문가이자 전문 테크니컬 라이터야.
+전달된 한국어 원문 텍스트들(Title, Subtitle, Description, Markdown 본문)을 분석하여, 다음을 수행해:
+1. 의미를 정확하게 유지하면서 전문적이고 세련된 영어(en) 및 일본어(ja)로 완역해.
+2. 마크다운 본문의 경우, 마크다운 서식(H2, H3, Blockquote, bold, code 등)을 그대로 완벽하게 보존해야 해.
+
+반드시 아래 JSON 형식으로만 응답해 (Markdown code block 표시 없이 순수 JSON 문자열만 출력):
+{
+  "en": {
+    "title": "translated title in English",
+    "subtitle": "translated subtitle in English",
+    "description": "translated description in English",
+    "markdown": "translated markdown body in English with all format preserved"
+  },
+  "ja": {
+    "title": "日本語に翻訳されたタイトル",
+    "subtitle": "日本語に翻訳されたサブタイトル",
+    "description": "日本語に翻訳された説明文",
+    "markdown": "日本語に翻訳されたマークダウン本文（すべてのフォーマットを維持）"
+  }
+}
+
+[번역 대상 한국어 원문]
+- Title: ${title || ''}
+- Subtitle: ${subtitle || ''}
+- Description: ${description || ''}
+${markdown ? `- Markdown:\n${markdown}` : ''}
+`;
+
+    const { GoogleGenerativeAI } = await import('@google/generative-ai');
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-2.5-flash'];
+    let resultText = null;
+    let errors = [];
+
+    for (const modelName of modelsToTry) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: { responseMimeType: "application/json" }
+        });
+        const response = await model.generateContent(prompt);
+        resultText = response.response.text();
+        if (resultText) break;
+      } catch (err) {
+        console.warn(`[BuildersLog Translate] Model ${modelName} failed:`, err.message);
+        errors.push(`[${modelName}]: ${err.message}`);
+      }
+    }
+
+    if (!resultText) {
+      return res.status(500).json({ error: `AI 완역 호출에 실패했습니다: ${errors.join(', ')}` });
+    }
+
+    resultText = resultText.replace(/^```(json)?\n?/i, '').replace(/```$/i, '').trim();
+
+    try {
+      const parsed = JSON.parse(resultText);
+      res.json(parsed);
+    } catch (parseError) {
+      try {
+        const recoveredText = repairJSONBackslashes(resultText);
+        const parsed = JSON.parse(recoveredText);
+        res.json(parsed);
+      } catch (recoveryError) {
+        console.error('[BuildersLog Translate] JSON parse failed:', resultText);
+        res.status(500).json({ error: `JSON 파싱에 실패했습니다: ${parseError.message}` });
+      }
+    }
+  } catch (err) {
+    console.error('[BuildersLog Translate] Error:', err);
+    res.status(500).json({ error: `서버 내부 에러: ${err.message}` });
   }
 });
 

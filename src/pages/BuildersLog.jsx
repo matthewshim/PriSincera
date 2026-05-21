@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import logMeta from '../data/buildersLogMeta.json';
+import { useTranslation } from '../contexts/LanguageContext';
 import './BuildersLog.css';
 
 function useScrollReveal(options = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }) {
@@ -22,6 +23,7 @@ function useScrollReveal(options = { threshold: 0.1, rootMargin: '0px 0px -100px
 }
 
 const ChapterCard = ({ chapter, index }) => {
+  const { localize, t } = useTranslation();
   const ref = useScrollReveal();
   const commits = chapter.commits || [];
   const isFeatured = index === 0;
@@ -33,7 +35,7 @@ const ChapterCard = ({ chapter, index }) => {
     return `${minutes} min read`;
   };
 
-  const readTime = calculateReadTime(chapter.description, commits);
+  const readTime = calculateReadTime(localize(chapter.description), commits);
   
   return (
     <div 
@@ -48,8 +50,8 @@ const ChapterCard = ({ chapter, index }) => {
           {isFeatured && (
             <div className="card-header card-header-featured">
               <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
-              <h2 className="chapter-title">{chapter.title}</h2>
-              <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
+              <h2 className="chapter-title">{localize(chapter.title)}</h2>
+              <h3 className="chapter-subtitle">{localize(chapter.subtitle)}</h3>
               <div className="chapter-meta">
                 <span className="meta-item">{new Date(chapter.date).toLocaleDateString()}</span>
                 <span className="meta-divider">•</span>
@@ -57,7 +59,7 @@ const ChapterCard = ({ chapter, index }) => {
               </div>
             </div>
           )}
-
+ 
           <div className="card-layout-split">
             <div className="card-main-content">
               <div>
@@ -65,8 +67,8 @@ const ChapterCard = ({ chapter, index }) => {
                 {!isFeatured && (
                   <div className="card-header">
                     <div className="chapter-badge">Chapter {chapter.chapterNo}</div>
-                    <h2 className="chapter-title">{chapter.title}</h2>
-                    <h3 className="chapter-subtitle">{chapter.subtitle}</h3>
+                    <h2 className="chapter-title">{localize(chapter.title)}</h2>
+                    <h3 className="chapter-subtitle">{localize(chapter.subtitle)}</h3>
                     <div className="chapter-meta">
                       <span className="meta-item">{new Date(chapter.date).toLocaleDateString()}</span>
                       <span className="meta-divider">•</span>
@@ -76,10 +78,10 @@ const ChapterCard = ({ chapter, index }) => {
                 )}
                 
                 <div className="card-body">
-                  <p className="chapter-desc">{chapter.description}</p>
+                  <p className="chapter-desc">{localize(chapter.description)}</p>
                 </div>
               </div>
-
+ 
               {chapter.tags && chapter.tags.length > 0 && (
                 <div className="card-tags">
                   {chapter.tags.map((tag, i) => (
@@ -89,7 +91,7 @@ const ChapterCard = ({ chapter, index }) => {
                   ))}
                 </div>
               )}
-
+ 
               {/* Inline Recent Shipments (Static, no longer absolute hover!) */}
               {!isFeatured && commits.length > 0 && (
                 <div className="card-shipments-static-panel">
@@ -97,7 +99,7 @@ const ChapterCard = ({ chapter, index }) => {
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="shipments-icon">
                       <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <span>Recent Shipments</span>
+                    <span>{t('buildersLog.recentShipments')}</span>
                   </div>
                   <div className="shipments-list">
                     {commits.slice(0, 3).map((commit, i) => (
@@ -105,14 +107,14 @@ const ChapterCard = ({ chapter, index }) => {
                         <span className={`shipment-badge badge-${commit.type}`}>
                           {commit.type}
                         </span>
-                        <span className="shipment-msg">{commit.msg}</span>
+                        <span className="shipment-msg">{localize(commit.msg)}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
             </div>
-
+ 
             {isFeatured && (
               <div className="card-visual-content">
                 <div className="visual-glow-sphere" style={{ background: `radial-gradient(circle, ${chapter.accent} 0%, transparent 70%)` }}></div>
@@ -121,27 +123,29 @@ const ChapterCard = ({ chapter, index }) => {
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                       <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    Key Shipments
+                    {t('buildersLog.keyShipments')}
                   </div>
                   <div className="visual-meta-commits">
                     {commits.slice(0, 3).map((commit, i) => (
                       <div key={i} className="visual-commit-row">
                         <span className="visual-commit-hash">{commit.hash}</span>
-                        <span className="visual-commit-msg">{commit.msg}</span>
+                        <span className="visual-commit-msg">{localize(commit.msg)}</span>
                       </div>
                     ))}
                     {commits.length > 3 && (
-                      <div className="visual-commit-more">+{commits.length - 3} more shipments</div>
+                      <div className="visual-commit-more">
+                        {t('buildersLog.moreShipments').replace('{count}', commits.length - 3)}
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
             )}
           </div>
-
+ 
           <div className="card-footer">
             <span className="read-more-btn">
-              Read Article <span className="read-more-arrow">→</span>
+              {t('buildersLog.readArticle')} <span className="read-more-arrow">→</span>
             </span>
           </div>
         </div>
@@ -151,9 +155,10 @@ const ChapterCard = ({ chapter, index }) => {
 };
 
 export default function BuildersLog() {
+  const { t } = useTranslation();
   useSEO({
     title: 'Builders Log',
-    description: "PriSincera의 프로덕트 메이킹과 비즈니스 구축 여정을 기록한 기술 블로그입니다.",
+    description: t('buildersLog.seoDescription'),
     keywords: 'PriSincera, 빌더스 로그, 개발 일지, 프로덕트, 기술 블로그, 아키텍처',
     ogUrl: 'https://www.prisincera.com/builders-log'
   });
@@ -173,9 +178,8 @@ export default function BuildersLog() {
         <div className="log-hero-content">
           <div className="log-hero-icon">🛠️</div>
           <h1 className="hero-heading">Builder's Log</h1>
-          <p className="hero-paragraph">
-            PriSincera가 단순한 포트폴리오를 넘어 완전한 SaaS 플랫폼으로 거듭나기까지.<br/>
-            프로덕트를 설계하고 코드를 쌓아 올린 치열한 항해의 기록을 공유합니다.
+          <p className="hero-paragraph" style={{ whiteSpace: 'pre-line' }}>
+            {t('buildersLog.heroParagraph')}
           </p>
         </div>
       </section>
@@ -216,7 +220,7 @@ export default function BuildersLog() {
         
         <section className="log-footer-note">
           <div className="pulse-dot"></div>
-          <p>여정은 계속됩니다.</p>
+          <p>{t('buildersLog.journeyContinues')}</p>
         </section>
       </div>
     </div>

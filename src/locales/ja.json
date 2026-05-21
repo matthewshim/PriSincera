@@ -10,5 +10,14 @@
     "navigate": "Navigate",
     "connect": "Connect",
     "tagline": "Sincerity, Prioritized."
+  },
+  "buildersLog": {
+    "heroParagraph": "単なるポートフォリオを超えて、完全なSaaSプラットフォームへと生まれ変わるまで。\nプロダクトを設計し、コードを積み上げてきた熾烈な航海の記録を共有します。",
+    "seoDescription": "PriSinceraのプロダクトメイキングとビジネス構築の旅を記録した技術ブログです。",
+    "readArticle": "記事を読む",
+    "recentShipments": "最近のデプロイ",
+    "keyShipments": "主要なデプロイ",
+    "moreShipments": "+{count}個のデプロイをさらに表示",
+    "journeyContinues": "旅は続きます。"
   }
 }

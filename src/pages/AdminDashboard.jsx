@@ -169,6 +169,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [contentModalTab, setContentModalTab] = useState('basic');
   const [contentForm, setContentForm] = useState(null);
   const [contentAction, setContentAction] = useState(null);
+  const [contentFormLocale, setContentFormLocale] = useState('ko');
 
   // Pace Note
   const [pacers, setPacers] = useState([]);
@@ -177,16 +178,37 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [pacePool, setPacePool] = useState([]);
   const [paceMeta, setPaceMeta] = useState({});
   const [poolModal, setPoolModal] = useState(null);
-  const [poolForm, setPoolForm] = useState({ id: '', title: '', category: '', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
+  const [poolForm, setPoolForm] = useState({ id: '', title: { ko: '', en: '', ja: '' }, category: '', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
+  const [poolFormLocale, setPoolFormLocale] = useState('ko');
 
   // Builder's Log
   const [buildersLogMeta, setBuildersLogMeta] = useState([]);
   const [buildersLogStats, setBuildersLogStats] = useState({});
   const [buildersLogModal, setBuildersLogModal] = useState(null);
-  const [buildersLogForm, setBuildersLogForm] = useState({ id: '', slug: '', chapterNo: '', title: '', subtitle: '', description: '', date: '', tags: '', accent: '#6D28D9', commits: '', markdown: '' });
+  const [buildersLogForm, setBuildersLogForm] = useState({
+    id: '', slug: '', chapterNo: '',
+    title: { ko: '', en: '', ja: '' },
+    subtitle: { ko: '', en: '', ja: '' },
+    description: { ko: '', en: '', ja: '' },
+    date: '', tags: '', accent: '#6D28D9', commits: '',
+    markdown: { ko: '', en: '', ja: '' }
+  });
   const [buildersLogAction, setBuildersLogAction] = useState(null);
+  const [buildersLogActiveTab, setBuildersLogActiveTab] = useState('ko');
 
   const isSuperAdmin = role === 'super_admin';
+
+  const parseLocaleField = (val) => {
+    if (!val) return { ko: '', en: '', ja: '' };
+    if (typeof val === 'object') {
+      return {
+        ko: val.ko || '',
+        en: val.en || '',
+        ja: val.ja || '',
+      };
+    }
+    return { ko: val, en: '', ja: '' };
+  };
 
   useEffect(() => { loadDashboard(); }, []);
 
@@ -370,12 +392,17 @@ function Dashboard({ token, adminEmail, onLogout }) {
   }
 
   function openCreatePool() {
-    setPoolForm({ id: `rec-${Date.now()}`, title: '', category: 'Mindset', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
+    setPoolForm({ id: `rec-${Date.now()}`, title: { ko: '', en: '', ja: '' }, category: 'Mindset', color: '#60A5FA', difficulty: 1, weight: 1.0, isActive: true });
+    setPoolFormLocale('ko');
     setPoolModal('create');
   }
 
   function openEditPool(item) {
-    setPoolForm({ ...item });
+    setPoolForm({ 
+      ...item,
+      title: parseLocaleField(item.title)
+    });
+    setPoolFormLocale('ko');
     setPoolModal({ mode: 'edit', id: item.id });
   }
 
@@ -406,13 +433,20 @@ function Dashboard({ token, adminEmail, onLogout }) {
   function openEditContent(item) {
     setContentForm({ 
       date: item.date,
-      study: item.study || {},
+      study: {
+        ...item.study,
+        theme: parseLocaleField(item.study?.theme),
+        explanation: parseLocaleField(item.study?.explanation),
+        sentence_kr: parseLocaleField(item.study?.sentence_kr),
+        business_context: parseLocaleField(item.study?.business_context),
+      },
       signal: item.signal || {},
       vocabulary: JSON.stringify(item.study?.vocabulary || [], null, 2),
       articles: JSON.stringify(item.signal?.articles || [], null, 2),
       parameters: JSON.stringify(item.study?.parameters || [], null, 2)
     });
     setContentAction(null);
+    setContentFormLocale('ko');
     setContentModalTab('basic');
     setContentModal({ mode: 'edit', date: item.date });
   }
@@ -420,13 +454,23 @@ function Dashboard({ token, adminEmail, onLogout }) {
   function openCreateContent() {
     setContentForm({ 
       date: '', 
-      study: { theme: '', sentence_jp: '', sentence_furigana: '', sentence_pronunciation_kr: '', sentence_kr: '', business_context: '', prompt_snippet: '', explanation: '' },
+      study: {
+        theme: { ko: '', en: '', ja: '' },
+        sentence_jp: '',
+        sentence_furigana: '',
+        sentence_pronunciation_kr: '',
+        sentence_kr: { ko: '', en: '', ja: '' },
+        business_context: { ko: '', en: '', ja: '' },
+        prompt_snippet: '',
+        explanation: { ko: '', en: '', ja: '' }
+      },
       signal: { articles: [] },
       vocabulary: '[]',
       articles: '[]',
       parameters: '[]'
     });
     setContentAction(null);
+    setContentFormLocale('ko');
     setContentModalTab('basic');
     setContentModal({ mode: 'create' });
   }
@@ -478,26 +522,93 @@ function Dashboard({ token, adminEmail, onLogout }) {
     const today = new Date().toISOString().split('T')[0];
     setBuildersLogForm({
       id: `ep${buildersLogMeta.length + 1}`, slug: '', chapterNo: String(buildersLogMeta.length + 1).padStart(2, '0'),
-      title: '', subtitle: '', description: '', date: today, tags: '', accent: '#6D28D9', commits: '[]', markdown: ''
+      title: { ko: '', en: '', ja: '' },
+      subtitle: { ko: '', en: '', ja: '' },
+      description: { ko: '', en: '', ja: '' },
+      date: today, tags: '', accent: '#6D28D9', commits: '[]',
+      markdown: { ko: '', en: '', ja: '' }
     });
+    setBuildersLogActiveTab('ko');
     setBuildersLogAction(null);
     setBuildersLogModal('create');
   }
 
   async function openEditBuildersLog(item) {
-    setBuildersLogAction({ type: 'loading', msg: '마크다운 불러오는 중...' });
+    setBuildersLogAction({ type: 'loading', msg: '마크다운 및 다국어 정보 불러오는 중...' });
     setBuildersLogModal({ mode: 'edit', slug: item.slug });
+    setBuildersLogActiveTab('ko');
     setBuildersLogForm({
-      id: item.id, slug: item.slug, chapterNo: item.chapterNo, title: item.title, subtitle: item.subtitle || '',
-      description: item.description || '', date: item.date, tags: (item.tags || []).join(', '),
-      accent: item.accent || '#6D28D9', commits: JSON.stringify(item.commits || [], null, 2), markdown: ''
+      id: item.id, slug: item.slug, chapterNo: item.chapterNo,
+      title: parseLocaleField(item.title),
+      subtitle: parseLocaleField(item.subtitle),
+      description: parseLocaleField(item.description),
+      date: item.date, tags: (item.tags || []).join(', '),
+      accent: item.accent || '#6D28D9', commits: JSON.stringify(item.commits || [], null, 2),
+      markdown: { ko: '', en: '', ja: '' }
     });
     try {
-      const data = await fetchApi(`/builderslog/content/${item.slug}`);
-      setBuildersLogForm(prev => ({ ...prev, markdown: data.content || '' }));
+      const [koRes, enRes, jaRes] = await Promise.allSettled([
+        fetchApi(`/builderslog/content/${item.slug}?lang=ko`),
+        fetchApi(`/builderslog/content/${item.slug}?lang=en`),
+        fetchApi(`/builderslog/content/${item.slug}?lang=ja`)
+      ]);
+      setBuildersLogForm(prev => ({
+        ...prev,
+        markdown: {
+          ko: koRes.status === 'fulfilled' ? koRes.value.content : '',
+          en: enRes.status === 'fulfilled' ? enRes.value.content : '',
+          ja: jaRes.status === 'fulfilled' ? jaRes.value.content : ''
+        }
+      }));
       setBuildersLogAction(null);
     } catch (err) {
       setBuildersLogAction({ type: 'error', msg: `본문 로드 실패: ${err.message}` });
+    }
+  }
+
+  async function handleAiTranslate() {
+    const { title, subtitle, description, markdown } = buildersLogForm;
+    if (!title.ko) {
+      setBuildersLogAction({ type: 'error', msg: 'AI 완역을 진행하려면 최소한 한국어 제목이 필요합니다.' });
+      return;
+    }
+    setBuildersLogAction({ type: 'loading', msg: 'AI가 한국어 원문을 바탕으로 영어 및 일본어로 자동 완역 중입니다...' });
+    try {
+      const res = await fetchApi('/builderslog/translate', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: title.ko,
+          subtitle: subtitle.ko,
+          description: description.ko,
+          markdown: markdown.ko
+        })
+      });
+      setBuildersLogForm(prev => ({
+        ...prev,
+        title: {
+          ko: prev.title.ko,
+          en: res.en?.title || prev.title.en || '',
+          ja: res.ja?.title || prev.title.ja || ''
+        },
+        subtitle: {
+          ko: prev.subtitle.ko,
+          en: res.en?.subtitle || prev.subtitle.en || '',
+          ja: res.ja?.subtitle || prev.subtitle.ja || ''
+        },
+        description: {
+          ko: prev.description.ko,
+          en: res.en?.description || prev.description.en || '',
+          ja: res.ja?.description || prev.description.ja || ''
+        },
+        markdown: {
+          ko: prev.markdown.ko,
+          en: res.en?.markdown || prev.markdown.en || '',
+          ja: res.ja?.markdown || prev.markdown.ja || ''
+        }
+      }));
+      setBuildersLogAction({ type: 'success', msg: '✨ AI 번역 완료! 각 탭에서 번역된 내용을 확인하실 수 있습니다.' });
+    } catch (err) {
+      setBuildersLogAction({ type: 'error', msg: `AI 완역 실패: ${err.message}` });
     }
   }
 
@@ -535,13 +646,44 @@ function Dashboard({ token, adminEmail, onLogout }) {
         updatedMetaArray = updatedMetaArray.map(m => m.id === newMetaObj.id ? newMetaObj : m);
       }
 
-      const body = {
-        metaArray: updatedMetaArray, currentSlug: buildersLogForm.slug,
-        markdown: buildersLogForm.markdown, skipAiReview: true // AI 검수는 파일 업로드 시 선행됨
+      // 1. 한국어 배포
+      const bodyKo = {
+        metaArray: updatedMetaArray,
+        currentSlug: buildersLogForm.slug,
+        markdown: buildersLogForm.markdown.ko || '',
+        skipAiReview: true,
+        locale: 'ko'
       };
+      setBuildersLogAction({ type: 'loading', msg: '한국어(KO) 버전 배포 중...' });
+      await fetchApi('/builderslog/publish', { method: 'POST', body: JSON.stringify(bodyKo) });
 
-      const result = await fetchApi('/builderslog/publish', { method: 'POST', body: JSON.stringify(body) });
-      setBuildersLogAction({ type: 'success', msg: result.message || '✅ 배포 완료' });
+      // 2. 영어 배포 (본문이 존재하면)
+      if (buildersLogForm.markdown.en && buildersLogForm.markdown.en.trim()) {
+        const bodyEn = {
+          metaArray: updatedMetaArray,
+          currentSlug: buildersLogForm.slug,
+          markdown: buildersLogForm.markdown.en,
+          skipAiReview: true,
+          locale: 'en'
+        };
+        setBuildersLogAction({ type: 'loading', msg: '영어(EN) 버전 배포 중...' });
+        await fetchApi('/builderslog/publish', { method: 'POST', body: JSON.stringify(bodyEn) });
+      }
+
+      // 3. 일본어 배포 (본문이 존재하면)
+      if (buildersLogForm.markdown.ja && buildersLogForm.markdown.ja.trim()) {
+        const bodyJa = {
+          metaArray: updatedMetaArray,
+          currentSlug: buildersLogForm.slug,
+          markdown: buildersLogForm.markdown.ja,
+          skipAiReview: true,
+          locale: 'ja'
+        };
+        setBuildersLogAction({ type: 'loading', msg: '일본어(JA) 버전 배포 중...' });
+        await fetchApi('/builderslog/publish', { method: 'POST', body: JSON.stringify(bodyJa) });
+      }
+
+      setBuildersLogAction({ type: 'success', msg: '🎉 전 언어 버전 배포 완료!' });
       setTimeout(() => { setBuildersLogModal(null); loadBuildersLogMeta(); }, 1500);
     } catch (err) {
       setBuildersLogAction({ type: 'error', msg: `❌ ${err.message}` });
@@ -764,7 +906,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         .slice(0, 10) // Top 10만 노출
                         .map((article, i) => (
                           <tr key={i}>
-                            <td className="admin-subject-cell">{article.title}</td>
+                            <td className="admin-subject-cell">{typeof article.title === 'object' ? article.title.ko : article.title}</td>
                             <td style={{ color: 'var(--text-muted)' }}>{article.slug}</td>
                             <td><strong style={{ color: 'var(--admin-green)' }}>{article.dailyViews.toLocaleString()}회</strong></td>
                             <td><strong style={{ color: 'var(--admin-blue)' }}>{article.totalViews.toLocaleString()}회</strong></td>
@@ -1030,7 +1172,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   {pacePool.map((item, i) => (
                     <tr key={i}>
                       <td><span className="admin-date-chip" style={{ backgroundColor: item.color || '#60A5FA', color: '#111' }}>{item.category}</span></td>
-                      <td className="admin-subject-cell" style={{ opacity: item.isActive === false ? 0.5 : 1 }}>{item.title}</td>
+                      <td className="admin-subject-cell" style={{ opacity: item.isActive === false ? 0.5 : 1 }}>{typeof item.title === 'object' ? item.title.ko : item.title}</td>
                       <td>{item.isActive !== false ? '✅ 활성' : '❌ 비활성'}</td>
                       <td>{item.createdAt ? new Date(item.createdAt).toLocaleDateString('ko') : '-'}</td>
                       <td className="admin-actions-cell">
@@ -1060,7 +1202,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <tr key={i}>
                       <td><span className="admin-date-chip" style={{ backgroundColor: item.accent || '#6D28D9', color: '#fff' }}>EP. {item.chapterNo}</span></td>
                       <td style={{ color: '#9CA3AF' }}>{item.slug}</td>
-                      <td className="admin-subject-cell">{item.title}</td>
+                      <td className="admin-subject-cell">{typeof item.title === 'object' ? item.title.ko : item.title}</td>
                       <td>{item.date}</td>
                       <td className="admin-actions-cell">
                         <button className="admin-action-btn edit" onClick={() => openEditBuildersLog(item)} title="수정/배포">✏️</button>
@@ -1084,8 +1226,20 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </div>
               <form onSubmit={handlePoolSubmit}>
                 <div className="admin-modal-body">
-                  <label className="admin-form-label">목표 (Title)
-                    <input type="text" required value={poolForm.title} onChange={e => setPoolForm({ ...poolForm, title: e.target.value })} />
+                  <div className="admin-modal-tabs" style={{ marginBottom: '12px', borderBottom: 'none' }}>
+                    {['ko', 'en', 'ja'].map(lang => (
+                      <button
+                        key={lang}
+                        type="button"
+                        className={`admin-modal-tab ${poolFormLocale === lang ? 'active' : ''}`}
+                        onClick={() => setPoolFormLocale(lang)}
+                      >
+                        {lang.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                  <label className="admin-form-label">목표 (Title - {poolFormLocale.toUpperCase()})
+                    <input type="text" required value={poolForm.title[poolFormLocale] || ''} onChange={e => setPoolForm({ ...poolForm, title: { ...poolForm.title, [poolFormLocale]: e.target.value } })} />
                   </label>
                   <label className="admin-form-label">카테고리
                     <select required value={poolForm.category} onChange={e => setPoolForm({ ...poolForm, category: e.target.value })} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--surface-bg)', color: 'var(--text-primary)', marginTop: '6px' }}>
@@ -1123,9 +1277,45 @@ function Dashboard({ token, adminEmail, onLogout }) {
               <form onSubmit={handleBuildersLogSubmit}>
                 <div className="admin-modal-body" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr', maxHeight: '70vh', overflowY: 'auto' }}>
                   
+                  <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div className="admin-modal-tabs" style={{ margin: 0, borderBottom: 'none' }}>
+                      {['ko', 'en', 'ja'].map(lang => (
+                        <button
+                          key={lang}
+                          type="button"
+                          className={`admin-modal-tab ${buildersLogActiveTab === lang ? 'active' : ''}`}
+                          onClick={() => setBuildersLogActiveTab(lang)}
+                        >
+                          {lang.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      className="admin-btn-secondary"
+                      onClick={handleAiTranslate}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '13px',
+                        background: 'linear-gradient(135deg, #7C3AED, #4F46E5)',
+                        color: '#FFF',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        boxShadow: '0 0 10px rgba(124, 58, 237, 0.3)',
+                        fontWeight: 'bold',
+                        transition: 'transform 0.2s ease'
+                      }}
+                      onMouseEnter={e => { e.target.style.transform = 'scale(1.02)'; }}
+                      onMouseLeave={e => { e.target.style.transform = 'scale(1)'; }}
+                    >
+                      ✨ AI 자동 완역
+                    </button>
+                  </div>
+
                   <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                     <label className="admin-form-label" style={{ marginBottom: 0, width: '100%' }}>
-                      본문 Markdown (AI 윤문 및 검열 파이프라인 연동)
+                      본문 Markdown ({buildersLogActiveTab.toUpperCase()} - AI 윤문 및 검열 파이프라인 연동)
                     </label>
                     <label className="admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', padding: '4px 12px', fontSize: '12px' }}>
                       📁 .md 파일 불러오기
@@ -1139,7 +1329,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                           const reader = new FileReader();
                           reader.onload = async (evt) => {
                             const rawMarkdown = evt.target.result;
-                            setBuildersLogForm(f => ({ ...f, markdown: rawMarkdown }));
+                            setBuildersLogForm(f => ({ ...f, markdown: { ...f.markdown, ko: rawMarkdown } }));
                             setBuildersLogAction({ type: 'loading', msg: 'AI가 초안을 분석하여 톤앤매너 교정 및 항목을 자동 작성 중입니다...' });
                             try {
                               const res = await fetchApi('/builderslog/analyze', { 
@@ -1148,11 +1338,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
                               });
                               setBuildersLogForm(f => ({
                                 ...f,
-                                title: res.title || f.title,
-                                subtitle: res.subtitle || f.subtitle,
+                                title: { ...f.title, ko: res.title || f.title.ko },
+                                subtitle: { ...f.subtitle, ko: res.subtitle || f.subtitle.ko },
                                 slug: res.slug || f.slug,
                                 tags: res.tags && res.tags.length > 0 ? res.tags.join(', ') : f.tags,
-                                markdown: res.refinedMarkdown || rawMarkdown,
+                                markdown: { ...f.markdown, ko: res.refinedMarkdown || rawMarkdown },
                                 commits: res.commits && res.commits.length > 0 ? JSON.stringify(res.commits, null, 2) : f.commits
                               }));
                               if (res._warning) {
@@ -1169,7 +1359,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       />
                     </label>
                   </div>
-                  <textarea required rows={15} value={buildersLogForm.markdown} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: e.target.value }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)', color: '#FFF', padding: '12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
+                  <textarea required rows={15} value={buildersLogForm.markdown[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: { ...f.markdown, [buildersLogActiveTab]: e.target.value } }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)', color: '#FFF', padding: '12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
 
                   {buildersLogAction && (
                     <div className={`admin-send-status ${buildersLogAction.type}`} style={{ gridColumn: 'span 2' }}>{buildersLogAction.msg}</div>
@@ -1190,12 +1380,16 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <input type="text" required value={buildersLogForm.slug} onChange={e => setBuildersLogForm(f => ({ ...f, slug: e.target.value }))} placeholder="my-awesome-update" />
                   </label>
                   <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    Title (메인 제목)
-                    <input type="text" required value={buildersLogForm.title} onChange={e => setBuildersLogForm(f => ({ ...f, title: e.target.value }))} />
+                    Title (메인 제목 - {buildersLogActiveTab.toUpperCase()})
+                    <input type="text" required value={buildersLogForm.title[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, title: { ...f.title, [buildersLogActiveTab]: e.target.value } }))} />
                   </label>
                   <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
-                    Subtitle (부제목/요약)
-                    <input type="text" value={buildersLogForm.subtitle} onChange={e => setBuildersLogForm(f => ({ ...f, subtitle: e.target.value }))} />
+                    Subtitle (부제목/요약 - {buildersLogActiveTab.toUpperCase()})
+                    <input type="text" value={buildersLogForm.subtitle[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, subtitle: { ...f.subtitle, [buildersLogActiveTab]: e.target.value } }))} />
+                  </label>
+                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                    Description (요약 및 SEO 설명 - {buildersLogActiveTab.toUpperCase()})
+                    <textarea rows={2} value={buildersLogForm.description[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, description: { ...f.description, [buildersLogActiveTab]: e.target.value } }))} placeholder="검색 엔진 및 리스트 카드에서 노출될 요약 정보입니다." />
                   </label>
                   <label className="admin-form-label">
                     Date (YYYY-MM-DD)
@@ -1296,6 +1490,22 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </div>
               <form onSubmit={handleContentSubmit}>
                 <div className="admin-modal-body">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <div className="admin-modal-tabs" style={{ margin: 0, borderBottom: 'none' }}>
+                      {['ko', 'en', 'ja'].map(lang => (
+                        <button
+                          key={lang}
+                          type="button"
+                          className={`admin-modal-tab ${contentFormLocale === lang ? 'active' : ''}`}
+                          onClick={() => setContentFormLocale(lang)}
+                        >
+                          {lang.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>* 다국어 입력 선택</span>
+                  </div>
+
                   <div className="admin-modal-tabs">
                     <button type="button" className={`admin-modal-tab ${contentModalTab === 'basic' ? 'active' : ''}`} onClick={() => setContentModalTab('basic')}>📅 기본 정보</button>
                     <button type="button" className={`admin-modal-tab ${contentModalTab === 'signal' ? 'active' : ''}`} onClick={() => setContentModalTab('signal')}>📰 IT Signal</button>
@@ -1310,8 +1520,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         <input type="text" value={contentForm.date} onChange={e => setContentForm({...contentForm, date: e.target.value})} required disabled={contentModal.mode === 'edit'} />
                       </label>
                       <label className="admin-form-label">
-                        공통 테마 (선택)
-                        <input type="text" value={contentForm.study?.theme || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, theme: e.target.value}})} />
+                        공통 테마 (선택 - {contentFormLocale.toUpperCase()})
+                        <input type="text" value={contentForm.study?.theme[contentFormLocale] || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, theme: { ...contentForm.study.theme, [contentFormLocale]: e.target.value }}})} />
                       </label>
                     </>
                   )}
@@ -1332,8 +1542,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         <textarea value={contentForm.study?.prompt_snippet || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, prompt_snippet: e.target.value}})} rows={4} style={{ fontFamily: 'monospace' }} />
                       </label>
                       <label className="admin-form-label">
-                        상세 설명
-                        <textarea value={contentForm.study?.explanation || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, explanation: e.target.value}})} rows={3} />
+                        상세 설명 ({contentFormLocale.toUpperCase()})
+                        <textarea value={contentForm.study?.explanation[contentFormLocale] || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, explanation: { ...contentForm.study.explanation, [contentFormLocale]: e.target.value }}})} rows={3} />
                       </label>
                       <label className="admin-form-label">
                         파라미터 설정 (JSON 배열 - name, description)
@@ -1353,8 +1563,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         <textarea value={contentForm.study?.sentence_furigana || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_furigana: e.target.value}})} rows={2} />
                       </label>
                       <label className="admin-form-label">
-                        한국어 해석
-                        <textarea value={contentForm.study?.sentence_kr || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_kr: e.target.value}})} rows={2} />
+                        해석 (Translation - {contentFormLocale.toUpperCase()})
+                        <textarea value={contentForm.study?.sentence_kr[contentFormLocale] || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, sentence_kr: { ...contentForm.study.sentence_kr, [contentFormLocale]: e.target.value }}})} rows={2} />
                       </label>
                       <label className="admin-form-label">
                         문장 한국어 발음
@@ -1365,8 +1575,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={4} style={{ fontFamily: 'monospace' }} />
                       </label>
                       <label className="admin-form-label">
-                        실무 활용 팁 (비즈니스 코멘트)
-                        <textarea value={contentForm.study?.business_context || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, business_context: e.target.value}})} rows={3} />
+                        실무 활용 팁 (비즈니스 코멘트 - {contentFormLocale.toUpperCase()})
+                        <textarea value={contentForm.study?.business_context[contentFormLocale] || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, business_context: { ...contentForm.study.business_context, [contentFormLocale]: e.target.value }}})} rows={3} />
                       </label>
                     </>
                   )}

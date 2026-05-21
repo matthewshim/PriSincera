@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
 import PaceNoteChronoRibbon from '../components/pacenote/PaceNoteChronoRibbon';
+import { useTranslation } from '../contexts/LanguageContext';
 import './PaceNoteDashboard.css';
 
 const getCurrentWeekId = () => {
@@ -63,6 +64,7 @@ const getDummyData = () => {
 export default function PaceNoteDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const { locale } = useTranslation();
 
   useSEO({
     title: 'Pace Note',
@@ -150,7 +152,7 @@ export default function PaceNoteDashboard() {
     setSaveStatus('saving');
     const delayDebounceFn = setTimeout(async () => {
       try {
-        const res = await fetch('/api/pacenote/diary', {
+        const res = await fetch(`/api/pacenote/diary?lang=${locale}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -257,7 +259,7 @@ export default function PaceNoteDashboard() {
 
   const fetchPaceData = async (token) => {
     try {
-      const res = await fetch('/api/pacenote', {
+      const res = await fetch(`/api/pacenote?lang=${locale}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -291,7 +293,7 @@ export default function PaceNoteDashboard() {
     });
 
     try {
-      await fetch('/api/pacenote/toggle', {
+      await fetch(`/api/pacenote/toggle?lang=${locale}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -327,7 +329,7 @@ export default function PaceNoteDashboard() {
     });
 
     try {
-      const res = await fetch('/api/pacenote/accept', {
+      const res = await fetch(`/api/pacenote/accept?lang=${locale}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -363,7 +365,7 @@ export default function PaceNoteDashboard() {
 
     setAddingTask(true);
     try {
-      const res = await fetch('/api/pacenote/add', {
+      const res = await fetch(`/api/pacenote/add?lang=${locale}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

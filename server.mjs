@@ -98,6 +98,44 @@ app.use((req, res, next) => {
   next();
 });
 
+// --- Locale parsing middleware ---
+app.use(['/api', '/admin'], (req, res, next) => {
+  const queryLang = req.query.lang;
+  const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
+  const allowed = ['ko', 'en', 'ja'];
+  req.locale = allowed.includes(queryLang) ? queryLang : (allowed.includes(headerLang) ? headerLang : 'ko');
+  next();
+});
+
+// --- Recursive Object Localizer for Dynamic DB Content ---
+const isLocalizationMap = (obj) => {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+  const keys = Object.keys(obj);
+  if (keys.length === 0) return false;
+  const allowedLocales = ['ko', 'en', 'ja'];
+  return keys.every(key => allowedLocales.includes(key));
+};
+
+const localizeObject = (obj, locale) => {
+  if (!obj) return obj;
+  if (isLocalizationMap(obj)) {
+    return obj[locale] || obj['ko'] || '';
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(item => localizeObject(item, locale));
+  }
+  if (typeof obj === 'object') {
+    const newObj = {};
+    for (const key of Object.keys(obj)) {
+      newObj[key] = localizeObject(obj[key], locale);
+    }
+    return newObj;
+  }
+  return obj;
+};
+
+
+
 // --- Static files with caching ---
 app.use(express.static(DIST_DIR, {
   maxAge: '1d',
@@ -347,9 +385,12 @@ app.get('/api/daily/:date', async (req, res) => {
       study: studyData || null
     };
 
+    // 클라이언트의 로케일에 맞춰 동적으로 모든 다국어 맵 데이터 평탄화(Flatten)
+    const localizedData = localizeObject(aggregatedData, req.locale);
+
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('Content-Type', 'application/json');
-    res.json(aggregatedData);
+    res.json(localizedData);
   } catch (err) {
     console.error(`[API] /api/daily/${dateStr} Error:`, err);
     res.status(500).json({ error: 'Failed to fetch daily signal' });

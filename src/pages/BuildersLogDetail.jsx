@@ -6,18 +6,23 @@ import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/atom-one-dark.css'; // Premium dark theme for code
 import useSEO from '../hooks/useSEO';
 import logMeta from '../data/buildersLogMeta.json';
+import { useTranslation } from '../contexts/LanguageContext';
 import './BuildersLogDetail.css';
 
 export default function BuildersLogDetail() {
   const { slug } = useParams();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
+  const { locale, localize } = useTranslation();
   
   const articleMeta = logMeta.find(m => m.slug === slug);
+  const localizedTitle = articleMeta ? localize(articleMeta.title) : "Builder's Log";
+  const localizedSubtitle = articleMeta ? localize(articleMeta.subtitle) : '';
+  const localizedDescription = articleMeta ? localize(articleMeta.description) : 'PriSincera 기술 블로그 아티클입니다.';
 
   useSEO({
-    title: articleMeta ? `${articleMeta.title} | Builder's Log` : 'Builder\'s Log',
-    description: articleMeta ? articleMeta.description : 'PriSincera 기술 블로그 아티클입니다.',
+    title: `${localizedTitle} | Builder's Log`,
+    description: localizedDescription,
     keywords: articleMeta && articleMeta.tags ? articleMeta.tags.join(', ') : 'PriSincera, 기술블로그',
     ogUrl: `https://www.prisincera.com/builders-log/${slug}`
   });
@@ -35,10 +40,22 @@ export default function BuildersLogDetail() {
       return;
     }
     
-    // Fetch markdown content from public folder with cache-busting timestamp
-    fetch(`/content/logs/${slug}.md?t=${Date.now()}`)
+    setLoading(true);
+    // Waterfall loading: Try slug_locale.md first, fall back to slug.md
+    const targetFile = locale && locale !== 'ko' ? `/content/logs/${slug}_${locale}.md` : `/content/logs/${slug}.md`;
+    
+    fetch(`${targetFile}?t=${Date.now()}`)
       .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch article');
+        if (!res.ok) {
+          if (locale && locale !== 'ko') {
+            // Try default Korean file as fallback
+            return fetch(`/content/logs/${slug}.md?t=${Date.now()}`).then(fallbackRes => {
+              if (!fallbackRes.ok) throw new Error('Failed to fetch article');
+              return fallbackRes.text();
+            });
+          }
+          throw new Error('Failed to fetch article');
+        }
         return res.text();
       })
       .then(text => {
@@ -47,13 +64,13 @@ export default function BuildersLogDetail() {
       })
       .catch(err => {
         console.error(err);
-        setContent('아티클을 불러오는데 실패했습니다.');
+        setContent(locale === 'ko' ? '아티클을 불러오는데 실패했습니다.' : 'Failed to load article.');
         setLoading(false);
       });
 
     // Record view count
     fetch(`/api/builderslog/${slug}/view`, { method: 'POST' }).catch(e => console.error(e));
-  }, [slug, articleMeta]);
+  }, [slug, articleMeta, locale, localize]);
 
   if (!articleMeta) {
     return (
@@ -73,8 +90,8 @@ export default function BuildersLogDetail() {
             <span className="chapter-badge">Chapter {articleMeta.chapterNo}</span>
             <span className="date-badge">{new Date(articleMeta.date).toLocaleDateString()}</span>
           </div>
-          <h1 className="detail-title">{articleMeta.title}</h1>
-          <h2 className="detail-subtitle">{articleMeta.subtitle}</h2>
+          <h1 className="detail-title">{localizedTitle}</h1>
+          <h2 className="detail-subtitle">{localizedSubtitle}</h2>
           
           <div className="detail-tags">
             {articleMeta.tags.map(tag => (
@@ -85,7 +102,7 @@ export default function BuildersLogDetail() {
 
         {loading ? (
           <div className="markdown-loading">
-            <div className="admin-spinner"></div> 아티클을 불러오는 중...
+            <div className="admin-spinner"></div> {locale === 'ko' ? '아티클을 불러오는 중...' : 'Loading article...'}
           </div>
         ) : (
           <article className="markdown-body">
@@ -100,7 +117,7 @@ export default function BuildersLogDetail() {
         
         <div className="detail-footer">
           <Link to="/builders-log" className="back-btn-large">
-            다른 여정 살펴보기
+            {locale === 'ko' ? '다른 여정 살펴보기' : 'Explore other journeys'}
           </Link>
         </div>
       </div>

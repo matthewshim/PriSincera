@@ -45,8 +45,17 @@ export function LanguageProvider({ children }) {
     return fallbackValue !== undefined ? fallbackValue : keyPath;
   };
 
+  // 동적 로컬라이제이션 맵 파싱용 헬퍼 함수
+  const localize = (obj) => {
+    if (!obj) return '';
+    if (typeof obj === 'object') {
+      return obj[locale] || obj['ko'] || '';
+    }
+    return obj;
+  };
+
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, t, SUPPORTED_LANGUAGES }}>
+    <LanguageContext.Provider value={{ locale, setLocale, t, localize, SUPPORTED_LANGUAGES }}>
       {children}
     </LanguageContext.Provider>
   );

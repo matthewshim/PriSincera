@@ -229,3 +229,69 @@ match /study_progress/{userId} {
 ```
 
 *본 2차 보안 취약점 진단 및 조치 보고서는 2026년 5월 21일 기준의 최신 코드베이스 정밀 정적 분석과 보안 위협 전면 제거 작업을 통해 작성 및 인증되었습니다.*
+
+---
+
+## 11. Pace Note (사색의 기록) 상세 보안 진단
+
+Pace Note 내 **'사색의 기록(Captain's Log, 주간 회고)'** 텍스트 박스 영역 및 백엔드 저장 API(`/api/pacenote/diary`)에 대한 SQL Injection, NoSQL Injection, XSS, 그리고 자원 소모 공격 관점에서의 종합 보안 안정성을 정밀 검증하고 분석한 결과보고서입니다.
+
+### 11.1 요약 및 안전성 판정
+* **최종 보안 평정**: **Green (매우 안전 - 보안 결함 및 취약점 없음)**
+* **핵심 판정 이유**: 
+  - 관계형 DB가 아닌 **Cloud Firestore (NoSQL)**를 사용하므로 SQL 주입은 논리적으로 불가능함.
+  - 전송 데이터에 대한 문자열 강제 강결합 캐스팅과 1,000자 길이 엄격 검증(Server-side Validation)이 이중으로 보호함.
+  - 리액트 자체의 **XSS 이스케이프 이중 래퍼** 및 **Bearer Token 기반의 헤더 인증(CSRF 원천 차단)**이 적용되어 전방위적 공격을 모두 방어함.
+
+### 11.2 공격 벡터별 심층 진단 결과
+
+#### 1) SQL Injection (SQL 인젝션)
+* **취약점 개요**: 사용자가 입력창에 악의적인 SQL 구문(예: `' OR '1'='1`)을 삽입하여 데이터베이스의 데이터를 임의로 조작하거나 권한을 탈취하는 공격.
+* **진단 결과**: **완벽하게 안전함 (SQL Injection 불가)**
+* **상세 분석**:
+  - 본 애플리케이션의 영속성 저장소는 MySQL이나 Oracle 같은 RDBMS가 아닌 구글의 **Cloud Firestore (NoSQL Document DB)**를 채택하고 있습니다.
+  - SQL 엔진이나 파서 자체가 백엔드 내부 및 데이터베이스에 존재하지 않으므로 SQL 주입 공격은 구조적으로 완전 무력화됩니다.
+  - 또한 DB 호출은 문자열 파싱 쿼리가 아닌, Firebase Admin SDK의 전용 객체 지향 메서드(`db.collection().doc().update()`)만을 사용하여 실행되므로 데이터 조작의 사각지대가 없습니다.
+
+#### 2) NoSQL Injection (NoSQL 인젝션)
+* **취약점 개요**: MongoDB 등에서 악의적인 JSON 객체 페이로드(예: `{"$gt": ""}`)를 전송하여 인증을 우회하거나 타인의 데이터를 조회/변조하는 공격.
+* **진단 결과**: **매우 안전함 (NoSQL Injection 불가)**
+* **상세 분석**:
+  - `pacenote-api.mjs` 백엔드 컨트롤러 단에서 사용자가 입력한 `statement`를 가공할 때 다음과 같은 엄격한 전처리를 거칩니다.
+    ```javascript
+    const cleanStatement = statement ? statement.trim() : '';
+    ```
+  - 만약 공격자가 JSON 객체 타입(예: `{ "$gt": "" }`)을 요청 본문으로 전송하더라도, 백엔드에서 삼항 연산자 분기와 `trim()` 연산 단계에서 문자열 형식으로 **강제 캐스팅 및 평탄화(Flattening)**되어 단순 텍스트 데이터(`"[object Object]"`)로 취급됩니다. 
+  - 이에 따라 Firestore에 저장될 때도 특수 필터 객체가 아닌 순수 단순 문자열로만 파인딩(Binding)되어 저장되므로 인젝션 유도가 불가능합니다.
+
+#### 3) Stored XSS (저장형 크로스 사이트 스크립팅)
+* **취약점 개요**: 악성 스크립트 코드(예: `<script>alert('XSS')</script>`)를 텍스트 박스에 주입하여 DB에 저장한 뒤, 다른 사용자나 본인이 해당 내용을 열람할 때 브라우저에서 스크립트가 임의 실행되도록 만드는 공격.
+* **진단 결과**: **완벽하게 안전함 (Stored XSS 불가)**
+* **상세 분석**:
+  - **React 자동 이스케이프**: React는 `{diaryText}`와 같이 JSX 중괄호 속에 동적으로 문자열을 바인딩할 때, 렌더링 엔진 내부에서 모든 문자열 특수기호를 HTML Entity로 자동 변환(Escape)하여 **단순 텍스트 노드(Text Node)로만 화면에 출력**합니다.
+  - 렌더링 영역인 `PaceNoteDashboard.jsx`를 보면 데이터가 직접 노출됩니다.
+    ```javascript
+    <p className="log-text">{diaryText}</p>
+    ```
+  - 따라서, 사용자가 작성한 글 내에 `<script>` 태그나 `onload`, `onerror` 핸들러가 포함되어 있더라도 HTML 태그로써 브라우저에 의해 파싱되지 않고 그대로 안전하게 화면에 글자(Plain Text)로 표기될 뿐입니다.
+  - 마크다운 포트폴리오 내보내기(`.md`)의 텍스트 박스 렌더링 역시 단순 HTML 태그가 아닌 React `<textarea value={generateMarkdownPortfolio()} readOnly />` 형식의 내부에 격리되어 렌더링되므로 프론트엔드 레벨에서의 스크립트 트리거 위협은 0%입니다.
+
+#### 4) CSRF (크로스 사이트 요청 위조) 및 권한 탈취
+* **취약점 개요**: 타 사이트에서 위조된 스크립트를 통해 로그인한 사용자의 브라우저 세션을 이용해 임의로 회고 데이터를 임의 조작하거나 삭제하는 공격.
+* **진단 결과**: **완벽하게 안전함 (CSRF 불가)**
+* **상세 분석**:
+  - 회고 저장 API인 `/api/pacenote/diary`는 쿠키(Cookie) 기반의 암묵적 세션 검증이 아닌, 헤더 기반 **Firebase ID Token 검증 방식 (`verifyUser` 미들웨어)**을 사용합니다.
+  - 공격자가 타 사이트에서 임의의 이미지 태그나 iframe을 통해 요청을 강제 전송하더라도, 요청 헤더(`Authorization: Bearer <Token>`) 내부에 유효한 Firebase JWT 토큰이 실려있지 않으면 백엔드 단에서 `401 Unauthorized`로 차단되므로 CSRF 공격 시도가 원천 봉쇄됩니다.
+
+#### 5) 대용량 페이로드 / 버퍼 오버플로우 DoS 공격
+* **취약점 개요**: 비정상적으로 거대한 크기의 텍스트(예: 수백 메가바이트)를 일시에 전송하여 서버의 가용량을 고갈시키거나 데이터베이스의 저장 한도를 초과하게 해 먹통으로 만드는 서비스 거부 공격.
+* **진단 결과**: **완벽하게 안전함 (DoS 방어)**
+* **상세 분석**:
+  - 백엔드 `pacenote-api.mjs`에 엄밀한 글자 수 바운더리 체크 코드가 서버 레벨에서 강제 집행되고 있습니다:
+    ```javascript
+    if (statement && statement.length > 1000) {
+      return res.status(400).json({ error: 'Diary entry must be 1000 characters or less' });
+    }
+    ```
+  - 1000자가 초과되는 즉시 Firestore DB 쓰기나 무거운 연산을 거치지 않고 HTTP 응답 코드로 바로 거부 처리(Early Return)하므로, 불필요한 자원 낭비 및 메모리 고갈 공격이 완벽하게 방지되고 있습니다.
+

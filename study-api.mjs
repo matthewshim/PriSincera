@@ -4,6 +4,34 @@ import { getStudyContent } from './pipeline/src/repositories/StudyRepository.mjs
 
 const studyRouter = express.Router();
 
+// --- Recursive Object Localizer for Dynamic DB Content ---
+const isLocalizationMap = (obj) => {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+  const keys = Object.keys(obj);
+  if (keys.length === 0) return false;
+  const allowedLocales = ['ko', 'en', 'ja'];
+  return keys.every(key => allowedLocales.includes(key));
+};
+
+const localizeObject = (obj, locale) => {
+  if (!obj) return obj;
+  if (isLocalizationMap(obj)) {
+    return obj[locale] || obj['ko'] || '';
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(item => localizeObject(item, locale));
+  }
+  if (typeof obj === 'object') {
+    const newObj = {};
+    for (const key of Object.keys(obj)) {
+      newObj[key] = localizeObject(obj[key], locale);
+    }
+    return newObj;
+  }
+  return obj;
+};
+
+
 // 미들웨어: Firebase Auth 토큰 검증
 async function verifyUser(req, res, next) {
   const authHeader = req.headers.authorization || '';
@@ -36,11 +64,13 @@ studyRouter.get('/daily/:date', async (req, res) => {
     const prevContent = await getStudyContent(prevDate);
     const nextContent = await getStudyContent(nextDate);
     
-    res.json({
+    const rawResponse = {
       ...content,
       hasPrev: !!prevContent,
       hasNext: !!nextContent
-    });
+    };
+
+    res.json(localizeObject(rawResponse, req.locale));
   } catch (err) {
     console.error('[PriStudy API] Get Content Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -10,5 +10,14 @@
     "navigate": "Navigate",
     "connect": "Connect",
     "tagline": "Sincerity, Prioritized."
+  },
+  "buildersLog": {
+    "heroParagraph": "PriSincera가 단순한 포트폴리오를 넘어 완전한 SaaS 플랫폼으로 거듭나기까지.\n프로덕트를 설계하고 코드를 쌓아 올린 치열한 항해의 기록을 공유합니다.",
+    "seoDescription": "PriSincera의 프로덕트 메이킹과 비즈니스 구축 여정을 기록한 기술 블로그입니다.",
+    "readArticle": "아티클 읽기",
+    "recentShipments": "최근 배포 사항",
+    "keyShipments": "핵심 배포 사항",
+    "moreShipments": "+{count}개 배포 더 보기",
+    "journeyContinues": "여정은 계속됩니다."
   }
 }

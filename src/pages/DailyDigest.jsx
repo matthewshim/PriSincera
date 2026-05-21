@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
 import DailyIntro from '../components/daily/DailyIntro';
 import DailyCalendar from '../components/daily/DailyCalendar';
+import { useTranslation } from '../contexts/LanguageContext';
 import './DailyDigest.css';
 
 const TABS = [
@@ -22,6 +23,7 @@ export default function DailyDigest() {
   const { date } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { locale } = useTranslation();
   
   useSEO({
     title: date ? `Daily Digest (${date})` : 'Daily Digest',
@@ -47,7 +49,7 @@ export default function DailyDigest() {
   const fetchQuickPeekData = async (targetDate) => {
     setQuickPeekLoading(true);
     try {
-      const res = await fetch(`/api/daily/${targetDate}`);
+      const res = await fetch(`/api/daily/${targetDate}?lang=${locale}`);
       if (res.ok) {
         const digest = await res.json();
         setQuickPeekData(digest);
@@ -159,7 +161,7 @@ export default function DailyDigest() {
     setLoading(true);
     try {
       if (date) {
-        const res = await fetch(`/api/daily/${date}`);
+        const res = await fetch(`/api/daily/${date}?lang=${locale}`);
         if (res.ok) {
           const digest = await res.json();
           setData(digest);

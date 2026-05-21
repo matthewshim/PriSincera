@@ -50,21 +50,41 @@ function getWeekDateRange(weekStr) {
 
 // 스마트 카테고리 매퍼 함수 (제목 기반 자동 매핑)
 function getSmartCategory(title) {
-  const t = title.toLowerCase();
+  const t = (typeof title === 'object' ? (title.ko || title.en || title.ja || '') : (title || '')).toLowerCase();
   
-  if (t.includes('달리기') || t.includes('운동') || t.includes('스트레칭') || t.includes('일어나기') || t.includes('명상') || t.includes('건강') || t.includes('식단') || t.includes('수면') || t.includes('헬스') || t.includes('산책') || t.includes('조깅')) {
+  if (
+    t.includes('달리기') || t.includes('운동') || t.includes('스트레칭') || t.includes('일어나기') || t.includes('명상') || t.includes('건강') || t.includes('식단') || t.includes('수면') || t.includes('헬스') || t.includes('산책') || t.includes('조깅') ||
+    t.includes('run') || t.includes('exercise') || t.includes('stretch') || t.includes('wake up') || t.includes('meditat') || t.includes('health') || t.includes('diet') || t.includes('sleep') || t.includes('fitness') || t.includes('walk') || t.includes('jog') ||
+    t.includes('走る') || t.includes('運動') || t.includes('ストレッチ') || t.includes('起きる') || t.includes('瞑想') || t.includes('健康') || t.includes('食事') || t.includes('睡眠') || t.includes('ジム') || t.includes('散歩') || t.includes('ジョギング')
+  ) {
     return { category: 'Health', color: '#10B981' }; // Emerald Green
   }
-  if (t.includes('회고') || t.includes('업무') || t.includes('코딩') || t.includes('개발') || t.includes('자동화') || t.includes('작업') || t.includes('프로젝트') || t.includes('계획') || t.includes('우선순위') || t.includes('시간 관리') || t.includes('정리') || t.includes('복습') || t.includes('수정') || t.includes('테스트')) {
+  if (
+    t.includes('회고') || t.includes('업무') || t.includes('코딩') || t.includes('개발') || t.includes('자동화') || t.includes('작업') || t.includes('프로젝트') || t.includes('계획') || t.includes('우선순위') || t.includes('시간 관리') || t.includes('정리') || t.includes('복습') || t.includes('수정') || t.includes('테스트') ||
+    t.includes('retrospective') || t.includes('review') || t.includes('work') || t.includes('code') || t.includes('develop') || t.includes('automat') || t.includes('task') || t.includes('project') || t.includes('plan') || t.includes('priorit') || t.includes('time manage') || t.includes('organiz') || t.includes('tid') || t.includes('fix') || t.includes('test') ||
+    t.includes('振り返り') || t.includes('業務') || t.includes('コーディング') || t.includes('開発') || t.includes('自動化') || t.includes('作業') || t.includes('プロジェクト') || t.includes('計画') || t.includes('優先順位') || t.includes('時間管理') || t.includes('整理') || t.includes('復習') || t.includes('修正') || t.includes('テスト')
+  ) {
     return { category: 'Productivity', color: '#F472B6' }; // Rose Pink
   }
-  if (t.includes('감사') || t.includes('마인드') || t.includes('일기') || t.includes('생각') || t.includes('회상') || t.includes('긍정') || t.includes('행복') || t.includes('사색') || t.includes('인사이트')) {
+  if (
+    t.includes('감사') || t.includes('마인드') || t.includes('일기') || t.includes('생각') || t.includes('회상') || t.includes('긍정') || t.includes('행복') || t.includes('사색') || t.includes('인사이트') ||
+    t.includes('gratitud') || t.includes('thank') || t.includes('mindset') || t.includes('diary') || t.includes('journal') || t.includes('thought') || t.includes('positive') || t.includes('happi') || t.includes('contemplat') || t.includes('insight') ||
+    t.includes('感謝') || t.includes('マインド') || t.includes('日記') || t.includes('考え') || t.includes('回想') || t.includes('肯定的') || t.includes('幸せ') || t.includes('思索') || t.includes('インサイト')
+  ) {
     return { category: 'Mindset', color: '#34D399' }; // Mint Green
   }
-  if (t.includes('아티클') || t.includes('공부') || t.includes('학습') || t.includes('독서') || t.includes('책') || t.includes('강의') || t.includes('리서치') || t.includes('공유') || t.includes('배움') || t.includes('일본어') || t.includes('영어') || t.includes('암기') || t.includes('읽기') || t.includes('스터디') || t.includes('북마크') || t.includes('메모')) {
+  if (
+    t.includes('아티클') || t.includes('공부') || t.includes('학습') || t.includes('독서') || t.includes('책') || t.includes('강의') || t.includes('리서치') || t.includes('공유') || t.includes('배움') || t.includes('일본어') || t.includes('영어') || t.includes('암기') || t.includes('읽기') || t.includes('스터디') || t.includes('북마크') || t.includes('메모') ||
+    t.includes('article') || t.includes('stud') || t.includes('learn') || t.includes('read') || t.includes('book') || t.includes('lectur') || t.includes('research') || t.includes('share') || t.includes('memoriz') || t.includes('bookmark') || t.includes('memo') ||
+    t.includes('記事') || t.includes('勉強') || t.includes('学習') || t.includes('読書') || t.includes('本') || t.includes('講義') || t.includes('リサーチ') || t.includes('共有') || t.includes('学び') || t.includes('日本語') || t.includes('英語') || t.includes('暗記') || t.includes('読む') || t.includes('スタディ') || t.includes('ブックマーク') || t.includes('メモ')
+  ) {
     return { category: 'Learning', color: '#60A5FA' }; // Sky Blue
   }
-  if (t.includes('동료') || t.includes('피드백') || t.includes('연락') || t.includes('지인') || t.includes('커피챗') || t.includes('소통') || t.includes('회의') || t.includes('네트워킹') || t.includes('인사')) {
+  if (
+    t.includes('동료') || t.includes('피드백') || t.includes('연락') || t.includes('지인') || t.includes('커피챗') || t.includes('소통') || t.includes('회의') || t.includes('네트워킹') || t.includes('인사') ||
+    t.includes('colleague') || t.includes('feedback') || t.includes('contact') || t.includes('coffee chat') || t.includes('communicat') || t.includes('meet') || t.includes('network') ||
+    t.includes('同僚') || t.includes('フィードバック') || t.includes('連絡') || t.includes('知人') || t.includes('コーヒーチャット') || t.includes('コミュニケーション') || t.includes('会議') || t.includes('ネットワーキング') || t.includes('挨拶')
+  ) {
     return { category: 'Networking', color: '#A78BFA' }; // Lavender Purple
   }
   
@@ -74,21 +94,156 @@ function getSmartCategory(title) {
 
 // 다량의 추천 케이스 (지속 추천을 위한 풀)
 const AI_RECOMMENDATION_POOL = [
-  { id: 'rec-1', title: '아침 출근 전 30분 동안 온전히 나를 위한 명상하기', category: 'Mindset', color: '#34D399' },
-  { id: 'rec-2', title: '이번 주 배운 내용을 바탕으로 링크드인에 인사이트 짧게 공유하기', category: 'Branding', color: '#60A5FA' },
-  { id: 'rec-3', title: '스마트폰을 끄고 1시간 동안 종이책이나 긴 호흡의 아티클 읽기', category: 'Deep Work', color: '#FBBF24' },
-  { id: 'rec-4', title: '관심 있는 분야의 오프라인 네트워킹 모임 찾아보기', category: 'Networking', color: '#A78BFA' },
-  { id: 'rec-5', title: '평소 쓰지 않던 새로운 AI 툴 1가지 테스트해보고 후기 남기기', category: 'AI & Future', color: '#22D3EE' },
-  { id: 'rec-6', title: '이번 주 나의 업무 프로세스 중 비효율적인 부분 1개 개선하기', category: 'Productivity', color: '#F472B6' },
-  { id: 'rec-7', title: '10년 뒤 나의 커리어 모습을 상상하며 한 페이지 에세이 작성하기', category: 'Vision', color: '#818CF8' },
-  { id: 'rec-8', title: '업무와 무관한 완전히 새로운 주제의 다큐멘터리 시청하기', category: 'Inspiration', color: '#FCD34D' },
-  { id: 'rec-9', title: '이번 주 감사했던 일 3가지를 적고 주변 사람에게 표현하기', category: 'Mindset', color: '#34D399' },
-  { id: 'rec-10', title: '책상과 작업 환경을 완전히 새롭게 정리정돈하기', category: 'Environment', color: '#9CA3AF' },
-  { id: 'rec-11', title: "이번 주 가장 어려웠던 문제에 대해 '왜?'를 3번 반복하며 회고하기", category: 'Problem Solving', color: '#FB923C' },
-  { id: 'rec-12', title: '평소 연락하지 않던 동료나 멘토에게 먼저 커피챗 제안하기', category: 'Networking', color: '#A78BFA' },
-  { id: 'rec-13', title: '이번 주 알게 된 새로운 영단어나 비즈니스 용어 5개 완벽히 암기하기', category: 'Learning', color: '#60A5FA' },
-  { id: 'rec-14', title: '잠들기 전 내일 가장 먼저 처리할 핵심 목표 1가지 적어두기', category: 'Productivity', color: '#F472B6' },
-  { id: 'rec-15', title: '가벼운 산책을 하며 팟캐스트나 오디오북 청취하기', category: 'Health', color: '#4ADE80' }
+  {
+    id: 'rec-1',
+    title: {
+      ko: '아침 출근 전 30분 동안 온전히 나를 위한 명상하기',
+      en: 'Meditate for 30 minutes entirely for myself before work',
+      ja: '朝の出勤前の30分間、完全に自分のための瞑想をする'
+    },
+    category: 'Mindset',
+    color: '#34D399'
+  },
+  {
+    id: 'rec-2',
+    title: {
+      ko: '이번 주 배운 내용을 바탕으로 링크드인에 인사이트 짧게 공유하기',
+      en: 'Share a brief insight on LinkedIn based on what you learned this week',
+      ja: '今週学んだ内容を基に、LinkedInに短いインサイトを共有する'
+    },
+    category: 'Branding',
+    color: '#60A5FA'
+  },
+  {
+    id: 'rec-3',
+    title: {
+      ko: '스마트폰을 끄고 1시간 동안 종이책이나 긴 호흡의 아티클 읽기',
+      en: 'Turn off your smartphone and read a paper book or a long-form article for 1 hour',
+      ja: 'スマートフォンをオフにして、1時間紙の本や長文の記事を読む'
+    },
+    category: 'Deep Work',
+    color: '#FBBF24'
+  },
+  {
+    id: 'rec-4',
+    title: {
+      ko: '관심 있는 분야의 오프라인 네트워킹 모임 찾아보기',
+      en: 'Look up offline networking meetups in your area of interest',
+      ja: '興味のある分野のオフラインネットワーキングの集まりを探す'
+    },
+    category: 'Networking',
+    color: '#A78BFA'
+  },
+  {
+    id: 'rec-5',
+    title: {
+      ko: '평소 쓰지 않던 새로운 AI 툴 1가지 테스트해보고 후기 남기기',
+      en: "Test 1 new AI tool you haven't used before and write a brief review",
+      ja: '普段使っていない新しいAIツールを1つ测试してレビューを残す'
+    },
+    category: 'AI & Future',
+    color: '#22D3EE'
+  },
+  {
+    id: 'rec-6',
+    title: {
+      ko: '이번 주 나의 업무 프로세스 중 비효율적인 부분 1개 개선하기',
+      en: 'Improve 1 inefficient part of your work process this week',
+      ja: '今週の自分の業務プロセスの中から非効率な部分を1つ改善する'
+    },
+    category: 'Productivity',
+    color: '#F472B6'
+  },
+  {
+    id: 'rec-7',
+    title: {
+      ko: '10년 뒤 나의 커리어 모습을 상상하며 한 페이지 에세이 작성하기',
+      en: 'Write a one-page essay imagining your career 10 years from now',
+      ja: '10年後の自分のキャリアの姿を想像しながら、1ページのエッセイを書く'
+    },
+    category: 'Vision',
+    color: '#818CF8'
+  },
+  {
+    id: 'rec-8',
+    title: {
+      ko: '업무와 무관한 완전히 새로운 주제의 다큐멘터리 시청하기',
+      en: 'Watch a documentary on a completely new topic unrelated to work',
+      ja: '業務とは関係のない完全に新しいテーマのドキュメンタリーを視聴する'
+    },
+    category: 'Inspiration',
+    color: '#FCD34D'
+  },
+  {
+    id: 'rec-9',
+    title: {
+      ko: '이번 주 감사했던 일 3가지를 적고 주변 사람에게 표현하기',
+      en: 'Write down 3 things you were grateful for this week and express them',
+      ja: '今週感謝したことを3つ書き出し、周囲の人に伝える'
+    },
+    category: 'Mindset',
+    color: '#34D399'
+  },
+  {
+    id: 'rec-10',
+    title: {
+      ko: '책상과 작업 환경을 완전히 새롭게 정리정돈하기',
+      en: 'Completely organize and tidy up your desk and work environment',
+      ja: 'デスクと作業環境を完全に新しく整理整頓する'
+    },
+    category: 'Environment',
+    color: '#9CA3AF'
+  },
+  {
+    id: 'rec-11',
+    title: {
+      ko: "이번 주 가장 어려웠던 문제에 대해 '왜?'를 3번 반복하며 회고하기",
+      en: "Review the most difficult problem this week by asking 'Why?' three times",
+      ja: "今週最も難しかった問題について、「なぜ？」を3回繰り返して振り返る"
+    },
+    category: 'Problem Solving',
+    color: '#FB923C'
+  },
+  {
+    id: 'rec-12',
+    title: {
+      ko: '평소 연락하지 않던 동료나 멘토에게 먼저 커피챗 제안하기',
+      en: "Suggest a coffee chat to a colleague or mentor you haven't contacted in a while",
+      ja: '普段連絡を取っていない同僚やメンターにまずコーヒーチャットを提案する'
+    },
+    category: 'Networking',
+    color: '#A78BFA'
+  },
+  {
+    id: 'rec-13',
+    title: {
+      ko: '이번 주 알게 된 새로운 영단어나 비즈니스 용어 5개 완벽히 암기하기',
+      en: 'Perfectize your memory of 5 new English words or business terms learned this week',
+      ja: '今週新しく知った英単語やビジネス用語を5つ完全に暗記する'
+    },
+    category: 'Learning',
+    color: '#60A5FA'
+  },
+  {
+    id: 'rec-14',
+    title: {
+      ko: '잠들기 전 내일 가장 먼저 처리할 핵심 목표 1가지 적어두기',
+      en: 'Write down 1 key goal to tackle first thing tomorrow before going to bed',
+      ja: '眠る前に、明日最優先で処理する核心目標を1つ書き留めておく'
+    },
+    category: 'Productivity',
+    color: '#F472B6'
+  },
+  {
+    id: 'rec-15',
+    title: {
+      ko: '가벼운 산책을 하며 팟캐스트나 오디오북 청취하기',
+      en: 'Listen to a podcast or audiobook while taking a light walk',
+      ja: '軽い散歩をしながらポッドキャストやオーディオブックを聴く'
+    },
+    category: 'Health',
+    color: '#4ADE80'
+  }
 ];
 
 // 추천 풀에서 필요한 개수만큼 부족한 추천을 채워주는 함수
@@ -122,6 +277,22 @@ async function getDailyPool() {
   return AI_RECOMMENDATION_POOL;
 }
 
+// 다국어 제목 파싱 및 로컬라이제이션 헬퍼
+const localizeTitle = (title, locale) => {
+  if (!title) return '';
+  if (typeof title === 'object') {
+    return title[locale] || title['ko'] || '';
+  }
+  return title;
+};
+
+const localizeTask = (task, locale) => {
+  return {
+    ...task,
+    title: localizeTitle(task.title, locale)
+  };
+};
+
 // 1. 유저의 Pace Note 데이터 조회 (현재 주간 + 과거 타임라인)
 pacenoteRouter.get('/', verifyUser, async (req, res) => {
   try {
@@ -147,11 +318,61 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       // 데이터가 없으면 기본값 생성
       const { start, end } = getWeekDateRange(currentWeekId);
       const defaultCurrentPace = [
-        { id: 'default-1', title: 'Daily Digest 오늘의 인사이트 1개 이상 읽기', category: 'Learning', color: '#60A5FA', completed: false },
-        { id: 'default-2', title: '이번 주 AI 스터디 프롬프트 직접 실행해보기', category: 'Learning', color: '#60A5FA', completed: false },
-        { id: 'default-3', title: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기', category: 'Learning', color: '#60A5FA', completed: false },
-        { id: 'default-4', title: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기', category: 'Productivity', color: '#F472B6', completed: false },
-        { id: 'default-5', title: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기', category: 'Learning', color: '#60A5FA', completed: false },
+        {
+          id: 'default-1',
+          title: {
+            ko: 'Daily Digest 오늘의 인사이트 1개 이상 읽기',
+            en: 'Read 1 or more daily insights in Daily Digest',
+            ja: 'Daily Digest 今日のインサイトを1つ以上読む'
+          },
+          category: 'Learning',
+          color: '#60A5FA',
+          completed: false
+        },
+        {
+          id: 'default-2',
+          title: {
+            ko: '이번 주 AI 스터디 프롬프트 직접 실행해보기',
+            en: "Try running this week's AI study prompt yourself",
+            ja: '今週のAIスタディプロンプトを直接実行してみる'
+          },
+          category: 'Learning',
+          color: '#60A5FA',
+          completed: false
+        },
+        {
+          id: 'default-3',
+          title: {
+            ko: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기',
+            en: 'Read the recommended business Japanese sentence aloud 3 times',
+            ja: 'ビジネス日本語の推奨文章を声に出して3回読む'
+          },
+          category: 'Learning',
+          color: '#60A5FA',
+          completed: false
+        },
+        {
+          id: 'default-4',
+          title: {
+            ko: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기',
+            en: 'Review S.I.G.N.A.L. analysis comments in Daily Digest',
+            ja: 'Daily DigestのS.I.G.N.A.L.分析コメントを復習する'
+          },
+          category: 'Productivity',
+          color: '#F472B6',
+          completed: false
+        },
+        {
+          id: 'default-5',
+          title: {
+            ko: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기',
+            en: 'Bookmark or take a note on an article of interest this week',
+            ja: '今週興味を持った記事にブックマークまたはメモを残す'
+          },
+          category: 'Learning',
+          color: '#60A5FA',
+          completed: false
+        }
       ];
       
       currentWeekData = {
@@ -219,9 +440,21 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       }
     });
 
+    // 클라이언트 언어 환경에 맞게 제목 평탄화(Flatten)하여 전달
+    const localizedCurrent = {
+      ...currentWeekData,
+      currentPace: (currentWeekData.currentPace || []).map(t => localizeTask(t, req.locale)),
+      recommendedPace: (currentWeekData.recommendedPace || []).map(t => localizeTask(t, req.locale))
+    };
+    
+    const localizedTimeline = pastLogs.map(log => ({
+      ...log,
+      tasks: (log.tasks || []).map(t => localizeTask(t, req.locale))
+    }));
+
     res.json({
-      current: currentWeekData,
-      timeline: pastLogs
+      current: localizedCurrent,
+      timeline: localizedTimeline
     });
   } catch (err) {
     console.error('[PaceNote API] Get Error:', err);
@@ -259,7 +492,7 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
     currentPace.push(newTask);
     await docRef.update({ currentPace });
     
-    res.json({ success: true, currentPace });
+    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
     console.error('[PaceNote API] Add Task Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -291,7 +524,7 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
     currentPace[taskIndex].completed = !currentPace[taskIndex].completed;
     
     await docRef.update({ currentPace });
-    res.json({ success: true, currentPace });
+    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
     console.error('[PaceNote API] Toggle Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -339,7 +572,11 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
     }
     
     await docRef.update({ currentPace, recommendedPace });
-    res.json({ success: true, currentPace, recommendedPace });
+    res.json({
+      success: true,
+      currentPace: currentPace.map(t => localizeTask(t, req.locale)),
+      recommendedPace: recommendedPace.map(t => localizeTask(t, req.locale))
+    });
   } catch (err) {
     console.error('[PaceNote API] Accept Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -374,3 +611,4 @@ pacenoteRouter.post('/diary', verifyUser, async (req, res) => {
 });
 
 export default pacenoteRouter;
+
