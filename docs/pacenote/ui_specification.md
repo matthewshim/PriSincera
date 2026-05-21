@@ -2,7 +2,7 @@
 status: active
 domain: PaceNote
 last_updated: 2026-05-21
-version: v1.1
+version: v1.2
 target_files:
   - src/components/pacenote/PaceNoteWeeklyCalendar.jsx
   - src/components/pacenote/PaceNoteWeeklyCalendar.css
@@ -18,6 +18,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-05-20 | AI Agent | 최초 13주 Bento Grid 캘린더 및 Seamless Chrono-Quarterly Segmented Ribbon 사양 정의 | PaceNote UI |
 | v1.1 | 2026-05-21 | AI Agent | Voyage Log(회고) 실시간 자동저장, 옴니 검색 모달, AI 포트폴리오 내보내기 스펙 추가 및 DDD 폴더 이관 | PaceNote Features |
+| v1.2 | 2026-05-21 | AI Agent | 2단 스플릿 워크스테이션 그리드 개편, SVG 원형 글자수 카운터, spring 애니메이션, progress 지표 추가 | PaceNote Layout & SVG |
 
 본 문서는 사용자가 주차별 목표를 수립하고 달성해나가는 **'전략적 마일스톤 관리(나만의 궤도) 플랫폼'**인 PaceNote 서비스(`/pacenote`)의 **주차별 캘린더 & 항해 지평선 UI/UX (Bento Weekly Route & Voyage Horizon)**의 최종 구현 사양서 및 상단 대시보드 내비게이션 영역의 **완전 모달-프리 인라인 분기 탭 크로노 리본(Seamless Chrono-Quarterly Segmented Ribbon) 전면 3차 개편 기획서**입니다.
 
@@ -584,3 +585,35 @@ export default function PaceNoteChronoRibbon({
   * 대시보드 우측 상단 '내보내기' 버튼 클릭 시, 반투명 백그라운드 블러가 적용된 글래스모피즘 프리뷰 모달 창이 부드럽게 팝업됩니다.
   * **원클릭 복사 (Copy to Clipboard)**: `navigator.clipboard.writeText`를 사용하여 클립보드에 정교한 마크다운 문장을 복제합니다.
   * **마크다운 파일 다운로드**: 클릭 시 `a[download]` 가상 노드를 생성 및 자극하여 `PaceNote_Growth_Portfolio.md` 파일로 유저 로컬 스토리지에 안정적으로 내려받을 수 있게 처리했습니다.
+
+---
+
+## 10. [v1.2 Layout & Interactive Overhaul] Split Workstation & Circular SVG Character Indicator Spec
+
+### 10-1. 2단 스플릿 워크스테이션 레이아웃 (Split Workstation Grid Layout)
+대시보드 하단 영역의 사용자 집중도와 인터랙션 편의성을 최대로 끌어올리기 위해 기존 1단 전면 너비 배치를 지양하고, **좌측 '나의 궤도(Task Tracker)'**와 **우측 '주간 항해 일지(Voyage Logbook)'**를 나란히 배치하는 2단 스플릿 디자인 시스템을 도입했습니다.
+
+* **그리드 사양**:
+  * 데스크톱 환경에서 `display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px;` 구조로 설계되어, 궤도 관리와 사색 일지 작성을 동시에 일목요연하게 조작할 수 있는 **워크스테이션 데스크**의 시각적 안정감을 제공합니다.
+  * 태블릿 및 모바일 반응형 대응을 위해 미디어 쿼리(`max-width: 1024px`) 조건 하에서 단일 열 `1fr` 배칭으로 유연한 상하 스태킹 리플로우를 수행합니다.
+
+### 10-2. 다이내믹 원형 SVG 글자수 진행 링 (Circular SVG Progress Ring)
+에디터 하단에 정량적으로 텍스트 한계(최대 1000자)를 지시하기 위해 브라우저 기본 글자수 라벨을 탈피하고, 실시간으로 차오르는 **원형 SVG Progress Indicator**를 장착했습니다.
+
+* **수학적 연산 공식**:
+  * 원의 반지름 $R = 9\text{px}$로 정의할 때, 원주(Circumference) $C$는 다음과 같이 도출됩니다.
+    $$C = 2 \times \pi \times R \approx 56.548\text{px}$$
+  * 현재 작성한 일지 글자수 길이를 $L$ ($0 \le L \le 1000$)이라 할 때, SVG의 `strokeDashoffset` 속성은 다음 선형 비례 관계식에 따라 계산되어 링의 차오름을 표현합니다.
+    $$\text{strokeDashoffset} = C \times \left(1 - \frac{\min(L, 1000)}{1000}\right)$$
+* **경보 상태별 임계점**:
+  * **Safe 영역 ($L \le 700$)**: 부드러운 그린 에메랄드 테마 컬러(`stroke: #10B981`)
+  * **Warning 영역 ($700 < L \le 900$)**: 주의 환기용 골드 앰버 테마 컬러(`stroke: #F59E0B`)
+  * **Danger 영역 ($L > 900$)**: 한계 임박을 시각화하는 경고 로즈 테마 컬러 (`stroke: #EF4444`)
+
+### 10-3. 체크박스 탄성 애니메이션 및 글래스모피즘 세로 바 스킨
+* **Spring 체크 애니메이션**:
+  * 태스크 달성 체크 시 사용자의 쾌감과 몰입을 돕기 위해, 부드러운 베지에 곡선을 활용한 **탄성(Spring) 팝 스케일 모션**을 내장했습니다.
+  * `@keyframes popSpring`을 정의하여 체크박스 체크 동작 즉시 `0% { scale(1) } -> 50% { scale(1.25) } -> 100% { scale(1) }` 흐름으로 동작하며, `cubic-bezier(0.34, 1.56, 0.64, 1)` 곡선을 적용해 쫀득하고 생동감 있는 물리 필링을 선사합니다.
+* **카테고리별 다이내믹 세로 바 (Dynamic Category Accent Bar)**:
+  * 각 태스크는 컴포넌트 레벨에서 스타일 속성 `--category-theme`에 카테고리 컬러를 바인딩하며, CSS 내 `border-left: 4px solid var(--category-theme)`를 활용하여 개별 카드에 세련된 컬러 바 데코레이션을 동적으로 입힙니다.
+

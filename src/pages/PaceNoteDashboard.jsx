@@ -561,12 +561,21 @@ export default function PaceNoteDashboard() {
                 const viewData = isCurrent ? data.current : data.timeline.find(t => t.weekId === selectedWeekId) || { tasks: [] };
                 const paceList = isCurrent ? viewData.currentPace : viewData.tasks;
                 
+                const completedCount = paceList ? paceList.filter(t => t.completed).length : 0;
+                const totalCount = paceList ? paceList.length : 0;
+                const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+                
                 return (
                   <>
-                    <div className="pacenote-bento-card tracker-card" style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
+                    <div className="pacenote-bento-card tracker-card">
                       <div className="pacenote-card-header">
                         <h2>{isCurrent ? '이번 주 나의 궤도' : `${selectedWeekId} 나의 궤도`}</h2>
                         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                          {totalCount > 0 && (
+                            <span className="pacenote-progress-pill">
+                              🎯 {completedCount}/{totalCount} 완료 ({progressPercent}%)
+                            </span>
+                          )}
                           {userToken && (
                             <button className="pacenote-btn-export" onClick={() => setShowExportModal(true)}>
                               📤 AI 성장 포트폴리오 내보내기
@@ -579,12 +588,22 @@ export default function PaceNoteDashboard() {
                         {isCurrent ? '조급해하지 않고 이번 주에 집중할 작은 행동들입니다.' : '과거에 단단하게 다져놓은 나의 항해 기록입니다.'}
                       </p>
                       
+                      {totalCount > 0 && (
+                        <div className="pacenote-progress-track-header">
+                          <div className="pacenote-progress-fill-header" style={{ width: `${progressPercent}%` }}></div>
+                        </div>
+                      )}
+                      
                       <div className="pacenote-tasks">
                         {paceList && paceList.length > 0 ? (
                           paceList.map((task) => {
-                            const isCompleted = isCurrent ? task.completed : true; 
+                            const isCompleted = task.completed; 
                             return (
-                              <label key={task.id} className={`pacenote-task-item ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}>
+                              <label 
+                                key={task.id} 
+                                className={`pacenote-task-item ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
+                                style={{ '--category-theme': task.color || '#A78BFA' }}
+                              >
                                 <input 
                                   type="checkbox" 
                                   checked={isCompleted} 
@@ -594,7 +613,7 @@ export default function PaceNoteDashboard() {
                                 <span className="task-custom-checkbox"></span>
                                 <span className="task-text">{task.title}</span>
                                 {task.category && (
-                                  <span className="task-category-badge" style={{ color: task.color || '#A78BFA', marginLeft: 'auto', fontSize: '0.75rem', border: `1px solid ${task.color || '#A78BFA'}`, padding: '2px 6px', borderRadius: '4px', whiteSpace: 'nowrap' }}>
+                                  <span className="task-category-badge" style={{ color: task.color || '#A78BFA', borderColor: task.color || '#A78BFA', '--category-theme': task.color || '#A78BFA' }}>
                                     {task.category}
                                   </span>
                                 )}
@@ -617,9 +636,9 @@ export default function PaceNoteDashboard() {
                     </div>
 
                     {/* ── Captain's Logbook ── */}
-                    <div className="pacenote-bento-card logbook-card" style={{ width: '100%', maxWidth: '1000px', margin: '24px auto 0 auto' }}>
+                    <div className="pacenote-bento-card logbook-card">
                       <div className="pacenote-card-header">
-                        <h2>⚓ 주간 항해 일지 (Weekly Voyage Log)</h2>
+                        <h2>⚓ 주간 항해 일지</h2>
                         {isCurrent && userToken && (
                           <span className={`auto-save-status ${saveStatus}`}>
                             {saveStatus === 'saving' && '○ 변경 사항 저장 중...'}
@@ -649,7 +668,22 @@ export default function PaceNoteDashboard() {
                             placeholder={userToken ? "이번 주 나의 궤도에서 발생한 사색, 어려웠던 일, 깨달은 배움을 자유롭게 적어보세요. (최대 1000자)" : "3초 로그인 후, 실시간으로 저장되는 나만의 주간 회고록을 완성해 보세요."}
                             disabled={!userToken}
                           />
-                          <div className="logbook-char-count">{diaryText.length} / 1000자</div>
+                          <div className="logbook-char-count">
+                            <svg width="24" height="24" className="char-count-svg">
+                              <circle cx="12" cy="12" r="9" className="char-count-bg-circle" />
+                              <circle 
+                                cx="12" 
+                                cy="12" 
+                                r="9" 
+                                className={`char-count-progress-circle ${diaryText.length > 900 ? 'danger' : diaryText.length > 700 ? 'warning' : 'safe'}`}
+                                style={{
+                                  strokeDasharray: 2 * Math.PI * 9,
+                                  strokeDashoffset: (2 * Math.PI * 9) * (1 - Math.min(diaryText.length / 1000, 1))
+                                }}
+                              />
+                            </svg>
+                            <span>{diaryText.length} / 1000자</span>
+                          </div>
                         </div>
                       ) : (
                         <div className="logbook-viewer">
