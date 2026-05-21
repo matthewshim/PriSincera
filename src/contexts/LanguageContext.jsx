@@ -29,20 +29,29 @@ export function LanguageProvider({ children }) {
     document.documentElement.lang = locale; // HTML lang 속성 동기화
   }, [locale]);
 
-  // 번역 도우미 헬퍼 t() 함수 구현 (번역 키가 없는 경우 fallback 방어막 장착)
-  const t = (keyPath) => {
-    const value = keyPath.split('.').reduce((acc, key) => {
+  // 번역 도우미 헬퍼 t() 함수 구현 (번역 키가 없는 경우 fallback 방어막 장착 및 변수 치환 지원)
+  const t = (keyPath, params = {}) => {
+    let value = keyPath.split('.').reduce((acc, key) => {
       return acc && acc[key] ? acc[key] : undefined;
     }, dictionaries[locale]);
 
-    if (value !== undefined) return value;
+    if (value === undefined) {
+      // 현재 로케일에서 번역 키를 찾지 못한 경우, 1차적으로 한국어 원본 fallback
+      value = keyPath.split('.').reduce((acc, key) => {
+        return acc && acc[key] ? acc[key] : undefined;
+      }, dictionaries['ko']);
+    }
 
-    // 현재 로케일에서 번역 키를 찾지 못한 경우, 1차적으로 한국어 원본 fallback
-    const fallbackValue = keyPath.split('.').reduce((acc, key) => {
-      return acc && acc[key] ? acc[key] : undefined;
-    }, dictionaries['ko']);
+    if (value === undefined) return keyPath;
 
-    return fallbackValue !== undefined ? fallbackValue : keyPath;
+    // 파라미터가 있는 경우 {key} 형태의 문자열 치환
+    if (params && Object.keys(params).length > 0 && typeof value === 'string') {
+      return Object.entries(params).reduce((str, [k, v]) => {
+        return str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+      }, value);
+    }
+
+    return value;
   };
 
   // 동적 로컬라이제이션 맵 파싱용 헬퍼 함수
