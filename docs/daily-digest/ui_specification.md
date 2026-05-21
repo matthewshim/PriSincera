@@ -1,4 +1,21 @@
+---
+status: active
+domain: DailyDigest
+last_updated: 2026-05-21
+version: v1.0
+target_files:
+  - src/components/daily/DailyCalendar.jsx
+  - src/components/daily/DailyCalendar.css
+  - src/pages/DailyDigest.jsx
+---
+
 # PriSincera Daily Digest Chrono-Calendar & Quick Peek UI Specification
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-21 | AI Agent | 42개 셀 고정 렌더링, 150ms 호버 디바운스, 2-Stage 모바일 UX 및 CLS 방지 사양서 작성 | DailyDigest UI |
 
 본 문서는 일자별 다이제스트 목록을 직관적으로 탐색하고 프리미엄한 아카이브 경험을 전달하기 위해 설계된 **Daily Digest 캘린더 그리드(Chrono-Calendar) 및 0-Lag 퀵 피크(Quick Peek) UI/UX**의 최종 구현 사양서입니다.
 

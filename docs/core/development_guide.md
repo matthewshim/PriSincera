@@ -1,4 +1,22 @@
+---
+status: active
+domain: Core
+last_updated: 2026-05-21
+version: v1.1
+target_files:
+  - Dockerfile
+  - cloudbuild.yaml
+  - nginx.conf
+---
+
 # 📘 PriSincera — 개발 관리 & 운영 가이드
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-04-30 | Developer | GCP Cloud Run 배포, CI/CD 및 DNS 관리 가이드 최초 구축 | Infrastructure |
+| v1.1 | 2026-05-21 | AI Agent | 도메인 중심(DDD) 폴더 구조 개편에 따른 표준 프론트매터 및 개정 내역 주입 | Documentation |
 
 > **최종 업데이트**: 2026-04-30  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  

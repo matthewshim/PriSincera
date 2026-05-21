@@ -1,4 +1,23 @@
+---
+status: active
+domain: Core
+last_updated: 2026-05-21
+version: v2.7
+target_files:
+  - src/styles/design_system.css
+  - src/pages/PaceNoteDashboard.css
+---
+
 # 📐 PriSincera Design System (v2.0: The Premium Evolution)
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v2.0 | 2026-04-30 | Designer | 프리미엄 다크 모드(Premium Dark Mode) 기준으로 디자인 시스템 대대적 재설계 | CSS System |
+| v2.5 | 2026-05-19 | Designer | Bento Chrono-Calendar & 3-Tab Workstation Theme 규격 정의 | DailyDigest |
+| v2.6 | 2026-05-20 | Designer | PaceNote Bento Weekly Calendar & Voyage Horizon 디자인 토큰 표준 수립 | PaceNote |
+| v2.7 | 2026-05-21 | AI Agent | 도메인 중심(DDD) 폴더 개편에 따른 표준 프론트매터 및 개정 내역 주입 | Documentation |
 
 > **"Sincerity, Prioritized."**
 > 본 문서는 PriSincera 웹사이트가 '세계 최고 수준(World-class)'의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 가이드라인입니다. 

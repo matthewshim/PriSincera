@@ -1,4 +1,21 @@
+---
+status: active
+domain: PaceNote
+last_updated: 2026-05-21
+version: v1.0
+target_files:
+  - pipeline/src/pacenote-composer.mjs
+  - pacenote-api.mjs
+  - admin-api.mjs
+---
+
 # PriSincera PaceNote AI 추천 확장 및 데이터 기반 고도화 계획서 (AI Recommendation Expansion & Data-Driven Optimization)
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-21 | AI Agent | Firestore Decoupling, Dynamic Ejection 및 AI Feedback Loop를 포함한 추천 엔진 설계서 작성 | AI Recommendation Engine |
 
 ## 1. 개요 및 목표 (Overview & Objectives)
 초기 `PaceNoteDashboard`의 'AI 추천 가이드'는 `pacenote-api.mjs` 내부에 하드코딩된 15개의 `AI_RECOMMENDATION_POOL` 배열에 의존하고 있었습니다. 

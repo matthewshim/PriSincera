@@ -1,4 +1,23 @@
+---
+status: active
+domain: PaceNote
+last_updated: 2026-05-21
+version: v1.1
+target_files:
+  - src/components/pacenote/PaceNoteWeeklyCalendar.jsx
+  - src/components/pacenote/PaceNoteWeeklyCalendar.css
+  - src/pages/PaceNoteDashboard.jsx
+  - src/pages/PaceNoteDashboard.css
+---
+
 # PriSincera PaceNote Bento Weekly Calendar & Voyage Horizon UI Specification
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-20 | AI Agent | 최초 13주 Bento Grid 캘린더 및 Seamless Chrono-Quarterly Segmented Ribbon 사양 정의 | PaceNote UI |
+| v1.1 | 2026-05-21 | AI Agent | Voyage Log(회고) 실시간 자동저장, 옴니 검색 모달, AI 포트폴리오 내보내기 스펙 추가 및 DDD 폴더 이관 | PaceNote Features |
 
 본 문서는 사용자가 주차별 목표를 수립하고 달성해나가는 **'전략적 마일스톤 관리(나만의 궤도) 플랫폼'**인 PaceNote 서비스(`/pacenote`)의 **주차별 캘린더 & 항해 지평선 UI/UX (Bento Weekly Route & Voyage Horizon)**의 최종 구현 사양서 및 상단 대시보드 내비게이션 영역의 **완전 모달-프리 인라인 분기 탭 크로노 리본(Seamless Chrono-Quarterly Segmented Ribbon) 전면 3차 개편 기획서**입니다.
 

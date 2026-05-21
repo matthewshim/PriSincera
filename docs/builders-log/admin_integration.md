@@ -1,4 +1,20 @@
+---
+status: active
+domain: BuildersLog
+last_updated: 2026-05-21
+version: v1.0
+target_files:
+  - src/pages/BuildersLog.jsx
+  - builderslog-api.mjs
+---
+
 # 서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-21 | AI Agent | GitHub API Git Data 연동 Git-less 커밋, Regex 시크릿 스캐너, Fallback AI 파이프라인 및 Firestore 조회수 통계 아키텍처 사양서 작성 | Admin Integration |
 
 현재 운영 중인 퍼스널 브랜딩 사이트의 **'Builder's Log'**는 데이터베이스(Firestore 등)를 거치지 않고, 로컬 파일 시스템(`.md`, `.json`) 및 Git 커밋을 통해 배포되는 **정적 렌더링(Static Asset) 구조**를 채택하고 있습니다. 
 
