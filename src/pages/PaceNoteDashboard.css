@@ -162,25 +162,22 @@
 .consolidated-header {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 24px;
-  width: 100%;
-}
-
-.consolidated-header-top-row {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  text-align: center;
   margin-bottom: 24px;
+  width: 100%;
 }
 
-.consolidated-header-top-row h2 {
+.consolidated-header-title {
   font-size: 1.6rem;
   font-weight: 700;
   color: #F5F3FF;
-  margin: 0;
+  margin: 0 0 16px 0;
   letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .consolidated-header-actions {
@@ -303,6 +300,13 @@
   color: #9CA3AF;
   font-size: 0.95rem;
   margin-bottom: 24px;
+}
+
+.consolidated-header .pacenote-card-desc {
+  margin: 0 auto;
+  max-width: 720px;
+  line-height: 1.6;
+  word-break: keep-all;
 }
 
 /* Badges */
@@ -1615,4 +1619,20 @@
   border-radius: 2px;
   box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Card Footer with Export Button ── */
+.consolidated-card-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  width: 100%;
+}
+
+.footer-export-btn {
+  font-size: 0.95rem !important;
+  padding: 10px 24px !important;
+  border-radius: 24px !important;
 }

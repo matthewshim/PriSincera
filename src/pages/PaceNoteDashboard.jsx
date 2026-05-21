@@ -572,27 +572,22 @@ export default function PaceNoteDashboard() {
                   return a.completed ? 1 : -1;
                 }) : [];
 
+                const weekInfo = parseWeekInfo(selectedWeekId);
+                const titleText = weekInfo.num ? `${weekInfo.num}주차 나의 궤도 & 항해 일지` : '나의 궤도 & 항해 일지';
+
                 return (
                   <>
                     <div className="pacenote-bento-card consolidated-pace-card">
                       {/* ── Unified Premium Header ── */}
                       <div className="pacenote-card-header consolidated-header">
-                        <div className="consolidated-header-top-row">
-                          <h2>{isCurrent ? '이번 주 나의 궤도 & 항해 일지' : `${selectedWeekId} 나의 궤도 & 항해 일지`}</h2>
-                          <div className="consolidated-header-actions">
-                            {isCurrent && userToken && saveStatus !== 'saved' && (
-                              <span className={`auto-save-status ${saveStatus}`}>
-                                {saveStatus === 'saving' && '○ 변경 사항 저장 중...'}
-                                {saveStatus === 'error' && '⚠ 저장 중 오류 발생'}
-                              </span>
-                            )}
-                            {userToken && (
-                              <button className="pacenote-btn-export" onClick={() => setShowExportModal(true)}>
-                                📤 AI 성장 포트폴리오 내보내기
-                              </button>
-                            )}
-                          </div>
-                        </div>
+                        <h2 className="consolidated-header-title">
+                          {titleText}
+                          {isCurrent && userToken && saveStatus === 'error' && (
+                            <span className="auto-save-status error" style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
+                              ⚠ 저장 중 오류 발생
+                            </span>
+                          )}
+                        </h2>
                         <p className="pacenote-card-desc">
                           {isCurrent 
                             ? '설정한 작은 행동들의 궤도(실행)와 주간의 깊은 사색(회고)이 결합되어 당신만의 소중한 AI 성장 포트폴리오를 형성합니다.' 
@@ -720,6 +715,15 @@ export default function PaceNoteDashboard() {
                           )}
                         </div>
                       </div>
+
+                      {/* ── Card Footer with Export Button ── */}
+                      {userToken && (
+                        <div className="consolidated-card-footer">
+                          <button className="pacenote-btn-export footer-export-btn" onClick={() => setShowExportModal(true)}>
+                            📤 AI 성장 포트폴리오 내보내기
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </>
                 );
