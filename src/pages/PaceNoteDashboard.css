@@ -59,6 +59,7 @@
   max-width: 800px;
   margin: 0 auto;
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .pacenote-auth-btn {
@@ -307,6 +308,7 @@
   max-width: 720px;
   line-height: 1.6;
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* Badges */

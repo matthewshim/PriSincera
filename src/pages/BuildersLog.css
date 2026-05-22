@@ -82,6 +82,7 @@
   margin: 0;
   opacity: 0.9;
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* --- Clean Pinterest Masonry Layout --- */
@@ -349,6 +350,7 @@
   margin: var(--space-xs) 0;
   color: var(--text-primary);
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .builder-card-featured .chapter-title {
@@ -364,6 +366,7 @@
   margin: 0 0 var(--space-xs);
   line-height: 1.5;
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .chapter-meta {
@@ -393,6 +396,7 @@
   line-height: 1.6;
   color: var(--text-secondary);
   word-break: keep-all;
+  overflow-wrap: break-word;
   margin: 0;
 }
 

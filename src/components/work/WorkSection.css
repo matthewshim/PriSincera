@@ -55,6 +55,7 @@
     max-width: 600px;
     margin: 0 auto;
     word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 /* --- Project Grid --- */

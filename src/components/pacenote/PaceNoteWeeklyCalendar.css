@@ -299,6 +299,7 @@
   font-style: italic;
   line-height: 1.45;
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* ── Responsive Styling ── */
