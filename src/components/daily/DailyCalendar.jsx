@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 import './DailyCalendar.css';
 
 export default function DailyCalendar({ publishedDates = [], onSelectDate, onHoverDate }) {
+  const { locale } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // KST Standard Today String (YYYY-MM-DD)
@@ -78,25 +80,61 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
     return cells;
   };
 
+  const getEnglishMonthName = (monthIndex) => {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[monthIndex];
+  };
+
+  const getWeekdays = () => {
+    if (locale === 'en') {
+      return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    } else if (locale === 'ja') {
+      return ['日', '月', '火', '水', '木', '金', '土'];
+    } else {
+      return ['일', '월', '화', '수', '목', '금', '토'];
+    }
+  };
+
   const gridCells = getGridCells();
 
   return (
     <div className="chrono-calendar-wrapper">
       <div className="calendar-header">
-        <button onClick={handlePrevMonth} className="calendar-nav-btn" aria-label="이전 달">
+        <button 
+          onClick={handlePrevMonth} 
+          className="calendar-nav-btn" 
+          aria-label={locale === 'ja' ? '前月' : locale === 'en' ? 'Previous month' : '이전 달'}
+        >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
         <h3 className="calendar-month-title">
-          <span className="calendar-year">{year}년</span>
-          <span className="calendar-month">{String(month + 1).padStart(2, '0')}월</span>
+          {locale === 'en' ? (
+            <>
+              <span className="calendar-month">{getEnglishMonthName(month)}</span>
+              <span className="calendar-year">{year}</span>
+            </>
+          ) : locale === 'ja' ? (
+            <>
+              <span className="calendar-year">{year}年</span>
+              <span className="calendar-month">{String(month + 1).padStart(2, '0')}月</span>
+            </>
+          ) : (
+            <>
+              <span className="calendar-year">{year}년</span>
+              <span className="calendar-month">{String(month + 1).padStart(2, '0')}월</span>
+            </>
+          )}
         </h3>
         <button 
           onClick={handleNextMonth} 
           disabled={isNextDisabled()} 
           className={`calendar-nav-btn ${isNextDisabled() ? 'disabled' : ''}`}
-          aria-label="다음 달"
+          aria-label={locale === 'ja' ? '翌月' : locale === 'en' ? 'Next month' : '다음 달'}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -106,8 +144,8 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
 
       <div className="calendar-grid">
         {/* Day of Week Headers */}
-        {['일', '월', '화', '수', '목', '금', '토'].map((weekday, idx) => (
-          <div key={weekday} className={`grid-weekday ${idx === 0 ? 'sun' : idx === 6 ? 'sat' : ''}`}>
+        {getWeekdays().map((weekday, idx) => (
+          <div key={idx} className={`grid-weekday ${idx === 0 ? 'sun' : idx === 6 ? 'sat' : ''}`}>
             {weekday}
           </div>
         ))}
@@ -125,7 +163,7 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
               onMouseEnter={() => isActive && onHoverDate(dateStr)}
               onClick={() => isActive && onSelectDate(dateStr)}
               className={`calendar-day-cell ${cell.isCurrentMonth ? 'current-month' : 'other-month'} ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}`}
-              title={isActive ? `${dateStr} 다이제스트 요약 보기` : dateStr}
+              title={isActive ? (locale === 'ja' ? `${dateStr} ダイジェスト要約を表示` : locale === 'en' ? `View digest summary for ${dateStr}` : `${dateStr} 다이제스트 요약 보기`) : dateStr}
             >
               <div className="day-number-container">
                 <span className="day-number">{cell.day}</span>
