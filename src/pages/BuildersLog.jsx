@@ -23,15 +23,17 @@ function useScrollReveal(options = { threshold: 0.1, rootMargin: '0px 0px -100px
 }
 
 const ChapterCard = ({ chapter, index }) => {
-  const { localize, t } = useTranslation();
+  const { locale, localize, t } = useTranslation();
   const ref = useScrollReveal();
   const commits = chapter.commits || [];
   const isFeatured = index === 0;
   
   // 한국어 정독 기준 (분당 150자 내외)으로 읽는 시간(Read Time) 산정
+  // 영문은 단어 및 공백으로 인한 문자수 팽창을 고려하여 기준값(Divisor)을 240으로 보정
   const calculateReadTime = (desc, commitsList) => {
     const textLength = (desc || '').length + commitsList.map(c => c.msg).join(' ').length;
-    const minutes = Math.max(1, Math.round(textLength / 180));
+    const divisor = locale === 'en' ? 240 : 180;
+    const minutes = Math.max(1, Math.round(textLength / divisor));
     return `${minutes} min read`;
   };
 
