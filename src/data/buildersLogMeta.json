@@ -116,18 +116,18 @@
     "chapterNo": "03",
     "title": {
       "ko": "서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남",
-      "en": "Achieving Perfect Control over Static Blogs (Static CMS) in Serverless Environments: Where GitHub API Meets AI",
-      "ja": "サーバーレス環境における静的ブログ (Static CMS) の完全制御: GitHub APIとAIの出会い"
+      "en": "Perfect Control over a Static Blog (Static CMS) in a Serverless Environment: GitHub API Meets AI",
+      "ja": "サーバーレス環境で静的ブログ（Static CMS）を完璧に制御する：GitHub APIとAIの融合"
     },
     "subtitle": {
       "ko": "안정성과 효율성을 극대화한 AI 기반 GitHub 연동 자동화 시스템 구현 방안",
-      "en": "An Implementation Strategy for an AI-Powered GitHub Integration Automation System Maximizing Stability and Efficiency",
-      "ja": "安定性と効率性を最大化するAIベースのGitHub連携自動化システム実装戦略"
+      "en": "Implementation of an AI-Driven GitHub Integration Automation System for Maximizing Stability and Efficiency",
+      "ja": "安定性と効率を極大化したAIベースのGitHub連携自動化システムの構築スキーム"
     },
     "description": {
       "ko": "서버리스 환경의 쓰기 제한(Read-Only)을 극복하기 위해 물리 디스크 대신 100% 메모리상에서 동작하는 GitHub REST API(Git-less Commit) 파이프라인을 설계하고, AI 톤앤매너 교정 및 보안 검열 루프를 결합하여 완벽하게 제어되는 정적 CMS를 구현한 경험.",
-      "en": "An experience designing a GitHub REST API (Git-less Commit) pipeline that operates 100% in memory instead of physical disks to overcome the write limitations (Read-Only) of serverless environments, and combining it with AI tone and manner correction and security review loops to implement a perfectly controlled static CMS.",
-      "ja": "サーバーレス環境の書き込み制限（Read-Only）を克服するため、物理ディスクの代わりに100%メモリ上で動作するGitHub REST API（Git-less Commit）パイプラインを設計し、AIトーン＆マナー校正およびセキュリティ検閲ループを組み合わせて完全に制御される静的CMSを実装した経験。"
+      "en": "Overcoming serverless read-only restrictions by designing a 100% in-memory GitHub REST API (Git-less Commit) pipeline instead of relying on a physical disk, and combining an AI tone-and-manner refiner and security censorship loop to achieve a perfectly controlled static CMS.",
+      "ja": "サーバーレス環境の書き込み制限（Read-Only）を克服するため、物理ディスクの代わりに100%メモリ上で動作するGitHub REST API（Git-less Commit）パイプラインを設計し、AIのトーン＆マナー補正やセキュリティ監査ループを結合することで、完璧に制御された静的CMSを具現化した経験。"
     },
     "date": "2026-05-19",
     "tags": [
@@ -171,8 +171,8 @@
     "chapterNo": "02",
     "title": {
       "ko": "고인물은 어떻게 AI를 망치는가? 150개 추천 풀 한계 돌파기",
-      "en": "How Do Experts Break AI? Overcoming the Limits of the 150 Recommendation Pool",
-      "ja": "ベテランはどのようにAIをダメにするのか？150個の推奨プール限界突破記"
+      "en": "How 'Power Users' Can Stagnate AI: Overcoming the 150-Recommendation Pool Limit",
+      "ja": "ベテランユーザーはAIをいかに停滞させるか？ 150個の推薦プール限界突破記"
     },
     "subtitle": {
       "ko": "Data-Driven AI Ecosystem",
@@ -181,8 +181,8 @@
     },
     "description": {
       "ko": "단순히 API를 호출해 무작위로 목표를 생성하던 초기 모델을 넘어, 유저의 '선택'과 '달성' 데이터를 바탕으로 Velocity를 계산하고 스스로 프롬프트를 진화시키는 플라이휠(Feedback Loop) 구축 과정.",
-      "en": "Beyond the initial model that simply called an API to generate random goals, we built a feedback loop flywheel that calculates velocity based on user 'selections' and 'achievements' to dynamically evolve its own prompts.",
-      "ja": "単にAPIを呼び出してランダムに目標を生成していた初期モデルを超え、ユーザーの「選択」と「達成」データに基づいてVelocityを計算し、自律的にプロンプトを進化させるフライホイール（Feedback Loop）の構築プロセス。"
+      "en": "Moving beyond initial models that randomly generated goals via simple API calls, this is the process of building a self-evolving flywheel (feedback loop) that calculates 'Velocity' based on user 'selection' and 'completion' data, and refines prompts autonomously.",
+      "ja": "単にAPIを呼び出して無作為に目標を生成していた初期モデルを超え、ユーザーの「選択」と「達成」データに基づいてVelocityを計算し、自らプロンプトを進化させるフライホイール（フィードバックループ）構築の過程。"
     },
     "date": "2026-05-18",
     "tags": [
