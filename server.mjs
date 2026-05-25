@@ -24,6 +24,18 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const DIST_DIR = join(__dirname, 'dist');
 
+// --- Load Builders Log Metadata for Sitemap & SEO Proxy ---
+const buildersLogMetaPath = join(__dirname, 'src', 'data', 'buildersLogMeta.json');
+let buildersLog = [];
+if (existsSync(buildersLogMetaPath)) {
+  try {
+    buildersLog = JSON.parse(readFileSync(buildersLogMetaPath, 'utf-8'));
+    console.log(`[Server] Loaded ${buildersLog.length} Builders Log articles for Sitemap & SEO`);
+  } catch (err) {
+    console.error('[Server] Failed to load buildersLogMeta.json', err);
+  }
+}
+
 // --- Buttondown API key (deprecated — 마이그레이션 완료 후 환경변수에서 제거) ---
 // const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY || '';
 
@@ -434,6 +446,13 @@ app.get('/sitemap.xml', async (req, res) => {
     for (const date of allDates) {
       xml += `  <url>\n    <loc>${baseUrl}/daily/${date}</loc>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
     }
+
+    // Add builders log chapters
+    for (const chapter of buildersLog) {
+      if (chapter.slug) {
+        xml += `  <url>\n    <loc>${baseUrl}/builders-log/${chapter.slug}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+      }
+    }
     
     xml += '</urlset>';
 
@@ -497,8 +516,28 @@ app.use(async (req, res) => {
       title = 'Pace Note — 목표와 회고 | PriSincera';
       description = '스스로의 우선순위를 지키기 위한 주간 목표 달성률과 투명한 성찰을 기록하는 페이스 노트입니다.';
     } else if (req.originalUrl.startsWith('/builders-log')) {
-      title = 'Builders Log — 서비스 구축의 기록 | PriSincera';
-      description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
+      const logMatch = req.originalUrl.match(/^\/builders-log\/([a-zA-Z0-9-_]+)/);
+      if (logMatch) {
+        const slug = logMatch[1];
+        const article = buildersLog.find(a => a.slug === slug);
+        if (article) {
+          const getLocaleVal = (obj) => {
+            if (!obj) return '';
+            if (typeof obj === 'object') {
+              return obj[req.locale] || obj['ko'] || '';
+            }
+            return obj;
+          };
+          title = `${getLocaleVal(article.title)} | Builder's Log`;
+          description = getLocaleVal(article.description).substring(0, 150) + '...';
+        } else {
+          title = 'Builders Log — 서비스 구축의 기록 | PriSincera';
+          description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
+        }
+      } else {
+        title = 'Builders Log — 서비스 구축의 기록 | PriSincera';
+        description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
+      }
     }
   } catch(err) {
     console.error('[SEO Proxy] Error generating meta tags:', err.message);
