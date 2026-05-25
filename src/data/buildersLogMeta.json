@@ -171,8 +171,8 @@
     "chapterNo": "02",
     "title": {
       "ko": "고인물은 어떻게 AI를 망치는가? 150개 추천 풀 한계 돌파기",
-      "en": "How 'Power Users' Can Stagnate AI: Overcoming the 150-Recommendation Pool Limit",
-      "ja": "ベテランユーザーはAIをいかに停滞させるか？ 150個の推薦プール限界突破記"
+      "en": "How Do Experts Break AI? Overcoming the Limits of the 150 Recommendation Pool",
+      "ja": "ベテランはどのようにAIをダメにするのか？150個の推奨プール限界突破記"
     },
     "subtitle": {
       "ko": "Data-Driven AI Ecosystem",
@@ -181,8 +181,8 @@
     },
     "description": {
       "ko": "단순히 API를 호출해 무작위로 목표를 생성하던 초기 모델을 넘어, 유저의 '선택'과 '달성' 데이터를 바탕으로 Velocity를 계산하고 스스로 프롬프트를 진화시키는 플라이휠(Feedback Loop) 구축 과정.",
-      "en": "Moving beyond initial models that randomly generated goals via simple API calls, this is the process of building a self-evolving flywheel (feedback loop) that calculates 'Velocity' based on user 'selection' and 'completion' data, and refines prompts autonomously.",
-      "ja": "単にAPIを呼び出して無作為に目標を生成していた初期モデルを超え、ユーザーの「選択」と「達成」データに基づいてVelocityを計算し、自らプロンプトを進化させるフライホイール（フィードバックループ）構築の過程。"
+      "en": "Beyond the initial model that simply called an API to generate random goals, we built a feedback loop flywheel that calculates velocity based on user 'selections' and 'achievements' to dynamically evolve its own prompts.",
+      "ja": "単にAPIを呼び出してランダムに目標を生成していた初期モデルを超え、ユーザーの「選択」と「達成」データに基づいてVelocityを計算し、自律的にプロンプトを進化させるフライホイール（Feedback Loop）の構築プロセス。"
     },
     "date": "2026-05-18",
     "tags": [
@@ -211,18 +211,18 @@
     "chapterNo": "01",
     "title": {
       "ko": "구글 원클릭 로그인의 숨겨진 함정: 유저와 관리자 세션 완벽히 격리하기",
-      "en": "The Hidden Trap of Google One-Tap Sign-In: Perfectly Isolating User and Admin Sessions",
-      "ja": "Googleワンクリックログインの隠れた罠：ユーザーと管理者セッションを完璧に隔離する"
+      "en": "The Hidden Pitfall of Google One-Click Login: Perfectly Isolating User and Admin Sessions",
+      "ja": "Googleワンクリックログインの隠された落とし穴：ユーザーと管理者セッションを完全に隔離する"
     },
     "subtitle": {
       "ko": "Authentication & Security",
       "en": "Authentication & Security",
-      "ja": "Authentication & Security"
+      "ja": "認証とセキュリティ"
     },
     "description": {
       "ko": "가입 이탈률을 0으로 만들기 위해 구글 로그인으로 전면 개편하면서 발생한 백오피스 권한 충돌 사태. 다중 Firebase 인스턴스 초기화를 통해 브라우저 세션을 물리적으로 격리한 트러블슈팅 경험.",
-      "en": "A back-office privilege conflict crisis arose when revamping to Google sign-in to eliminate sign-up drop-off. Sharing our troubleshooting experience physically isolating browser sessions via multi-Firebase instance initialization.",
-      "ja": "離脱率をゼロにするためにGoogleログインへと全面改修した際に発生した、バックオフィス権限の衝突事態。マルチFirebaseインスタンス初期化を通じて、ブラウザセッションを物理的に隔離したトラブルシューティング経験。"
+      "en": "A backend permission conflict incident that occurred during a complete revamp to Google login, aimed at eliminating signup abandonment. This describes our troubleshooting experience of physically isolating browser sessions through the initialization of multiple Firebase instances.",
+      "ja": "サインアップの離脱率をゼロにするためにGoogleログインに全面改修を行った際に発生した、バックオフィスでの権限衝突問題。複数のFirebaseインスタンスを初期化することで、ブラウザセッションを物理的に隔離したトラブルシューティングの経験談。"
     },
     "date": "2026-05-18",
     "tags": [
