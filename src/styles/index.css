@@ -144,3 +144,9 @@ button { background: none; border: none; font: inherit; color: inherit; }
         transition-duration: 0.01ms !important;
     }
 }
+
+/* --- Japanese (CJK) Word Wrapping Override --- */
+/* Restores standard character-level wrapping for Japanese, overriding 'keep-all' bugs */
+:lang(ja) * {
+    word-break: normal !important;
+}
