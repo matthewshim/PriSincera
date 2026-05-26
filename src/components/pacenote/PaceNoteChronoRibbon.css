@@ -413,15 +413,26 @@
   }
   
   .quarter-segment-belt {
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 16px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    width: 100%;
+    padding: 0 8px;
+    box-sizing: border-box;
+  }
+
+  .quarter-segment-belt::-webkit-scrollbar {
+    display: none;
   }
   
   .quarter-segment-btn {
-    padding: 6px 14px;
+    padding: 6px 10px;
     font-size: 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   
   .ribbon-week-card {
