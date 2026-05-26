@@ -11,6 +11,14 @@ export default function TelescopeCursor() {
   const infoRef = useRef(null);
 
   useEffect(() => {
+    // Detect mobile/tablet touch screens to bypass event listeners and RAF animation loop for performance
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouchDevice) {
+      const cursor = cursorRef.current;
+      if (cursor) cursor.style.display = 'none';
+      return;
+    }
+
     const cursor = cursorRef.current;
     if (!cursor) return;
 

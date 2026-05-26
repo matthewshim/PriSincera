@@ -316,4 +316,13 @@
     padding-left: var(--space-md);
     padding-right: var(--space-md);
   }
+  .markdown-body {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  .markdown-body pre {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }

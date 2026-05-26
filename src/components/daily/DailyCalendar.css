@@ -253,7 +253,7 @@
 }
 
 /* ── Responsive Styling ── */
-@media (max-width: 480px) {
+@media (max-width: 767px) {
   .chrono-calendar-wrapper {
     padding: 16px;
   }
@@ -268,6 +268,23 @@
   
   .calendar-day-cell {
     padding: 4px;
+    position: relative;
+    /* 시각적으로는 정방형 유지하며 터치 타겟 규격 확보를 위한 최소 높이 */
+    aspect-ratio: 1; 
+    min-height: 38px;
+  }
+  
+  /* 물리적 터치 타겟을 투명 영역으로 사방 44px 이상 확장하여 오터치 차단 */
+  .calendar-day-cell::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    left: -4px;
+    right: -4px;
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
   }
   
   .day-number {

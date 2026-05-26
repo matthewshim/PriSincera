@@ -415,6 +415,8 @@
   .quarter-segment-belt {
     gap: 8px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   
   .quarter-segment-btn {
@@ -426,6 +428,7 @@
     min-width: 95px;
     padding: 10px 12px;
     gap: 8px;
+    scroll-snap-align: center;
   }
   
   .ribbon-card-week-label {
@@ -447,5 +450,7 @@
   .ribbon-viewport {
     padding: 8px 4px;
     gap: 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
   }
 }

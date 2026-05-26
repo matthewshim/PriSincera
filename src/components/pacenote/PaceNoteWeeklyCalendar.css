@@ -314,7 +314,21 @@
   }
 
   .weekly-hover-peek-panel {
-    bottom: -110px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 24px;
+    display: block;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    background: rgba(10, 7, 20, 0.8);
+    animation: none;
+  }
+
+  .weekly-hover-peek-panel .peek-panel-arrow {
+    display: none;
   }
 }
 

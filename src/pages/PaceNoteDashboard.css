@@ -1638,3 +1638,12 @@
   padding: 10px 24px !important;
   border-radius: 24px !important;
 }
+
+/* ── Mobile Viewport Overrides ── */
+@media (max-width: 767px) {
+  .omnibar-input {
+    font-size: 16px !important;
+    padding: 12px 16px;
+  }
+}
+

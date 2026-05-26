@@ -410,15 +410,25 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       }
     }
 
-    // 과거 데이터 (Timeline 용) - 최신순 10개
-    const pastDocs = await weeksRef.where('weekId', '<', currentWeekId)
+    // 과거 데이터 (Timeline 용) - 최신순 10개 내외를 가져오되,
+    // 복합 인덱스(Composite Index) 배포 번거로움을 피하기 위해 range filter(<) 없이
+    // 기본 단일 필드 인덱스를 사용하는 orderBy만 적용한 뒤 메모리 상에서 필터링합니다.
+    const pastDocs = await weeksRef
       .orderBy('weekId', 'desc')
-      .limit(10)
+      .limit(20)
       .get();
       
     const pastLogs = [];
     pastDocs.forEach(doc => {
       const data = doc.data();
+      // 현재 주차 및 혹시 모를 미래 주차는 과거 타임라인에서 제외
+      if (data.weekId >= currentWeekId) {
+        return;
+      }
+      // 최대 10개만 타임라인에 노출
+      if (pastLogs.length >= 10) {
+        return;
+      }
       // 완료된 미션들만 타임라인에 표시
       let completedTasks = (data.currentPace || []).filter(t => t.completed);
       if (completedTasks.length > 0) {

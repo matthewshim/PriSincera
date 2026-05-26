@@ -11,7 +11,14 @@ export default function PaceNoteWeeklyCalendar({
 }) {
   const [hoveredWeekInfo, setHoveredWeekInfo] = useState(null);
   const [hoverTimeoutId, setHoverTimeoutId] = useState(null);
+  const [isTouch, setIsTouch] = useState(false);
   
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsTouch(window.matchMedia('(pointer: coarse)').matches);
+    }
+  }, []);
+
   // Clean up timer on unmount
   useEffect(() => {
     return () => {
@@ -68,6 +75,7 @@ export default function PaceNoteWeeklyCalendar({
   }, [pastWeeksData, currentWeekTasks]);
 
   const handleWeekHover = (wId) => {
+    if (isTouch) return;
     if (hoverTimeoutId) clearTimeout(hoverTimeoutId);
 
     const timer = setTimeout(() => {
@@ -108,9 +116,49 @@ export default function PaceNoteWeeklyCalendar({
   };
 
   const handleWeekLeave = () => {
+    if (isTouch) return;
     if (hoverTimeoutId) clearTimeout(hoverTimeoutId);
     setHoveredWeekInfo(null);
   };
+
+  // 모바일/터치 디바이스에서는 selectedWeekId 정보를 인라인 패널에 유지
+  const activeWeekInfo = useMemo(() => {
+    if (isTouch) {
+      if (!selectedWeekId) return null;
+      const wId = selectedWeekId;
+      const timelineWeek = pastWeeksData.find(p => p.weekId === wId);
+      const isCurrent = wId === currentWeekId;
+      const isFuture = !isCurrent && !timelineWeek;
+
+      if (isFuture) {
+        return { wId, isFuture: true };
+      }
+
+      let total = 0;
+      let completed = 0;
+      let statement = "진행된 기록이 있는 항해 경로입니다.";
+
+      if (isCurrent) {
+        total = currentWeekTasks.length;
+        completed = currentWeekTasks.filter(t => t.completed).length;
+        statement = "현재 치열하게 개척 중인 이번 주 궤도입니다.";
+      } else if (timelineWeek) {
+        total = timelineWeek.tasks ? timelineWeek.tasks.length : 0;
+        completed = timelineWeek.tasks ? timelineWeek.tasks.filter(t => t.completed).length : 0;
+        statement = timelineWeek.statement || "완료된 기록이 안전하게 저장된 항해 경로입니다.";
+      }
+
+      return {
+        wId,
+        isFuture: false,
+        isCurrent,
+        total,
+        completed,
+        statement
+      };
+    }
+    return hoveredWeekInfo;
+  }, [isTouch, selectedWeekId, hoveredWeekInfo, pastWeeksData, currentWeekId, currentWeekTasks]);
 
   return (
     <div className="pacenote-weekly-chrono-container">
@@ -188,17 +236,17 @@ export default function PaceNoteWeeklyCalendar({
       </div>
 
       {/* ── 하단 실시간 호버 퀵피크 오버레이 패널 ── */}
-      {hoveredWeekInfo && (
+      {activeWeekInfo && (
         <div className="weekly-hover-peek-panel">
           <div className="peek-panel-arrow"></div>
           <div className="peek-panel-content">
-            <span className="peek-week-title">{hoveredWeekInfo.wId} 궤도 정보</span>
-            {hoveredWeekInfo.isFuture ? (
+            <span className="peek-week-title">{activeWeekInfo.wId} {isTouch ? '궤도 상세' : '궤도 정보'}</span>
+            {activeWeekInfo.isFuture ? (
               <p className="peek-desc">🔒 미개척 항해 주차입니다. 해당 주간에 궤도가 오픈됩니다.</p>
             ) : (
               <div className="peek-metrics">
-                <span className="metric-item">체크리스트 달성률: {hoveredWeekInfo.completed} / {hoveredWeekInfo.total} 완료</span>
-                <p className="peek-statement">"{hoveredWeekInfo.statement}"</p>
+                <span className="metric-item">체크리스트 달성률: {activeWeekInfo.completed} / {activeWeekInfo.total} 완료</span>
+                <p className="peek-statement">"{activeWeekInfo.statement}"</p>
               </div>
             )}
           </div>
