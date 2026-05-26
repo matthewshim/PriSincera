@@ -396,19 +396,19 @@ function Header() {
               <div className="visual-blur-orb emerald"></div>
             </div>
           </Link>
-        </div>
-        
-        {/* 모바일 하단 Thumb Zone 언어 토글 (3단 가로 그리드) */}
-        <div className="mobile-nav-locale-footer">
-          {SUPPORTED_LANGUAGES.map((lang) => (
-            <button
-              key={lang.code}
-              className={`mobile-locale-btn ${locale === lang.code ? 'active' : ''}`}
-              onClick={() => { setLocale(lang.code); setIsMobileMenuOpen(false); }}
-            >
-              {lang.nativeLabel}
-            </button>
-          ))}
+
+          {/* 모바일 하단 Thumb Zone 언어 토글 (3단 가로 그리드) */}
+          <div className="mobile-nav-locale-footer">
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                className={`mobile-locale-btn ${locale === lang.code ? 'active' : ''}`}
+                onClick={() => { setLocale(lang.code); setIsMobileMenuOpen(false); }}
+              >
+                {lang.nativeLabel}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </nav>

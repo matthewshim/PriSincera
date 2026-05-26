@@ -365,7 +365,7 @@
         pointer-events: none;
         transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         overflow-y: auto;
-        padding: 92px 20px 140px;
+        padding: 92px 20px 60px;
     }
 
     .mobile-nav-overlay.open {
@@ -541,6 +541,8 @@
         position: absolute;
         right: -14px;
         top: 50%;
+        width: 240px !important;
+        height: 240px !important;
         transform: translateY(-50%) scale(0.42) rotateY(-8deg) rotateX(4deg);
         transform-origin: right center;
         background: transparent !important;
@@ -551,6 +553,16 @@
 
     .mobile-bento-nav-item:hover .dynamic-mockup {
         transform: translateY(-50%) scale(0.46) rotateY(-2deg) rotateX(2deg);
+    }
+
+    .mobile-bento-nav-item .base-mockup {
+        width: 240px !important;
+        height: 240px !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 16px;
+        box-sizing: border-box !important;
     }
 
     /* Scoped CSS Art definitions for the menu overlay */
@@ -858,13 +870,16 @@
 
     /* Mobile Locale Switcher in Drawer Footer */
     .mobile-nav-locale-footer {
-        position: absolute;
-        bottom: 40px;
-        left: var(--space-md);
-        right: var(--space-md);
+        position: relative;
+        margin-top: 28px;
+        bottom: 0;
+        left: 0;
+        right: 0;
         display: flex;
         gap: var(--space-sm);
         z-index: 1005;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .mobile-locale-btn {
