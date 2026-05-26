@@ -1,5 +1,50 @@
 [
   {
+    "id": "ep6",
+    "slug": "seo-deep-dive-spa-crawling-blind-spots-dynamic-sitemap-proxy",
+    "chapterNo": "06",
+    "title": {
+      "ko": "SEO Deep Dive: SPA 크롤링 맹점 극복 및 동적 사이트맵 연동기",
+      "en": "SEO Deep Dive: Overcoming SPA Crawling Blind Spots and Dynamic Sitemap Integration",
+      "ja": "SEOディープダイブ：SPAクローリングの盲点を克服し、動的サイトマップを連携する"
+    },
+    "subtitle": {
+      "ko": "PriSincera의 SPA에서 발견된 SEO 맹점을 분석하고, 동적 사이트맵 확장 및 크롤러 전용 메타 태그 프록시 고도화를 통해 검색 엔진 노출을 극대화한 엔지니어링 기록",
+      "en": "An engineering record detailing the analysis of SEO blind spots discovered in PriSincera's SPA, and how search engine exposure was maximized through dynamic sitemap expansion and advanced crawler-specific meta tag proxy.",
+      "ja": "PriSinceraのSPAで発見されたSEOの盲点を分析し、動的サイトマップの拡張とクローラー専用メタタグプロキシの高度化を通じて検索エンジン露出を最大化したエンジニアリング記録。"
+    },
+    "description": {
+      "ko": "",
+      "en": "",
+      "ja": ""
+    },
+    "date": "2026-05-26",
+    "tags": [
+      "SEO",
+      "SPA",
+      "Sitemap",
+      "Node.js"
+    ],
+    "accent": "#6D28D9",
+    "commits": [
+      {
+        "type": "docs",
+        "hash": "cf3f812",
+        "msg": "add SEO optimization specs and index dynamic BuildersLog posting draft"
+      },
+      {
+        "type": "feat",
+        "hash": "2b4c38c",
+        "msg": "optimize dynamic sitemap.xml and enable specific SEO meta tags for BuildersLog articles"
+      },
+      {
+        "type": "fix",
+        "hash": "ae40f8e",
+        "msg": "handle SPA index.html fallback rendering issue in BuildersLogDetail"
+      }
+    ]
+  },
+  {
     "id": "ep5",
     "slug": "prisincera-web-service-security-audit-remediation-report",
     "chapterNo": "05",
