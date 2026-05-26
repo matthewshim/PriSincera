@@ -4,29 +4,39 @@
     "slug": "seo-deep-dive-spa-crawling-blind-spots-dynamic-sitemap-proxy",
     "chapterNo": "06",
     "title": {
-      "ko": "SEO Deep Dive: SPA 크롤링 맹점 극복 및 동적 사이트맵 연동기",
-      "en": "SEO Deep Dive: Overcoming SPA Crawling Blind Spots and Dynamic Sitemap Integration",
-      "ja": "SEOディープダイブ：SPAクローリングの盲点を克服し、動的サイトマップを連携する"
+      "ko": "🛠️ SEO Deep Dive: SPA의 크롤링 맹점 극복 및 동적 사이트맵 연동기",
+      "en": "🛠️ SEO Deep Dive: Overcoming SPA Crawling Blind Spots and Integrating Dynamic Sitemaps",
+      "ja": "🛠️ SEOディープダイブ：SPAのクローリング盲点克服と動的サイトマップ連携"
     },
     "subtitle": {
-      "ko": "PriSincera의 SPA에서 발견된 SEO 맹점을 분석하고, 동적 사이트맵 확장 및 크롤러 전용 메타 태그 프록시 고도화를 통해 검색 엔진 노출을 극대화한 엔지니어링 기록",
-      "en": "An engineering record detailing the analysis of SEO blind spots discovered in PriSincera's SPA, and how search engine exposure was maximized through dynamic sitemap expansion and advanced crawler-specific meta tag proxy.",
-      "ja": "PriSinceraのSPAで発見されたSEOの盲点を分析し、動的サイトマップの拡張とクローラー専用メタタグプロキシの高度化を通じて検索エンジン露出を最大化したエンジニアリング記録。"
+      "ko": "PriSincera SPA의 검색 엔진 크롤링 맹점 분석 및 서버리스 Node.js 기반 동적 사이트맵, 메타 프록시 구축을 통한 오가닉 트래픽 확보 전략",
+      "en": "Analyzing PriSincera SPA's Search Engine Crawling Blind Spots and Strategies for Acquiring Organic Traffic through Serverless Node.js-based Dynamic Sitemap and Meta Proxy Implementation",
+      "ja": "PriSincera SPAの検索エンジンのクローリング盲点分析、およびサーバーレスNode.jsベースの動的サイトマップとメタプロキシ構築によるオーガニックトラフィック確保戦略"
     },
     "description": {
-      "ko": "",
-      "en": "",
-      "ja": ""
+      "ko": "PriSincera는 SPA의 고질적인 SEO 맹점(정적 사이트맵, Builders Log 인덱싱 누락, 획일적 OG 태그)으로 오가닉 트래픽 확보에 난항을 겪었습니다. 본 아티클은 이를 Node.js 기반 동적 사이트맵과 SEO 프록시로 해결하고, 자동 색인 및 CTR 극대화를 이룬 엔지니어링 과정을 상세히 다룹니다.",
+      "en": "PriSincera faced challenges in acquiring organic traffic due to chronic SEO blind spots inherent in SPAs (static sitemap, missing Builders Log indexing, uniform OG tags). This article details the engineering process that addressed these issues using a Node.js-based dynamic sitemap and an SEO proxy, achieving automatic indexing and maximizing CTR.",
+      "ja": "PriSinceraは、SPAに固有のSEO盲点（静的サイトマップ、Builders Logのインデックス漏れ、画一的なOGタグ）により、オーガニックトラフィックの確保に苦慮していました。本記事では、Node.jsベースの動的サイトマップとSEOプロキシでこれらの問題を解決し、自動インデックスとCTR最大化を実現したエンジニアリングプロセスを詳細に解説します。"
     },
     "date": "2026-05-26",
     "tags": [
       "SEO",
       "SPA",
-      "Sitemap",
-      "Node.js"
+      "Node.js",
+      "크롤링"
     ],
     "accent": "#6D28D9",
     "commits": [
+      {
+        "type": "feat",
+        "hash": "d9866df",
+        "msg": "add localized description extraction and translate mapping in builderslog admin router"
+      },
+      {
+        "type": "feat",
+        "hash": "6128568",
+        "msg": "publish seo-deep-dive-spa-crawling-blind-spots-dynamic-sitemap-proxy via Admin"
+      },
       {
         "type": "docs",
         "hash": "cf3f812",

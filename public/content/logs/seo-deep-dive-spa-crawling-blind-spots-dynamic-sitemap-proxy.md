@@ -1,15 +1,3 @@
----
-status: active
-domain: BuildersLog
-last_updated: 2026-05-26
-version: v1.0
-target_files:
-  - server.mjs
-  - src/components/daily/DailyCalendar.jsx
-  - src/pages/BuildersLog.css
-  - src/styles/index.css
----
-
 # 🛠️ SEO Deep Dive: SPA의 크롤링 맹점 극복 및 동적 사이트맵 연동기
 
 ## 📝 Revision History
