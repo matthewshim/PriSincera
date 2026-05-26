@@ -146,6 +146,15 @@
               border-radius 0.25s ease;
 }
 
+/* Featured Card Signature Accent Skin */
+.builder-card-featured .builder-card-glass {
+  background: rgba(255, 255, 255, 0.016);
+  border-color: color-mix(in srgb, var(--accent-color) 20%, rgba(255, 255, 255, 0.06));
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 24px 40px -8px rgba(0, 0, 0, 0.3),
+              0 0 20px color-mix(in srgb, var(--accent-color) 4%, transparent);
+}
+
 /* Aurora Radial Glow on Hover */
 .card-glow-bg {
   position: absolute;
@@ -626,6 +635,17 @@
     display: none; /* Hide visual block on tablet to compress vertical space */
   }
 
+  .builder-card-featured .card-visual-content {
+    display: flex; /* Keep visual content visible for the featured card! */
+    border-left: none;
+    padding-left: 0;
+    margin-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: var(--space-lg);
+    width: 100%;
+    min-height: auto;
+  }
+
   .chapter-title {
     font-size: 1.5rem;
   }
@@ -660,7 +680,9 @@
   }
 
   .builder-card-featured .chapter-title {
-    font-size: 1.4rem;
+    font-size: 1.7rem; /* Prominent title size for the top post */
+    line-height: 1.25;
+    letter-spacing: -0.02em;
   }
 
   .chapter-subtitle {
@@ -676,6 +698,14 @@
     text-overflow: ellipsis;
     font-size: 0.85rem;
     line-height: 1.5;
+  }
+
+  /* Do NOT clamp the featured card summary on mobile! */
+  .builder-card-featured .chapter-desc {
+    display: block; /* Unclamp description for detail */
+    -webkit-line-clamp: unset;
+    font-size: 0.88rem;
+    line-height: 1.6;
   }
 
   .card-tags {
