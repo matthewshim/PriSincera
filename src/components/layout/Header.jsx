@@ -262,13 +262,11 @@ function Header() {
 
           {/* 1. PriSincera Base (Platform Foundation) */}
           <a
-            href="#"
+            href="https://github.com/matthewshim/PriSincera"
+            target="_blank"
+            rel="noopener noreferrer"
             className="mobile-bento-nav-item base-gold-theme"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsMobileMenuOpen(false);
-              alert(t('header.sylphioAlert'));
-            }}
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="bento-card-content">
               <div className="bento-card-label" style={{ color: '#F59E0B' }}>Platform Foundation</div>
