@@ -8,8 +8,8 @@ import { useTranslation } from '../contexts/LanguageContext';
 import './DailyDigest.css';
 
 const TABS = [
-  { key: 'intro', icon: '📋', translationKey: 'dailyDigest.introTab' },
   { key: 'daily', icon: '📝', translationKey: 'dailyDigest.dailyTab' },
+  { key: 'intro', icon: '📋', translationKey: 'dailyDigest.introTab' },
 ];
 
 function formatNavDate(dateStr, locale = 'ko') {
@@ -39,7 +39,7 @@ export default function DailyDigest() {
     ogUrl: `https://www.prisincera.com/daily${date ? `/${date}` : ''}`
   });
 
-  const [activeTab, setActiveTab] = useState(window.location.hash === '#daily' ? 'daily' : 'intro');
+  const [activeTab, setActiveTab] = useState(window.location.hash === '#intro' ? 'intro' : 'daily');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null); // Detail data or Archive list
   const [subStatus, setSubStatus] = useState('');
@@ -155,7 +155,9 @@ export default function DailyDigest() {
   }, []);
 
   useEffect(() => {
-    if (location.hash === '#daily') {
+    if (location.hash === '#intro') {
+      setActiveTab('intro');
+    } else if (location.hash === '#daily') {
       setActiveTab('daily');
     }
   }, [location.hash]);
@@ -315,8 +317,8 @@ export default function DailyDigest() {
 
   const handleTabChange = (key) => {
     setActiveTab(key);
-    if (key === 'daily') {
-      navigate('/daily#daily');
+    if (key === 'intro') {
+      navigate('/daily#intro');
     } else {
       navigate('/daily');
     }
