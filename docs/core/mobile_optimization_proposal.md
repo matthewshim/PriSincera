@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-05-26
-version: v1.5
+version: v1.6
 target_files:
   - src/styles/index.css
   - src/pages/PaceNoteDashboard.css
@@ -30,6 +30,7 @@ target_files:
 | v1.3 | 2026-05-26 | AI Agent | 일괄 진행(Big Bang) 최종 결정에 따른 전면 모바일 최적화 코드 구현 완료 및 반영 | 전면 최적화 완료 |
 | v1.4 | 2026-05-26 | AI Agent | 모바일 메인 스크롤 피로도 해소용 가로 스와이프(Horizontal Swipe) 전략 검토안 추가 수록 | 전략/사용성 고도화 |
 | v1.5 | 2026-05-26 | AI Agent | 가로 스와이프 개선 기획을 반영하여 빌더스 로그 게재용 테크 아티클 포맷으로 전면 개편 | 빌더스 로그 아카이빙 |
+| v1.6 | 2026-05-26 | AI Agent | 모바일 햄버거 메뉴 Bento Navigator 포탈 개편안 및 비주얼 목업 디자인 수록 | 모바일 햄버거 메뉴 개편 |
 
 ---
 
@@ -244,7 +245,29 @@ const activeWeekInfo = useMemo(() => {
 
 ---
 
-## 5. 최적화 적용 전후 사용성 지표 비교 (Impact Analysis)
+## 5. 🪐 모바일 햄버거 메뉴 Bento 포탈 전면 개편 제안 (Mobile Bento Navigation Portal)
+
+현재 제공되는 단조로운 텍스트 중심의 모바일 햄버거 메뉴를 혁신하고, 메인 인덱스(Home)에서 소개하는 4대 핵심 서비스(PriSincera Base, Builder's Log, Daily Digest, Pace Note)의 고유 아이덴티티와 비주얼 토큰을 집약한 **"Bento Navigator Mobile Portal (반응형 벤토 네비게이션 허브)"** 설계안을 제안합니다.
+
+### 🖼️ UI 디자인 컨셉 목업 (Proposed UI Mockup)
+
+제안서 분석에 맞춰 생성한 아래의 **고품격 UI 목업 디자인**을 검토해 주시기 바랍니다.
+
+![모바일 벤토 네비게이션 햄버거 메뉴 목업 디자인](./mobile_menu_mockup.png)
+
+### 💎 주요 핵심 설계 디테일
+* **4대 브랜드 고유 비주얼 캡슐화 (Bento Card Skin)**: 각 메뉴 링크를 독립적인 **글래스모피즘 카드**로 감싸고, 카드마다 서비스 고유의 네온 아우라 광원 테마를 이식합니다.
+  * **Sylphio (Base)**: Amber-Gold 그라데이션 광원 + 크리스탈 프리즘 아이콘 🪐
+  * **Builder's Log**: Deep Violet 그라데이션 광원 + 타임라인 노드 아이콘 📖
+  * **Daily Digest**: Neon Cyan 그라데이션 광원 + AI 터미널 프롬프트 아이콘 📡
+  * **Pace Note**: Neon Emerald Green 그라데이션 광원 + 주차 달성률 체크 그리드 아이콘 🎯
+* **설명적 부제 및 기호 이식 (Micro-Descriptions)**: 메뉴 타이틀 아래에 얇은 폰트로 영문 서비스 본질 및 다국어 맞춤 한글 설명을 병기하여, 정보 탐색의 편의성을 극적으로 향상시킵니다.
+* **스프링 물리 효과 기반 엇갈린 진입 애니메이션 (Staggered Stagger)**: 햄버거 메뉴 버튼을 누르는 순간, 4개의 Bento 메뉴 카드들이 위에서 아래로 순차적으로 통통 튀며 슬라이딩 인(`stagger delay: 0.08s * index`)되도록 애니메이션을 바인딩합니다.
+* **활성 궤도 브리딩 아우라 (Active Breathing Aura)**: 현재 사용자가 위치한 해당 페이지의 벤토 카드 테두리에 은은하게 펄싱하는 네온 광원 숨결 효과를 부여하여, 자신의 위치를 본능적으로 인지할 수 있도록 유도합니다.
+
+---
+
+## 6. 최적화 적용 전후 사용성 지표 비교 (Impact Analysis)
 
 반응형 Bento와 가로 스와이프 기법을 동시 도입하며 얻은 모바일 성능 및 사용성 향상 수치는 다음과 같습니다.
 
@@ -258,7 +281,7 @@ const activeWeekInfo = useMemo(() => {
 
 ---
 
-## 6. 결론 및 빌더(Builder)로서의 교훈
+## 7. 결론 및 빌더(Builder)로서의 교훈
 
 "단순히 데스크톱용으로 미려하게 설계한 반응형 컴포넌트들을 모바일 스크린 크기에 맞춰 억지로 세로로 구겨넣는 것"은 모바일 퍼스트 시대에 가장 경계해야 할 태도라는 사실을 이번 여정을 통해 깊이 깨닫게 되었습니다.
 
