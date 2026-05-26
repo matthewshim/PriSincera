@@ -974,13 +974,15 @@ router.post('/builderslog/analyze', async (req, res) => {
     const prompt = `
 너는 PriSincera의 수석 테크니컬 라이터야. 전달된 초안 마크다운 문서를 분석해서 다음 작업을 수행해:
 1. 이 아티클에 가장 어울리는 Title, Subtitle, 영문 Slug(소문자와 하이픈만), Tags(최대 4개)를 추출해.
-2. 아래 제공된 [최근 커밋 리스트]를 분석하여, 이 아티클의 내용과 실제로 관련된 커밋들만 선별(최대 5개)하여 JSON 배열로 반환해. 연관된 것이 없다면 빈 배열 []을 반환해.
+2. 이 아티클을 150~200자 내외로 명확하게 요약한 SEO용 한국어 설명문(description)을 작성해.
+3. 아래 제공된 [최근 커밋 리스트]를 분석하여, 이 아티클의 내용과 실제로 관련된 커밋들만 선별(최대 5개)하여 JSON 배열로 반환해. 연관된 것이 없다면 빈 배열 []을 반환해.
 
 반드시 아래 JSON 형식으로만 응답해 (Markdown code block 표시 없이 순수 JSON 문자열만 출력):
 {
   "title": "추출한 제목",
   "subtitle": "추출한 부제목",
   "slug": "extracted-english-slug",
+  "description": "추출한 SEO용 설명문",
   "tags": ["Tag1", "Tag2"],
   "commits": [
     { "type": "feat", "hash": "abc1234", "msg": "커밋 메시지" }
