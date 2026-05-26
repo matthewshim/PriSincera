@@ -28,6 +28,7 @@ export default function WorkSection() {
           </p>
         </div>
 
+        <div className="work-grid">
         {/* 1. PriSincera Base Flagship (Core Foundation) */}
         <div className="flagship-card reveal-item flagship-glow" style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(245, 158, 11, 0.4)' }}>
           <div className="flagship-content">
@@ -226,6 +227,7 @@ export default function WorkSection() {
             </div>
             <div className="visual-blur-orb emerald"></div>
           </div>
+        </div>
         </div>
 
       </div>
