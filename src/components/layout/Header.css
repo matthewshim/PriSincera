@@ -539,15 +539,16 @@
     /* Compact Mockup Scaling Overrides */
     .bento-card-visual .dynamic-mockup {
         position: absolute;
-        right: -14px;
+        right: -2px; /* Increased from -14px to prevent tight squeezed right margins */
         top: 50%;
         width: 240px !important;
         height: 240px !important;
         transform: translateY(-50%) scale(0.42) rotateY(-8deg) rotateX(4deg);
         transform-origin: right center;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
+        background: rgba(255, 255, 255, 0.03) !important; /* Re-engineered mockup background */
+        border: 1px solid rgba(255, 255, 255, 0.1) !important; /* Re-engineered mockup border */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        border-radius: 16px !important;
         pointer-events: none;
     }
 
@@ -563,6 +564,9 @@
         justify-content: space-between;
         padding: 16px;
         box-sizing: border-box !important;
+        background: rgba(26, 16, 53, 0.65) !important; /* Specific dark background for base cube */
+        border: 1px solid rgba(245, 158, 11, 0.25) !important; /* Specific amber border for base cube */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
     }
 
     /* Scoped CSS Art definitions for the menu overlay */
