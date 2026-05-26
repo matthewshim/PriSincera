@@ -1697,3 +1697,26 @@
   font-size: 0.9rem;
   padding: 40px 0;
 }
+
+/* ── Mobile Overrides for Bento Chrono-Calendar Layout ── */
+@media (max-width: 768px) {
+  .daily-bento-portal {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin: 20px auto;
+  }
+  
+  .bento-quick-peek-section {
+    position: static;
+  }
+
+  .quick-peek-welcome {
+    min-height: auto;
+    padding: 32px 20px;
+  }
+
+  .quick-peek-card-wrapper {
+    min-height: auto;
+  }
+}
+
