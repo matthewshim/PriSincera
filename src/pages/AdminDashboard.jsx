@@ -1385,6 +1385,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                                 ...f,
                                 title: { ...f.title, ko: res.title || f.title.ko },
                                 subtitle: { ...f.subtitle, ko: res.subtitle || f.subtitle.ko },
+                                description: { ...f.description, ko: res.description || f.description.ko },
                                 slug: res.slug || f.slug,
                                 tags: res.tags && res.tags.length > 0 ? res.tags.join(', ') : f.tags,
                                 markdown: { ...f.markdown, ko: res.refinedMarkdown || rawMarkdown },
