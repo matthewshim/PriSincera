@@ -835,7 +835,7 @@
     }
 
     .flagship-card {
-        flex-direction: column;
+        flex-direction: column-reverse;
         border-radius: 20px;
     }
 
@@ -845,9 +845,13 @@
         text-align: center;
     }
 
+    .work-card-tags {
+        justify-content: center;
+    }
+
     .flagship-visual {
         min-height: 200px;
         border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 }
