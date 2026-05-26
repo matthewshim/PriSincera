@@ -826,6 +826,24 @@
         padding: var(--space-xl) var(--space-md);
     }
 
+    .work-grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 16px;
+        padding: 12px 4px 24px 4px;
+        scrollbar-width: none;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .work-grid::-webkit-scrollbar {
+        display: none;
+    }
+
     .work-card {
         padding: var(--space-lg);
         flex-direction: column;
@@ -841,6 +859,11 @@
     .flagship-card {
         flex-direction: column-reverse;
         border-radius: 20px;
+        flex-shrink: 0;
+        width: 85vw;
+        max-width: 320px;
+        scroll-snap-align: center;
+        margin-bottom: 0;
     }
 
     .flagship-content {

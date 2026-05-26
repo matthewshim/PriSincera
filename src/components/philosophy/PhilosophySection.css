@@ -307,7 +307,21 @@
     }
 
     .concept-cards {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 14px;
+        padding: 10px 4px 20px 4px;
+        scrollbar-width: none;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .concept-cards::-webkit-scrollbar {
+        display: none;
     }
 
     .concept-card:last-child {
@@ -318,6 +332,10 @@
         padding: var(--space-md) var(--space-lg);
         flex-direction: column;
         gap: var(--space-md);
+        flex-shrink: 0;
+        width: 80vw;
+        max-width: 290px;
+        scroll-snap-align: center;
     }
 
     .philosophy-title {
