@@ -251,13 +251,151 @@ function Header() {
         </div>
       </div>
 
-      {/* Mobile Overlay Navigation */}
+      {/* Mobile Overlay Navigation (Bento Portal) */}
       <div className={`mobile-nav-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
-        <div className="mobile-nav-links">
-          <Link to="/builders-log" className={`mobile-nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('header.buildersLog')}</Link>
-          <Link to="/daily" className={`mobile-nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('header.dailyDigest')}</Link>
-          <Link to="/pacenote" className={`mobile-nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('header.paceNote')}</Link>
-          <a href="#" className="mobile-nav-link" onClick={(e) => { e.preventDefault(); setIsMobileMenuOpen(false); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
+        <div className="mobile-bento-menu-container">
+          {/* Menu Title Header */}
+          <div className="mobile-menu-header">
+            <span className="mobile-menu-title">PriSincera Portal</span>
+            <span className="mobile-menu-subtitle">Explore Flagship Services & Growth Engine</span>
+          </div>
+
+          {/* 1. PriSincera Base (Platform Foundation) */}
+          <a
+            href="#"
+            className="mobile-bento-nav-item base-gold-theme"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              alert(t('header.sylphioAlert'));
+            }}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: '#F59E0B' }}>Platform Foundation</div>
+              <h3 className="bento-card-title">PriSincera Base</h3>
+              <div className="bento-card-arrow">🪐 Explore GitHub →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup base-mockup">
+                <div className="base-engine-container">
+                  <div className="prism-core">
+                    <div className="prism-face front"></div>
+                    <div className="prism-face back"></div>
+                    <div className="prism-face left"></div>
+                    <div className="prism-face right"></div>
+                    <div className="prism-face top"></div>
+                    <div className="prism-face bottom"></div>
+                  </div>
+                  <div className="engine-ring ring-x"></div>
+                  <div className="engine-ring ring-y"></div>
+                  <div className="engine-ring ring-z"></div>
+                </div>
+                <div className="base-terminal">
+                  <div className="terminal-header">
+                    <span className="terminal-title">core-engine.log</span>
+                    <span className="terminal-status active">RUNNING</span>
+                  </div>
+                  <div className="terminal-lines">
+                    <div className="terminal-line">&gt; Client: React 18 + Vite Success</div>
+                    <div className="terminal-line">&gt; Cloud Run: Active</div>
+                  </div>
+                </div>
+              </div>
+              <div className="visual-blur-orb amber"></div>
+            </div>
+          </a>
+
+          {/* 2. Builder's Log (Growth Blog) */}
+          <Link
+            to="/builders-log"
+            className={`mobile-bento-nav-item log-indigo-theme${location.pathname.startsWith('/builders-log') ? ' active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: '#8B5CF6' }}>Engineering & Growth</div>
+              <h3 className="bento-card-title">Builder's Log</h3>
+              <div className="bento-card-arrow">📖 Read Logs →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup builderslog-mockup">
+                <div className="mockup-timeline">
+                  <div className="timeline-line"></div>
+                  <div className="timeline-node active">
+                    <div className="node-dot"></div>
+                    <div className="node-info">
+                      <div className="node-title">Admin Integration</div>
+                      <div className="node-meta">Chapter 3 · May 20</div>
+                    </div>
+                  </div>
+                  <div className="timeline-node">
+                    <div className="node-dot"></div>
+                    <div className="node-info">
+                      <div className="node-title">Auth Isolation</div>
+                      <div className="node-meta">Chapter 2 · May 18</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="visual-blur-orb indigo"></div>
+            </div>
+          </Link>
+
+          {/* 3. Daily Digest (AI Curation) */}
+          <Link
+            to="/daily"
+            className={`mobile-bento-nav-item daily-cyan-theme${location.pathname.startsWith('/daily') ? ' active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: 'var(--orbit-cyan)' }}>AI Curation</div>
+              <h3 className="bento-card-title">Daily Digest</h3>
+              <div className="bento-card-arrow">📡 View Curation →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup daily-mockup">
+                <div className="mockup-header">
+                  <div className="mockup-dot"></div><div className="mockup-dot"></div><div className="mockup-dot"></div>
+                </div>
+                <div className="mockup-body">
+                  <div className="mockup-skeleton-title"></div>
+                  <div className="mockup-skeleton-text"></div>
+                  <div className="mockup-ai-card">
+                    <span className="ai-spark">✨</span>
+                    <div className="ai-lines">
+                      <div className="ai-line"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="visual-blur-orb cyan"></div>
+            </div>
+          </Link>
+
+          {/* 4. Pace Note (Action Tracker) */}
+          <Link
+            to="/pacenote"
+            className={`mobile-bento-nav-item pace-green-theme${location.pathname.startsWith('/pacenote') ? ' active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: '#34D399' }}>Action & Tracker</div>
+              <h3 className="bento-card-title">Pace Note</h3>
+              <div className="bento-card-arrow">🎯 Track Goals →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup pacenote-mockup">
+                <div className="pacenote-grid">
+                  {[...Array(20)].map((_, i) => (
+                    <div key={i} className={`pace-cell ${[5,6,12,14,18].includes(i) ? 'active' : ''} ${i === 14 ? 'pulse' : ''}`}></div>
+                  ))}
+                </div>
+                <div className="pace-floating-card">
+                  <div className="pace-check">✓</div>
+                </div>
+              </div>
+              <div className="visual-blur-orb emerald"></div>
+            </div>
+          </Link>
         </div>
         
         {/* 모바일 하단 Thumb Zone 언어 토글 (3단 가로 그리드) */}
