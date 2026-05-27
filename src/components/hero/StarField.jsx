@@ -110,7 +110,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    let w, h, stars = [], stardust = [], nebulae = [], shootingStars = [], constellations = [], frameId;
+    let w, h, scale = 1, stars = [], stardust = [], nebulae = [], shootingStars = [], constellations = [], frameId;
     let zodiacFade = 0; // 0 = hidden, 1 = fully visible
     let lastFrameTime = 0;
     const FPS_INTERVAL = 1000 / 30; // 30fps cap
@@ -129,6 +129,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
+      scale = Math.min(w, h) / 900; // 공용 scale 계산 추가
       smoothMx = w / 2;
       smoothMy = h / 2;
       createStars();
@@ -307,7 +308,6 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     }
 
     function createConstellations() {
-      const scale = Math.min(w, h) / 900;
       constellations = ZODIACS.map(z => {
         const centerX = z.cx * w;
         const centerY = z.cy * h;
