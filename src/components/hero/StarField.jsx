@@ -118,6 +118,14 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     // Smoothed mouse position for parallax (avoids jitter)
     let smoothMx = 0, smoothMy = 0;
 
+    let resizeTimeout;
+    function handleResize() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        resize();
+      }, 100);
+    }
+
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
@@ -139,12 +147,14 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       const isMobile = w <= 768;
       const density = Math.floor((w * h) / (isMobile ? 5600 : 2800));
 
-      // Depth-based color palettes (atmospheric perspective)
-      // Far = cool blue/cyan, Mid = neutral lavender/white, Near = warm white/gold
+      // Depth-based color palettes (natural blackbody classification)
+      // Far (Class O/B: blue-white): #E2ECFF, #C9DFFE, #A3C9FF
+      // Mid (Class A/F: pure white, ice white): #F8F9FA, #F0F4F8, #E6ECF5
+      // Near (Class G/K/M: warm whites, soft golds, orange-reds): #FFFEE8, #FFFAC7, #FFE1C2, #FFCFA3
       const colorsByDepth = {
-        far:  ['#5B8FB9', '#67E8F9', '#7DD3FC', '#93C5FD'],  // cool blues
-        mid:  ['#C4B5FD', '#E9D5FF', '#DDD6FE', '#FFFFFF'],  // neutral lavender/white
-        near: ['#FFFFFF', '#FEF3C7', '#FDE68A', '#F0ABFC'],   // warm whites/golds
+        far:  ['#E2ECFF', '#C9DFFE', '#A3C9FF'],
+        mid:  ['#F8F9FA', '#F0F4F8', '#E6ECF5'],
+        near: ['#FFFEE8', '#FFFAC7', '#FFE1C2', '#FFCFA3'],
       };
 
       for (let i = 0; i < density; i++) {
@@ -174,6 +184,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           baseOpacity: 0.04 + depth * 0.55,              // far: very dim, near: bright
           parallaxFactor: depth * 0.045,                 // far: almost static, near: moves a lot
           glowRadius: depth > 0.7 ? 2 + depth * 4 : 0,  // only near stars get glow
+          isSuperBright: depth > 0.88,                  // top ~1.2% brightest stars!
         });
       }
 
@@ -187,13 +198,32 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       // Each nebula at a different depth for parallax layering
       const depths = [0.05, 0.15, 0.08, 0.12];
       for (let i = 0; i < 4; i++) {
+        const r = Math.random() * 250 + 120;
+        
+        // Create Offscreen Canvas for double-buffering cache
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = r * 2;
+        offCanvas.height = r * 2;
+        const offCtx = offCanvas.getContext('2d');
+        
+        // Draw the radial gradient on the offscreen canvas once
+        const grad = offCtx.createRadialGradient(r, r, 0, r, r, r);
+        const col = colors[i];
+        grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},1)`);
+        grad.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0)`);
+        offCtx.fillStyle = grad;
+        offCtx.beginPath();
+        offCtx.arc(r, r, r, 0, Math.PI * 2);
+        offCtx.fill();
+
         nebulae.push({
           x: Math.random() * w, y: Math.random() * h,
-          r: Math.random() * 250 + 120, color: colors[i],
+          r, color: col,
           speedX: (Math.random() - 0.5) * 0.12, speedY: (Math.random() - 0.5) * 0.08,
           opacity: 0.012 + Math.random() * 0.015, phase: Math.random() * Math.PI * 2,
           depth: depths[i],
           parallaxFactor: depths[i] * 0.03,
+          offCanvas, // Store cached canvas reference
         });
       }
     }
@@ -230,7 +260,75 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       const parallaxBaseX = smoothMx - centerX;
       const parallaxBaseY = smoothMy - centerY;
 
-      // --- Nebulae (with subtle parallax) ---
+      // --- Background Celestial Grids (very faint Planisphere styling) ---
+      ctx.save();
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.025)';
+      ctx.lineWidth = 0.35;
+      const centerGridX = w / 2, centerGridY = h / 2;
+      const minSize = Math.min(w, h);
+      
+      // Declination Rings
+      for (let rFactor = 0.15; rFactor <= 0.85; rFactor += 0.15) {
+        ctx.beginPath();
+        ctx.arc(centerGridX, centerGridY, minSize * rFactor, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      // Right Ascension Radial Lines
+      for (let angleDeg = 0; angleDeg < 360; angleDeg += 30) {
+        const rad = (angleDeg * Math.PI) / 180;
+        ctx.beginPath();
+        ctx.moveTo(centerGridX, centerGridY);
+        ctx.lineTo(centerGridX + Math.cos(rad) * minSize, centerGridY + Math.sin(rad) * minSize);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // --- Telescope Lens Reticle & Grid Zoom (Clipped inside Lens) ---
+      const LENS_RADIUS = 240;       // wider telescope field of view
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(rawMx, rawMy, LENS_RADIUS, 0, Math.PI * 2);
+      ctx.clip();
+      
+      // Declination Rings (Brighter inside lens)
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.09)';
+      ctx.lineWidth = 0.5;
+      for (let rFactor = 0.15; rFactor <= 0.85; rFactor += 0.15) {
+        ctx.beginPath();
+        ctx.arc(centerGridX, centerGridY, minSize * rFactor, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      // Right Ascension Lines
+      for (let angleDeg = 0; angleDeg < 360; angleDeg += 30) {
+        const rad = (angleDeg * Math.PI) / 180;
+        ctx.beginPath();
+        ctx.moveTo(centerGridX, centerGridY);
+        ctx.lineTo(centerGridX + Math.cos(rad) * minSize, centerGridY + Math.sin(rad) * minSize);
+        ctx.stroke();
+      }
+      
+      // Lens Center Reticle Crosshairs
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.18)';
+      ctx.lineWidth = 0.55;
+      ctx.beginPath();
+      ctx.moveTo(rawMx - 18, rawMy); ctx.lineTo(rawMx + 18, rawMy);
+      ctx.moveTo(rawMx, rawMy - 18); ctx.lineTo(rawMx, rawMy + 18);
+      ctx.stroke();
+      // Reticle Inner Coordinate Ring
+      ctx.beginPath();
+      ctx.arc(rawMx, rawMy, 25, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Reticle Outer Lens Ring
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.arc(rawMx, rawMy, LENS_RADIUS - 1.5, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      ctx.restore();
+
+      // --- Nebulae (with subtle parallax & Offscreen Canvas cache) ---
       for (const n of nebulae) {
         n.x += n.speedX; n.y += n.speedY; n.phase += 0.003;
         if (n.x < -n.r) n.x = w + n.r; if (n.x > w + n.r) n.x = -n.r;
@@ -243,41 +341,50 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         const drawNy = n.y + noy;
 
         const alpha = n.opacity + Math.sin(n.phase) * 0.006;
-        const grad = ctx.createRadialGradient(drawNx, drawNy, 0, drawNx, drawNy, n.r);
-        grad.addColorStop(0, `rgba(${n.color.r},${n.color.g},${n.color.b},${alpha})`);
-        grad.addColorStop(1, `rgba(${n.color.r},${n.color.g},${n.color.b},0)`);
-        ctx.globalAlpha = 1; ctx.fillStyle = grad;
-        ctx.beginPath(); ctx.arc(drawNx, drawNy, n.r, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = Math.max(0.001, Math.min(1, alpha));
+        ctx.drawImage(n.offCanvas, drawNx - n.r, drawNy - n.r);
       }
+      ctx.globalAlpha = 1;
 
       // --- Mouse position for telescope lens effect ---
       const mx = rawMx;
       const my = rawMy;
 
       // Telescope lens parameters
-      const LENS_RADIUS = 240;       // wider telescope field of view
       const LENS_MAGNIFY = 0.06;     // minimal position push (preserves constellation shapes)
       const LENS_SIZE_SCALE = 1.5;   // zoom-in magnification at lens center
 
-      // Reusable lens transform — primarily scales up, minimal position shift
-      // Returns { x, y, strength, sizeScale } for any input point
+      // Rolling pool of lens results to support multiple concurrent queries (avoiding GC thrashing)
+      const lensPool = [
+        { x: 0, y: 0, strength: 0, sizeScale: 1 },
+        { x: 0, y: 0, strength: 0, sizeScale: 1 },
+        { x: 0, y: 0, strength: 0, sizeScale: 1 }
+      ];
+      let poolIndex = 0;
+
       function lensTransform(px, py) {
+        const cache = lensPool[poolIndex];
+        poolIndex = (poolIndex + 1) % lensPool.length;
+
         const dx = px - mx, dy = py - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist >= LENS_RADIUS || dist === 0) {
-          return { x: px, y: py, strength: 0, sizeScale: 1 };
+          cache.x = px;
+          cache.y = py;
+          cache.strength = 0;
+          cache.sizeScale = 1;
+          return cache;
         }
         const t = 1 - dist / LENS_RADIUS;
         const strength = t * t; // quadratic falloff
-        // Very subtle outward push — just enough for spatial depth, not enough to deform
         const pushAmount = strength * LENS_MAGNIFY * LENS_RADIUS;
         const angle = Math.atan2(dy, dx);
-        return {
-          x: px + Math.cos(angle) * pushAmount,
-          y: py + Math.sin(angle) * pushAmount,
-          strength,
-          sizeScale: 1 + strength * (LENS_SIZE_SCALE - 1),
-        };
+        
+        cache.x = px + Math.cos(angle) * pushAmount;
+        cache.y = py + Math.sin(angle) * pushAmount;
+        cache.strength = strength;
+        cache.sizeScale = 1 + strength * (LENS_SIZE_SCALE - 1);
+        return cache;
       }
 
       // --- Regular Stars (depth-layered with parallax + lens distortion) ---
@@ -290,8 +397,9 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         let drawX = s.x + pox;
         let drawY = s.y + poy;
 
-        // Twinkle alpha
-        let alpha = s.baseOpacity + Math.sin(s.twinklePhase) * (0.1 + s.depth * 0.2);
+        // Scintillation model with multiple frequencies + micro-jitter
+        const twinkleOffset = Math.sin(s.twinklePhase) * 0.12 + Math.cos(s.twinklePhase * 2.3) * 0.05 + (Math.random() - 0.5) * 0.03;
+        let alpha = s.baseOpacity + twinkleOffset * (0.15 + s.depth * 0.35);
 
         // --- Telescope lens distortion ---
         const lens = lensTransform(drawX, drawY);
@@ -313,6 +421,40 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         ctx.beginPath();
         ctx.arc(drawX, drawY, finalR, 0, Math.PI * 2);
         ctx.fill();
+
+        // Diffraction spikes for superbright stars magnified by telescope lens
+        if (s.isSuperBright && sizeBonus > 0.3) {
+          ctx.save();
+          ctx.globalCompositeOperation = 'screen';
+          const spikeLength = finalR * 7.5 * (sizeBonus / 1.5);
+          
+          // Ultra-fine diffraction gradient
+          const grad = ctx.createLinearGradient(drawX - spikeLength, drawY, drawX + spikeLength, drawY);
+          grad.addColorStop(0, 'rgba(255,255,255,0)');
+          grad.addColorStop(0.5, `rgba(255,255,255,${alpha * 0.7})`);
+          grad.addColorStop(1, 'rgba(255,255,255,0)');
+          
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 0.45;
+          
+          // Horizontal spike
+          ctx.beginPath();
+          ctx.moveTo(drawX - spikeLength, drawY);
+          ctx.lineTo(drawX + spikeLength, drawY);
+          ctx.stroke();
+          
+          // Vertical spike
+          ctx.save();
+          ctx.translate(drawX, drawY);
+          ctx.rotate(Math.PI / 2);
+          ctx.beginPath();
+          ctx.moveTo(-spikeLength, 0);
+          ctx.lineTo(spikeLength, 0);
+          ctx.stroke();
+          ctx.restore();
+          
+          ctx.restore();
+        }
 
         // Glow halo for near stars (depth > 0.7)
         if (s.glowRadius > 0) {
@@ -380,20 +522,60 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         // Random highlight pulse: unique per-constellation organic breathing
         // Each constellation has a different frequency and phase for natural feel
         const randFreqs = [0.37, 0.53, 0.29, 0.41, 0.61, 0.47, 0.31, 0.59, 0.43, 0.67, 0.39, 0.51];
-        const randPhases = [0, 2.1, 4.3, 1.5, 3.7, 5.2, 0.8, 2.9, 4.6, 1.2, 3.3, 5.8];
-        const randIntensity = zodiacShowAllRef.current
-          ? Math.max(0, Math.sin(now * randFreqs[ci] + randPhases[ci])) * 0.4
-          : 0;
-
-        // Combined pulse: pick the stronger of sequential and random
-        const pulse = Math.max(seqPulse, randIntensity);
+               // --- IAU Constellation Boundary Box & Corner Ticks ---
+        if (reveal > 0.12 || pulse > 0.1) {
+          ctx.save();
+          // Apply lens to boundary center for coordination
+          const lCenter = lensTransform(c.centerX, c.centerY);
+          const bScale = scale * 1.8 * lCenter.sizeScale;
+          const bSize = 65 * bScale;
+          
+          const bx = lCenter.x, by = lCenter.y;
+          const left = bx - bSize, right = bx + bSize;
+          const top = by - bSize, bottom = by + bSize;
+          
+          ctx.globalAlpha = Math.max(0.015, Math.max(reveal * 0.22, pulse * 0.13)) * zodiacFade;
+          ctx.strokeStyle = '#818CF8';
+          ctx.lineWidth = 0.45;
+          
+          // Draw thin dotted coordinate box representing IAU boundary
+          ctx.setLineDash([2, 5]);
+          ctx.beginPath();
+          ctx.rect(left, top, bSize * 2, bSize * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          
+          // Draw corner L-brackets (ticks)
+          ctx.strokeStyle = '#A5B4FC';
+          ctx.lineWidth = 0.75;
+          const tickLen = 5 * lCenter.sizeScale;
+          
+          // Top-Left corner
+          ctx.beginPath();
+          ctx.moveTo(left, top + tickLen); ctx.lineTo(left, top); ctx.lineTo(left + tickLen, top);
+          ctx.stroke();
+          // Top-Right corner
+          ctx.beginPath();
+          ctx.moveTo(right - tickLen, top); ctx.lineTo(right, top); ctx.lineTo(right, top + tickLen);
+          ctx.stroke();
+          // Bottom-Left corner
+          ctx.beginPath();
+          ctx.moveTo(left, bottom - tickLen); ctx.lineTo(left, bottom); ctx.lineTo(left + tickLen, bottom);
+          ctx.stroke();
+          // Bottom-Right corner
+          ctx.beginPath();
+          ctx.moveTo(right - tickLen, bottom); ctx.lineTo(right, bottom); ctx.lineTo(right, bottom - tickLen);
+          ctx.stroke();
+          
+          ctx.restore();
+        }
 
         // --- Hint lines (always visible, pulse adds brightness on turn) ---
         const hintAlpha = (0.15 + pulse + reveal * 0.35) * zodiacFade;
         ctx.globalAlpha = hintAlpha;
 
-        ctx.strokeStyle = `rgba(196, 181, 253, ${0.5 + pulse * 0.5 + reveal * 0.4})`;
-        ctx.lineWidth = 0.6 + pulse * 0.3 + reveal * 0.5;
+        ctx.strokeStyle = `rgba(165, 180, 252, ${0.45 + pulse * 0.4 + reveal * 0.35})`;
+        ctx.lineWidth = 0.5 + pulse * 0.25 + reveal * 0.4;
         ctx.setLineDash(reveal < 0.5 ? [3, 5] : [4 + reveal * 4, 3 - reveal * 2]);
         for (const [a, b] of c.lines) {
           const sa = c.starPositions[a], sb = c.starPositions[b];
@@ -404,23 +586,37 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         }
         ctx.setLineDash([]);
 
-        // --- Constellation stars (with lens magnification) ---
+        // --- Constellation stars (with lens magnification & Bayer designations) ---
+        const GREEK_DESIGNATIONS = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ'];
         for (const sp of c.starPositions) {
           const lsp = lensTransform(sp.x, sp.y);
-          const baseR = 1.2;
+          const baseR = 1.25;
           const starR = (baseR + pulse * 0.8 + reveal * 1.5) * lsp.sizeScale;
 
           // Glow (during pulse or reveal)
           if (pulse > 0.1 || reveal > 0.05) {
             ctx.globalAlpha = Math.max(pulse * 0.3, reveal * 0.25) * zodiacFade;
-            ctx.fillStyle = '#C4B5FD';
+            ctx.fillStyle = '#C7D2FE';
             ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR + 4 * lsp.sizeScale, 0, Math.PI * 2); ctx.fill();
           }
 
           // Core star — always visible, brighter on reveal and pulse
           ctx.globalAlpha = (0.35 + pulse + reveal * 0.55 + lsp.strength * 0.3) * zodiacFade;
-          ctx.fillStyle = (reveal > 0.3 || pulse > 0.2) ? '#E9D5FF' : '#C4B5FD';
+          ctx.fillStyle = (reveal > 0.3 || pulse > 0.2) ? '#FFFFFF' : '#E0E7FF';
           ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR, 0, Math.PI * 2); ctx.fill();
+
+          // Bayer designations next to major constellation stars on reveal/pulse
+          if (reveal > 0.25 || pulse > 0.2) {
+            const starIndex = c.starPositions.indexOf(sp);
+            const bayerLetter = GREEK_DESIGNATIONS[starIndex % GREEK_DESIGNATIONS.length];
+            ctx.save();
+            ctx.globalAlpha = Math.max(0.1, Math.max(reveal * 0.45, pulse * 0.35)) * zodiacFade;
+            ctx.font = `italic ${Math.round(7.5 * lsp.sizeScale)}px 'Inter', serif`;
+            ctx.fillStyle = '#A5B4FC';
+            ctx.textAlign = 'left';
+            ctx.fillText(`${bayerLetter}`, lsp.x + (starR + 4) * lsp.sizeScale, lsp.y - 2);
+            ctx.restore();
+          }
         }
 
         // --- Label (appears on telescope reveal OR during pulse peak) ---
@@ -439,7 +635,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           // Name
           ctx.globalAlpha = labelAlpha * (showByReveal ? 0.85 : 0.55);
           ctx.font = `500 ${Math.round(11 * labelScale)}px 'Inter', sans-serif`;
-          ctx.fillStyle = '#E9D5FF';
+          ctx.fillStyle = '#E2E8F0';
           ctx.textAlign = 'center';
           ctx.fillText(c.name, lCenter.x, lCenter.y + 44 * labelScale);
 
@@ -447,14 +643,25 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           if (showByReveal) {
             ctx.globalAlpha = revealAlpha * 0.45;
             ctx.font = `400 ${Math.round(9 * labelScale)}px 'Inter', sans-serif`;
-            ctx.fillStyle = '#A78BFA';
+            ctx.fillStyle = '#818CF8';
             ctx.fillText(c.sub, lCenter.x, lCenter.y + 57 * labelScale);
+
+            // Technical Astronomical Coordinates (RA / DEC / Dist / Mag)
+            const raHours = Math.floor(ci * 2).toString().padStart(2, '0');
+            const decDegs = (ci * 7 - 35 >= 0 ? '+' : '') + (ci * 7 - 35);
+            const distLy = 350 + ci * 85;
+            const appMag = (1.1 + ci * 0.15).toFixed(1);
+            
+            ctx.globalAlpha = revealAlpha * 0.35 * zodiacFade;
+            ctx.font = `${Math.round(7.5 * labelScale)}px 'Inter', sans-serif`;
+            ctx.fillStyle = '#94A3B8';
+            ctx.fillText(`RA ${raHours}h 15m / DEC ${decDegs}° | Dist: ~${distLy} ly | Mag: ${appMag}`, lCenter.x, lCenter.y + 70 * labelScale);
           }
 
           // Symbol
           ctx.globalAlpha = labelAlpha * (showByReveal ? 0.2 : 0.12);
           ctx.font = `${Math.round(16 * labelScale)}px sans-serif`;
-          ctx.fillStyle = '#C4B5FD';
+          ctx.fillStyle = '#818CF8';
           ctx.fillText(c.symbol, lCenter.x, lCenter.y - 38 * labelScale);
         }
       }
@@ -499,20 +706,56 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       ctx.globalAlpha = 1;
     }
 
+    let isLooping = false;
+    let isHeroVisible = true;
+
+    function startLoop() {
+      if (isLooping) return;
+      isLooping = true;
+      lastFrameTime = performance.now();
+      frameId = requestAnimationFrame(draw);
+    }
+
+    function stopLoop() {
+      if (!isLooping) return;
+      isLooping = false;
+      cancelAnimationFrame(frameId);
+    }
+
     function draw(now) {
+      if (!isLooping) return;
       frameId = requestAnimationFrame(draw);
       if (now - lastFrameTime < FPS_INTERVAL) return;
       lastFrameTime = now;
       drawFrame();
     }
 
-    window.addEventListener('resize', resize);
+    // IntersectionObserver to freeze canvas animation when Hero is scrolled out of view
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      isHeroVisible = entry.isIntersecting;
+      if (isHeroVisible) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
+    }, { threshold: 0 });
+
+    const heroElement = document.getElementById('hero');
+    if (heroElement) {
+      observer.observe(heroElement);
+    } else {
+      startLoop();
+    }
+
+    window.addEventListener('resize', handleResize);
     resize();
-    frameId = requestAnimationFrame(draw);
 
     return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(frameId);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+      observer.disconnect();
+      stopLoop();
     };
   }, [rawMouseRef]);
 

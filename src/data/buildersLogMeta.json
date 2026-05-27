@@ -1,5 +1,40 @@
 [
   {
+    "id": "ep8",
+    "slug": "celestial-simulation-strategy",
+    "chapterNo": "08",
+    "title": {
+      "ko": "🌌 낭만을 코딩하다: 극사실주의 천체 시뮬레이션(Celestial Simulation) 개발기",
+      "en": "🌌 Coding Romance: Photorealistic Celestial Simulation Development Log",
+      "ja": "🌌 ロマンをコーディングする：極致の天体シミュレーション（Celestial Simulation）開発記"
+    },
+    "subtitle": {
+      "ko": "천체물리학과 고성능 프론트엔드 엔지니어링의 융합으로 구현한 진짜 밤하늘 스타필드 엔진",
+      "en": "Real Night Sky Starfield Engine Built with Fusion of Astrophysics and High-Performance Frontend Engineering",
+      "ja": "天体物理学と高性能フロントエンドエンジニアリングの融合で構築された本物の夜空スターフィールドエンジン"
+    },
+    "description": {
+      "ko": "PriSincera 메인 히어로 영역의 '별 관측 망원경' 콘셉트를 완성하기 위해 단순 네온스타를 걷어내고, 흑체 복사(Blackbody) 색온도, 대기 불안정(Scintillation) 삼각함수 물리 모사, 1등성의 광학 회절 스파이크, 극세선 천문 성도(Planisphere) 디자인을 도입했습니다. Object Pooling, Active Freeze, Offscreen Canvas 등의 극단적 웹 최적화를 통한 프레임 방어 및 메모리 누수 방지 아키텍처도 상세히 다룹니다.",
+      "en": "To perfect the 'telescope star observation' concept of PriSincera's main hero section, we replaced simple neon stars with blackbody color temperatures, atmospheric scintillation physics modeling, primary star diffraction spikes, and planisphere celestial charts. This article also covers the web performance architectures like Object Pooling, Active Freeze, and Offscreen Canvas to achieve fluid 60FPS.",
+      "ja": "PriSinceraのメインヒーロー領域における「天体観測望遠鏡」のコンセプトを完成させるため、単純なネ오ンスターを廃し、黒体放射（Blackbody）色温度、大気揺らぎ（Scintillation）の三角関数物理模倣、1等性の光学回折スパイク、極細線の天体星図（Planisphere）デザインを導入しました。Object Pooling、Active Freeze、Offscreen Canvasなどの極端なWeb最適化によるフレーム維持およびメモリリーク防止アーキテクチャも詳細に解説します。"
+    },
+    "date": "2026-05-28",
+    "tags": [
+      "Stellar Physics",
+      "Canvas 2D",
+      "Performance Optimization",
+      "Astrophotography"
+    ],
+    "accent": "#8B5CF6",
+    "commits": [
+      {
+        "type": "feat",
+        "hash": "804bd86",
+        "msg": "feat: stage celestial-simulation-strategy builderslog article draft"
+      }
+    ]
+  },
+  {
     "id": "ep7",
     "slug": "prisincera-design-system-v4-aura-neutral-semantic-interaction",
     "chapterNo": "07",
