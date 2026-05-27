@@ -244,12 +244,13 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       nebulae = [];
       
       // 몽골 밤하늘 감성의 성운 기하 구성: 황금갈색, 마젠타/딥퍼플, 차콜(암흑성운)
+      // 육안 식별 및 WOW 포인트를 확실히 체감하도록 투명도(opacity)를 기존보다 4~5배 대폭 상향
       const nebulaConfigs = [
-        { t: 0.20, color: { r:12, g:10, b:16 }, opacity: 0.035, scaleR: 0.45, isDark: true }, // 암흑 먼지띠
-        { t: 0.35, color: { r:190, g:130, b:75 }, opacity: 0.018, scaleR: 0.35, isDark: false }, // 황금빛 성운
-        { t: 0.50, color: { r:95, g:60, b:150 }, opacity: 0.015, scaleR: 0.40, isDark: false }, // 마젠타 성운
-        { t: 0.65, color: { r:195, g:140, b:85 }, opacity: 0.018, scaleR: 0.32, isDark: false }, // 황금빛 성운
-        { t: 0.80, color: { r:10, g:8, b:12 }, opacity: 0.040, scaleR: 0.48, isDark: true },  // 암흑 먼지띠
+        { t: 0.20, color: { r:14, g:10, b:20 }, opacity: 0.16, scaleR: 0.52, isDark: true },  // 암흑 먼지띠 (별빛 가림 효과용)
+        { t: 0.38, color: { r:215, g:140, b:75 }, opacity: 0.085, scaleR: 0.42, isDark: false }, // 황금빛 성운
+        { t: 0.52, color: { r:110, g:75, b:185 }, opacity: 0.075, scaleR: 0.48, isDark: false }, // 마젠타/보라빛 성운
+        { t: 0.68, color: { r:225, g:155, b:90 }, opacity: 0.085, scaleR: 0.40, isDark: false }, // 황금빛 성운
+        { t: 0.82, color: { r:12, g:8, b:18 }, opacity: 0.18, scaleR: 0.55, isDark: true },  // 암흑 먼지띠
       ];
 
       const x1 = -w * 0.15, y1 = h * 0.95;
@@ -274,9 +275,9 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         const col = cfg.color;
         
         if (cfg.isDark) {
-          // 암흑 성운: 외곽으로 갈수록 투명해지며, 렌즈 밖의 은은한 별빛들을 가려 가스층의 유기적 입체감을 높임
+          // 암흑 성운: 뽀얗게 뭉친 아기별 띠의 일부를 은은하게 지워내어 유기적 공간 깊이를 극대화
           grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},1)`);
-          grad.addColorStop(0.5, `rgba(${col.r},${col.g},${col.b},0.6)`);
+          grad.addColorStop(0.6, `rgba(${col.r},${col.g},${col.b},0.6)`);
           grad.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0)`);
         } else {
           // 발광 성운
@@ -406,8 +407,11 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       
       ctx.restore();
 
-      // --- Nebulae (with subtle parallax & Offscreen Canvas cache) ---
+      // --- Emission Nebulae (Sub-layered Background Gaseous Core) ---
+      // Render colorful emission nebulae on the background canvas first
       for (const n of nebulae) {
+        if (n.isDark) continue; // Skip dark dust lanes for later foreground pass
+
         n.x += n.speedX; n.y += n.speedY; n.phase += 0.002;
         if (n.x < -n.r) n.x = w + n.r; if (n.x > w + n.r) n.x = -n.r;
         if (n.y < -n.r) n.y = h + n.r; if (n.y > h + n.r) n.y = -n.r;
@@ -425,21 +429,14 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         let lensBoost = 1.0;
         if (dist < LENS_RADIUS) {
           const t = 1 - dist / LENS_RADIUS;
-          lensBoost = 1.0 + t * t * 0.85; // 렌즈 조준선 내부에서 성운 줄기를 더 선명하게 밝힘
+          // 렌즈 조준선 내부에서 성운 가스가 극적으로 부각되는 WOW 포인트 (2.2배 증폭)
+          lensBoost = 1.0 + t * t * 1.2; 
         }
 
-        const alpha = (n.opacity + Math.sin(n.phase) * 0.003) * lensBoost;
+        const alpha = (n.opacity + Math.sin(n.phase) * 0.004) * lensBoost;
         ctx.save();
         ctx.globalAlpha = Math.max(0.001, Math.min(0.9, alpha));
-        
-        if (n.isDark) {
-          // 암흑 성운 (차콜/차단 먼지띠): 일반 소스 블렌딩
-          ctx.globalCompositeOperation = 'source-over';
-        } else {
-          // 발광 가스 구름: 스크린 블렌딩
-          ctx.globalCompositeOperation = 'screen';
-        }
-        
+        ctx.globalCompositeOperation = 'screen';
         ctx.drawImage(n.offCanvas, drawNx - n.r, drawNy - n.r);
         ctx.restore();
       }
@@ -654,6 +651,43 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           ctx.fill();
         }
       }
+
+      // --- Dark Nebulae / Dust Lanes (Foreground Blockade Pass) ---
+      // Overlay dark dust lanes to block out the background stars, creating organic silhouette depth
+      for (const n of nebulae) {
+        if (!n.isDark) continue;
+
+        n.x += n.speedX; n.y += n.speedY; n.phase += 0.002;
+        if (n.x < -n.r) n.x = w + n.r; if (n.x > w + n.r) n.x = -n.r;
+        if (n.y < -n.r) n.y = h + n.r; if (n.y > h + n.r) n.y = -n.r;
+
+        // Parallax offset
+        const nox = parallaxBaseX * n.parallaxFactor;
+        const noy = parallaxBaseY * n.parallaxFactor;
+        const drawNx = n.x + nox;
+        const drawNy = n.y + noy;
+
+        // 마우스 렌즈 영역 근처 체크
+        const dx = drawNx - rawMx;
+        const dy = drawNy - rawMy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        let lensBoost = 1.0;
+        if (dist < LENS_RADIUS) {
+          const t = 1 - dist / LENS_RADIUS;
+          // 망원경 렌즈 안에서는 암흑 가스가 흩어져 걷히며, 가려져 있던 미세 배경 아기별들이 뽀얗게 드러나는 기믹!
+          lensBoost = 1.0 - t * t * 0.55; 
+        }
+
+        const alpha = (n.opacity + Math.sin(n.phase) * 0.004) * lensBoost;
+        if (alpha > 0.002) {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0.001, Math.min(0.85, alpha));
+          ctx.globalCompositeOperation = 'source-over'; // 별빛 위에 어두운 텍스처를 얹어 은은하게 가림
+          ctx.drawImage(n.offCanvas, drawNx - n.r, drawNy - n.r);
+          ctx.restore();
+        }
+      }
+      ctx.globalAlpha = 1;
 
       // --- Zodiac Constellations ---
       // Fade in only after CI assembly completes
