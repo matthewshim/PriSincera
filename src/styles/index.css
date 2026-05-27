@@ -150,3 +150,19 @@ button { background: none; border: none; font: inherit; color: inherit; }
 :lang(ja) * {
     word-break: normal !important;
 }
+
+/* --- Language-Specific Font Families (v3.0 Chrono-Neutral) --- */
+:lang(en) {
+    --font-display: 'Inter', 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+:lang(ko) {
+    --font-display: 'Pretendard Variable', 'Pretendard', 'Inter', sans-serif;
+    --font-body: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+:lang(ja) {
+    --font-display: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    --font-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+}

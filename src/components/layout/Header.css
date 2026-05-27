@@ -260,7 +260,7 @@
     top: calc(100% + 8px);
     right: 0;
     min-width: 110px;
-    background: rgba(10, 7, 20, 0.85); /* OLED Void Black */
+    background: rgba(10, 10, 10, 0.9); /* OLED Void Black */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
@@ -357,7 +357,7 @@
         position: fixed;
         top: 0; left: 0;
         width: 100vw; height: 100vh;
-        background: rgba(10, 7, 20, 0.98);
+        background: rgba(8, 8, 8, 0.98);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
         z-index: 1001;
@@ -423,7 +423,7 @@
         min-height: 110px;
         border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.05);
-        background: rgba(26, 16, 53, 0.45);
+        background: rgba(17, 17, 17, 0.45);
         padding: 16px 20px;
         text-decoration: none;
         position: relative;
@@ -568,7 +568,7 @@
         justify-content: space-between;
         padding: 16px;
         box-sizing: border-box !important;
-        background: rgba(26, 16, 53, 0.65) !important; /* Specific dark background for base cube */
+        background: rgba(17, 17, 17, 0.7) !important; /* Specific dark background for base cube */
         border: 1px solid rgba(245, 158, 11, 0.25) !important; /* Specific amber border for base cube */
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
     }
@@ -634,7 +634,7 @@
     }
 
     .mobile-bento-nav-item .base-terminal {
-        background: rgba(10, 7, 20, 0.85);
+        background: rgba(10, 10, 10, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 8px;
         padding: 10px;

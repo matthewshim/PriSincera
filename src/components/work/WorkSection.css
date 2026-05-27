@@ -16,15 +16,15 @@
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
-    background: rgba(10, 7, 20, 0.72);
+    background: rgba(10, 10, 10, 0.75);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(196, 181, 253, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 24px;
     padding: var(--space-2xl) var(--space-xl);
     box-shadow:
-        0 4px 60px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(196, 181, 253, 0.04);
+        0 4px 60px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* --- Section Header --- */
@@ -70,10 +70,10 @@
 .work-card {
     position: relative;
     padding: var(--space-xl);
-    background: rgba(26, 16, 53, 0.55);
+    background: var(--glass-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(196, 181, 253, 0.08);
+    border: 1px solid var(--glass-border);
     border-radius: 16px;
     display: flex;
     align-items: flex-start;
@@ -98,11 +98,10 @@
 }
 
 .work-card:hover {
-    border-color: rgba(196, 181, 253, 0.15);
+    border-color: var(--glass-border-hover);
     transform: translateY(-4px);
     box-shadow:
-        0 12px 40px rgba(124, 58, 237, 0.12),
-        0 0 1px rgba(196, 181, 253, 0.2);
+        0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .work-card:hover::before {
@@ -115,10 +114,10 @@
 .flagship-card {
     position: relative;
     padding: 0;
-    background: rgba(26, 16, 53, 0.55);
+    background: rgba(17, 17, 17, 0.6);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(196, 181, 253, 0.08);
+    border: 1px solid var(--glass-border);
     border-radius: 24px;
     display: flex;
     flex-direction: row;
@@ -129,9 +128,9 @@
 }
 
 .flagship-card:hover {
-    border-color: rgba(196, 181, 253, 0.15);
+    border-color: var(--glass-border-hover);
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.12), 0 0 1px rgba(196, 181, 253, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .flagship-content {
@@ -651,7 +650,7 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
-    background: rgba(26, 16, 53, 0.65);
+    background: rgba(17, 17, 17, 0.7);
     border: 1px solid rgba(245, 158, 11, 0.25);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -735,14 +734,14 @@
 }
 
 .base-terminal {
-    background: rgba(10, 7, 20, 0.85);
+    background: rgba(10, 10, 10, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 10px;
     font-family: var(--font-mono);
     font-size: 0.65rem;
     color: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55);
     text-align: left;
 }
 

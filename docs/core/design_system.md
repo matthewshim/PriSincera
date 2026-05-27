@@ -1,14 +1,14 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-05-21
-version: v2.7
+last_updated: 2026-05-27
+version: v3.0
 target_files:
   - src/styles/design_system.css
   - src/pages/PaceNoteDashboard.css
 ---
 
-# 📐 PriSincera Design System (v2.0: The Premium Evolution)
+# 📐 PriSincera Design System (v3.0: Chrono-Neutral & Density Optimization)
 
 ## 📝 Revision History
 
@@ -18,6 +18,7 @@ target_files:
 | v2.5 | 2026-05-19 | Designer | Bento Chrono-Calendar & 3-Tab Workstation Theme 규격 정의 | DailyDigest |
 | v2.6 | 2026-05-20 | Designer | PaceNote Bento Weekly Calendar & Voyage Horizon 디자인 토큰 표준 수립 | PaceNote |
 | v2.7 | 2026-05-21 | AI Agent | 도메인 중심(DDD) 폴더 개편에 따른 표준 프론트매터 및 개정 내역 주입 | Documentation |
+| v3.0 | 2026-05-27 | AI Agent | 여백 최적화(Density) 및 퍼플 배경 색상 누수 완전히 제거(Desaturated Chrono-Neutral) 규격 명문화 | CSS Layout & Color System |
 
 > **"Sincerity, Prioritized."**
 > 본 문서는 PriSincera 웹사이트가 '세계 최고 수준(World-class)'의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 가이드라인입니다. 
@@ -27,24 +28,25 @@ target_files:
 
 ## 1. 🎨 Color System: Refined & Sophisticated
 
-**[문제점 분석]** 기존 시스템은 배경(`--bg-void`, `--bg-surface`)과 보조 텍스트(`--text-muted`)에 과도한 보라색이 섞여 있어, 텍스트가 많은 DailyDigest나 PaceNote에서 시각적 피로를 유발하고 명도 대비(Contrast)가 다소 부족했습니다.
-**[개선 방향]** 배경과 텍스트는 채도가 배제된 무채색(Subtle Tint) 흑백 계열로 정제하여 완벽한 가독성을 확보하고, 브랜드 컬러(Violet)는 오직 '결정적인 순간(CTA, 하이라이트)'에만 빛나도록 제한합니다.
+**[문제점 분석]** 기존 시스템은 배경 및 보조 카드 요소들에 보라색/퍼플 계열(`rgba(10, 7, 20)`, `rgba(26, 16, 53)`)이 과도하게 섞여 있어, 텍스트가 많은 본문에서 가독성을 떨어뜨리고 시각적 피로를 유발했습니다.
+**[개선 방향]** 배경과 텍스트, 카드 면(Surface)은 보라색 혼합을 완전히 배제한 **순수 무채색(Desaturated Chrono-Neutral, OLED Black & Slate)** 계열로 정제하여 완벽한 가독성(WCAG 2.1 AA 명도대비 4.5:1 이상)을 확보하고, 브랜드 컬러(Violet)는 오직 결정적인 순간(CTA, 핵심 강조 오버레이)에만 하이라이트로 적용합니다.
 
 ### 1-1. Base & Surfaces (OLED Black & Slate)
 완벽한 대비를 위해 순수 블랙에 가까운 배경을 사용하고, 카드(Surface)는 투명도와 밝기(Lightness)로만 계층을 나눕니다.
 
 | Token | Hex (New) | 기존 대비 개선점 |
 |-------|-----------|------------------|
-| `--bg-void` | `#050505` | 기존(`#0A0714`)보다 더 깊고 순수한 블랙 (OLED 친화적, 몰입감 극대화) |
-| `--bg-surface` | `#111111` | 채도를 뺀 다크 그레이로 텍스트와의 명도 대비 향상 |
-| `--bg-elevated` | `#1A1A1A` | 플로팅 요소, 모달, 강조 카드 전용 |
+| `--bg-void` | `#000000` / `#050505` | 깊고 순수한 블랙 (OLED 친화적, 몰입감 극대화) |
+| `--bg-surface` | `#0A0A0A` | 채도를 완전히 뺀 다크 그레이로 텍스트 가독성 최우선 |
+| `--bg-elevated` | `#111111` / `#171717` | 플로팅 요소, 모달, 강조 카드 전용 |
+| `--glass-bg-neutral` | `rgba(17, 17, 17, 0.6)` / `rgba(10, 10, 10, 0.75)` | 퍼플 색조를 완전히 걷어내고 순수 다크 그레이 유리광 스킨 제공 |
 
 ### 1-2. Typography Colors (Maximum Legibility)
-보라색 텍스트(`#6D5BA3`)를 배제하고, 철저한 명도 대비 기반의 뉴트럴 텍스트 토큰을 도입합니다.
+보라색 계열 텍스트를 철저히 배제하고, 뉴트럴 텍스트 토큰을 도입합니다.
 
 | Token | Hex / RGBA | 용도 및 기대 효과 |
 |-------|------------|-------------------|
-| `--text-primary` | `#FAFAFA` | 제목, 주요 본문 (순백색 `#FFF`의 눈부심 방지를 위해 오프화이트 사용) |
+| `--text-primary` | `#FAFAFA` | 제목, 주요 본문 (눈부심 방지를 위해 오프화이트 사용) |
 | `--text-secondary`| `#A1A1AA` | 보조 텍스트, 서브타이틀 (시각적 안정감이 높은 Neutral Gray) |
 | `--text-muted` | `#71717A` | 비활성 텍스트, 부가 설명 (명도 대비 최소 기준 충족) |
 
@@ -53,7 +55,7 @@ target_files:
 
 | Token | Hex / Value | 용도 |
 |-------|-------------|------|
-| `--prism-violet` | `#6D28D9` | 메인 브랜드 액센트 (기존보다 채도를 살짝 낮춰 고급스러움 확보) |
+| `--prism-violet` | `#6D28D9` | 메인 브랜드 액센트 (결정적인 순간용) |
 | `--prism-lavender`| `#A78BFA` | 서브 라이팅 효과, 상호작용 피드백 |
 | `--orbit-cyan` | `#06B6D4` | 정보성 강조, 테크(Tech) 시그널, 링크 색상 |
 | `--gradient-brand` | `linear-gradient(135deg, #6D28D9, #A78BFA, #FBCFE8)` | **우아한 오로라 그라디언트**. 대형 텍스트 Accent 및 핵심 Hero 요소 전용 |
@@ -81,9 +83,15 @@ target_files:
 | **Body Base** | `--font-body` | `1rem` (16px) | `1.6` | `0` |
 | **Caption/Tag** | `--font-mono` | `0.75rem` (12px) | `1.4` | `0.05em` |
 
+### 2-3. Language-Specific Font Stacks (언어별 최적화 폰트 스택)
+다국어 환경(English, Korean, Japanese)에서의 완벽한 심미성과 가독성 보장을 위해 각 언어별 맞춤 폰트 스택을 바인딩하여 렌더링 퀄리티를 최적화합니다.
+* **영어 (English)**: `Inter`, `Geist`, `SF Pro Display` 등을 스택 선두에 배치하여 숫자와 알파벳의 모던한 비율 및 기하학적 조형미를 극대화합니다.
+* **한국어 (Korean)**: `Pretendard Variable`, `Pretendard`를 전면 도입하여 자간/행간의 불균형을 극복하고 다크모드 상에서도 명확히 스캔되도록 최적화합니다.
+* **일본어 (Japanese)**: `Hiragino Sans`, `Hiragino Kaku Gothic ProN` (macOS/iOS 최적화) 및 `Yu Gothic`, `Meiryo` (Windows 최적화)를 차례대로 배치하여 렌더링 시 왜곡이나 기본 서체의 투박함을 방지하고 가독성을 확보합니다.
+
 ---
 
-## 3. 📐 Geometry & Spatial System (The 8-Point Grid)
+## 3. 📐 Geometry & Spatial System (The 8-Point Grid & Spacing Optimization)
 
 불규칙한 스페이싱(`6px, 12px, 80px`)을 버리고, **엄격한 4pt / 8pt Grid System**을 도입합니다. 인간의 눈은 수학적 비례에서 무의식적인 편안함과 고급스러움을 느낍니다.
 
@@ -92,12 +100,22 @@ target_files:
 | `--space-xs` | `4px` | 요소 간 최소 간격 (아이콘과 텍스트) |
 | `--space-sm` | `8px` | 인라인 요소 간격, 작은 버튼 패딩 |
 | `--space-md` | `16px` | 컴포넌트 내부 패딩 (Input, Button) |
-| `--space-lg` | `24px` | 기본 카드 내부 패딩 |
-| `--space-xl` | `32px` | 대형 카드 내부 패딩, 섹션 내 그룹 간격 |
+| `--space-lg` | `24px` | 기본 대형 영역 내부 패딩 |
+| `--space-xl` | `32px` | 섹션 내 그룹 간격 |
 | `--space-2xl` | `64px` | 주요 섹션 간 간격 |
 | `--space-3xl` | `128px` | 대형 Hero 여백, 페이지 상하단 여백 |
 
-### 3-1. Border Radius (부드러운 곡선)
+### 3-1. 🚀 v3.0 Card & Content Spacing Optimization (Density)
+기존의 카드들은 텍스트의 볼륨에 비해 과도한 내부 여백과 넓은 카드 사이의 간격을 가지고 있어 화면이 비어 보이거나 산만한 단점이 있었습니다. v3.0에서는 최적의 정보 밀도를 확보하기 위해 아래와 같이 규격화합니다.
+
+* **카드 내부 여백 (Card Padding)**:
+  - 데스크톱/태블릿: 기존 `24px 32px` (`var(--space-lg) var(--space-xl)`)에서 **`20px 24px`** 또는 **`16px 24px`**로 세로 여백을 컴팩트하게 조정합니다 (상하 17~33% 축소).
+  - 모바일: `16px 20px`로 스택 및 정보 전달력을 강화합니다.
+* **카드 간 사이 여백 (Flex/Grid Gap)**:
+  - 데스크톱: 기존 `var(--space-lg)` (`24px`)에서 **`16px` (`var(--space-md)`)** 또는 **`18px`**로 최적화하여 연관된 카드들이 기하학적으로 하나의 그룹으로 명확히 인식되도록 묶어줍니다.
+  - 태블릿/모바일: `14px` 또는 `16px`로 리플로우되어 견고한 정보 흐름을 보장합니다.
+
+### 3-2. Border Radius (부드러운 곡선)
 | Token | 값 | 용도 |
 |-------|---|------|
 | `--radius-sm` | `6px` | 체크박스, 작은 태그 |

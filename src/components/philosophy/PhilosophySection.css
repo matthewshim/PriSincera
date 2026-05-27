@@ -16,15 +16,15 @@
     width: 100%;
     margin: 0 auto;
     /* Glassmorphic panel — readable content over star background */
-    background: rgba(10, 7, 20, 0.72);
+    background: rgba(10, 10, 10, 0.75);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(196, 181, 253, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 24px;
     padding: var(--space-2xl) var(--space-xl);
     box-shadow:
-        0 4px 60px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(196, 181, 253, 0.04);
+        0 4px 60px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* --- Section Label --- */
@@ -104,16 +104,16 @@
 .concept-cards {
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
+    gap: 16px;
 }
-
+/* --- Base & Surfaces (OLED Black & Slate) --- */
 .concept-card {
     position: relative;
-    padding: var(--space-lg) var(--space-xl);
-    background: rgba(26, 16, 53, 0.55);
+    padding: 20px 24px; /* Compacted from 24px 32px */
+    background: var(--glass-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(196, 181, 253, 0.08);
+    border: 1px solid var(--glass-border);
     border-radius: 16px;
     display: flex;
     align-items: flex-start;
@@ -138,11 +138,11 @@
 }
 
 .concept-card:hover {
-    border-color: rgba(196, 181, 253, 0.15);
+    border-color: var(--glass-border-hover);
     transform: translateY(-4px);
     box-shadow:
-        0 12px 40px rgba(124, 58, 237, 0.12),
-        0 0 1px rgba(196, 181, 253, 0.2);
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .concept-card:hover::before {
@@ -158,8 +158,8 @@
     height: 48px;
     padding: 6px;
     border-radius: 12px;
-    background: rgba(124, 58, 237, 0.08);
-    border: 1px solid rgba(196, 181, 253, 0.06);
+    background: rgba(124, 58, 237, 0.06);
+    border: 1px solid var(--glass-border);
     transition: all var(--duration-normal) var(--ease-out);
 }
 
@@ -169,8 +169,8 @@
 }
 
 .concept-card:hover .concept-icon {
-    background: rgba(124, 58, 237, 0.15);
-    border-color: rgba(196, 181, 253, 0.12);
+    background: rgba(124, 58, 237, 0.12);
+    border-color: var(--glass-border-hover);
     transform: scale(1.05);
 }
 
@@ -226,7 +226,7 @@
 .belief-declaration {
     margin-top: var(--space-xl);
     padding-top: var(--space-lg);
-    border-top: 1px solid rgba(196, 181, 253, 0.08);
+    border-top: 1px solid var(--glass-border);
 }
 
 .declaration-text {
