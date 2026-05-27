@@ -110,7 +110,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    let w, h, stars = [], nebulae = [], shootingStars = [], constellations = [], frameId;
+    let w, h, stars = [], stardust = [], nebulae = [], shootingStars = [], constellations = [], frameId;
     let zodiacFade = 0; // 0 = hidden, 1 = fully visible
     let lastFrameTime = 0;
     const FPS_INTERVAL = 1000 / 30; // 30fps cap
@@ -136,33 +136,36 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       createConstellations();
     }
 
+    // Box-Muller transform for Gaussian distribution around Milky Way diagonal
+    function randomNormal() {
+      let u = 0, v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    }
+
     /**
-     * Create stars with depth-based properties:
-     * - depth: 0 (farthest) → 1 (nearest)
-     * - Size, opacity, color temperature, parallax all scale with depth
-     * - Cubic distribution: most stars are far (small/dim), few are near (bright)
+     * Create stars with depth-based properties and ultra-dense stardust:
+     * - Major Stars (stars): 200-400 major twinkling stellar classifications (O/B/A/F/G/K/M) with spikes
+     * - Stardust (stardust): 1500-2200 background sub-pixel micro-stars clustered along diagonal Milky Way
      */
     function createStars() {
       stars = [];
+      stardust = [];
       const isMobile = w <= 768;
-      const density = Math.floor((w * h) / (isMobile ? 5600 : 2800));
-
-      // Depth-based color palettes (natural blackbody classification)
-      // Far (Class O/B: blue-white): #E2ECFF, #C9DFFE, #A3C9FF
-      // Mid (Class A/F: pure white, ice white): #F8F9FA, #F0F4F8, #E6ECF5
-      // Near (Class G/K/M: warm whites, soft golds, orange-reds): #FFFEE8, #FFFAC7, #FFE1C2, #FFCFA3
+      
+      // 1. 일반 주요 항성들 생성 (대기 깜빡임, 회절 스파이크, glow가 풍부한 주성들 - 정예화)
+      const starDensity = Math.floor((w * h) / (isMobile ? 8000 : 4000));
       const colorsByDepth = {
         far:  ['#E2ECFF', '#C9DFFE', '#A3C9FF'],
         mid:  ['#F8F9FA', '#F0F4F8', '#E6ECF5'],
         near: ['#FFFEE8', '#FFFAC7', '#FFE1C2', '#FFCFA3'],
       };
 
-      for (let i = 0; i < density; i++) {
-        // Cubic distribution: depth³ makes most stars far, few near
+      for (let i = 0; i < starDensity; i++) {
         const rawDepth = Math.random();
         const depth = rawDepth * rawDepth * rawDepth; // 0~1, skewed toward 0
 
-        // Select color palette based on depth
         let palette;
         if (depth < 0.15) {
           palette = colorsByDepth.far;
@@ -177,55 +180,130 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           x: Math.random() * w,
           y: Math.random() * h,
           depth,
-          r: 0.15 + depth * 1.8,                        // far: tiny, near: big
+          r: 0.25 + depth * 1.9,
           color,
-          twinkleSpeed: 0.003 + (1 - depth) * 0.025,    // far: slow twinkle, near: faster
+          twinkleSpeed: 0.003 + (1 - depth) * 0.025,
           twinklePhase: Math.random() * Math.PI * 2,
-          baseOpacity: 0.04 + depth * 0.55,              // far: very dim, near: bright
-          parallaxFactor: depth * 0.045,                 // far: almost static, near: moves a lot
-          glowRadius: depth > 0.7 ? 2 + depth * 4 : 0,  // only near stars get glow
-          isSuperBright: depth > 0.88,                  // top ~1.2% brightest stars!
+          baseOpacity: 0.05 + depth * 0.55,
+          parallaxFactor: depth * 0.045,
+          glowRadius: depth > 0.7 ? 2 + depth * 4 : 0,
+          isSuperBright: depth > 0.86,
         });
       }
 
       // Sort by depth so far stars draw first (painter's algorithm)
       stars.sort((a, b) => a.depth - b.depth);
+
+      // 2. 초고밀도 배경 아기별(Stardust) 생성 (1000 ~ 2200개)
+      // 대각선 은하수 띠: 좌하단에서 우상단으로 흐르는 궤적 설정
+      const stardustCount = isMobile ? 1000 : 2200;
+      const stardustColors = ['#FFF3D6', '#E3EFFF', '#FFFFFF'];
+      
+      const x1 = -w * 0.15, y1 = h * 0.95;
+      const x2 = w * 1.15, y2 = h * 0.05;
+
+      for (let i = 0; i < stardustCount; i++) {
+        let sX, sY;
+        const isBelongToMilkyWay = Math.random() < 0.75; // 75%는 은하수 대각 벨트에 밀집
+
+        if (isBelongToMilkyWay) {
+          const t = Math.random();
+          const axisX = x1 + t * (x2 - x1);
+          const axisY = y1 + t * (y2 - y1);
+          
+          // 대각선 은하수 축 중심으로부터 가우시안 확률 분포
+          const spreadWidth = Math.min(w, h) * 0.14;
+          sX = axisX + randomNormal() * spreadWidth;
+          sY = axisY + randomNormal() * spreadWidth;
+        } else {
+          // 25%는 밤하늘 전역에 은은하게 뽀얗고 고운 그레인 질감으로 분산
+          sX = Math.random() * w;
+          sY = Math.random() * h;
+        }
+
+        // 화면 영역을 너무 크게 벗어난 별 제외
+        if (sX < -50 || sX > w + 50 || sY < -50 || sY > h + 50) continue;
+
+        stardust.push({
+          x: sX,
+          y: sY,
+          r: 0.08 + Math.random() * 0.35,
+          color: stardustColors[Math.floor(Math.random() * stardustColors.length)],
+          baseOpacity: 0.03 + Math.random() * 0.15,
+          parallaxFactor: Math.random() * 0.012, // 은하수 뒤편의 깊은 원경 묘사
+        });
+      }
     }
 
+    /**
+     * Create organic gaseous nebulae aligned to the Milky Way diagonal axis:
+     * Aligns golden-amber, deep magenta-purple, and dark dust lanes to create realistic 3D textures.
+     */
     function createNebulae() {
       nebulae = [];
-      const colors = [{ r:124,g:58,b:237 }, { r:167,g:139,b:250 }, { r:240,g:171,b:252 }, { r:34,g:211,b:238 }];
-      // Each nebula at a different depth for parallax layering
-      const depths = [0.05, 0.15, 0.08, 0.12];
-      for (let i = 0; i < 4; i++) {
-        const r = Math.random() * 250 + 120;
+      
+      // 몽골 밤하늘 감성의 성운 기하 구성: 황금갈색, 마젠타/딥퍼플, 차콜(암흑성운)
+      const nebulaConfigs = [
+        { t: 0.20, color: { r:12, g:10, b:16 }, opacity: 0.035, scaleR: 0.45, isDark: true }, // 암흑 먼지띠
+        { t: 0.35, color: { r:190, g:130, b:75 }, opacity: 0.018, scaleR: 0.35, isDark: false }, // 황금빛 성운
+        { t: 0.50, color: { r:95, g:60, b:150 }, opacity: 0.015, scaleR: 0.40, isDark: false }, // 마젠타 성운
+        { t: 0.65, color: { r:195, g:140, b:85 }, opacity: 0.018, scaleR: 0.32, isDark: false }, // 황금빛 성운
+        { t: 0.80, color: { r:10, g:8, b:12 }, opacity: 0.040, scaleR: 0.48, isDark: true },  // 암흑 먼지띠
+      ];
+
+      const x1 = -w * 0.15, y1 = h * 0.95;
+      const x2 = w * 1.15, y2 = h * 0.05;
+
+      nebulaConfigs.forEach((cfg, idx) => {
+        // 대각선 궤적 상의 좌표 계산
+        const baseCenterX = x1 + cfg.t * (x2 - x1);
+        const baseCenterY = y1 + cfg.t * (y2 - y1);
         
-        // Create Offscreen Canvas for double-buffering cache
+        // 성운 반경은 화면 최소 길이 기준 설정
+        const minDimension = Math.min(w, h);
+        const r = minDimension * cfg.scaleR;
+        
+        // 오프스크린 캔버스 더블 버퍼링 캐싱
         const offCanvas = document.createElement('canvas');
         offCanvas.width = r * 2;
         offCanvas.height = r * 2;
         const offCtx = offCanvas.getContext('2d');
         
-        // Draw the radial gradient on the offscreen canvas once
         const grad = offCtx.createRadialGradient(r, r, 0, r, r, r);
-        const col = colors[i];
-        grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},1)`);
-        grad.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0)`);
+        const col = cfg.color;
+        
+        if (cfg.isDark) {
+          // 암흑 성운: 외곽으로 갈수록 투명해지며, 렌즈 밖의 은은한 별빛들을 가려 가스층의 유기적 입체감을 높임
+          grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},1)`);
+          grad.addColorStop(0.5, `rgba(${col.r},${col.g},${col.b},0.6)`);
+          grad.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0)`);
+        } else {
+          // 발광 성운
+          grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},1)`);
+          grad.addColorStop(0.4, `rgba(${col.r},${col.g},${col.b},0.45)`);
+          grad.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0)`);
+        }
+        
         offCtx.fillStyle = grad;
         offCtx.beginPath();
         offCtx.arc(r, r, r, 0, Math.PI * 2);
         offCtx.fill();
 
         nebulae.push({
-          x: Math.random() * w, y: Math.random() * h,
-          r, color: col,
-          speedX: (Math.random() - 0.5) * 0.12, speedY: (Math.random() - 0.5) * 0.08,
-          opacity: 0.012 + Math.random() * 0.015, phase: Math.random() * Math.PI * 2,
-          depth: depths[i],
-          parallaxFactor: depths[i] * 0.03,
-          offCanvas, // Store cached canvas reference
+          x: baseCenterX + (Math.random() - 0.5) * 60,
+          y: baseCenterY + (Math.random() - 0.5) * 60,
+          r,
+          color: col,
+          isDark: cfg.isDark,
+          speedX: (Math.random() - 0.5) * 0.05, // 은은한 흐름 드리프트
+          speedY: (Math.random() - 0.5) * 0.03,
+          opacity: cfg.opacity,
+          phase: Math.random() * Math.PI * 2,
+          depth: 0.05 + idx * 0.02,
+          parallaxFactor: (0.05 + idx * 0.02) * 0.035,
+          offCanvas,
         });
-      }
+      });
     }
 
     function createConstellations() {
@@ -330,7 +408,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
 
       // --- Nebulae (with subtle parallax & Offscreen Canvas cache) ---
       for (const n of nebulae) {
-        n.x += n.speedX; n.y += n.speedY; n.phase += 0.003;
+        n.x += n.speedX; n.y += n.speedY; n.phase += 0.002;
         if (n.x < -n.r) n.x = w + n.r; if (n.x > w + n.r) n.x = -n.r;
         if (n.y < -n.r) n.y = h + n.r; if (n.y > h + n.r) n.y = -n.r;
 
@@ -340,17 +418,102 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         const drawNx = n.x + nox;
         const drawNy = n.y + noy;
 
-        const alpha = n.opacity + Math.sin(n.phase) * 0.006;
-        ctx.globalAlpha = Math.max(0.001, Math.min(1, alpha));
+        // 마우스 렌즈 영역 근처 가스 밝기 증폭 체크
+        const dx = drawNx - rawMx;
+        const dy = drawNy - rawMy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        let lensBoost = 1.0;
+        if (dist < LENS_RADIUS) {
+          const t = 1 - dist / LENS_RADIUS;
+          lensBoost = 1.0 + t * t * 0.85; // 렌즈 조준선 내부에서 성운 줄기를 더 선명하게 밝힘
+        }
+
+        const alpha = (n.opacity + Math.sin(n.phase) * 0.003) * lensBoost;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0.001, Math.min(0.9, alpha));
+        
+        if (n.isDark) {
+          // 암흑 성운 (차콜/차단 먼지띠): 일반 소스 블렌딩
+          ctx.globalCompositeOperation = 'source-over';
+        } else {
+          // 발광 가스 구름: 스크린 블렌딩
+          ctx.globalCompositeOperation = 'screen';
+        }
+        
         ctx.drawImage(n.offCanvas, drawNx - n.r, drawNy - n.r);
+        ctx.restore();
       }
       ctx.globalAlpha = 1;
 
       // --- Mouse position for telescope lens effect ---
       const mx = rawMx;
       const my = rawMy;
+      const LENS_RADIUS_SQ = LENS_RADIUS * LENS_RADIUS;
 
-      // Telescope lens parameters
+      // --- Super-dense Stardust Layer (Hybrid Draw Call Batching) ---
+      // Batch drawing to achieve 60FPS with 2,200+ stars by minimizing context switches
+      const stardustColors = ['#FFF3D6', '#E3EFFF', '#FFFFFF'];
+      const stardustOpacities = [0.05, 0.10, 0.16];
+      const stardustBuckets = {};
+
+      stardustColors.forEach(c => {
+        stardustOpacities.forEach(o => {
+          stardustBuckets[`${c}_${o}`] = [];
+        });
+      });
+
+      const lensInsideStardust = [];
+
+      function getNearestOpacity(val) {
+        if (val < 0.08) return 0.05;
+        if (val < 0.13) return 0.10;
+        return 0.16;
+      }
+
+      for (const s of stardust) {
+        const pox = parallaxBaseX * s.parallaxFactor;
+        const poy = parallaxBaseY * s.parallaxFactor;
+        const drawX = s.x + pox;
+        const drawY = s.y + poy;
+
+        const dx = drawX - mx;
+        const dy = drawY - my;
+        const distSq = dx * dx + dy * dy;
+
+        if (distSq < LENS_RADIUS_SQ) {
+          // Inside lens: collect for individualized deep telescope zoom physics
+          lensInsideStardust.push({ s, drawX, drawY });
+        } else {
+          // Outside lens: pool into bucket calls for single-pass drawing
+          const mappedO = getNearestOpacity(s.baseOpacity);
+          const key = `${s.color}_${mappedO}`;
+          if (stardustBuckets[key]) {
+            stardustBuckets[key].push({ x: drawX, y: drawY, r: s.r });
+          }
+        }
+      }
+
+      // 1. Render outside stars in just 9 batch draws
+      ctx.save();
+      for (const key of Object.keys(stardustBuckets)) {
+        const list = stardustBuckets[key];
+        if (list.length === 0) continue;
+
+        const [color, opacityStr] = key.split('_');
+        const opacity = parseFloat(opacityStr);
+
+        ctx.fillStyle = color;
+        ctx.globalAlpha = opacity;
+        ctx.beginPath();
+        for (const p of list) {
+          ctx.moveTo(p.x + p.r, p.y);
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        }
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // 2. Telescope lens transformation parameters
       const LENS_MAGNIFY = 0.06;     // minimal position push (preserves constellation shapes)
       const LENS_SIZE_SCALE = 1.5;   // zoom-in magnification at lens center
 
@@ -386,6 +549,24 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         cache.sizeScale = 1 + strength * (LENS_SIZE_SCALE - 1);
         return cache;
       }
+
+      // 3. Render inside stardust with magnification physics (dense clusters resolve into starry grains)
+      ctx.save();
+      for (const item of lensInsideStardust) {
+        const { s, drawX, drawY } = item;
+        const lens = lensTransform(drawX, drawY);
+        
+        const sizeBonus = lens.strength * 1.6;
+        const finalR = (s.r + sizeBonus) * lens.sizeScale;
+        const finalAlpha = Math.min(1.0, s.baseOpacity + lens.strength * 0.45);
+
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = finalAlpha;
+        ctx.beginPath();
+        ctx.arc(lens.x, lens.y, finalR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
 
       // --- Regular Stars (depth-layered with parallax + lens distortion) ---
       for (const s of stars) {
