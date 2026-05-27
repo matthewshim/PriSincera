@@ -522,7 +522,15 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         // Random highlight pulse: unique per-constellation organic breathing
         // Each constellation has a different frequency and phase for natural feel
         const randFreqs = [0.37, 0.53, 0.29, 0.41, 0.61, 0.47, 0.31, 0.59, 0.43, 0.67, 0.39, 0.51];
-               // --- IAU Constellation Boundary Box & Corner Ticks ---
+        const randPhases = [0, 2.1, 4.3, 1.5, 3.7, 5.2, 0.8, 2.9, 4.6, 1.2, 3.3, 5.8];
+        const randIntensity = zodiacShowAllRef.current
+          ? Math.max(0, Math.sin(now * randFreqs[ci] + randPhases[ci])) * 0.4
+          : 0;
+
+        // Combined pulse: pick the stronger of sequential and random
+        const pulse = Math.max(seqPulse, randIntensity);
+
+        // --- IAU Constellation Boundary Box & Corner Ticks ---
         if (reveal > 0.12 || pulse > 0.1) {
           ctx.save();
           // Apply lens to boundary center for coordination
