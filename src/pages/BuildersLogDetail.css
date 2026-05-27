@@ -98,9 +98,20 @@
   word-break: keep-all;
   overflow-wrap: break-word;
   margin-bottom: var(--space-md);
+}
+
+.detail-title .title-emoji {
+  margin-right: 0.25em;
+  -webkit-text-fill-color: initial;
+  background: none;
+  background-clip: border-box;
+}
+
+.detail-title .title-text {
   background: linear-gradient(135deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .detail-subtitle {

@@ -9,6 +9,24 @@ import logMeta from '../data/buildersLogMeta.json';
 import { useTranslation } from '../contexts/LanguageContext';
 import './BuildersLogDetail.css';
 
+// Utility to separate leading emoji from text to prevent Chrome background-clip bugs on emojis
+const renderTitle = (title) => {
+  if (!title) return null;
+  // Matches standard emojis, including supplementary and pictograph blocks
+  const emojiRegex = /^([\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F9FF}]+(?:\ufe0f)?)\s*(.*)$/u;
+  const match = title.match(emojiRegex);
+  if (match) {
+    const [, emoji, restOfTitle] = match;
+    return (
+      <>
+        <span className="title-emoji">{emoji}</span>
+        <span className="title-text">{restOfTitle}</span>
+      </>
+    );
+  }
+  return <span className="title-text">{title}</span>;
+};
+
 export default function BuildersLogDetail() {
   const { slug } = useParams();
   const [content, setContent] = useState('');
@@ -94,7 +112,7 @@ export default function BuildersLogDetail() {
             <span className="chapter-badge">Chapter {articleMeta.chapterNo}</span>
             <span className="date-badge">{new Date(articleMeta.date).toLocaleDateString()}</span>
           </div>
-          <h1 className="detail-title">{localizedTitle}</h1>
+          <h1 className="detail-title">{renderTitle(localizedTitle)}</h1>
           <h2 className="detail-subtitle">{localizedSubtitle}</h2>
           
           <div className="detail-tags">
