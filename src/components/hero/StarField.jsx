@@ -145,6 +145,31 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
     }
 
+    // Soft falloff mask to protect brand text readability at center-middle region
+    function getReadabilityShield(px, py) {
+      const rx = px / w;
+      const ry = py / h;
+      // 텍스트 영역: x(25%~75%), y(40%~72%)
+      if (rx >= 0.25 && rx <= 0.75 && ry >= 0.40 && ry <= 0.72) {
+        const centerX = w / 2;
+        const centerY = h * 0.56;
+        const maxDistX = w * 0.25;
+        const maxDistY = h * 0.16;
+        
+        const dx = Math.abs(px - centerX);
+        const dy = Math.abs(py - centerY);
+        
+        if (dx < maxDistX && dy < maxDistY) {
+          const tX = dx / maxDistX; // 0~1
+          const tY = dy / maxDistY;
+          const factor = Math.max(tX, tY); // 0 (중심) ~ 1 (경계)
+          // 중심에 가까울수록 65% 디밍(0.35 배), 경계로 갈수록 서서히 100% 불투명도로 복구
+          return 0.35 + factor * 0.65;
+        }
+      }
+      return 1.0;
+    }
+
     /**
      * Create stars with depth-based properties and ultra-dense stardust:
      * - Major Stars (stars): 200-400 major twinkling stellar classifications (O/B/A/F/G/K/M) with spikes
@@ -712,11 +737,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         const c = constellations[ci];
         // Calculate distance from mouse to constellation center
         const dist = Math.hypot(mx - c.centerX, my - c.centerY);
+        const isFocused = dist < REVEAL_RADIUS;
 
-        // When showAll: reveal to a softer level (0.5) for subtlety
-        // Mouse proximity or direct reveal still goes to full 1.0
         let target;
-        if (dist < REVEAL_RADIUS) {
+        if (isFocused) {
           target = 1; // mouse proximity = full reveal
         } else if (zodiacShowAllRef.current) {
           target = 0.5; // scroll-triggered = soft reveal
@@ -727,6 +751,9 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
 
         const reveal = c.revealAmount;
 
+        // Content Readability Shield: 디밍 계수 연산 (중앙 본문 영역 보호)
+        const shield = getReadabilityShield(c.centerX, c.centerY);
+
         // Sequential pulse: this constellation's turn to glow
         const pulseStart = ci * PULSE_CYCLE;
         const pulseProgress = (cycleTime - pulseStart + TOTAL_CYCLE) % TOTAL_CYCLE;
@@ -735,7 +762,6 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           : 0;
 
         // Random highlight pulse: unique per-constellation organic breathing
-        // Each constellation has a different frequency and phase for natural feel
         const randFreqs = [0.37, 0.53, 0.29, 0.41, 0.61, 0.47, 0.31, 0.59, 0.43, 0.67, 0.39, 0.51];
         const randPhases = [0, 2.1, 4.3, 1.5, 3.7, 5.2, 0.8, 2.9, 4.6, 1.2, 3.3, 5.8];
         const randIntensity = zodiacShowAllRef.current
@@ -745,10 +771,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         // Combined pulse: pick the stronger of sequential and random
         const pulse = Math.max(seqPulse, randIntensity);
 
-        // --- IAU Constellation Boundary Box & Corner Ticks ---
-        if (reveal > 0.12 || pulse > 0.1) {
+        // --- IAU Constellation Boundary Box & Corner Ticks (Smart Focused Pass) ---
+        // Only draw coordinate boxes when actively focused (isFocused or heavy pulse) to protect clarity
+        if ((reveal > 0.35 || pulse > 0.25) && isFocused) {
           ctx.save();
-          // Apply lens to boundary center for coordination
           const lCenter = lensTransform(c.centerX, c.centerY);
           const bScale = scale * 1.8 * lCenter.sizeScale;
           const bSize = 65 * bScale;
@@ -757,9 +783,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           const left = bx - bSize, right = bx + bSize;
           const top = by - bSize, bottom = by + bSize;
           
-          ctx.globalAlpha = Math.max(0.015, Math.max(reveal * 0.22, pulse * 0.13)) * zodiacFade;
-          ctx.strokeStyle = '#818CF8';
-          ctx.lineWidth = 0.45;
+          // 쨍한 퍼플 블루 대신 따뜻하고 옅은 앤티크 골드-실버 톤으로 개편
+          ctx.globalAlpha = Math.max(0.015, Math.max(reveal * 0.20, pulse * 0.12)) * zodiacFade * shield;
+          ctx.strokeStyle = 'rgba(215, 202, 185, 0.8)';
+          ctx.lineWidth = 0.35; // 극세선화
           
           // Draw thin dotted coordinate box representing IAU boundary
           ctx.setLineDash([2, 5]);
@@ -769,40 +796,32 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           ctx.setLineDash([]);
           
           // Draw corner L-brackets (ticks)
-          ctx.strokeStyle = '#A5B4FC';
-          ctx.lineWidth = 0.75;
-          const tickLen = 5 * lCenter.sizeScale;
+          ctx.strokeStyle = 'rgba(215, 202, 185, 0.9)';
+          ctx.lineWidth = 0.5; // 슬림화
+          const tickLen = 4.5 * lCenter.sizeScale;
           
-          // Top-Left corner
-          ctx.beginPath();
-          ctx.moveTo(left, top + tickLen); ctx.lineTo(left, top); ctx.lineTo(left + tickLen, top);
-          ctx.stroke();
-          // Top-Right corner
-          ctx.beginPath();
-          ctx.moveTo(right - tickLen, top); ctx.lineTo(right, top); ctx.lineTo(right, top + tickLen);
-          ctx.stroke();
-          // Bottom-Left corner
-          ctx.beginPath();
-          ctx.moveTo(left, bottom - tickLen); ctx.lineTo(left, bottom); ctx.lineTo(left + tickLen, bottom);
-          ctx.stroke();
-          // Bottom-Right corner
-          ctx.beginPath();
-          ctx.moveTo(right - tickLen, bottom); ctx.lineTo(right, bottom); ctx.lineTo(right, bottom - tickLen);
-          ctx.stroke();
+          // Top-Left
+          ctx.beginPath(); ctx.moveTo(left, top + tickLen); ctx.lineTo(left, top); ctx.lineTo(left + tickLen, top); ctx.stroke();
+          // Top-Right
+          ctx.beginPath(); ctx.moveTo(right - tickLen, top); ctx.lineTo(right, top); ctx.lineTo(right, top + tickLen); ctx.stroke();
+          // Bottom-Left
+          ctx.beginPath(); ctx.moveTo(left, bottom - tickLen); ctx.lineTo(left, bottom); ctx.lineTo(left + tickLen, bottom); ctx.stroke();
+          // Bottom-Right
+          ctx.beginPath(); ctx.moveTo(right - tickLen, bottom); ctx.lineTo(right, bottom); ctx.lineTo(right, bottom - tickLen); ctx.stroke();
           
           ctx.restore();
         }
 
         // --- Hint lines (always visible, pulse adds brightness on turn) ---
-        const hintAlpha = (0.15 + pulse + reveal * 0.35) * zodiacFade;
+        // 인공 형광 보라 대신 부드럽고 차분한 골드-실버(#D4C4B5/B0C4DE 매칭 앤티크 톤)로 통일
+        const hintAlpha = (0.08 + pulse * 0.2 + reveal * 0.32) * zodiacFade * shield;
         ctx.globalAlpha = hintAlpha;
 
-        ctx.strokeStyle = `rgba(165, 180, 252, ${0.45 + pulse * 0.4 + reveal * 0.35})`;
-        ctx.lineWidth = 0.5 + pulse * 0.25 + reveal * 0.4;
+        ctx.strokeStyle = `rgba(210, 200, 185, ${0.35 + pulse * 0.3 + reveal * 0.3})`;
+        ctx.lineWidth = 0.30 + pulse * 0.12 + reveal * 0.18; // 0.3px 극세 에칭 가이드선
         ctx.setLineDash(reveal < 0.5 ? [3, 5] : [4 + reveal * 4, 3 - reveal * 2]);
         for (const [a, b] of c.lines) {
           const sa = c.starPositions[a], sb = c.starPositions[b];
-          // Apply lens distortion to constellation line endpoints
           const la = lensTransform(sa.x, sa.y);
           const lb = lensTransform(sb.x, sb.y);
           ctx.beginPath(); ctx.moveTo(la.x, la.y); ctx.lineTo(lb.x, lb.y); ctx.stroke();
@@ -813,29 +832,29 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         const GREEK_DESIGNATIONS = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ'];
         for (const sp of c.starPositions) {
           const lsp = lensTransform(sp.x, sp.y);
-          const baseR = 1.25;
-          const starR = (baseR + pulse * 0.8 + reveal * 1.5) * lsp.sizeScale;
+          const baseR = 1.20;
+          const starR = (baseR + pulse * 0.6 + reveal * 1.3) * lsp.sizeScale;
 
           // Glow (during pulse or reveal)
           if (pulse > 0.1 || reveal > 0.05) {
-            ctx.globalAlpha = Math.max(pulse * 0.3, reveal * 0.25) * zodiacFade;
-            ctx.fillStyle = '#C7D2FE';
-            ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR + 4 * lsp.sizeScale, 0, Math.PI * 2); ctx.fill();
+            ctx.globalAlpha = Math.max(pulse * 0.25, reveal * 0.22) * zodiacFade * shield;
+            ctx.fillStyle = '#E8DFD8'; // 차분한 골드 크림 톤
+            ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR + 3 * lsp.sizeScale, 0, Math.PI * 2); ctx.fill();
           }
 
           // Core star — always visible, brighter on reveal and pulse
-          ctx.globalAlpha = (0.35 + pulse + reveal * 0.55 + lsp.strength * 0.3) * zodiacFade;
-          ctx.fillStyle = (reveal > 0.3 || pulse > 0.2) ? '#FFFFFF' : '#E0E7FF';
+          ctx.globalAlpha = (0.28 + pulse * 0.8 + reveal * 0.5 + lsp.strength * 0.3) * zodiacFade * shield;
+          ctx.fillStyle = (reveal > 0.3 || pulse > 0.2) ? '#FFFFFF' : '#F5EBE0'; // 소프트 웜 화이트
           ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR, 0, Math.PI * 2); ctx.fill();
 
-          // Bayer designations next to major constellation stars on reveal/pulse
-          if (reveal > 0.25 || pulse > 0.2) {
+          // Bayer designations (Smart Focused details: only draw inside lens focusing for clean UX)
+          if ((reveal > 0.35 || pulse > 0.25) && isFocused) {
             const starIndex = c.starPositions.indexOf(sp);
             const bayerLetter = GREEK_DESIGNATIONS[starIndex % GREEK_DESIGNATIONS.length];
             ctx.save();
-            ctx.globalAlpha = Math.max(0.1, Math.max(reveal * 0.45, pulse * 0.35)) * zodiacFade;
+            ctx.globalAlpha = Math.max(0.1, Math.max(reveal * 0.40, pulse * 0.30)) * zodiacFade * shield;
             ctx.font = `italic ${Math.round(7.5 * lsp.sizeScale)}px 'Inter', serif`;
-            ctx.fillStyle = '#A5B4FC';
+            ctx.fillStyle = '#ACD4FF'; // 차분하고 선명한 성도 실버
             ctx.textAlign = 'left';
             ctx.fillText(`${bayerLetter}`, lsp.x + (starR + 4) * lsp.sizeScale, lsp.y - 2);
             ctx.restore();
@@ -849,25 +868,26 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         if (showByReveal || showByPulse) {
           const revealAlpha = showByReveal ? Math.min(1, (reveal - 0.15) / 0.45) : 0;
           const pulseAlpha = showByPulse ? (pulse - 0.15) / 0.30 : 0;
-          const labelAlpha = Math.min(1, Math.max(revealAlpha, pulseAlpha)) * zodiacFade;
+          const labelAlpha = Math.min(1, Math.max(revealAlpha, pulseAlpha)) * zodiacFade * shield;
 
           // Apply lens to label position
           const lCenter = lensTransform(c.centerX, c.centerY);
           const labelScale = lCenter.sizeScale;
 
-          // Name
-          ctx.globalAlpha = labelAlpha * (showByReveal ? 0.85 : 0.55);
-          ctx.font = `500 ${Math.round(11 * labelScale)}px 'Inter', sans-serif`;
+          // Name (언제나 뚜렷하되 shield 감쇄를 적용하여 중앙 본문 방해 방지)
+          ctx.globalAlpha = labelAlpha * (showByReveal ? 0.75 : 0.45);
+          ctx.font = `500 ${Math.round(10.5 * labelScale)}px 'Inter', sans-serif`;
           ctx.fillStyle = '#E2E8F0';
           ctx.textAlign = 'center';
           ctx.fillText(c.name, lCenter.x, lCenter.y + 44 * labelScale);
 
-          // Subtitle (only on full reveal, not pulse)
-          if (showByReveal) {
-            ctx.globalAlpha = revealAlpha * 0.45;
-            ctx.font = `400 ${Math.round(9 * labelScale)}px 'Inter', sans-serif`;
-            ctx.fillStyle = '#818CF8';
-            ctx.fillText(c.sub, lCenter.x, lCenter.y + 57 * labelScale);
+          // Subtitle & Coord HUD (Smart Focused HUD: only draw sub-labels under active lens focusing)
+          if (showByReveal && isFocused) {
+            // Subtitle
+            ctx.globalAlpha = revealAlpha * 0.40;
+            ctx.font = `400 ${Math.round(8.5 * labelScale)}px 'Inter', sans-serif`;
+            ctx.fillStyle = '#B0C4DE'; // 앤티크 실버 스틸 블루
+            ctx.fillText(c.sub, lCenter.x, lCenter.y + 56 * labelScale);
 
             // Technical Astronomical Coordinates (RA / DEC / Dist / Mag)
             const raHours = Math.floor(ci * 2).toString().padStart(2, '0');
@@ -875,17 +895,19 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
             const distLy = 350 + ci * 85;
             const appMag = (1.1 + ci * 0.15).toFixed(1);
             
-            ctx.globalAlpha = revealAlpha * 0.35 * zodiacFade;
+            ctx.globalAlpha = revealAlpha * 0.30 * zodiacFade * shield;
             ctx.font = `${Math.round(7.5 * labelScale)}px 'Inter', sans-serif`;
             ctx.fillStyle = '#94A3B8';
-            ctx.fillText(`RA ${raHours}h 15m / DEC ${decDegs}° | Dist: ~${distLy} ly | Mag: ${appMag}`, lCenter.x, lCenter.y + 70 * labelScale);
+            ctx.fillText(`RA ${raHours}h 15m / DEC ${decDegs}° | Dist: ~${distLy} ly | Mag: ${appMag}`, lCenter.x, lCenter.y + 68 * labelScale);
           }
 
-          // Symbol
-          ctx.globalAlpha = labelAlpha * (showByReveal ? 0.2 : 0.12);
-          ctx.font = `${Math.round(16 * labelScale)}px sans-serif`;
-          ctx.fillStyle = '#818CF8';
-          ctx.fillText(c.symbol, lCenter.x, lCenter.y - 38 * labelScale);
+          // Symbol (Smart Focused Symbol: only show under lens focusing)
+          if (isFocused) {
+            ctx.globalAlpha = labelAlpha * (showByReveal ? 0.18 : 0.10);
+            ctx.font = `${Math.round(15 * labelScale)}px sans-serif`;
+            ctx.fillStyle = '#B0C4DE';
+            ctx.fillText(c.symbol, lCenter.x, lCenter.y - 38 * labelScale);
+          }
         }
       }
       } // end zodiacFade > 0.005
