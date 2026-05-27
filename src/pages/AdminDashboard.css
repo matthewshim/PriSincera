@@ -26,19 +26,19 @@
 :root {
   --admin-bg: var(--bg-void);
   --admin-surface: var(--bg-surface);
-  --admin-surface-hover: #221645;
-  --admin-border: rgba(196, 181, 253, 0.08);
-  --admin-border-hover: rgba(196, 181, 253, 0.18);
-  --admin-text: #E9D5FF;
-  --admin-text-dim: #A78BFA;
-  --admin-text-muted: rgba(196, 181, 253, 0.5);
-  --admin-accent: #C084FC;
-  --admin-accent-glow: rgba(192, 132, 252, 0.2);
-  --admin-blue: #22D3EE;
-  --admin-green: #34D399;
+  --admin-surface-hover: rgba(255, 255, 255, 0.04);
+  --admin-border: var(--glass-border);
+  --admin-border-hover: var(--glass-border-hover);
+  --admin-text: var(--text-primary);
+  --admin-text-dim: var(--text-secondary);
+  --admin-text-muted: var(--text-muted);
+  --admin-accent: var(--prism-violet);
+  --admin-accent-glow: rgba(124, 58, 237, 0.15);
+  --admin-blue: var(--orbit-cyan);
+  --admin-green: #10B981;
   --admin-orange: #F59E0B;
   --admin-red: #EF4444;
-  --admin-radius: 12px;
+  --admin-radius: var(--radius-md);
 }
 
 /* ─── Login ───────────────────────────────────── */
@@ -72,7 +72,7 @@
   font-size: 24px;
   font-weight: 700;
   margin: 0 0 4px;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--font-display);
 }
 
 .admin-login-sub {
@@ -88,7 +88,7 @@
 }
 
 .admin-login-card input {
-  background: rgba(196, 181, 253, 0.04);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--admin-border);
   border-radius: 10px;
   padding: 14px 16px;
@@ -104,26 +104,11 @@
 }
 
 .admin-login-card button {
-  background: linear-gradient(135deg, #7C3AED, #C084FC);
-  color: white;
-  border: none;
-  border-radius: 10px;
   padding: 14px;
   font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
   margin-top: 8px;
-  transition: opacity 0.2s, transform 0.1s;
-}
-
-.admin-login-card button:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.admin-login-card button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  border-radius: 10px;
 }
 
 .admin-error {
@@ -141,7 +126,7 @@
   min-height: 100vh;
   background: var(--admin-bg);
   color: var(--admin-text);
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--font-body);
 }
 
 .admin-header {
@@ -171,7 +156,7 @@
   font-size: 18px;
   font-weight: 700;
   margin: 0;
-  background: linear-gradient(135deg, #C084FC, #22D3EE);
+  background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -251,19 +236,15 @@
 }
 
 .admin-logout-btn {
-  background: transparent;
-  border: 1px solid var(--admin-border);
-  border-radius: 8px;
-  color: var(--admin-text-dim);
   padding: 6px 14px;
   font-size: 13px;
-  cursor: pointer !important;
-  transition: all 0.2s;
+  border-radius: 8px;
 }
 
 .admin-logout-btn:hover {
   border-color: var(--admin-red);
   color: var(--admin-red);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
 /* ─── Sidebar Layout ────────────────────────────── */
@@ -554,35 +535,16 @@
 /* ─── Buttons ─────────────────────────────────── */
 
 .admin-btn-primary {
-  background: linear-gradient(135deg, #7C3AED, #C084FC);
-  color: white;
-  border: none;
-  border-radius: 8px;
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.admin-btn-primary:hover {
-  opacity: 0.9;
+  border-radius: 8px;
 }
 
 .admin-btn-secondary {
-  background: transparent;
-  border: 1px solid var(--admin-border);
-  border-radius: 8px;
-  color: var(--admin-text-dim);
   padding: 8px 16px;
   font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.admin-btn-secondary:hover {
-  border-color: var(--admin-accent);
-  color: var(--admin-accent);
+  border-radius: 8px;
 }
 
 /* ─── Test Send ───────────────────────────────── */
@@ -872,7 +834,7 @@
 }
 
 .admin-form-label input {
-  background: rgba(196, 181, 253, 0.04);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--admin-border);
   border-radius: 8px;
   padding: 11px 14px;
@@ -935,7 +897,7 @@
 /* ─── Select ──────────────────────────────────── */
 
 .admin-form-label select {
-  background: rgba(196, 181, 253, 0.04);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--admin-border);
   border-radius: 8px;
   padding: 11px 14px;
@@ -1033,4 +995,16 @@
   background: rgba(192, 132, 252, 0.15);
   border-color: var(--admin-accent);
   color: var(--admin-text);
+}
+
+/* ─── Haptic Pressed Scaling Override ─── */
+.admin-profile-btn:active,
+.admin-logout-btn:active,
+.admin-sidebar-item:active,
+.admin-btn-primary:active,
+.admin-btn-secondary:active,
+.admin-action-btn:active,
+.admin-login-card button:active {
+  transform: scale(0.97) translateY(0) !important;
+  transition-duration: 70ms !important;
 }

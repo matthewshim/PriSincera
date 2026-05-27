@@ -101,7 +101,7 @@ function LoginForm({ onLogin }) {
             value={password} onChange={e => setPassword(e.target.value)} required
           />
           {error && <div className="admin-error">{error}</div>}
-          <button id="admin-login-btn" type="submit" disabled={loading} style={{ marginBottom: 12 }}>
+          <button id="admin-login-btn" type="submit" className="btn-primary" disabled={loading} style={{ marginBottom: 12 }}>
             {loading ? '인증 중...' : '이메일로 로그인'}
           </button>
           <button type="button" onClick={handleGoogleLogin} disabled={loading} style={{ background: '#4285F4', width: '100%', padding: '12px', borderRadius: '8px', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
@@ -828,14 +828,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <h1>PriSincera Admin</h1>
         </div>
         <div className="admin-header-right">
-          <button className="admin-profile-btn" onClick={openProfile} title="마이페이지">
+          <button className="admin-profile-btn btn-secondary" onClick={openProfile} title="마이페이지">
             <span className="admin-avatar">👤</span>
             <span className="admin-profile-info">
               <span className="admin-profile-email">{adminEmail}</span>
               <span className={`admin-role-badge ${role}`}>{ROLE_LABEL[role] || role}</span>
             </span>
           </button>
-          <button className="admin-logout-btn" onClick={onLogout}>로그아웃</button>
+          <button className="admin-logout-btn btn-secondary" onClick={onLogout}>로그아웃</button>
         </div>
       </header>
 
@@ -1050,7 +1050,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-admins">
             <div className="admin-section-header">
               <h2>관리자 계정 관리</h2>
-              <button className="admin-btn-primary" onClick={openCreateAdmin}>➕ 관리자 추가</button>
+              <button className="admin-btn-primary btn-primary" onClick={openCreateAdmin}>➕ 관리자 추가</button>
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
@@ -1096,7 +1096,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-subscribers">
             <div className="admin-section-header">
               <h2>콘텐츠 관리</h2>
-              <button className="admin-btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
+              <button className="admin-btn-primary btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
@@ -1176,7 +1176,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-subscribers">
             <div className="admin-section-header">
               <h2>AI 추천 풀 관리</h2>
-              <button className="admin-btn-primary" onClick={openCreatePool}>➕ 항목 수동 추가</button>
+              <button className="admin-btn-primary btn-primary" onClick={openCreatePool}>➕ 항목 수동 추가</button>
             </div>
 
             <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #A78BFA' }}>
@@ -1220,7 +1220,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-builderslog">
             <div className="admin-section-header">
               <h2>Builder's Log 퍼블리싱</h2>
-              <button className="admin-btn-primary" onClick={openCreateBuildersLog}>📝 새 아티클 작성</button>
+              <button className="admin-btn-primary btn-primary" onClick={openCreateBuildersLog}>📝 새 아티클 작성</button>
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
@@ -1269,13 +1269,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     </div>
                     <button
                       type="button"
-                      className="admin-btn-secondary"
+                      className="admin-btn-primary btn-primary"
                       onClick={handlePoolAiTranslate}
                       style={{
                         padding: '6px 12px',
                         fontSize: '13px',
-                        background: 'linear-gradient(135deg, #7C3AED, #4F46E5)',
-                        color: 'white',
                         border: 'none'
                       }}
                     >
@@ -1303,8 +1301,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   {poolAction && <div className={`admin-send-status ${poolAction.type}`}>{poolAction.msg}</div>}
                 </div>
                 <div className="admin-modal-footer">
-                  <button type="button" className="admin-btn-secondary" onClick={() => setPoolModal(null)}>취소</button>
-                  <button type="submit" className="admin-btn-primary">저장</button>
+                  <button type="button" className="admin-btn-secondary btn-secondary" onClick={() => setPoolModal(null)}>취소</button>
+                  <button type="submit" className="admin-btn-primary btn-primary">저장</button>
                 </div>
               </form>
             </div>
@@ -1337,22 +1335,13 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     </div>
                     <button
                       type="button"
-                      className="admin-btn-secondary"
+                      className="admin-btn-primary btn-primary"
                       onClick={handleAiTranslate}
                       style={{
                         padding: '6px 12px',
                         fontSize: '13px',
-                        background: 'linear-gradient(135deg, #7C3AED, #4F46E5)',
-                        color: '#FFF',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        boxShadow: '0 0 10px rgba(124, 58, 237, 0.3)',
-                        fontWeight: 'bold',
-                        transition: 'transform 0.2s ease'
+                        border: 'none'
                       }}
-                      onMouseEnter={e => { e.target.style.transform = 'scale(1.02)'; }}
-                      onMouseLeave={e => { e.target.style.transform = 'scale(1)'; }}
                     >
                       ✨ AI 자동 완역
                     </button>
@@ -1362,7 +1351,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <label className="admin-form-label" style={{ marginBottom: 0, width: '100%' }}>
                       본문 Markdown ({buildersLogActiveTab.toUpperCase()} - AI 윤문 및 검열 파이프라인 연동)
                     </label>
-                    <label className="admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', padding: '4px 12px', fontSize: '12px' }}>
+                    <label className="admin-btn-secondary btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', padding: '4px 12px', fontSize: '12px' }}>
                       📁 .md 파일 불러오기
                       <input 
                         type="file" 
@@ -1452,7 +1441,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                       <span>관련 커밋 (JSON 배열 - 옵션)</span>
-                      <button type="button" onClick={handleFetchRecentCommits} className="admin-btn-secondary" style={{ padding: '4px 8px', fontSize: '0.8rem', height: 'auto' }}>
+                      <button type="button" onClick={handleFetchRecentCommits} className="admin-btn-secondary btn-secondary" style={{ padding: '4px 8px', fontSize: '0.8rem', height: 'auto' }}>
                         최근 커밋 10개 불러오기 ⬇️
                       </button>
                     </div>
@@ -1460,8 +1449,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   </label>
                 </div>
                 <div className="admin-modal-footer">
-                  <button type="button" className="admin-btn-secondary" onClick={() => setBuildersLogModal(null)}>취소</button>
-                  <button type="submit" className="admin-btn-primary" disabled={buildersLogAction?.type === 'loading'}>
+                  <button type="button" className="admin-btn-secondary btn-secondary" onClick={() => setBuildersLogModal(null)}>취소</button>
+                  <button type="submit" className="admin-btn-primary btn-primary" disabled={buildersLogAction?.type === 'loading'}>
                     {buildersLogAction?.type === 'loading' ? '배포 중...' : 'GitHub 커밋 및 배포'}
                   </button>
                 </div>
@@ -1519,8 +1508,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   )}
                 </div>
                 <div className="admin-modal-footer">
-                  <button type="button" className="admin-btn-secondary" onClick={() => setProfileModal(false)}>닫기</button>
-                  <button type="submit" className="admin-btn-primary">저장</button>
+                  <button type="button" className="admin-btn-secondary btn-secondary" onClick={() => setProfileModal(false)}>닫기</button>
+                  <button type="submit" className="admin-btn-primary btn-primary">저장</button>
                 </div>
               </form>
             </div>
@@ -1630,8 +1619,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   {contentAction && <div className={`admin-send-status ${contentAction.type}`}>{contentAction.msg}</div>}
                 </div>
                 <div className="admin-modal-footer">
-                  <button type="button" className="admin-btn-secondary" onClick={() => setContentModal(null)}>취소</button>
-                  <button type="submit" className="admin-btn-primary">저장</button>
+                  <button type="button" className="admin-btn-secondary btn-secondary" onClick={() => setContentModal(null)}>취소</button>
+                  <button type="submit" className="admin-btn-primary btn-primary">저장</button>
                 </div>
               </form>
             </div>
@@ -1687,8 +1676,8 @@ function AdminModal({ mode, form, setForm, action, onSubmit, onClose, showRole }
             {action && <div className={`admin-send-status ${action.type}`}>{action.msg}</div>}
           </div>
           <div className="admin-modal-footer">
-            <button type="button" className="admin-btn-secondary" onClick={onClose}>취소</button>
-            <button type="submit" className="admin-btn-primary">{mode === 'create' ? '생성' : '저장'}</button>
+            <button type="button" className="admin-btn-secondary btn-secondary" onClick={onClose}>취소</button>
+            <button type="submit" className="admin-btn-primary btn-primary">{mode === 'create' ? '생성' : '저장'}</button>
           </div>
         </form>
       </div>
