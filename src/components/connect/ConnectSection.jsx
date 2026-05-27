@@ -35,7 +35,7 @@ export default function ConnectSection() {
               href="https://www.linkedin.com/in/shimks"
               target="_blank"
               rel="noopener noreferrer"
-              className="connect-btn primary"
+              className="btn-primary connect-btn"
               id="connectLinkedIn"
             >
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -47,7 +47,7 @@ export default function ConnectSection() {
             {/* Email */}
             <a
               href="mailto:matthew.shim@prisincera.com"
-              className="connect-btn secondary"
+              className="btn-secondary connect-btn"
               id="connectEmail"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

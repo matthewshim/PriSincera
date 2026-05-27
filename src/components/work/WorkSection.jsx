@@ -49,7 +49,7 @@ export default function WorkSection() {
               <span className="work-tag">AI Pair Programmed</span>
             </div>
             <div className="flagship-cta-wrap">
-              <a href="https://github.com/matthewshim/PriSincera" target="_blank" rel="noopener noreferrer" className="flagship-cta-btn amber">
+              <a href="https://github.com/matthewshim/PriSincera" target="_blank" rel="noopener noreferrer" className="btn-primary flagship-cta-btn">
                 {t('home.serviceBaseCta')}
               </a>
             </div>
@@ -104,7 +104,7 @@ export default function WorkSection() {
               <span className="work-tag">Troubleshooting</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/builders-log" className="flagship-cta-btn indigo">
+              <Link to="/builders-log" className="btn-primary flagship-cta-btn">
                 {t('home.serviceBuildersCta')}
               </Link>
             </div>
@@ -159,7 +159,7 @@ export default function WorkSection() {
               <span className="work-tag">Newsletter</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/daily" className="flagship-cta-btn">
+              <Link to="/daily" className="btn-primary flagship-cta-btn">
                 {t('home.serviceDailyCta')}
               </Link>
             </div>
@@ -205,7 +205,7 @@ export default function WorkSection() {
               <span className="work-tag">Timeline</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/pacenote" className="flagship-cta-btn green">
+              <Link to="/pacenote" className="btn-primary flagship-cta-btn">
                 {t('home.servicePaceCta')}
               </Link>
             </div>

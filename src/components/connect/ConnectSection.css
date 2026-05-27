@@ -102,69 +102,20 @@
 }
 
 .connect-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
     padding: 14px 32px;
-    border-radius: var(--radius-pill);
-    font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.02em;
-    transition: all var(--duration-normal) var(--ease-out);
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
 }
 
 .connect-btn svg {
     width: 18px;
     height: 18px;
     flex-shrink: 0;
+    margin-right: 8px;
 }
 
-/* Primary — LinkedIn */
-.connect-btn.primary {
-    background: var(--gradient-cta);
-    color: #FFFFFF;
-    border: 1px solid rgba(196, 181, 253, 0.2);
-    box-shadow:
-        0 4px 20px rgba(124, 58, 237, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
 
-.connect-btn.primary:hover {
-    transform: translateY(-3px);
-    box-shadow:
-        0 8px 32px rgba(124, 58, 237, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    border-color: rgba(196, 181, 253, 0.3);
-}
-
-.connect-btn.primary:active {
-    transform: translateY(-1px);
-}
-
-/* Secondary — Email */
-.connect-btn.secondary {
-    background: rgba(25, 25, 25, 0.65);
-    color: var(--crystal-light);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-.connect-btn.secondary:hover {
-    transform: translateY(-3px);
-    background: rgba(25, 25, 25, 0.85);
-    border-color: var(--glass-border-hover);
-    box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
-.connect-btn.secondary:active {
-    transform: translateY(-1px);
-}
 
 /* --- Scroll Animation --- */
 .connect .reveal-item {

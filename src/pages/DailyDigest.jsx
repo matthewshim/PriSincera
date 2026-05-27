@@ -341,7 +341,7 @@ export default function DailyDigest() {
           
           <div className="daily-subscribe-wrap">
             <button 
-              className={`daily-google-sub-btn ${subStatus || 'idle'}`} 
+              className={`btn-primary btn-glow daily-google-sub-btn ${subStatus || 'idle'}`} 
               onClick={handleGoogleSubscribe} 
               disabled={subStatus === 'loading' || subStatus === 'success' || subStatus === 'already_subscribed'}
             >
@@ -484,7 +484,7 @@ export default function DailyDigest() {
                         {/* Read Full Button */}
                         <button 
                           onClick={() => navigate(`/daily/${quickPeekDate}`)}
-                          className="quick-peek-action-btn"
+                          className="btn-secondary quick-peek-action-btn"
                         >
                           {t('dailyDigest.viewFullContent')}
                         </button>

@@ -737,7 +737,7 @@ export default function PaceNoteDashboard() {
           
           <div className="pacenote-auth-action" style={{ marginTop: '32px', textAlign: 'center' }}>
             {!userToken ? (
-              <button className="pacenote-auth-btn" onClick={handleLoginClick}>
+              <button className="btn-primary pacenote-auth-btn" onClick={handleLoginClick}>
                 {t('paceNote.createMyPace')}
               </button>
             ) : (
@@ -968,7 +968,7 @@ export default function PaceNoteDashboard() {
                       {/* ── Card Footer with Export Button ── */}
                       {userToken && (
                         <div className="consolidated-card-footer">
-                          <button className="pacenote-btn-export footer-export-btn" onClick={() => setShowExportModal(true)}>
+                          <button className="btn-secondary pacenote-btn-export footer-export-btn" onClick={() => setShowExportModal(true)}>
                             {t('paceNote.exportBtn')}
                           </button>
                         </div>
@@ -1026,7 +1026,7 @@ export default function PaceNoteDashboard() {
                 autoFocus
               />
               {newTaskTitle.trim() && (
-                <button className="omnibar-submit-btn" onClick={handleAddTask} disabled={addingTask}>
+                <button className="btn-primary omnibar-submit-btn" onClick={handleAddTask} disabled={addingTask}>
                   ↵ {t('paceNote.enterOrbit')}
                 </button>
               )}
@@ -1062,7 +1062,7 @@ export default function PaceNoteDashboard() {
                 {newTaskTitle.trim() ? t('paceNote.searchOrRec') : t('paceNote.aiRecGuide')}
               </span>
               {!newTaskTitle.trim() && (
-                <button className="omnibar-refresh-btn" onClick={refreshRecommendations} disabled={isRefreshingRecs}>
+                <button className="btn-secondary omnibar-refresh-btn" onClick={refreshRecommendations} disabled={isRefreshingRecs}>
                   {isRefreshingRecs ? t('paceNote.refreshing') : t('paceNote.otherRecs')}
                 </button>
               )}

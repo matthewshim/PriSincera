@@ -67,28 +67,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(192, 132, 252, 0.1));
-  color: var(--crystal-white);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
   padding: 14px 28px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(192, 132, 252, 0.3);
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(12px);
-  transition: all var(--duration-fast) var(--ease-out);
-}
-.pacenote-auth-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(192, 132, 252, 0.2));
-  border-color: rgba(192, 132, 252, 0.5);
-  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
-  transform: translateY(-2px);
-}
-.pacenote-auth-btn:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.2);
 }
 
 /* ── Bento Container ── */
@@ -334,19 +313,8 @@
 }
 
 .pacenote-btn-export {
-  background: var(--glass-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #E9D5FF;
   padding: 6px 14px;
-  border-radius: 20px;
   font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.pacenote-btn-export:hover {
-  background: var(--glass-bg);
-  color: #FFF;
 }
 
 /* ── Tasks (Tracker) ── */
@@ -392,7 +360,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 20px;
-  background: rgba(17, 10, 35, 0.4);
+  background: rgba(17, 17, 17, 0.4);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 4px solid var(--category-theme, #A78BFA);
@@ -426,7 +394,7 @@
 }
 
 .pacenote-task-item.readonly:hover {
-  background: rgba(17, 10, 35, 0.4);
+  background: rgba(17, 17, 17, 0.4);
   border-color: rgba(255, 255, 255, 0.05);
   border-left-color: var(--category-theme, #A78BFA);
   transform: none;
@@ -642,8 +610,8 @@
 }
 
 .pacenote-calendar-modal {
-  background: #110A23;
-  border: 1px solid rgba(196, 181, 253, 0.2);
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   width: 90%;
   max-width: 1000px;
@@ -666,7 +634,7 @@
   border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
-  background: rgba(17, 10, 35, 0.95);
+  background: rgba(17, 17, 17, 0.95);
   backdrop-filter: blur(10px);
   z-index: 10;
 }
@@ -888,21 +856,12 @@
 }
 
 .omnibar-submit-btn {
-  background: rgba(34, 211, 238, 0.1);
-  color: #67E8F9;
-  border: 1px solid rgba(34, 211, 238, 0.3);
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
   white-space: nowrap;
   margin-left: 12px;
-}
-
-.omnibar-submit-btn:hover:not(:disabled) {
-  background: rgba(34, 211, 238, 0.2);
 }
 
 /* ── Omnibar Dropdown ── */
@@ -940,20 +899,12 @@
 }
 
 .omnibar-refresh-btn {
-  background: transparent;
-  border: none;
-  color: #A78BFA;
   font-size: 0.8rem;
   font-weight: 600;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 4px;
-  transition: opacity 0.2s;
-}
-
-.omnibar-refresh-btn:hover:not(:disabled) {
-  opacity: 0.8;
+  padding: 4px 10px;
 }
 
 .omnibar-dropdown-list {
@@ -1044,8 +995,8 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  background: rgba(17, 10, 35, 0.6);
-  border: 1px solid rgba(167, 139, 250, 0.2);
+  background: rgba(17, 17, 17, 0.6);
+  border: 1px solid rgba(16, 185, 129, 0.2);
   border-radius: 12px;
   padding: 14px 20px;
   margin-bottom: 16px;
@@ -1089,8 +1040,8 @@
   z-index: 9990;
 }
 .pacenote-omni-modal {
-  background: #110A23;
-  border: 1px solid rgba(196, 181, 253, 0.2);
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   width: 100%;
   max-width: 700px;
@@ -1443,8 +1394,8 @@
 
 /* ── AI Markdown Growth Portfolio Export Modal ── */
 .pacenote-export-modal {
-  background: #110A23;
-  border: 1px solid rgba(196, 181, 253, 0.25);
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   width: 90%;
   max-width: 720px;
@@ -1537,57 +1488,8 @@
   justify-content: center;
   gap: 8px;
   padding: 10px 20px;
-  border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.export-btn.btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #E2E8F0;
-}
-
-.export-btn.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #FFF;
-}
-
-.export-btn.btn-primary {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #FFF;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
-}
-
-.export-btn.btn-primary:hover {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
-  transform: translateY(-1px);
-}
-
-.export-btn:active {
-  transform: translateY(0);
-}
-
-/* Glow Export Button styling */
-.pacenote-btn-export {
-  background: rgba(16, 185, 129, 0.1) !important;
-  border: 1px solid rgba(16, 185, 129, 0.3) !important;
-  color: #A7F3D0 !important;
-  font-weight: 600 !important;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
-  padding: 6px 16px !important;
-}
-
-.pacenote-btn-export:hover {
-  background: rgba(16, 185, 129, 0.2) !important;
-  border-color: rgba(16, 185, 129, 0.5) !important;
-  color: #FFF !important;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-  transform: translateY(-1px);
 }
 
 /* Progress Pill Badge */

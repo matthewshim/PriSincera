@@ -54,7 +54,7 @@
 .philosophy-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-3xl);
+    gap: var(--space-2xl); /* Compacted from 128px to 64px for v4.0 density */
     align-items: start;
 }
 

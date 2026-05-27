@@ -171,29 +171,9 @@
 }
 
 .flagship-cta-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(192, 132, 252, 0.1));
-    color: var(--crystal-white);
-    font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+    padding: 14px 28px;
     font-size: 1rem;
     font-weight: 500;
-    padding: 14px 28px;
-    border-radius: var(--radius-pill);
-    border: 1px solid rgba(192, 132, 252, 0.3);
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(12px);
-    transition: all var(--duration-fast) var(--ease-out);
-    text-decoration: none;
-}
-.flagship-cta-btn:hover {
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(192, 132, 252, 0.2));
-    border-color: rgba(192, 132, 252, 0.5);
-    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
-    transform: translateY(-2px);
 }
 
 /* --- Flagship Visual Effects & CSS Art --- */
@@ -395,25 +375,7 @@
     50% { transform: translateZ(30px) translateY(-10px); }
 }
 
-.flagship-cta-btn.green {
-    background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(16, 185, 129, 0.1));
-    border-color: rgba(52, 211, 153, 0.4);
-}
-.flagship-cta-btn.green:hover {
-    background: linear-gradient(135deg, rgba(52, 211, 153, 0.25), rgba(16, 185, 129, 0.2));
-    border-color: rgba(52, 211, 153, 0.6);
-    box-shadow: 0 8px 30px rgba(52, 211, 153, 0.3);
-}
 
-.flagship-cta-btn.indigo {
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.1));
-    border-color: rgba(124, 58, 237, 0.4);
-}
-.flagship-cta-btn.indigo:hover {
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(139, 92, 246, 0.2));
-    border-color: rgba(124, 58, 237, 0.6);
-    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
-}
 
 /* Builders Log Mockup CSS Art */
 .builderslog-mockup {
