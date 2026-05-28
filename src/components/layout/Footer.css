@@ -83,7 +83,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-lg);
-    max-width: 380px;
+    max-width: 520px; /* Increased from 380px to accommodate the longer slogan beautifully */
     padding: var(--space-xs) 0;
     background: none;
     border: none;
@@ -194,6 +194,8 @@
     color: var(--text-muted);
     letter-spacing: 0.04em;
     opacity: 0.75;
+    white-space: pre-line; /* Support explicit newlines from translation files */
+    line-height: 1.5; /* Premium reading rhythm for multiline english texts */
 }
 
 /* "발 아래 꽃, 먼 곳의 별" 슬로건 영역 (푸터 하단 라인 바로 위 배치) */
