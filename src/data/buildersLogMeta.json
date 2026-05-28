@@ -1,5 +1,40 @@
 [
   {
+    "id": "ep9",
+    "slug": "daily-digest-email-engine-overhaul-v4",
+    "chapterNo": "09",
+    "title": {
+      "ko": "📬 노이즈 속의 나침반: 데일리 다이제스트(Daily Digest) 이메일 엔진 v4.0 개편기",
+      "en": "📬 Compass in Noise: Daily Digest Email Engine v4.0 Overhaul Log",
+      "ja": "📬 ノイズの中の羅針盤：デイリーダイジェ스트（Daily Digest）Eメールエンジン v4.0 改編記"
+    },
+    "subtitle": {
+      "ko": "디자인 시스템 v4.0 반영 및 페이스노트 & 빌더스 로그의 유기적 융합",
+      "en": "Reflecting Design System v4.0 and Organic Integration of Pace Note & Builder's Log",
+      "ja": "デザインシステムv4.0の反映およびPace Note＆Builder's Log의有機적融合"
+    },
+    "description": {
+      "ko": "칠흑의 우주를 수놓는 Aura-Neutral 테마를 이메일에 투사하기 위한 이중 테이블 마크업 설계, 무작위 페이스노트 3종 연동 필터링, 그리고 메이커의 투명성과 제품 진척도를 전하는 Git Shipments 터미널 렌더러 내장까지. 데일리 다이제스트 이메일 엔진의 대대적인 4.0 아키텍처 개편 스토리를 공유합니다.",
+      "en": "Shared the story of the major v4.0 architecture overhaul of the Daily Digest Email Engine, including a dual-table markup design to project the Aura-Neutral theme into emails, random Pace Note sampling, and a Git Shipments terminal renderer conveying maker transparency.",
+      "ja": "漆黒의 우주를 채우는 Aura-Neutral 테마를 이메일에 투사하기 위한 이중 테이블 마크업 설계, 무작위 페이스노트 3종 연동 필터링, 그리고 메이커의 투명성과 제품 진척도를 전하는 Git Shipments 터미널 렌더러 내장까지. 데일리 다이제스트 E메일 엔진의 대대적인 v4.0 아키텍처 개편 스토리를 공유합니다."
+    },
+    "date": "2026-05-29",
+    "tags": [
+      "Email Engine",
+      "Design System",
+      "Pace Note",
+      "Automation"
+    ],
+    "accent": "#EC4899",
+    "commits": [
+      {
+        "type": "feat",
+        "hash": "3644807",
+        "msg": "feat(email): overhaul Daily Digest with design v4.0, Pace Notes, and Builder's Log"
+      }
+    ]
+  },
+  {
     "id": "ep8",
     "slug": "celestial-simulation-strategy",
     "chapterNo": "08",
