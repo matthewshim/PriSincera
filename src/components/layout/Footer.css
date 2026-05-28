@@ -23,7 +23,7 @@
     height: 520px; /* 높이를 460px에서 520px로 확장하여 은하수가 흐르는 상단 스카이라인 영역 대폭 추가 확보 */
     background-image: url('/footer-camp-star-bg.png');
     background-size: cover;
-    background-position: right 25%; /* right bottom에서 right 25%로 조정하여 상단의 은하수 밤하늘과 텐트가 잘리지 않고 완벽하게 살아서 보이도록 조정 */
+    background-position: right 70%; /* Y축을 right 70% 황금비율로 미세 조정하여 텐트, 모닥불, 들꽃 무리와 상단 은하수가 절묘하게 한 프레임에 담기도록 구성 */
     background-repeat: no-repeat;
     pointer-events: none;
     z-index: 1;
