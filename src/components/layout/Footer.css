@@ -1,7 +1,7 @@
 .footer {
     position: relative;
     z-index: 4;
-    padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+    padding: var(--space-xl) var(--space-xl) var(--space-md); /* Tightened overall height to keep copyright compact */
     background: var(--bg-deep);
     border-top: 1px solid var(--glass-border);
 }
@@ -44,7 +44,7 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--space-3xl);
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md); /* Tightened space to slogan zone */
 }
 
 .footer-links {
@@ -203,8 +203,8 @@
     display: flex;
     justify-content: flex-end; /* 우측 영역 정렬 */
     width: 100%;
-    padding-bottom: var(--space-md);
-    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-xs); /* Extremely tight padding above the border line */
+    margin-bottom: var(--space-sm); /* Extremely tight margin below the border line */
     border-bottom: 1px solid var(--glass-border); /* 새로운 하단 구분선 */
 }
 
@@ -218,6 +218,7 @@
     font-size: 0.75rem;
     color: var(--text-muted);
     opacity: 0.6;
+    margin: 0; /* Reset default paragraph margin to keep it perfectly compact */
 }
 
 /* 들꽃 성좌도 숨쉬기 반짝임 애니메이션 */
@@ -243,8 +244,8 @@
     
     .footer-slogan-zone {
         justify-content: flex-start; /* 모바일 좌측 정렬 */
-        padding-bottom: var(--space-sm);
-        margin-bottom: var(--space-sm);
+        padding-bottom: var(--space-xs);
+        margin-bottom: var(--space-xs);
     }
     
     .footer-slogan-card {
@@ -254,6 +255,6 @@
 }
 
 @media (max-width: 768px) {
-    .footer { padding: var(--space-2xl) var(--space-md) var(--space-lg); }
+    .footer { padding: var(--space-xl) var(--space-md) var(--space-md); }
     .footer-links { gap: var(--space-2xl); }
 }

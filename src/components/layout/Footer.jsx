@@ -128,7 +128,6 @@ function Footer() {
               </svg>
             </div>
             <div className="slogan-text-group">
-              <span className="slogan-kr">{t('footer.sloganKr')}</span>
               <span className="slogan-en">{t('footer.sloganEn')}</span>
             </div>
           </div>
