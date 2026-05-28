@@ -62,8 +62,10 @@ function Footer() {
               <a href="mailto:matthew.shim@prisincera.com" className="footer-link">Email</a>
             </div>
           </div>
+        </div>
 
-          {/* "발 아래 꽃, 먼 곳의 별" Botanical Constellation Slogan Card */}
+        {/* "발 아래 꽃, 먼 곳의 별" Slogan Zone — Positioned right above the bottom border line */}
+        <div className="footer-slogan-zone">
           <div className="footer-slogan-card">
             <div className="flower-constellation">
               <svg viewBox="0 0 60 60" fill="none" width="56" height="56" className="constellation-svg">

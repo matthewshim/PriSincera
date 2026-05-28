@@ -38,15 +38,13 @@
     letter-spacing: 0.03em;
 }
 
-/* 듀얼 칼럼 레이아웃 래퍼 (좌 네비게이션, 우 꽃의 성좌도 슬로건) */
+/* 듀얼 칼럼 레이아웃 래퍼 (좌 네비게이션 영역) */
 .footer-links-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--space-3xl);
-    margin-bottom: var(--space-xl);
-    padding-bottom: var(--space-xl);
-    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: var(--space-lg);
 }
 
 .footer-links {
@@ -198,6 +196,16 @@
     opacity: 0.75;
 }
 
+/* "발 아래 꽃, 먼 곳의 별" 슬로건 영역 (푸터 하단 라인 바로 위 배치) */
+.footer-slogan-zone {
+    display: flex;
+    justify-content: flex-end; /* 우측 영역 정렬 */
+    width: 100%;
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--glass-border); /* 새로운 하단 구분선 */
+}
+
 .footer-bottom {
     display: flex;
     justify-content: space-between;
@@ -229,6 +237,12 @@
         flex-direction: column;
         align-items: stretch;
         gap: var(--space-2xl);
+    }
+    
+    .footer-slogan-zone {
+        justify-content: flex-start; /* 모바일 좌측 정렬 */
+        padding-bottom: var(--space-sm);
+        margin-bottom: var(--space-sm);
     }
     
     .footer-slogan-card {
