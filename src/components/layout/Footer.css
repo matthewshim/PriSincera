@@ -1,7 +1,7 @@
 .footer {
     position: relative;
     z-index: 4;
-    padding: var(--space-xl) var(--space-xl) var(--space-xl);
+    padding: var(--space-2xl) var(--space-xl) var(--space-xl);
     background: var(--bg-deep);
     border-top: 1px solid var(--glass-border);
 }
@@ -12,7 +12,7 @@
 }
 
 .footer-brand {
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-2xl);
 }
 
 .footer-logo {
@@ -38,12 +38,20 @@
     letter-spacing: 0.03em;
 }
 
-.footer-links {
+/* 듀얼 칼럼 레이아웃 래퍼 (좌 네비게이션, 우 꽃의 성좌도 슬로건) */
+.footer-links-wrapper {
     display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: var(--space-3xl);
     margin-bottom: var(--space-xl);
     padding-bottom: var(--space-xl);
     border-bottom: 1px solid var(--glass-border);
+}
+
+.footer-links {
+    display: flex;
+    gap: var(--space-3xl);
 }
 
 .footer-col {
@@ -72,12 +80,118 @@
     color: var(--text-primary);
 }
 
-.footer-link-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    text-align: left;
+/* "발 아래 꽃, 먼 곳의 별" 슬로건 카드 스타일 */
+.footer-slogan-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    max-width: 360px;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(10px);
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.footer-slogan-card:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(215, 202, 185, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 꽃 모양의 별자리 SVG 스타일 */
+.flower-constellation {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.constellation-svg {
+    filter: drop-shadow(0 0 4px rgba(215, 202, 185, 0.08));
+    animation: constellationBreathe 4.5s ease-in-out infinite;
+}
+
+.constellation-ring {
+    stroke: rgba(215, 202, 185, 0.06);
+    stroke-width: 0.35;
+}
+
+.constellation-ring.outer {
+    stroke-dasharray: 1.5 3;
+}
+
+.constellation-tick {
+    stroke: rgba(215, 202, 185, 0.14);
+    stroke-width: 0.35;
+}
+
+.constellation-line {
+    stroke-linecap: round;
+    transition: stroke-width var(--duration-normal) var(--ease-out);
+}
+
+.constellation-line.core-line {
+    stroke: rgba(172, 192, 212, 0.08); /* 앤티크 실버 궤도 */
+    stroke-width: 0.3;
+}
+
+.constellation-line.petal-line {
+    stroke: rgba(215, 202, 185, 0.22); /* 앤티크 골드 꽃잎 */
+    stroke-width: 0.35;
+}
+
+.constellation-dust {
+    fill: rgba(255, 243, 214, 0.3);
+}
+
+.constellation-major-star {
+    fill: #FFF3D6;
+    filter: drop-shadow(0 0 1.5px rgba(255, 243, 214, 0.7));
+}
+
+/* 마우스 오버 시 꽃의 성좌도 활성 반응 */
+.footer-slogan-card:hover .constellation-svg {
+    animation-play-state: paused;
+}
+
+.footer-slogan-card:hover .constellation-line.petal-line {
+    stroke: rgba(215, 202, 185, 0.55);
+    stroke-width: 0.45;
+}
+
+.footer-slogan-card:hover .constellation-line.core-line {
+    stroke: rgba(172, 192, 212, 0.28);
+}
+
+.footer-slogan-card:hover .constellation-ring {
+    stroke: rgba(215, 202, 185, 0.18);
+}
+
+/* 슬로건 텍스트 타이포그래피 */
+.slogan-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.slogan-kr {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+}
+
+.slogan-en {
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    opacity: 0.75;
 }
 
 .footer-bottom {
@@ -92,7 +206,34 @@
     opacity: 0.6;
 }
 
+/* 들꽃 성좌도 숨쉬기 반짝임 애니메이션 */
+@keyframes constellationBreathe {
+    0%, 100% {
+        opacity: 0.65;
+        transform: scale(0.98);
+        filter: drop-shadow(0 0 2px rgba(215, 202, 185, 0.05));
+    }
+    50% {
+        opacity: 0.95;
+        transform: scale(1.02);
+        filter: drop-shadow(0 0 6px rgba(215, 202, 185, 0.18));
+    }
+}
+
+@media (max-width: 900px) {
+    .footer-links-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2xl);
+    }
+    
+    .footer-slogan-card {
+        max-width: 100%;
+        margin-top: var(--space-sm);
+    }
+}
+
 @media (max-width: 768px) {
     .footer { padding: var(--space-2xl) var(--space-md) var(--space-lg); }
-    .footer-links { gap: var(--space-xl); }
+    .footer-links { gap: var(--space-2xl); }
 }

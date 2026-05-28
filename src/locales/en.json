@@ -9,7 +9,9 @@
   "footer": {
     "navigate": "Navigate",
     "connect": "Connect",
-    "tagline": "Sincerity, Prioritized."
+    "tagline": "Sincerity, Prioritized.",
+    "sloganKr": "발 아래 꽃, 먼 곳의 별",
+    "sloganEn": "Flowers underfoot, stars in the distance"
   },
   "buildersLog": {
     "heroParagraph": "From a simple portfolio to a complete SaaS platform.\nWe share the record of our fierce journey of designing products and building code.",

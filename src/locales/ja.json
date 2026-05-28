@@ -9,7 +9,9 @@
   "footer": {
     "navigate": "Navigate",
     "connect": "Connect",
-    "tagline": "Sincerity, Prioritized."
+    "tagline": "Sincerity, Prioritized.",
+    "sloganKr": "足元の花、遠くの星",
+    "sloganEn": "Flowers underfoot, stars in the distance"
   },
   "buildersLog": {
     "heroParagraph": "単なるポートフォリオを超えて、完全なSaaSプラットフォームへと生まれ変わるまで。\nプロダクトを設計し、コードを積み上げてきた激烈な航海の記録を共有します。",
