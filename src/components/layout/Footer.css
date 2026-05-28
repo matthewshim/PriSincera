@@ -14,10 +14,11 @@
     margin: 0 auto;
 }
 
-/* 극사실주의 캠핑 및 은하수 데코레이션 배경 (우측 하단에 고정해상도로 선명하게 배치) */
+/* 극사실주의 캠핑 및 은하수 데코레이션 배경 (우측 하단 컨텐츠 경계선 끝단에 고정해상도로 정렬 배치) */
 .footer-bg-scene {
     position: absolute;
-    right: 0;
+    right: 0; /* Fallback */
+    right: max(0px, calc((100% - 1200px) / 2)); /* 1200px 그리드 우측 끝단에 완벽하게 세로 정렬 정착 */
     bottom: 0;
     width: 620px; /* 고정 크기로 세팅하여 이미지 늘어짐/깨짐/과도한 줌인 완벽 방지 */
     height: 100%;
@@ -31,7 +32,7 @@
     transition: opacity var(--duration-normal) var(--ease-out);
 }
 
-/* 좌측 경계를 안개 속으로 용해시키는 그라데이션 베일 */
+/* 좌측 및 우측 경계를 부드러운 안개 속에 용해시키는 3차원 그라데이션 베일 */
 .footer-bg-scene::before {
     content: '';
     position: absolute;
@@ -39,7 +40,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0) 100%);
+    /* 좌우 페이딩: 좌측(0%~40%) 안개 속 융합, 우측(85%~100%) 끝단의 수직 절단선 소멸 처리 */
+    background: linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0.6) 20%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0) 85%, #000000 100%);
     z-index: 2;
 }
 
@@ -292,6 +294,7 @@
     
     .footer-bg-scene {
         width: 100%; /* 모바일 화면에서는 너비를 채워 넓게 분산되도록 유도 */
+        right: 0; /* 모바일 그리드 스택 시 우측 끝 배치 초기화 */
         opacity: 0.18; /* 스택 시 가독성 최우선으로 투명도 디밍 */
     }
 }
