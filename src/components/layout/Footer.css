@@ -2,18 +2,57 @@
     position: relative;
     z-index: 4;
     padding: var(--space-2xl) var(--space-xl) var(--space-xl); /* Restored top 64px, side 32px, bottom 32px for premium breathability */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 30%),
-                linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0.88) 40%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.15) 100%),
-                url('/footer-camp-star-bg.png');
-    background-size: cover;
-    background-position: right center;
-    background-repeat: no-repeat;
+    background: #000000; /* Pure black footer background from design system */
     border-top: 1px solid var(--glass-border);
+    overflow: hidden; /* Clips the absolute positioned camp scene beautifully */
 }
 
 .footer-inner {
+    position: relative;
+    z-index: 2; /* Sits cleanly above the absolute background scene */
     max-width: 1200px;
     margin: 0 auto;
+}
+
+/* 극사실주의 캠핑 및 은하수 데코레이션 배경 (우측 하단에 고정해상도로 선명하게 배치) */
+.footer-bg-scene {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 620px; /* 고정 크기로 세팅하여 이미지 늘어짐/깨짐/과도한 줌인 완벽 방지 */
+    height: 100%;
+    background-image: url('/footer-camp-star-bg.png');
+    background-size: cover;
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.38; /* 디자인 시스템 차광 감도와 일치하도록 조율 */
+    transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+/* 좌측 경계를 안개 속으로 용해시키는 그라데이션 베일 */
+.footer-bg-scene::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0) 100%);
+    z-index: 2;
+}
+
+/* 상단 경계를 안개 속으로 용해시키는 그라데이션 베일 */
+.footer-bg-scene::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.45) 30%, rgba(0, 0, 0, 0) 100%);
+    z-index: 3;
 }
 
 .footer-brand {
@@ -250,14 +289,17 @@
         align-items: flex-start; /* Left-align the lines on mobile stacked layout */
         text-align: left;
     }
+    
+    .footer-bg-scene {
+        width: 100%; /* 모바일 화면에서는 너비를 채워 넓게 분산되도록 유도 */
+        opacity: 0.18; /* 스택 시 가독성 최우선으로 투명도 디밍 */
+    }
 }
 
 @media (max-width: 768px) {
     .footer {
         padding: var(--space-2xl) var(--space-md) var(--space-lg);
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.65) 60%, rgba(0, 0, 0, 0.35) 100%), url('/footer-camp-star-bg.png');
-        background-size: cover;
-        background-position: center;
+        background: #000000;
     }
     .footer-links { gap: var(--space-2xl); }
 }

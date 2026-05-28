@@ -74,6 +74,8 @@ function Footer() {
           <p className="footer-copy">&copy; {year} PriSincera. All rights reserved.</p>
         </div>
       </div>
+      {/* Decorative campfire stardust absolute background */}
+      <div className="footer-bg-scene" />
     </footer>
   );
 }
