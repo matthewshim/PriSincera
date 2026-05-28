@@ -293,10 +293,7 @@
         align-self: stretch; /* Stretch to occupy the full width on mobile */
     }
     
-    .slogan-text-group {
-        align-items: flex-start; /* Left-align the lines on mobile stacked layout */
-        text-align: left;
-    }
+
     
     .footer-bg-scene {
         width: 100%; /* 모바일 화면에서는 너비를 채워 넓게 분산되도록 유도 */
