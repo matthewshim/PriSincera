@@ -80,24 +80,27 @@
     color: var(--text-primary);
 }
 
-/* "발 아래 꽃, 먼 곳의 별" 슬로건 카드 스타일 */
+/* "발 아래 꽃, 먼 곳의 별" 슬로건 카드 스타일 (카드 보더와 배경색을 철거하여 칠흑 배경에 스며들도록 개편) */
 .footer-slogan-card {
     display: flex;
     align-items: center;
     gap: var(--space-lg);
-    max-width: 360px;
-    padding: var(--space-sm) var(--space-md);
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.02);
-    border-radius: var(--radius-md);
-    backdrop-filter: blur(10px);
-    transition: all var(--duration-normal) var(--ease-out);
+    max-width: 380px;
+    padding: var(--space-xs) 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+    backdrop-filter: none;
+    box-shadow: none;
+    transition: opacity var(--duration-normal) var(--ease-out);
+    opacity: 0.55; /* 평소에는 은은하게 밤하늘 배경으로 녹아듦 */
 }
 
 .footer-slogan-card:hover {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(215, 202, 185, 0.12);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    opacity: 0.95; /* 마우스 호버 시 카드 부스팅 대신 텍스트와 성좌 전체가 선명하게 밝혀짐 */
+    background: none;
+    border-color: transparent;
+    box-shadow: none;
 }
 
 /* 꽃 모양의 별자리 SVG 스타일 */
@@ -109,12 +112,12 @@
 }
 
 .constellation-svg {
-    filter: drop-shadow(0 0 4px rgba(215, 202, 185, 0.08));
-    animation: constellationBreathe 4.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 3px rgba(215, 202, 185, 0.05));
+    animation: constellationBreathe 5.0s ease-in-out infinite;
 }
 
 .constellation-ring {
-    stroke: rgba(215, 202, 185, 0.06);
+    stroke: rgba(215, 202, 185, 0.05);
     stroke-width: 0.35;
 }
 
@@ -123,32 +126,33 @@
 }
 
 .constellation-tick {
-    stroke: rgba(215, 202, 185, 0.14);
+    stroke: rgba(215, 202, 185, 0.12);
     stroke-width: 0.35;
 }
 
 .constellation-line {
     stroke-linecap: round;
-    transition: stroke-width var(--duration-normal) var(--ease-out);
+    transition: stroke var(--duration-normal) var(--ease-out), stroke-width var(--duration-normal) var(--ease-out);
 }
 
 .constellation-line.core-line {
-    stroke: rgba(172, 192, 212, 0.08); /* 앤티크 실버 궤도 */
+    stroke: rgba(172, 192, 212, 0.06); /* 극도로 은은한 앤티크 실버 */
     stroke-width: 0.3;
 }
 
 .constellation-line.petal-line {
-    stroke: rgba(215, 202, 185, 0.22); /* 앤티크 골드 꽃잎 */
+    stroke: rgba(215, 202, 185, 0.18); /* 앤티크 골드 꽃잎 */
     stroke-width: 0.35;
 }
 
 .constellation-dust {
-    fill: rgba(255, 243, 214, 0.3);
+    fill: rgba(255, 243, 214, 0.2);
 }
 
 .constellation-major-star {
     fill: #FFF3D6;
-    filter: drop-shadow(0 0 1.5px rgba(255, 243, 214, 0.7));
+    opacity: 0.85;
+    filter: drop-shadow(0 0 1px rgba(255, 243, 214, 0.5));
 }
 
 /* 마우스 오버 시 꽃의 성좌도 활성 반응 */
@@ -157,16 +161,16 @@
 }
 
 .footer-slogan-card:hover .constellation-line.petal-line {
-    stroke: rgba(215, 202, 185, 0.55);
-    stroke-width: 0.45;
+    stroke: rgba(215, 202, 185, 0.42);
+    stroke-width: 0.42;
 }
 
 .footer-slogan-card:hover .constellation-line.core-line {
-    stroke: rgba(172, 192, 212, 0.28);
+    stroke: rgba(172, 192, 212, 0.22);
 }
 
 .footer-slogan-card:hover .constellation-ring {
-    stroke: rgba(215, 202, 185, 0.18);
+    stroke: rgba(215, 202, 185, 0.14);
 }
 
 /* 슬로건 텍스트 타이포그래피 */
