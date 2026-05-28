@@ -19,8 +19,8 @@
     position: absolute;
     right: 0; /* 부모인 links-wrapper 내부의 우측 끝에 안착 (자연스럽게 1200px 경계선과 영구 일치) */
     bottom: 0;
-    width: 620px; /* 고정 크기로 세팅하여 이미지 늘어짐/깨짐/과도한 줌인 완벽 방지 */
-    height: 460px; /* 높이를 460px로 대폭 늘려 위쪽 브랜드 로고 영역 및 별무리 하늘(Stars in the distance)을 제한 없이 온전히 노출 */
+    width: 100%; /* 너비를 100%로 확장하여 은하강과 야생 들꽃들이 좌측 빈 여백까지 온전하고 광활하게 흘러가도록 구현 */
+    height: 460px; /* 높이를 460px로 고정하여 종횡비 고정으로 해상도 깨짐 및 줌인 방지 */
     background-image: url('/footer-camp-star-bg.png');
     background-size: cover;
     background-position: right bottom;
@@ -39,8 +39,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /* 좌우 페이딩: 좌측(0%~25%) 안개 속 융합 범위를 좁혀 별무리와 들꽃이 좌측 네비게이션 영역까지 더 많이 은은하게 노출되도록 조정 */
-    background: linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0.4) 10%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 88%, #000000 100%);
+    /* 좌우 페이딩: 좌측(0%~18%) 안개 속 융합 범위를 더욱 좁혀 별무리와 들꽃이 좌측 끝 빈 여백까지 광대하게 노출되도록 조정 */
+    background: linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0.4) 8%, rgba(0, 0, 0, 0) 18%, rgba(0, 0, 0, 0) 90%, #000000 100%);
     z-index: 2;
 }
 
