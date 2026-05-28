@@ -284,6 +284,37 @@ router.post('/email/send-test', async (req, res) => {
     const { getStudyContent } = await import('./pipeline/src/repositories/StudyRepository.mjs');
     const studyData = await getStudyContent(todayStr);
 
+    // 오늘의 Pace Note 가져오기 (무작위 3종)
+    let paceNotes = [];
+    try {
+      const { db } = await import('./pipeline/src/lib/firestore.mjs');
+      const poolRef = db.collection('config').doc('pacenote_daily_pool');
+      const doc = await poolRef.get();
+      if (doc.exists && doc.data().pool) {
+        const activePool = doc.data().pool.filter(item => item.isActive !== false);
+        if (activePool.length > 0) {
+          const shuffled = [...activePool].sort(() => 0.5 - Math.random());
+          paceNotes = shuffled.slice(0, 3);
+        }
+      }
+    } catch (err) {
+      console.error('[Admin Email Test] Pace Note 로딩 실패:', err.message);
+    }
+
+    // 최신 빌더스 로그 가져오기
+    let latestBuilderLog = null;
+    try {
+      const buildersLogPath = path.join(__dirname, 'src', 'data', 'buildersLogMeta.json');
+      if (fs.existsSync(buildersLogPath)) {
+        const logs = JSON.parse(fs.readFileSync(buildersLogPath, 'utf8'));
+        if (logs && logs.length > 0) {
+          latestBuilderLog = logs[0];
+        }
+      }
+    } catch (err) {
+      console.error('[Admin Email Test] 빌더스 로그 로딩 실패:', err.message);
+    }
+
     // 템플릿 렌더링
     const { renderDailyEmail } = await import('./pipeline/src/lib/email-template.mjs');
     const htmlContent = renderDailyEmail({
@@ -293,6 +324,8 @@ router.post('/email/send-test', async (req, res) => {
       dailyPageUrl: `https://www.prisincera.com/daily/${todayStr}`,
       unsubscribeUrl: `https://www.prisincera.com/unsubscribe?email=${encodeURIComponent(to)}`,
       studyData: studyData,
+      paceNotes: paceNotes,
+      latestBuilderLog: latestBuilderLog,
     });
 
     const { sendEmail } = await import('./pipeline/src/lib/mailer.mjs');
