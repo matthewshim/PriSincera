@@ -1,7 +1,7 @@
 .footer {
     position: relative;
     z-index: 4;
-    padding: var(--space-xl) var(--space-xl) var(--space-md); /* Tightened overall height to keep copyright compact */
+    padding: var(--space-xl) var(--space-xl) var(--space-sm); /* Tightened overall height to keep copyright extremely close */
     background: var(--bg-deep);
     border-top: 1px solid var(--glass-border);
 }
@@ -78,13 +78,9 @@
     color: var(--text-primary);
 }
 
-/* "발 아래 꽃, 먼 곳의 별" 슬로건 카드 스타일 (카드 보더와 배경색을 철거하여 칠흑 배경에 스며들도록 개편) */
 .footer-slogan-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-lg);
-    max-width: 520px; /* Increased from 380px to accommodate the longer slogan beautifully */
-    padding: var(--space-xs) 0;
+    max-width: 520px; /* Accommodate the longer slogan beautifully */
+    padding: 0;
     background: none;
     border: none;
     border-radius: 0;
@@ -175,6 +171,8 @@
 .slogan-text-group {
     display: flex;
     flex-direction: column;
+    align-items: flex-end; /* Align lines to the right edge */
+    text-align: right; /* Right align the text sentences */
     gap: var(--space-xs);
 }
 
@@ -204,7 +202,7 @@
     justify-content: flex-end; /* 우측 영역 정렬 */
     width: 100%;
     padding-bottom: var(--space-xs); /* Extremely tight padding above the border line */
-    margin-bottom: var(--space-sm); /* Extremely tight margin below the border line */
+    margin-bottom: var(--space-xs); /* Reduced from space-sm to bring copyright incredibly close */
     border-bottom: 1px solid var(--glass-border); /* 새로운 하단 구분선 */
 }
 
