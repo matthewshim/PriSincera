@@ -47,6 +47,8 @@ function Footer() {
           <p className="footer-tagline">{t('footer.tagline')}</p>
         </div>
         <div className="footer-links-wrapper">
+          {/* Decorative campfire stardust absolute background - bounded above bottom border line */}
+          <div className="footer-bg-scene" />
           <div className="footer-links">
             <div className="footer-col">
               <h4 className="footer-col-title">{t('footer.navigate')}</h4>
@@ -74,8 +76,6 @@ function Footer() {
           <p className="footer-copy">&copy; {year} PriSincera. All rights reserved.</p>
         </div>
       </div>
-      {/* Decorative campfire stardust absolute background */}
-      <div className="footer-bg-scene" />
     </footer>
   );
 }

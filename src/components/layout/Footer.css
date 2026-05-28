@@ -14,11 +14,10 @@
     margin: 0 auto;
 }
 
-/* 극사실주의 캠핑 및 은하수 데코레이션 배경 (우측 하단 컨텐츠 경계선 끝단에 고정해상도로 정렬 배치) */
+/* 극사실주의 캠핑 및 은하수 데코레이션 배경 (우측 하단 컨텐츠 영역 안에 고정해상도로 정렬 배치) */
 .footer-bg-scene {
     position: absolute;
-    right: 0; /* Fallback */
-    right: max(0px, calc((100% - 1200px) / 2)); /* 1200px 그리드 우측 끝단에 완벽하게 세로 정렬 정착 */
+    right: 0; /* 부모인 links-wrapper 내부의 우측 끝에 안착 (자연스럽게 1200px 경계선과 영구 일치) */
     bottom: 0;
     width: 620px; /* 고정 크기로 세팅하여 이미지 늘어짐/깨짐/과도한 줌인 완벽 방지 */
     height: 100%;
@@ -28,7 +27,7 @@
     background-repeat: no-repeat;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.38; /* 디자인 시스템 차광 감도와 일치하도록 조율 */
+    opacity: 0.28; /* 이미지 오퍼시티를 0.38에서 0.28로 소폭 디밍하여 문구 판독성을 획기적으로 상승 */
     transition: opacity var(--duration-normal) var(--ease-out);
 }
 
@@ -40,12 +39,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /* 좌우 페이딩: 좌측(0%~40%) 안개 속 융합, 우측(85%~100%) 끝단의 수직 절단선 소멸 처리 */
+    /* 좌우 페이딩: 좌측(0%~40%) 안개 속 융합, 우측(85%~100%) 컨텐츠 컨테이너 바깥으로의 절단선 완전 소멸 */
     background: linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0.6) 20%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0) 85%, #000000 100%);
     z-index: 2;
 }
 
-/* 상단 경계를 안개 속으로 용해시키는 그라데이션 베일 */
+/* 상단 및 하단 경계를 안개 속으로 용해시키는 3차원 수직 그라데이션 베일 */
 .footer-bg-scene::after {
     content: '';
     position: absolute;
@@ -53,7 +52,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.45) 30%, rgba(0, 0, 0, 0) 100%);
+    /* 상하 페이딩: 상단(0%~25%) 안개 속 융합, 하단(70%~100%) 구분선 바로 위 칠흑 융합으로 수평 절단면 완전 소멸 */
+    background: linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0.4) 25%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0) 70%, #000000 100%);
     z-index: 3;
 }
 
@@ -86,6 +86,8 @@
 
 /* 듀얼 칼럼 레이아웃 래퍼 (좌 네비게이션 & 우 슬로건 영역 병렬 배치) */
 .footer-links-wrapper {
+    position: relative;
+    overflow: hidden; /* 배경 이미지가 하단 구분선 아래인 카피라이트 영역으로 침범하는 것을 절대 방지 */
     display: flex;
     justify-content: space-between;
     align-items: flex-start; /* Keep columns top-aligned */
@@ -238,11 +240,13 @@
     font-size: 0.68rem;
     font-style: italic;
     font-weight: 400;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.92); /* 가독성 향상을 위해 텍스트 색상을 선명한 밝은 백색으로 튜닝 */
     letter-spacing: 0.04em;
-    opacity: 0.75;
     white-space: pre-line; /* Support explicit newlines from translation files */
     line-height: 1.5; /* Premium reading rhythm for multiline english texts */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.98), 
+                 0 2px 8px rgba(0, 0, 0, 0.95), 
+                 0 4px 16px rgba(0, 0, 0, 0.9); /* 모닥불/성도 디테일 위에서도 선명하게 글자가 분리되어 읽히는 3중 텍스트 섀도 기법 */
 }
 
 /* 들꽃 성좌도 숨쉬기 반짝임 애니메이션 */
@@ -295,7 +299,7 @@
     .footer-bg-scene {
         width: 100%; /* 모바일 화면에서는 너비를 채워 넓게 분산되도록 유도 */
         right: 0; /* 모바일 그리드 스택 시 우측 끝 배치 초기화 */
-        opacity: 0.18; /* 스택 시 가독성 최우선으로 투명도 디밍 */
+        opacity: 0.12; /* 스택 시 가독성 최우선으로 투명도 디밍 */
     }
 }
 
