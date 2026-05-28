@@ -1,7 +1,7 @@
 .footer {
     position: relative;
     z-index: 4;
-    padding: var(--space-xl) var(--space-xl) var(--space-sm); /* Tightened overall height to keep copyright extremely close */
+    padding: var(--space-2xl) var(--space-xl) var(--space-xl); /* Restored top 64px, side 32px, bottom 32px for premium breathability */
     background: var(--bg-deep);
     border-top: 1px solid var(--glass-border);
 }
@@ -38,13 +38,15 @@
     letter-spacing: 0.03em;
 }
 
-/* 듀얼 칼럼 레이아웃 래퍼 (좌 네비게이션 영역) */
+/* 듀얼 칼럼 레이아웃 래퍼 (좌 네비게이션 & 우 슬로건 영역 병렬 배치) */
 .footer-links-wrapper {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-start; /* Keep columns top-aligned */
     gap: var(--space-3xl);
-    margin-bottom: var(--space-md); /* Tightened space to slogan zone */
+    margin-bottom: var(--space-xl); /* Balanced bottom space to copyright */
+    padding-bottom: var(--space-xl); /* Balanced padding above bottom line */
+    border-bottom: 1px solid var(--glass-border); /* Dividing line placed directly under row */
 }
 
 .footer-links {
@@ -79,8 +81,9 @@
 }
 
 .footer-slogan-card {
-    max-width: 520px; /* Accommodate the longer slogan beautifully */
+    max-width: 680px; /* Increased from 520px to prevent "now." from wrapping */
     padding: 0;
+    align-self: flex-end; /* Sit directly on top of the bottom border line */
     background: none;
     border: none;
     border-radius: 0;
@@ -196,15 +199,7 @@
     line-height: 1.5; /* Premium reading rhythm for multiline english texts */
 }
 
-/* "발 아래 꽃, 먼 곳의 별" 슬로건 영역 (푸터 하단 라인 바로 위 배치) */
-.footer-slogan-zone {
-    display: flex;
-    justify-content: flex-end; /* 우측 영역 정렬 */
-    width: 100%;
-    padding-bottom: var(--space-xs); /* Extremely tight padding above the border line */
-    margin-bottom: var(--space-xs); /* Reduced from space-sm to bring copyright incredibly close */
-    border-bottom: 1px solid var(--glass-border); /* 새로운 하단 구분선 */
-}
+/* 들꽃 성좌도 숨쉬기 반짝임 애니메이션 */
 
 .footer-bottom {
     display: flex;
@@ -240,19 +235,19 @@
         gap: var(--space-2xl);
     }
     
-    .footer-slogan-zone {
-        justify-content: flex-start; /* 모바일 좌측 정렬 */
-        padding-bottom: var(--space-xs);
-        margin-bottom: var(--space-xs);
-    }
-    
     .footer-slogan-card {
         max-width: 100%;
         margin-top: var(--space-sm);
+        align-self: stretch; /* Stretch to occupy the full width on mobile */
+    }
+    
+    .slogan-text-group {
+        align-items: flex-start; /* Left-align the lines on mobile stacked layout */
+        text-align: left;
     }
 }
 
 @media (max-width: 768px) {
-    .footer { padding: var(--space-xl) var(--space-md) var(--space-md); }
+    .footer { padding: var(--space-2xl) var(--space-md) var(--space-lg); }
     .footer-links { gap: var(--space-2xl); }
 }

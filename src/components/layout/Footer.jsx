@@ -62,16 +62,14 @@ function Footer() {
               <a href="mailto:matthew.shim@prisincera.com" className="footer-link">Email</a>
             </div>
           </div>
-        </div>
 
-        {/* "발 아래 꽃, 먼 곳의 별" Slogan Zone — Positioned right above the bottom border line */}
-        <div className="footer-slogan-zone">
           <div className="footer-slogan-card">
             <div className="slogan-text-group">
               <span className="slogan-en">{t('footer.sloganEn')}</span>
             </div>
           </div>
         </div>
+
         <div className="footer-bottom">
           <p className="footer-copy">&copy; {year} PriSincera. All rights reserved.</p>
         </div>
