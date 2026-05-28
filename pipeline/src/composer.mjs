@@ -11,7 +11,7 @@
  * 6. 스코어링된 데일리 JSON 갱신 (dm_picks 포함)
  * 7. Gmail SMTP로 전체 구독자에게 HTML 이메일 발송
  */
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { scoreArticles, generateComments } from './lib/gemini.mjs';
@@ -148,10 +148,43 @@ async function main() {
     console.log(`[Composer] PriStudy 오늘의 1문장 로드 완료`);
   }
 
+  // Pace Note 로드 (전체 추천 풀 중 임의의 미션 3개 노출)
+  let paceNotes = [];
+  try {
+    const poolRef = db.collection('config').doc('pacenote_daily_pool');
+    const doc = await poolRef.get();
+    if (doc.exists && doc.data().pool) {
+      const activePool = doc.data().pool.filter(item => item.isActive !== false);
+      if (activePool.length > 0) {
+        // 무작위로 섞어서 3개 추출
+        const shuffled = [...activePool].sort(() => 0.5 - Math.random());
+        paceNotes = shuffled.slice(0, 3);
+        console.log(`[Composer] Pace Note 추천 풀에서 임의의 미션 3개 무작위 추출 완료 (전체 풀 크기: ${activePool.length})`);
+      }
+    }
+  } catch (err) {
+    console.error('[Composer] Pace Note 추천 풀 로드 중 오류 발생:', err.message);
+  }
+
+  // Builder's Log 로드 (상시 노출)
+  let latestBuilderLog = null;
+  try {
+    const buildersLogPath = join(__dirname, '..', '..', 'src', 'data', 'buildersLogMeta.json');
+    if (existsSync(buildersLogPath)) {
+      const logs = JSON.parse(readFileSync(buildersLogPath, 'utf8'));
+      if (logs && logs.length > 0) {
+        latestBuilderLog = logs[0]; // 가장 처음에 위치한 최근 포스트
+        console.log(`[Composer] 최신 빌더스 로그 추출 완료: Ch. ${latestBuilderLog.chapterNo} - ${latestBuilderLog.slug}`);
+      }
+    }
+  } catch (err) {
+    console.error('[Composer] 빌더스 로그 로드 중 오류 발생:', err.message);
+  }
+
   let emailResult = { sent: 0, total: 0 };
   
   if (subscribers.length > 0) {
-    emailResult = await dispatchDailyEmail(todayStr, finalArticles, subscribers, studyData);
+    emailResult = await dispatchDailyEmail(todayStr, finalArticles, subscribers, studyData, paceNotes, latestBuilderLog);
   } else {
     console.log('[Composer] 구독자가 없습니다. 이메일 발송 스킵.');
   }

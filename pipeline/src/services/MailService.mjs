@@ -30,7 +30,7 @@ export async function isEmailAlreadySent(todayStr) {
  * @param {Array} subscribers 
  * @param {Object} [studyData]
  */
-export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, studyData) {
+export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, studyData, paceNotes, latestBuilderLog) {
   const dailyPageUrl = `https://www.prisincera.com/daily/${todayStr}`;
   
   // 날짜 한국어 포맷 (예: 5/3(일))
@@ -64,6 +64,8 @@ export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, s
     dailyPageUrl,
     unsubscribeUrl: buildUnsubscribeUrl(subscriberEmail),
     studyData,
+    paceNotes,
+    latestBuilderLog,
   });
 
   // 발송 실행

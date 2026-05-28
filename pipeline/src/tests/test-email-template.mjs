@@ -87,12 +87,41 @@ const mockArticles = [
   },
 ];
 
+const mockPaceNotes = [
+  { id: 'rec-1', title: { ko: '아침 출근 전 30분 명상하기' }, category: 'Mindset', color: '#10B981', isActive: true },
+  { id: 'rec-2', title: '링크드인에 인사이트 공유하기', category: 'Branding', color: '#60A5FA', isActive: true },
+  { id: 'rec-3', title: '스마트폰을 끄고 1시간 독서하기', category: 'Deep Work', color: '#A78BFA', isActive: true },
+];
+
+const mockBuilderLog = {
+  id: 'ep8',
+  chapterNo: '08',
+  slug: 'celestial-simulation-strategy',
+  title: { ko: '🌌 극사실주의 천체 시뮬레이션 개발기' },
+  subtitle: { ko: '천체물리학과 고성능 프론트엔드의 융합' },
+  description: { ko: '메인 히어로 스타필드 엔진의 극단적 웹 최적화 여정.' },
+  date: new Date().toISOString().split('T')[0], // NEW 배지 트리거용 오늘 날짜
+  tags: ['Canvas 2D', 'Performance Optimization'],
+  commits: [
+    { type: 'feat', hash: '804bd86', msg: 'feat: stage celestial-simulation-strategy' }
+  ]
+};
+
 const html = renderDailyEmail({
   date: '2026-04-29',
   articles: mockArticles,
   totalCount: 16,
-  dailyPageUrl: 'https://www.prisincera.com/prisignal/2026-04-29',
+  dailyPageUrl: 'https://www.prisincera.com/daily/2026-04-29',
   unsubscribeUrl: 'https://www.prisincera.com/api/unsubscribe?email=test%40example.com&token=abc123',
+  studyData: {
+    prompt_snippet: 'Act as a senior product manager...',
+    explanation: '실무 PM 프롬프트 1-Pick',
+    sentence_jp: 'お世話になっております。',
+    sentence_kr: '신세를 지고 있습니다.',
+    theme: '비즈니스 이메일'
+  },
+  paceNotes: mockPaceNotes,
+  latestBuilderLog: mockBuilderLog,
 });
 
 // 구조 검증
@@ -102,34 +131,41 @@ assert(html.includes('<meta charset="UTF-8">'), 'charset 메타 포함');
 assert(html.includes('color-scheme'), 'color-scheme 메타 포함');
 
 // 헤더 검증
-assert(html.includes('PriSignal'), 'PriSignal 헤더 포함');
-assert(html.includes('Pri<span style="color:#C084FC;">Signal</span>'), '브랜드 컬러 스판');
-assert(html.includes('노이즈 속에서 시그널을 포착하다'), '서브타이틀 포함');
+assert(html.includes('PriSincera'), 'PriSincera 헤더 포함');
+assert(html.includes('Pri<span style="color:#C084FC;">Sincera</span>'), '브랜드 컬러 스판');
+assert(html.includes('Daily Insights & Study'), '서브타이틀 포함');
 
 // 날짜 + 통계 검증
 assert(html.includes('4월 29일 (수)'), '한국어 날짜 포함');
 assert(html.includes('전체 16건'), '전체 건수 통계');
 assert(html.includes('DM Pick 3'), 'DM Pick 수');
-assert(html.includes('카테고리'), '카테고리 수 통계');
+assert(html.includes('카테고리 5'), '카테고리 수 통계');
 
 // DM Pick 카드 검증
-assert(html.includes('DM Pick — 오늘의 핵심 시그널'), 'DM Pick 섹션 제목');
+assert(html.includes('IT Tech Signal'), 'DM Pick 섹션 제목');
 assert(html.includes('AI 혁신의 미래'), 'DM Pick 아티클 제목 포함');
 assert(html.includes('DM Pick · AI &amp; Future'), 'DM Pick 배지 (AI)');
-assert(html.includes('DM Pick · Attitude'), 'DM Pick 배지 (Attitude)');
 assert(html.includes('주목할 만한 AI 트렌드'), '에디터 코멘트 포함');
-assert(html.includes('href="https://example.com/1"'), 'CTA 링크 포함');
 assert(html.includes('→ 원문 읽기'), 'CTA 텍스트 포함');
 
 // More Signals 검증
-assert(html.includes('More Signals'), 'More Signals 섹션');
-assert(html.includes('프로덕트 로드맵 설계'), '비DM 아티클 포함');
-assert(html.includes('Product Craft'), '프로덕트 카테고리명');
-assert(html.includes('전략적 우선순위'), '우선순위 아티클 포함');
+assert(html.includes('더 많은 시그널이 기다리고 있어요!'), 'More Signals 섹션');
+
+// Pace Note 검증
+assert(html.includes('오늘의 Pace Note 추천'), 'Pace Note 섹션 헤더 포함');
+assert(html.includes('아침 출근 전 30분 명상하기'), '페이스노트 미션 타이틀 포함');
+assert(html.includes('Mindset'), '페이스노트 카테고리 포함');
+
+// Builder's Log 검증
+assert(html.includes('최근 빌드 로그'), '빌더스 로그 섹션 헤더 포함');
+assert(html.includes('극사실주의 천체 시뮬레이션 개발기'), '빌더스 로그 타이틀 포함');
+assert(html.includes('Ch. 08'), '빌더스 로그 챕터 포함');
+assert(html.includes('NEW'), '최신 빌드 로그 NEW 배지 포함');
+assert(html.includes('Git Shipments'), 'Git 커밋 터미널 포함');
 
 // Portal CTA 검증
 assert(html.includes('오늘의 전체 시그널을 확인하세요'), '포털 CTA 텍스트');
-assert(html.includes('prisignal/2026-04-29'), '포털 URL');
+assert(html.includes('daily/2026-04-29'), '포털 URL');
 assert(html.includes('데일리 포털에서 확인하기'), 'CTA 버튼 텍스트');
 
 // Footer 검증

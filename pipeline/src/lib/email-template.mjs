@@ -285,6 +285,217 @@ function renderStudySection(studyData, date) {
   return html;
 }
 
+// ─── Pace Note Section Renderer ─────────────────
+function renderPaceNoteSection(paceNotes) {
+  if (!paceNotes || paceNotes.length === 0) return '';
+
+  const getPaceCategoryMeta = (category) => {
+    const metas = {
+      'Mindset': { color: '#10B981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', icon: '🎯' },
+      'Health & Wellness': { color: '#10B981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', icon: '🌿' },
+      'Branding': { color: '#60A5FA', bg: 'rgba(96,165,250,0.12)', border: 'rgba(96,165,250,0.25)', icon: '✨' },
+      'Networking': { color: '#60A5FA', bg: 'rgba(96,165,250,0.12)', border: 'rgba(96,165,250,0.25)', icon: '🤝' },
+      'Deep Work': { color: '#A78BFA', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.25)', icon: '⚡' },
+      'Productivity': { color: '#A78BFA', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.25)', icon: '📈' },
+      'AI & Future': { color: '#22D3EE', bg: 'rgba(34,211,238,0.12)', border: 'rgba(34,211,238,0.25)', icon: '🤖' },
+    };
+    return metas[category] || { color: '#A78BFA', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.25)', icon: '💫' };
+  };
+
+  const itemsHtml = paceNotes.map((item, idx) => {
+    const cat = getPaceCategoryMeta(item.category);
+    const titleText = typeof item.title === 'object' ? (item.title.ko || item.title.en || '') : item.title;
+    return `
+      <!-- Pace Note Item ${idx + 1} -->
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+             style="margin-bottom:12px; background-color:#111111; border:1px solid rgba(255,255,255,0.05); border-left:3px solid ${cat.color}; border-radius:8px;">
+        <tr>
+          <td style="padding:16px 20px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td style="padding-bottom:6px;">
+                  <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:${cat.color}; background:${cat.bg}; border:1px solid ${cat.border}; border-radius:100px; padding:2px 10px; letter-spacing:0.02em;">
+                    ${cat.icon} ${escapeHtml(item.category)}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p style="margin:0; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; font-weight:600; color:#FAFAFA; line-height:1.5;">
+                    ${escapeHtml(titleText)}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>`;
+  }).join('');
+
+  return `
+<!-- ═══ PACENOTE SECTION ═══ -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td style="padding: 12px 32px 24px;">
+      <div style="height:1px; background: linear-gradient(90deg, transparent, rgba(96,165,250,0.25), transparent);"></div>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 0 24px;">
+      <p style="margin:0 0 4px; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#60A5FA; line-height:1.3;">
+        🎯 오늘의 Pace Note 추천
+      </p>
+      <p style="margin:0 0 16px; font-family:'Pretendard',-apple-system,sans-serif; font-size:13px; color:#A1A1AA; line-height:1.4;">
+        타인의 속도에 휩쓸리지 않고, 오직 자신만의 속도로 성장하는 일일 미션
+      </p>
+      
+      ${itemsHtml}
+      
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top: 14px; margin-bottom: 8px;">
+        <tr>
+          <td bgcolor="#4F46E5"
+              style="background:linear-gradient(135deg,#4F46E5,#6D28D9); border-radius:100px; padding:8px 22px;">
+            <a href="https://www.prisincera.com/pacenote"
+               style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+              → 페이스노트 캘린더에서 기록하기
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+}
+
+// ─── Builder's Log Section Renderer ─────────────
+function renderBuilderLogSection(latestBuilderLog) {
+  if (!latestBuilderLog) return '';
+
+  const titleText = typeof latestBuilderLog.title === 'object' ? (latestBuilderLog.title.ko || latestBuilderLog.title.en || '') : latestBuilderLog.title;
+  const subtitleText = typeof latestBuilderLog.subtitle === 'object' ? (latestBuilderLog.subtitle.ko || latestBuilderLog.subtitle.en || '') : latestBuilderLog.subtitle;
+  const descText = typeof latestBuilderLog.description === 'object' ? (latestBuilderLog.description.ko || latestBuilderLog.description.en || '') : latestBuilderLog.description;
+
+  // NEW 배지 연산 (KST 기준 7일 이내)
+  let isNew = false;
+  try {
+    const logDate = new Date(latestBuilderLog.date + 'T00:00:00+09:00');
+    const now = new Date();
+    const diffTime = Math.abs(now - logDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    isNew = diffDays <= 7;
+  } catch (e) {
+    // 날짜 파싱 실패 시 무시
+  }
+
+  const newBadgeHtml = isNew 
+    ? `<span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:700; color:#FFFFFF; background:linear-gradient(135deg,#EC4899,#F43F5E); border-radius:4px; padding:2px 8px; margin-left:8px; vertical-align:middle; letter-spacing:0.05em;">NEW</span>`
+    : '';
+
+  // 태그 렌더링
+  let tagsHtml = '';
+  if (latestBuilderLog.tags && latestBuilderLog.tags.length > 0) {
+    tagsHtml = `<div style="margin: 12px 0 16px;">` +
+      latestBuilderLog.tags.map(tag => `
+        <span style="display:inline-block; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:11px; color:#A1A1AA; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:4px; padding:2px 8px; margin-right:6px; margin-bottom:4px;">
+          #${escapeHtml(tag)}
+        </span>
+      `).join('') + `</div>`;
+  }
+
+  // 커밋 로그 터미널 모사
+  let commitListHtml = '';
+  if (latestBuilderLog.commits && latestBuilderLog.commits.length > 0) {
+    commitListHtml = `
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+             style="margin:14px 0 16px; padding:12px; background-color:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.03); border-radius:8px;">
+        <tr>
+          <td>
+            <p style="margin:0 0 6px; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#71717A; text-transform:uppercase; letter-spacing:0.05em;">
+              📦 Git Shipments
+            </p>` +
+            latestBuilderLog.commits.map(c => `
+              <div style="font-family:'JetBrains Mono','Courier New',monospace; font-size:12px; color:#A1A1AA; line-height:1.5; margin-bottom:4px; word-break:break-all;">
+                <span style="color:#A78BFA; font-weight:bold;">[${escapeHtml(c.type)}]</span>
+                <span style="color:#71717A;">${escapeHtml(c.hash)}</span> ${escapeHtml(c.msg)}
+              </div>
+            `).join('') + `
+          </td>
+        </tr>
+      </table>`;
+  }
+
+  return `
+<!-- ═══ BUILDERS LOG SECTION ═══ -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td style="padding: 24px 32px 24px;">
+      <div style="height:1px; background: linear-gradient(90deg, transparent, rgba(236,72,153,0.25), transparent);"></div>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 0 24px;">
+      <p style="margin:0 0 4px; font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:17px; font-weight:700; color:#FBCFE8; line-height:1.3;">
+        🛠️ Builder's Log (최근 빌드 로그)
+      </p>
+      <p style="margin:0 0 16px; font-family:'Pretendard',-apple-system,sans-serif; font-size:13px; color:#A1A1AA; line-height:1.4;">
+        서비스 가치를 위해 메이커들이 매일 밤하늘에 수놓은 제품 개발 진척 상황
+      </p>
+      
+      <!-- Builder's Log Card -->
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+             style="background-color:#111111; border:1px solid rgba(255,255,255,0.05); border-top:1px solid rgba(255,255,255,0.1); border-radius:16px;">
+        <tr>
+          <td style="padding:22px 24px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td style="padding-bottom:10px;">
+                  <span style="display:inline-block; font-family:'Inter',-apple-system,sans-serif; font-size:11px; font-weight:600; color:#A78BFA; background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.2); border-radius:100px; padding:3px 12px; letter-spacing:0.02em; vertical-align:middle;">
+                    🚀 Ch. ${escapeHtml(latestBuilderLog.chapterNo)}
+                  </span>
+                  ${newBadgeHtml}
+                  <span style="font-family:'Inter',-apple-system,sans-serif; font-size:12px; color:#71717A; margin-left:8px; vertical-align:middle;">
+                    ${escapeHtml(latestBuilderLog.date)}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <h3 style="margin:0 0 6px; font-family:'Pretendard',-apple-system,sans-serif; font-size:16px; font-weight:700; color:#FFFFFF; line-height:1.4;">
+                    ${escapeHtml(titleText)}
+                  </h3>
+                  <p style="margin:0 0 12px; font-family:'Pretendard',-apple-system,sans-serif; font-size:13px; color:#A1A1AA; line-height:1.5;">
+                    ${escapeHtml(subtitleText)}
+                  </p>
+                  <p style="margin:0; font-family:'Pretendard',-apple-system,sans-serif; font-size:14px; color:#E4E4E7; line-height:1.6;">
+                    ${escapeHtml(descText)}
+                  </p>
+                  
+                  ${tagsHtml}
+                  ${commitListHtml}
+                  
+                  <!-- Read Button -->
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top: 8px;">
+                    <tr>
+                      <td bgcolor="#7C3AED"
+                          style="background:linear-gradient(135deg,#7C3AED,#A855F7); border-radius:100px; padding:8px 22px;">
+                        <a href="https://www.prisincera.com/builderslog/${escapeHtml(latestBuilderLog.slug)}"
+                           style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
+                          → 제작기 읽기
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+}
+
 // ─── Main Render ─────────────────────────────────
 
 /**
@@ -297,9 +508,11 @@ function renderStudySection(studyData, date) {
  * @param {string} params.dailyPageUrl - 데일리 포털 URL
  * @param {string} params.unsubscribeUrl - 구독 해지 URL (개인화)
  * @param {Object} [params.studyData] - Daily Digest 오늘의 1문장 데이터
+ * @param {Array}  [params.paceNotes] - 오늘의 Pace Note 추천 배열
+ * @param {Object} [params.latestBuilderLog] - 최신 빌더스 로그 메타데이터 객체
  * @returns {string} 완전한 HTML 이메일 문자열
  */
-export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, unsubscribeUrl, studyData }) {
+export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, unsubscribeUrl, studyData, paceNotes, latestBuilderLog }) {
   const dateKR = formatDateKR(date);
   const dmPicks = articles.filter(a => a.isDmPick);
   const otherArticles = articles.filter(a => !a.isDmPick);
@@ -313,6 +526,12 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
 
   // Daily Digest Section
   const studyHtml = renderStudySection(studyData, date);
+
+  // Pace Note Section
+  const paceNotesHtml = renderPaceNoteSection(paceNotes);
+
+  // Builder's Log Section
+  const builderLogHtml = renderBuilderLogSection(latestBuilderLog);
 
   // Portal CTA
   const portalCTA = renderPortalCTA(dailyPageUrl);
@@ -466,6 +685,20 @@ export function renderDailyEmail({ date, articles, totalCount, dailyPageUrl, uns
               ${studyHtml}
             </td>
           </tr>
+
+          ${paceNotesHtml ? `
+          <tr>
+            <td style="padding: 0;">
+              ${paceNotesHtml}
+            </td>
+          </tr>` : ''}
+
+          ${builderLogHtml ? `
+          <tr>
+            <td style="padding: 0;">
+              ${builderLogHtml}
+            </td>
+          </tr>` : ''}
 
           <!-- ═══ PORTAL CTA ═══ -->
           <tr>
