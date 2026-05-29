@@ -102,38 +102,38 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
 
   return (
     <div className="chrono-calendar-wrapper">
-      <div className="calendar-header">
+      <div className="chrono-calendar-header">
         <button 
           onClick={handlePrevMonth} 
-          className="calendar-nav-btn" 
+          className="chrono-calendar-nav-btn" 
           aria-label={locale === 'ja' ? '前月' : locale === 'en' ? 'Previous month' : '이전 달'}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
-        <h3 className="calendar-month-title">
+        <h3 className="chrono-calendar-month-title">
           {locale === 'en' ? (
             <>
-              <span className="calendar-month">{getEnglishMonthName(month)}</span>
-              <span className="calendar-year">{year}</span>
+              <span className="chrono-calendar-month">{getEnglishMonthName(month)}</span>
+              <span className="chrono-calendar-year">{year}</span>
             </>
           ) : locale === 'ja' ? (
             <>
-              <span className="calendar-year">{year}年</span>
-              <span className="calendar-month">{String(month + 1).padStart(2, '0')}月</span>
+              <span className="chrono-calendar-year">{year}년</span>
+              <span className="chrono-calendar-month">{String(month + 1).padStart(2, '0')}月</span>
             </>
           ) : (
             <>
-              <span className="calendar-year">{year}년</span>
-              <span className="calendar-month">{String(month + 1).padStart(2, '0')}월</span>
+              <span className="chrono-calendar-year">{year}년</span>
+              <span className="chrono-calendar-month">{String(month + 1).padStart(2, '0')}월</span>
             </>
           )}
         </h3>
         <button 
           onClick={handleNextMonth} 
           disabled={isNextDisabled()} 
-          className={`calendar-nav-btn ${isNextDisabled() ? 'disabled' : ''}`}
+          className={`chrono-calendar-nav-btn ${isNextDisabled() ? 'disabled' : ''}`}
           aria-label={locale === 'ja' ? '翌月' : locale === 'en' ? 'Next month' : '다음 달'}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -142,7 +142,7 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
         </button>
       </div>
 
-      <div className="calendar-grid">
+      <div className="chrono-calendar-grid">
         {/* Day of Week Headers */}
         {getWeekdays().map((weekday, idx) => (
           <div key={idx} className={`grid-weekday ${idx === 0 ? 'sun' : idx === 6 ? 'sat' : ''}`}>
@@ -162,7 +162,7 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
               disabled={!isActive}
               onMouseEnter={() => isActive && onHoverDate(dateStr)}
               onClick={() => isActive && onSelectDate(dateStr)}
-              className={`calendar-day-cell ${cell.isCurrentMonth ? 'current-month' : 'other-month'} ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}`}
+              className={`chrono-calendar-day-cell ${cell.isCurrentMonth ? 'current-month' : 'other-month'} ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}`}
               title={isActive ? (locale === 'ja' ? `${dateStr} ダイジェスト要約を表示` : locale === 'en' ? `View digest summary for ${dateStr}` : `${dateStr} 다이제스트 요약 보기`) : dateStr}
             >
               <div className="day-number-container">
