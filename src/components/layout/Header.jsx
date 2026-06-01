@@ -197,7 +197,7 @@ function Header() {
           <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">{t('header.buildersLog')}</Link>
           <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">{t('header.dailyDigest')}</Link>
           <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">{t('header.paceNote')}</Link>
-          <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
+          <Link to="/sylphio" className={`nav-link${location.pathname.startsWith('/sylphio') ? ' active' : ''}`} id="navSylphio">{t('header.sylphio')}</Link>
         </div>
         <div className="nav-right">
           {/* 다국어 언어 선택 스위치 (OLED Custom Dropdown Select) */}
@@ -392,6 +392,27 @@ function Header() {
                 </div>
               </div>
               <div className="visual-blur-orb emerald"></div>
+            </div>
+          </Link>
+
+          {/* 5. Sylphio (AI Translation) */}
+          <Link
+            to="/sylphio"
+            className={`mobile-bento-nav-item sylphio-blue-theme${location.pathname.startsWith('/sylphio') ? ' active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: '#00F2FE' }}>On-Device AI Translation</div>
+              <h3 className="bento-card-title">Sylphio</h3>
+              <div className="bento-card-arrow">🍃 Meet the Spirit →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup sylphio-mockup">
+                <div className="sylphio-bento-core">
+                  <div className="sylphio-bento-pulse"></div>
+                </div>
+              </div>
+              <div className="visual-blur-orb blue"></div>
             </div>
           </Link>
 

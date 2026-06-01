@@ -56,7 +56,7 @@ function Footer() {
               <Link to="/builders-log" className="footer-link">{t('header.buildersLog')}</Link>
               <Link to="/daily" className="footer-link">{t('header.dailyDigest')}</Link>
               <Link to="/pacenote" className="footer-link">{t('header.paceNote')}</Link>
-              <a href="#" className="footer-link" onClick={(e) => { e.preventDefault(); alert(t('header.sylphioAlert')); }}>{t('header.sylphio')}</a>
+              <Link to="/sylphio" className="footer-link">{t('header.sylphio')}</Link>
             </div>
             <div className="footer-col">
               <h4 className="footer-col-title">{t('footer.connect')}</h4>
