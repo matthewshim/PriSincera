@@ -1,5 +1,40 @@
 [
   {
+    "id": "ep10",
+    "slug": "gemini-api-cost-optimization",
+    "chapterNo": "10",
+    "title": {
+      "ko": "노이즈 속의 최적화: 월 0원 청구서로 향하는 제미나이(Gemini) API 비용 처방전",
+      "en": "Optimization in Noise: Gemini API Cost Prescription Towards $0 Bill",
+      "ja": "ノイズの中の最適化：月0円請求書に向かうGemini APIコスト処方箋"
+    },
+    "subtitle": {
+      "ko": "16배 비싼 Pro 모델 배제 및 12개 대형 배치 전환으로 실현한 초저비용 API 가동기",
+      "en": "Excluding Pro Models 16x Expensive and Transitioning to 12-Batch to Achieve Ultra-Low Cost API Run",
+      "ja": "16倍高価なProモデルの排除および12個の大型バッチ転換で実現した超低コストAPI稼働記"
+    },
+    "description": {
+      "ko": "매일 아침 수집되는 전 세계 테크/비즈니스 아티클의 AI 요약 및 스코어링 비용을 99% 절감한 여정. Pro 모델 자동 폴백(Fallback) 구조 제거, Multi-Model Spraying 중복 호출 해결, 12개 배치 사이즈 확대 및 15 RPM 무료 제한 우회 쿨타임(4초) 튜닝의 실제 소스코드와 비하인드 설계를 공유합니다.",
+      "en": "A journey to reduce the AI summarization and scoring costs of global tech/business articles by 99%. We share the actual source code and behind-the-scenes designs of removing Pro model automatic fallback, resolving Multi-Model Spraying duplicate calls, expanding batch size to 12, and tuning 4s cool time to bypass 15 RPM limits.",
+      "ja": "毎日朝収集される全世界のテック/ビジネス記事のAI要約およびスコアリングコストを99%削減した軌跡。Proモデルの自動フォールバック構造の排除、Multi-Model Spraying重複呼び出しの解決、12個のバッチサイズ拡大、および15 RPM無料制限回避クールタイム（4秒）チューニングの実際のソースコードとビハインド設計を共有します。"
+    },
+    "date": "2026-06-02",
+    "tags": [
+      "Gemini API",
+      "Cost Optimization",
+      "Automation",
+      "Refactoring"
+    ],
+    "accent": "#10B981",
+    "commits": [
+      {
+        "type": "feat",
+        "hash": "a1f9e2d",
+        "msg": "feat(gemini): optimize API cost with Pro model exclusion, 12-batch, and throttle"
+      }
+    ]
+  },
+  {
     "id": "ep9",
     "slug": "daily-digest-email-engine-overhaul-v4",
     "chapterNo": "09",

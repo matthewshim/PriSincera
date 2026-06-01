@@ -30,7 +30,8 @@ function loadTemplate(name) {
  * Gemini 호출 + JSON 파싱 (재시도 포함)
  */
 export async function callGemini(prompt, maxRetries = 3) {
-  const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-pro-latest', 'gemini-pro'];
+  // 최신 고효율/저비용 Flash 모델군만 배치하여 요금 폭탄 차단
+  const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-2.5-flash'];
   const generationConfig = {
     temperature: 0.7,
     topP: 0.9,
@@ -40,22 +41,22 @@ export async function callGemini(prompt, maxRetries = 3) {
 
   let lastError;
 
+  // 매 재시도마다 모델 후보군 전체를 난사하지 않고, 순차적으로 1개 모델만 시도
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    for (const modelName of modelsToTry) {
-      try {
-        const model = getGenAI().getGenerativeModel({ model: modelName, generationConfig });
-        const result = await model.generateContent(prompt);
-        const text = result.response.text();
-        const jsonMatch = text.match(/```json\s*([\s\S]*?)```/) || [null, text];
-        return JSON.parse(jsonMatch[1].trim());
-      } catch (err) {
-        console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} (${modelName}) 실패: ${err.message}`);
-        lastError = err;
+    const modelName = modelsToTry[(attempt - 1) % modelsToTry.length];
+    try {
+      const model = getGenAI().getGenerativeModel({ model: modelName, generationConfig });
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+      const jsonMatch = text.match(/```json\s*([\s\S]*?)```/) || [null, text];
+      return JSON.parse(jsonMatch[1].trim());
+    } catch (err) {
+      console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} (${modelName}) 실패: ${err.message}`);
+      lastError = err;
+      if (attempt < maxRetries) {
+        // 실패 시 1.5초 대기 후 다음 단일 모델로 백업 시도
+        await new Promise(r => setTimeout(r, 1500));
       }
-    }
-    // If all models fail in this attempt, wait before next attempt
-    if (attempt < maxRetries) {
-      await new Promise(r => setTimeout(r, 2000 * attempt));
     }
   }
   
@@ -69,7 +70,8 @@ export async function callGemini(prompt, maxRetries = 3) {
  */
 export async function scoreArticles(articles) {
   const template = loadTemplate('scoring-prompt.txt');
-  const batchSize = 5;
+  // 배치 크기를 12개로 확대하여 일일 총 호출 수 60% 이상 절감 (컨텍스트가 긴 Flash에 최적화)
+  const batchSize = 12;
   const results = [];
 
   for (let i = 0; i < articles.length; i += batchSize) {
@@ -102,9 +104,9 @@ export async function scoreArticles(articles) {
       }
     }
 
-    // 배치 간 레이트 리밋 대기
+    // 무료 등급(Free Tier)의 RPM(분당 15회) 필터를 안전하게 피하기 위해 대기 시간을 4초로 조정
     if (i + batchSize < articles.length) {
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 4000));
     }
   }
 
