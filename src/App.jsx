@@ -9,7 +9,14 @@ const DailyDigest = lazy(() => import('./pages/DailyDigest'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const PaceNoteDashboard = lazy(() => import('./pages/PaceNoteDashboard'));
 const BuildersLog = lazy(() => import('./pages/BuildersLog'));
-const BuildersLogDetail = lazy(() => import('./pages/BuildersLogDetail'));/** Minimal loading fallback — invisible, prevents layout shift */
+const BuildersLogDetail = lazy(() => import('./pages/BuildersLogDetail'));
+
+/* ── Sylphio Pages ── */
+const SylphioLanding = lazy(() => import('./pages/SylphioLanding'));
+const SylphioApiKeyGuide = lazy(() => import('./pages/SylphioApiKeyGuide'));
+const SylphioPrivacy = lazy(() => import('./pages/SylphioPrivacy'));
+
+/** Minimal loading fallback — invisible, prevents layout shift */
 const PageFallback = (
   <div style={{ minHeight: '100vh', background: 'var(--bg-void, var(--bg-void))' }} />
 );
@@ -46,6 +53,11 @@ function App() {
 
             {/* Pace Note Routes */}
             <Route path="pacenote" element={<PaceNoteDashboard />} />
+            
+            {/* Sylphio Routes */}
+            <Route path="sylphio" element={<SylphioLanding />} />
+            <Route path="sylphio/guide" element={<SylphioApiKeyGuide />} />
+            <Route path="sylphio/privacy" element={<SylphioPrivacy />} />
             
             {/* Legacy Redirects */}
             <Route path="signal/*" element={<Navigate to="/daily" replace />} />

@@ -1,0 +1,306 @@
+.sylphio-guide {
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, #080f33 0%, #060814 80%);
+  color: #e2e8f0;
+  padding: 120px 24px 80px 24px;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sylphio-guide-container {
+  max-width: 900px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.sylphio-guide-header {
+  text-align: center;
+  margin-bottom: 48px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 32px;
+}
+
+.sylphio-guide-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  background: linear-gradient(135deg, #ffffff 30%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sylphio-guide-subtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.sylphio-guide-byok-note {
+  background: rgba(96, 165, 250, 0.04);
+  border: 1px solid rgba(96, 165, 250, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 48px;
+  display: flex;
+  gap: 16px;
+}
+
+.sylphio-guide-byok-icon {
+  font-size: 1.8rem;
+}
+
+.sylphio-guide-byok-content h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  color: #60a5fa;
+  margin: 0 0 8px 0;
+}
+
+.sylphio-guide-byok-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.sylphio-guide-section {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 40px;
+  transition: border-color 0.3s ease;
+}
+
+.sylphio-guide-section:hover {
+  border-color: rgba(96, 165, 250, 0.15);
+}
+
+.sylphio-guide-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sylphio-guide-section-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.gemini-badge {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.openai-badge {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.app-badge {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+}
+
+.sylphio-guide-section-title h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.sylphio-guide-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px 0;
+}
+
+.sylphio-guide-step-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.sylphio-guide-step-number {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.sylphio-guide-step-text {
+  color: #cbd5e1;
+  font-size: 1rem;
+}
+
+.sylphio-guide-step-text strong {
+  color: #f8fafc;
+}
+
+.sylphio-guide-step-link {
+  color: #60a5fa;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(96, 165, 250, 0.4);
+}
+
+.sylphio-guide-step-link:hover {
+  color: #93c5fd;
+  border-bottom-style: solid;
+}
+
+.sylphio-guide-pricing-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.sylphio-guide-pricing-header {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  color: #f8fafc;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.sylphio-guide-pricing-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .sylphio-guide-pricing-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sylphio-guide-pricing-item {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.sylphio-guide-pricing-item h5 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  margin: 0 0 8px 0;
+}
+
+.sylphio-guide-pricing-item.free h5 {
+  color: #34d399;
+}
+
+.sylphio-guide-pricing-item.pay h5 {
+  color: #f43f5e;
+}
+
+.sylphio-guide-pricing-item p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.sylphio-guide-warning-box {
+  background: rgba(244, 63, 94, 0.03);
+  border: 1px solid rgba(244, 63, 94, 0.15);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.sylphio-guide-warning-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.sylphio-guide-warning-content h5 {
+  font-family: 'Outfit', sans-serif;
+  color: #f43f5e;
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+}
+
+.sylphio-guide-warning-content p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.sylphio-guide-faq {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 40px;
+  margin-top: 40px;
+}
+
+.sylphio-guide-faq h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  color: #f8fafc;
+  margin: 0 0 24px 0;
+}
+
+.sylphio-guide-faq-item {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.sylphio-guide-faq-item h5 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  color: #f8fafc;
+  margin: 0 0 8px 0;
+}
+
+.sylphio-guide-faq-item p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .sylphio-guide-container {
+    padding: 24px;
+    border-radius: 16px;
+  }
+  .sylphio-guide-header h1 {
+    font-size: 2rem;
+  }
+}

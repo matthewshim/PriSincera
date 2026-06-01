@@ -431,6 +431,9 @@ app.get('/sitemap.xml', async (req, res) => {
       { url: '/daily', changefreq: 'daily', priority: 0.9 },
       { url: '/builders-log', changefreq: 'weekly', priority: 0.8 },
       { url: '/pacenote', changefreq: 'weekly', priority: 0.8 },
+      { url: '/sylphio', changefreq: 'weekly', priority: 0.9 },
+      { url: '/sylphio/guide', changefreq: 'weekly', priority: 0.8 },
+      { url: '/sylphio/privacy', changefreq: 'monthly', priority: 0.5 },
       { url: '/connect', changefreq: 'monthly', priority: 0.5 }
     ];
 
@@ -537,6 +540,16 @@ app.use(async (req, res) => {
       } else {
         title = 'Builders Log — 서비스 구축의 기록 | PriSincera';
         description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
+      }
+    } else if (req.originalUrl.startsWith('/sylphio')) {
+      title = 'Sylphio (실피오) — macOS용 실시간 온디바이스 AI 동시통역 에이전트';
+      description = '맥OS 완벽 호환, 에어팟 실명 락온, 100% 로컬 온디바이스 STT 무제한 발화, Gemini 및 GPT AI 동시통역과 마크다운 회의록 자동 요약본을 제공하는 프리미엄 번역 비서 Sylphio를 만나보세요.';
+      if (req.originalUrl.includes('/guide')) {
+        title = 'Sylphio API Key 연동 가이드 — Google Gemini & OpenAI';
+        description = '개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고의 AI 실시간 번역 및 회의록 요약 기능을 한계 없이 누려보세요.';
+      } else if (req.originalUrl.includes('/privacy')) {
+        title = 'Sylphio Privacy Policy (Zero Data Collection) — PriSincera';
+        description = '어떠한 개인 정보, 오디오 녹음 파일, 또는 번역된 텍스트 데이터도 당사의 서버로 수집, 저장, 전송하지 않는 Sylphio의 데이터 무수집 개인정보 처리방침입니다.';
       }
     }
   } catch(err) {
