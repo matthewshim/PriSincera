@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import GoogleAnalytics from './components/common/GoogleAnalytics';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 /* ── Code Splitting: page-level lazy imports ── */
 const Home = lazy(() => import('./pages/Home'));
@@ -33,7 +34,7 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <ScrollToTop />
       <GoogleAnalytics />
       <Suspense fallback={PageFallback}>
@@ -67,7 +68,7 @@ function App() {
           </Route>
         </Routes>
       </Suspense>
-    </>
+    </ErrorBoundary>
   );
 }
 

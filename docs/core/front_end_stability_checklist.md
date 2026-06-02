@@ -8,9 +8,9 @@
 
 자바스크립트 코드는 단 하나의 예외(uncaught error)로도 리액트 렌더링 트리를 붕괴시키고 전체 페이지를 빈 화면(White Screen)으로 만들 수 있습니다.
 
-*   [ ] **React Error Boundary 구축 여부**
+*   [x] **React Error Boundary 구축 여부**
     *   앱 전체 혹은 비즈니스 핵심 컴포넌트(GNB, 결제, 대시보드 차트) 단위로 `ErrorBoundary`를 배치하여, 특정 영역의 에러가 앱 전체 셧다운으로 이어지지 않도록 격리했는가?
-*   [ ] **인터랙션/커스텀 비주얼의 JS-CSS 동적 동기화 여부**
+*   [x] **인터랙션/커스텀 비주얼의 JS-CSS 동적 동기화 여부**
     *   커스텀 마우스 포인터, 스크롤 애니메이션 등 비주얼 요소가 자바스크립트 로드 여부에 완전히 종속되는 경우, JS 실행이 보장될 때만 활성화 클래스(예: `html.has-custom-cursor`)를 동적으로 주입하고, 실패 시 브라우저 기본값(Fallback)이 100% 작동하도록 분기 처리했는가?
 *   [ ] **API 데이터 null/undefined 방어 코드 작성 여부**
     *   서버에서 전달받는 모든 응답 객체에 대해 Optional Chaining (`data?.user?.profile`) 및 기본값 지정(Nullish Coalescing `?? []`)을 철저히 적용하여 `TypeError: Cannot read properties of undefined` 에러를 원천 예방했는가?
