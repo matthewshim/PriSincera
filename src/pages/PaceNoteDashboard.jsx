@@ -146,6 +146,17 @@ export default function PaceNoteDashboard() {
   const [loading, setLoading] = useState(true);
   const { locale, t } = useTranslation();
 
+  // CSS Gradient Fog state
+  const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
+
+  // Mouse move handler for background gradient fog
+  const handleBgMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const xPct = `${(clientX / window.innerWidth) * 100}%`;
+    const yPct = `${(clientY / window.innerHeight) * 100}%`;
+    setMousePos({ x: xPct, y: yPct });
+  };
+
   useSEO({
     title: 'Pace Note',
     description: t('paceNote.heroSubtitle') ? t('paceNote.heroSubtitle').replace(/\n/g, ' ') : 'Pace Note',
@@ -725,7 +736,14 @@ export default function PaceNoteDashboard() {
   };
 
   return (
-    <div className="pacenote-page">
+    <div 
+      className="pacenote-page"
+      onMouseMove={handleBgMouseMove}
+      style={{
+        '--mouse-x': mousePos.x,
+        '--mouse-y': mousePos.y
+      }}
+    >
       {/* ── Hero Section ── */}
       <section className="pacenote-hero">
         <div className="pacenote-hero-content">
