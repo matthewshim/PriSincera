@@ -8,10 +8,10 @@
   top: 52px; /* Placed exactly under the scrolled desktop GNB */
   z-index: 100;
   width: 100%; /* LNB 가로 100% 가득 채우기 수립 */
-  background: rgba(0, 0, 0, 0.8); /* OLED Black transparency */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--glass-bg); /* GNB와 동일하게 디자인 시스템 표준 Glassmorphism 배경으로 일치 */
+  backdrop-filter: blur(20px); /* GNB와 동일하게 블러 값 일치 */
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border); /* GNB와 동일한 테두리 일치 */
   display: flex;
   justify-content: center;
   padding: 0 var(--space-md, 16px);
