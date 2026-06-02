@@ -90,15 +90,30 @@
 @media (max-width: 640px) {
   .sylphio-tabs-nav {
     top: 44px; /* GNB scrolled 모바일 높이(44px)에 정확히 밀착하여 8px 틈새 컬러 불일치 완벽 해소 */
-    padding: 0 var(--space-xs, 8px);
+    padding: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox 스크롤바 제거 */
+    -ms-overflow-style: none; /* IE 스크롤바 제거 */
   }
+
+  .sylphio-tabs-nav::-webkit-scrollbar {
+    display: none; /* Chrome/Safari 스크롤바 제거 */
+  }
+
   .sylphio-tabs-inner {
-    gap: var(--space-xs, 8px);
-    justify-content: space-around;
+    gap: 0;
+    justify-content: flex-start;
+    padding: 0 12px;
+    width: max-content; /* 찌그러짐 방지를 위해 내부 콘텐츠 크기로 고정 */
+    min-width: 100%;
   }
+
   .sylphio-tab {
-    font-size: 0.76rem;
-    padding: 12px 6px;
+    font-size: 0.78rem;
+    padding: 12px 14px; /* 터치 영역 양옆 확보 */
     letter-spacing: -0.02em;
+    white-space: nowrap; /* 글자가 아래로 찌그러져 개행되는 현상 원천 차단 */
+    flex-shrink: 0;
   }
 }

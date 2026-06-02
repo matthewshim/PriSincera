@@ -408,21 +408,44 @@
     0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-.sylphio-pricing-card.premium::after {
-  content: 'POPULAR';
+/* Premium Pricing badge with interactive live light indicator */
+.sylphio-pricing-badge {
   position: absolute;
-  top: -12px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #1e80ff 0%, #00d2fe 100%);
-  color: #000000;
+  background: linear-gradient(135deg, #1e80ff 0%, #00f2fe 100%);
+  color: #050505;
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  padding: 4px 12px;
-  border-radius: 9999px; /* Pill */
-  letter-spacing: 0.05em;
-  box-shadow: 0 4px 10px rgba(30, 128, 255, 0.2);
+  padding: 4px 16px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  box-shadow: 
+    0 8px 20px rgba(30, 128, 255, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.sylphio-pricing-badge::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 6px #FFFFFF;
+  animation: badgeDotPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes badgeDotPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 .sylphio-pricing-card h3 {
@@ -451,7 +474,7 @@
   color: var(--text-secondary, #a1a1aa);
   font-size: 0.88rem;
   line-height: 1.5;
-  margin-bottom: var(--space-lg, 24px);
+  margin-bottom: 20px; /* 기능 소개 리스트와의 조화로운 여백 밸런스 수립 */
 }
 
 .sylphio-pricing-features {
@@ -460,21 +483,36 @@
   margin: 0 0 var(--space-xl, 32px) 0;
   flex-grow: 1;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px; /* 각 기능 행 간의 시원하고 정돈된 여백 수립 */
 }
 
 .sylphio-pricing-features li {
   font-size: 0.88rem;
   color: var(--text-secondary, #a1a1aa);
-  margin-bottom: 12px;
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start; /* 여러 줄 텍스트 배치 시 시작 위치 매핑 */
+  gap: 12px; /* 체크 아이콘과 설명 글자 간의 고급화된 마진 확보 */
+  line-height: 1.5;
 }
 
 .sylphio-pricing-features li::before {
   content: '✓';
-  color: #60a5fa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.12) 0%, rgba(30, 128, 255, 0.12) 100%);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  color: #00f2fe; /* 실피오 블루 오로라 색상 */
+  font-size: 9px;
   font-weight: 900;
+  margin-top: 2px; /* 줄바꿈 텍스트 상단에 정확히 일치 */
+  box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
 }
 
 /* --- Virtual Subtitle Animation --- */
