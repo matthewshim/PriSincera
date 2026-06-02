@@ -166,6 +166,15 @@ export default function BuildersLog() {
   });
 
   const headerRef = useScrollReveal();
+  
+  // GNB 백라이트 오라 유입을 위한 마우스 반응형 좌표 상태 수립
+  const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
+  const handleBgMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const xPct = `${(clientX / window.innerWidth) * 100}%`;
+    const yPct = `${(clientY / window.innerHeight) * 100}%`;
+    setMousePos({ x: xPct, y: yPct });
+  };
 
   useEffect(() => {
     document.body.classList.add('hero-ready');
@@ -176,7 +185,15 @@ export default function BuildersLog() {
 
   return (
     <div className="builders-log-wrapper">
-      <section className="log-hero-section" ref={headerRef}>
+      <section 
+        className="log-hero-section" 
+        ref={headerRef}
+        onMouseMove={handleBgMouseMove}
+        style={{
+          '--mouse-x': mousePos.x,
+          '--mouse-y': mousePos.y
+        }}
+      >
         <div className="log-hero-content">
           <div className="log-hero-icon">🛠️</div>
           <h1 className="hero-heading">Builder's Log</h1>

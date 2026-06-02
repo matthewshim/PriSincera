@@ -22,8 +22,8 @@
   height: 100%;
   background: radial-gradient(
     circle at var(--mouse-x) var(--mouse-y), 
-    rgba(30, 128, 255, 0.06) 0%, 
-    rgba(109, 40, 217, 0.03) 30%, 
+    rgba(0, 242, 254, 0.08) 0%, /* 브랜드 표준 Cyan */
+    rgba(30, 128, 255, 0.04) 30%, /* 브랜드 표준 Neon Blue */
     rgba(0, 0, 0, 0) 70%
   );
   pointer-events: none;
