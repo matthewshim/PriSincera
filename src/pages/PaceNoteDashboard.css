@@ -53,9 +53,9 @@
 
 .pacenote-subtitle {
   font-size: 1.15rem;
-  color: #E9D5FF;
+  color: var(--crystal-light);
   line-height: 1.6;
-  opacity: 0.8;
+  opacity: 0.9;
   max-width: 800px;
   margin: 0 auto;
   word-break: keep-all;
