@@ -299,7 +299,6 @@ export default function SylphioLanding() {
         '--mouse-y': mousePos.y
       }}
     >
-      <SylphioNav />
       {/* --- HERO SECTION --- */}
       <section className="sylphio-hero">
         <div className="sylphio-core-container">
@@ -331,6 +330,8 @@ export default function SylphioLanding() {
           </Link>
         </div>
       </section>
+      
+      <SylphioNav />
       
       {/* --- CORE FEATURES SECTION --- */}
       <section className="sylphio-section">

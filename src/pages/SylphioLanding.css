@@ -42,7 +42,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 180px var(--space-lg, 24px) var(--space-xl, 64px) var(--space-lg, 24px);
+  padding: var(--space-3xl, 140px) var(--space-lg, 24px) var(--space-xl, 64px) var(--space-lg, 24px);
   z-index: 2;
   text-align: center;
 }

@@ -7,7 +7,7 @@
   min-height: 100vh;
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-secondary, #a1a1aa);
-  padding: 180px var(--space-lg, 24px) var(--space-2xl, 80px) var(--space-lg, 24px);
+  padding: var(--space-3xl, 120px) var(--space-lg, 24px) var(--space-2xl, 80px) var(--space-lg, 24px);
   font-family: 'Inter', 'Pretendard', -apple-system, sans-serif;
   display: flex;
   justify-content: center;
