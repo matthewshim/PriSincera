@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
+import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioPrivacy.css';
 
 // Local Multilingual Translation Dict for Privacy Policy
@@ -116,6 +117,7 @@ export default function SylphioPrivacy() {
 
   return (
     <div className="sylphio-privacy">
+      <SylphioNav />
       <div className="sylphio-privacy-container">
         
         <div className="sylphio-privacy-header">

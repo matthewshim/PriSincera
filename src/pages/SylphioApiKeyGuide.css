@@ -7,7 +7,7 @@
   min-height: 100vh;
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-secondary, #a1a1aa);
-  padding: var(--space-3xl, 120px) var(--space-lg, 24px) var(--space-2xl, 80px) var(--space-lg, 24px);
+  padding: 180px var(--space-lg, 24px) var(--space-2xl, 80px) var(--space-lg, 24px);
   font-family: 'Inter', 'Pretendard', sans-serif;
   display: flex;
   justify-content: center;
@@ -333,33 +333,5 @@
   }
 }
 
-/* Usability Improvement: Back Navigation Styles */
-.sylphio-guide-back-nav {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: var(--space-md, 24px);
-}
 
-.btn-back-to-landing {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
-  font-size: 0.85rem;
-  color: var(--text-muted, #71717a);
-  text-decoration: none;
-  font-weight: 500;
-  transition: all var(--duration-fast, 200ms) cubic-bezier(0.175, 0.885, 0.32, 1.15);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.btn-back-to-landing:hover {
-  color: var(--text-primary, #fafafa);
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateX(-2px);
-}
 

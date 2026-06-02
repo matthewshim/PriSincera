@@ -1,0 +1,99 @@
+/* ==========================================================================
+   PriSincera Design System v4.0 (Aura-Neutral & Premium Glass)
+   Sylphio Sub Navigation Bar (LNB) Style Sheet
+   ========================================================================== */
+
+.sylphio-tabs-nav {
+  position: sticky;
+  top: 52px; /* Placed exactly under the scrolled desktop GNB */
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.8); /* OLED Black transparency */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--space-md, 16px);
+  transition: background var(--duration-fast, 200ms) ease, border-color var(--duration-fast, 200ms) ease;
+}
+
+.sylphio-tabs-inner {
+  display: flex;
+  position: relative;
+  gap: var(--space-md, 24px);
+  max-width: 1200px;
+  width: 100%;
+  justify-content: center;
+}
+
+.sylphio-tab {
+  background: none;
+  border: none;
+  color: var(--text-muted, #71717a);
+  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 14px var(--space-sm, 12px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--duration-fast, 200ms) ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  position: relative;
+  text-decoration: none;
+}
+
+.sylphio-tab:hover {
+  color: var(--text-primary, #fafafa);
+}
+
+.sylphio-tab.active {
+  color: var(--text-primary, #fafafa);
+  font-weight: 600;
+}
+
+/* Glassmorphism Active Indicator bar */
+.sylphio-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00f2fe 0%, #1e80ff 100%);
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+}
+
+/* Supporting Tactile Spring Press-Down Feedback */
+.sylphio-tab:active {
+  transform: scale(0.95);
+  transition-duration: 70ms;
+}
+
+.sylphio-tab.support-link {
+  color: #60a5fa; /* Branding subtle accent to differentiate client mail support */
+  opacity: 0.85;
+}
+
+.sylphio-tab.support-link:hover {
+  opacity: 1;
+  color: #a5f3fc;
+}
+
+/* Responsive Optimization for mobile */
+@media (max-width: 640px) {
+  .sylphio-tabs-nav {
+    top: 52px; /* GNB height also adjusts in mobile */
+    padding: 0 var(--space-xs, 8px);
+  }
+  .sylphio-tabs-inner {
+    gap: var(--space-xs, 8px);
+    justify-content: space-around;
+  }
+  .sylphio-tab {
+    font-size: 0.76rem;
+    padding: 12px 6px;
+    letter-spacing: -0.02em;
+  }
+}

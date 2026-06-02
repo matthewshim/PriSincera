@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
+import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioLanding.css';
 
 // 3D Tilt Hover Feature Card Component
@@ -298,6 +299,7 @@ export default function SylphioLanding() {
         '--mouse-y': mousePos.y
       }}
     >
+      <SylphioNav />
       {/* --- HERO SECTION --- */}
       <section className="sylphio-hero">
         <div className="sylphio-core-container">
@@ -490,20 +492,12 @@ export default function SylphioLanding() {
       
       {/* --- FOOTER / PRIVACY AGREEMENT --- */}
       <footer className="sylphio-section" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'center', padding: '40px 24px' }}>
-        <p style={{ color: '#475569', fontSize: '0.9rem', marginBottom: '16px' }}>
+        <p style={{ color: '#475569', fontSize: '0.9rem', marginBottom: '8px' }}>
           {d.footerDesc}
         </p>
-        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', fontSize: '0.9rem' }}>
-          <Link to="/sylphio/privacy" style={{ color: '#64748b', textDecoration: 'none' }} id="link-footer-privacy">
-            {d.footerPrivacy}
-          </Link>
-          <Link to="/sylphio/guide" style={{ color: '#64748b', textDecoration: 'none' }} id="link-footer-guide">
-            {d.footerGuide}
-          </Link>
-          <a href="mailto:support@prisincera.com" style={{ color: '#64748b', textDecoration: 'none' }}>
-            {d.footerSupport} (support@prisincera.com)
-          </a>
-        </div>
+        <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>
+          {d.footerSupport}: <a href="mailto:support@prisincera.com" style={{ color: '#60a5fa', textDecoration: 'none' }}>support@prisincera.com</a>
+        </p>
       </footer>
     </div>
   );

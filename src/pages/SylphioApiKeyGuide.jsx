@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
+import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioApiKeyGuide.css';
 
 // Local Translation Dict for Premium UX
@@ -153,15 +154,9 @@ export default function SylphioApiKeyGuide() {
   
   return (
     <div className="sylphio-guide">
+      <SylphioNav />
       <div className="sylphio-guide-container">
         
-        {/* Usability Improvement: Back to Sylphio Intro Landing Page */}
-        <div className="sylphio-guide-back-nav">
-          <Link to="/sylphio" className="btn-back-to-landing">
-            {locale === 'ko' ? '← Sylphio 소개 페이지로 돌아가기' : locale === 'ja' ? '← Sylphio紹介ページに戻る' : '← Back to Sylphio Intro'}
-          </Link>
-        </div>
-
         <div className="sylphio-guide-header">
           <h1>{d.title}</h1>
           <p className="sylphio-guide-subtitle">
