@@ -7,6 +7,7 @@
   position: sticky;
   top: 52px; /* Placed exactly under the scrolled desktop GNB */
   z-index: 100;
+  width: 100%; /* LNB 가로 100% 가득 채우기 수립 */
   background: rgba(0, 0, 0, 0.8); /* OLED Black transparency */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
