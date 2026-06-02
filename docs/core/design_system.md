@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-06-02
-version: v4.5
+version: v4.6
 target_files:
   - src/styles/index.css
   - src/components/hero/TelescopeCursor.jsx
@@ -12,7 +12,7 @@ target_files:
   - src/pages/PaceNoteDashboard.jsx
 ---
 
-# 📐 PriSincera Design System (v4.5: Unified Interactive Design System)
+# 📐 PriSincera Design System (v4.6: Layout Width & Interaction Standards)
 
 ## 📝 Revision History
 
@@ -23,10 +23,11 @@ target_files:
 | v2.6 | 2026-05-20 | Designer | PaceNote Bento Weekly Calendar & Voyage Horizon 디자인 토큰 표준 수립 | PaceNote |
 | v3.0 | 2026-05-27 | AI Agent | 여백 최적화(Density) 및 퍼플 배경 색상 누수 완전히 제거(Desaturated Chrono-Neutral) 규격 명문화 | CSS Layout & Color System |
 | v4.0 | 2026-05-27 | AI Agent | 차세대 의미론적 CTA 버튼 설계 규격(Semantic CTA) 및 글로벌 최고 수준 디자인 시스템 분석(Linear, Vercel, HIG) 반영 | Global Brand System & UI Refactoring |
-| v4.5 | 2026-06-02 | AI Agent | **글로벌 인터랙션 대통합 (3D Tilt, 마그네틱 TelescopeCursor, Unified Haptic active scale) 규격 제정** | Global Interaction System & UI Refactoring |
+| v4.5 | 2026-06-02 | AI Agent | 글로벌 인터랙션 대통합 (3D Tilt, 마그네틱 TelescopeCursor, Unified Haptic active scale) 규격 제정 | Global Interaction System & UI Refactoring |
+| v4.6 | 2026-06-02 | AI Agent | **최신 해상도 점유율 및 안구 가독 가시 범위 기반 3단계 콘텐츠 가로 영역 규격화 수립** | Global Spacing & Layout System |
 
 > **"Sincerity, Prioritized."**
-> 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 v4.5 표준 가이드라인입니다. 
+> 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 v4.6 표준 가이드라인입니다. 
 
 ---
 
@@ -185,6 +186,25 @@ target_files:
 | `--radius-md` | `12px` | 일반 카드, 액션 버튼 |
 | `--radius-lg` | `24px` | Bento Grid의 대형 패널, 모달 창 |
 | `--radius-full`| `9999px` | Pill 모양 CTA 버튼 |
+
+### 3-3. 🖥️ 최신 해상도 점유율 기반 콘텐츠 영역 가로 규격 (3-Tier Width System)
+데스크톱의 주류 해상도인 1920x1080(FHD) 점유율 60% 통계와 모바일 및 QHD/4K 모니터 환경에 동시에 대처하며, 글을 읽는 인간 안구의 피로도 임계점(Line-Length / Measure)을 넘지 않도록 아래와 같이 콘텐츠 영역 가로 상한선(`max-width`)을 3개 카테고리 기하학으로 규격화합니다.
+
+1. **Bento Grid & 대시보드 핏 (Dashboard Layout - `1200px`)**
+   * **적용 범위**: `/pacenote` (페이스노트 대시보드), `/builders-log` (챕터 카드 그리드)
+   * **목적 및 명세**: 3열 혹은 4열의 다이내믹한 그리드를 미려하게 분할할 수 있는 최적의 폭입니다. 주류 FHD 모니터에서 적정 좌우 여백(`360px`씩)을 주어 기하학적 깊이감과 정보 밀도를 동시에 양립시킵니다.
+   * **코드 표준**: `max-width: 1200px; margin: 0 auto; width: 100%;`
+
+2. **정독 아티클 & 가이드 핏 (Reading & Information Sheet - `900px`)**
+   * **적용 범위**: `/sylphio/guide` (가이드), `/sylphio/privacy` (개인정보처리방침), `/daily/{date}` (다이제스트 본문)
+   * **목적 및 명세**: 가독성에 극도로 중점을 두어야 하는 글읽기 콘텐츠는 `900px` (순수 텍스트 리포트는 `800px`)을 초과하는 즉시 가독 지표가 파괴됩니다. 표(Table)나 코드 블록 등 넓은 시야와 가독 한계선을 모두 잡는 완벽한 타협점입니다.
+   * **코드 표준**: `max-width: 900px; margin: 0 auto; width: calc(100% - 48px);` (모바일 좌우 24px 보존)
+
+3. **비주얼 브랜드 랜딩 핏 (Visual Branding & Canvas - `1440px`)**
+   * **적용 범위**: 메인 Landing, `/sylphio` (실피오 브랜드 소개 페이지)
+   * **목적 및 명세**: 3D Three.js 및 웅장한 히어로 타이포그래피로 초반 시각적 신뢰감을 확보해야 하는 소개 페이지는 광활한 확장이 요구됩니다. 다만 초고해상도 유저들을 위해 최대 상한선을 `1440px`로 제한하여 균형 잡힌 비주얼 기조를 지켜냅니다.
+   * **코드 표준**: `max-width: 1440px; margin: 0 auto; width: 100%;`
+
 
 ---
 
