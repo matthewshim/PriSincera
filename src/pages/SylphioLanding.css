@@ -466,7 +466,7 @@
   color: var(--text-secondary, #a1a1aa);
   font-size: 0.88rem;
   line-height: 1.5;
-  margin-bottom: 48px !important; /* .premium-card p 의 margin: 0; 강제 덮어쓰기 무력화 및 여백 보장 */
+  margin-bottom: 24px !important; /* 절반으로 피드백 최적화: 덮어쓰기 차단과 동시에 이상적인 24px 여백 확보 */
 }
 
 .sylphio-pricing-features {
