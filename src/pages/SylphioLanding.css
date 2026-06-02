@@ -8,6 +8,7 @@
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-primary, #fafafa); /* Eye-friendly Off-White */
   font-family: 'Inter', 'Pretendard', -apple-system, sans-serif;
+  padding-top: 80px; /* PriSincera 글로벌 카테고리 최상단 패딩 표준 규격 */
   position: relative;
   /* CSS Gradient Fog dynamic coordinates */
   --mouse-x: 50%;
@@ -41,16 +42,16 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 110px var(--space-lg, 24px) 24px var(--space-lg, 24px);
+  padding: 80px 24px 64px; /* Builders Log, Daily Digest 등 글로벌 규격 조율 세로 패딩 */
   z-index: 2;
   text-align: center;
 }
 
 .sylphio-core-container {
   position: relative;
-  width: 120px;
-  height: 120px;
-  margin-bottom: 16px;
+  width: 95px; /* 이모지 아이콘의 Visual Weight와 완벽한 균형 매칭 */
+  height: 95px;
+  margin-bottom: 20px;
 }
 
 /* 3D MeshTransmissionMaterial Simulation Core */
@@ -88,10 +89,10 @@
 
 .sylphio-hero h1 {
   font-family: 'Outfit', 'Pretendard', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  font-weight: 800;
-  line-height: 1.15;
-  margin: 0 0 var(--space-md, 16px) 0;
+  font-size: 3rem; /* Builders Log 'hero-heading'과 100% 규격 일치 */
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 var(--space-sm, 12px) 0;
   background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 75%, #1e80ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -100,10 +101,10 @@
 }
 
 .sylphio-hero p.tagline {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-size: 1.15rem; /* Builders Log 'hero-paragraph'와 100% 규격 일치 */
   color: var(--text-secondary, #a1a1aa);
   max-width: 820px;
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0 0 var(--space-xl, 40px) 0;
   font-weight: 300;
   word-break: keep-all;
