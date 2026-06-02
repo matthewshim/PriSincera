@@ -94,10 +94,8 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
-    cursor: none;
 }
 
-a, button { cursor: none; }
 a { color: inherit; text-decoration: none; }
 img, svg { max-width: 100%; display: block; }
 button { background: none; border: none; font: inherit; color: inherit; }
@@ -142,11 +140,7 @@ button { background: none; border: none; font: inherit; color: inherit; }
     transform: translateY(-2px);
 }
 
-/* --- Responsive default cursor for mobile --- */
-@media (max-width: 768px) {
-    body { cursor: auto; }
-    a, button { cursor: pointer; }
-}
+
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -191,7 +185,6 @@ button { background: none; border: none; font: inherit; color: inherit; }
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: all var(--duration-fast) var(--ease-spring);
-    cursor: none;
     user-select: none;
     text-decoration: none;
 }
@@ -214,7 +207,6 @@ button { background: none; border: none; font: inherit; color: inherit; }
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: all var(--duration-fast) var(--ease-spring);
-    cursor: none;
     user-select: none;
     text-decoration: none;
 }

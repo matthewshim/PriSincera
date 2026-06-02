@@ -146,7 +146,6 @@
     height: 32px;
     background: none;
     border: none;
-    cursor: none;
     transition: opacity 0.3s var(--ease-out);
 }
 

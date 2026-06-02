@@ -22,6 +22,9 @@ export default function TelescopeCursor() {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
+    // Enable custom cursor styles only when JS runs and mounts successfully
+    document.documentElement.classList.add('has-custom-cursor');
+
     /* ── Pointer coordinates ── */
     let targetX = -200, targetY = -200;
     let curX = -200, curY = -200;
@@ -126,6 +129,7 @@ export default function TelescopeCursor() {
       document.removeEventListener('mouseenter', onEnter);
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mouseout', onOut);
+      document.documentElement.classList.remove('has-custom-cursor');
     };
   }, []);
 

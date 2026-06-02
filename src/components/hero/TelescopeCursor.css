@@ -136,9 +136,10 @@
 
 /* --- Hide default browser cursor --- */
 @media (min-width: 769px) {
-    *,
-    *::before,
-    *::after {
+    html.has-custom-cursor,
+    html.has-custom-cursor *,
+    html.has-custom-cursor *::before,
+    html.has-custom-cursor *::after {
         cursor: none !important;
     }
 }
