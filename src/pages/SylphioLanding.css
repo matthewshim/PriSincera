@@ -233,8 +233,10 @@
 
 .sylphio-features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 1000px 안에서 3열 배치를 매끄럽게 수용하기 위해 300px로 미세 보정 */
   gap: 16px; /* Compacter v4.0 gap */
+  max-width: 1000px; /* 프런트엔드 디자인 시스템 1000px 가로 폭 정합성 수립 */
+  margin: 0 auto;
 }
 
 /* Bento Card Glassmorphism 3.0 ("Jewel" Effect) */
@@ -284,7 +286,7 @@
 
 /* --- Web Simulator Section --- */
 .sylphio-simulator-box {
-  max-width: 800px;
+  max-width: 1000px; /* 1000px 통일: 맥북 화면 실제 비율과 자막 가독성 확보 */
   margin: 0 auto;
 }
 
@@ -396,7 +398,7 @@
   justify-content: center;
   align-items: stretch;
   flex-wrap: wrap;
-  max-width: 900px;
+  max-width: 1000px; /* 1000px 통일: 두 가격 카드의 넉넉한 수평 밸런스 이식 */
   margin: 0 auto;
 }
 
