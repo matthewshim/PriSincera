@@ -7,7 +7,7 @@
   min-height: 100vh;
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-secondary, #a1a1aa);
-  padding: 80px 0 var(--space-2xl, 80px); /* GNB 상단 패딩 및 LNB 가로 100% 핏 */
+  padding: 0 0 var(--space-2xl, 80px); /* GNB 뒤쪽 배경 오라 유입을 위해 최상단 패딩 제거 */
   font-family: var(--font-body);
   display: flex;
   flex-direction: column;
@@ -25,7 +25,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 80px 24px 64px; /* 글로벌 규격 조율 세로 패딩 및 반응형 좌우 여백 */
+  padding: 160px 24px 64px; /* GNB 높이(80px)를 보정한 웅장한 히어로 패딩 */
   z-index: 2;
   text-align: center;
   width: 100%;

@@ -8,7 +8,7 @@
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-primary, #fafafa); /* Eye-friendly Off-White */
   font-family: var(--font-body);
-  padding-top: 80px; /* PriSincera 글로벌 카테고리 최상단 패딩 표준 규격 */
+  padding-top: 0; /* GNB 뒤쪽 배경 오라 유입을 위해 최상단 패딩 제거 */
   position: relative;
 }
 
@@ -39,7 +39,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 80px 24px 64px; /* Builders Log, Daily Digest 등 글로벌 규격 조율 세로 패딩 */
+  padding: 160px 24px 64px; /* GNB 높이(80px)를 보정한 웅장한 히어로 패딩 */
   z-index: 2;
   text-align: center;
   /* CSS Gradient Fog dynamic coordinates */

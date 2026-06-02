@@ -1,7 +1,7 @@
 .daily-digest-page {
   min-height: 100vh;
   background: var(--bg-void);
-  padding-top: 80px;
+  padding-top: 0; /* GNB 뒤쪽 배경 오라 유입을 위해 최상단 패딩 제거 */
   color: var(--text-primary);
   padding-bottom: 60px;
 }
@@ -9,14 +9,14 @@
 /* ── Hero Section ── */
 .daily-hero {
   text-align: center;
-  padding: 60px 20px 40px;
+  padding: 140px 20px 40px; /* GNB 높이(80px)를 보정한 웅장한 히어로 패딩 */
   position: relative;
 }
 .daily-hero::after {
   content: '';
   position: absolute;
-  top: -80px; left: 0;
-  width: 100%; height: calc(100% + 80px);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
