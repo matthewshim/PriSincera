@@ -10,13 +10,10 @@
   font-family: var(--font-body);
   padding-top: 80px; /* PriSincera 글로벌 카테고리 최상단 패딩 표준 규격 */
   position: relative;
-  /* CSS Gradient Fog dynamic coordinates */
-  --mouse-x: 50%;
-  --mouse-y: 20%;
 }
 
 /* 150ms debounced CSS Gradient Fog backlight aura morphing */
-.sylphio-landing::before {
+.sylphio-hero::before {
   content: '';
   position: absolute;
   top: 0;
@@ -45,6 +42,10 @@
   padding: 80px 24px 64px; /* Builders Log, Daily Digest 등 글로벌 규격 조율 세로 패딩 */
   z-index: 2;
   text-align: center;
+  /* CSS Gradient Fog dynamic coordinates */
+  --mouse-x: 50%;
+  --mouse-y: 20%;
+  overflow: hidden; /* Prevent light leakage outside the hero section */
 }
 
 .sylphio-core-container {

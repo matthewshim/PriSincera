@@ -291,16 +291,16 @@ export default function SylphioLanding() {
   };
   
   return (
-    <div 
-      className="sylphio-landing" 
-      onMouseMove={handleBgMouseMove}
-      style={{
-        '--mouse-x': mousePos.x,
-        '--mouse-y': mousePos.y
-      }}
-    >
+    <div className="sylphio-landing">
       {/* --- HERO SECTION --- */}
-      <section className="sylphio-hero">
+      <section 
+        className="sylphio-hero"
+        onMouseMove={handleBgMouseMove}
+        style={{
+          '--mouse-x': mousePos.x,
+          '--mouse-y': mousePos.y
+        }}
+      >
         <div className="sylphio-core-container">
           <div className="sylphio-aurora-core"></div>
           <div className="sylphio-aurora-ring"></div>

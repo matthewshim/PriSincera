@@ -736,16 +736,16 @@ export default function PaceNoteDashboard() {
   };
 
   return (
-    <div 
-      className="pacenote-page"
-      onMouseMove={handleBgMouseMove}
-      style={{
-        '--mouse-x': mousePos.x,
-        '--mouse-y': mousePos.y
-      }}
-    >
+    <div className="pacenote-page">
       {/* ── Hero Section ── */}
-      <section className="pacenote-hero">
+      <section 
+        className="pacenote-hero"
+        onMouseMove={handleBgMouseMove}
+        style={{
+          '--mouse-x': mousePos.x,
+          '--mouse-y': mousePos.y
+        }}
+      >
         <div className="pacenote-hero-content">
           <div className="pacenote-hero-icon">⛵</div>
           <h1 className="pacenote-title">Pace Note</h1>

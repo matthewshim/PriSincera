@@ -3,13 +3,10 @@
   padding-bottom: 80px;
   background: var(--bg-void, #000000); /* OLED Void Black */
   position: relative;
-  /* CSS Gradient Fog dynamic coordinates */
-  --mouse-x: 50%;
-  --mouse-y: 20%;
 }
 
 /* 150ms debounced CSS Gradient Fog backlight aura morphing */
-.pacenote-page::before {
+.pacenote-hero::before {
   content: '';
   position: absolute;
   top: 0;
@@ -34,6 +31,10 @@
   position: relative;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   z-index: 2;
+  overflow: hidden; /* Prevent light leakage outside the hero section */
+  /* CSS Gradient Fog dynamic coordinates */
+  --mouse-x: 50%;
+  --mouse-y: 20%;
 }
 
 .pacenote-hero-content {
