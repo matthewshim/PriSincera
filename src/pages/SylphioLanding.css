@@ -462,11 +462,11 @@
   font-weight: 400;
 }
 
-.sylphio-price-desc {
+.sylphio-pricing-card .sylphio-price-desc {
   color: var(--text-secondary, #a1a1aa);
   font-size: 0.88rem;
   line-height: 1.5;
-  margin-bottom: 48px; /* 요금제 소개 문구와 주요 기능 리스트 사이의 시원하고 확실한 호흡 여백 확보 */
+  margin-bottom: 48px !important; /* .premium-card p 의 margin: 0; 강제 덮어쓰기 무력화 및 여백 보장 */
 }
 
 .sylphio-pricing-features {
