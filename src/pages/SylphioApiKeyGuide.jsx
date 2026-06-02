@@ -154,6 +154,7 @@ export default function SylphioApiKeyGuide() {
   
   return (
     <div className="sylphio-guide">
+      <SylphioNav />
       <div className="sylphio-guide-container">
         
         <div className="sylphio-guide-header">
@@ -162,8 +163,6 @@ export default function SylphioApiKeyGuide() {
             {d.subtitle}
           </p>
         </div>
-
-        <SylphioNav />
 
         <div className="sylphio-guide-byok-note">
           <div className="sylphio-guide-byok-icon">🛡️</div>

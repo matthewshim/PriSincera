@@ -117,6 +117,7 @@ export default function SylphioPrivacy() {
 
   return (
     <div className="sylphio-privacy">
+      <SylphioNav />
       <div className="sylphio-privacy-container">
         
         <div className="sylphio-privacy-header">
@@ -124,8 +125,6 @@ export default function SylphioPrivacy() {
           <h1>{d.title}</h1>
           <div className="sylphio-privacy-meta">{d.meta}</div>
         </div>
-
-        <SylphioNav />
 
         <div className="sylphio-privacy-intro">
           {d.intro}

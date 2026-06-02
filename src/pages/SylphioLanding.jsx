@@ -299,6 +299,7 @@ export default function SylphioLanding() {
         '--mouse-y': mousePos.y
       }}
     >
+      <SylphioNav />
       {/* --- HERO SECTION --- */}
       <section className="sylphio-hero">
         <div className="sylphio-core-container">
@@ -330,8 +331,6 @@ export default function SylphioLanding() {
           </Link>
         </div>
       </section>
-      
-      <SylphioNav />
       
       {/* --- CORE FEATURES SECTION --- */}
       <section className="sylphio-section">
@@ -490,16 +489,6 @@ export default function SylphioLanding() {
           </div>
         </div>
       </section>
-      
-      {/* --- FOOTER / PRIVACY AGREEMENT --- */}
-      <footer className="sylphio-section" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'center', padding: '40px 24px' }}>
-        <p style={{ color: '#475569', fontSize: '0.9rem', marginBottom: '8px' }}>
-          {d.footerDesc}
-        </p>
-        <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>
-          {d.footerSupport}: <a href="mailto:support@prisincera.com" style={{ color: '#60a5fa', textDecoration: 'none' }}>support@prisincera.com</a>
-        </p>
-      </footer>
     </div>
   );
 }
