@@ -154,15 +154,16 @@ export default function SylphioApiKeyGuide() {
   
   return (
     <div className="sylphio-guide">
+      <div className="sylphio-guide-outer-header">
+        <h1>{d.title}</h1>
+        <p className="sylphio-guide-subtitle">
+          {d.subtitle}
+        </p>
+      </div>
+
       <SylphioNav />
+
       <div className="sylphio-guide-container">
-        
-        <div className="sylphio-guide-header">
-          <h1>{d.title}</h1>
-          <p className="sylphio-guide-subtitle">
-            {d.subtitle}
-          </p>
-        </div>
 
         <div className="sylphio-guide-byok-note">
           <div className="sylphio-guide-byok-icon">🛡️</div>

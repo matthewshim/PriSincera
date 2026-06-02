@@ -8,7 +8,6 @@
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-primary, #fafafa); /* Eye-friendly Off-White */
   font-family: 'Inter', 'Pretendard', -apple-system, sans-serif;
-  overflow-x: hidden;
   position: relative;
   /* CSS Gradient Fog dynamic coordinates */
   --mouse-x: 50%;

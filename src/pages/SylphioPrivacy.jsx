@@ -117,14 +117,15 @@ export default function SylphioPrivacy() {
 
   return (
     <div className="sylphio-privacy">
+      <div className="sylphio-privacy-outer-header">
+        <div className="sylphio-privacy-badge-zero">{d.badge}</div>
+        <h1>{d.title}</h1>
+        <div className="sylphio-privacy-meta">{d.meta}</div>
+      </div>
+
       <SylphioNav />
+
       <div className="sylphio-privacy-container">
-        
-        <div className="sylphio-privacy-header">
-          <div className="sylphio-privacy-badge-zero">{d.badge}</div>
-          <h1>{d.title}</h1>
-          <div className="sylphio-privacy-meta">{d.meta}</div>
-        </div>
 
         <div className="sylphio-privacy-intro">
           {d.intro}
