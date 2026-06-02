@@ -8,7 +8,7 @@
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-secondary, #a1a1aa);
   padding: 80px var(--space-lg, 24px) var(--space-2xl, 80px); /* GNB 상단 패딩 글로벌 표준화 */
-  font-family: 'Inter', 'Pretendard', sans-serif;
+  font-family: var(--font-body);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -71,7 +71,7 @@
 }
 
 .sylphio-hero h1 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 3rem; /* Builders Log 'hero-heading'과 100% 규격 일치 */
   font-weight: 700;
   line-height: 1.2;
@@ -140,7 +140,7 @@
 }
 
 .sylphio-guide-header h1 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 2.6rem);
   font-weight: 800;
   margin: 0 0 16px 0;
@@ -175,7 +175,7 @@
 }
 
 .sylphio-guide-byok-content h4 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
   color: #60a5fa;
   margin: 0 0 8px 0;
@@ -214,7 +214,7 @@
 }
 
 .sylphio-guide-section-badge {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 4px 10px;
@@ -242,7 +242,7 @@
 }
 
 .sylphio-guide-section-title h2 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 1.45rem;
   color: var(--text-primary, #fafafa);
   margin: 0;
@@ -272,7 +272,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--text-secondary, #a1a1aa);
@@ -310,7 +310,7 @@
 }
 
 .sylphio-guide-pricing-header {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 1.05rem;
   color: var(--text-primary, #fafafa);
   margin-bottom: 16px;
@@ -337,7 +337,7 @@
 }
 
 .sylphio-guide-pricing-item h5 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 0.95rem;
   margin: 0 0 8px 0;
   font-weight: 700;
@@ -374,7 +374,7 @@
 }
 
 .sylphio-guide-warning-content h5 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   color: #f43f5e;
   margin: 0 0 6px 0;
   font-size: 0.92rem;
@@ -395,7 +395,7 @@
 }
 
 .sylphio-guide-faq h3 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 1.6rem;
   color: var(--text-primary, #fafafa);
   margin: 0 0 20px 0;
@@ -412,7 +412,7 @@
 }
 
 .sylphio-guide-faq-item h5 {
-  font-family: 'Outfit', 'Pretendard', sans-serif;
+  font-family: var(--font-display);
   font-size: 1rem;
   color: var(--text-primary, #fafafa);
   margin: 0 0 8px 0;
