@@ -82,6 +82,53 @@
 
 .telescope-cursor.near-star .telescope-info { opacity: 1; }
 
+/* --- Magnetic Context Hovering (v4.5) --- */
+.telescope-cursor.hovering-magnetic .telescope-ring {
+    transform: scale(1.25);
+}
+
+.telescope-cursor.hovering-magnetic .telescope-ring circle {
+    stroke: rgba(253, 230, 138, 0.15);
+}
+
+.telescope-cursor.hovering-magnetic .telescope-ring line {
+    opacity: 0.12;
+}
+
+.telescope-cursor.hovering-magnetic .telescope-ring circle[fill] {
+    opacity: 0;
+}
+
+.telescope-cursor.hovering-magnetic .telescope-glow {
+    width: 90px;
+    height: 90px;
+    opacity: 0.85;
+    background: radial-gradient(circle, rgba(253, 230, 138, 0.08) 0%, rgba(245, 158, 11, 0.03) 50%, transparent 80%);
+}
+
+.telescope-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(253, 230, 138, 0.95);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    text-shadow: 0 0 8px rgba(253, 230, 138, 0.2);
+}
+
+.telescope-cursor.hovering-magnetic .telescope-label {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
 /* --- Hide on mobile/touch --- */
 @media (max-width: 768px) {
     .telescope-cursor { display: none; }

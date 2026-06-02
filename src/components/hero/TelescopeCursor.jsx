@@ -47,12 +47,33 @@ export default function TelescopeCursor() {
     function onLeave() { cursor.classList.remove('visible'); targetX = -200; targetY = -200; }
     function onEnter() { cursor.classList.add('visible'); }
     function onOver(e) {
-      if (e.target.closest('a, button, input, textarea, select, label, [role="button"], [tabindex]')) {
+      const magneticTarget = e.target.closest('[data-hover-text]');
+      if (magneticTarget) {
+        const hoverText = magneticTarget.getAttribute('data-hover-text');
+        if (hoverText) {
+          cursor.classList.add('hovering-magnetic');
+          const label = cursor.querySelector('.telescope-label');
+          if (label) label.textContent = hoverText;
+          cursor.classList.remove('hovering-interactive');
+          return;
+        }
+      }
+
+      const interactive = e.target.closest('a, button, input, textarea, select, label, [role="button"], [tabindex]');
+      if (interactive) {
         cursor.classList.add('hovering-interactive');
       }
     }
     function onOut(e) {
-      if (e.target.closest('a, button, input, textarea, select, label, [role="button"], [tabindex]')) {
+      const magneticTarget = e.target.closest('[data-hover-text]');
+      if (!magneticTarget) {
+        cursor.classList.remove('hovering-magnetic');
+        const label = cursor.querySelector('.telescope-label');
+        if (label) label.textContent = '';
+      }
+
+      const interactive = e.target.closest('a, button, input, textarea, select, label, [role="button"], [tabindex]');
+      if (!interactive) {
         cursor.classList.remove('hovering-interactive');
       }
     }
@@ -124,6 +145,7 @@ export default function TelescopeCursor() {
       </svg>
       <div className="telescope-glow"></div>
       <div className="telescope-info" ref={infoRef}></div>
+      <div className="telescope-label"></div>
     </div>
   );
 }

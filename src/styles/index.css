@@ -238,17 +238,35 @@ button { background: none; border: none; font: inherit; color: inherit; }
     50% { box-shadow: 0 0 15px 0 rgba(34, 211, 238, 0.15); }
 }
 
-/* Unified Haptic Active pressed scaling state */
+/* Unified Haptic Active pressed scaling state (v4.5) */
+.haptic-trigger:active,
 .btn-primary:active,
 .btn-secondary:active,
-.btn-glow:active {
+.btn-glow:active,
+a:active,
+button:active,
+.sylphio-tab:active,
+.daily-tab:active,
+.pacenote-tab:active,
+.pacenote-cell:active,
+.builder-card:active,
+.daily-card:active,
+.signal-article-card:active {
     transform: scale(0.97) translateY(0) !important;
     transition-duration: 70ms !important;
 }
 
+/* 3D Tilt Card Base Utility (v4.5) */
+.premium-3d-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s ease, box-shadow 0.25s ease;
+}
+
 /* Ensure default cursor for mobile media queries */
 @media (max-width: 768px) {
-    .btn-primary, .btn-secondary, .btn-glow {
+    .btn-primary, .btn-secondary, .btn-glow, .haptic-trigger {
         cursor: pointer;
     }
 }
+

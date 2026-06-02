@@ -126,7 +126,7 @@ export default function PaceNoteChronoRibbon({
         {['Q1', 'Q2', 'Q3', 'Q4'].map(q => {
           const isCurrentQ = getQuarterFromWeekId(currentWeekId) === q;
           const isActiveQ = activeQuarter === q;
-          let btnClass = "quarter-segment-btn";
+          let btnClass = "quarter-segment-btn haptic-trigger";
           if (isActiveQ) btnClass += " active";
           if (isCurrentQ) btnClass += " current-voyage";
           
@@ -200,6 +200,7 @@ export default function PaceNoteChronoRibbon({
             cardClass += ` ${state}`;
             if (isSelected) cardClass += " selected";
             if (isAllCompleted) cardClass += " all-completed";
+            if (!isUnoperated && !isLocked) cardClass += " haptic-trigger";
 
             return (
               <button
@@ -209,6 +210,7 @@ export default function PaceNoteChronoRibbon({
                 onClick={() => !isUnoperated && !isLocked && onSelectWeek(wId)}
                 disabled={isUnoperated || isLocked}
                 title={isUnoperated ? t('paceNote.chronoUnoperatedTooltip') : isLocked ? t('paceNote.chronoLockedTooltip') : t('paceNote.chronoOrbitTooltip', { week: wNum })}
+                data-hover-text={!isUnoperated && !isLocked ? "GO" : undefined}
               >
                 <div className="ribbon-card-top">
                   <div className="ribbon-card-header-left">

@@ -105,7 +105,7 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
       <div className="chrono-calendar-header">
         <button 
           onClick={handlePrevMonth} 
-          className="chrono-calendar-nav-btn" 
+          className="chrono-calendar-nav-btn haptic-trigger" 
           aria-label={locale === 'ja' ? '前月' : locale === 'en' ? 'Previous month' : '이전 달'}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -133,7 +133,7 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
         <button 
           onClick={handleNextMonth} 
           disabled={isNextDisabled()} 
-          className={`chrono-calendar-nav-btn ${isNextDisabled() ? 'disabled' : ''}`}
+          className={`chrono-calendar-nav-btn haptic-trigger ${isNextDisabled() ? 'disabled' : ''}`}
           aria-label={locale === 'ja' ? '翌月' : locale === 'en' ? 'Next month' : '다음 달'}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -162,8 +162,9 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
               disabled={!isActive}
               onMouseEnter={() => isActive && onHoverDate(dateStr)}
               onClick={() => isActive && onSelectDate(dateStr)}
-              className={`chrono-calendar-day-cell ${cell.isCurrentMonth ? 'current-month' : 'other-month'} ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}`}
+              className={`chrono-calendar-day-cell ${cell.isCurrentMonth ? 'current-month' : 'other-month'} ${isActive ? 'active haptic-trigger' : ''} ${isToday ? 'today' : ''}`}
               title={isActive ? (locale === 'ja' ? `${dateStr} ダイジェスト要約を表示` : locale === 'en' ? `View digest summary for ${dateStr}` : `${dateStr} 다이제스트 요약 보기`) : dateStr}
+              data-hover-text={isActive ? "VIEW" : undefined}
             >
               <div className="day-number-container">
                 <span className="day-number">{cell.day}</span>

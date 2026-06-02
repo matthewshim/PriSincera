@@ -140,7 +140,6 @@
 .pacenote-bento-card:hover {
   background: rgba(255, 255, 255, 0.035);
   border-color: var(--glass-border-hover);
-  transform: translateY(-2px);
 }
 
 /* ── Consolidated Premium Unified Card Style ── */

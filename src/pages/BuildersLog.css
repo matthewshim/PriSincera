@@ -48,7 +48,7 @@
   transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.log-hero-section.reveal-active {
+.log-hero-section.revealed {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
@@ -125,7 +125,7 @@
   margin-bottom: 24px;
 }
 
-.builder-card.reveal-active {
+.builder-card.revealed {
   opacity: 1;
   transform: translateY(0);
 }
@@ -186,7 +186,6 @@
   border-color: color-mix(in srgb, var(--accent-color) 35%, rgba(255, 255, 255, 0.05));
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 
               0 0 24px color-mix(in srgb, var(--accent-color) 8%, transparent);
-  transform: translateY(-4px);
 }
 
 .builder-card-link-wrapper {

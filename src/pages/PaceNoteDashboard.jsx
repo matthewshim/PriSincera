@@ -146,6 +146,41 @@ export default function PaceNoteDashboard() {
   const [loading, setLoading] = useState(true);
   const { locale, t } = useTranslation();
 
+  // 3D Tilt states & handlers (v4.5)
+  const card3dRef = React.useRef(null);
+  const [tiltStyle, setTiltStyle] = useState({});
+
+  const handleCardMouseMove = (e) => {
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouchDevice) return;
+
+    const card = card3dRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const xc = rect.width / 2;
+    const yc = rect.height / 2;
+    const dx = (x - xc) / xc;
+    const dy = (y - yc) / yc;
+
+    // 최대 4도 수준의 묵직하고 부드러운 3D Tilt (디자인 시스템 4.5 규격 준수)
+    const tiltX = (dy * -4).toFixed(2);
+    const tiltY = (dx * 4).toFixed(2);
+
+    setTiltStyle({
+      transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.005, 1.005, 1.005)`
+    });
+  };
+
+  const handleCardMouseLeave = () => {
+    setTiltStyle({
+      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
+    });
+  };
+
   // CSS Gradient Fog state
   const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
 
@@ -846,7 +881,14 @@ export default function PaceNoteDashboard() {
 
                 return (
                   <>
-                    <div className="pacenote-bento-card consolidated-pace-card">
+                    <div 
+                      className="pacenote-bento-card consolidated-pace-card premium-3d-card"
+                      ref={card3dRef}
+                      onMouseMove={handleCardMouseMove}
+                      onMouseLeave={handleCardMouseLeave}
+                      style={tiltStyle}
+                      data-hover-text="VIEW"
+                    >
                       {/* ── Unified Premium Header ── */}
                       <div className="pacenote-card-header consolidated-header">
                         <h2 className="consolidated-header-title">
@@ -884,7 +926,7 @@ export default function PaceNoteDashboard() {
                           
                           {/* ── Omni-Orbit Trigger ── */}
                           {isCurrent && (
-                            <button className="pacenote-omnibar-trigger" onClick={() => setShowOmniModal(true)}>
+                            <button className="pacenote-omnibar-trigger haptic-trigger" onClick={() => setShowOmniModal(true)}>
                               <span className="omnibar-icon">✨</span>
                               <span className="omnibar-placeholder">{t('paceNote.omnibarPlaceholder')}</span>
                               <kbd className="omnibar-shortcut">⌘K</kbd>
@@ -898,7 +940,7 @@ export default function PaceNoteDashboard() {
                                 return (
                                   <label 
                                     key={task.id} 
-                                    className={`pacenote-task-item ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
+                                    className={`pacenote-task-item haptic-trigger ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
                                     style={{ '--category-theme': task.color || '#A78BFA' }}
                                   >
                                     <input 

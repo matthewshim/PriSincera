@@ -1,32 +1,50 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
+import useScrollReveal from '../hooks/useScrollReveal';
 import logMeta from '../data/buildersLogMeta.json';
 import { useTranslation } from '../contexts/LanguageContext';
 import './BuildersLog.css';
 
-function useScrollReveal(options = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        el.classList.add('reveal-active');
-        observer.unobserve(el);
-      }
-    }, options);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [options.threshold, options.rootMargin]);
-  return ref;
-}
-
 const ChapterCard = ({ chapter, index }) => {
   const { locale, localize, t } = useTranslation();
-  const ref = useScrollReveal();
+  const revealRef = useScrollReveal({ threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+  const cardRef = useRef(null);
   const commits = chapter.commits || [];
   const isFeatured = index === 0;
+
+  const [tiltStyle, setTiltStyle] = useState({});
+
+  const handleMouseMove = (e) => {
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouchDevice) return;
+
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const xc = rect.width / 2;
+    const yc = rect.height / 2;
+    const dx = (x - xc) / xc;
+    const dy = (y - yc) / yc;
+
+    // 최대 5~6도 수준으로 묵직하게 3D Tilt + 공중부유(-4px) + scale3d(1.015) (디자인 시스템 4.5 규격 준수)
+    const tiltX = (dy * -5).toFixed(2);
+    const tiltY = (dx * 5).toFixed(2);
+
+    setTiltStyle({
+      transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px) scale3d(1.015, 1.015, 1.015)`
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTiltStyle({
+      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)'
+    });
+  };
   
   // 한국어 정독 기준 (분당 150자 내외)으로 읽는 시간(Read Time) 산정
   // 영문은 단어 및 공백으로 인한 문자수 팽창을 고려하여 기준값(Divisor)을 240으로 보정
@@ -42,10 +60,20 @@ const ChapterCard = ({ chapter, index }) => {
   return (
     <div 
       className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'}`} 
-      ref={ref}
+      ref={revealRef}
     >
       <Link to={`/builders-log/${chapter.slug}`} className="builder-card-link-wrapper">
-        <div className="builder-card-glass" style={{ '--accent-color': chapter.accent }}>
+        <div 
+          className="builder-card-glass premium-3d-card haptic-trigger" 
+          ref={cardRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            ...tiltStyle,
+            '--accent-color': chapter.accent
+          }}
+          data-hover-text="READ"
+        >
           <div className="card-glow-bg"></div>
           
           {/* Featured Card 전용 상단 100% 가로 헤더 */}

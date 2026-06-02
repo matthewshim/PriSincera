@@ -1,19 +1,18 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-05-27
-version: v4.0
+last_updated: 2026-06-02
+version: v4.5
 target_files:
   - src/styles/index.css
-  - src/components/philosophy/PhilosophySection.css
-  - src/components/journey/JourneySection.css
-  - src/components/work/WorkSection.css
-  - src/components/connect/ConnectSection.css
-  - src/components/layout/Header.css
-  - src/components/pacenote/PaceNoteWeeklyCalendar.css
+  - src/components/hero/TelescopeCursor.jsx
+  - src/components/hero/TelescopeCursor.css
+  - src/pages/BuildersLog.jsx
+  - src/pages/DailyDigest.jsx
+  - src/pages/PaceNoteDashboard.jsx
 ---
 
-# 📐 PriSincera Design System (v4.0: Aura-Neutral & Semantic Interaction)
+# 📐 PriSincera Design System (v4.5: Unified Interactive Design System)
 
 ## 📝 Revision History
 
@@ -23,10 +22,11 @@ target_files:
 | v2.5 | 2026-05-19 | Designer | Bento Chrono-Calendar & 3-Tab Workstation Theme 규격 정의 | DailyDigest |
 | v2.6 | 2026-05-20 | Designer | PaceNote Bento Weekly Calendar & Voyage Horizon 디자인 토큰 표준 수립 | PaceNote |
 | v3.0 | 2026-05-27 | AI Agent | 여백 최적화(Density) 및 퍼플 배경 색상 누수 완전히 제거(Desaturated Chrono-Neutral) 규격 명문화 | CSS Layout & Color System |
-| v4.0 | 2026-05-27 | AI Agent | **차세대 의미론적 CTA 버튼 설계 규격(Semantic CTA) 및 글로벌 최고 수준 디자인 시스템 분석(Linear, Vercel, HIG) 반영** | Global Brand System & UI Refactoring |
+| v4.0 | 2026-05-27 | AI Agent | 차세대 의미론적 CTA 버튼 설계 규격(Semantic CTA) 및 글로벌 최고 수준 디자인 시스템 분석(Linear, Vercel, HIG) 반영 | Global Brand System & UI Refactoring |
+| v4.5 | 2026-06-02 | AI Agent | **글로벌 인터랙션 대통합 (3D Tilt, 마그네틱 TelescopeCursor, Unified Haptic active scale) 규격 제정** | Global Interaction System & UI Refactoring |
 
 > **"Sincerity, Prioritized."**
-> 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 v4.0 표준 가이드라인입니다. 
+> 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 v4.5 표준 가이드라인입니다. 
 
 ---
 
@@ -272,6 +272,31 @@ target_files:
 ### 6-2. Micro-Interactions (마이크로 인터랙션)
 - **Button Active State**: 클릭 시 `transform: scale(0.97)`을 주어 물리적 버튼을 누르는 실제적인 타격감을 부여합니다.
 - **Spotlight Glow**: 카드 호버 시 단순히 테두리 색상만 바뀌는 것이 아니라, 카드 내부 마우스 커서 위치를 따라다니는 빛 반사(Glow) 효과를 전역 카드 시스템에 통합합니다.
+
+### 6-3. 🌌 3D Tilt Physics (입체 호버 스펙)
+카드형 UI 컴포넌트들에 마우스 호버 시, 마우스 좌표 추종형 입체 3D 기울기 효과를 일괄 상속하여 프리미엄 햅틱 깊이를 형성합니다.
+* **디바이스 대응 예외 처리**: 모바일/터치 디바이스에서는 3D Tilt 연산을 전면 비활성화하고, 깔끔한 2D `scale(1.01)` 호버 및 햅틱 active scale로 예외 처리하여 오작동 및 성능 저하를 방지합니다.
+* **기울기 감도 차별화 공식 (Differentiated Sensitivity)**:
+  - **소개 및 체험 위주 카드** (예: 실피오 Feature 카드): 역동적이고 즐거운 경험을 위해 최대 **`10도`** 수준의 깊은 기울기 허용.
+  - **정보 밀도가 높은 묵직한 본문 카드** (예: 빌더스 로그 챕터 카드, 데일리 큐레이션 피드 카드, 페이스노트 목표/캘린더 카드): 묵직하고 진중한 신뢰감을 주기 위해 최대 **`5 ~ 7도`** 범위 내로 억제하여 적용.
+* **물리 메커니즘**:
+  - 카드 중심을 기준으로 마우스 포인터의 상대적인 X, Y 위치 비율을 계산하여 CSS Custom Property(`--rx`, `--ry`)로 실시간 주입.
+  - 적용 스타일: `transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) scale3d(1.02, 1.02, 1.02);`
+
+### 6-4. 🔭 TelescopeCursor Magnetic Context Interaction
+커스텀 커서(`TelescopeCursor`)가 인터랙티브 타겟과 반응하여 단순 크기 확장을 넘어, 상황별 마그네틱 텍스트를 노출하도록 진화합니다.
+* **추적 대상 확장**: 기존 링크(`a`, `button`)에 국한되었던 호버 대상을 빌더스 로그 카드(`.builder-card`), 데일리 피드 카드(`.daily-card`), 페이스노트 대시보드 셀(`.pacenote-cell`), 실피오 피처 카드(`.sylphio-feature-card`) 전역으로 전면 확대.
+* **자성 텍스트 라벨 (Magnetic Label)**:
+  - 타겟에 `data-hover-text` 속성(예: `data-hover-text="READ"`, `data-hover-text="VIEW"`, `data-hover-text="TRY"`)이 지정되어 있는 경우, `TelescopeCursor`가 해당 요소를 감지하여 포인터를 확장함과 동시에 정중앙에 은은하게 엠보싱 처리된 텍스트 가이드를 투사합니다.
+  - 스타일: `--cursor-size`가 80px 이상으로 확장되고 폰트 크기 `10px`, 자간 `0.1em`, 무채색 세미 트랜스페어런트 텍스트 모핑을 동반함.
+
+### 6-5. 🎯 Unified Haptic Active Scale (대통합 햅틱 클릭 피드백)
+모든 터치 가능 요소 및 클릭 주체에 대해 균일하고 쫀득한 타격감을 피드백하는 물리 규격을 대통합합니다.
+* **적용 범위**: LNB/GNB 메뉴 탭, 아코디언 헤더, 캘린더 날짜 셀, 옴니 검색 모달 트리거, 모든 형태의 버튼(`.btn-primary`, `.btn-secondary` 등) 및 앵커.
+* **물리적 규격 (Active Haptic Standard)**:
+  - **눌림 압축비**: `transform: scale(0.97) !important;`
+  - **복원 반응 시간**: `transition-duration: 70ms !important;`
+  - 클래스 선언 `.haptic-trigger` 또는 해당 컴포넌트의 `:active` 의사 클래스(Pseudo-class)에 즉각 매핑.
 
 ---
 
