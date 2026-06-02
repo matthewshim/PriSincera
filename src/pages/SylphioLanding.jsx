@@ -316,7 +316,7 @@ export default function SylphioLanding() {
           <a 
             href="#" 
             onClick={handleAlert} 
-            className="btn-primary"
+            className="btn-sylphio-primary"
             id="btn-download-mac"
           >
             <span>{d.heroCtaDownload}</span>
@@ -448,7 +448,7 @@ export default function SylphioLanding() {
             <a 
               href="#" 
               onClick={handleAlert} 
-              className="btn-secondary"
+              className="btn-sylphio-secondary"
               style={{ textAlign: 'center', justifyContent: 'center' }}
               id="btn-pricing-free"
             >
@@ -474,7 +474,7 @@ export default function SylphioLanding() {
             <a 
               href="#" 
               onClick={handleAlert} 
-              className="btn-primary"
+              className="btn-sylphio-primary"
               style={{ textAlign: 'center', justifyContent: 'center' }}
               id="btn-pricing-pro"
             >

@@ -37,12 +37,13 @@
     --gradient-subtle: linear-gradient(135deg, #6D28D9, #A78BFA);
     --gradient-cta: linear-gradient(135deg, rgba(109, 40, 217, 0.15), rgba(167, 139, 250, 0.1));
 
-    /* Semantic CTA Button Tokens (v4.0) */
+    /* Semantic CTA Button Tokens (v4.0) - Default: Purple/Violet (PriSincera Brand) */
     --btn-primary-bg: var(--gradient-cta);
     --btn-primary-border: rgba(196, 181, 253, 0.2);
     --btn-primary-border-hover: rgba(196, 181, 253, 0.35);
     --btn-primary-glow: rgba(124, 58, 237, 0.15);
     --btn-primary-glow-hover: rgba(124, 58, 237, 0.3);
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(109, 40, 217, 0.25), rgba(167, 139, 250, 0.18));
     
     --btn-secondary-bg: rgba(25, 25, 25, 0.65);
     --btn-secondary-bg-hover: rgba(35, 35, 35, 0.85);
@@ -196,7 +197,7 @@ button { background: none; border: none; font: inherit; color: inherit; }
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, rgba(109, 40, 217, 0.25), rgba(167, 139, 250, 0.18));
+    background: var(--btn-primary-hover-bg);
     border-color: var(--btn-primary-border-hover);
     box-shadow: 0 8px 30px var(--btn-primary-glow-hover);
     transform: translateY(-2px);
@@ -268,5 +269,52 @@ button:active,
     .btn-primary, .btn-secondary, .btn-glow, .haptic-trigger {
         cursor: pointer;
     }
+}
+
+/* ============================================
+   Service-Specific Scoped CTA Themes (v4.7)
+   ============================================ */
+
+/* 1. Builder's Log (Indigo/Purple Theme) */
+.builders-log-wrapper,
+.builders-log-detail-wrapper {
+    --btn-primary-bg: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.1));
+    --btn-primary-border: rgba(196, 181, 253, 0.2);
+    --btn-primary-border-hover: rgba(196, 181, 253, 0.35);
+    --btn-primary-glow: rgba(124, 58, 237, 0.15);
+    --btn-primary-glow-hover: rgba(124, 58, 237, 0.3);
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(139, 92, 246, 0.18));
+}
+
+/* 2. Daily Digest (Cyan Theme) */
+.daily-digest-page {
+    --btn-primary-bg: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(34, 211, 238, 0.1));
+    --btn-primary-border: rgba(34, 211, 238, 0.2);
+    --btn-primary-border-hover: rgba(34, 211, 238, 0.35);
+    --btn-primary-glow: rgba(6, 182, 212, 0.15);
+    --btn-primary-glow-hover: rgba(6, 182, 212, 0.3);
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(34, 211, 238, 0.18));
+}
+
+/* 3. Pace Note (Emerald/Green Theme) */
+.pacenote-page {
+    --btn-primary-bg: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(16, 185, 129, 0.1));
+    --btn-primary-border: rgba(52, 211, 153, 0.2);
+    --btn-primary-border-hover: rgba(52, 211, 153, 0.35);
+    --btn-primary-glow: rgba(52, 211, 153, 0.15);
+    --btn-primary-glow-hover: rgba(52, 211, 153, 0.3);
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(52, 211, 153, 0.25), rgba(16, 185, 129, 0.18));
+}
+
+/* 4. Sylphio (Neon Blue/Cyan Theme) */
+.sylphio-landing,
+.sylphio-guide,
+.sylphio-privacy {
+    --btn-primary-bg: linear-gradient(135deg, rgba(30, 128, 255, 0.15), rgba(0, 242, 254, 0.15));
+    --btn-primary-border: rgba(0, 242, 254, 0.3);
+    --btn-primary-border-hover: rgba(0, 242, 254, 0.5);
+    --btn-primary-glow: rgba(30, 128, 255, 0.15);
+    --btn-primary-glow-hover: rgba(30, 128, 255, 0.3);
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(30, 128, 255, 0.25), rgba(0, 242, 254, 0.25));
 }
 

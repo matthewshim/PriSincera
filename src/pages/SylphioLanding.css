@@ -123,8 +123,8 @@
    Semantic CTA Button System
    ========================================================================== */
 
-/* Primary Button (.btn-primary) */
-.btn-primary {
+/* Primary Button (.btn-sylphio-primary) */
+.btn-sylphio-primary {
   font-family: var(--font-display);
   background: linear-gradient(135deg, rgba(30, 128, 255, 0.85) 0%, rgba(0, 242, 254, 0.75) 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -146,7 +146,7 @@
   text-decoration: none;
 }
 
-.btn-primary:hover {
+.btn-sylphio-primary:hover {
   transform: translateY(-2px);
   box-shadow: 
     0 8px 25px rgba(30, 128, 255, 0.4), 
@@ -154,8 +154,8 @@
   filter: brightness(1.08);
 }
 
-/* Secondary Button (.btn-secondary) */
-.btn-secondary {
+/* Secondary Button (.btn-sylphio-secondary) */
+.btn-sylphio-secondary {
   font-family: var(--font-display);
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -176,7 +176,7 @@
   text-decoration: none;
 }
 
-.btn-secondary:hover {
+.btn-sylphio-secondary:hover {
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.15);
   color: var(--text-primary, #fafafa);
@@ -184,8 +184,8 @@
 }
 
 /* Tactile Spring Press-Down Feedback */
-.btn-primary:active,
-.btn-secondary:active,
+.btn-sylphio-primary:active,
+.btn-sylphio-secondary:active,
 .btn-simulator:active {
   transform: scale(0.97) translateY(0) !important;
   transition-duration: 70ms !important;

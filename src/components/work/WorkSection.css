@@ -763,7 +763,13 @@
     top: 15%;
     right: 15%;
 }
+.visual-blur-orb.blue {
+    background: #1E80FF;
+    top: 15%;
+    right: 15%;
+}
 
+/* --- flagship-cta-btn color variations --- */
 .flagship-cta-btn.amber {
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(244, 63, 94, 0.1));
     border-color: rgba(245, 158, 11, 0.4);
@@ -772,6 +778,76 @@
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(244, 63, 94, 0.2));
     border-color: rgba(245, 158, 11, 0.6);
     box-shadow: 0 8px 30px rgba(245, 158, 11, 0.3);
+}
+
+.flagship-cta-btn.indigo {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.1));
+    border-color: rgba(124, 58, 237, 0.4);
+}
+.flagship-cta-btn.indigo:hover {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(139, 92, 246, 0.2));
+    border-color: rgba(124, 58, 237, 0.6);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+}
+
+.flagship-cta-btn.cyan {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(34, 211, 238, 0.1));
+    border-color: rgba(6, 182, 212, 0.4);
+}
+.flagship-cta-btn.cyan:hover {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(34, 211, 238, 0.2));
+    border-color: rgba(6, 182, 212, 0.6);
+    box-shadow: 0 8px 30px rgba(6, 182, 212, 0.3);
+}
+
+.flagship-cta-btn.green {
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(16, 185, 129, 0.1));
+    border-color: rgba(52, 211, 153, 0.4);
+}
+.flagship-cta-btn.green:hover {
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.25), rgba(16, 185, 129, 0.2));
+    border-color: rgba(52, 211, 153, 0.6);
+    box-shadow: 0 8px 30px rgba(52, 211, 153, 0.3);
+}
+
+.flagship-cta-btn.blue {
+    background: linear-gradient(135deg, rgba(30, 128, 255, 0.15), rgba(0, 242, 254, 0.15));
+    border-color: rgba(0, 242, 254, 0.4);
+}
+.flagship-cta-btn.blue:hover {
+    background: linear-gradient(135deg, rgba(30, 128, 255, 0.25), rgba(0, 242, 254, 0.25));
+    border-color: rgba(0, 242, 254, 0.6);
+    box-shadow: 0 8px 30px rgba(0, 242, 254, 0.3);
+}
+
+/* Sylphio Mockup CSS Art */
+.sylphio-mockup {
+    width: 280px;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sylphio-bento-core {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(0, 242, 254, 0.5) 0%, rgba(30, 128, 255, 0.25) 60%, rgba(0,0,0,0) 100%);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 
+        0 0 30px rgba(30, 128, 255, 0.4),
+        0 0 60px rgba(0, 242, 254, 0.2);
+}
+.sylphio-bento-pulse {
+    position: absolute;
+    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    border: 1.5px solid rgba(0, 242, 254, 0.4);
+    border-radius: 50%;
+    animation: bentoPulse 2.5s infinite linear;
+}
+@keyframes bentoPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.3); opacity: 0; }
 }
 
 /* ============================================

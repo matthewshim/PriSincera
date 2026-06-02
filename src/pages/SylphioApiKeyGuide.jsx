@@ -205,7 +205,7 @@ export default function SylphioApiKeyGuide() {
           <a 
             href="#" 
             onClick={handleAlert} 
-            className="btn-primary"
+            className="btn-sylphio-primary"
             id="btn-download-mac"
           >
             <span>{d.heroCtaDownload}</span>

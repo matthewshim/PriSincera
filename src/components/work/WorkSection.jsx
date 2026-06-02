@@ -49,7 +49,7 @@ export default function WorkSection() {
               <span className="work-tag">AI Pair Programmed</span>
             </div>
             <div className="flagship-cta-wrap">
-              <a href="https://github.com/matthewshim/PriSincera" target="_blank" rel="noopener noreferrer" className="btn-primary flagship-cta-btn">
+              <a href="https://github.com/matthewshim/PriSincera" target="_blank" rel="noopener noreferrer" className="btn-primary flagship-cta-btn amber">
                 {t('home.serviceBaseCta')}
               </a>
             </div>
@@ -104,7 +104,7 @@ export default function WorkSection() {
               <span className="work-tag">Troubleshooting</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/builders-log" className="btn-primary flagship-cta-btn">
+              <Link to="/builders-log" className="btn-primary flagship-cta-btn indigo">
                 {t('home.serviceBuildersCta')}
               </Link>
             </div>
@@ -159,7 +159,7 @@ export default function WorkSection() {
               <span className="work-tag">Newsletter</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/daily" className="btn-primary flagship-cta-btn">
+              <Link to="/daily" className="btn-primary flagship-cta-btn cyan">
                 {t('home.serviceDailyCta')}
               </Link>
             </div>
@@ -205,7 +205,7 @@ export default function WorkSection() {
               <span className="work-tag">Timeline</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/pacenote" className="btn-primary flagship-cta-btn">
+              <Link to="/pacenote" className="btn-primary flagship-cta-btn green">
                 {t('home.servicePaceCta')}
               </Link>
             </div>
@@ -226,6 +226,41 @@ export default function WorkSection() {
               </div>
             </div>
             <div className="visual-blur-orb emerald"></div>
+          </div>
+        </div>
+
+        {/* 5. Sylphio Flagship */}
+        <div className="flagship-card reveal-item flagship-glow" style={{ '--reveal-delay': '0.6s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}>
+          <div className="flagship-content">
+            <div className="flagship-label" style={{ color: '#00F2FE' }}>On-Device AI Translation</div>
+            <h3 className="flagship-title">Sylphio</h3>
+            <p className="flagship-desc">
+              {t('home.serviceSylphioDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">On-Device AI</span>
+              <span className="work-tag">Real-Time STT</span>
+              <span className="work-tag">macOS Native</span>
+              <span className="work-tag">Secure Keychain</span>
+            </div>
+            <div className="flagship-cta-wrap">
+              <Link to="/sylphio" className="btn-primary flagship-cta-btn blue">
+                {t('home.serviceSylphioCta')}
+              </Link>
+            </div>
+          </div>
+          <div className="flagship-visual">
+            <div className="dynamic-mockup sylphio-mockup">
+              <div className="sylphio-bento-core">
+                <div className="sylphio-bento-pulse"></div>
+              </div>
+            </div>
+            <div className="visual-blur-orb blue"></div>
           </div>
         </div>
         </div>
