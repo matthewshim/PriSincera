@@ -459,7 +459,7 @@
   color: var(--text-secondary, #a1a1aa);
   font-size: 0.88rem;
   line-height: 1.5;
-  margin-bottom: 36px; /* 요금제 소개 문구와 주요 기능 리스트 사이의 쾌적한 호흡 여백 확보 */
+  margin-bottom: 48px; /* 요금제 소개 문구와 주요 기능 리스트 사이의 시원하고 확실한 호흡 여백 확보 */
 }
 
 .sylphio-pricing-features {
