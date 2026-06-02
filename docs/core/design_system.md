@@ -195,10 +195,10 @@ target_files:
    * **목적 및 명세**: 3열 혹은 4열의 다이내믹한 그리드를 미려하게 분할할 수 있는 최적의 폭입니다. 주류 FHD 모니터에서 적정 좌우 여백(`360px`씩)을 주어 기하학적 깊이감과 정보 밀도를 동시에 양립시킵니다.
    * **코드 표준**: `max-width: 1200px; margin: 0 auto; width: 100%;`
 
-2. **정독 아티클 & 가이드 핏 (Reading & Information Sheet - `900px`)**
-   * **적용 범위**: `/sylphio/guide` (가이드), `/sylphio/privacy` (개인정보처리방침), `/daily/{date}` (다이제스트 본문)
-   * **목적 및 명세**: 가독성에 극도로 중점을 두어야 하는 글읽기 콘텐츠는 `900px` (순수 텍스트 리포트는 `800px`)을 초과하는 즉시 가독 지표가 파괴됩니다. 표(Table)나 코드 블록 등 넓은 시야와 가독 한계선을 모두 잡는 완벽한 타협점입니다.
-   * **코드 표준**: `max-width: 900px; margin: 0 auto; width: calc(100% - 48px);` (모바일 좌우 24px 보존)
+2. **정독 아티클 & 가이드 핏 (Reading & Information Sheet - `900px` / `1000px` for Sylphio family)**
+   * **적용 범위**: `/daily/{date}` (다이제스트 본문 - `900px`), `/sylphio/guide` (가이드), `/sylphio/privacy` (개인정보처리방침) (Sylphio 브랜드 통일성을 위해 `1000px` 적용)
+   * **목적 및 명세**: 가독성에 극도로 중점을 두어야 하는 글읽기 콘텐츠는 `900px`을 초과하는 즉시 가독 지표가 흔들리나, Sylphio 브랜드 제품군의 통일된 그리드 경험 및 표(Table)/코드 블록의 넉넉한 공간 확보를 위해 가이드와 개인정보처리방침은 `1000px`로 상향 조정하여 기하학적 균형을 이식합니다.
+   * **코드 표준**: `max-width: 900px` (또는 Sylphio 제품군 `1000px`); margin: 0 auto; width: calc(100% - 48px);
 
 3. **비주얼 브랜드 랜딩 핏 (Visual Branding & Canvas - `1440px`)**
    * **적용 범위**: 메인 Landing, `/sylphio` (실피오 브랜드 소개 페이지)
