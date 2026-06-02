@@ -222,6 +222,13 @@
   font-size: 1.05rem;
   max-width: 580px;
   margin: 0 auto;
+  white-space: pre-line; /* \n 개행 문자가 마크업 훼손 없이 줄바꿈으로 자연스럽게 작동하도록 바인딩 */
+}
+
+@media (min-width: 769px) {
+  .sylphio-section-header p {
+    max-width: 820px; /* PC 데스크톱에서 긴 설명글들이 찌그러지지 않고 미려한 한 줄 정렬이 되도록 최대 너비 확장 */
+  }
 }
 
 .sylphio-features-grid {
