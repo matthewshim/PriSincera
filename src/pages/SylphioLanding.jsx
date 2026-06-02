@@ -58,9 +58,9 @@ const SCENARIOS = {
 // Multilingual Content Map for Premium UX
 const TRANSLATIONS = {
   ko: {
-    heroTitle: "소리 없이 흐르는 지적인 통역 정령, Sylphio",
-    heroTagline: "화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
-    heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
+    heroTitle: "Sylphio",
+    heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
+    heroCtaDownload: "Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
     featuresTitle: "가장 완벽한 실시간 AI 통역의 5대 무기",
     featuresSub: "기존 번역 솔루션의 침묵 장애와 캡처 실패 한계를 뛰어넘은 Mac 전용 아키텍처",
@@ -105,9 +105,9 @@ const TRANSLATIONS = {
     footerSupport: "고객 지원"
   },
   en: {
-    heroTitle: "The Intelligent Translation Spirit in Silence, Sylphio",
-    heroTagline: "Captures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nExperience the powerful multilingual intelligence of Gemini and GPT flawlessly in a Mac native environment.",
-    heroCtaDownload: "📥 Free Download on Mac App Store",
+    heroTitle: "Sylphio",
+    heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nExperience the powerful multilingual intelligence of Gemini and GPT flawlessly in a Mac native environment.",
+    heroCtaDownload: "Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
     featuresTitle: "5 Ultimate Weapons for Flawless Real-Time AI Translation",
     featuresSub: "A Mac-dedicated architecture designed to eliminate silent freezes and capture failures.",
@@ -152,9 +152,9 @@ const TRANSLATIONS = {
     footerSupport: "Support"
   },
   ja: {
-    heroTitle: "静かに囁く知的な翻訳の精霊、Sylphio",
-    heroTagline: "画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPT의 강력한 다국어 지능을、Mac네이티브 환경에서 완벽하게 체험해 보세요.",
-    heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
+    heroTitle: "Sylphio",
+    heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio.\n画面 of すべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPT의 강력한 다국어 지능을、Mac네이티브 환경에서 완벽하게 체험해 보세요.",
+    heroCtaDownload: "Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
     featuresTitle: "完璧なリアルタイムAI通訳を実現する5つの武器",
     featuresSub: "従来の翻訳ツールの沈黙フリーズやキャプチャ失敗の限界を克服した、Mac専用アーキテクチャ。",
