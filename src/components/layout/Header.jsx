@@ -25,9 +25,10 @@ function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Close mobile menu on route change
+  // Close mobile menu and resync scrolled state on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setScrolled(window.scrollY > 60);
   }, [location.pathname]);
 
   // Lock body scroll when mobile menu is open
