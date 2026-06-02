@@ -79,7 +79,6 @@ const TRANSLATIONS = {
     simPlaceholder: "위의 시나리오 버튼을 클릭하여 AI 실시간 자막 시뮬레이션을 가동해 보세요.",
     pricingTitle: "합리적인 라이선스 모델",
     pricingSub: "매달 청구되는 무거운 구독 요금을 종결하세요. 개인 API Key 연동으로 쓰고 마신 만큼만 1원 단위로 지불합니다.",
-    popularBadge: "가장 인기있는 선택",
     priceFreeDesc: "기본적인 온디바이스 통역과 오디오 캡처 기능을 무제한 경험해 보세요.",
     priceProDesc: "단 한 번의 커피 두 잔 값 결제로 평생 라이선스를 획득하고 AI Pro 번역 기능을 완전 봉인 해제하세요.",
     freeTitle: "Sylphio Free",
@@ -127,7 +126,6 @@ const TRANSLATIONS = {
     simPlaceholder: "Click the scenario buttons above to run the AI real-time subtitle simulation.",
     pricingTitle: "A Fair and Reasonable License Model",
     pricingSub: "End heavy monthly subscriptions. Pay only for what you use down to the penny by connecting your own API key.",
-    popularBadge: "Most Popular",
     priceFreeDesc: "Experience basic on-device speech-to-text and screen audio capture for free, forever.",
     priceProDesc: "Unlock professional AI translation features permanently for the price of just two cups of coffee.",
     freeTitle: "Sylphio Free",
@@ -175,7 +173,6 @@ const TRANSLATIONS = {
     simPlaceholder: "上のシナリオボタンをクリックして、AIリアルタイム字幕シミュレーションを起動します。",
     pricingTitle: "合理的なライセンスモデル",
     pricingSub: "重い月額サブスクリプションはもう不要。個人APIキーとの連携により、消費した分だけ1円単位で支払う合理的なモデルです。",
-    popularBadge: "最も人気のある選択",
     priceFreeDesc: "基本的なオンデバイス通訳およびオーディオキャプチャ機能を無制限に体験してください。",
     priceProDesc: "コーヒー2杯分の支払いで、プロ仕様のAI翻訳エンジンと高度な要約機能を永続的にアンロックできます。",
     freeTitle: "Sylphio Free",
@@ -460,8 +457,8 @@ export default function SylphioLanding() {
           </div>
           
           {/* Pro Lifetime Tier */}
-          <div className="sylphio-pricing-card premium-card premium" style={{ position: 'relative' }}>
-            <div className="sylphio-pricing-badge">{d.popularBadge}</div>
+          <div className="sylphio-pricing-card premium-card premium" style={{ position: 'relative', overflow: 'hidden' }}>
+            <div className="sylphio-pricing-badge">POPULAR</div>
             <h3>{d.proTitle}</h3>
             <div className="sylphio-price">{d.proPrice} <span>{d.proPricePeriod}</span></div>
             <p className="sylphio-price-desc">

@@ -408,45 +408,30 @@
     0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Premium Pricing badge with interactive live light indicator */
+/* Premium Pricing Diagonal Corner Ribbon (Exquisite 3D Placement) */
 .sylphio-pricing-badge {
   position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 16px;
+  right: -32px;
+  transform: rotate(45deg);
   background: linear-gradient(135deg, #1e80ff 0%, #00f2fe 100%);
   color: #050505;
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   font-weight: 800;
-  padding: 4px 16px;
-  border-radius: 999px;
-  letter-spacing: 0.06em;
-  box-shadow: 
-    0 8px 20px rgba(30, 128, 255, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  padding: 4px 32px; /* 가로 길이를 넓게 빼서 모서리를 풍성히 채우고 클리핑 유도 */
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 12px rgba(30, 128, 255, 0.25);
   z-index: 10;
   white-space: nowrap;
+  text-align: center;
 }
 
 .sylphio-pricing-badge::before {
-  content: '';
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  box-shadow: 0 0 6px #FFFFFF;
-  animation: badgeDotPulse 1.8s infinite ease-in-out;
+  display: none; /* 코너 리본에서는 불필요하므로 숨김 */
 }
 
-@keyframes badgeDotPulse {
-  0%, 100% { opacity: 0.4; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.2); }
-}
+
 
 .sylphio-pricing-card h3 {
   font-family: var(--font-display);
