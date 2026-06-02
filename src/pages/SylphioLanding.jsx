@@ -25,7 +25,7 @@ function FeatureCard({ icon, title, description }) {
   
   return (
     <div 
-      className="sylphio-feature-card"
+      className="sylphio-feature-card premium-card"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ 
@@ -152,7 +152,7 @@ const TRANSLATIONS = {
   },
   ja: {
     heroTitle: "静かに囁く知的な翻訳の精霊、Sylphio",
-    heroTagline: "画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPTの強力な多言語知能を、Macネイティブ環境で完璧に体験してください。",
+    heroTagline: "画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPT의 강력한 다국어 지능을、Mac네이티브 환경에서 완벽하게 체험해 보세요.",
     heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
     featuresTitle: "完璧なリアルタイムAI通訳を実現する5つの武器",
@@ -181,7 +181,7 @@ const TRANSLATIONS = {
     proPrice: "$9.99",
     proPricePeriod: "/ 1回のみの支払い（永久ライセンス）",
     freeFeature1: "100% ローカルオンデバイス STTの無制限稼働",
-    freeFeature2: "システムオーディオ & マイクのリアルタイム収集",
+    freeFeature2: "システムオーディオ & 마이크のリアルタイム収集",
     freeFeature3: "Appleフレームワークベースの基本オフライン翻訳",
     freeFeature4: "リアルタイム・グラスモフィズム字幕ビューア搭載",
     proFeature1: "Freeティアのすべての価値を含む",
@@ -201,9 +201,16 @@ const TRANSLATIONS = {
 
 export default function SylphioLanding() {
   const { locale } = useTranslation();
-  // Safe localization fallback
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
+  // GNB activation hook (adds hero-ready class to document.body)
+  useEffect(() => {
+    document.body.classList.add('hero-ready');
+    return () => {
+      document.body.classList.remove('hero-ready');
+    };
+  }, []);
+
   // CSS Gradient Fog state
   const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
   
@@ -303,14 +310,14 @@ export default function SylphioLanding() {
             href="https://apps.apple.com" 
             target="_blank" 
             rel="noreferrer" 
-            className="btn-sylphio-primary"
+            className="btn-primary"
             id="btn-download-mac"
           >
             <span>{d.heroCtaDownload}</span>
           </a>
           <Link 
             to="/sylphio/guide" 
-            className="btn-sylphio-secondary"
+            className="btn-secondary"
             id="btn-guide-main"
           >
             <span>{d.heroCtaGuide}</span>
@@ -361,7 +368,7 @@ export default function SylphioLanding() {
           <p>{d.simSub}</p>
         </div>
         
-        <div className="sylphio-simulator-box">
+        <div className="sylphio-simulator-box premium-card">
           <div className="sylphio-simulator-controls">
             <button 
               className={`btn-simulator ${activeScenario === 'en' ? 'active' : ''}`}
@@ -425,7 +432,7 @@ export default function SylphioLanding() {
         
         <div className="sylphio-pricing-cards">
           {/* Free Tier */}
-          <div className="sylphio-pricing-card">
+          <div className="sylphio-pricing-card premium-card">
             <h3>{d.freeTitle}</h3>
             <div className="sylphio-price">{d.freePrice} <span>{d.freePricePeriod}</span></div>
             <p className="sylphio-price-desc">
@@ -441,7 +448,7 @@ export default function SylphioLanding() {
               href="https://apps.apple.com" 
               target="_blank" 
               rel="noreferrer" 
-              className="btn-sylphio-secondary"
+              className="btn-secondary"
               style={{ textAlign: 'center', justifyContent: 'center' }}
               id="btn-pricing-free"
             >
@@ -450,7 +457,7 @@ export default function SylphioLanding() {
           </div>
           
           {/* Pro Lifetime Tier */}
-          <div className="sylphio-pricing-card premium">
+          <div className="sylphio-pricing-card premium-card premium">
             <h3>{d.proTitle}</h3>
             <div className="sylphio-price">{d.proPrice} <span>{d.proPricePeriod}</span></div>
             <p className="sylphio-price-desc">
@@ -468,7 +475,7 @@ export default function SylphioLanding() {
               href="https://apps.apple.com" 
               target="_blank" 
               rel="noreferrer" 
-              className="btn-sylphio-primary"
+              className="btn-primary"
               style={{ textAlign: 'center', justifyContent: 'center' }}
               id="btn-pricing-pro"
             >

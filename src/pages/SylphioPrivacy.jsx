@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './SylphioPrivacy.css';
 
 export default function SylphioPrivacy() {
+  // GNB activation hook (adds hero-ready class to document.body)
+  useEffect(() => {
+    document.body.classList.add('hero-ready');
+    return () => {
+      document.body.classList.remove('hero-ready');
+    };
+  }, []);
+
   return (
     <div className="sylphio-privacy">
       <div className="sylphio-privacy-container">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 import './SylphioApiKeyGuide.css';
 
@@ -96,16 +96,16 @@ const TRANSLATIONS = {
     title: "Sylphio APIキー連携ガイド",
     subtitle: "個人用のAI APIキーをSylphioに連携し、月々の定額サブスク料金なしで、最高精度のリアルタイム翻訳と議事録要約を制限なく体験してください。",
     byokTitle: "BYOK (Bring Your Own Key) アーキテクチャのメリット",
-    byokDesc: "Sylphioは、ユーザー所有 of APIキーを直接入力する安全な方式（BYOK）を採用しています。録音音声や翻訳テキストは開発元のサーバーを一切仲介せず、ローカル端末とAIプロバイダのセキュアなエンドポイント間で直接通信されます。保存されたキーは、macOSの最高セキュリティストレージであるSecure Keychain（キーチェーン）に暗号化されて安全に保護されます。",
+    byokDesc: "Sylphioは、ユーザー所有のAPIキーを直接入力する安全な方式（BYOK）を採用しています。録音音声や翻訳テキストは開発元のサーバーを一切仲介せず、ローカル端末とAIプロバイダのセキュアなエンドポイント間で直接通信されます。保存されたキーは、macOSの最高セキュリティストレージであるSecure Keychain（キーチェーン）に暗号化されて安全に保護されます。",
     geminiTitle: "1. Google Gemini APIキー発行プロセス (推奨・無料)",
-    geminiIntro: "Google Geminiは、驚異的な翻訳理解力に加え、非常に強力な無料枠（Free Tier）を提供しており、Sylphio의 導入障壁をゼロに抑えることができます。",
+    geminiIntro: "Google Geminiは、驚異的な翻訳理解力に加え、非常に強力な無料枠（Free Tier）を提供しており、Sylphioの導入障壁をゼロに抑えることができます。",
     geminiStep1: "ブラウザを開き、aistudio.google.comにアクセスしてGoogleアカウントでログインします。",
     geminiStep2: "左側のサイドバーメニューにある Get API key ボタンをクリックします。",
-    geminiStep3: "画面中央の Create API key ボタンをクリックし、ポップアップで Create API key in new project を選択してキーを生成します。",
+    geminiStep3: "画面中央 of Create API key ボタンをクリックし、ポップアップで Create API key in new project を選択してキーを生成します。",
     geminiStep4: "生成された固有のキー文字列（AIzaSy...で始まる）をコピーし、安全に保管してください。",
     geminiPriceHeader: "Gemini 料金プラン＆無料枠ガイド",
     geminiFreeTitle: "無料枠 (Free Tier)",
-    geminiFreeDesc: "料金：100% 無料\n制限：1分あたり15回のリクエスト (15 RPM)、1日あたり1,500回のリクエスト。\nSylphioは1.5秒の無音検知後にリクエストを送信するため、通常の会話であれば実質的に完全無料で無制限に利用可能です。",
+    geminiFreeDesc: "料金：100% 無料\n制限：1分あたり15回のリクエスト (15 RPM), 1日あたり1,500回のリクエスト。\nSylphioは1.5秒の無音検知後にリクエストを送信するため、通常の会話であれば実質的に完全無料で無制限に利用可能です。",
     geminiPayTitle: "従量課金プラン (Pay-as-you-go)",
     geminiPayDesc: "制限のない超高速通訳が必要な場合、課金登録が可能です。料金は100万トークンあたり約0.075ドル（約10円）と、圧倒的にリーズナブルです。",
     
@@ -142,6 +142,14 @@ export default function SylphioApiKeyGuide() {
   const { locale } = useTranslation();
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
+  // GNB activation hook (adds hero-ready class to document.body)
+  useEffect(() => {
+    document.body.classList.add('hero-ready');
+    return () => {
+      document.body.classList.remove('hero-ready');
+    };
+  }, []);
+  
   return (
     <div className="sylphio-guide">
       <div className="sylphio-guide-container">
@@ -175,12 +183,18 @@ export default function SylphioApiKeyGuide() {
             <li className="sylphio-guide-step-item">
               <span className="sylphio-guide-step-number">1</span>
               <span className="sylphio-guide-step-text">
-                {d.geminiStep1.includes('aistudio.google.com') ? (
+                {locale === 'ko' ? (
                   <>
                     웹 브라우저를 열고 <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">Google AI Studio (aistudio.google.com)</a>에 접속하여 개인 구글 계정으로 로그인합니다.
                   </>
+                ) : locale === 'ja' ? (
+                  <>
+                    ブラウザを開き、<a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">Google AI Studio (aistudio.google.com)</a>にアクセスしてGoogleアカウントでログインします。
+                  </>
                 ) : (
-                  d.geminiStep1
+                  <>
+                    Open your web browser, go to <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">Google AI Studio (aistudio.google.com)</a>, and log in with your personal Google account.
+                  </>
                 )}
               </span>
             </li>
@@ -235,12 +249,18 @@ export default function SylphioApiKeyGuide() {
             <li className="sylphio-guide-step-item">
               <span className="sylphio-guide-step-number">1</span>
               <span className="sylphio-guide-step-text">
-                {d.openaiStep1.includes('platform.openai.com') ? (
+                {locale === 'ko' ? (
                   <>
                     <a href="https://platform.openai.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">OpenAI API Platform (platform.openai.com)</a>에 접속하여 가입 후 로그인합니다.
                   </>
+                ) : locale === 'ja' ? (
+                  <>
+                    <a href="https://platform.openai.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">OpenAI API Platform (platform.openai.com)</a> にアクセスし、登録およびログインします。
+                  </>
                 ) : (
-                  d.openaiStep1
+                  <>
+                    Visit the <a href="https://platform.openai.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">OpenAI API Platform (platform.openai.com)</a>, register, and log in.
+                  </>
                 )}
               </span>
             </li>
