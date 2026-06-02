@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioPrivacy.css';
@@ -157,13 +158,6 @@ export default function SylphioPrivacy() {
           >
             <span>{d.heroCtaDownload}</span>
           </a>
-          <Link 
-            to="/sylphio/guide" 
-            className="btn-secondary"
-            id="btn-guide-main"
-          >
-            <span>{d.heroCtaGuide}</span>
-          </Link>
         </div>
       </section>
 

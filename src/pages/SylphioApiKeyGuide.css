@@ -19,7 +19,7 @@
    Common Compact Sylphio Hero Styles
    ========================================================================== */
 .sylphio-hero {
-  min-height: auto;
+  min-height: 460px; /* 타 카테고리와 완벽히 일치하는 570px 수준의 웅장한 히어로 높이 고정 확보 */
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -321,13 +321,6 @@ export default function SylphioLanding() {
           >
             <span>{d.heroCtaDownload}</span>
           </a>
-          <Link 
-            to="/sylphio/guide" 
-            className="btn-secondary"
-            id="btn-guide-main"
-          >
-            <span>{d.heroCtaGuide}</span>
-          </Link>
         </div>
       </section>
       
