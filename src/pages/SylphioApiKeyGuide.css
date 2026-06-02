@@ -120,11 +120,11 @@
   max-width: 900px;
   width: calc(100% - 48px); /* 모바일/태블릿 반응형 여백 사수 */
   margin-top: 40px; /* LNB와의 여백을 시원하게 확보 */
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: var(--glass-bg); /* 디자인 시스템 표준 Glassmorphism 배경 */
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.08); /* 프리미엄 상단 테두리 미세 반사 */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-lg, 24px);
   padding: var(--space-xl, 40px); /* Spacing Density Optimization */
   box-shadow: 
@@ -191,9 +191,9 @@
 
 /* Glassmorphism Section */
 .sylphio-guide-section {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.015); /* 약간의 면 대비감 선사 */
   border: 1px solid rgba(255, 255, 255, 0.03);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-md, 20px);
   padding: 24px var(--space-lg, 24px); /* Density optimization */
   margin-bottom: var(--space-xl, 32px);
@@ -202,7 +202,7 @@
 }
 
 .sylphio-guide-section:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
   border-color: rgba(30, 128, 255, 0.2);
 }
 
