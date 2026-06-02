@@ -7,7 +7,7 @@
   min-height: 100vh;
   background: var(--bg-void, #000000); /* OLED Void Black */
   color: var(--text-secondary, #a1a1aa);
-  padding: 80px var(--space-lg, 24px) var(--space-2xl, 80px); /* GNB 상단 패딩 글로벌 표준화 */
+  padding: 80px 0 var(--space-2xl, 80px); /* GNB 상단 패딩 및 LNB 가로 100% 핏 */
   font-family: var(--font-body);
   display: flex;
   flex-direction: column;
@@ -25,7 +25,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 80px 24px 64px; /* 글로벌 규격 조율 세로 패딩 */
+  padding: 80px 24px 64px; /* 글로벌 규격 조율 세로 패딩 및 반응형 좌우 여백 */
   z-index: 2;
   text-align: center;
   width: 100%;
@@ -118,7 +118,7 @@
 
 .sylphio-guide-container {
   max-width: 900px;
-  width: 100%;
+  width: calc(100% - 48px); /* 모바일/태블릿 반응형 여백 사수 */
   margin-top: 40px; /* LNB와의 여백을 시원하게 확보 */
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -428,12 +428,84 @@
 
 @media (max-width: 640px) {
   .sylphio-guide-container {
+    width: calc(100% - 32px); /* 모바일 초밀착 여백 최적화 */
     padding: 20px;
     border-radius: 16px;
   }
   .sylphio-guide-header h1 {
     font-size: 1.8rem;
   }
+}
+
+/* ==========================================================================
+   Semantic CTA Button System
+   ========================================================================== */
+
+/* Primary Button (.btn-primary) */
+.btn-primary {
+  font-family: var(--font-display);
+  background: linear-gradient(135deg, rgba(30, 128, 255, 0.85) 0%, rgba(0, 242, 254, 0.75) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 14px 28px;
+  border-radius: 9999px; /* Pill */
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 
+    0 4px 15px rgba(30, 128, 255, 0.2), 
+    0 0 1px rgba(255, 255, 255, 0.15);
+  transition: all var(--duration-fast, 200ms) cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(30, 128, 255, 0.4), 
+    0 0 10px rgba(0, 242, 254, 0.2);
+  filter: brightness(1.08);
+}
+
+/* Secondary Button (.btn-secondary) */
+.btn-secondary {
+  font-family: var(--font-display);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-secondary, #a1a1aa);
+  padding: 14px 28px;
+  border-radius: 9999px; /* Pill */
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast, 200ms) cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary, #fafafa);
+  transform: translateY(-2px);
+}
+
+/* Tactile Spring Press-Down Feedback */
+.btn-primary:active,
+.btn-secondary:active {
+  transform: scale(0.97) translateY(0) !important;
+  transition-duration: 70ms !important;
 }
 
 
