@@ -9,7 +9,7 @@ const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
     heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
-    heroCtaDownload: "Mac App Store에서 무료 다운로드",
+    heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
     title: "Sylphio API Key 연동 가이드",
     subtitle: "개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고의 AI 실시간 번역 및 회의록 요약 기능을 한계 없이 누려보세요.",
@@ -57,7 +57,7 @@ const TRANSLATIONS = {
   en: {
     heroTitle: "Sylphio",
     heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nExperience the powerful multilingual intelligence of Gemini and GPT flawlessly in a Mac native environment.",
-    heroCtaDownload: "Free Download on Mac App Store",
+    heroCtaDownload: "📥 Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
     title: "Sylphio API Key Integration Guide",
     subtitle: "Integrate your personal AI API Key with Sylphio to enjoy the ultimate AI real-time translation and minutes summary features without limits and without monthly subscription fees.",
@@ -105,7 +105,7 @@ const TRANSLATIONS = {
   ja: {
     heroTitle: "Sylphio",
     heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio.\n画面 of すべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPT의 강력한 다국어 지능을、Mac네이티브 환경에서 완벽하게 체험해 보세요.",
-    heroCtaDownload: "Mac App Storeで無料ダウンロード",
+    heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
     title: "Sylphio APIキー連携ガイド",
     subtitle: "個人用のAI APIキーをSylphioに連携し、月々の定額サブスク料金なしで、最高精度のリアルタイム翻訳と議事録要約を制限なく体験してください。",
