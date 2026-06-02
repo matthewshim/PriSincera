@@ -35,22 +35,22 @@
 
 /* --- Hero Section (Aura & Cinema) --- */
 .sylphio-hero {
-  min-height: 90vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 180px var(--space-lg, 24px) var(--space-xl, 64px) var(--space-lg, 24px);
+  padding: 110px var(--space-lg, 24px) 24px var(--space-lg, 24px);
   z-index: 2;
   text-align: center;
 }
 
 .sylphio-core-container {
   position: relative;
-  width: 180px;
-  height: 180px;
-  margin-bottom: var(--space-xl, 32px);
+  width: 120px;
+  height: 120px;
+  margin-bottom: 16px;
 }
 
 /* 3D MeshTransmissionMaterial Simulation Core */

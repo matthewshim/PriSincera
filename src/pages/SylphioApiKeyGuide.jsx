@@ -7,6 +7,10 @@ import './SylphioApiKeyGuide.css';
 // Local Translation Dict for Premium UX
 const TRANSLATIONS = {
   ko: {
+    heroTitle: "소리 없이 흐르는 지적인 통역 정령, Sylphio",
+    heroTagline: "화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
+    heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
+    heroCtaGuide: "💡 API Key 발급 가이드 보기",
     title: "Sylphio API Key 연동 가이드",
     subtitle: "개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고의 AI 실시간 번역 및 회의록 요약 기능을 한계 없이 누려보세요.",
     byokTitle: "BYOK (Bring Your Own Key) 아키텍처의 장점",
@@ -51,6 +55,10 @@ const TRANSLATIONS = {
     faq2A: "- 원인: 사용 중인 OpenAI 플랫폼 계정에 사전 충전된 Balance(달러 크레딧)가 0인 상태이거나, 등록했던 카드 결제 정보가 만료되어 계정이 일시 잠금 상태일 때 발생합니다.\n- 해결법: platform.openai.com으로 이동하셔서 충전 잔액이 남아 있는지 재차 확인하시고 최소 5달러를 결제/충전해 두셔야 정상 가동됩니다."
   },
   en: {
+    heroTitle: "The Intelligent Translation Spirit in Silence, Sylphio",
+    heroTagline: "Captures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nExperience the powerful multilingual intelligence of Gemini and GPT flawlessly in a Mac native environment.",
+    heroCtaDownload: "📥 Free Download on Mac App Store",
+    heroCtaGuide: "💡 View API Key Integration Guide",
     title: "Sylphio API Key Integration Guide",
     subtitle: "Integrate your personal AI API Key with Sylphio to enjoy the ultimate AI real-time translation and minutes summary features without limits and without monthly subscription fees.",
     byokTitle: "Advantages of BYOK (Bring Your Own Key) Architecture",
@@ -95,6 +103,10 @@ const TRANSLATIONS = {
     faq2A: "- Cause: Your OpenAI API account balance is $0, or your registered card billing information has expired, causing a temporary account hold.\n- Solution: Go to platform.openai.com, check your balance, and pre-charge a minimum of $5 to restore service."
   },
   ja: {
+    heroTitle: "静かに囁く知的な翻訳の精霊、Sylphio",
+    heroTagline: "画面のすべての音声とマ이크入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPT의 강력한 다국어 지능을、Mac네이티브 환경에서 완벽하게 체험해 보세요.",
+    heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
+    heroCtaGuide: "💡 APIキー連携ガイドを見る",
     title: "Sylphio APIキー連携ガイド",
     subtitle: "個人用のAI APIキーをSylphioに連携し、月々の定額サブスク料金なしで、最高精度のリアルタイム翻訳と議事録要約を制限なく体験してください。",
     byokTitle: "BYOK (Bring Your Own Key) アーキテクチャのメリット",
@@ -141,9 +153,15 @@ const TRANSLATIONS = {
 };
 
 export default function SylphioApiKeyGuide() {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
+  // Alert handler for preparing app Store / downloads
+  const handleAlert = (e) => {
+    e.preventDefault();
+    alert(t('header.sylphioAlert'));
+  };
+
   // GNB activation hook (adds hero-ready class to document.body)
   useEffect(() => {
     document.body.classList.add('hero-ready');
@@ -154,12 +172,37 @@ export default function SylphioApiKeyGuide() {
   
   return (
     <div className="sylphio-guide">
-      <div className="sylphio-guide-outer-header">
-        <h1>{d.title}</h1>
-        <p className="sylphio-guide-subtitle">
-          {d.subtitle}
+      {/* 2Depth LNB 상단 공통 히어로 영역 */}
+      <section className="sylphio-hero">
+        <div className="sylphio-core-container">
+          <div className="sylphio-aurora-core"></div>
+          <div className="sylphio-aurora-ring"></div>
+        </div>
+        
+        <h1>{d.heroTitle}</h1>
+        
+        <p className="tagline" style={{ whiteSpace: 'pre-line' }}>
+          {d.heroTagline}
         </p>
-      </div>
+        
+        <div className="sylphio-hero-ctas">
+          <a 
+            href="#" 
+            onClick={handleAlert} 
+            className="btn-primary"
+            id="btn-download-mac"
+          >
+            <span>{d.heroCtaDownload}</span>
+          </a>
+          <Link 
+            to="/sylphio/guide" 
+            className="btn-secondary"
+            id="btn-guide-main"
+          >
+            <span>{d.heroCtaGuide}</span>
+          </Link>
+        </div>
+      </section>
 
       <SylphioNav />
 

@@ -6,6 +6,10 @@ import './SylphioPrivacy.css';
 // Local Multilingual Translation Dict for Privacy Policy
 const TRANSLATIONS = {
   ko: {
+    heroTitle: "소리 없이 흐르는 지적인 통역 정령, Sylphio",
+    heroTagline: "화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
+    heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
+    heroCtaGuide: "💡 API Key 발급 가이드 보기",
     badge: "데이터 무수집 원칙",
     title: "실피오 개인정보 처리방침",
     meta: "시행 일자: 2026-06-01 (예정)",
@@ -38,6 +42,10 @@ const TRANSLATIONS = {
     ]
   },
   en: {
+    heroTitle: "The Intelligent Translation Spirit in Silence, Sylphio",
+    heroTagline: "Captures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nExperience the powerful multilingual intelligence of Gemini and GPT flawlessly in a Mac native environment.",
+    heroCtaDownload: "📥 Free Download on Mac App Store",
+    heroCtaGuide: "💡 View API Key Integration Guide",
     badge: "Zero Data Collection",
     title: "Sylphio Privacy Policy",
     meta: "Effective Date: 2026-06-01 (Planned)",
@@ -70,6 +78,10 @@ const TRANSLATIONS = {
     ]
   },
   ja: {
+    heroTitle: "静かに囁く知的な翻訳의 정령、Sylphio",
+    heroTagline: "画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPT의 강력한 다국어 지능을、Mac네이티브 환경에서 완벽하게 체험해 보세요.",
+    heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
+    heroCtaGuide: "💡 APIキー連携ガイドを見る",
     badge: "データ無収集",
     title: "Sylphio 個人情報保護方針",
     meta: "施行日：2026-06-01 (予定)",
@@ -104,8 +116,14 @@ const TRANSLATIONS = {
 };
 
 export default function SylphioPrivacy() {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
+  
+  // Alert handler for preparing app Store / downloads
+  const handleAlert = (e) => {
+    e.preventDefault();
+    alert(t('header.sylphioAlert'));
+  };
 
   // GNB activation hook (adds hero-ready class to document.body)
   useEffect(() => {
@@ -117,11 +135,37 @@ export default function SylphioPrivacy() {
 
   return (
     <div className="sylphio-privacy">
-      <div className="sylphio-privacy-outer-header">
-        <div className="sylphio-privacy-badge-zero">{d.badge}</div>
-        <h1>{d.title}</h1>
-        <div className="sylphio-privacy-meta">{d.meta}</div>
-      </div>
+      {/* 2Depth LNB 상단 공통 히어로 영역 */}
+      <section className="sylphio-hero">
+        <div className="sylphio-core-container">
+          <div className="sylphio-aurora-core"></div>
+          <div className="sylphio-aurora-ring"></div>
+        </div>
+        
+        <h1>{d.heroTitle}</h1>
+        
+        <p className="tagline" style={{ whiteSpace: 'pre-line' }}>
+          {d.heroTagline}
+        </p>
+        
+        <div className="sylphio-hero-ctas">
+          <a 
+            href="#" 
+            onClick={handleAlert} 
+            className="btn-primary"
+            id="btn-download-mac"
+          >
+            <span>{d.heroCtaDownload}</span>
+          </a>
+          <Link 
+            to="/sylphio/guide" 
+            className="btn-secondary"
+            id="btn-guide-main"
+          >
+            <span>{d.heroCtaGuide}</span>
+          </Link>
+        </div>
+      </section>
 
       <SylphioNav />
 
