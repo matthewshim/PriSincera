@@ -34,14 +34,18 @@
   font-family: 'Outfit', 'Pretendard', sans-serif;
   font-size: 0.88rem;
   font-weight: 500;
-  padding: 14px var(--space-sm, 12px);
+  padding: var(--space-sm, 8px) var(--space-md, 16px); /* 데일리 다이제스트 LNB와 100% 동일하게 패딩 슬림화 */
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-xs, 4px); /* 데일리 다이제스트 LNB와 100% 동일하게 간격 조정 */
   transition: color var(--duration-fast, 200ms) ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.15);
   position: relative;
   text-decoration: none;
+}
+
+.sylphio-tab-icon {
+  font-size: 1rem; /* 데일리 다이제스트 LNB와 100% 동일하게 이모지 크기 규격 적용 */
 }
 
 .sylphio-tab:hover {
@@ -85,7 +89,7 @@
 /* Responsive Optimization for mobile */
 @media (max-width: 640px) {
   .sylphio-tabs-nav {
-    top: 52px; /* GNB height also adjusts in mobile */
+    top: 44px; /* GNB scrolled 모바일 높이(44px)에 정확히 밀착하여 8px 틈새 컬러 불일치 완벽 해소 */
     padding: 0 var(--space-xs, 8px);
   }
   .sylphio-tabs-inner {

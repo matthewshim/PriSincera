@@ -5,22 +5,22 @@ import './SylphioNav.css';
 
 const NAV_ITEMS = {
   ko: [
-    { type: 'route', label: '서비스 소개', path: '/sylphio', end: true },
-    { type: 'route', label: 'API Key 발급 가이드', path: '/sylphio/guide' },
-    { type: 'route', label: '개인정보 처리방침', path: '/sylphio/privacy' },
-    { type: 'link', label: '고객지원', path: 'mailto:support@prisincera.com' }
+    { type: 'route', icon: '📋', label: '서비스 소개', path: '/sylphio', end: true },
+    { type: 'route', icon: '💡', label: 'API Key 발급 가이드', path: '/sylphio/guide' },
+    { type: 'route', icon: '🛡️', label: '개인정보 처리방침', path: '/sylphio/privacy' },
+    { type: 'link', icon: '✉️', label: '고객지원', path: 'mailto:support@prisincera.com' }
   ],
   en: [
-    { type: 'route', label: 'Introduction', path: '/sylphio', end: true },
-    { type: 'route', label: 'API Key Guide', path: '/sylphio/guide' },
-    { type: 'route', label: 'Privacy Policy', path: '/sylphio/privacy' },
-    { type: 'link', label: 'Support', path: 'mailto:support@prisincera.com' }
+    { type: 'route', icon: '📋', label: 'Introduction', path: '/sylphio', end: true },
+    { type: 'route', icon: '💡', label: 'API Key Guide', path: '/sylphio/guide' },
+    { type: 'route', icon: '🛡️', label: 'Privacy Policy', path: '/sylphio/privacy' },
+    { type: 'link', icon: '✉️', label: 'Support', path: 'mailto:support@prisincera.com' }
   ],
   ja: [
-    { type: 'route', label: 'サービス紹介', path: '/sylphio', end: true },
-    { type: 'route', label: 'APIキー連携ガイド', path: '/sylphio/guide' },
-    { type: 'route', label: '個人情報保護方針', path: '/sylphio/privacy' },
-    { type: 'link', label: 'サポート', path: 'mailto:support@prisincera.com' }
+    { type: 'route', icon: '📋', label: 'サービス紹介', path: '/sylphio', end: true },
+    { type: 'route', icon: '💡', label: 'APIキー連携ガイド', path: '/sylphio/guide' },
+    { type: 'route', icon: '🛡️', label: '個人情報保護方針', path: '/sylphio/privacy' },
+    { type: 'link', icon: '✉️', label: 'サポート', path: 'mailto:support@prisincera.com' }
   ]
 };
 
@@ -41,6 +41,7 @@ export default function SylphioNav() {
                 className={({ isActive }) => `sylphio-tab ${isActive ? 'active' : ''}`}
                 role="tab"
               >
+                {item.icon && <span className="sylphio-tab-icon">{item.icon}</span>}
                 <span className="sylphio-tab-label">{item.label}</span>
               </NavLink>
             );
@@ -52,6 +53,7 @@ export default function SylphioNav() {
                 className="sylphio-tab support-link"
                 role="tab"
               >
+                {item.icon && <span className="sylphio-tab-icon">{item.icon}</span>}
                 <span className="sylphio-tab-label">{item.label}</span>
               </a>
             );
