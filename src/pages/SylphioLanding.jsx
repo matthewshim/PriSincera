@@ -158,7 +158,7 @@ const TRANSLATIONS = {
     featuresTitle: "完璧なリアルタイムAI通訳を実現する5つの武器",
     featuresSub: "従来の翻訳ツールの沈黙フリーズやキャプチャ失敗の限界を克服した、Mac専用アーキテクチャ。",
     f1Title: "AirPods Max & Bluetooth 動的ロックオン",
-    f1Desc: "会議中のイヤホン脱着によるオーディオ損失を防ぎます。お使いのAirPodsのデバイス名を自動検出し、リアルタイムに集音ストリームへ自動マッピングします。",
+    f1Desc: "会議中のイヤホン脱着によるオーディオ損失を防ぎます。お使い의 AirPodsのデバイス名を自動検出し、リアルタイムに集音ストリームへ自動マッピングします。",
     f2Title: "100% ローカルオンデバイス STTエンジン",
     f2Desc: "ネットワーク遅延や60秒制限による字幕の中断を完全に防止。端末内のオフラインローカルニューラルエンジンにより、レイテンシー0msで無制限の音声抽出をサポートします。",
     f3Title: "システム & 마이크 デュアルキャプチャ",
@@ -200,7 +200,7 @@ const TRANSLATIONS = {
 };
 
 export default function SylphioLanding() {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
   // GNB activation hook (adds hero-ready class to document.body)
@@ -210,6 +210,12 @@ export default function SylphioLanding() {
       document.body.classList.remove('hero-ready');
     };
   }, []);
+
+  // Alert handler for preparing app Store / downloads
+  const handleAlert = (e) => {
+    e.preventDefault();
+    alert(t('header.sylphioAlert'));
+  };
 
   // CSS Gradient Fog state
   const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
@@ -307,9 +313,8 @@ export default function SylphioLanding() {
         
         <div className="sylphio-hero-ctas">
           <a 
-            href="https://apps.apple.com" 
-            target="_blank" 
-            rel="noreferrer" 
+            href="#" 
+            onClick={handleAlert} 
             className="btn-primary"
             id="btn-download-mac"
           >
@@ -445,9 +450,8 @@ export default function SylphioLanding() {
               <li>{d.freeFeature4}</li>
             </ul>
             <a 
-              href="https://apps.apple.com" 
-              target="_blank" 
-              rel="noreferrer" 
+              href="#" 
+              onClick={handleAlert} 
               className="btn-secondary"
               style={{ textAlign: 'center', justifyContent: 'center' }}
               id="btn-pricing-free"
@@ -472,9 +476,8 @@ export default function SylphioLanding() {
               <li>{d.proFeature6}</li>
             </ul>
             <a 
-              href="https://apps.apple.com" 
-              target="_blank" 
-              rel="noreferrer" 
+              href="#" 
+              onClick={handleAlert} 
               className="btn-primary"
               style={{ textAlign: 'center', justifyContent: 'center' }}
               id="btn-pricing-pro"

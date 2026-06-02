@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import './SylphioApiKeyGuide.css';
 
@@ -96,9 +97,9 @@ const TRANSLATIONS = {
     title: "Sylphio APIキー連携ガイド",
     subtitle: "個人用のAI APIキーをSylphioに連携し、月々の定額サブスク料金なしで、最高精度のリアルタイム翻訳と議事録要約を制限なく体験してください。",
     byokTitle: "BYOK (Bring Your Own Key) アーキテクチャのメリット",
-    byokDesc: "Sylphioは、ユーザー所有のAPIキーを直接入力する安全な方式（BYOK）を採用しています。録音音声や翻訳テキストは開発元のサーバーを一切仲介せず、ローカル端末とAIプロバイダのセキュアなエンドポイント間で直接通信されます。保存されたキーは、macOSの最高セキュリティストレージであるSecure Keychain（キーチェーン）に暗号化されて安全に保護されます。",
+    byokDesc: "Sylphioは、ユーザー所有 of APIキーを直接入力하는 안전한 방식（BYOK）を採用しています。録音音声や翻訳テキストは開発元のサーバーを一切仲介せず、ローカル端末とAIプロバイダのセキュアなエンドポイント間で直接通信されます。保存されたキーは、macOSの最高セキュリティストレージであるSecure Keychain（キーチェーン）に暗号化されて安全に保護されます。",
     geminiTitle: "1. Google Gemini APIキー発行プロセス (推奨・無料)",
-    geminiIntro: "Google Geminiは、驚異的な翻訳理解力に加え、非常に強力な無料枠（Free Tier）を提供しており、Sylphioの導入障壁をゼロに抑えることができます。",
+    geminiIntro: "Google Geminiは、驚異的な翻訳理解力に加え、非常に強力な無料枠（Free Tier）を提供しており、Sylphio의 導入障壁をゼロに抑えることができます。",
     geminiStep1: "ブラウザを開き、aistudio.google.comにアクセスしてGoogleアカウントでログインします。",
     geminiStep2: "左側のサイドバーメニューにある Get API key ボタンをクリックします。",
     geminiStep3: "画面中央 of Create API key ボタンをクリックし、ポップアップで Create API key in new project を選択してキーを生成します。",
@@ -154,6 +155,13 @@ export default function SylphioApiKeyGuide() {
     <div className="sylphio-guide">
       <div className="sylphio-guide-container">
         
+        {/* Usability Improvement: Back to Sylphio Intro Landing Page */}
+        <div className="sylphio-guide-back-nav">
+          <Link to="/sylphio" className="btn-back-to-landing">
+            {locale === 'ko' ? '← Sylphio 소개 페이지로 돌아가기' : locale === 'ja' ? '← Sylphio紹介ページに戻る' : '← Back to Sylphio Intro'}
+          </Link>
+        </div>
+
         <div className="sylphio-guide-header">
           <h1>{d.title}</h1>
           <p className="sylphio-guide-subtitle">
