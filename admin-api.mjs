@@ -1031,7 +1031,7 @@ ${recentCommitsText}
 
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-2.5-flash'];
+    const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash'];
     let resultText = null;
     let errors = [];
 
@@ -1205,7 +1205,7 @@ ${markdown ? `- Markdown:\n${markdown}` : ''}
 
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-2.5-flash'];
+    const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash'];
     let resultText = null;
     let errors = [];
 
