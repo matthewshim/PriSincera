@@ -82,8 +82,8 @@
 .pacenote-spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid rgba(196, 181, 253, 0.2);
-  border-top-color: #C4B5FD;
+  border: 3px solid rgba(52, 211, 153, 0.2);
+  border-top-color: #34D399;
   border-radius: 50%;
   animation: pacenote-spin 1s linear infinite;
   margin: 0 auto 16px;
@@ -177,7 +177,7 @@
 
 .pacenote-progress-label {
   font-size: 0.85rem;
-  color: #C4B5FD;
+  color: #34D399;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -219,7 +219,7 @@
 .panel-sub-title {
   font-size: 1.15rem;
   font-weight: 600;
-  color: #E9D5FF;
+  color: #E2E8F0;
   margin-top: 0;
   margin-bottom: 18px;
   display: flex;
@@ -287,9 +287,9 @@
 
 /* Badges */
 .pacenote-date-badge {
-  background: rgba(167, 139, 250, 0.15);
-  color: #C4B5FD;
-  border: 1px solid rgba(167, 139, 250, 0.3);
+  background: rgba(52, 211, 153, 0.1);
+  color: #34D399;
+  border: 1px solid rgba(52, 211, 153, 0.25);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -341,13 +341,13 @@
 }
 
 .pacenote-tasks::-webkit-scrollbar-thumb {
-  background: rgba(167, 139, 250, 0.15);
+  background: rgba(52, 211, 153, 0.15);
   border-radius: 4px;
   transition: background 0.2s;
 }
 
 .pacenote-tasks::-webkit-scrollbar-thumb:hover {
-  background: rgba(167, 139, 250, 0.3);
+  background: rgba(52, 211, 153, 0.3);
 }
 
 .pacenote-task-item {
@@ -358,7 +358,7 @@
   background: rgba(17, 17, 17, 0.4);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 4px solid var(--category-theme, #A78BFA);
+  border-left: 4px solid var(--category-theme, #34D399);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -368,9 +368,9 @@
 .pacenote-task-item:hover {
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.1);
-  border-left-color: var(--category-theme, #A78BFA);
+  border-left-color: var(--category-theme, #34D399);
   transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 15px rgba(167, 139, 250, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 15px rgba(52, 211, 153, 0.03);
 }
 
 .pacenote-task-item.completed {
@@ -391,7 +391,7 @@
 .pacenote-task-item.readonly:hover {
   background: rgba(17, 17, 17, 0.4);
   border-color: rgba(255, 255, 255, 0.05);
-  border-left-color: var(--category-theme, #A78BFA);
+  border-left-color: var(--category-theme, #34D399);
   transform: none;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
@@ -404,7 +404,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid rgba(196, 181, 253, 0.4);
+  border: 2px solid rgba(52, 211, 153, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -453,7 +453,7 @@
 }
 
 .task-text {
-  color: #E9D5FF;
+  color: #E2E8F0;
   font-size: 0.98rem;
   line-height: 1.5;
   word-break: keep-all;
@@ -526,7 +526,7 @@
 }
 
 .pacenote-ai-scroll::-webkit-scrollbar-thumb {
-  background: rgba(34, 211, 238, 0.2);
+  background: rgba(52, 211, 153, 0.2);
   border-radius: 4px;
 }
 
@@ -534,16 +534,16 @@
   flex-shrink: 0;
   width: 280px;
   padding: 20px;
-  background: linear-gradient(145deg, rgba(34, 211, 238, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
+  background: linear-gradient(145deg, rgba(52, 211, 153, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
   border-radius: 16px;
-  border: 1px solid rgba(34, 211, 238, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.15);
   display: flex;
   flex-direction: column;
 }
 
 .pacenote-rec-cat {
   font-size: 0.75rem;
-  color: #22D3EE;
+  color: #34D399;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -559,9 +559,9 @@
 }
 
 .pacenote-btn-accept {
-  background: rgba(34, 211, 238, 0.1);
-  color: #67E8F9;
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: rgba(52, 211, 153, 0.1);
+  color: #34D399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -572,7 +572,7 @@
 }
 
 .pacenote-btn-accept:hover {
-  background: rgba(34, 211, 238, 0.2);
+  background: rgba(52, 211, 153, 0.2);
   transform: translateY(-1px);
 }
 
@@ -675,15 +675,15 @@
 }
 
 .calendar-cell:hover:not(.future) {
-  background: rgba(167, 139, 250, 0.15);
-  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.4);
   transform: translateY(-2px);
 }
 
 .calendar-cell.active {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%);
-  border-color: #A78BFA;
-  box-shadow: 0 0 15px rgba(167, 139, 250, 0.2);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(34, 211, 238, 0.1) 100%);
+  border-color: #34D399;
+  box-shadow: 0 0 15px rgba(52, 211, 153, 0.15);
 }
 
 .calendar-cell.current {
@@ -699,7 +699,7 @@
 .cell-num {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #E9D5FF;
+  color: #E2E8F0;
   margin-bottom: 6px;
 }
 
@@ -709,7 +709,7 @@
 
 .cell-count {
   font-size: 0.85rem;
-  color: #A78BFA;
+  color: #34D399;
   font-weight: 600;
 }
 
@@ -728,20 +728,20 @@
   gap: 12px;
   margin-top: 16px;
   background: rgba(0, 0, 0, 0.2);
-  border: 1px dashed rgba(196, 181, 253, 0.3);
+  border: 1px dashed rgba(52, 211, 153, 0.3);
   border-radius: 16px;
   padding: 12px 20px;
   transition: all 0.2s;
 }
 
 .pacenote-add-form:focus-within {
-  border-color: #C4B5FD;
+  border-color: #34D399;
   background: rgba(255, 255, 255, 0.03);
 }
 
 .add-icon {
   font-size: 1.5rem;
-  color: #C4B5FD;
+  color: #34D399;
   font-weight: 300;
 }
 
@@ -759,8 +759,8 @@
 }
 
 .pacenote-add-btn {
-  background: rgba(196, 181, 253, 0.15);
-  color: #C4B5FD;
+  background: rgba(52, 211, 153, 0.15);
+  color: #34D399;
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
@@ -771,7 +771,7 @@
 }
 
 .pacenote-add-btn:hover:not(:disabled) {
-  background: rgba(196, 181, 253, 0.25);
+  background: rgba(52, 211, 153, 0.25);
   color: #FFF;
 }
 
@@ -792,7 +792,7 @@
 }
 
 .pacenote-task-item.readonly .task-text {
-  color: #E9D5FF;
+  color: #E2E8F0;
   text-decoration: none;
 }
 

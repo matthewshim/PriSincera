@@ -508,9 +508,9 @@
 }
 
 .badge-style, .badge-docs, .badge-chore {
-  color: #c084fc;
-  background: rgba(192, 132, 252, 0.1);
-  border: 1px solid rgba(192, 132, 252, 0.2);
+  color: #e2e8f0;
+  background: rgba(226, 226, 231, 0.1);
+  border: 1px solid rgba(226, 226, 231, 0.2);
 }
 
 .shipment-msg {
