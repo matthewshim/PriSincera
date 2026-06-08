@@ -13,21 +13,6 @@
   position: relative;
   overflow: hidden; /* Prevent light leakage outside the hero section */
 }
-.daily-hero::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: radial-gradient(
-    circle at var(--mouse-x) var(--mouse-y), 
-    rgba(167, 139, 250, 0.08) 0%, /* 브랜드 표준 Lavender */
-    rgba(109, 40, 217, 0.04) 30%, /* 브랜드 표준 Violet */
-    rgba(0, 0, 0, 0) 70%
-  );
-  pointer-events: none;
-  z-index: 0;
-  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
 .daily-hero-content {
   position: relative;
   z-index: 1;
@@ -740,7 +725,6 @@
   background: rgba(0, 0, 0, 0.85); /* Matches var(--bg-void) #000000 with transparency for glass effect */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: center;
   padding: 0 var(--space-md);

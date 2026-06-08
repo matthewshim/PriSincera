@@ -111,15 +111,7 @@ export default function DailyDigest() {
   const location = useLocation();
   const navigate = useNavigate();
   const { locale, t } = useTranslation();
-  
-  // GNB 백라이트 오라 유입을 위한 마우스 반응형 좌표 상태 수립
-  const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
-  const handleBgMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    const xPct = `${(clientX / window.innerWidth) * 100}%`;
-    const yPct = `${(clientY / window.innerHeight) * 100}%`;
-    setMousePos({ x: xPct, y: yPct });
-  };
+
   
   useSEO({
     title: date ? `Daily Digest (${date})` : 'Daily Digest',
@@ -415,14 +407,7 @@ export default function DailyDigest() {
 
   const renderHeroAndTabs = () => (
     <>
-      <section 
-        className="daily-hero"
-        onMouseMove={handleBgMouseMove}
-        style={{
-          '--mouse-x': mousePos.x,
-          '--mouse-y': mousePos.y
-        }}
-      >
+      <section className="daily-hero">
         <div className="daily-hero-content">
           <div className="daily-hero-icon">☕</div>
           <h1 className="daily-title">Daily Digest</h1>
