@@ -31,7 +31,7 @@ function loadTemplate(name) {
  */
 export async function callGemini(prompt, maxRetries = 3) {
   // 최신 고효율/저비용 Flash 모델군만 배치하여 요금 폭탄 차단
-  const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+  const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash'];
   const generationConfig = {
     temperature: 0.7,
     topP: 0.9,
