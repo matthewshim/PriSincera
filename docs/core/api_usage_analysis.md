@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-02
-version: v1.1
+last_updated: 2026-06-08
+version: v1.2
 target_files:
   - pipeline/src/lib/gemini.mjs
   - admin-api.mjs
@@ -16,6 +16,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-05-22 | Maker | 최초 AI 커밋 자동 매칭 API 한도 및 과금 안정성 분석 | admin-api.mjs |
 | v1.1 | 2026-06-02 | Antigravity | 결제 계정 요금 차단 및 100% 무료 티어 운용을 위한 고효율 API 최적화 설계 반영 | gemini.mjs, admin-api.mjs |
+| v1.2 | 2026-06-08 | Antigravity | 개인 Gmail 발급 무료 API 키 이관 및 모델명(gemini-flash-latest) 호환성 패치 반영 | gemini.mjs, admin-api.mjs |
 
 ---
 
@@ -102,5 +103,22 @@ PriSincera 플랫폼은 기술 블로그인 **Builder's Log** 작성 시 본문 
 - **월간(30일) 예상 총 과금액:** **\$0.225 (약 300원 미만)**
 
 ### 🏁 최종 가용성 권고사항
-- **유료 결제 연동 유지 권장:** 월 300원 미만의 소액 수준으로 요금이 전격 봉쇄되었으므로, **GCP 인프라 리소스(Cloud Run, DB 등)의 구동 마비 리스크를 감수하며 결제 계정을 해지할 필요가 전혀 없습니다.** 
-- 한 달에 단 300원 미만의 안전 마진용 비용으로 **인프라의 100% 무중단 안정성(Paid Tier의 무제한 RPM 가용성)**을 챙긴 상태로 그대로 평화롭게 서비스를 유지하는 것이 비즈니스 관점에서 절대적으로 유리함이 검증되었습니다.
+- **100% 무료 등급 이관 반영 완료**: v1.1 설계 당시에는 월 300원 미만의 소액 청구로 유료 결제 유지를 권장했으나, 기업 환경의 요금 관리 및 결제 리스크 완전 원천 차단을 위해 **결제 연동이 없는 100% 독립 무료 등급(Free Tier) API Key로 이관**을 진행하였습니다.
+- 한도 초과 시에도 요금이 결제되지 않고 단순히 API 에러가 반환되는 무료 등급의 특성상 비용 청구 리스크가 0%로 완벽히 방어됩니다.
+
+---
+
+## 5. v1.2 업데이트: 무료 등급(Free Tier) 완전 이관 (2026-06-08)
+
+### 1) 구글 Workspace 조직 계정 무료 쿼터 제한 대응
+- **진단**: Google Workspace 조직 도메인 계정(`@prisincera.com`)으로 생성한 구글 클라우드 프로젝트는 결제 수단이 비활성화된 경우 보안 및 남용 방지 정책상 무료 쿼터가 `0`으로 제한되는 현상이 발견되었습니다.
+- **조치**: 조직 도메인 대신 결제 수단이 등록되지 않은 **순수 개인 구글 계정(`@gmail.com`)**을 활용하여 Google AI Studio에서 전용 무료 API 키를 새로 발급받아 연동을 처리하였습니다.
+
+### 2) API v1beta 모델명 버전 호환성 패치
+- **진단**: 무료 API 키 적용 과정에서 `gemini-1.5-flash` 모델은 `v1beta` 엔드포인트 상에서 `404 Not Found` 에러를 반환하고, `gemini-2.0-flash` 모델은 신규 개인 계정 무료 한도에서 제한(limit: 0)되는 현상이 확인되었습니다.
+- **조치**: 무료 등급에서 완벽하게 동작하며 안정적인 응답을 보장하는 `gemini-flash-latest`와 `gemini-2.5-flash` 모델로 파이프라인(`gemini.mjs`) 및 어드민 백엔드(`admin-api.mjs`)의 모델 우선순위 리스트를 전격 갱신하였습니다.
+
+### 3) API Key 노출 방지 및 보안 무결성 확보
+- **보안 수칙 준수**: 연동된 API Key는 소스 코드, 클라이언트 환경(.env) 또는 Git 커밋 이력에 절대로 일반 텍스트 형태로 노출되거나 저장되지 않도록 철저히 차단하였습니다.
+- **Secret Manager 통합**: 새로 발급받은 실무 API Key는 오직 GCP Secret Manager의 `GEMINI_API_KEY` 및 `GEMINI_ADMIN_API_KEY` 보안 비밀의 최신 버전(`latest`)으로만 업로드되어 있으며, Cloud Build 배포 및 Cloud Run 구동 런타임에 동적으로 주입됩니다.
+
