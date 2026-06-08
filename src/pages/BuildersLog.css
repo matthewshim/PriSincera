@@ -25,7 +25,6 @@
   text-align: center;
   padding: 160px 24px 48px; /* GNB 높이(80px)를 보정한 웅장한 히어로 패딩 */
   position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   opacity: 0;
   transform: translateY(30px) scale(0.98);
   transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
