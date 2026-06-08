@@ -120,14 +120,7 @@ export default function SylphioPrivacy() {
   const { locale, t } = useTranslation();
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
-  // GNB 백라이트 오라 유입을 위한 마우스 반응형 좌표 상태 수립
-  const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
-  const handleBgMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    const xPct = `${(clientX / window.innerWidth) * 100}%`;
-    const yPct = `${(clientY / window.innerHeight) * 100}%`;
-    setMousePos({ x: xPct, y: yPct });
-  };
+
 
   // Alert handler for preparing app Store / downloads
   const handleAlert = (e) => {
@@ -146,14 +139,7 @@ export default function SylphioPrivacy() {
   return (
     <div className="sylphio-privacy">
       {/* 2Depth LNB 상단 공통 히어로 영역 */}
-      <section 
-        className="sylphio-hero"
-        onMouseMove={handleBgMouseMove}
-        style={{
-          '--mouse-x': mousePos.x,
-          '--mouse-y': mousePos.y
-        }}
-      >
+      <section className="sylphio-hero">
         <div className="sylphio-core-container">
           <div className="sylphio-aurora-core"></div>
           <div className="sylphio-aurora-ring"></div>

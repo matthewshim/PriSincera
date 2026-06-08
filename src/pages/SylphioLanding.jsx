@@ -218,9 +218,6 @@ export default function SylphioLanding() {
     alert(t('header.sylphioAlert'));
   };
 
-  // CSS Gradient Fog state
-  const [mousePos, setMousePos] = useState({ x: '50%', y: '20%' });
-  
   // Simulator states
   const [activeScenario, setActiveScenario] = useState(null);
   const [displayedSource, setDisplayedSource] = useState("");
@@ -232,14 +229,6 @@ export default function SylphioLanding() {
   const typingTimerRef = useRef(null);
   const translateDelayTimerRef = useRef(null);
   const translateTypingTimerRef = useRef(null);
-  
-  // Mouse move handler for background gradient fog
-  const handleBgMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    const xPct = `${(clientX / window.innerWidth) * 100}%`;
-    const yPct = `${(clientY / window.innerHeight) * 100}%`;
-    setMousePos({ x: xPct, y: yPct });
-  };
   
   // Cleanup timers on unmount
   useEffect(() => {
@@ -293,14 +282,7 @@ export default function SylphioLanding() {
   return (
     <div className="sylphio-landing">
       {/* --- HERO SECTION --- */}
-      <section 
-        className="sylphio-hero"
-        onMouseMove={handleBgMouseMove}
-        style={{
-          '--mouse-x': mousePos.x,
-          '--mouse-y': mousePos.y
-        }}
-      >
+      <section className="sylphio-hero">
         <div className="sylphio-core-container">
           <div className="sylphio-aurora-core"></div>
           <div className="sylphio-aurora-ring"></div>
