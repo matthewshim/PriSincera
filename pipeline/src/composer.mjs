@@ -62,11 +62,13 @@ async function main() {
 
   let finalArticles = [];
   let studyData = null;
+  let dmWithComments = [];
 
   // 이미 스코어링이 완료되었는지 확인 (FORCE_SCORE=true 일 경우 강제 재실행)
   if (dailyData.status === 'scored' && process.env.FORCE_SCORE !== 'true') {
     console.log('\n[Composer] 🛑 이미 스코어링이 완료된 데이터입니다. AI 스코어링 단계를 건너뜁니다.');
     finalArticles = dailyData.articles;
+    dmWithComments = finalArticles.filter(a => a.isDmPick || (dailyData.dm_picks && dailyData.dm_picks.includes(a.id)));
   } else {
     // 2. AI 스코어링 (전체 아티클)
     console.log('\n--- Phase 1: SIGNAL 스코어링 ---');
@@ -87,7 +89,7 @@ async function main() {
 
     // 5. DM 픽에 에디터 코멘트 생성
     console.log('\n--- Phase 3: 에디터 코멘트 ---');
-    const dmWithComments = await generateComments(dmPicks);
+    dmWithComments = await generateComments(dmPicks);
     const dmPickIds = dmWithComments.map(a => a.id);
 
     // 6. 품질 필터링 — 카테고리별 최소 보장 + 점수 필터 + 카테고리별 캡
