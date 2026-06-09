@@ -64,15 +64,8 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #00f2fe 0%, #1e80ff 100%);
+  background: var(--gradient-brand);
   border-radius: 2px 2px 0 0;
-  box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
-}
-
-/* Supporting Tactile Spring Press-Down Feedback */
-.sylphio-tab:active {
-  transform: scale(0.95);
-  transition-duration: 70ms;
 }
 
 .sylphio-tab.support-link {
@@ -82,7 +75,7 @@
 
 .sylphio-tab.support-link:hover {
   opacity: 1;
-  color: #a5f3fc;
+  color: #87A9EC;
 }
 
 /* Responsive Optimization for mobile */

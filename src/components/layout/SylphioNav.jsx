@@ -38,7 +38,7 @@ export default function SylphioNav() {
                 key={idx}
                 to={item.path}
                 end={item.end}
-                className={({ isActive }) => `sylphio-tab ${isActive ? 'active' : ''}`}
+                className={({ isActive }) => `sylphio-tab haptic-trigger ${isActive ? 'active' : ''}`}
                 role="tab"
               >
                 {item.icon && <span className="sylphio-tab-icon">{item.icon}</span>}
@@ -50,7 +50,7 @@ export default function SylphioNav() {
               <a
                 key={idx}
                 href={item.path}
-                className="sylphio-tab support-link"
+                className="sylphio-tab support-link haptic-trigger"
                 role="tab"
               >
                 {item.icon && <span className="sylphio-tab-icon">{item.icon}</span>}
