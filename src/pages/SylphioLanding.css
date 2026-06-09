@@ -42,16 +42,16 @@
   height: 100%;
   background: radial-gradient(
     circle, 
-    rgba(0, 242, 254, 0.3) 0%, 
-    rgba(30, 128, 255, 0.08) 50%, 
+    rgba(135, 169, 236, 0.35) 0%, 
+    rgba(30, 60, 114, 0.15) 50%, 
     rgba(0, 0, 0, 0) 100%
   );
   border-radius: 50%;
   filter: blur(8px);
   animation: floatCore 6s ease-in-out infinite alternate, spinCore 12s linear infinite;
   box-shadow: 
-    0 0 60px rgba(30, 128, 255, 0.2), 
-    0 0 100px rgba(109, 40, 217, 0.1);
+    0 0 60px rgba(135, 169, 236, 0.25), 
+    0 0 100px rgba(30, 60, 114, 0.15);
 }
 
 .sylphio-aurora-ring {
@@ -60,8 +60,8 @@
   left: -8px;
   right: -8px;
   bottom: -8px;
-  border: 1px solid rgba(0, 242, 254, 0.12);
-  border-top: 1.5px solid rgba(0, 242, 254, 0.35);
+  border: 1px solid rgba(135, 169, 236, 0.15);
+  border-top: 1.5px solid rgba(135, 169, 236, 0.4);
   border-radius: 50%;
   animation: spinRing 16s linear infinite;
 }
@@ -72,7 +72,7 @@
   font-weight: 700;
   line-height: 1.2;
   margin: 0 0 var(--space-sm, 12px) 0;
-  background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 75%, #1e80ff 100%);
+  background: linear-gradient(135deg, #ffffff 30%, #87A9EC 75%, #1e3c72 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -101,69 +101,7 @@
    Semantic CTA Button System
    ========================================================================== */
 
-/* Primary Button (.btn-sylphio-primary) */
-.btn-sylphio-primary {
-  font-family: var(--font-display);
-  background: linear-gradient(135deg, rgba(30, 128, 255, 0.85) 0%, rgba(0, 242, 254, 0.75) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-  padding: 14px 28px;
-  border-radius: 9999px; /* Pill */
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 
-    0 4px 15px rgba(30, 128, 255, 0.2), 
-    0 0 1px rgba(255, 255, 255, 0.15);
-  transition: all var(--duration-fast, 200ms) cubic-bezier(0.175, 0.885, 0.32, 1.15);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
-}
-
-.btn-sylphio-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 25px rgba(30, 128, 255, 0.4), 
-    0 0 10px rgba(0, 242, 254, 0.2);
-  filter: brightness(1.08);
-}
-
-/* Secondary Button (.btn-sylphio-secondary) */
-.btn-sylphio-secondary {
-  font-family: var(--font-display);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: var(--text-secondary, #a1a1aa);
-  padding: 14px 28px;
-  border-radius: 9999px; /* Pill */
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--duration-fast, 200ms) cubic-bezier(0.175, 0.885, 0.32, 1.15);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
-}
-
-.btn-sylphio-secondary:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: var(--text-primary, #fafafa);
-  transform: translateY(-2px);
-}
-
-/* Tactile Spring Press-Down Feedback */
-.btn-sylphio-primary:active,
-.btn-sylphio-secondary:active,
+/* Custom Button System definitions removed to inherit standard GNB/Platform theme buttons (.btn-primary, .btn-secondary) */
 .btn-simulator:active {
   transform: scale(0.97) translateY(0) !important;
   transition-duration: 70ms !important;
@@ -235,7 +173,7 @@
 
 .premium-card:hover {
   background: rgba(26, 26, 26, 0.6); /* 디자인 시스템 표준 호버 배경 */
-  border-color: rgba(30, 128, 255, 0.3); /* Subtle branding glow */
+  border-color: rgba(135, 169, 236, 0.35); /* Subtle branding glow */
 }
 
 .sylphio-feature-icon {
@@ -299,10 +237,10 @@
 }
 
 .btn-simulator.active {
-  background: rgba(30, 128, 255, 0.08);
-  border-color: rgba(30, 128, 255, 0.35);
-  color: #60a5fa;
-  box-shadow: 0 0 15px rgba(30, 128, 255, 0.1);
+  background: rgba(135, 169, 236, 0.12);
+  border-color: rgba(135, 169, 236, 0.45);
+  color: #87A9EC;
+  box-shadow: 0 0 15px rgba(135, 169, 236, 0.15);
 }
 
 /* Virtual Subtitle Bar (Glassmorphism OLED 스킨) */
@@ -351,7 +289,7 @@
 .sylphio-sim-translated {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #00f2fe;
+  color: #87A9EC;
   line-height: 1.6;
   margin: 0;
   border-top: 1px dashed rgba(255, 255, 255, 0.06);
@@ -388,10 +326,10 @@
 }
 
 .sylphio-pricing-card.premium {
-  border-color: rgba(30, 128, 255, 0.2);
-  background: linear-gradient(135deg, rgba(30, 128, 255, 0.04) 0%, rgba(0, 242, 254, 0.02) 100%), var(--glass-bg);
+  border-color: rgba(135, 169, 236, 0.3);
+  background: linear-gradient(135deg, rgba(135, 169, 236, 0.06) 0%, rgba(135, 169, 236, 0.02) 100%), var(--glass-bg);
   box-shadow: 
-    0 15px 40px rgba(30, 128, 255, 0.08),
+    0 15px 40px rgba(135, 169, 236, 0.15),
     0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -401,14 +339,14 @@
   top: 16px;
   right: -32px;
   transform: rotate(45deg);
-  background: linear-gradient(135deg, #1e80ff 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #1e3c72 0%, #87A9EC 100%);
   color: #050505;
   font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 800;
   padding: 4px 32px; /* 가로 길이를 넓게 빼서 모서리를 풍성히 채우고 클리핑 유도 */
   letter-spacing: 0.08em;
-  box-shadow: 0 4px 12px rgba(30, 128, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(135, 169, 236, 0.25);
   z-index: 10;
   white-space: nowrap;
   text-align: center;
@@ -478,13 +416,13 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.12) 0%, rgba(30, 128, 255, 0.12) 100%);
-  border: 1px solid rgba(0, 242, 254, 0.25);
-  color: #00f2fe; /* 실피오 블루 오로라 색상 */
+  background: linear-gradient(135deg, rgba(135, 169, 236, 0.15) 0%, rgba(30, 60, 114, 0.15) 100%);
+  border: 1px solid rgba(135, 169, 236, 0.35);
+  color: #87A9EC; /* 실피오 블루 오로라 색상 */
   font-size: 9px;
   font-weight: 900;
   margin-top: 2px; /* 줄바꿈 텍스트 상단에 정확히 일치 */
-  box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
+  box-shadow: 0 0 8px rgba(135, 169, 236, 0.2);
 }
 
 /* --- Virtual Subtitle Animation --- */
@@ -501,7 +439,7 @@
 
 .sylphio-cursor-pulse {
   animation: cursorBlink 1s infinite alternate;
-  color: #00f2fe;
+  color: #87A9EC;
   font-weight: 100;
   margin-left: 2px;
 }

@@ -155,7 +155,7 @@ export default function SylphioPrivacy() {
           <a 
             href="#" 
             onClick={handleAlert} 
-            className="btn-sylphio-primary"
+            className="btn-primary"
             id="btn-download-mac"
           >
             <span>{d.heroCtaDownload}</span>
