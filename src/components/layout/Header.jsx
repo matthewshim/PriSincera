@@ -169,25 +169,25 @@ function Header() {
               <circle cx="22" cy="22" r="2" fill="#FFFFFF" opacity="0.9"/>
               <defs>
                 <linearGradient id="g-up-header" x1="50%" y1="0%" x2="50%" y2="100%">
-                  <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.85"/>
-                  <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.3"/>
+                  <stop offset="0%" stopColor="var(--prism-lavender)" stopOpacity="0.85"/>
+                  <stop offset="100%" stopColor="var(--color-indigo)" stopOpacity="0.3"/>
                 </linearGradient>
                 <linearGradient id="g-down-header" x1="50%" y1="100%" x2="50%" y2="0%">
-                  <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.75"/>
-                  <stop offset="100%" stopColor="#6D28D9" stopOpacity="0.2"/>
+                  <stop offset="0%" stopColor="var(--color-gold-light)" stopOpacity="0.75"/>
+                  <stop offset="100%" stopColor="var(--color-gold)" stopOpacity="0.2"/>
                 </linearGradient>
                 <linearGradient id="g-edge-header" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.6"/>
-                  <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.3"/>
+                  <stop offset="0%" stopColor="var(--prism-rose)" stopOpacity="0.6"/>
+                  <stop offset="100%" stopColor="var(--color-indigo)" stopOpacity="0.3"/>
                 </linearGradient>
                 <linearGradient id="g-orbit-header" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.7"/>
+                  <stop offset="0%" stopColor="var(--color-cyan)" stopOpacity="0.7"/>
                   <stop offset="50%" stopColor="#67E8F9" stopOpacity="0.3"/>
-                  <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.7"/>
+                  <stop offset="100%" stopColor="var(--color-cyan)" stopOpacity="0.7"/>
                 </linearGradient>
                 <linearGradient id="g-amber-header" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#FDE68A" stopOpacity="0.9"/>
-                  <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.7"/>
+                  <stop offset="100%" stopColor="var(--color-gold)" stopOpacity="0.7"/>
                 </linearGradient>
               </defs>
             </svg>
