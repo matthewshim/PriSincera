@@ -179,6 +179,7 @@ export default function SylphioApiKeyGuide() {
         <div className="sylphio-core-container">
           <div className="sylphio-aurora-core"></div>
           <div className="sylphio-aurora-ring"></div>
+          <img src="/sylphio-icon.png" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
         </div>
         
         <h1>{d.heroTitle}</h1>

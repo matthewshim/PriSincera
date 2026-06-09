@@ -911,6 +911,17 @@
         position: relative;
         box-shadow: 0 0 20px rgba(30, 128, 255, 0.4);
     }
+    .mobile-bento-nav-item .sylphio-bento-icon-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+        z-index: 2;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
     .mobile-bento-nav-item .sylphio-bento-pulse {
         position: absolute;
         top: -5px; left: -5px; right: -5px; bottom: -5px;
