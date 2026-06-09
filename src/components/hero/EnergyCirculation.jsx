@@ -47,13 +47,13 @@ export default function EnergyCirculation({ rawMouseRef, active }) {
     }
 
     const orbitRunners = [
-      { angle: 0, speed: 0.008, r: 3, color: { r:103,g:232,b:249 }, trail: [] },
-      { angle: Math.PI*0.66, speed: 0.006, r: 2.5, color: { r:34,g:211,b:238 }, trail: [] },
-      { angle: Math.PI*1.33, speed: 0.01, r: 2, color: { r:165,g:243,b:252 }, trail: [] },
+      { angle: 0, speed: 0.008, r: 3, color: { r:229,g:178,b:93 }, trail: [] }, // Starlight Gold
+      { angle: Math.PI*0.66, speed: 0.006, r: 2.5, color: { r:247,g:208,b:112 }, trail: [] }, // Starlight Gold Light
+      { angle: Math.PI*1.33, speed: 0.01, r: 2, color: { r:199,g:210,b:254 }, trail: [] }, // Lavender
     ];
 
     const edgeRunners = [];
-    const edgeColors = [{ r:196,g:181,b:253 }, { r:167,g:139,b:250 }];
+    const edgeColors = [{ r:199,g:210,b:254 }, { r:165,g:180,b:252 }]; // Lavender, Indigo
     EDGE_PATHS.forEach((path, pi) => {
       for (let i = 0; i < 3; i++) {
         edgeRunners.push({
@@ -132,7 +132,7 @@ export default function EnergyCirculation({ rawMouseRef, active }) {
           const pr = 8 + p.intensity * 12;
           ctx.globalAlpha = p.intensity * 0.5;
           const g = ctx.createRadialGradient(vp.x, vp.y, 0, vp.x, vp.y, pr);
-          g.addColorStop(0, 'rgba(196,181,253,0.6)'); g.addColorStop(1, 'rgba(196,181,253,0)');
+          g.addColorStop(0, 'rgba(199,210,254,0.6)'); g.addColorStop(1, 'rgba(199,210,254,0)');
           ctx.fillStyle = g; ctx.beginPath(); ctx.arc(vp.x, vp.y, pr, 0, Math.PI * 2); ctx.fill();
           p.intensity *= 0.93;
         }

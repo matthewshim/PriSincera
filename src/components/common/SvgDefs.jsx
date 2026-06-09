@@ -19,9 +19,9 @@ function SvgDefs() {
           <stop offset="100%" stopColor="var(--color-indigo)" stopOpacity="0.3"/>
         </linearGradient>
         <linearGradient id="g-orbit" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="var(--color-cyan)" stopOpacity="0.7"/>
-          <stop offset="50%" stopColor="#67E8F9" stopOpacity="0.3"/>
-          <stop offset="100%" stopColor="var(--color-cyan)" stopOpacity="0.7"/>
+          <stop offset="0%" stopColor="var(--color-gold)" stopOpacity="0.85"/>
+          <stop offset="50%" stopColor="var(--prism-lavender)" stopOpacity="0.4"/>
+          <stop offset="100%" stopColor="var(--prism-lavender)" stopOpacity="0.85"/>
         </linearGradient>
         <linearGradient id="g-amber" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="var(--color-gold)" stopOpacity="0.9"/>

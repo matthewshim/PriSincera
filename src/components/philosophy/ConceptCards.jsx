@@ -9,11 +9,11 @@ export default function BeliefCards() {
       icon: (
         <svg viewBox="0 0 48 48" fill="none">
           {/* ○ The Orbit — CI의 순환의 원 */}
-          <circle cx="24" cy="24" r="16" stroke="#22D3EE" strokeWidth="1.2" fill="none"
+          <circle cx="24" cy="24" r="16" stroke="#E5B25D" strokeWidth="1.2" fill="none"
             strokeDasharray="96 4" strokeLinecap="round" opacity="0.7"/>
-          <circle cx="24" cy="24" r="10" stroke="#22D3EE" strokeWidth="0.6" fill="none"
+          <circle cx="24" cy="24" r="10" stroke="#C7D2FE" strokeWidth="0.6" fill="none"
             strokeDasharray="4 4" opacity="0.3"/>
-          <circle cx="24" cy="24" r="2.5" fill="#22D3EE" opacity="0.5"/>
+          <circle cx="24" cy="24" r="2.5" fill="#E5B25D" opacity="0.5"/>
         </svg>
       ),
       symbol: '○',
@@ -21,7 +21,7 @@ export default function BeliefCards() {
       subtitle: t('home.conceptCard1.subtitle'),
       quote: t('home.conceptCard1.quote'),
       description: t('home.conceptCard1.desc'),
-      color: '#22D3EE',
+      color: '#E5B25D',
     },
     {
       icon: (
