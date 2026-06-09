@@ -18,7 +18,7 @@
     /* Brand Accents & Gradients (Celestial Starlight & Nebula) */
     --color-gold: #E5B25D;       /* Brand Primary: Note A Starlight Gold */
     --color-gold-light: #F7D070; /* Hover starlight gold highlight */
-    --color-indigo: #818CF8;     /* Brand Secondary: Nebula Indigo */
+    --color-indigo: #A5B4FC;     /* Brand Secondary: Nebula Indigo (optimized for readability) */
     --color-cyan: #22D3EE;       /* Info/Link Accent: Aether Cyan */
 
     /* Backward Compatibility Mappings for existing UI layouts */
@@ -35,10 +35,10 @@
     /* Glassmorphism 3.0 (Precision & Soft Depth) */
     --glass-bg: rgba(14, 14, 26, 0.75);
     --glass-border: rgba(255, 255, 255, 0.05);
-    --glass-border-hover: rgba(129, 140, 248, 0.20); /* Subtle indigo highlight on hover */
+    --glass-border-hover: rgba(165, 180, 252, 0.20); /* Subtle indigo highlight on hover */
 
     /* Premium Gradients */
-    --gradient-brand: linear-gradient(135deg, #0A0F1D, #161B2E, var(--color-gold)); /* Deep space to gold */
+    --gradient-brand: linear-gradient(135deg, var(--color-indigo) 0%, var(--prism-lavender) 50%, var(--color-gold) 100%); /* Celestial Indigo to Gold */
     --gradient-subtle: linear-gradient(135deg, #161B2E, #475569);
     --gradient-cta: linear-gradient(135deg, rgba(229, 178, 93, 0.08), rgba(255, 255, 255, 0.03));
 

@@ -457,10 +457,10 @@
         border: 1px solid rgba(245, 158, 11, 0.22);
     }
     .mobile-bento-nav-item.log-indigo-theme {
-        --point-color: #8B5CF6;
-        --glow-color: rgba(124, 58, 237, 0.12);
-        --aura-pulse: rgba(124, 58, 237, 0.22);
-        border: 1px solid rgba(139, 92, 246, 0.22);
+        --point-color: var(--color-indigo);
+        --glow-color: rgba(165, 180, 252, 0.12);
+        --aura-pulse: rgba(165, 180, 252, 0.22);
+        border: 1px solid rgba(165, 180, 252, 0.22);
     }
     .mobile-bento-nav-item.daily-cyan-theme {
         --point-color: #22D3EE;
@@ -873,7 +873,7 @@
         z-index: 0;
     }
     .mobile-bento-nav-item .visual-blur-orb.amber { background: #F59E0B; top: 10%; right: 10%; }
-    .mobile-bento-nav-item .visual-blur-orb.indigo { background: #8B5CF6; top: 10%; right: 10%; }
+    .mobile-bento-nav-item .visual-blur-orb.indigo { background: var(--color-indigo); top: 10%; right: 10%; }
     .mobile-bento-nav-item .visual-blur-orb.cyan { background: #22D3EE; top: 10%; right: 10%; }
     .mobile-bento-nav-item .visual-blur-orb.emerald { background: #34D399; top: 10%; right: 10%; }
     .mobile-bento-nav-item .visual-blur-orb.blue { background: #1E80FF; top: 10%; right: 10%; }

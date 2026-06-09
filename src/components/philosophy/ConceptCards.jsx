@@ -27,9 +27,9 @@ export default function BeliefCards() {
       icon: (
         <svg viewBox="0 0 48 48" fill="none">
           {/* △ Priority Prism — CI의 위를 향하는 프리즘 */}
-          <path d="M24 8 L38 34 L10 34 Z" stroke="#C4B5FD" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
-          <line x1="24" y1="16" x2="24" y2="30" stroke="#E9D5FF" strokeWidth="0.8" opacity="0.4"/>
-          <circle cx="24" cy="12" r="1.5" fill="#C4B5FD" opacity="0.6"/>
+          <path d="M24 8 L38 34 L10 34 Z" stroke="#C7D2FE" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+          <line x1="24" y1="16" x2="24" y2="30" stroke="#F1F5F9" strokeWidth="0.8" opacity="0.4"/>
+          <circle cx="24" cy="12" r="1.5" fill="#C7D2FE" opacity="0.6"/>
         </svg>
       ),
       symbol: '△',
@@ -37,14 +37,14 @@ export default function BeliefCards() {
       subtitle: t('home.conceptCard2.subtitle'),
       quote: t('home.conceptCard2.quote'),
       description: t('home.conceptCard2.desc'),
-      color: '#C4B5FD',
+      color: '#C7D2FE',
     },
     {
       icon: (
         <svg viewBox="0 0 48 48" fill="none">
           {/* ▽ Sincera Prism — CI의 아래를 지탱하는 프리즘 */}
-          <path d="M24 40 L10 14 L38 14 Z" stroke="#A78BFA" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
-          <circle cx="24" cy="26" r="3" fill="#F0ABFC" opacity="0.2"/>
+          <path d="M24 40 L10 14 L38 14 Z" stroke="#A5B4FC" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+          <circle cx="24" cy="26" r="3" fill="rgba(165, 180, 252, 0.2)" opacity="0.5"/>
           <circle cx="24" cy="26" r="1.5" fill="#FFFFFF" opacity="0.8"/>
         </svg>
       ),
@@ -53,7 +53,7 @@ export default function BeliefCards() {
       subtitle: t('home.conceptCard3.subtitle'),
       quote: t('home.conceptCard3.quote'),
       description: t('home.conceptCard3.desc'),
-      color: '#A78BFA',
+      color: '#A5B4FC',
     },
   ];
 

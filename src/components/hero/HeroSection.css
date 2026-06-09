@@ -13,7 +13,7 @@
     /* Principle 1: Restrained Authority & Focus in Chaos. Deep OLED black with precision lighting */
     background: #000000;
     background-image: 
-        radial-gradient(circle at 50% 40%, rgba(109, 40, 217, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 40%, rgba(165, 180, 252, 0.08) 0%, transparent 45%),
         radial-gradient(circle at 50% 60%, rgba(34, 211, 238, 0.05) 0%, transparent 55%);
 }
 
@@ -54,8 +54,8 @@
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(circle,
-        rgba(196, 181, 253, 0.15) 0%,
-        rgba(124, 58, 237, 0.08) 25%,
+        rgba(199, 210, 254, 0.15) 0%,
+        rgba(165, 180, 252, 0.08) 25%,
         transparent 65%);
     opacity: 0;
     transition: opacity 3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -129,11 +129,11 @@
 }
 
 .word.accent {
-    background: linear-gradient(135deg, #E9D5FF, #C084FC);
+    background: linear-gradient(135deg, var(--prism-lavender), var(--color-gold));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 30px rgba(192, 132, 252, 0.2);
+    text-shadow: 0 0 30px rgba(229, 178, 93, 0.15);
 }
 
 .hero-sub {
@@ -226,7 +226,7 @@
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(196, 181, 253, 0.08);
+    border: 1px solid rgba(165, 180, 252, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,8 +236,8 @@
 }
 
 .celestial-btn:hover {
-    background: rgba(26, 16, 53, 0.7);
-    border-color: rgba(196, 181, 253, 0.2);
+    background: rgba(22, 22, 41, 0.75);
+    border-color: rgba(165, 180, 252, 0.2);
     transform: scale(1.08);
 }
 
@@ -251,7 +251,7 @@
     position: absolute;
     inset: -4px;
     border-radius: 18px;
-    border: 1px solid rgba(124, 58, 237, 0.3);
+    border: 1px solid rgba(165, 180, 252, 0.3);
     opacity: 0;
     transition: all 0.5s var(--ease-out);
     pointer-events: none;
@@ -270,7 +270,7 @@
 .celestial-divider {
     width: 20px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(196, 181, 253, 0.15), transparent);
+    background: linear-gradient(90deg, transparent, rgba(165, 180, 252, 0.15), transparent);
     margin: 2px 0;
 }
 
@@ -318,13 +318,13 @@
 /* OFF state — flat, dim */
 .waveform-bars.off .waveform-bar {
     height: 3px;
-    background: rgba(109, 91, 163, 0.35);
+    background: rgba(165, 180, 252, 0.35);
 }
 
 /* ON state — animated individual bars */
 .waveform-bars.on .waveform-bar {
-    background: linear-gradient(to top, #7C3AED, #C4B5FD);
-    box-shadow: 0 0 6px rgba(124, 58, 237, 0.4);
+    background: linear-gradient(to top, var(--color-indigo), var(--prism-lavender));
+    box-shadow: 0 0 6px rgba(165, 180, 252, 0.4);
 }
 
 .waveform-bars.on .waveform-bar:nth-child(1) {
@@ -366,10 +366,10 @@
 
 /* Glow halo behind the bars when active */
 .celestial-btn.waveform-btn.active {
-    border-color: rgba(124, 58, 237, 0.25);
+    border-color: rgba(165, 180, 252, 0.25);
     box-shadow:
-        0 0 12px rgba(124, 58, 237, 0.12),
-        inset 0 0 12px rgba(124, 58, 237, 0.06);
+        0 0 12px rgba(165, 180, 252, 0.12),
+        inset 0 0 12px rgba(165, 180, 252, 0.06);
 }
 
 /* ============================================
@@ -393,7 +393,7 @@
 }
 
 .atlas-icon.off .atlas-ring {
-    stroke: rgba(109, 91, 163, 0.3);
+    stroke: rgba(165, 180, 252, 0.3);
     stroke-width: 1;
     stroke-dasharray: 4 3;
 }
@@ -423,12 +423,12 @@
 /* Star dots */
 .atlas-star {
     transition: all 0.5s var(--ease-out);
-    fill: rgba(109, 91, 163, 0.3);
+    fill: rgba(165, 180, 252, 0.3);
 }
 
 .atlas-icon.on .atlas-star {
-    fill: #C4B5FD;
-    filter: drop-shadow(0 0 2px rgba(196, 181, 253, 0.6));
+    fill: var(--prism-lavender);
+    filter: drop-shadow(0 0 2px rgba(199, 210, 254, 0.6));
 }
 
 /* Constellation lines */
@@ -439,7 +439,7 @@
 }
 
 .atlas-icon.on .atlas-line {
-    stroke: rgba(196, 181, 253, 0.4);
+    stroke: rgba(199, 210, 254, 0.4);
     stroke-width: 0.6;
 }
 

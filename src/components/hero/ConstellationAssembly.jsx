@@ -2,45 +2,45 @@ import { useRef, useEffect, useCallback } from 'react';
 
 // CI ×1.25 exact geometry
 const TARGETS = [
-  { id: 'v1', x: 250, y: 75,  color: '#C4B5FD', r: 5 },
-  { id: 'v2', x: 406, y: 346, color: '#C4B5FD', r: 5 },
-  { id: 'v3', x: 94,  y: 346, color: '#C4B5FD', r: 5 },
-  { id: 'v4', x: 250, y: 425, color: '#A78BFA', r: 5 },
-  { id: 'v5', x: 94,  y: 154, color: '#A78BFA', r: 5 },
-  { id: 'v6', x: 406, y: 154, color: '#A78BFA', r: 5 },
-  { id: 'i1', x: 173, y: 206, color: '#E9D5FF', r: 3 },
-  { id: 'i2', x: 328, y: 206, color: '#E9D5FF', r: 3 },
-  { id: 'i3', x: 173, y: 294, color: '#E9D5FF', r: 3 },
-  { id: 'i4', x: 328, y: 294, color: '#E9D5FF', r: 3 },
-  { id: 'i5', x: 250, y: 154, color: '#E9D5FF', r: 3 },
-  { id: 'i6', x: 250, y: 346, color: '#E9D5FF', r: 3 },
+  { id: 'v1', x: 250, y: 75,  color: '#C7D2FE', r: 5 },
+  { id: 'v2', x: 406, y: 346, color: '#C7D2FE', r: 5 },
+  { id: 'v3', x: 94,  y: 346, color: '#C7D2FE', r: 5 },
+  { id: 'v4', x: 250, y: 425, color: '#A5B4FC', r: 5 },
+  { id: 'v5', x: 94,  y: 154, color: '#A5B4FC', r: 5 },
+  { id: 'v6', x: 406, y: 154, color: '#A5B4FC', r: 5 },
+  { id: 'i1', x: 173, y: 206, color: '#F1F5F9', r: 3 },
+  { id: 'i2', x: 328, y: 206, color: '#F1F5F9', r: 3 },
+  { id: 'i3', x: 173, y: 294, color: '#F1F5F9', r: 3 },
+  { id: 'i4', x: 328, y: 294, color: '#F1F5F9', r: 3 },
+  { id: 'i5', x: 250, y: 154, color: '#F1F5F9', r: 3 },
+  { id: 'i6', x: 250, y: 346, color: '#F1F5F9', r: 3 },
 ];
 
 const EDGES = [
-  { from: 'v1', to: 'v2', color: '#C4B5FD', width: 1.2, delay: 0 },
-  { from: 'v2', to: 'v3', color: '#C4B5FD', width: 1.2, delay: 200 },
-  { from: 'v3', to: 'v1', color: '#C4B5FD', width: 1.2, delay: 400 },
-  { from: 'v4', to: 'v5', color: '#A78BFA', width: 1.2, delay: 650 },
-  { from: 'v5', to: 'v6', color: '#A78BFA', width: 1.2, delay: 850 },
-  { from: 'v6', to: 'v4', color: '#A78BFA', width: 1.2, delay: 1050 },
-  { from: 'i5', to: 'i2', color: '#E9D5FF', width: 0.5, delay: 1350 },
-  { from: 'i2', to: 'i4', color: '#E9D5FF', width: 0.5, delay: 1500 },
-  { from: 'i4', to: 'i6', color: '#E9D5FF', width: 0.5, delay: 1650 },
-  { from: 'i6', to: 'i3', color: '#E9D5FF', width: 0.5, delay: 1800 },
-  { from: 'i3', to: 'i1', color: '#E9D5FF', width: 0.5, delay: 1950 },
-  { from: 'i1', to: 'i5', color: '#E9D5FF', width: 0.5, delay: 2100 },
+  { from: 'v1', to: 'v2', color: '#C7D2FE', width: 1.2, delay: 0 },
+  { from: 'v2', to: 'v3', color: '#C7D2FE', width: 1.2, delay: 200 },
+  { from: 'v3', to: 'v1', color: '#C7D2FE', width: 1.2, delay: 400 },
+  { from: 'v4', to: 'v5', color: '#A5B4FC', width: 1.2, delay: 650 },
+  { from: 'v5', to: 'v6', color: '#A5B4FC', width: 1.2, delay: 850 },
+  { from: 'v6', to: 'v4', color: '#A5B4FC', width: 1.2, delay: 1050 },
+  { from: 'i5', to: 'i2', color: '#F1F5F9', width: 0.5, delay: 1350 },
+  { from: 'i2', to: 'i4', color: '#F1F5F9', width: 0.5, delay: 1500 },
+  { from: 'i4', to: 'i6', color: '#F1F5F9', width: 0.5, delay: 1650 },
+  { from: 'i6', to: 'i3', color: '#F1F5F9', width: 0.5, delay: 1800 },
+  { from: 'i3', to: 'i1', color: '#F1F5F9', width: 0.5, delay: 1950 },
+  { from: 'i1', to: 'i5', color: '#F1F5F9', width: 0.5, delay: 2100 },
 ];
 
 const OUTER_NODES = [
-  { cx: 55,  cy: 55,  r: 2,   color: '#C4B5FD' },
-  { cx: 445, cy: 75,  r: 2.5, color: '#A78BFA' },
-  { cx: 475, cy: 260, r: 1.8, color: '#E9D5FF' },
-  { cx: 455, cy: 435, r: 2,   color: '#FDE68A' },
+  { cx: 55,  cy: 55,  r: 2,   color: '#C7D2FE' },
+  { cx: 445, cy: 75,  r: 2.5, color: '#A5B4FC' },
+  { cx: 475, cy: 260, r: 1.8, color: '#F1F5F9' },
+  { cx: 455, cy: 435, r: 2,   color: '#F7D070' },
   { cx: 45,  cy: 425, r: 2.2, color: '#67E8F9' },
-  { cx: 25,  cy: 195, r: 1.5, color: '#F0ABFC' },
-  { cx: 155, cy: 25,  r: 1.8, color: '#C4B5FD' },
-  { cx: 345, cy: 20,  r: 1.5, color: '#A78BFA' },
-  { cx: 475, cy: 375, r: 2,   color: '#E9D5FF' },
+  { cx: 25,  cy: 195, r: 1.5, color: '#F1F5F9' },
+  { cx: 155, cy: 25,  r: 1.8, color: '#C7D2FE' },
+  { cx: 345, cy: 20,  r: 1.5, color: '#A5B4FC' },
+  { cx: 475, cy: 375, r: 2,   color: '#F1F5F9' },
   { cx: 15,  cy: 345, r: 1.6, color: '#67E8F9' },
 ];
 
@@ -414,7 +414,7 @@ export default function ConstellationAssembly({ rawMouseRef, onAssemblyComplete 
         line.setAttribute('y1', na.cy);
         line.setAttribute('x2', nb.cx);
         line.setAttribute('y2', nb.cy);
-        line.setAttribute('stroke', '#C4B5FD');
+        line.setAttribute('stroke', '#C7D2FE');
         line.setAttribute('stroke-width', '0.3');
         line.setAttribute('stroke-opacity', '0');
         line.setAttribute('stroke-dasharray', '4 8');
@@ -517,11 +517,11 @@ export default function ConstellationAssembly({ rawMouseRef, onAssemblyComplete 
                 fill="url(#g-amber)" opacity="0"/>
           <path className="hex-inner" id="hexInner"
                 d="M173 206 L250 154 L328 206 L328 294 L250 346 L173 294 Z"
-                fill="rgba(124,58,237,0.06)" stroke="rgba(196,181,253,0.15)" strokeWidth="0.8" opacity="0"/>
+                fill="rgba(165, 180, 252, 0.06)" stroke="rgba(199, 210, 254, 0.15)" strokeWidth="0.8" opacity="0"/>
           <g className="refraction-lines" id="refractionLines" opacity="0">
-            <line x1="250" y1="154" x2="250" y2="346" stroke="#E9D5FF" strokeWidth="0.6"/>
-            <line x1="173" y1="206" x2="328" y2="294" stroke="#C4B5FD" strokeWidth="0.5"/>
-            <line x1="328" y1="206" x2="173" y2="294" stroke="#FDE68A" strokeWidth="0.5"/>
+            <line x1="250" y1="154" x2="250" y2="346" stroke="#F1F5F9" strokeWidth="0.6"/>
+            <line x1="173" y1="206" x2="328" y2="294" stroke="#C7D2FE" strokeWidth="0.5"/>
+            <line x1="328" y1="206" x2="173" y2="294" stroke="#F7D070" strokeWidth="0.5"/>
           </g>
           <circle className="core-glow" id="coreGlow" cx="250" cy="250" r="18"
                   fill="url(#g-core-glow)" filter="url(#glow-xl)" opacity="0"/>
