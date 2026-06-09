@@ -565,7 +565,7 @@ export default function DailyDigest() {
                         {/* Read Full Button */}
                         <button 
                           onClick={() => navigate(`/daily/${quickPeekDate}`)}
-                          className="btn-secondary quick-peek-action-btn"
+                          className="btn-primary btn-glow quick-peek-action-btn"
                         >
                           {t('dailyDigest.viewFullContent')}
                         </button>
