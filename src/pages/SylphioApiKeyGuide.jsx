@@ -42,11 +42,11 @@ const TRANSLATIONS = {
     appSetupTitle: "3. Sylphio 앱 내 API Key 최종 연동 가이드",
     appStep1: "macOS에 단독 설치된 Sylphio.app을 기동합니다.",
     appStep2: "대기 화면 우측 상단의 설정 기어 버튼(⚙️)을 클릭하여 환경설정 창을 엽니다.",
-    appStep3: "좌측 탭 메뉴에서 AI Engine (인공지능 번역 엔진)을 선택합니다.",
+    appStep3: "좌측 탭 메뉴에서 AI 엔진 (BYOK)을 선택합니다.",
     appStep4: "AI PRO 실시간 통역 엔진 활성화 스위치를 ON(켬) 상태로 전환합니다.",
     appStep5: "유저가 선호하는 AI 엔진 플랫폼(Google Gemini 또는 OpenAI)을 선택합니다.",
     appStep6: "복사해 두었던 API Key 문자열을 붙여넣기(CMD + V) 합니다.",
-    appStep7: "API Key 연동 성공 및 활성화 표시를 확인한 뒤 설정창을 닫으면 다국어 자동 감지 및 실시간 번역 통역이 해제되어 완벽 가동됩니다!",
+    appStep7: "API Key 연동 성공 및 활성화 표시를 확인한 뒤 설정창을 닫으면 다국어 자동 감지 및 실시간 번역 통역 기능의 잠금이 해제되어 완벽 가동됩니다!",
     
     faqHeader: "🚨 긴급 장애 극복 및 트러블슈팅 (Troubleshooting)",
     faq1Q: "Q1. \"설정 ⚙️에서 AI 번역을 활성화하세요\" 또는 \"번역 에러\" 가 계속 발생합니다.",
@@ -179,7 +179,7 @@ export default function SylphioApiKeyGuide() {
         <div className="sylphio-core-container">
           <div className="sylphio-aurora-core"></div>
           <div className="sylphio-aurora-ring"></div>
-          <img src="/sylphio-icon.png" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
+          <img src="/sylphio-icon.png?v=2" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
         </div>
         
         <h1>{d.heroTitle}</h1>

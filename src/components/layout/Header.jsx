@@ -418,7 +418,7 @@ function Header() {
             <div className="bento-card-visual">
               <div className="dynamic-mockup sylphio-mockup">
                 <div className="sylphio-bento-core">
-                  <img src="/sylphio-icon.png" alt="Sylphio App Icon" className="sylphio-bento-icon-img" />
+                  <img src="/sylphio-icon.png?v=2" alt="Sylphio App Icon" className="sylphio-bento-icon-img" />
                   <div className="sylphio-bento-pulse"></div>
                 </div>
               </div>
