@@ -121,7 +121,7 @@
 
 /* ── Consolidated Premium Unified Card Style ── */
 .consolidated-pace-card {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.015) 0%, rgba(34, 211, 238, 0.015) 100%), var(--glass-bg);
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.015) 0%, rgba(199, 210, 254, 0.015) 100%), var(--glass-bg);
   border: 1px solid var(--glass-border);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.03);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -298,9 +298,9 @@
 }
 
 .pacenote-ai-badge {
-  background: rgba(34, 211, 238, 0.15);
-  color: #22D3EE;
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: rgba(199, 210, 254, 0.15);
+  color: var(--prism-lavender);
+  border: 1px solid rgba(199, 210, 254, 0.3);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -681,9 +681,9 @@
 }
 
 .calendar-cell.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(34, 211, 238, 0.1) 100%);
-  border-color: #34D399;
-  box-shadow: 0 0 15px rgba(52, 211, 153, 0.15);
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.15) 0%, rgba(199, 210, 254, 0.1) 100%);
+  border-color: var(--color-indigo);
+  box-shadow: 0 0 15px rgba(165, 180, 252, 0.15);
 }
 
 .calendar-cell.current {
@@ -826,8 +826,8 @@
 }
 
 .pacenote-omnibar.focused {
-  border-color: var(--prism-cyan);
-  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2), 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: var(--color-indigo);
+  box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.2), 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .omnibar-icon {
@@ -1060,15 +1060,15 @@
 
 /* ── Premium Weekly Voyage Logbook Card ── */
 .logbook-card {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.02) 0%, rgba(34, 211, 238, 0.02) 100%), var(--glass-bg);
-  border: 1px solid rgba(16, 185, 129, 0.15) !important;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(16, 185, 129, 0.05) !important;
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.02) 0%, rgba(199, 210, 254, 0.02) 100%), var(--glass-bg);
+  border: 1px solid rgba(165, 180, 252, 0.15) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(165, 180, 252, 0.05) !important;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .logbook-card:hover {
-  border-color: rgba(34, 211, 238, 0.4) !important;
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4), 0 0 20px rgba(34, 211, 238, 0.1) !important;
+  border-color: rgba(199, 210, 254, 0.4) !important;
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4), 0 0 20px rgba(199, 210, 254, 0.1) !important;
 }
 
 /* Auto Save Status Badge */
@@ -1340,16 +1340,16 @@
 }
 
 .omni-cat-tab.active {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(34, 211, 238, 0.15) 100%);
-  border-color: rgba(167, 139, 250, 0.4);
-  color: #E9D5FF;
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.2) 0%, rgba(199, 210, 254, 0.15) 100%);
+  border-color: rgba(165, 180, 252, 0.4);
+  color: var(--prism-lavender);
+  box-shadow: 0 0 10px rgba(165, 180, 252, 0.2);
 }
 
 /* Focus highlighting in dropdown */
 .omnibar-rec-item.focused {
-  background: linear-gradient(90deg, rgba(167, 139, 250, 0.15) 0%, rgba(34, 211, 238, 0.05) 100%) !important;
-  border-left: 3px solid #C4B5FD;
+  background: linear-gradient(90deg, rgba(165, 180, 252, 0.15) 0%, rgba(199, 210, 254, 0.05) 100%) !important;
+  border-left: 3px solid var(--prism-lavender);
   padding-left: 13px; /* Compensate border width */
   transform: scale(1.005);
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);

@@ -77,20 +77,20 @@
 }
 
 .quarter-segment-btn.active {
-  background: rgba(34, 211, 238, 0.08);
-  border-color: rgba(34, 211, 238, 0.4);
-  color: #22D3EE;
+  background: rgba(165, 180, 252, 0.08);
+  border-color: rgba(165, 180, 252, 0.4);
+  color: var(--color-indigo);
   font-weight: 600;
-  box-shadow: 0 0 16px rgba(34, 211, 238, 0.12);
+  box-shadow: 0 0 16px rgba(165, 180, 252, 0.12);
 }
 
 .quarter-segment-btn.current-voyage .current-dot {
   width: 6px;
   height: 6px;
-  background-color: #22D3EE;
+  background-color: var(--color-indigo);
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 8px #22D3EE;
+  box-shadow: 0 0 8px var(--color-indigo);
   animation: pulseDot 2s infinite;
 }
 
@@ -121,11 +121,11 @@
 }
 
 .ribbon-arrow:hover {
-  background: rgba(34, 211, 238, 0.08);
-  border-color: rgba(34, 211, 238, 0.3);
-  color: #22D3EE;
+  background: rgba(165, 180, 252, 0.08);
+  border-color: rgba(165, 180, 252, 0.3);
+  color: var(--color-indigo);
   transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(34, 211, 238, 0.15);
+  box-shadow: 0 0 10px rgba(165, 180, 252, 0.15);
 }
 
 .ribbon-arrow:active {
@@ -214,13 +214,13 @@
 
 /* ③ current: 현재 진행/항해 중 주차 */
 .ribbon-week-card.current {
-  border-color: rgba(34, 211, 238, 0.35);
-  background: rgba(34, 211, 238, 0.02);
-  box-shadow: inset 0 0 12px rgba(34, 211, 238, 0.05);
+  border-color: rgba(165, 180, 252, 0.35);
+  background: rgba(165, 180, 252, 0.02);
+  box-shadow: inset 0 0 12px rgba(165, 180, 252, 0.05);
 }
 
 .ribbon-week-card.current .ribbon-card-week-label {
-  color: #22D3EE;
+  color: var(--color-indigo);
 }
 
 /* ④ completed: 기록 완료 과거 주차 (데이터 있음) */
@@ -245,19 +245,18 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-/* ⑥ selected: 현재 대시보드 뷰로 선택 활성화 됨 */
 .ribbon-week-card.selected {
-  background: rgba(34, 211, 238, 0.09);
-  border-color: #22D3EE;
+  background: rgba(165, 180, 252, 0.09);
+  border-color: var(--color-indigo);
   transform: translateY(-4px) scale(1.03);
   box-shadow: 
-    0 10px 30px rgba(34, 211, 238, 0.2), 
-    inset 0 0 15px rgba(34, 211, 238, 0.08);
+    0 10px 30px rgba(165, 180, 252, 0.2), 
+    inset 0 0 15px rgba(165, 180, 252, 0.08);
   z-index: 5;
 }
 
 .ribbon-week-card.selected .ribbon-card-week-label {
-  color: #22D3EE;
+  color: var(--color-indigo);
   font-weight: 700;
 }
 
@@ -331,7 +330,7 @@
 
 .ribbon-week-card.current .ribbon-pct-text,
 .ribbon-week-card.selected .ribbon-pct-text {
-  color: #22D3EE;
+  color: var(--color-indigo);
 }
 
 .ribbon-badge-text {
@@ -355,13 +354,12 @@
   animation: trophyFloat 2.5s infinite ease-in-out;
 }
 
-/* 실시간 맥동 도트 (현재 주차에 표시) */
 .ribbon-pulse-indicator {
   width: 5px;
   height: 5px;
-  background-color: #22D3EE;
+  background-color: var(--color-indigo);
   border-radius: 50%;
-  box-shadow: 0 0 8px #22D3EE;
+  box-shadow: 0 0 8px var(--color-indigo);
   animation: pulseDot 2s infinite;
 }
 
@@ -377,13 +375,13 @@
 
 .ribbon-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #06B6D4, #22D3EE);
+  background: linear-gradient(90deg, var(--color-indigo), var(--prism-lavender));
   border-radius: 2px;
   transition: width 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
 }
 
 .ribbon-week-card.selected .ribbon-progress-fill {
-  background: linear-gradient(90deg, #22D3EE, #67E8F9);
+  background: linear-gradient(90deg, var(--color-indigo), var(--prism-lavender));
 }
 
 /* 골드 프로그레스바 */
