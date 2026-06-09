@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-08
-version: v1.2
+last_updated: 2026-06-09
+version: v1.3
 target_files:
   - pipeline/src/lib/gemini.mjs
   - admin-api.mjs
@@ -17,6 +17,7 @@ target_files:
 | v1.0 | 2026-05-22 | Maker | 최초 AI 커밋 자동 매칭 API 한도 및 과금 안정성 분석 | admin-api.mjs |
 | v1.1 | 2026-06-02 | Antigravity | 결제 계정 요금 차단 및 100% 무료 티어 운용을 위한 고효율 API 최적화 설계 반영 | gemini.mjs, admin-api.mjs |
 | v1.2 | 2026-06-08 | Antigravity | 개인 Gmail 발급 무료 API 키 이관 및 모델명(gemini-flash-latest) 호환성 패치 반영 | gemini.mjs, admin-api.mjs |
+| v1.3 | 2026-06-09 | Antigravity | Cloud Build IAM 권한 복구 및 pristudy-composer Job Secret Manager 이관 반영 | Cloud Build, Cloud Run Jobs |
 
 ---
 
@@ -121,4 +122,23 @@ PriSincera 플랫폼은 기술 블로그인 **Builder's Log** 작성 시 본문 
 ### 3) API Key 노출 방지 및 보안 무결성 확보
 - **보안 수칙 준수**: 연동된 API Key는 소스 코드, 클라이언트 환경(.env) 또는 Git 커밋 이력에 절대로 일반 텍스트 형태로 노출되거나 저장되지 않도록 철저히 차단하였습니다.
 - **Secret Manager 통합**: 새로 발급받은 실무 API Key는 오직 GCP Secret Manager의 `GEMINI_API_KEY` 및 `GEMINI_ADMIN_API_KEY` 보안 비밀의 최신 버전(`latest`)으로만 업로드되어 있으며, Cloud Build 배포 및 Cloud Run 구동 런타임에 동적으로 주입됩니다.
+
+
+## 6. v1.3 업데이트: Cloud Run Job 배포 장애 및 IAM 권한 복구 (2026-06-09)
+
+### 1) Cloud Build 배포 중단 및 `PERMISSION_DENIED` 이슈
+- **증상**: 무료 API 키 적용 배포 이후, 매일 아침 전송되는 데일리 다이제스트 메일에서 일본어 학습 및 AI 프롬프트 1문장(PriStudy) 영역이 완전히 누락된 상태로 송신 및 웹 아카이브에 박제되었습니다.
+- **진단**: Cloud Build 파이프라인의 `Step #6` (Collector Job 업데이트) 실행 시, 빌드를 실행하는 기본 Compute Engine 서비스 계정(`1094711522476-compute@developer.gserviceaccount.com`)에 배치 Job의 실행 전용 서비스 계정(`prisignal-pipeline@prisincera.iam.gserviceaccount.com`) 권한을 위임할 수 있는 `iam.serviceaccounts.actAs` (Service Account User) 역할이 누락되어 배포가 영구 거부되었습니다.
+- **영향**: 배포 실패로 인해 `pristudy-composer` Job을 업데이트하는 `Step #9`가 완전히 생략되었으며, 이에 따라 해당 Job은 5월 6일 자 만료된 API Key가 하드코딩된 상태로 오랫동안 실패를 반복하고 있었습니다.
+
+### 2) 서비스 계정 위임 권한 부여 및 핫픽스 적용
+- **IAM 권한 바인딩**: gcloud CLI를 통해 Cloud Build 기본 서비스 계정이 파이프라인 서비스 계정을 정상적으로 위임·호출할 수 있도록 `Service Account User` 역할을 추가 바인딩하였습니다.
+  ```bash
+  gcloud iam service-accounts add-iam-policy-binding \
+    prisignal-pipeline@prisincera.iam.gserviceaccount.com \
+    --member="serviceAccount:1094711522476-compute@developer.gserviceaccount.com" \
+    --role="roles/iam.serviceAccountUser"
+  ```
+- **Job 구성의 Secret Manager 이관**: `pristudy-composer` Cloud Run Job에 하드코딩되어 있던 기존의 만료된 `GEMINI_API_KEY` 환경변수를 강제 제거하고, 다른 Job들과 동일하게 GCP Secret Manager(`GEMINI_API_KEY=GEMINI_API_KEY:latest`)를 바인딩하도록 직접 설정을 업데이트하였습니다.
+- **수동 복구 실행**: Job 설정을 복구한 직후 `pristudy-composer` Job을 즉시 기동하여 오늘 자 학습 콘텐츠를 성공적으로 Firestore에 복구하였습니다. (이후 수동 트리거한 Cloud Build도 모든 파이프라인을 100% 통과하여 `SUCCESS` 상태를 완료했습니다.)
 

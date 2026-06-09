@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-05-21
-version: v1.1
+last_updated: 2026-06-09
+version: v1.2
 target_files:
   - Dockerfile
   - cloudbuild.yaml
@@ -17,6 +17,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-04-30 | Developer | GCP Cloud Run 배포, CI/CD 및 DNS 관리 가이드 최초 구축 | Infrastructure |
 | v1.1 | 2026-05-21 | AI Agent | 도메인 중심(DDD) 폴더 구조 개편에 따른 표준 프론트매터 및 개정 내역 주입 | Documentation |
+| v1.2 | 2026-06-09 | Antigravity | Cloud Run Jobs 관리 및 CI/CD IAM 권한 위임(actAs) 설정 가이드 추가 | cloudbuild.yaml, Infrastructure |
 
 > **최종 업데이트**: 2026-04-30  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
@@ -477,6 +478,37 @@ Cloud Run 배포 설정:
 | `max-instances` | `5` | 최대 스케일 |
 | `memory` | `512Mi` | 인스턴스 메모리 |
 | `concurrency` | `80` | 인스턴스당 동시 요청 수 |
+
+### 7-7. Cloud Run Jobs 및 IAM 서비스 계정 권한 (2026-06-09 추가)
+
+PriSignal의 데일리 수집 및 메일 발송 파이프라인 등 배치성 백그라운드 작업들은 별도의 **Cloud Run Jobs**로 실행되며, Cloud Scheduler를 통해 스케줄링됩니다.
+
+#### 1) 대상 Job 리스트
+- `prisignal-collector`: 매일 06:00 KST에 실행되어 RSS 피드를 수집합니다.
+- `prisignal-composer`: 매일 08:00 KST에 실행되어 아티클 스코어링 및 뉴스레터를 발송합니다.
+- `pristudy-composer`: 매일 04:00 KST에 실행되어 PriStudy 학습 문장 및 프롬프트를 자동 생성합니다.
+- `pacenote-composer`: 매일 00:00 KST에 실행되어 Pace Note 추천 미션 풀을 갱신합니다.
+- `prisignal-monitor`: 매주 월요일 08:30 KST에 실행되어 발송 상태를 최종 모니터링합니다.
+
+#### 2) 서비스 계정 및 최소 권한
+모든 Job은 최소 권한 원칙에 따라 커스텀 파이프라인 서비스 계정(`prisignal-pipeline@prisincera.iam.gserviceaccount.com`)을 할당받아 실행됩니다.
+
+#### 3) CI/CD 배포를 위한 필수 IAM 권한 (중요)
+Cloud Build 파이프라인(`cloudbuild.yaml`)에서 `gcloud run jobs update` 명령어를 통해 배치 Job들을 자동으로 갱신(Update)하려면, **Cloud Build 실행 계정이 대상 Job의 서비스 계정을 대신해 동작할 수 있는 권한**이 사전에 바인딩되어 있어야 합니다.
+- **필수 역할**: Service Account User (`roles/iam.serviceAccountUser`)
+- **대상**: 배치 Job 전용 서비스 계정 (`prisignal-pipeline@prisincera.iam.gserviceaccount.com`)
+- **구성원**: 기본 Compute Engine 서비스 계정 (예: `[PROJECT_NUMBER]-compute@developer.gserviceaccount.com` 또는 활성 Cloud Build 서비스 계정)
+
+이 권한이 누락되면 Cloud Build 시 아래와 같은 `PERMISSION_DENIED` 오류가 발생하여 파이프라인 전체 배포가 차단됩니다.
+> `PERMISSION_DENIED: Permission 'iam.serviceaccounts.actAs' denied on service account...`
+
+**해결 및 예방 명령어 (CLI):**
+```bash
+gcloud iam service-accounts add-iam-policy-binding \
+  prisignal-pipeline@prisincera.iam.gserviceaccount.com \
+  --member="serviceAccount:[PROJECT_NUMBER]-compute@developer.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser"
+```
 
 ---
 
