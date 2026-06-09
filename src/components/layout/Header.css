@@ -175,6 +175,23 @@
     background: var(--orbit-cyan);
 }
 
+/* Service Scoped Theme overrides for BGM wavebars */
+.nav.sylphio-theme .gnb-bgm-btn.active .waveform-bar {
+    background: #87A9EC; /* Sylphio Sapphire Blue */
+}
+
+.nav.builders-theme .gnb-bgm-btn.active .waveform-bar {
+    background: var(--color-gold); /* Celestial Gold */
+}
+
+.nav.daily-theme .gnb-bgm-btn.active .waveform-bar {
+    background: var(--color-indigo); /* Nebula Indigo */
+}
+
+.nav.pacenote-theme .gnb-bgm-btn.active .waveform-bar {
+    background: var(--color-indigo); /* Nebula Indigo */
+}
+
 .gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(1) { height: 40%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0s; }
 .gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(2) { height: 70%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.15s; }
 .gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(3) { height: 100%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.3s; }

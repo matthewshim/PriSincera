@@ -138,8 +138,16 @@ function Header() {
   }, [musicPlaying, getAudio]);
 
 
+  const getThemeClass = () => {
+    if (location.pathname.startsWith('/sylphio')) return 'sylphio-theme';
+    if (location.pathname.startsWith('/builders-log')) return 'builders-theme';
+    if (location.pathname.startsWith('/daily')) return 'daily-theme';
+    if (location.pathname.startsWith('/pacenote')) return 'pacenote-theme';
+    return '';
+  };
+
   return (
-    <nav className={`nav${scrolled ? ' scrolled' : ''}`} id="nav">
+    <nav className={`nav${scrolled ? ' scrolled' : ''} ${getThemeClass()}`} id="nav">
       <div className="nav-inner">
         {/* Hamburger toggle button (mobile only) - Moved to left */}
         <button 
