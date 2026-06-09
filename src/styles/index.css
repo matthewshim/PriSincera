@@ -296,15 +296,15 @@ button:active,
     --btn-glow-color: rgba(165, 180, 252, 0.15); /* Nebula Indigo glow */
 }
 
-/* 3. Pace Note (Muted Platinum-Emerald Theme) */
+/* 3. Pace Note (Muted Platinum-Indigo Theme) */
 .pacenote-page {
-    --btn-primary-bg: linear-gradient(135deg, rgba(226, 226, 231, 0.12), rgba(52, 211, 153, 0.04));
+    --btn-primary-bg: linear-gradient(135deg, rgba(226, 226, 231, 0.12), rgba(165, 180, 252, 0.06));
     --btn-primary-border: rgba(226, 226, 231, 0.25);
-    --btn-primary-border-hover: rgba(52, 211, 153, 0.35);
-    --btn-primary-glow: rgba(52, 211, 153, 0.01);
-    --btn-primary-glow-hover: rgba(52, 211, 153, 0.03);
-    --btn-primary-hover-bg: linear-gradient(135deg, rgba(226, 226, 231, 0.20), rgba(52, 211, 153, 0.08));
-    --btn-glow-color: rgba(52, 211, 153, 0.15); /* Emerald green glow */
+    --btn-primary-border-hover: rgba(165, 180, 252, 0.35);
+    --btn-primary-glow: rgba(165, 180, 252, 0.01);
+    --btn-primary-glow-hover: rgba(165, 180, 252, 0.03);
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(226, 226, 231, 0.20), rgba(165, 180, 252, 0.12));
+    --btn-glow-color: rgba(165, 180, 252, 0.15); /* Nebula Indigo glow */
 }
 
 /* 4. Sylphio (Deep Sapphire-Starlight Blue Theme) */

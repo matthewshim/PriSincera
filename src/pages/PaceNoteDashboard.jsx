@@ -781,11 +781,11 @@ export default function PaceNoteDashboard() {
               <div className="pacenote-logged-in-wrap">
                 <div style={{ 
                   display: 'inline-block', 
-                  background: 'rgba(52, 211, 153, 0.1)', 
-                  border: '1px solid rgba(52, 211, 153, 0.5)', 
+                  background: 'rgba(165, 180, 252, 0.08)', 
+                  border: '1px solid rgba(165, 180, 252, 0.3)', 
                   padding: '12px 28px', 
                   borderRadius: '100px', 
-                  color: '#34D399', 
+                  color: 'var(--color-indigo)', 
                   fontSize: '1rem', 
                   fontWeight: '500',
                   boxShadow: 'none',
