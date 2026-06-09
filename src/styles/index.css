@@ -184,6 +184,10 @@ button { background: none; border: none; font: inherit; color: inherit; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 600;
     background: var(--btn-primary-bg);
     color: #FFFFFF;
     border: 1px solid var(--btn-primary-border);
@@ -207,6 +211,10 @@ button { background: none; border: none; font: inherit; color: inherit; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 600;
     background: var(--btn-secondary-bg);
     color: var(--crystal-light);
     border: 1px solid var(--glass-border);
