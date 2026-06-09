@@ -90,7 +90,7 @@
     font-family: var(--font-mono);
     font-size: 0.75rem;
     letter-spacing: 0.18em;
-    color: var(--orbit-cyan-light);
+    color: var(--color-indigo);
     margin-bottom: var(--space-md);
     opacity: 0;
     transform: translateY(15px);
