@@ -366,34 +366,34 @@ export default function DailyDigest() {
     
     // AI / 인공지능 (Cyan)
     if (cat.includes('ai') || cat.includes('인공지능') || cat.includes('intelligence')) 
-      return { color: '#22D3EE', background: 'rgba(34, 211, 238, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(34, 211, 238, 0.3)' };
+      return { color: 'var(--color-cyan)', background: 'rgba(34, 211, 238, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(34, 211, 238, 0.25)' };
     
     // Attitude / Mindset (Emerald/Green)
     if (cat.includes('attitude') || cat.includes('mindset') || cat.includes('태도')) 
-      return { color: '#34D399', background: 'rgba(52, 211, 153, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(52, 211, 153, 0.3)' };
+      return { color: '#34D399', background: 'rgba(52, 211, 153, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(52, 211, 153, 0.25)' };
     
     // Priority / Strategy (Amber/Yellow)
     if (cat.includes('priority') || cat.includes('strategy') || cat.includes('전략')) 
-      return { color: '#FBBF24', background: 'rgba(251, 191, 36, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(251, 191, 36, 0.3)' };
+      return { color: '#FBBF24', background: 'rgba(251, 191, 36, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(251, 191, 36, 0.25)' };
     
     // Global / Trend (Blue)
     if (cat.includes('global') || cat.includes('글로벌') || cat.includes('trend') || cat.includes('트렌드')) 
-      return { color: '#60A5FA', background: 'rgba(96, 165, 250, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.3)' };
+      return { color: '#60A5FA', background: 'rgba(96, 165, 250, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.25)' };
     
-    // Startup / Business (Rose/Pink)
+    // Startup / Business (Gold)
     if (cat.includes('startup') || cat.includes('스타트업') || cat.includes('business') || cat.includes('비즈니스')) 
-      return { color: '#F472B6', background: 'rgba(244, 114, 182, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(244, 114, 182, 0.3)' };
+      return { color: 'var(--prism-gold)', background: 'rgba(229, 178, 93, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(229, 178, 93, 0.25)' };
     
-    // Tech / Dev / SW (Violet)
+    // Tech / Dev / SW (Indigo)
     if (cat.includes('tech') || cat.includes('개발') || cat.includes('software')) 
-      return { color: '#A78BFA', background: 'rgba(167, 139, 250, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(167, 139, 250, 0.3)' };
+      return { color: 'var(--color-indigo)', background: 'rgba(129, 140, 248, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(129, 140, 248, 0.25)' };
     
     // Security / Defense (Red)
     if (cat.includes('security') || cat.includes('보안')) 
-      return { color: '#F87171', background: 'rgba(248, 113, 113, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(248, 113, 113, 0.3)' };
+      return { color: '#F87171', background: 'rgba(248, 113, 113, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(248, 113, 113, 0.25)' };
     
     // Default (Lavender)
-    return { color: 'var(--prism-lavender)', background: 'rgba(192, 132, 252, 0.15)', boxShadow: 'inset 0 0 0 1px rgba(192, 132, 252, 0.3)' };
+    return { color: 'var(--prism-lavender)', background: 'rgba(199, 210, 254, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(199, 210, 254, 0.25)' };
   };
 
   const handleTabChange = (key) => {
@@ -526,7 +526,7 @@ export default function DailyDigest() {
                             <div className="group-items">
                               {quickPeekData.signal.articles.slice(0, 2).map((art, idx) => (
                                 <div key={idx} className="peek-item flat">
-                                  <span className="peek-bullet" style={{ color: getCategoryStyles(art.category).color || '#A78BFA' }}>✦</span>
+                                  <span className="peek-bullet" style={{ color: getCategoryStyles(art.category).color || 'var(--color-indigo)' }}>✦</span>
                                   <span className="peek-text">{art.title}</span>
                                 </div>
                               ))}

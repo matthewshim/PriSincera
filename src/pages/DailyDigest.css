@@ -67,9 +67,9 @@
   animation: pulse-border 1.5s infinite;
 }
 @keyframes pulse-border {
-  0% { border-color: rgba(192, 132, 252, 0.2); box-shadow: 0 0 0 0 rgba(192, 132, 252, 0.2); }
-  50% { border-color: rgba(192, 132, 252, 0.6); box-shadow: 0 0 0 8px rgba(192, 132, 252, 0); }
-  100% { border-color: rgba(192, 132, 252, 0.2); box-shadow: 0 0 0 0 rgba(192, 132, 252, 0); }
+  0% { border-color: rgba(229, 178, 93, 0.2); box-shadow: 0 0 0 0 rgba(229, 178, 93, 0.2); }
+  50% { border-color: rgba(229, 178, 93, 0.6); box-shadow: 0 0 0 8px rgba(229, 178, 93, 0); }
+  100% { border-color: rgba(229, 178, 93, 0.2); box-shadow: 0 0 0 0 rgba(229, 178, 93, 0); }
 }
 .daily-google-sub-btn.success, .daily-google-sub-btn.already_subscribed {
   background: rgba(52, 211, 153, 0.1) !important;
@@ -143,7 +143,7 @@
 .daily-card:hover {
   transform: translateY(-2px);
   border-color: var(--glass-border-hover);
-  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+  box-shadow: 0 8px 30px rgba(129, 140, 248, 0.15);
 }
 
 /* ── Signal Articles Grid & Featured Card ── */
@@ -172,8 +172,8 @@
 
 .signal-article-card:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(167, 139, 250, 0.25);
-  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.12);
+  border-color: rgba(129, 140, 248, 0.25);
+  box-shadow: 0 12px 40px rgba(129, 140, 248, 0.12);
 }
 
 /* DM Pick - Flagship horizontal layout on desktop */
@@ -281,12 +281,12 @@
 }
 
 .signal-insight {
-  background: rgba(124, 58, 237, 0.08);
+  background: rgba(129, 140, 248, 0.08);
   border-left: 3px solid var(--prism-violet);
   padding: var(--space-sm) var(--space-md);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   font-size: 0.9rem;
-  color: var(--crystal-light);
+  color: var(--text-secondary);
   margin: 0 0 var(--space-md);
   line-height: 1.6;
 }
@@ -498,10 +498,10 @@
 
 /* ── Business Japanese 1-Pick Card (Zen Minimalist Theme) ── */
 .japanese-study-card {
-  background: linear-gradient(135deg, rgba(251, 207, 232, 0.02) 0%, rgba(5, 5, 5, 0.8) 100%);
-  border: 1px solid rgba(251, 207, 232, 0.12);
+  background: linear-gradient(135deg, rgba(241, 245, 249, 0.01) 0%, rgba(5, 5, 5, 0.8) 100%);
+  border: 1px solid rgba(241, 245, 249, 0.10);
   border-radius: var(--radius-lg);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(251, 207, 232, 0.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(241, 245, 249, 0.01);
   overflow: hidden;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -511,14 +511,14 @@
 }
 
 .japanese-study-card:hover {
-  border-color: rgba(251, 207, 232, 0.25);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(251, 207, 232, 0.05);
+  border-color: rgba(241, 245, 249, 0.20);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(241, 245, 249, 0.03);
 }
 
 .japanese-audio-play-main {
   margin-left: auto;
-  background: rgba(251, 207, 232, 0.08);
-  border: 1px solid rgba(251, 207, 232, 0.2);
+  background: rgba(241, 245, 249, 0.05);
+  border: 1px solid rgba(241, 245, 249, 0.15);
   color: var(--prism-rose);
   border-radius: var(--radius-pill);
   padding: 8px 16px;
@@ -531,8 +531,8 @@
 }
 
 .japanese-audio-play-main:hover {
-  background: rgba(251, 207, 232, 0.18);
-  border-color: rgba(251, 207, 232, 0.4);
+  background: rgba(241, 245, 249, 0.15);
+  border-color: rgba(241, 245, 249, 0.3);
   color: var(--text-primary);
   transform: translateY(-1px);
 }
@@ -601,7 +601,7 @@
 }
 
 .jp-insight {
-  background: rgba(251, 207, 232, 0.04) !important;
+  background: rgba(241, 245, 249, 0.03) !important;
   border-left: 3px solid var(--prism-rose) !important;
   border-radius: 4px;
   max-width: 800px;
@@ -620,7 +620,7 @@
 .jp-insight p {
   margin: 0;
   font-size: 0.9rem;
-  color: var(--crystal-light);
+  color: var(--text-secondary);
 }
 
 /* Vocabulary 2-column bento cards grid */
@@ -656,7 +656,7 @@
 
 .study-vocab-card:hover {
   background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(251, 207, 232, 0.15);
+  border-color: rgba(241, 245, 249, 0.15);
   transform: translateY(-2px);
 }
 
@@ -680,7 +680,7 @@
 }
 
 .vocab-audio-btn {
-  background: rgba(251, 207, 232, 0.08);
+  background: rgba(241, 245, 249, 0.05);
   border: none;
   color: var(--prism-rose);
   border-radius: 50%;
@@ -695,7 +695,7 @@
 }
 
 .vocab-audio-btn:hover {
-  background: rgba(251, 207, 232, 0.25);
+  background: rgba(241, 245, 249, 0.15);
   color: var(--text-primary);
   transform: scale(1.08);
 }
@@ -822,8 +822,8 @@
 .archive-card:hover {
   transform: translateY(-4px);
   background: rgba(255, 255, 255, 0.04);
-  border-color: var(--theme-color-semi, rgba(167, 139, 250, 0.25));
-  box-shadow: 0 16px 35px var(--theme-color-glow, rgba(124, 58, 237, 0.1));
+  border-color: var(--theme-color-semi, rgba(129, 140, 248, 0.25));
+  box-shadow: 0 16px 35px var(--theme-color-glow, rgba(129, 140, 248, 0.08));
 }
 
 .archive-card:hover::before {
@@ -907,14 +907,14 @@
   gap: 8px;
   margin: 4px 0 8px 36px;
   padding: 4px 12px;
-  background: rgba(124, 58, 237, 0.1);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: rgba(129, 140, 248, 0.08);
+  border: 1px solid rgba(129, 140, 248, 0.15);
   border-radius: var(--radius-pill);
   width: max-content;
   transition: all 0.2s;
 }
 .archive-card:hover .archive-flat-more {
-  background: rgba(124, 58, 237, 0.2);
+  background: rgba(129, 140, 248, 0.18);
 }
 .flat-more-line {
   display: none;
@@ -1131,14 +1131,14 @@
 
 /* IT Tech Signal Active States */
 .daily-feed-container.theme-signal::before {
-  background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, rgba(124, 58, 237, 0.01) 60%, transparent 100%);
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.08) 0%, rgba(99, 102, 241, 0.01) 60%, transparent 100%);
   opacity: 1;
 }
 
 .daily-feed-container.theme-signal .workspace-tab-btn.active {
-  background: rgba(167, 139, 250, 0.08);
-  border-color: rgba(167, 139, 250, 0.25);
-  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: rgba(129, 140, 248, 0.08);
+  border-color: rgba(129, 140, 248, 0.25);
+  box-shadow: 0 4px 20px rgba(129, 140, 248, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .daily-feed-container.theme-signal .workspace-tab-btn.active .btn-icon {
@@ -1146,22 +1146,22 @@
 }
 
 .daily-feed-container.theme-signal .workspace-tab-btn.active .btn-title {
-  color: #C084FC; /* var(--prism-lavender) */
-  text-shadow: 0 0 12px rgba(167, 139, 250, 0.25);
+  color: var(--prism-lavender);
+  text-shadow: 0 0 12px rgba(129, 140, 248, 0.25);
 }
 
 .daily-feed-container.theme-signal .workspace-tab-btn.active .btn-meta {
-  color: #A78BFA;
+  color: var(--color-indigo);
   opacity: 0.9;
 }
 
 .daily-feed-container.theme-signal .signal-article-card {
-  border-color: rgba(167, 139, 250, 0.08);
+  border-color: rgba(129, 140, 248, 0.08);
 }
 
 .daily-feed-container.theme-signal .signal-article-card:hover {
-  border-color: rgba(167, 139, 250, 0.28);
-  box-shadow: 0 12px 40px rgba(167, 139, 250, 0.09);
+  border-color: rgba(129, 140, 248, 0.28);
+  box-shadow: 0 12px 40px rgba(129, 140, 248, 0.09);
 }
 
 /* AI Prompt Workstation Active States */
@@ -1201,14 +1201,14 @@
 
 /* Language Dojo Active States */
 .daily-feed-container.theme-japanese::before {
-  background: radial-gradient(circle, rgba(251, 207, 232, 0.08) 0%, rgba(244, 114, 182, 0.01) 60%, transparent 100%);
+  background: radial-gradient(circle, rgba(241, 245, 249, 0.06) 0%, rgba(226, 232, 240, 0.01) 60%, transparent 100%);
   opacity: 1;
 }
 
 .daily-feed-container.theme-japanese .workspace-tab-btn.active {
-  background: rgba(251, 207, 232, 0.08);
-  border-color: rgba(251, 207, 232, 0.25);
-  box-shadow: 0 4px 20px rgba(251, 207, 232, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: rgba(241, 245, 249, 0.05);
+  border-color: rgba(241, 245, 249, 0.20);
+  box-shadow: 0 4px 20px rgba(241, 245, 249, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .daily-feed-container.theme-japanese .workspace-tab-btn.active .btn-icon {
@@ -1216,22 +1216,22 @@
 }
 
 .daily-feed-container.theme-japanese .workspace-tab-btn.active .btn-title {
-  color: #F472B6; /* Rose */
-  text-shadow: 0 0 12px rgba(251, 207, 232, 0.25);
+  color: var(--prism-rose);
+  text-shadow: 0 0 12px rgba(241, 245, 249, 0.20);
 }
 
 .daily-feed-container.theme-japanese .workspace-tab-btn.active .btn-meta {
-  color: #F472B6;
+  color: var(--prism-rose);
   opacity: 0.9;
 }
 
 .daily-feed-container.theme-japanese .japanese-study-card {
-  border-color: rgba(251, 207, 232, 0.15);
+  border-color: rgba(241, 245, 249, 0.15);
 }
 
 .daily-feed-container.theme-japanese .japanese-study-card:hover {
-  border-color: rgba(251, 207, 232, 0.35);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(251, 207, 232, 0.09);
+  border-color: rgba(241, 245, 249, 0.30);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(241, 245, 249, 0.06);
 }
 
 /* ─────────────────────────────────────────────
@@ -1410,7 +1410,7 @@
 .quick-peek-welcome .welcome-icon {
   font-size: 3rem;
   margin-bottom: 20px;
-  filter: drop-shadow(0 4px 12px rgba(167, 139, 250, 0.2));
+  filter: drop-shadow(0 4px 12px rgba(229, 178, 93, 0.15));
   animation: float 6s ease-in-out infinite;
 }
 
@@ -1420,7 +1420,7 @@
   font-weight: 700;
   color: var(--text-primary, #ffffff);
   margin: 0 0 12px 0;
-  background: var(--gradient-brand, linear-gradient(135deg, #a78bfa, #c084fc));
+  background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1452,10 +1452,10 @@
 }
 
 .quick-peek-card-wrapper:hover {
-  border-color: rgba(167, 139, 250, 0.2);
+  border-color: rgba(229, 178, 93, 0.25);
   box-shadow: 
-    0 20px 60px rgba(124, 58, 237, 0.1),
-    inset 0 0 0 1px rgba(167, 139, 250, 0.03);
+    0 20px 60px rgba(229, 178, 93, 0.06),
+    inset 0 0 0 1px rgba(229, 178, 93, 0.02);
 }
 
 .quick-peek-header {
@@ -1471,7 +1471,7 @@
   font-family: var(--font-display, 'Outfit', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--prism-lavender, #c084fc);
+  color: var(--prism-gold);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -1509,8 +1509,8 @@
 .quick-peek-blur-loader .spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(167, 139, 250, 0.2);
-  border-top-color: var(--prism-lavender, #c084fc);
+  border: 2px solid rgba(229, 178, 93, 0.1);
+  border-top-color: var(--prism-gold);
   border-radius: 50%;
   animation: peekSpinner 0.8s linear infinite;
 }
@@ -1521,7 +1521,7 @@
 
 .quick-peek-blur-loader span {
   font-size: 0.8rem;
-  color: var(--prism-lavender, #c084fc);
+  color: var(--prism-gold);
   font-family: var(--font-mono, monospace);
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -1587,7 +1587,7 @@
 .peek-more-indicator {
   font-family: var(--font-mono, monospace);
   font-size: 0.72rem;
-  color: var(--prism-lavender, #c084fc);
+  color: var(--prism-gold);
   opacity: 0.8;
   margin-left: 12px;
 }
@@ -1613,8 +1613,8 @@
 
 /* Japanese item theme */
 .peek-item.highlight-jp {
-  background: rgba(244, 114, 182, 0.03);
-  border: 1px solid rgba(244, 114, 182, 0.1);
+  background: rgba(241, 245, 249, 0.02);
+  border: 1px solid rgba(241, 245, 249, 0.08);
   align-items: center;
 }
 
@@ -1624,7 +1624,7 @@
 }
 
 .peek-item.highlight-jp .jp-text {
-  color: #F472B6;
+  color: var(--prism-rose);
   font-weight: 500;
 }
 

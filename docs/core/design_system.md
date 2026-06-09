@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-02
-version: v4.6
+last_updated: 2026-06-09
+version: v5.0
 target_files:
   - src/styles/index.css
   - src/components/hero/TelescopeCursor.jsx
@@ -12,7 +12,7 @@ target_files:
   - src/pages/PaceNoteDashboard.jsx
 ---
 
-# 📐 PriSincera Design System (v4.6: Layout Width & Interaction Standards)
+# 📐 PriSincera Design System (v5.0: Celestial Overhaul & Contrast Optimization)
 
 ## 📝 Revision History
 
@@ -25,6 +25,7 @@ target_files:
 | v4.0 | 2026-05-27 | AI Agent | 차세대 의미론적 CTA 버튼 설계 규격(Semantic CTA) 및 글로벌 최고 수준 디자인 시스템 분석(Linear, Vercel, HIG) 반영 | Global Brand System & UI Refactoring |
 | v4.5 | 2026-06-02 | AI Agent | 글로벌 인터랙션 대통합 (3D Tilt, 마그네틱 TelescopeCursor, Unified Haptic active scale) 규격 제정 | Global Interaction System & UI Refactoring |
 | v4.6 | 2026-06-02 | AI Agent | **최신 해상도 점유율 및 안구 가독 가시 범위 기반 3단계 콘텐츠 가로 영역 규격화 수립** | Global Spacing & Layout System |
+| v5.0 | 2026-06-09 | AI Agent | **AI 특유의 템플릿 느낌을 완전히 걷어내고 스타라이트 실버, 네뷸라 인디고, 스타라이트 골드 조합으로 대대적인 천체(Celestial) 테마 개편 및 본문 고대비 명도 개선** | Brand Accents & Colors Overhaul |
 
 > **"Sincerity, Prioritized."**
 > 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 v4.6 표준 가이드라인입니다. 
@@ -51,37 +52,39 @@ target_files:
 
 ---
 
-## 1. 🎨 Color System: Refined & Sophisticated
+## 1. 🎨 Color System: Refined & Sophisticated (Celestial Overhaul)
 
 **[디벨롭 사유]** 텍스트를 장시간 집중해서 읽어야 하는 `DailyDigest` 아티클이나 `PaceNote` 주차별 타임라인에서 배경이나 카드에 보라색 색조가 섞여 있으면, 색상 간섭 현상으로 인해 가독성이 급격히 저하됩니다. 또한 호버 시 포인트 컬러가 강조되는 시각적 효과가 배경색과 희석되어 고급스러움이 저하됩니다.
-**[v4.0 설계 표준]** 배경과 카드의 기조면은 보라색 혼합을 완전히 배제한 **순수 무채색(Desaturated Neutral OLED Slate)**으로 정제하고, 고귀한 브랜드 컬러인 Violet과 Cyan은 사용자의 인터랙션 순간에만 '보석처럼 선명하게' 나타나도록 제한합니다.
+**[v5.0 설계 표준]** AI 특유의 쨍한 보라색/핑크색 템플릿 느낌을 완전히 걷어내고, 깊은 우주의 느낌을 주는 **우주색 배경(OLED Space Black)**과 **스타라이트 골드**, **네뷸라 인디고**, **스타라이트 실버** 조합의 세련된 천체(Celestial) 테마를 수립하며 본문 텍스트 대비 명도를 대폭 개선하였습니다.
 
-### 1-1. Base & Surfaces (OLED Black & Slate)
+### 1-1. Base & Surfaces (OLED Space Black & Navy Depth)
 | Token | Hex / RGBA | 용도 및 설계 의도 |
 |-------|-----------|------------------|
-| `--bg-void` | `#000000` | 깊고 순수한 블랙 (OLED 친화적, 몰입감 극대화) |
-| `--bg-deep` | `#050505` | 깊은 배경 레이어 |
-| `--bg-surface` | `#0A0A0A` | 다크 그레이 기본 서페이스 |
-| `--bg-elevated` | `#111111` / `#171717` | 플로팅 요소, 모달, 강조 카드 전용 |
-| `--glass-bg` | `rgba(17, 17, 17, 0.6)` | 표준 무채색 다크 그레이 유리광 스킨 |
-| `--glass-border` | `rgba(255, 255, 255, 0.04)` | 정밀한 1px 초미세 구조선 |
-| `--glass-border-hover`| `rgba(255, 255, 255, 0.12)` | 호버 시 활성화되는 정밀 구조선 |
+| `--bg-void` | `#020205` | 깊고 순수한 우주의 암흑 배경 (OLED 친화적) |
+| `--bg-deep` | `#070710` | 네이비 톤이 살짝 감도는 깊은 밤하늘 배경 레이어 |
+| `--bg-surface` | `#0E0E1A` | 카드 및 패널 기본 서페이스 |
+| `--bg-elevated` | `#161629` | 툴팁 및 플로팅 강조 요소 |
+| `--glass-bg` | `rgba(14, 14, 26, 0.75)` | 깊은 우주 유리광 스킨 |
+| `--glass-border` | `rgba(255, 255, 255, 0.05)` | 정밀한 1px 초미세 구조선 |
+| `--glass-border-hover`| `rgba(129, 140, 248, 0.20)` | 호버 시 활성화되는 인디고 빛 반사 테두리 |
 
 ### 1-2. Typography Colors (APCA & Legibility)
 | Token | Hex / RGBA | 용도 및 기대 효과 |
 |-------|------------|-------------------|
-| `--text-primary` | `#FAFAFA` | 제목, 주요 본문 (눈부심 방지를 위해 오프화이트 사용) |
-| `--text-secondary`| `#A1A1AA` | 보조 텍스트, 서브타이틀 (시각적 안정감이 높은 Neutral Gray) |
-| `--text-muted` | `#71717A` | 비활성 텍스트, 부가 설명 (명도 대비 최소 기준 충족) |
+| `--text-primary` | `#FAFAFA` | 제목, 주요 본문 (가장 선명한 Off-White, 15:1 대비) |
+| `--text-secondary`| `#E2E8F0` | 보조 텍스트, 설명 및 본문 (가독성이 극대화된 Slate Light, 7:1 대비 충족) |
+| `--text-muted` | `#94A3B8` | 비활성 텍스트, 태그, 부가 정보 (시각적 안정감을 유지하는 Slate Muted) |
 
-### 1-3. Brand Accents & Gradients (The "Aura")
+### 1-3. Brand Accents & Gradients (Celestial Accents)
 | Token | Hex / Value | 용도 |
 |-------|-------------|------|
-| `--prism-violet` | `#6D28D9` | 메인 브랜드 액센트 (결정적인 순간용) |
-| `--prism-lavender`| `#A78BFA` | 서브 라이팅 효과, 상호작용 피드백 |
-| `--orbit-cyan` | `#06B6D4` | 정보성 강조, 테크(Tech) 시그널, 링크 색상 |
-| `--gradient-brand` | `linear-gradient(135deg, #6D28D9, #A78BFA, #FBCFE8)` | **우아한 오로라 그라디언트**. 핵심 Hero 요소 전용 |
-| `--gradient-cta` | `linear-gradient(135deg, rgba(109, 40, 217, 0.15), rgba(167, 139, 250, 0.1))` | primary 버튼 전용 우아한 반투명 브랜드 그라디언트 |
+| `--color-gold` | `#E5B25D` | 메인 핵심 포인트 컬러 (기준음 Note A 상징 Starlight Gold) |
+| `--color-indigo` | `#818CF8` | 서브 브랜드 포인트 컬러 (맑고 깊은 Nebula Indigo) |
+| `--color-cyan` | `#22D3EE` | 정보성 강조, 테크(Tech) 시그널, 링크 색상 (Aether Cyan) |
+| `--prism-rose` | `#F1F5F9` | **스타라이트 실버/화이트**. 기존의 저렴한 AI 핑크를 완벽히 치환 |
+| `--prism-lavender`| `#C7D2FE` | 다크모드 가독성을 위해 명도가 보장된 연인디고 |
+| `--gradient-brand` | `linear-gradient(135deg, #0A0F1D, #161B2E, var(--color-gold))` | 깊은 우주 공간에서 골드 별빛으로 이어지는 그라디언트 |
+| `--gradient-cta` | `linear-gradient(135deg, rgba(229, 178, 93, 0.08), rgba(255, 255, 255, 0.03))` | starlight gold 기반 반투명 브랜드 그라디언트 |
 
 ---
 
@@ -383,9 +386,9 @@ Daily Digest 아카이브 개편과 3-Tab 워크스페이스 리뉴얼 과정에
 * **백라이트 아우라 모핑 (Ambient Morphing Backdrop)**:
   * 컨테이너(`.daily-feed-container`) 뒷면에 `filter: blur(140px)`가 적용된 큰 가상 요소(`::before`)를 배치합니다.
   * 탭이 바뀔 때마다 테마의 대표광(대표 색상)을 배경 그라디언트로 부드럽게 페이드 전환시킵니다.
-    * **IT Tech (Signal)**: 라벤더 아우라 (`rgba(167, 139, 250, 0.08)`)
-    * **AI Workstation (Prompt)**: 사이언 아우라 (`rgba(6, 182, 212, 0.08)`)
-    * **Language Dojo (Japanese)**: 로즈 아우라 (`rgba(251, 207, 232, 0.08)`)
+    * **IT Tech (Signal)**: 네뷸라 인디고 아우라 (`rgba(129, 140, 248, 0.08)`)
+    * **AI Workstation (Prompt)**: 에테르 사이언 아우라 (`rgba(6, 182, 212, 0.08)`)
+    * **Language Dojo (Japanese)**: 스타라이트 실버 아우라 (`rgba(241, 245, 249, 0.06)`)
   * 트랜지션 필터: `transition: background 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.8s ease-in-out;`
 
 ### 9-4. 2-Stage Mobile Tap UX Flow (모바일 오터치 차단)

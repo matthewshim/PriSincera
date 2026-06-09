@@ -4,51 +4,54 @@
 
 /* --- Design Tokens --- */
 :root {
-    /* Base & Surfaces (OLED Black & Slate) */
-    --bg-void: #000000;
-    --bg-deep: #050505;
-    --bg-surface: #0a0a0a;
-    --bg-elevated: #111111;
+    /* Base & Surfaces (OLED Space Black) */
+    --bg-void: #020205;         /* Deep cosmic void */
+    --bg-deep: #070710;         /* Deep space with a very subtle navy tone */
+    --bg-surface: #0E0E1A;      /* Primary card surface */
+    --bg-elevated: #161629;     /* Tooltips and floating cards */
 
-    /* Brand Accents & Gradients (Anti-AI Template Overhaul) */
-    --prism-violet: #1e293b;       /* Changed from neon purple to celestial deep slate */
-    --prism-deep: #0f172a;
-    --prism-indigo: #334155;
-    --prism-lavender: #94a3b8;     /* Changed from lavender to platinum slate */
-    --prism-rose: #e2e8f0;         /* Changed from pink to silver slate */
-    --prism-amber: #E5B25D;        /* Warm Starlight Gold */
-    --prism-gold: #E5B25D;         /* Starlight Gold Base */
-    --prism-gold-light: #F7D070;   /* Bright Starlight Gold Highlight */
+    /* Typography Colors (APCA & Legibility) */
+    --text-primary: #FAFAFA;     /* Main titles & headings */
+    --text-secondary: #E2E8F0;   /* Readable body copy (Slate Light) */
+    --text-muted: #94A3B8;       /* Metadata, captions, & tags (Slate Muted) */
+
+    /* Brand Accents & Gradients (Celestial Starlight & Nebula) */
+    --color-gold: #E5B25D;       /* Brand Primary: Note A Starlight Gold */
+    --color-gold-light: #F7D070; /* Hover starlight gold highlight */
+    --color-indigo: #818CF8;     /* Brand Secondary: Nebula Indigo */
+    --color-cyan: #22D3EE;       /* Info/Link Accent: Aether Cyan */
+
+    /* Backward Compatibility Mappings for existing UI layouts */
+    --prism-violet: var(--color-indigo);
+    --prism-lavender: #C7D2FE;   /* High-contrast lavender-slate for text legibility */
+    --prism-rose: #F1F5F9;       /* Premium Starlight Silver (completely replaces cheap pink) */
+    --prism-gold: var(--color-gold);
+    --prism-gold-light: var(--color-gold-light);
     --crystal-white: #FAFAFA;
     --crystal-light: #E4E4E7;
-    --orbit-cyan: #06B6D4;
+    --orbit-cyan: var(--color-cyan);
     --orbit-cyan-light: #67E8F9;
 
-    /* Typography Colors (Maximum Legibility) */
-    --text-primary: #FAFAFA;
-    --text-secondary: #A1A1AA;
-    --text-muted: #71717A;
-
     /* Glassmorphism 3.0 (Precision & Soft Depth) */
-    --glass-bg: rgba(17, 17, 17, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.04);
-    --glass-border-hover: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(14, 14, 26, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-border-hover: rgba(129, 140, 248, 0.20); /* Subtle indigo highlight on hover */
 
     /* Premium Gradients */
-    --gradient-brand: linear-gradient(135deg, #1A2238, #30415D, #E5B25D); /* Celestial Deep Space to Gold */
-    --gradient-subtle: linear-gradient(135deg, #30415D, #94A3B8);         /* Deep Space to Silver */
-    --gradient-cta: linear-gradient(135deg, rgba(229, 178, 93, 0.08), rgba(226, 226, 231, 0.05));
+    --gradient-brand: linear-gradient(135deg, #0A0F1D, #161B2E, var(--color-gold)); /* Deep space to gold */
+    --gradient-subtle: linear-gradient(135deg, #161B2E, #475569);
+    --gradient-cta: linear-gradient(135deg, rgba(229, 178, 93, 0.08), rgba(255, 255, 255, 0.03));
 
-    /* Semantic CTA Button Tokens (v4.0) - Default: Warm Starlight Gold Accents */
+    /* Semantic CTA Button Tokens (v4.0) */
     --btn-primary-bg: var(--gradient-cta);
     --btn-primary-border: rgba(229, 178, 93, 0.20);
-    --btn-primary-border-hover: rgba(229, 178, 93, 0.40);
-    --btn-primary-glow: rgba(229, 178, 93, 0.03);
-    --btn-primary-glow-hover: rgba(229, 178, 93, 0.08);
-    --btn-primary-hover-bg: linear-gradient(135deg, rgba(229, 178, 93, 0.15), rgba(226, 226, 231, 0.08));
+    --btn-primary-border-hover: rgba(229, 178, 93, 0.45);
+    --btn-primary-glow: rgba(229, 178, 93, 0.02);
+    --btn-primary-glow-hover: rgba(229, 178, 93, 0.06);
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(229, 178, 93, 0.18), rgba(255, 255, 255, 0.06));
     
-    --btn-secondary-bg: rgba(25, 25, 25, 0.65);
-    --btn-secondary-bg-hover: rgba(35, 35, 35, 0.85);
+    --btn-secondary-bg: rgba(22, 22, 41, 0.65);
+    --btn-secondary-bg-hover: rgba(30, 30, 56, 0.85);
 
     /* Typography Stack */
     --font-serif: 'Cormorant Garamond', 'Playfair Display', serif;
