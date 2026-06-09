@@ -79,11 +79,11 @@ target_files:
 | Token | Hex / Value | 용도 |
 |-------|-------------|------|
 | `--color-gold` | `#E5B25D` | 메인 핵심 포인트 컬러 (기준음 Note A 상징 Starlight Gold) |
-| `--color-indigo` | `#818CF8` | 서브 브랜드 포인트 컬러 (맑고 깊은 Nebula Indigo) |
+| `--color-indigo` | `#A5B4FC` | 서브 브랜드 포인트 컬러 (맑고 깊은 Nebula Indigo - 가독성 개선) |
 | `--color-cyan` | `#22D3EE` | 정보성 강조, 테크(Tech) 시그널, 링크 색상 (Aether Cyan) |
 | `--prism-rose` | `#F1F5F9` | **스타라이트 실버/화이트**. 기존의 저렴한 AI 핑크를 완벽히 치환 |
 | `--prism-lavender`| `#C7D2FE` | 다크모드 가독성을 위해 명도가 보장된 연인디고 |
-| `--gradient-brand` | `linear-gradient(135deg, #0A0F1D, #161B2E, var(--color-gold))` | 깊은 우주 공간에서 골드 별빛으로 이어지는 그라디언트 |
+| `--gradient-brand` | `linear-gradient(135deg, var(--color-indigo) 0%, var(--prism-lavender) 50%, var(--color-gold) 100%)` | Celestial Indigo to Gold 그라디언트 |
 | `--gradient-cta` | `linear-gradient(135deg, rgba(229, 178, 93, 0.08), rgba(255, 255, 255, 0.03))` | starlight gold 기반 반투명 브랜드 그라디언트 |
 
 ---
@@ -98,10 +98,10 @@ target_files:
 ```css
 /* 1. Primary CTA (.btn-primary) - 메인 실행 버튼 */
 .btn-primary {
-  background: var(--gradient-cta);
+  background: var(--btn-primary-bg);
   color: #FFFFFF;
-  border: 1px solid rgba(196, 181, 253, 0.2);
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.15);
+  border: 1px solid var(--btn-primary-border);
+  box-shadow: 0 4px 20px var(--btn-primary-glow);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-pill);
@@ -109,9 +109,9 @@ target_files:
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, rgba(109, 40, 217, 0.25), rgba(167, 139, 250, 0.18));
-  border-color: rgba(196, 181, 253, 0.35);
-  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+  background: var(--btn-primary-hover-bg);
+  border-color: var(--btn-primary-border-hover);
+  box-shadow: 0 8px 30px var(--btn-primary-glow-hover);
   transform: translateY(-2px);
 }
 
@@ -267,7 +267,7 @@ target_files:
 .premium-card:hover {
   background: rgba(255, 255, 255, 0.035);
   /* 호버시에만 브랜드 컬러가 은은하게 등장 */
-  border-color: rgba(167, 139, 250, 0.3); 
+  border-color: rgba(165, 180, 252, 0.3); 
   transform: translateY(-2px);
 }
 ```

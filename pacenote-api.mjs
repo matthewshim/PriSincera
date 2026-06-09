@@ -162,7 +162,7 @@ const AI_RECOMMENDATION_POOL = [
       ja: '10年後の自分のキャリアの姿を想像しながら、1ページのエッセイを書く'
     },
     category: 'Vision',
-    color: '#818CF8'
+    color: '#A5B4FC'
   },
   {
     id: 'rec-8',
