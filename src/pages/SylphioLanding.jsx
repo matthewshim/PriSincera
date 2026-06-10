@@ -346,6 +346,11 @@ export default function SylphioLanding() {
             title={d.f5Title}
             description={d.f5Desc}
           />
+          <FeatureCard 
+            icon="🖥️"
+            title={d.f6Title}
+            description={d.f6Desc}
+          />
         </div>
       </section>
       
