@@ -57,20 +57,6 @@ const SCENARIOS = {
 
 // Multilingual Content Map for Premium UX
 const TRANSLATIONS = {
-  en: {
-    speaker: "Steve (Product Manager)",
-    source: "Good morning everyone. Today we are gathered to discuss our product roadmap for the next quarter, including the integration of our new AI engine.",
-    translated: "여러분 안녕하십니까. 오늘은 새로운 AI 엔진 통합을 포함한 다음 분기 제품 로드맵을 논의하기 위해 모였습니다."
-  },
-  jp: {
-    speaker: "Kenji (AI Engineer)",
-    source: "皆さん、こんにちは。本日のセミナーでは、オンデバイスAI技術が私たちの日常生活にどのような変化をもたらすかについてお話しします。",
-    translated: "여러분, 안녕하십니까. 오늘 세미나에서는 온디바이스 AI 기술이 우리의 일상 생활에 어떤 변화를 가져올지에 대해 말씀드리겠습니다."
-  }
-};
-
-// Multilingual Content Map for Premium UX
-const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
     heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
