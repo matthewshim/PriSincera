@@ -290,7 +290,7 @@ export default function SylphioLanding() {
         <div className="sylphio-core-container">
           <div className="sylphio-aurora-core"></div>
           <div className="sylphio-aurora-ring"></div>
-          <img src="/sylphio-icon.png?v=2" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
+          <img src="/sylphio-icon.png?v=3" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
         </div>
         
         <h1>{d.heroTitle}</h1>
