@@ -29,7 +29,7 @@ function loadTemplate(name) {
 /**
  * Gemini 호출 + JSON 파싱 (재시도 포함)
  */
-export async function callGemini(prompt, maxRetries = 3) {
+export async function callGemini(prompt, maxRetries = 5) {
   // 최신 고효율/저비용 Flash 모델군만 배치하여 요금 폭탄 차단
   const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash'];
   const generationConfig = {
@@ -51,11 +51,14 @@ export async function callGemini(prompt, maxRetries = 3) {
       const jsonMatch = text.match(/```json\s*([\s\S]*?)```/) || [null, text];
       return JSON.parse(jsonMatch[1].trim());
     } catch (err) {
-      console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} (${modelName}) 실패: ${err.message}`);
       lastError = err;
       if (attempt < maxRetries) {
-        // 실패 시 1.5초 대기 후 다음 단일 모델로 백업 시도
-        await new Promise(r => setTimeout(r, 1500));
+        // 실패 시 지수 백오프(Exponential Backoff) + 지터(Jitter)를 적용하여 대기 후 다음 단일 모델로 백업 시도
+        const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+        console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} (${modelName}) 실패. ${Math.round(delay / 10) / 100}초 후 재시도... 에러: ${err.message}`);
+        await new Promise(r => setTimeout(r, delay));
+      } else {
+        console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} (${modelName}) 최종 실패: ${err.message}`);
       }
     }
   }

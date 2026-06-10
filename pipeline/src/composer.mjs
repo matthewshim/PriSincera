@@ -21,6 +21,7 @@ import { getDailySignal, saveDailySignal } from './repositories/DailyRepository.
 import { filterAndCapArticles, mapEditorComments } from './services/ScoringService.mjs';
 import { dispatchDailyEmail, isEmailAlreadySent } from './services/MailService.mjs';
 import { getActiveSubscribers } from './lib/subscribers.mjs';
+import { db } from './lib/firestore.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

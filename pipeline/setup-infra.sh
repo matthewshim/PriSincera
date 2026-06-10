@@ -140,12 +140,13 @@ gcloud run jobs create pristudy-composer \
   --set-env-vars "GCS_BUCKET=${BUCKET_NAME}" \
   --set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest" \
   --task-timeout 1800s \
-  --max-retries 0 \
+  --max-retries 2 \
   --memory 512Mi \
   --cpu 1 2>/dev/null || \
 gcloud run jobs update pristudy-composer \
   --image ${IMAGE} \
-  --region ${REGION}
+  --region ${REGION} \
+  --max-retries 2
 
 # PaceNote Composer Job (매일 AI 추천 목표 풀 갱신)
 gcloud run jobs create pacenote-composer \
@@ -197,15 +198,19 @@ gcloud scheduler jobs create http prisignal-monitor-weekly \
   --oauth-service-account-email ${SA_EMAIL} \
   --description "PriSignal: 발송 상태 확인 및 알림" 2>/dev/null || echo "  (이미 존재)"
 
-# 매일 04:00 KST — PriStudy 학습 문장 생성
+# 매일 07:30 KST — PriStudy 학습 문장 생성
 gcloud scheduler jobs create http pristudy-compose-daily \
   --location ${REGION} \
-  --schedule "0 4 * * *" \
+  --schedule "30 7 * * *" \
   --time-zone "Asia/Seoul" \
   --uri "https://${REGION}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_ID}/jobs/pristudy-composer:run" \
   --http-method POST \
   --oauth-service-account-email ${SA_EMAIL} \
-  --description "PriStudy: 매일 일본어 학습 문장 자동 생성" 2>/dev/null || echo "  (이미 존재)"
+  --description "PriStudy: 매일 일본어 학습 문장 자동 생성" 2>/dev/null || \
+gcloud scheduler jobs update http pristudy-compose-daily \
+  --location ${REGION} \
+  --schedule "30 7 * * *" \
+  --time-zone "Asia/Seoul"
 
 # 매일 00:00 KST — PaceNote 추천 목표 풀 갱신
 gcloud scheduler jobs create http pacenote-compose-daily \
