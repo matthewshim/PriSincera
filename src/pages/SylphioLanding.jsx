@@ -89,11 +89,11 @@ const TRANSLATIONS = {
     proTitle: "Sylphio Pro Lifetime",
     proPrice: "$9.99",
     proPricePeriod: "/ 단 1회 결제 (소장)",
-    freeFeature1: "로컬 및 하이브리드 STT 무제한 작동",
+    freeFeature1: "영어(English) 음성 인식 및 기본 번역 무제한 지원",
     freeFeature2: "시스템 오디오 & 마이크 실시간 캡처 지원",
-    freeFeature3: "Apple 내장 프레임워크 기반 기본 하이브리드 번역",
+    freeFeature3: "영어 전용 실시간 오프라인/하이브리드 번역 자막 제공",
     freeFeature4: "실시간 글래스모피즘 자막 뷰어 기본 제공",
-    proFeature1: "Free 티어의 모든 핵심 가치 포함",
+    proFeature1: "12개 다국어(한국어, 일본어, 중국어 등) 잠금 전면 해제",
     proFeature2: "AI PRO 요약 및 Action Items 엔진 잠금해제 (BYOK)",
     proFeature3: "Google Gemini / OpenAI API 연동 지원",
     proFeature4: "macOS Secure Keychain API Key 암호화 저장",
@@ -138,11 +138,11 @@ const TRANSLATIONS = {
     proTitle: "Sylphio Pro Lifetime",
     proPrice: "$9.99",
     proPricePeriod: "/ One-time purchase",
-    freeFeature1: "Unlimited Hybrid Local STT",
+    freeFeature1: "Unlimited English speech-to-text & basic translation",
     freeFeature2: "Real-time system audio & mic capture",
-    freeFeature3: "Basic hybrid translation via Apple frameworks",
+    freeFeature3: "English-only real-time offline/hybrid translation subtitles",
     freeFeature4: "Real-time glassmorphism subtitle viewer",
-    proFeature1: "Includes all Free tier core benefits",
+    proFeature1: "Unlock all 12 global languages (Korean, Japanese, etc.)",
     proFeature2: "Unlock AI PRO summary and Action Items engine (BYOK)",
     proFeature3: "Google Gemini / OpenAI API integration support",
     proFeature4: "macOS Secure Keychain encrypted key storage",
@@ -185,11 +185,11 @@ const TRANSLATIONS = {
     proTitle: "Sylphio Pro Lifetime",
     proPrice: "$9.99",
     proPricePeriod: "/ 1回のみの支払い",
-    freeFeature1: "ハイブリッドローカルSTTの無制限稼働",
+    freeFeature1: "英語(English)の音声認識および基本翻訳の無制限サポート",
     freeFeature2: "システムオーディオ & マイクのリアルタイム収集をサポート",
-    freeFeature3: "Appleフレームワークベースの基本ハイブリッド翻訳",
+    freeFeature3: "英語専用のリアルタイム・オフライン/ハイブリッド翻訳字幕の提供",
     freeFeature4: "リアルタイム・グラスモフィズム字幕ビューアを標準搭載",
-    proFeature1: "Freeティアのすべての価値を含む",
+    proFeature1: "12の多言語（韓国語、日本語、中国語など）ロックを全面解除",
     proFeature2: "AI PRO 要約およびアクションアイテムエンジンのアンロック (BYOK)",
     proFeature3: "Google Gemini / OpenAI API 連携のサポート",
     proFeature4: "macOS Secure Keychain APIキー暗号化保管",
@@ -229,6 +229,13 @@ export default function SylphioLanding() {
   const [showTranslated, setShowTranslated] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   
+  // Pro 라이선스 구매 여부 모의 제어
+  const [isProUnlocked, setIsProUnlocked] = useState(false);
+  const [showMockPaywall, setShowMockPaywall] = useState(false);
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const [purchaseStatus, setPurchaseStatus] = useState("");
+  const [showSuccessCheck, setShowSuccessCheck] = useState(false);
+  
   // Refs for simulator timers
   const typingTimerRef = useRef(null);
   const translateDelayTimerRef = useRef(null);
@@ -245,6 +252,12 @@ export default function SylphioLanding() {
   
   // Run Interactive Demo Scenario
   const handlePlayScenario = (key) => {
+    // 일본어 시나리오 클릭 시 Pro 라이선스가 잠겨있다면 결제 모달 팝업 가동
+    if (key === 'jp' && !isProUnlocked) {
+      setShowMockPaywall(true);
+      return;
+    }
+
     if (typingTimerRef.current) clearInterval(typingTimerRef.current);
     if (translateDelayTimerRef.current) clearTimeout(translateDelayTimerRef.current);
     if (translateTypingTimerRef.current) clearInterval(translateTypingTimerRef.current);
@@ -281,6 +294,26 @@ export default function SylphioLanding() {
         }
       }, 40);
     }, 1200);
+  };
+
+  // 결제 모사 핸들러 (StoreKit 2 구매 트랜잭션 흉내내기)
+  const handlePurchasePro = () => {
+    setIsPurchasing(true);
+    setPurchaseStatus(locale === 'ko' ? "App Store와 통신 중..." : locale === 'ja' ? "App Storeと通信中..." : "Communicating with App Store...");
+    
+    setTimeout(() => {
+      setPurchaseStatus(locale === 'ko' ? "구매 성공! 감사합니다." : locale === 'ja' ? "購入成功！ありがとうございます。" : "Purchase successful! Thank you.");
+      setIsPurchasing(false);
+      setShowSuccessCheck(true);
+      
+      setTimeout(() => {
+        setIsProUnlocked(true);
+        setShowMockPaywall(false);
+        setShowSuccessCheck(false);
+        // 구매 즉시 잠겨있던 일본어 시나리오 자동 재생 가동
+        handlePlayScenario('jp');
+      }, 1500);
+    }, 1500);
   };
   
   return (
@@ -360,7 +393,8 @@ export default function SylphioLanding() {
           <p>{d.simSub}</p>
         </div>
         
-        <div className="sylphio-simulator-box premium-card">
+        <div className="sylphio-simulator-box">
+          {/* 상단 시나리오 버튼 제어부 (PRO 뱃지 보강) */}
           <div className="sylphio-simulator-controls">
             <button 
               className={`btn-simulator ${activeScenario === 'en' ? 'active' : ''}`}
@@ -377,42 +411,105 @@ export default function SylphioLanding() {
               id="btn-sim-japanese"
             >
               🇯🇵 Japanese Seminar ( Kenji )
+              {!isProUnlocked && <span className="btn-sim-pro-badge">✨ PRO</span>}
             </button>
           </div>
           
-          <div className="sylphio-virtual-bar">
-            {activeScenario ? (
-              <div style={{ transition: 'all 0.5s ease' }}>
-                <div className="sylphio-sim-speaker">
-                  🔊 {SCENARIOS[activeScenario].speaker}
-                </div>
-                
-                <p className="sylphio-sim-source">
-                  {displayedSource}
-                  {isPlaying && displayedSource.length < SCENARIOS[activeScenario].source.length && (
-                    <span className="sylphio-cursor-pulse">|</span>
-                  )}
-                </p>
-                
-                {showTranslated && (
-                  <div className="sylphio-sim-translated" style={{ animation: 'slideUpFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}>
-                    <div style={{ fontSize: '0.8rem', color: '#60a5fa', marginBottom: '4px', fontWeight: 'bold' }}>
-                      ⚡ AI REAL-TIME TRANSLATION
-                    </div>
-                    {displayedTranslated}
-                    {isPlaying && displayedTranslated.length < SCENARIOS[activeScenario].translated.length && (
-                      <span className="sylphio-cursor-pulse">|</span>
+          {/* 실제 데스크톱 앱과 100% 싱크 맞춘 HUD 윈도우 프레임 */}
+          <div className="sylphio-virtual-window">
+            <div className="sylphio-window-header">
+              <div className="sylphio-window-traffic">
+                <span className="dot red"></span>
+                <span className="dot yellow"></span>
+                <span className="dot green"></span>
+              </div>
+              <div className="sylphio-window-title">Sylphio Live Translator</div>
+              <div className="sylphio-window-badges">
+                <span className={`badge-tier ${isProUnlocked ? 'pro' : 'free'}`}>
+                  {isProUnlocked ? '✨ PRO' : 'FREE'}
+                </span>
+                <span className="badge-source">🎙️ {locale === 'ko' ? '내장 마이크' : locale === 'ja' ? '内蔵マイク' : 'Built-in Mic'}</span>
+              </div>
+            </div>
+            
+            <div className="sylphio-virtual-bar">
+              {activeScenario ? (
+                <div className="sylphio-sim-message-block">
+                  <div className="sylphio-sim-lang-code">
+                    {activeScenario === 'en' ? 'EN' : 'JA'}
+                  </div>
+                  
+                  <div className="sylphio-sim-text-stack">
+                    {/* 원문 출력 (반투명 백색) */}
+                    <p className="sylphio-sim-source">
+                      {displayedSource}
+                      {isPlaying && displayedSource.length < SCENARIOS[activeScenario].source.length && (
+                        <span className="sylphio-cursor-pulse">|</span>
+                      )}
+                    </p>
+                    
+                    {/* 번역문 출력 (링고민트 볼드) */}
+                    {showTranslated && (
+                      <p className="sylphio-sim-translated">
+                        {displayedTranslated}
+                        {isPlaying && displayedTranslated.length < SCENARIOS[activeScenario].translated.length && (
+                          <span className="sylphio-cursor-pulse" style={{ color: '#10B981' }}>|</span>
+                        )}
+                      </p>
                     )}
                   </div>
-                )}
-              </div>
-            ) : (
-              <div className="sylphio-virtual-bar-placeholder">
-                {d.simPlaceholder}
-              </div>
-            )}
+                </div>
+              ) : (
+                <div className="sylphio-virtual-bar-placeholder">
+                  {d.simPlaceholder}
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* 모의 결제 모달 Paywall */}
+        {showMockPaywall && (
+          <div className="sylphio-mock-paywall-overlay">
+            <div className="sylphio-mock-paywall-modal">
+              <div className="paywall-close" onClick={() => setShowMockPaywall(false)}>✕</div>
+              
+              {showSuccessCheck ? (
+                <div className="paywall-success-screen">
+                  <div className="success-checkmark">✓</div>
+                  <h3>{purchaseStatus}</h3>
+                </div>
+              ) : (
+                <>
+                  <div className="paywall-header">
+                    <h2>✨ Sylphio Pro Lifetime ✨</h2>
+                    <p>{locale === 'ko' ? "평생 소장 라이선스로 모든 기능을 무제한 해제하세요." : "Unlock everything permanently with a lifetime license."}</p>
+                  </div>
+                  
+                  <div className="paywall-grid">
+                    <div className="paywall-item">🔒 ➔ 🔓 12개 다국어 전면 해제</div>
+                    <div className="paywall-item">🎨 자막 커스텀 그라데이션</div>
+                    <div className="paywall-item">📊 AI 요약 정밀 회의록 기능</div>
+                    <div className="paywall-item">⚙️ 고성능 AI 엔진 연동 (BYOK)</div>
+                  </div>
+                  
+                  <button 
+                    className="btn-paywall-purchase" 
+                    onClick={handlePurchasePro} 
+                    disabled={isPurchasing}
+                  >
+                    {isPurchasing ? (
+                      <span className="spinner"></span>
+                    ) : (
+                      <span>Sylphio Pro Lifetime 평생 소장하기 ($9.99)</span>
+                    )}
+                  </button>
+                  {isPurchasing && <p className="paywall-status">{purchaseStatus}</p>}
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </section>
       
       {/* --- PRICING SECTION --- */}

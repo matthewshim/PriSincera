@@ -482,3 +482,279 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* macOS HUD Window Frame */
+.sylphio-virtual-window {
+  background: rgba(10, 12, 18, 0.8);
+  border: 1.5px solid rgba(59, 130, 246, 0.25);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.5),
+    0 0 1px rgba(255, 255, 255, 0.15);
+  margin-top: 10px;
+}
+
+.sylphio-window-header {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1.0px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* macOS Traffic lights */
+.sylphio-window-traffic {
+  display: flex;
+  gap: 6px;
+}
+.sylphio-window-traffic .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.sylphio-window-traffic .dot.red { background: #ff5f56; }
+.sylphio-window-traffic .dot.yellow { background: #ffbd2e; }
+.sylphio-window-traffic .dot.green { background: #27c93f; }
+
+.sylphio-window-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+.sylphio-window-badges {
+  display: flex;
+  gap: 6px;
+}
+
+.badge-tier {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 2.5px 6px;
+  border-radius: 4px;
+  color: white;
+}
+.badge-tier.free {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.65);
+}
+.badge-tier.pro {
+  background: linear-gradient(135deg, #ffb800, #ff8a00);
+  box-shadow: 0 2px 6px rgba(255, 138, 0, 0.3);
+}
+
+.badge-source {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2.5px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* 2줄 적층 레이아웃 & 언어 태그 배지 */
+.sylphio-sim-message-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.sylphio-sim-lang-code {
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: white;
+  padding: 3px 6.5px;
+  background: #3b82f6;
+  border-radius: 5px;
+  flex-shrink: 0;
+  margin-top: 4px;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.35);
+}
+
+.sylphio-sim-text-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sylphio-sim-source {
+  font-size: 0.95rem; /* font scale match */
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.48); /* 48% dim text */
+  margin: 0;
+  line-height: 1.5;
+}
+
+.sylphio-sim-translated {
+  font-size: 1.15rem; /* font scale scaleup */
+  font-weight: 700;
+  color: #10B981; /* lingoMint color */
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* PRO 뱃지 스타일 */
+.btn-sim-pro-badge {
+  background: linear-gradient(135deg, #ffb800, #ff8a00);
+  color: #050505;
+  font-size: 0.58rem;
+  font-weight: 900;
+  padding: 1.5px 4px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  margin-left: 4px;
+}
+
+/* Paywall Overlay */
+.sylphio-mock-paywall-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* Paywall Modal */
+.sylphio-mock-paywall-modal {
+  background: #11131c;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  width: 90%;
+  max-width: 480px;
+  padding: 30px;
+  border-radius: 20px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.paywall-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 18px;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.paywall-close:hover {
+  color: white;
+}
+
+.paywall-header h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #3b82f6, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.paywall-header p {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin: 0 0 24px 0;
+}
+
+.paywall-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.paywall-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  text-align: left;
+}
+
+.btn-paywall-purchase {
+  width: 100%;
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-paywall-purchase:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+.btn-paywall-purchase:active {
+  transform: translateY(0);
+}
+
+.paywall-status {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* Success Screen */
+.paywall-success-screen {
+  padding: 20px 0;
+}
+.success-checkmark {
+  width: 60px;
+  height: 60px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1.5px solid #10B981;
+  color: #10B981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 auto 16px;
+  animation: popSuccess 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes popSuccess {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
