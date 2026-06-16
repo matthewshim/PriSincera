@@ -119,10 +119,10 @@
     display: flex;
     align-items: flex-start;
     gap: var(--space-lg);
-    transition: all var(--duration-normal) var(--ease-out), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease;
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease, background 0.2s ease;
     cursor: default;
     overflow: hidden;
-    will-change: transform;
+    will-change: transform, opacity;
 }
 
 /* Card accent line (left border) */
@@ -135,7 +135,7 @@
     width: 2px;
     background: var(--card-accent, var(--prism-lavender));
     opacity: 0.3;
-    transition: all var(--duration-normal) var(--ease-out);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 1px;
 }
 
@@ -153,6 +153,33 @@
     opacity: 0.6;
 }
 
+/* --- Focus Dimming Proximity Logic --- */
+.concept-cards.has-active-focus .concept-card:not(.active-focus) {
+    opacity: 0.45;
+    transform: scale(0.98);
+    border-color: var(--glass-border);
+    box-shadow: none;
+}
+
+.concept-card.active-focus {
+    opacity: 1 !important;
+    transform: translateY(-4px) scale(1.02) !important;
+    border-color: color-mix(in srgb, var(--card-accent) 40%, var(--glass-border-hover));
+    box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.45),
+        0 0 20px color-mix(in srgb, var(--card-accent) 8%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    background: rgba(15, 15, 15, 0.85);
+}
+
+.concept-card.active-focus::before {
+    top: 10%;
+    bottom: 10%;
+    opacity: 1;
+    width: 3px;
+    box-shadow: 0 0 8px var(--card-accent);
+}
+
 /* --- Card Icon --- */
 .concept-icon {
     flex-shrink: 0;
@@ -162,7 +189,7 @@
     border-radius: 12px;
     background: rgba(165, 180, 252, 0.06);
     border: 1px solid var(--glass-border);
-    transition: all var(--duration-normal) var(--ease-out);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .concept-icon svg {
@@ -170,11 +197,68 @@
     height: 100%;
 }
 
-.concept-card:hover .concept-icon {
-    background: rgba(165, 180, 252, 0.12);
-    border-color: var(--glass-border-hover);
+.concept-card:hover .concept-icon,
+.concept-card.active-focus .concept-icon {
+    background: color-mix(in srgb, var(--card-accent) 12%, transparent);
+    border-color: color-mix(in srgb, var(--card-accent) 30%, var(--glass-border-hover));
     transform: scale(1.05);
 }
+
+/* --- SVG Micro-Animations --- */
+/* ○ The Orbit animation */
+.concept-card.active-focus .orbit-outer {
+    transform-origin: center;
+    transform-origin: 24px 24px;
+    animation: spinOrbit 12s linear infinite;
+}
+@keyframes spinOrbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.concept-card.active-focus .orbit-center {
+    animation: orbitCenterPulse 2s ease-in-out infinite;
+}
+@keyframes orbitCenterPulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.4); opacity: 0.8; }
+}
+
+/* △ Priority Prism animation */
+.concept-card.active-focus .prism-triangle {
+    animation: prismShift 4s ease-in-out infinite;
+}
+@keyframes prismShift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1px); }
+}
+
+.concept-card.active-focus .prism-dot {
+    animation: prismDotGlow 2s ease-in-out infinite;
+}
+@keyframes prismDotGlow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* ▽ Sincera Prism animation */
+.concept-card.active-focus .sincera-triangle {
+    animation: sinceraShift 4s ease-in-out infinite;
+}
+@keyframes sinceraShift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(1px); }
+}
+
+.concept-card.active-focus .sincera-glow {
+    transform-origin: 24px 26px;
+    animation: sinceraPulse 2.5s ease-in-out infinite;
+}
+@keyframes sinceraPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.25); }
+}
+
 
 /* --- Card Body --- */
 .concept-body {
