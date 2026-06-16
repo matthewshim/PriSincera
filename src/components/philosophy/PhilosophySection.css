@@ -111,10 +111,12 @@
 .concept-card {
     position: relative;
     padding: 20px 24px; /* Compacted from 24px 32px */
-    background: var(--glass-bg);
+    background: 
+        linear-gradient(rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.75)) padding-box,
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)) border-box;
+    border: 1px solid transparent;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
     border-radius: 16px;
     display: flex;
     align-items: flex-start;
@@ -125,59 +127,76 @@
     will-change: transform, opacity;
 }
 
-/* Card accent line (left border) */
+/* Card internal ambient glow (behind content) */
 .concept-card::before {
     content: '';
     position: absolute;
+    bottom: 0;
     left: 0;
-    top: 20%;
-    bottom: 20%;
-    width: 2px;
-    background: var(--card-accent, var(--prism-lavender));
-    opacity: 0.3;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    border-radius: 1px;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--card-accent) 15%, transparent) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .concept-card:hover {
-    border-color: var(--glass-border-hover);
+    background: 
+        linear-gradient(rgba(12, 12, 12, 0.8), rgba(12, 12, 12, 0.8)) padding-box,
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)) border-box;
     transform: translateY(-4px);
     box-shadow:
         0 16px 48px rgba(0, 0, 0, 0.45),
         0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-.concept-card:hover::before {
-    top: 10%;
-    bottom: 10%;
-    opacity: 0.6;
-}
-
 /* --- Focus Dimming Proximity Logic --- */
 .concept-cards.has-active-focus .concept-card:not(.active-focus) {
     opacity: 0.45;
     transform: scale(0.98);
-    border-color: var(--glass-border);
     box-shadow: none;
 }
 
 .concept-card.active-focus {
     opacity: 1 !important;
     transform: translateY(-4px) scale(1.02) !important;
-    border-color: color-mix(in srgb, var(--card-accent) 40%, var(--glass-border-hover));
+    background: 
+        linear-gradient(rgba(15, 15, 15, 0.85), rgba(15, 15, 15, 0.85)) padding-box,
+        radial-gradient(circle at 0% 100%, var(--card-accent) 0%, transparent 70%) border-box;
     box-shadow:
         0 16px 48px rgba(0, 0, 0, 0.45),
-        0 0 20px color-mix(in srgb, var(--card-accent) 8%, transparent),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    background: rgba(15, 15, 15, 0.85);
+        0 0 24px color-mix(in srgb, var(--card-accent) 8%, transparent);
 }
 
 .concept-card.active-focus::before {
-    top: 10%;
-    bottom: 10%;
     opacity: 1;
-    width: 3px;
-    box-shadow: 0 0 8px var(--card-accent);
+}
+
+/* Active card shimmer sweep (Apple chip effect) */
+.concept-card.active-focus::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.18) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: shineSweep 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes shineSweep {
+    0% { left: -150%; }
+    100% { left: 150%; }
 }
 
 /* --- Card Icon --- */
@@ -190,6 +209,8 @@
     background: rgba(165, 180, 252, 0.06);
     border: 1px solid var(--glass-border);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 1;
 }
 
 .concept-icon svg {
@@ -263,6 +284,8 @@
 /* --- Card Body --- */
 .concept-body {
     flex: 1;
+    position: relative;
+    z-index: 1;
 }
 
 .concept-title {
