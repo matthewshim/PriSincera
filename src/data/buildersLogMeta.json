@@ -1,5 +1,45 @@
 [
   {
+    "id": "ep11",
+    "slug": "scroll-linked-interaction-and-minimal-focus",
+    "chapterNo": "11",
+    "title": {
+      "ko": "🌌 과유불급(過猶不及)의 미학: 스크롤 인터랙션 고도화 및 초정제 미니멀 포커스 설계기",
+      "en": "🌌 Aesthetic of Moderation: Scroll-linked Interaction Overhaul & Ultra-Refined Minimal Focus Design",
+      "ja": "🌌 過ぎたるは猶及ばざるがごとし의 美學：스크롤인터랙션의 고도화와 초정제 미니멀포커스 설계기"
+    },
+    "subtitle": {
+      "ko": "화려한 시각적 장치들을 덜어내고, 오직 스케일 대비와 가독성 디밍만으로 구현한 최상급 퍼스널 브랜딩 UX",
+      "en": "Shedding Flashy Visual Effects to Achieve Elite Personal Branding UX with Only Scale Contrast and Readability Dimming",
+      "ja": "화려한 시각적 장치들을 덜어내고, 오직 스케일 대비와 가독성 디밍만으로 구현한 최상급 퍼스널 브랜딩 UX"
+    },
+    "description": {
+      "ko": "요란하게 깜빡이는 카드 3D 효과와 반짝이는 광원 빔을 과감히 제거하고, 화면 중앙의 포커스 카드만 1.025배 확대하고 주변 카드를 0.45배 톤다운하는 극도로 절제된 스크롤 연동 포커스 시스템 구축기. 스크롤 진척도에 따라 실시간으로 자라나는 Journey 타임라인의 SVG 드로잉 및 배경 캔버스의 별똥별 디퓨즈 굴절 렌더러 설계법까지 공개합니다.",
+      "en": "A journey to remove flashy card 3D tilt and text shimmer effects, replacing them with an ultra-minimal focus system that enlarges the center card by 1.025x and dims others to 0.45 opacity. Learn how we built the real-time SVG Journey timeline and the planisphere starfield shooting star refraction renderer.",
+      "ja": "요란하게 깜빡이는 카드 3D 효과와 반짝이는 광원 빔을 과감히 제거하고, 화면 중앙의 포커스 카드만 1.025배 확대하고 주변 카드를 0.45배 톤다운하는 극도로 절제된 스크롤 연동 포커스 시스템 구축기. 스크롤 진척도에 따라 실시간으로 자라나는 Journey 타임라인의 SVG 드로잉 및 배경 캔버스의 별똥별 디퓨즈 굴절 렌더러 설계법까지 공개합니다."
+    },
+    "date": "2026-06-16",
+    "tags": [
+      "Scroll Interaction",
+      "Performance Optimization",
+      "Design System",
+      "Refactoring"
+    ],
+    "accent": "#8B5CF6",
+    "commits": [
+      {
+        "type": "refactor",
+        "hash": "07f4d0e",
+        "msg": "refactor: simplify flagship card active focus style and remove shimmer sweep"
+      },
+      {
+        "type": "feat",
+        "hash": "e9d792b",
+        "msg": "feat(journey): implement real-time scroll progress timeline and milestone activations"
+      }
+    ]
+  },
+  {
     "id": "ep10",
     "slug": "gemini-api-cost-optimization",
     "chapterNo": "10",
