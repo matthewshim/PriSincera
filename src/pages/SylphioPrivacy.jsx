@@ -25,7 +25,7 @@ const TRANSLATIONS = {
         title: "2. 오디오 및 음성 인식 처리",
         bullets: [
           "로컬 모드 (기본 제공): 기본 번역 모드를 사용할 경우, 화면의 오디오 캡처 및 음성 인식(STT)은 Apple의 내장 프레임워크(SFSpeechRecognizer)를 통해 처리됩니다. 음성 데이터는 Apple의 보안 음성 인식 정책에 따라 기기 내부(On-Device) 또는 Apple 보안 서버를 거쳐 안전하고 익명으로 처리되며, 개발사(PriSincera)는 어떠한 데이터도 수집하지 않습니다.",
-          "Pro 모드 (BYOK - 개인 API Key 연동): 사용자가 직접 발급받은 외부 AI의 API Key(OpenAI, Gemini 등)를 사용할 경우, 오디오 데이터는 사용자의 기기에서 해당 AI 제공업체의 서버로 직접(Directly) 전송됩니다. 개발사(PriSincera)는 이 과정에 일절 개입하지 않으며, 사용자의 오디오나 번역 결과물을 열람하거나 저장할 수 있는 권한 및 물리적 서버 자체가 존재하지 않습니다."
+          "Pro 모드 (BYOK - 개인 API Key 연동): 사용자가 직접 발급받은 외부 AI의 API Key(OpenAI, Gemini 등)를 사용할 경우, 음성 인식된 텍스트 스크립트만 사용자의 기기에서 해당 AI 제공업체의 서버로 직접(Directly) 전송되어 요약을 위해 사용됩니다. 오디오 데이터(음성 녹음) 자체는 외부 AI 서버로 일절 전송되지 않으며, 개발사(PriSincera)는 이 과정에 일절 개입하지 않고 사용자의 데이터나 요약 결과물을 열람하거나 저장할 수 있는 물리적 서버 자체가 존재하지 않습니다."
         ]
       },
       {
@@ -61,7 +61,7 @@ const TRANSLATIONS = {
         title: "2. Audio & Speech Processing",
         bullets: [
           "Local Mode (Apple Frameworks): If you use the built-in translation, all audio capture and speech-to-text processing occurs via Apple's native framework (SFSpeechRecognizer). Audio data is processed safely and anonymously on-device or via Apple's secure servers in accordance with Apple's secure speech recognition policy, and the developer (PriSincera) does not collect any data.",
-          "Pro Mode (BYOK - Bring Your Own Key): If you provide your own API Key (e.g., OpenAI, Google Gemini), your audio is processed locally, and the necessary requests are sent directly from your device to the chosen third-party AI provider. PriSincera does not intercept, log, or have any access to your audio or the resulting translations."
+          "Pro Mode (BYOK - Bring Your Own Key): If you provide your own API Key (e.g., OpenAI, Google Gemini), only the transcribed text script is processed locally and sent directly from your device to the chosen third-party AI provider for summary generation. Audio data (voice recordings) itself is never transmitted to third-party AI servers. PriSincera does not intercept, log, or have any access to your audio or the resulting translations."
         ]
       },
       {
@@ -97,7 +97,7 @@ const TRANSLATIONS = {
         title: "2. オーディオおよび音声認識処理",
         bullets: [
           "ローカルモード (基本提供): 基本翻訳モードを使用する場合、画面のオーディオキャプチャおよび音声認識（STT）は、Appleの内蔵フレームワーク（SFSpeechRecognizer）を通じて処理されます。音声データは、Appleの安全な音声認識ポリシーに従ってデバイス内部（On-Device）またはAppleの安全なサーバーを経由して安全かつ匿名で処理され、開発元（PriSincera）はいかなるデータも収集しません。",
-          "Proモード (BYOK - 個人APIキー連携): ユーザーが直接取得した外部AIのAPIキー（OpenAI、Geminiなど）を使用する場合、オーディオデータはユーザーのデバイスから該当AIプロバイダのサーバーに直接（Directly）送信されます。開発元（PriSincera）はこのプロセスに一切関与せず、ユーザーのオーディオや翻訳結果を閲覧・保存する権限および物理的サーバー自体が存在しません。"
+          "Proモード (BYOK - 個人APIキー連携): ユーザーが直接取得した外部AIのAPIキー（OpenAI、Geminiなど）を使用する場合、音声認識されたテキストスクリプトのみがユーザーのデバイスから該当AIプロバイダのサーバーに直接（Directly）送信され、要約生成のために処理されます。音声データ（録音ファイル）自体は外部のAIサーバーへ一切送信されず、開発元（PriSincera）はこのプロセスに一切関与せず、ユーザーのオーディオや翻訳結果を閲覧・保存する権限および物理的サーバー自体が存在しません。"
         ]
       },
       {
