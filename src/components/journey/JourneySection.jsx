@@ -183,7 +183,7 @@ export default function JourneySection() {
 
         <div className="timeline" style={{ '--scroll-progress': progress }}>
           {MILESTONES.map((m, i) => {
-            const isActive = i === 0 ? progress >= 0.15 : i === 1 ? progress >= 0.45 : progress >= 0.75;
+            const isActive = i === 0 ? progress >= 0.08 : i === 1 ? progress >= 0.22 : progress >= 0.36;
             const isRevealed = revealedMilestones[i];
             return (
               <div
