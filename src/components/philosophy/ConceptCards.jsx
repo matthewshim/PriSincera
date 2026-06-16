@@ -5,6 +5,12 @@ export default function BeliefCards() {
   const { t } = useTranslation();
   const containerRef = useRef(null);
   const [activeCardIndex, setActiveCardIndex] = useState(-1);
+  const activeIndexRef = useRef(-1);
+
+  // Sync activeIndexRef with activeCardIndex state to avoid closure issues in scroll handler
+  useEffect(() => {
+    activeIndexRef.current = activeCardIndex;
+  }, [activeCardIndex]);
 
   const CARDS = [
     {
@@ -77,8 +83,9 @@ export default function BeliefCards() {
         const viewCenterY = window.innerHeight / 2;
         const viewCenterX = window.innerWidth / 2;
 
-        let closestIndex = -1;
+        let absoluteClosestIndex = -1;
         let minDistance = Infinity;
+        const cardDistances = [];
 
         cards.forEach((card, idx) => {
           const rect = card.getBoundingClientRect();
@@ -94,19 +101,43 @@ export default function BeliefCards() {
             distance = Math.abs(viewCenterY - cardCenterY);
           }
 
+          cardDistances.push(distance);
+
           const isInViewport = isMobile
             ? (rect.left < window.innerWidth && rect.right > 0)
             : (rect.top < window.innerHeight && rect.bottom > 0);
 
           if (isInViewport && distance < minDistance) {
-            // Safe range check (only activate if card center is within 450px of viewport center)
-            if (!isMobile && distance > 450) return;
             minDistance = distance;
-            closestIndex = idx;
+            absoluteClosestIndex = idx;
           }
         });
 
-        setActiveCardIndex(closestIndex);
+        const currentActive = activeIndexRef.current;
+        let nextIndex = currentActive;
+
+        // Reset if the section is scrolled way out of view (closer than 450px)
+        if (absoluteClosestIndex === -1 || (!isMobile && minDistance > 450)) {
+          nextIndex = -1;
+        } else {
+          if (currentActive === -1) {
+            // Immediate focus if entering from inactive state
+            nextIndex = absoluteClosestIndex;
+          } else {
+            // Hysteresis buffer (desktop: 90px, mobile: 50px) to prevent rapid/jittery switches
+            const currentActiveDistance = cardDistances[currentActive] ?? Infinity;
+            const candidateDistance = cardDistances[absoluteClosestIndex];
+            const buffer = isMobile ? 50 : 90;
+
+            if (candidateDistance < currentActiveDistance - buffer) {
+              nextIndex = absoluteClosestIndex;
+            }
+          }
+        }
+
+        if (nextIndex !== currentActive) {
+          setActiveCardIndex(nextIndex);
+        }
         rafId = null;
       });
     };
