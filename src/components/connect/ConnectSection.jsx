@@ -13,7 +13,7 @@ export default function ConnectSection() {
 
   return (
     <section className="connect reveal-section" id="connect" ref={sectionRef}>
-      <div className="connect-container">
+      <div className="connect-container shooting-star-sweep-wrap" style={{ '--reveal-delay': '0.1s' }}>
         <div className="section-label">Connect</div>
 
         <div className="connect-content">

@@ -27,6 +27,9 @@
     box-shadow:
         0 4px 60px rgba(0, 0, 0, 0.35),
         inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        
+    /* Support for Star Sweep */
+    --sweep-color: rgba(165, 180, 252, 0.3);
 }
 
 /* Subtle gradient glow behind content */

@@ -57,13 +57,42 @@ export default function BeliefCards() {
     },
   ];
 
+  const handleMouseMove = (e) => {
+    if (window.matchMedia('(hover: hover)').matches === false) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const px = x / rect.width;
+    const py = y / rect.height;
+    
+    card.style.setProperty('--mouse-x', `${px * 100}%`);
+    card.style.setProperty('--mouse-y', `${py * 100}%`);
+    
+    const rotateY = ((px - 0.5) * 8).toFixed(2);
+    const rotateX = ((0.5 - py) * 8).toFixed(2);
+    
+    card.style.setProperty('--rotate-x', `${rotateX}deg`);
+    card.style.setProperty('--rotate-y', `${rotateY}deg`);
+  };
+
+  const handleMouseLeave = (e) => {
+    const card = e.currentTarget;
+    card.style.setProperty('--mouse-x', '50%');
+    card.style.setProperty('--mouse-y', '50%');
+    card.style.setProperty('--rotate-x', '0deg');
+    card.style.setProperty('--rotate-y', '0deg');
+  };
+
   return (
     <div className="concept-cards">
       {CARDS.map((card, i) => (
         <div
-          className="concept-card reveal-item"
+          className="concept-card reveal-item shooting-star-sweep-wrap"
           key={card.subtitle}
           style={{ '--reveal-delay': `${0.2 + i * 0.15}s`, '--card-accent': card.color }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="concept-icon">{card.icon}</div>
           <div className="concept-body">

@@ -125,6 +125,33 @@ export default function JourneySection() {
     return () => observer.disconnect();
   }, []);
 
+  const handleMouseMove = (e) => {
+    if (window.matchMedia('(hover: hover)').matches === false) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const px = x / rect.width;
+    const py = y / rect.height;
+    
+    card.style.setProperty('--mouse-x', `${px * 100}%`);
+    card.style.setProperty('--mouse-y', `${py * 100}%`);
+    
+    const rotateY = ((px - 0.5) * 8).toFixed(2);
+    const rotateX = ((0.5 - py) * 8).toFixed(2);
+    
+    card.style.setProperty('--rotate-x', `${rotateX}deg`);
+    card.style.setProperty('--rotate-y', `${rotateY}deg`);
+  };
+
+  const handleMouseLeave = (e) => {
+    const card = e.currentTarget;
+    card.style.setProperty('--mouse-x', '50%');
+    card.style.setProperty('--mouse-y', '50%');
+    card.style.setProperty('--rotate-x', '0deg');
+    card.style.setProperty('--rotate-y', '0deg');
+  };
+
   const setMilestoneRef = useCallback((el, i) => {
     milestonesRef.current[i] = el;
   }, []);
@@ -156,9 +183,12 @@ export default function JourneySection() {
         <div className="timeline">
           {MILESTONES.map((m, i) => (
             <div
-              className={`milestone${m.isNow ? ' now' : ''}`}
+              className={`milestone shooting-star-sweep-wrap${m.isNow ? ' now' : ''}`}
               key={m.year}
               ref={(el) => setMilestoneRef(el, i)}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{ '--reveal-delay': `${0.1 + i * 0.1}s` }}
             >
               <div className="milestone-dot" />
               <div className="milestone-card">

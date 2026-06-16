@@ -77,13 +77,15 @@
     background: linear-gradient(
         to right,
         transparent,
-        rgba(229, 178, 93, 0.45) 20%,
-        rgba(199, 210, 254, 0.45) 50%,
-        rgba(165, 180, 252, 0.45) 80%,
+        rgba(229, 178, 93, 0.3) 30%,
+        rgba(255, 255, 255, 0.85) 50%,
+        rgba(165, 180, 252, 0.3) 70%,
         transparent
     );
+    background-size: 200% 100%;
     transform: translateY(-50%);
     z-index: 0;
+    animation: timelinePulseSweep 6s linear infinite;
 }
 
 /* --- Milestone Card --- */
@@ -101,8 +103,13 @@
     border-radius: 20px;
     padding: 32px 24px;
     z-index: 1;
-    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    
+    /* Support for Star Sweep and Starlight Sheen */
+    --sweep-color: var(--milestone-accent, rgba(229, 178, 93, 0.45));
+    overflow: hidden;
+    will-change: transform, background;
 }
 
 .milestone:nth-child(1) {
@@ -118,11 +125,12 @@
 }
 
 .milestone:hover {
-    transform: translateY(-8px);
+    transform: translateY(-8px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
     border-color: color-mix(in srgb, var(--milestone-accent) 30%, rgba(255, 255, 255, 0.05));
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.45),
+        0 20px 48px rgba(0, 0, 0, 0.45),
         0 0 20px color-mix(in srgb, var(--milestone-accent) 8%, transparent);
+    background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.06) 0%, rgba(17, 17, 17, 0.85) 80%, rgba(17, 17, 17, 0.95) 100%);
 }
 
 /* --- Dot on the timeline --- */
@@ -285,16 +293,23 @@
         background: linear-gradient(
             to bottom,
             transparent,
-            rgba(229, 178, 93, 0.45) 20%,
-            rgba(199, 210, 254, 0.45) 50%,
-            rgba(165, 180, 252, 0.45) 80%,
+            rgba(229, 178, 93, 0.3) 30%,
+            rgba(255, 255, 255, 0.85) 50%,
+            rgba(165, 180, 252, 0.3) 70%,
             transparent
         );
+        background-size: 100% 200%;
         transform: translateX(-50%);
+        animation: timelinePulseSweepVertical 6s linear infinite;
     }
 
     .journey-stats {
         flex-wrap: wrap;
         gap: var(--space-xl);
     }
+}
+
+@keyframes timelinePulseSweepVertical {
+    0% { background-position: 0 -150%; }
+    100% { background-position: 0 250%; }
 }

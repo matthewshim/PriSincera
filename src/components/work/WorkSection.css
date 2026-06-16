@@ -122,15 +122,22 @@
     display: flex;
     flex-direction: row;
     align-items: stretch;
-    transition: all var(--duration-normal) var(--ease-out);
+    transition: all var(--duration-normal) var(--ease-out), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease;
     overflow: hidden;
     margin-bottom: 40px;
+    
+    /* Support for Star Sweep and Starlight Sheen */
+    --sweep-color: var(--glow-color, rgba(229, 178, 93, 0.45));
+    will-change: transform, background;
 }
 
 .flagship-card:hover {
     border-color: var(--glass-border-hover);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    transform: translateY(-4px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+    box-shadow: 
+        0 20px 48px rgba(0, 0, 0, 0.55),
+        0 0 25px var(--glow-color, rgba(229, 178, 93, 0.05));
+    background: radial-gradient(circle 240px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.06) 0%, rgba(17, 17, 17, 0.75) 75%, rgba(17, 17, 17, 0.95) 100%);
 }
 
 .flagship-content {

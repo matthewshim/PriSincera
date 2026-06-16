@@ -110,7 +110,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    let w, h, scale = 1, stars = [], stardust = [], nebulae = [], shootingStars = [], constellations = [], frameId;
+    let w, h, scale = 1, stars = [], stardust = [], nebulae = [], shootingStars = [], constellations = [], frameId, isAmbientMode = false;
     let zodiacFade = 0; // 0 = hidden, 1 = fully visible
     let lastFrameTime = 0;
     const FPS_INTERVAL = 1000 / 30; // 30fps cap
@@ -364,73 +364,77 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       const parallaxBaseX = smoothMx - centerX;
       const parallaxBaseY = smoothMy - centerY;
 
-      // --- Background Celestial Grids (very faint Planisphere styling) ---
-      ctx.save();
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.025)';
-      ctx.lineWidth = 0.35;
-      const centerGridX = w / 2, centerGridY = h / 2;
-      const minSize = Math.min(w, h);
-      
-      // Declination Rings
-      for (let rFactor = 0.15; rFactor <= 0.85; rFactor += 0.15) {
-        ctx.beginPath();
-        ctx.arc(centerGridX, centerGridY, minSize * rFactor, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-      // Right Ascension Radial Lines
-      for (let angleDeg = 0; angleDeg < 360; angleDeg += 30) {
-        const rad = (angleDeg * Math.PI) / 180;
-        ctx.beginPath();
-        ctx.moveTo(centerGridX, centerGridY);
-        ctx.lineTo(centerGridX + Math.cos(rad) * minSize, centerGridY + Math.sin(rad) * minSize);
-        ctx.stroke();
-      }
-      ctx.restore();
-
-      // --- Telescope Lens Reticle & Grid Zoom (Clipped inside Lens) ---
       const LENS_RADIUS = 240;       // wider telescope field of view
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(rawMx, rawMy, LENS_RADIUS, 0, Math.PI * 2);
-      ctx.clip();
-      
-      // Declination Rings (Brighter inside lens)
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.09)';
-      ctx.lineWidth = 0.5;
-      for (let rFactor = 0.15; rFactor <= 0.85; rFactor += 0.15) {
+
+      // --- Background Celestial Grids & Telescope Lens (Only in active mode) ---
+      if (!isAmbientMode) {
+        // --- Background Celestial Grids (very faint Planisphere styling) ---
+        ctx.save();
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.025)';
+        ctx.lineWidth = 0.35;
+        const centerGridX = w / 2, centerGridY = h / 2;
+        const minSize = Math.min(w, h);
+        
+        // Declination Rings
+        for (let rFactor = 0.15; rFactor <= 0.85; rFactor += 0.15) {
+          ctx.beginPath();
+          ctx.arc(centerGridX, centerGridY, minSize * rFactor, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        // Right Ascension Radial Lines
+        for (let angleDeg = 0; angleDeg < 360; angleDeg += 30) {
+          const rad = (angleDeg * Math.PI) / 180;
+          ctx.beginPath();
+          ctx.moveTo(centerGridX, centerGridY);
+          ctx.lineTo(centerGridX + Math.cos(rad) * minSize, centerGridY + Math.sin(rad) * minSize);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // --- Telescope Lens Reticle & Grid Zoom (Clipped inside Lens) ---
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(centerGridX, centerGridY, minSize * rFactor, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-      // Right Ascension Lines
-      for (let angleDeg = 0; angleDeg < 360; angleDeg += 30) {
-        const rad = (angleDeg * Math.PI) / 180;
+        ctx.arc(rawMx, rawMy, LENS_RADIUS, 0, Math.PI * 2);
+        ctx.clip();
+        
+        // Declination Rings (Brighter inside lens)
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.09)';
+        ctx.lineWidth = 0.5;
+        for (let rFactor = 0.15; rFactor <= 0.85; rFactor += 0.15) {
+          ctx.beginPath();
+          ctx.arc(centerGridX, centerGridY, minSize * rFactor, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        // Right Ascension Lines
+        for (let angleDeg = 0; angleDeg < 360; angleDeg += 30) {
+          const rad = (angleDeg * Math.PI) / 180;
+          ctx.beginPath();
+          ctx.moveTo(centerGridX, centerGridY);
+          ctx.lineTo(centerGridX + Math.cos(rad) * minSize, centerGridY + Math.sin(rad) * minSize);
+          ctx.stroke();
+        }
+        
+        // Lens Center Reticle Crosshairs
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.18)';
+        ctx.lineWidth = 0.55;
         ctx.beginPath();
-        ctx.moveTo(centerGridX, centerGridY);
-        ctx.lineTo(centerGridX + Math.cos(rad) * minSize, centerGridY + Math.sin(rad) * minSize);
+        ctx.moveTo(rawMx - 18, rawMy); ctx.lineTo(rawMx + 18, rawMy);
+        ctx.moveTo(rawMx, rawMy - 18); ctx.lineTo(rawMx, rawMy + 18);
         ctx.stroke();
+        // Reticle Inner Coordinate Ring
+        ctx.beginPath();
+        ctx.arc(rawMx, rawMy, 25, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Reticle Outer Lens Ring
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.arc(rawMx, rawMy, LENS_RADIUS - 1.5, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        ctx.restore();
       }
-      
-      // Lens Center Reticle Crosshairs
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.18)';
-      ctx.lineWidth = 0.55;
-      ctx.beginPath();
-      ctx.moveTo(rawMx - 18, rawMy); ctx.lineTo(rawMx + 18, rawMy);
-      ctx.moveTo(rawMx, rawMy - 18); ctx.lineTo(rawMx, rawMy + 18);
-      ctx.stroke();
-      // Reticle Inner Coordinate Ring
-      ctx.beginPath();
-      ctx.arc(rawMx, rawMy, 25, 0, Math.PI * 2);
-      ctx.stroke();
-      
-      // Reticle Outer Lens Ring
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.arc(rawMx, rawMy, LENS_RADIUS - 1.5, 0, Math.PI * 2);
-      ctx.stroke();
-      
-      ctx.restore();
 
       // --- Emission Nebulae (Sub-layered Background Gaseous Core) ---
       // Render colorful emission nebulae on the background canvas first
@@ -715,10 +719,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       ctx.globalAlpha = 1;
 
       // --- Zodiac Constellations ---
-      // Fade in only after CI assembly completes
+      // Skip rendering entirely in Ambient Mode to conserve CPU
       const zodiacTarget = zodiacActiveRef.current ? 1 : 0;
       zodiacFade += (zodiacTarget - zodiacFade) * 0.015; // ~3s fade-in
-      if (zodiacFade < 0.005) { /* skip rendering entirely */ }
+      if (isAmbientMode || zodiacFade < 0.005) { /* skip rendering entirely */ }
       else {
 
       const REVEAL_RADIUS = 180;
@@ -970,20 +974,20 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     function draw(now) {
       if (!isLooping) return;
       frameId = requestAnimationFrame(draw);
-      if (now - lastFrameTime < FPS_INTERVAL) return;
+      const currentInterval = isAmbientMode ? 83.33 : FPS_INTERVAL; // ~12fps cap in ambient mode
+      if (now - lastFrameTime < currentInterval) return;
       lastFrameTime = now;
       drawFrame();
     }
 
-    // IntersectionObserver to freeze canvas animation when Hero is scrolled out of view
+    // IntersectionObserver to transition to Ambient Deep Space Mode when Hero is scrolled out of view
     const observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
       isHeroVisible = entry.isIntersecting;
-      if (isHeroVisible) {
-        startLoop();
-      } else {
-        stopLoop();
-      }
+      isAmbientMode = !isHeroVisible;
+      
+      // Never stop loop completely; keep running at low frame rate for ambient background shooting stars
+      startLoop();
     }, { threshold: 0 });
 
     const heroElement = document.getElementById('hero');
