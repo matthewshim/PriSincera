@@ -84,8 +84,6 @@
     );
     transform: translateY(-50%);
     z-index: 0;
-    /* Slow breathing animation instead of active flow */
-    animation: timelineBreathing 12s ease-in-out infinite;
 }
 
 /* --- Milestone Card --- */
@@ -105,11 +103,8 @@
     z-index: 1;
     transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-    
-    /* Support for Star Sweep and Starlight Sheen */
-    --sweep-color: var(--milestone-accent, rgba(229, 178, 93, 0.45));
     overflow: hidden;
-    will-change: transform, background;
+    will-change: transform;
 }
 
 .milestone:nth-child(1) {
@@ -125,12 +120,10 @@
 }
 
 .milestone:hover {
-    transform: translateY(-4px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+    transform: translateY(-4px);
     border-color: color-mix(in srgb, var(--milestone-accent) 20%, rgba(255, 255, 255, 0.05));
     box-shadow: 
         0 16px 40px rgba(0, 0, 0, 0.45);
-    /* Very subtle sheen over original background */
-    background: radial-gradient(circle 180px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.03) 0%, transparent 100%), rgba(17, 17, 17, 0.75);
 }
 
 /* --- Dot on the timeline --- */
@@ -299,7 +292,6 @@
             transparent
         );
         transform: translateX(-50%);
-        animation: timelineBreathing 12s ease-in-out infinite;
     }
 
     .journey-stats {
@@ -308,7 +300,3 @@
     }
 }
 
-@keyframes timelineBreathing {
-    0%, 100% { opacity: 0.45; }
-    50% { opacity: 0.95; }
-}

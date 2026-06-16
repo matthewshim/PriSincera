@@ -997,11 +997,49 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       startLoop();
     }
 
+    function handleTriggerShootingStar(e) {
+      const { x, y, width, height, color } = e.detail || {};
+      if (typeof x !== 'number' || typeof y !== 'number') return;
+
+      // Spawn a shooting star dynamically at coordinates
+      // Since stars travel diagonally down-right (vx > 0, vy > 0),
+      // we want the start position to be top-left relative to the card so it passes behind it.
+      const cardWidth = width || 300;
+      const cardHeight = height || 200;
+
+      // Position start offset to the top-left of the card
+      const sx = x - 80 - Math.random() * 80;
+      const sy = y - 60 - Math.random() * 60;
+
+      // Velocity: fast diagonal motion
+      const svx = 7 + Math.random() * 4;
+      const svy = 4.5 + Math.random() * 2.5;
+
+      // Slower decay for scrolling trigger stars so they cross the card fully
+      const decay = 0.010 + Math.random() * 0.008;
+      const length = 45 + Math.random() * 40;
+
+      const finalColor = color || '255,255,255';
+
+      shootingStars.push({
+        x: sx,
+        y: sy,
+        vx: svx,
+        vy: svy,
+        life: 1.0,
+        decay,
+        length,
+        color: finalColor
+      });
+    }
+
     window.addEventListener('resize', handleResize);
+    window.addEventListener('trigger-shooting-star', handleTriggerShootingStar);
     resize();
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('trigger-shooting-star', handleTriggerShootingStar);
       clearTimeout(resizeTimeout);
       observer.disconnect();
       stopLoop();

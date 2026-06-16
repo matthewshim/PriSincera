@@ -15,7 +15,7 @@ target_files:
 
 # ☄️ 스크롤 인터랙션 디자인 강화 제안서 — 별똥별 모티브
 
-본 제안서는 메인 페이지(`Home.jsx`)의 스크롤 및 호버 인터랙션 디자인 품질을 **"별똥별(Shooting Star)" 모티브**를 기반으로 강화하기 위한 구체적인 계획을 제시합니다. 미세한 마이크로 애니메이션과 천체 물리 기믹을 결합하여 사용자에게 프리미엄하고 역동적인 UX를 제공하는 것을 목표로 합니다.
+본 제안서는 메인 페이지(`Home.jsx`)의 스크롤 및 호버 인터랙션 디자인 품질을 **"별똥별(Shooting Star)" 모티브**를 기반으로 강화하기 위한 구체적인 계획을 제시합니다. 인위적인 카드 레벨의 모션을 배제하고 우주 배경 공간의 천체 물리 현상과 글래스모피즘(Glassmorphism)의 굴절 특성을 활용하여 깊이감 있는 프리미엄 UX를 구현하는 것을 목표로 합니다.
 
 ## 📝 개정 이력 (Revision History)
 
@@ -23,6 +23,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-16 | Antigravity | 최초 스크롤 인터랙션 디자인 품질 강화 제안서 작성 (별똥별 모티브) | Home, StarField, Section CSS |
 | v1.1 | 2026-06-16 | Antigravity | 피드백 반영: 미니멀리스트 프리미엄 톤앤매너로 3D 틸트 각도 축소(2.2도) 및 별똥별 글레어 미세 조정, 타임라인 브리딩 전환 | Home, StarField, Section CSS |
+| v1.2 | 2026-06-16 | Antigravity | 피드백 최종 반영: 요란한 카드 3D 효과 및 Sheen 전면 롤백, 배경 캔버스 별똥별 투과 연동 및 정적 타임라인 복원 | Home, StarField, Section CSS, hooks |
 
 ---
 
@@ -31,14 +32,16 @@ target_files:
 고품질의 마이크로 인터랙션을 위해 반영된 디자인 핵심 사항입니다.
 
 > [!IMPORTANT]
-> **1. 유리창 반사광 테두리 스윕 (별똥별 궤적 리파인)**
-> 카드가 스크롤되어 화면에 나타날 때(Reveal), 카드의 테두리를 따라 극세선 형태의 은은한 실버-화이트 글레어 반사광(`rgba(255, 255, 255, 0.15)`)이 1.8초에 걸쳐 한 차례 흘러 지나가는 효과입니다. 네온 컬러의 과장된 띠를 배제하고 고급유리판에 가볍게 비치는 물리적 글레어 질감을 묘사했습니다.
+> **1. 플랫 글래스모피즘 카드로의 원복 (Tackiness 롤백)**
+> * 요란한 카드 레벨의 3D 틸트 효과(`onMouseMove`, `onMouseLeave`)와 카드 내 대각선 그라데이션 반사광(sheen) 레이어를 전면 제거했습니다.
+> * 호버 시에는 카드가 기울지 않고, 오직 은은하고 세련된 테두리(border)의 하이라이트 투명도 변화와 은은한 그림자 팽창만을 유도하여 가독성과 톤앤매너의 안정성을 최우선으로 확보했습니다.
 > 
-> **2. 성도 라인 느린 호흡 (Journey 섹션)**
-> `Journey` 섹션의 연도를 잇는 수직/수평 타임라인 라인이 인위적으로 스트로빙(흘러내림)하지 않고, 마치 밤하늘의 성운이 숨을 쉬듯 12초 주기로 불투명도가 천천히 변하는 **심우주 브리딩(Breathing)** 모션 효과를 얹어 차분함과 깊이감을 완성했습니다.
+> **2. 배경 캔버스 별똥별 투과 연동 (3D 레이어 깊이감)**
+> * 카드가 스크롤되어 화면에 진입하는 순간(Reveal), 카드의 뷰포트 좌표와 고유 액센트 색상 정보가 글로벌 커스텀 이벤트(`trigger-shooting-star`)를 통해 뒷면의 별밭 배경 캔버스(`StarField.jsx`)로 전달됩니다.
+> * 이에 따라 카드의 렌더링 딜레이와 싱크되어 카드 뒷편의 배경에서 실제 캔버스 별똥별이 떨어집니다. 별똥별의 흐름과 꼬리가 반투명 유리판(`backdrop-filter: blur`) 뒤를 지나가며 자연스럽게 굴절되고 디퓨즈(흐려짐)되어, 평면적인 카드에 기하학적인 입체 심도(Depth)를 제공합니다.
 > 
-> **3. 미세 3D 틸트 및 3.5% 투명도 반사광**
-> 카드를 호버할 때 카드가 마우스 포인터 방향으로 아주 묵직하게 3D 틸팅(최대 각도 **2.2도** 억제)되며, 카드 표면에 비치는 부드러운 그라데이션 반사광(sheen)의 불투명도를 **3.5%** 수준(`opacity: 0.035`)으로 낮게 얹어 오리지널 OLED Space Black 글라스모피즘 카드의 가독성과 본연의 정체성을 완벽히 조화시켰습니다.
+> **3. 깔끔하고 정적인 성도 타임라인 (Journey 섹션)**
+> * Journey 섹션의 연도를 잇는 수직/수평 연결선을 서서히 껌뻑이게(Breathing) 만들던 애니메이션 루프를 완전히 걷어내고, 정적이고 세련된 은하수 톤의 그라데이션 선으로 원복하여 스크롤 시 시선의 피로도를 최소화했습니다.
 
 ---
 
@@ -46,60 +49,81 @@ target_files:
 
 > [!WARNING]
 > **1. 별똥별 광원의 색상 규격**
-> 카드의 별똥별 궤적 광원 색상을 각 섹션의 고유 액센트 컬러(Base: 골드, Builder's Log: 인디고, Daily Digest: 시안, Pace Note: 그린, Sylphio: 블루)를 기반으로 하되, 원색을 배제하고 매우 높은 채도의 투명 광원으로 조절하여 은은함을 유도했습니다.
+> 배경 캔버스에서 연동되어 떨어지는 별똥별의 색상은 각 카드가 가지고 있는 고유한 아이덴티티 컬러(Base: 골드, Builder's Log: 인디고, Daily Digest: 시안, Pace Note: 그린, Sylphio: 블루)의 RGB 값으로 매칭되어, 시각적 일관성과 개성을 완성도 높게 전달합니다.
 > 
-> **2. 모바일 환경 최적화 설계**
-> 모바일 기기(<= 768px)에서는 마우스 포인터 기반 호버(Hover) 모션이 유발하는 터치 불이익(터치 후 떼어도 호버 상태 유지)을 방지하기 위해, 미디어 쿼리(`@media (hover: hover)`)를 연동하여 모바일에서는 3D 틸팅과 마우스 추적 반사광을 즉각 차단하고 경량 스크롤 페이드/스케일 reveal과 모바일 햅틱 액티브 프레스(Haptic Scale) 축소 효과로 대체했습니다.
+> **2. 성능 유실 방지 및 디바운스 최적화**
+> 스크롤 감지 및 별똥별 생성 이벤트는 전역 윈도우 인터페이스를 통해 비동기적으로 중계되며, React 렌더링 생명주기와 완벽히 분리되어 브라우저 성능이나 프레임 드랍 없이 부드러운 60fps 애니메이션 속도를 보장합니다.
 
 ---
 
 ## 🛠️ 컴포넌트별 변경 계획
 
-인터랙션 강화 계획은 다음과 같은 형태로 코드 및 스타일시트에 반영되었습니다.
+배경 별똥별 통합 계획은 다음과 같이 코드 및 스타일시트에 반영되었습니다.
 
-### 1. 전역 스타일 가이드 개편
+### 1. 전역 스타일 가이드 정제
 
 #### [MODIFY] [index.css](file:///d:/prisincera/www/src/styles/index.css)
-* 대각선 극세 별똥별 글레어 흐름 애니메이션 키프레임(`@keyframes shooting-star-sweep`) 추가
-* 타임라인 수평/수직 라인용 천천히 쉬는 호흡 키프레임(`@keyframes timelineBreathing`) 추가
-* `.shooting-star-sweep-wrap` 글레어 광원 빔 스타일 정의
+* 대각선 극세 별똥별 글레어 흐름 애니메이션 키프레임 및 `.shooting-star-sweep-wrap` CSS 클래스 전면 삭제
 
 ---
 
 ### 2. Philosophy (Belief) 섹션
 
+#### [MODIFY] [ConceptCards.jsx](file:///d:/prisincera/www/src/components/philosophy/ConceptCards.jsx)
+* 카드 내 마우스 호버 트래킹 이벤트 리스너 제거
+* 각 카드에 `data-accent-color="229,178,93"` 등의 고유 RGB 값 속성 할당
+
 #### [MODIFY] [PhilosophySection.css](file:///d:/prisincera/www/src/components/philosophy/PhilosophySection.css)
-* `.concept-card` 내부에 절대 위치로 배치된 `::after` 유사 요소를 이용해, 스크롤 진입(`revealed`) 시 은은한 실버-골드 글레어가 쓸고 지나가는 효과 구현
-* 호버 시 테두리 액센트 라인이 확장되며 내부 3.5% 저농도 그라데이션 반사광이 마우스를 추적하는 미세 인터랙션 정의
+* 호버 시 3D 기울기 회전 및 마우스 추적 반사광 삭제, 은은한 테두리 광원 업데이트로 정제
 
 ---
 
 ### 3. Journey (Timeline) 섹션
 
+#### [MODIFY] [JourneySection.jsx](file:///d:/prisincera/www/src/components/journey/JourneySection.jsx)
+* 마우스 틸트 스크립트 제거
+* `IntersectionObserver`로 개별 마일스톤 카드가 뷰포트에 감지되는 시점에 직접 `trigger-shooting-star` 이벤트를 발생시키도록 보완
+
 #### [MODIFY] [JourneySection.css](file:///d:/prisincera/www/src/components/journey/JourneySection.css)
-* 수직/수평 타임라인 라인에 브리딩 애니메이션을 중첩하여 은은하게 뛰는 성도 흐름 스타일링
-* 개별 `.milestone` 카드 호버 시 최대 틸팅각 2.2도 및 리프트 4px 조정, 내부 starlight sheen 3.5% 투명도 적용
+* 타임라인 수직/수평 라인의 브리딩 펄스 애니메이션 삭제 및 단정하게 고정된 그라데이션 선화
+* 마일스톤 호버 틸트 및 셰도우 그라데이션 반사광 삭제
 
 ---
 
 ### 4. Work (Services) 섹션
 
+#### [MODIFY] [WorkSection.jsx](file:///d:/prisincera/www/src/components/work/WorkSection.jsx)
+* 5대 플래그십 카드에서의 호버 틸트 마우스 제어 제거
+* 각 카드별 고유 식별 광원 RGB 속성(`data-accent-color`) 추가
+
 #### [MODIFY] [WorkSection.css](file:///d:/prisincera/www/src/components/work/WorkSection.css)
-* 다섯 개의 플래그십 카드(`.flagship-card`)가 스크롤 진입 시, 고유 색상 빔 글레어 스윕이 발생하도록 설정
-* 호버 시 최대 틸팅각 2.2도 및 2px 리프트 제어, 고유 색상을 옅게 믹스한 starlight sheen과 은은한 백그라운드 오라(Aura) 융합
+* 호버 시 3D 회전 및 마우스 빔 효과 제거, 깔끔하고 은은한 드롭 셰도우 효과로 단순화
 
 ---
 
 ### 5. Connect 섹션
 
-#### [MODIFY] [ConnectSection.css](file:///d:/prisincera/www/src/components/connect/ConnectSection.css)
-* 연락망 카드(`.connect-container`)에 실버-인디고 글레어 스윕 적용
+#### [MODIFY] [ConnectSection.jsx](file:///d:/prisincera/www/src/components/connect/ConnectSection.jsx)
+* 연락망 카드(`.connect-container`)에 `data-accent-color` 부여 및 카드 글레어 sweep 클래스 삭제
 
 ---
 
-### 6. 백경 성도 캔버스 최적화
+### 6. 스크롤 감지 훅 고도화
+
+#### [MODIFY] [useScrollReveal.js](file:///d:/prisincera/www/src/hooks/useScrollReveal.js)
+* 섹션이 스크롤되어 화면에 진입(`revealed`)할 때, 하위의 `data-accent-color` 속성을 지닌 카드들을 쿼리
+* 카드의 스태거링 딜레이 시간(`--reveal-delay`)을 계산하여 정확한 밀리초 단위의 `setTimeout`을 연동, 캔버스 별똥별 생성 이벤트(`trigger-shooting-star`)를 순차적으로 발행
+
+---
+
+### 7. 백경 성도 캔버스 물리 통합
 
 #### [MODIFY] [StarField.jsx](file:///d:/prisincera/www/src/components/hero/StarField.jsx)
+* window 레벨에서 `trigger-shooting-star` 이벤트를 수신하는 리스너 설치
+* 이벤트 수신 시 카드의 viewport 공간적 좌표 `(x, y)` 및 크기 값을 기준으로, 카드의 뒤쪽 궤적을 대각선으로 아름답게 가로지르는 물리적 별똥별 객체 생성 및 렌더링 루프 연동
+* 컴포넌트 소멸(unmount) 시 리스너 해제 보장
+
+---
 * 기존 `IntersectionObserver`가 Hero 영역 이탈 시 캔버스를 완전히 멈추던 방식을 개선하여 **"심우주 모드 (Ambient Deep Space Mode)"**로의 소프트 전환 구현:
   * Hero 이탈 시 FPS 제한(12fps)을 두어 모바일/웹 CPU 점유율 최저 레벨 억제
   * 무거운 마우스 마그네틱 효과 및 HUD 좌표계 텍스트 렌더링 생략

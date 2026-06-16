@@ -8,32 +8,7 @@ export default function WorkSection() {
   const { t } = useTranslation();
   const sectionRef = useScrollReveal({ threshold: 0.08 });
 
-  const handleMouseMove = (e) => {
-    if (window.matchMedia('(hover: hover)').matches === false) return;
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const px = x / rect.width;
-    const py = y / rect.height;
-    
-    card.style.setProperty('--mouse-x', `${px * 100}%`);
-    card.style.setProperty('--mouse-y', `${py * 100}%`);
-    
-    const rotateY = ((px - 0.5) * 2.2).toFixed(2);
-    const rotateX = ((0.5 - py) * 2.2).toFixed(2);
-    
-    card.style.setProperty('--rotate-x', `${rotateX}deg`);
-    card.style.setProperty('--rotate-y', `${rotateY}deg`);
-  };
 
-  const handleMouseLeave = (e) => {
-    const card = e.currentTarget;
-    card.style.setProperty('--mouse-x', '50%');
-    card.style.setProperty('--mouse-y', '50%');
-    card.style.setProperty('--rotate-x', '0deg');
-    card.style.setProperty('--rotate-y', '0deg');
-  };
 
   return (
     <section className="work reveal-section" id="work" ref={sectionRef}>
@@ -58,10 +33,9 @@ export default function WorkSection() {
         <div className="work-grid">
         {/* 1. PriSincera Base Flagship (Core Foundation) */}
         <div
-          className="flagship-card reveal-item flagship-glow shooting-star-sweep-wrap"
+          className="flagship-card reveal-item flagship-glow"
           style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(245, 158, 11, 0.4)' }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          data-accent-color="245,158,11"
         >
           <div className="flagship-content">
             <div className="flagship-label" style={{ color: '#F59E0B' }}>Platform Foundation & Core Infrastructure</div>
@@ -119,10 +93,9 @@ export default function WorkSection() {
 
         {/* 2. Builder's Log Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow shooting-star-sweep-wrap"
+          className="flagship-card reveal-item flagship-glow"
           style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          data-accent-color="124,58,237"
         >
           <div className="flagship-content">
             <div className="flagship-label" style={{ color: '#8B5CF6' }}>Engineering & Growth Logs</div>
@@ -179,10 +152,9 @@ export default function WorkSection() {
 
         {/* 3. Daily Digest Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow shooting-star-sweep-wrap"
+          className="flagship-card reveal-item flagship-glow"
           style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          data-accent-color="34,211,238"
         >
           <div className="flagship-content">
             <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>Daily Curation & Learning</div>
@@ -230,10 +202,9 @@ export default function WorkSection() {
 
         {/* 4. Pace Note Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow shooting-star-sweep-wrap"
+          className="flagship-card reveal-item flagship-glow"
           style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(52, 211, 153, 0.4)' }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          data-accent-color="52,211,153"
         >
           <div className="flagship-content">
             <div className="flagship-label" style={{ color: '#34D399' }}>Action & Branding</div>
@@ -278,10 +249,9 @@ export default function WorkSection() {
 
         {/* 5. Sylphio Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow shooting-star-sweep-wrap"
+          className="flagship-card reveal-item flagship-glow"
           style={{ '--reveal-delay': '0.6s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          data-accent-color="0,242,254"
         >
           <div className="flagship-content">
             <div className="flagship-label" style={{ color: '#00F2FE' }}>On-Device AI Translation</div>

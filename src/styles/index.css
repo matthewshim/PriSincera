@@ -117,7 +117,7 @@ button { background: none; border: none; font: inherit; color: inherit; }
 .orbit-spin { animation: orbitSpin 40s linear infinite; }
 .orbit-spin-slow { animation: orbitSpin 55s linear infinite; }
 
-/* --- Utility Animations --- */
+/* GPU Accelerated fade-in */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -128,39 +128,6 @@ button { background: none; border: none; font: inherit; color: inherit; }
     50% { opacity: 1; }
 }
 
-/* GPU Accelerated Shooting Star Sweep */
-@keyframes shootingStarSweep {
-    0% { transform: translate(-100%, -100%) rotate(-45deg); }
-    100% { transform: translate(150%, 150%) rotate(-45deg); }
-}
-
-/* Timeline vertical meteor pulse */
-@keyframes timelinePulseSweep {
-    0% { background-position: 0% -150%; }
-    100% { background-position: 0% 250%; }
-}
-
-/* Starlight Sweep Border Class (Refined Glare) */
-.shooting-star-sweep-wrap {
-    position: relative;
-    overflow: hidden;
-}
-.shooting-star-sweep-wrap::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    /* Razor-thin starlight silver glare overlay */
-    background: linear-gradient(135deg, transparent 48%, var(--sweep-color, rgba(255, 255, 255, 0.15)) 50%, transparent 52%);
-    pointer-events: none;
-    z-index: 5;
-    transform: translate(-150%, -150%) rotate(-45deg);
-    opacity: 0.8;
-}
-.revealed.shooting-star-sweep-wrap::after,
-.revealed .shooting-star-sweep-wrap::after {
-    animation: shootingStarSweep 1.8s var(--ease-out) forwards;
-    animation-delay: calc(var(--reveal-delay, 0s) + 0.15s);
-}
 
 /* --- Glassmorphism 3.0 Premium Card (Restrained Authority & Celestial Accent) --- */
 .premium-card {

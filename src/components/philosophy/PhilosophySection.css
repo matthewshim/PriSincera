@@ -122,10 +122,7 @@
     transition: all var(--duration-normal) var(--ease-out), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease;
     cursor: default;
     overflow: hidden;
-    
-    /* Support for Star Sweep and Starlight Sheen */
-    --sweep-color: var(--card-accent, rgba(229, 178, 93, 0.45));
-    will-change: transform, background;
+    will-change: transform;
 }
 
 /* Card accent line (left border) */
@@ -144,12 +141,10 @@
 
 .concept-card:hover {
     border-color: var(--glass-border-hover);
-    transform: translateY(-4px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+    transform: translateY(-4px);
     box-shadow:
         0 16px 48px rgba(0, 0, 0, 0.45),
         0 0 1px rgba(255, 255, 255, 0.1);
-    /* Very subtle starlight sheen overlay (only 3.5% opacity) over glass background */
-    background: radial-gradient(circle 180px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.035) 0%, transparent 100%), var(--glass-bg);
 }
 
 .concept-card:hover::before {

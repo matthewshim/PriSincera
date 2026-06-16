@@ -67,6 +67,7 @@ export default function JourneySection() {
       industry: '20 Years of IT',
       description: t('home.milestone1.desc'),
       keyword: 'Experience',
+      rgb: '229,178,93',
     },
     {
       year: 'Shift',
@@ -74,6 +75,7 @@ export default function JourneySection() {
       industry: 'Vibe Coding',
       description: t('home.milestone2.desc'),
       keyword: 'Innovation',
+      rgb: '199,210,254',
     },
     {
       year: 'Now',
@@ -82,6 +84,7 @@ export default function JourneySection() {
       description: t('home.milestone3.desc'),
       keyword: 'Service',
       isNow: true,
+      rgb: '165,180,252',
     },
   ];
 
@@ -92,6 +95,21 @@ export default function JourneySection() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
+            
+            const rect = entry.target.getBoundingClientRect();
+            const color = entry.target.getAttribute('data-accent-color');
+            window.dispatchEvent(
+              new CustomEvent('trigger-shooting-star', {
+                detail: {
+                  x: rect.left,
+                  y: rect.top,
+                  width: rect.width,
+                  height: rect.height,
+                  color: color,
+                },
+              })
+            );
+
             observer.unobserve(entry.target);
           }
         });
@@ -125,33 +143,6 @@ export default function JourneySection() {
     return () => observer.disconnect();
   }, []);
 
-  const handleMouseMove = (e) => {
-    if (window.matchMedia('(hover: hover)').matches === false) return;
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const px = x / rect.width;
-    const py = y / rect.height;
-    
-    card.style.setProperty('--mouse-x', `${px * 100}%`);
-    card.style.setProperty('--mouse-y', `${py * 100}%`);
-    
-    const rotateY = ((px - 0.5) * 2.2).toFixed(2);
-    const rotateX = ((0.5 - py) * 2.2).toFixed(2);
-    
-    card.style.setProperty('--rotate-x', `${rotateX}deg`);
-    card.style.setProperty('--rotate-y', `${rotateY}deg`);
-  };
-
-  const handleMouseLeave = (e) => {
-    const card = e.currentTarget;
-    card.style.setProperty('--mouse-x', '50%');
-    card.style.setProperty('--mouse-y', '50%');
-    card.style.setProperty('--rotate-x', '0deg');
-    card.style.setProperty('--rotate-y', '0deg');
-  };
-
   const setMilestoneRef = useCallback((el, i) => {
     milestonesRef.current[i] = el;
   }, []);
@@ -183,12 +174,11 @@ export default function JourneySection() {
         <div className="timeline">
           {MILESTONES.map((m, i) => (
             <div
-              className={`milestone shooting-star-sweep-wrap${m.isNow ? ' now' : ''}`}
+              className={`milestone${m.isNow ? ' now' : ''}`}
               key={m.year}
               ref={(el) => setMilestoneRef(el, i)}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
               style={{ '--reveal-delay': `${0.1 + i * 0.1}s` }}
+              data-accent-color={m.rgb}
             >
               <div className="milestone-dot" />
               <div className="milestone-card">

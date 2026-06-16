@@ -125,20 +125,15 @@
     transition: all var(--duration-normal) var(--ease-out), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease;
     overflow: hidden;
     margin-bottom: 40px;
-    
-    /* Support for Star Sweep and Starlight Sheen */
-    --sweep-color: var(--glow-color, rgba(229, 178, 93, 0.45));
-    will-change: transform, background;
+    will-change: transform;
 }
 
 .flagship-card:hover {
     border-color: var(--glass-border-hover);
-    transform: translateY(-2px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+    transform: translateY(-2px);
     box-shadow: 
         0 16px 40px rgba(0, 0, 0, 0.45),
         0 0 15px color-mix(in srgb, var(--glow-color, rgba(229, 178, 93, 0.1)) 40%, transparent);
-    /* Very subtle sheen overlay over base background */
-    background: radial-gradient(circle 240px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.035) 0%, transparent 100%), rgba(17, 17, 17, 0.6);
 }
 
 .flagship-content {
