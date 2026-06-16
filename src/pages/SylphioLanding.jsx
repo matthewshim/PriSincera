@@ -48,9 +48,14 @@ const SCENARIOS = {
     source: "Good morning everyone. Today we are gathered to discuss our product roadmap for the next quarter, including the integration of our new AI engine.",
     translated: "여러분 안녕하십니까. 오늘은 새로운 AI 엔진 통합을 포함한 다음 분기 제품 로드맵을 논의하기 위해 모였습니다."
   },
+  ko: {
+    speaker: "민수 (프로젝트 리더)",
+    source: "안녕하세요 여러분. 오늘 회의에서는 다음 분기 릴리즈 일정과 새롭게 추가될 실시간 번역 기능의 안정성에 대해 논의하겠습니다.",
+    translated: "Hello everyone. In today's meeting, we will discuss the next quarter's release schedule and the stability of the newly added real-time translation feature."
+  },
   jp: {
     speaker: "Kenji (AI Engineer)",
-    source: "皆さん、こんにちは。本日のセミナーでは、オンデバイスAI技術が私たちの日常生活にどのような変化をもたらすかについてお話しします。",
+    source: "皆さん、こんにちは。本日のセミナーでは, オンデバイスAI技術が私たちの日常生活にどのような変化をもたらすかについてお話しします。",
     translated: "여러분, 안녕하십니까. 오늘 세미나에서는 온디바이스 AI 기술이 우리의 일상 생활에 어떤 변화를 가져올지에 대해 말씀드리겠습니다."
   }
 };
@@ -89,11 +94,11 @@ const TRANSLATIONS = {
     proTitle: "Sylphio Pro Lifetime",
     proPrice: "$9.99",
     proPricePeriod: "/ 단 1회 결제 (소장)",
-    freeFeature1: "영어(English) 음성 인식 및 기본 번역 무제한 지원",
+    freeFeature1: "영어 및 한국어 음성 인식 및 기본 번역 무제한 지원",
     freeFeature2: "시스템 오디오 & 마이크 실시간 캡처 지원",
-    freeFeature3: "영어 전용 실시간 오프라인/하이브리드 번역 자막 제공",
+    freeFeature3: "영어 및 한국어 실시간 오프라인/하이브리드 번역 자막 제공",
     freeFeature4: "실시간 글래스모피즘 자막 뷰어 기본 제공",
-    proFeature1: "12개 다국어(한국어, 일본어, 중국어 등) 잠금 전면 해제",
+    proFeature1: "10개 이상 다국어(일본어, 중국어, 프랑스어 등) 잠금 전면 해제",
     proFeature2: "AI PRO 요약 및 Action Items 엔진 잠금해제 (BYOK)",
     proFeature3: "Google Gemini / OpenAI API 연동 지원",
     proFeature4: "macOS Secure Keychain API Key 암호화 저장",
@@ -138,11 +143,11 @@ const TRANSLATIONS = {
     proTitle: "Sylphio Pro Lifetime",
     proPrice: "$9.99",
     proPricePeriod: "/ One-time purchase",
-    freeFeature1: "Unlimited English speech-to-text & basic translation",
+    freeFeature1: "Unlimited English & Korean speech-to-text & basic translation",
     freeFeature2: "Real-time system audio & mic capture",
-    freeFeature3: "English-only real-time offline/hybrid translation subtitles",
+    freeFeature3: "English & Korean real-time offline/hybrid translation subtitles",
     freeFeature4: "Real-time glassmorphism subtitle viewer",
-    proFeature1: "Unlock all 12 global languages (Korean, Japanese, etc.)",
+    proFeature1: "Unlock all 10+ global languages (Japanese, Chinese, etc.)",
     proFeature2: "Unlock AI PRO summary and Action Items engine (BYOK)",
     proFeature3: "Google Gemini / OpenAI API integration support",
     proFeature4: "macOS Secure Keychain encrypted key storage",
@@ -185,11 +190,11 @@ const TRANSLATIONS = {
     proTitle: "Sylphio Pro Lifetime",
     proPrice: "$9.99",
     proPricePeriod: "/ 1回のみの支払い",
-    freeFeature1: "英語(English)の音声認識および基本翻訳の無制限サポート",
+    freeFeature1: "英語(English)と韓国語(Korean)の音声認識および基本翻訳の無制限サポート",
     freeFeature2: "システムオーディオ & マイクのリアルタイム収集をサポート",
-    freeFeature3: "英語専用のリアルタイム・オフライン/ハイブリッド翻訳字幕の提供",
+    freeFeature3: "英語と韓国語専用のリアルタイム・オフライン/ハイブリッド翻訳字幕の提供",
     freeFeature4: "リアルタイム・グラスモフィズム字幕ビューアを標準搭載",
-    proFeature1: "12の多言語（韓国語、日本語、中国語など）ロックを全面解除",
+    proFeature1: "10以上の多言語（日本語、中国語、フランス語など）ロックを全面解除",
     proFeature2: "AI PRO 要約およびアクションアイテムエンジンのアンロック (BYOK)",
     proFeature3: "Google Gemini / OpenAI API 連携のサポート",
     proFeature4: "macOS Secure Keychain APIキー暗号化保管",
@@ -405,6 +410,14 @@ export default function SylphioLanding() {
               🇺🇸 English Meeting ( Steve )
             </button>
             <button 
+              className={`btn-simulator ${activeScenario === 'ko' ? 'active' : ''}`}
+              onClick={() => handlePlayScenario('ko')}
+              disabled={isPlaying && activeScenario === 'ko'}
+              id="btn-sim-korean"
+            >
+              🇰🇷 Korean Meeting ( Minsoo )
+            </button>
+            <button 
               className={`btn-simulator ${activeScenario === 'jp' ? 'active' : ''}`}
               onClick={() => handlePlayScenario('jp')}
               disabled={isPlaying && activeScenario === 'jp'}
@@ -436,7 +449,7 @@ export default function SylphioLanding() {
               {activeScenario ? (
                 <div className="sylphio-sim-message-block">
                   <div className="sylphio-sim-lang-code">
-                    {activeScenario === 'en' ? 'EN' : 'JA'}
+                    {activeScenario.toUpperCase()}
                   </div>
                   
                   <div className="sylphio-sim-text-stack">
