@@ -8,11 +8,17 @@ export default function WorkSection() {
   const { t } = useTranslation();
   const [sectionRef, revealed] = useScrollReveal({ threshold: 0.08 });
   const [activeCardIndex, setActiveCardIndex] = React.useState(-1);
+  const activeIndexRef = React.useRef(-1);
+
+  React.useEffect(() => {
+    activeIndexRef.current = activeCardIndex;
+  }, [activeCardIndex]);
 
   React.useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
+    const grid = section.querySelector('.work-grid');
     let rafId = null;
 
     const handleScroll = () => {
@@ -20,35 +26,82 @@ export default function WorkSection() {
 
       rafId = requestAnimationFrame(() => {
         const cards = section.querySelectorAll('.flagship-card');
-        const viewCenter = window.innerHeight / 2;
+        const isMobile = window.innerWidth <= 768;
+        const viewCenterY = window.innerHeight / 2;
+        const viewCenterX = window.innerWidth / 2;
 
-        let closestIndex = -1;
+        let absoluteClosestIndex = -1;
         let minDistance = Infinity;
+        const cardDistances = [];
 
         cards.forEach((card, idx) => {
           const rect = card.getBoundingClientRect();
-          const cardCenter = rect.top + rect.height / 2;
-          const distance = Math.abs(viewCenter - cardCenter);
+          let distance;
 
-          // Only focus cards if they are in the viewport
-          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+          if (isMobile) {
+            // Horizontal distance on mobile
+            const cardCenterX = rect.left + rect.width / 2;
+            distance = Math.abs(viewCenterX - cardCenterX);
+          } else {
+            // Vertical distance on desktop/tablet
+            const cardCenterY = rect.top + rect.height / 2;
+            distance = Math.abs(viewCenterY - cardCenterY);
+          }
+
+          cardDistances.push(distance);
+
+          const isInViewport = isMobile
+            ? (rect.left < window.innerWidth && rect.right > 0)
+            : (rect.top < window.innerHeight && rect.bottom > 0);
 
           if (isInViewport && distance < minDistance) {
             minDistance = distance;
-            closestIndex = idx;
+            absoluteClosestIndex = idx;
           }
         });
 
-        setActiveCardIndex(closestIndex);
+        const currentActive = activeIndexRef.current;
+        let nextIndex = currentActive;
+
+        // Reset focus if section is scrolled way out of view (desktop threshold: 500px)
+        if (absoluteClosestIndex === -1 || (!isMobile && minDistance > 500)) {
+          nextIndex = -1;
+        } else {
+          if (currentActive === -1) {
+            nextIndex = absoluteClosestIndex;
+          } else {
+            // Hysteresis buffer to make transitions steady (desktop: 200px, mobile: 60px)
+            const currentActiveDistance = cardDistances[currentActive] ?? Infinity;
+            const candidateDistance = cardDistances[absoluteClosestIndex];
+            const buffer = isMobile ? 60 : 200;
+
+            if (candidateDistance < currentActiveDistance - buffer) {
+              nextIndex = absoluteClosestIndex;
+            }
+          }
+        }
+
+        if (nextIndex !== currentActive) {
+          setActiveCardIndex(nextIndex);
+        }
         rafId = null;
       });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    if (grid) {
+      grid.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      if (grid) {
+        grid.removeEventListener('scroll', handleScroll);
+      }
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [sectionRef]);

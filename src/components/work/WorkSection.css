@@ -114,29 +114,47 @@
 .flagship-card {
     position: relative;
     padding: 0;
-    background: rgba(17, 17, 17, 0.6);
+    background: 
+        linear-gradient(rgba(17, 17, 17, 0.7), rgba(17, 17, 17, 0.7)) padding-box,
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)) border-box;
+    border: 1px solid transparent;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
     border-radius: 24px;
     display: flex;
     flex-direction: row;
     align-items: stretch;
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow 0.5s ease,
+                background 0.3s ease;
     overflow: hidden;
     margin-bottom: 40px;
     will-change: transform, opacity;
 }
 
+/* Flagship Card internal ambient glow (behind content) */
+.flagship-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--glow-color, rgba(255, 255, 255, 0.1)) 15%, transparent) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 0;
+}
+
 .flagship-card:hover {
-    border-color: var(--glass-border-hover);
+    background: 
+        linear-gradient(rgba(20, 20, 20, 0.75), rgba(20, 20, 20, 0.75)) padding-box,
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)) border-box;
     transform: translateY(-2px);
     box-shadow: 
-        0 16px 40px rgba(0, 0, 0, 0.45),
-        0 0 15px color-mix(in srgb, var(--glow-color, rgba(229, 178, 93, 0.1)) 40%, transparent);
+        0 16px 40px rgba(0, 0, 0, 0.45);
 }
 
 /* Active focus on scroll rules */
@@ -150,15 +168,41 @@
     opacity: 1;
     transform: scale(1.0);
     filter: blur(0);
-    border-color: color-mix(in srgb, var(--glow-color, rgba(255, 255, 255, 0.1)) 25%, var(--glass-border));
+    background: 
+        linear-gradient(rgba(12, 12, 12, 0.85), rgba(12, 12, 12, 0.85)) padding-box,
+        radial-gradient(circle at 0% 100%, var(--glow-color, rgba(255, 255, 255, 0.1)) 0%, transparent 70%) border-box;
     box-shadow: 
         0 24px 48px rgba(0, 0, 0, 0.5),
-        0 0 30px color-mix(in srgb, var(--glow-color, rgba(255, 255, 255, 0.1)) 12%, transparent);
+        0 0 30px color-mix(in srgb, var(--glow-color, rgba(255, 255, 255, 0.1)) 10%, transparent);
+}
+
+.flagship-card.active-focus::before {
+    opacity: 1;
+}
+
+/* Active card shimmer sweep (Apple chip effect) */
+.flagship-card.active-focus::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: shineSweep 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: none;
+    z-index: 2;
 }
 
 .work-grid.has-active-focus .flagship-card.active-focus .visual-blur-orb {
     transform: scale(1.22);
-    opacity: 0.5;
+    opacity: 0.55;
 }
 
 .flagship-content {
@@ -167,6 +211,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
 .flagship-label {
@@ -216,6 +262,7 @@
     min-height: 380px;
     overflow: hidden;
     perspective: 1000px;
+    z-index: 1;
 }
 
 .visual-blur-orb {
@@ -876,6 +923,79 @@
 @keyframes bentoPulse {
     0% { transform: scale(1); opacity: 0.8; }
     100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* ============================================
+   Mockup Ignition (Active Focus Animations)
+   ============================================ */
+/* 1. Base Engine Mockup Ignition */
+.flagship-card.active-focus .prism-core {
+    animation-duration: 3.5s;
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.8);
+}
+.flagship-card.active-focus .terminal-status.active::before {
+    animation-duration: 0.6s;
+    box-shadow: 0 0 12px #F59E0B;
+}
+
+/* 2. Builder's Log Mockup Ignition */
+.flagship-card.active-focus .timeline-node {
+    opacity: 1;
+}
+.flagship-card.active-focus .timeline-node:nth-child(2) {
+    transition-delay: 0.25s;
+}
+.flagship-card.active-focus .timeline-node:nth-child(3) {
+    transition-delay: 0.5s;
+}
+.flagship-card.active-focus .timeline-node.active .node-dot {
+    animation: activeNodePulse 2.5s infinite ease-in-out;
+}
+@keyframes activeNodePulse {
+    0%, 100% { transform: scale(1.2); box-shadow: 0 0 10px #8B5CF6; }
+    50% { transform: scale(1.4); box-shadow: 0 0 20px rgba(139, 92, 246, 0.8); }
+}
+
+/* 3. Daily Digest Mockup Ignition */
+.flagship-card.active-focus .mockup-ai-card {
+    animation-duration: 1.8s;
+    background: rgba(34, 211, 238, 0.16);
+    border-color: rgba(34, 211, 238, 0.5);
+}
+.flagship-card.active-focus .ai-spark {
+    animation-duration: 2.2s;
+}
+
+/* 4. Pace Note Mockup Ignition */
+.flagship-card.active-focus .pace-cell:nth-child(4n+1) {
+    animation: activeCellPulse 2.5s infinite 0.2s;
+}
+.flagship-card.active-focus .pace-cell:nth-child(4n+3) {
+    animation: activeCellPulse 2.5s infinite 0.6s;
+}
+@keyframes activeCellPulse {
+    0%, 100% { background: rgba(52, 211, 153, 0.05); }
+    50% { background: rgba(52, 211, 153, 0.5); box-shadow: 0 0 12px rgba(52, 211, 153, 0.4); }
+}
+.flagship-card.active-focus .pace-floating-card {
+    animation: floatCardActive 3.5s infinite ease-in-out;
+}
+@keyframes floatCardActive {
+    0%, 100% { transform: translateZ(35px) translateY(0); }
+    50% { transform: translateZ(35px) translateY(-14px) rotate(2.5deg); }
+}
+
+/* 5. Sylphio Mockup Ignition */
+.flagship-card.active-focus .sylphio-bento-pulse {
+    animation-duration: 1.2s;
+    border-width: 2px;
+}
+.flagship-card.active-focus .sylphio-bento-core {
+    animation: corePulse 2s infinite ease-in-out;
+}
+@keyframes corePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(30, 128, 255, 0.4); }
+    50% { transform: scale(1.12); box-shadow: 0 0 50px rgba(0, 242, 254, 0.65); }
 }
 
 /* ============================================
