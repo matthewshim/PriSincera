@@ -60,6 +60,7 @@ export default function JourneySection() {
   const milestonesRef = useRef([]);
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [revealedMilestones, setRevealedMilestones] = useState([false, false, false]);
 
   const MILESTONES = [
     {
@@ -95,21 +96,29 @@ export default function JourneySection() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
+            const index = Number(entry.target.getAttribute('data-index'));
             
-            const rect = entry.target.getBoundingClientRect();
-            const color = entry.target.getAttribute('data-accent-color');
-            window.dispatchEvent(
-              new CustomEvent('trigger-shooting-star', {
-                detail: {
-                  x: rect.left,
-                  y: rect.top,
-                  width: rect.width,
-                  height: rect.height,
-                  color: color,
-                },
-              })
-            );
+            setRevealedMilestones((prev) => {
+              if (prev[index]) return prev;
+              
+              const rect = entry.target.getBoundingClientRect();
+              const color = entry.target.getAttribute('data-accent-color');
+              window.dispatchEvent(
+                new CustomEvent('trigger-shooting-star', {
+                  detail: {
+                    x: rect.left,
+                    y: rect.top,
+                    width: rect.width,
+                    height: rect.height,
+                    color: color,
+                  },
+                })
+              );
+
+              const next = [...prev];
+              next[index] = true;
+              return next;
+            });
 
             observer.unobserve(entry.target);
           }
@@ -175,13 +184,15 @@ export default function JourneySection() {
         <div className="timeline" style={{ '--scroll-progress': progress }}>
           {MILESTONES.map((m, i) => {
             const isActive = i === 0 ? progress >= 0.15 : i === 1 ? progress >= 0.45 : progress >= 0.75;
+            const isRevealed = revealedMilestones[i];
             return (
               <div
-                className={`milestone${m.isNow ? ' now' : ''}${isActive ? ' active' : ''}`}
+                className={`milestone${m.isNow ? ' now' : ''}${isActive ? ' active' : ''}${isRevealed ? ' revealed' : ''}`}
                 key={m.year}
                 ref={(el) => setMilestoneRef(el, i)}
                 style={{ '--reveal-delay': `${0.1 + i * 0.1}s` }}
                 data-accent-color={m.rgb}
+                data-index={i}
               >
                 <div className="milestone-dot" />
                 <div className="milestone-card">

@@ -6,7 +6,7 @@ import './WorkSection.css';
 
 export default function WorkSection() {
   const { t } = useTranslation();
-  const sectionRef = useScrollReveal({ threshold: 0.08 });
+  const [sectionRef, revealed] = useScrollReveal({ threshold: 0.08 });
   const [activeCardIndex, setActiveCardIndex] = React.useState(-1);
 
   React.useEffect(() => {
@@ -56,7 +56,7 @@ export default function WorkSection() {
 
 
   return (
-    <section className="work reveal-section" id="work" ref={sectionRef}>
+    <section className={`work reveal-section${revealed ? ' revealed' : ''}`} id="work" ref={sectionRef}>
       <div className="work-container">
         <div className="section-label">Services</div>
 

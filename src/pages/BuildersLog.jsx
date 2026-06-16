@@ -8,7 +8,7 @@ import './BuildersLog.css';
 
 const ChapterCard = ({ chapter, index }) => {
   const { locale, localize, t } = useTranslation();
-  const revealRef = useScrollReveal({ threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+  const [revealRef, revealed] = useScrollReveal({ threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
   const cardRef = useRef(null);
   const commits = chapter.commits || [];
   const isFeatured = index === 0;
@@ -59,7 +59,7 @@ const ChapterCard = ({ chapter, index }) => {
   
   return (
     <div 
-      className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'}`} 
+      className={`builder-card builder-card-${index} ${isFeatured ? 'builder-card-featured' : 'builder-card-grid'}${revealed ? ' revealed' : ''}`} 
       ref={revealRef}
     >
       <Link to={`/builders-log/${chapter.slug}`} className="builder-card-link-wrapper">
@@ -193,7 +193,7 @@ export default function BuildersLog() {
     ogUrl: 'https://www.prisincera.com/builders-log'
   });
 
-  const headerRef = useScrollReveal();
+  const [headerRef, headerRevealed] = useScrollReveal();
   
   useEffect(() => {
     document.body.classList.add('hero-ready');
@@ -205,7 +205,7 @@ export default function BuildersLog() {
   return (
     <div className="builders-log-wrapper">
       <section 
-        className="log-hero-section" 
+        className={`log-hero-section${headerRevealed ? ' revealed' : ''}`} 
         ref={headerRef}
       >
         <div className="log-hero-content">

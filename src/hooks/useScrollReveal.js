@@ -1,11 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Custom hook for scroll-triggered reveal animations.
- * Adds 'revealed' class when element enters viewport.
+ * Returns [ref, revealed].
  */
 export default function useScrollReveal(options = {}) {
   const ref = useRef(null);
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -14,7 +15,7 @@ export default function useScrollReveal(options = {}) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.classList.add('revealed');
+          setRevealed(true);
 
           // Trigger background shooting stars for elements with data-accent-color
           const cards = Array.from(el.querySelectorAll('[data-accent-color]'));
@@ -55,5 +56,5 @@ export default function useScrollReveal(options = {}) {
     return () => observer.disconnect();
   }, [options.threshold, options.rootMargin]);
 
-  return ref;
+  return [ref, revealed];
 }

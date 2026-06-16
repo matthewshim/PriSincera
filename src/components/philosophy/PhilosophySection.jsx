@@ -11,10 +11,10 @@ import './PhilosophySection.css';
  * Layout: Left narrative intro + brand declaration / Right: three belief cards.
  */
 export default function BeliefSection() {
-  const sectionRef = useScrollReveal({ threshold: 0.08 });
+  const [sectionRef, revealed] = useScrollReveal({ threshold: 0.08 });
 
   return (
-    <section className="philosophy reveal-section" id="belief" ref={sectionRef}>
+    <section className={`philosophy reveal-section${revealed ? ' revealed' : ''}`} id="belief" ref={sectionRef}>
       <div className="philosophy-container">
         <div className="section-label">Belief</div>
         <div className="philosophy-layout">

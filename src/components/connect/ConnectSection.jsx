@@ -10,11 +10,11 @@ import './ConnectSection.css';
  */
 export default function ConnectSection() {
   const { t } = useTranslation();
-  const sectionRef = useScrollReveal({ threshold: 0.12 });
+  const [sectionRef, revealed] = useScrollReveal({ threshold: 0.12 });
   const [progressRef, progress] = useScrollProgress();
 
   return (
-    <section className="connect reveal-section" id="connect" ref={sectionRef}>
+    <section className={`connect reveal-section${revealed ? ' revealed' : ''}`} id="connect" ref={sectionRef}>
       <div 
         className="connect-container" 
         style={{ '--reveal-delay': '0.1s', '--scroll-progress': progress }} 
