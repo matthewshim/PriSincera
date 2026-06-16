@@ -1,13 +1,5 @@
 # 🌌 Aesthetic of Moderation: Scroll-linked Interaction Overhaul & Ultra-Refined Minimal Focus Design
 
-## 📝 Revision History
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-16 | Antigravity | Wrote the Builder's Log article for main scroll interaction refinement and focus optimization | Home, StarField, Section CSS |
-
----
-
 ## 1. 💡 Introduction: Lost on the Border Between Flashy and 'Cheap'
 One of the most common pitfalls in product design and frontend engineering is the misconception that **"the more it shakes and flashes, the more premium it looks."**
 
