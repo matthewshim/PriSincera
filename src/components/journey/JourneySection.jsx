@@ -158,7 +158,7 @@ export default function JourneySection() {
   }, []);
 
   return (
-    <section className="journey" id="journey" ref={sectionRef}>
+    <section className="journey" id="journey">
       <div className="journey-container">
         <div className="section-label">Journey</div>
 
@@ -181,9 +181,9 @@ export default function JourneySection() {
           </div>
         </div>
 
-        <div className="timeline" style={{ '--scroll-progress': progress }}>
+        <div className="timeline" ref={sectionRef} style={{ '--scroll-progress': progress }}>
           {MILESTONES.map((m, i) => {
-            const isActive = i === 0 ? progress >= 0.08 : i === 1 ? progress >= 0.22 : progress >= 0.36;
+            const isActive = i === 0 ? progress >= 0.12 : i === 1 ? progress >= 0.36 : progress >= 0.60;
             const isRevealed = revealedMilestones[i];
             return (
               <div
