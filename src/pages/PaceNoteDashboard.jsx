@@ -180,6 +180,32 @@ export default function PaceNoteDashboard() {
   };
   const [data, setData] = useState(null);
   const { user, token: userToken, loginWithGoogle, logout } = useAuth();
+  
+  const fetchWithAuth = async (url, options = {}) => {
+    let currentToken = userToken;
+    const doFetch = (tok) => {
+      const headers = {
+        ...options.headers,
+        Authorization: `Bearer ${tok}`
+      };
+      return fetch(url, { ...options, headers });
+    };
+
+    let res = await doFetch(currentToken);
+
+    if (res.status === 401 && user) {
+      console.warn('[PaceNote] Token expired or invalid (401), attempting to force refresh...');
+      try {
+        const newToken = await user.getIdToken(true);
+        res = await doFetch(newToken);
+      } catch (err) {
+        console.error('[PaceNote] Failed to force refresh token:', err);
+      }
+    }
+
+    return res;
+  };
+
   const [selectedWeekId, setSelectedWeekId] = useState(null);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [addingTask, setAddingTask] = useState(false);
@@ -236,11 +262,10 @@ export default function PaceNoteDashboard() {
     setSaveStatus('saving');
     const delayDebounceFn = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/pacenote/diary?lang=${locale}`, {
+        const res = await fetchWithAuth(`/api/pacenote/diary?lang=${locale}`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ statement: diaryText })
         });
@@ -346,7 +371,7 @@ export default function PaceNoteDashboard() {
 
   useEffect(() => {
     if (userToken) {
-      fetchPaceData(userToken);
+      fetchPaceData();
     } else {
       const dummy = getDummyData(locale);
       setData(dummy);
@@ -355,11 +380,9 @@ export default function PaceNoteDashboard() {
     }
   }, [userToken, locale]);
 
-  const fetchPaceData = async (token) => {
+  const fetchPaceData = async () => {
     try {
-      const res = await fetch(`/api/pacenote?lang=${locale}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetchWithAuth(`/api/pacenote?lang=${locale}`);
       if (res.ok) {
         const result = await res.json();
         setData(result);
@@ -391,18 +414,21 @@ export default function PaceNoteDashboard() {
     });
 
     try {
-      await fetch(`/api/pacenote/toggle?lang=${locale}`, {
+      const res = await fetchWithAuth(`/api/pacenote/toggle?lang=${locale}`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userToken}` 
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ taskId })
       });
+      if (!res.ok) {
+        console.error('Failed to toggle task');
+        fetchPaceData();
+      }
     } catch (err) {
       console.error(err);
       // Revert on error
-      fetchPaceData(userToken);
+      fetchPaceData();
     }
   };
 
@@ -427,11 +453,10 @@ export default function PaceNoteDashboard() {
     });
 
     try {
-      const res = await fetch(`/api/pacenote/accept?lang=${locale}`, {
+      const res = await fetchWithAuth(`/api/pacenote/accept?lang=${locale}`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userToken}` 
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ taskId })
       });
@@ -443,11 +468,11 @@ export default function PaceNoteDashboard() {
           current: { ...prev.current, currentPace: result.currentPace, recommendedPace: result.recommendedPace }
         }));
       } else {
-        fetchPaceData(userToken);
+        fetchPaceData();
       }
     } catch (err) {
       console.error(err);
-      fetchPaceData(userToken);
+      fetchPaceData();
     } finally {
       setShowOmniModal(false);
     }
@@ -463,11 +488,10 @@ export default function PaceNoteDashboard() {
 
     setAddingTask(true);
     try {
-      const res = await fetch(`/api/pacenote/add?lang=${locale}`, {
+      const res = await fetchWithAuth(`/api/pacenote/add?lang=${locale}`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userToken}` 
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ title: newTaskTitle })
       });
@@ -479,6 +503,8 @@ export default function PaceNoteDashboard() {
         }));
         setNewTaskTitle('');
         setShowOmniModal(false);
+      } else {
+        console.error('Failed to add task');
       }
     } catch (err) {
       console.error(err);
