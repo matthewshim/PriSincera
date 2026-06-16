@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
+import useScrollProgress from '../../hooks/useScrollProgress';
 import './JourneySection.css';
 
 /**
@@ -55,7 +56,7 @@ function StatItem({ target, suffix, label, started }) {
 
 export default function JourneySection() {
   const { t } = useTranslation();
-  const sectionRef = useRef(null);
+  const [sectionRef, progress] = useScrollProgress();
   const milestonesRef = useRef([]);
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
@@ -171,25 +172,28 @@ export default function JourneySection() {
           </div>
         </div>
 
-        <div className="timeline">
-          {MILESTONES.map((m, i) => (
-            <div
-              className={`milestone${m.isNow ? ' now' : ''}`}
-              key={m.year}
-              ref={(el) => setMilestoneRef(el, i)}
-              style={{ '--reveal-delay': `${0.1 + i * 0.1}s` }}
-              data-accent-color={m.rgb}
-            >
-              <div className="milestone-dot" />
-              <div className="milestone-card">
-                <div className="milestone-year">{m.year}</div>
-                <div className="milestone-headline">{m.headline}</div>
-                <div className="milestone-industry">{m.industry}</div>
-                <p className="milestone-desc">{m.description}</p>
-                <span className="milestone-keyword">{m.keyword}</span>
+        <div className="timeline" style={{ '--scroll-progress': progress }}>
+          {MILESTONES.map((m, i) => {
+            const isActive = i === 0 ? progress >= 0.15 : i === 1 ? progress >= 0.45 : progress >= 0.75;
+            return (
+              <div
+                className={`milestone${m.isNow ? ' now' : ''}${isActive ? ' active' : ''}`}
+                key={m.year}
+                ref={(el) => setMilestoneRef(el, i)}
+                style={{ '--reveal-delay': `${0.1 + i * 0.1}s` }}
+                data-accent-color={m.rgb}
+              >
+                <div className="milestone-dot" />
+                <div className="milestone-card">
+                  <div className="milestone-year">{m.year}</div>
+                  <div className="milestone-headline">{m.headline}</div>
+                  <div className="milestone-industry">{m.industry}</div>
+                  <p className="milestone-desc">{m.description}</p>
+                  <span className="milestone-keyword">{m.keyword}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

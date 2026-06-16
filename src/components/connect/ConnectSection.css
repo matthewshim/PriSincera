@@ -37,7 +37,8 @@
     left: 50%;
     width: 600px;
     height: 400px;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(calc(0.85 + var(--scroll-progress, 0) * 0.3));
+    opacity: calc(0.4 + var(--scroll-progress, 0) * 0.6);
     background: radial-gradient(
         ellipse,
         rgba(124, 58, 237, 0.12) 0%,
@@ -45,6 +46,7 @@
         transparent 70%
     );
     pointer-events: none;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .connect-container::after {
@@ -54,13 +56,15 @@
     left: 50%;
     width: 500px;
     height: 300px;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(calc(0.9 + var(--scroll-progress, 0) * 0.2));
+    opacity: calc(0.5 + var(--scroll-progress, 0) * 0.5);
     background: radial-gradient(
         ellipse,
         rgba(34, 211, 238, 0.06) 0%,
         transparent 60%
     );
     pointer-events: none;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* --- Content --- */

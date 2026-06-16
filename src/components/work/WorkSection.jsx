@@ -7,6 +7,51 @@ import './WorkSection.css';
 export default function WorkSection() {
   const { t } = useTranslation();
   const sectionRef = useScrollReveal({ threshold: 0.08 });
+  const [activeCardIndex, setActiveCardIndex] = React.useState(-1);
+
+  React.useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let rafId = null;
+
+    const handleScroll = () => {
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        const cards = section.querySelectorAll('.flagship-card');
+        const viewCenter = window.innerHeight / 2;
+
+        let closestIndex = -1;
+        let minDistance = Infinity;
+
+        cards.forEach((card, idx) => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(viewCenter - cardCenter);
+
+          // Only focus cards if they are in the viewport
+          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+          if (isInViewport && distance < minDistance) {
+            minDistance = distance;
+            closestIndex = idx;
+          }
+        });
+
+        setActiveCardIndex(closestIndex);
+        rafId = null;
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [sectionRef]);
 
 
 
@@ -30,10 +75,10 @@ export default function WorkSection() {
           </p>
         </div>
 
-        <div className="work-grid">
+        <div className={`work-grid${activeCardIndex !== -1 ? ' has-active-focus' : ''}`}>
         {/* 1. PriSincera Base Flagship (Core Foundation) */}
         <div
-          className="flagship-card reveal-item flagship-glow"
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 0 ? ' active-focus' : ''}`}
           style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(245, 158, 11, 0.4)' }}
           data-accent-color="245,158,11"
         >
@@ -93,7 +138,7 @@ export default function WorkSection() {
 
         {/* 2. Builder's Log Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow"
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 1 ? ' active-focus' : ''}`}
           style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}
           data-accent-color="124,58,237"
         >
@@ -152,7 +197,7 @@ export default function WorkSection() {
 
         {/* 3. Daily Digest Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow"
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
           style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
           data-accent-color="34,211,238"
         >
@@ -202,7 +247,7 @@ export default function WorkSection() {
 
         {/* 4. Pace Note Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow"
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
           style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(52, 211, 153, 0.4)' }}
           data-accent-color="52,211,153"
         >
@@ -249,7 +294,7 @@ export default function WorkSection() {
 
         {/* 5. Sylphio Flagship */}
         <div
-          className="flagship-card reveal-item flagship-glow"
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 4 ? ' active-focus' : ''}`}
           style={{ '--reveal-delay': '0.6s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
           data-accent-color="0,242,254"
         >

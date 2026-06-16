@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
 import useScrollReveal from '../../hooks/useScrollReveal';
+import useScrollProgress from '../../hooks/useScrollProgress';
 import './ConnectSection.css';
 
 /**
@@ -10,10 +11,16 @@ import './ConnectSection.css';
 export default function ConnectSection() {
   const { t } = useTranslation();
   const sectionRef = useScrollReveal({ threshold: 0.12 });
+  const [progressRef, progress] = useScrollProgress();
 
   return (
     <section className="connect reveal-section" id="connect" ref={sectionRef}>
-      <div className="connect-container" style={{ '--reveal-delay': '0.1s' }} data-accent-color="165,180,252">
+      <div 
+        className="connect-container" 
+        style={{ '--reveal-delay': '0.1s', '--scroll-progress': progress }} 
+        data-accent-color="165,180,252"
+        ref={progressRef}
+      >
         <div className="section-label">Connect</div>
 
         <div className="connect-content">
