@@ -20,8 +20,8 @@ export default function WorkSection() {
     card.style.setProperty('--mouse-x', `${px * 100}%`);
     card.style.setProperty('--mouse-y', `${py * 100}%`);
     
-    const rotateY = ((px - 0.5) * 5).toFixed(2);
-    const rotateX = ((0.5 - py) * 5).toFixed(2);
+    const rotateY = ((px - 0.5) * 2.2).toFixed(2);
+    const rotateX = ((0.5 - py) * 2.2).toFixed(2);
     
     card.style.setProperty('--rotate-x', `${rotateX}deg`);
     card.style.setProperty('--rotate-y', `${rotateY}deg`);

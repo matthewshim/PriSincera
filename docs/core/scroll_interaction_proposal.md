@@ -22,6 +22,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-16 | Antigravity | 최초 스크롤 인터랙션 디자인 품질 강화 제안서 작성 (별똥별 모티브) | Home, StarField, Section CSS |
+| v1.1 | 2026-06-16 | Antigravity | 피드백 반영: 미니멀리스트 프리미엄 톤앤매너로 3D 틸트 각도 축소(2.2도) 및 별똥별 글레어 미세 조정, 타임라인 브리딩 전환 | Home, StarField, Section CSS |
 
 ---
 
