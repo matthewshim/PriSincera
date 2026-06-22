@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
 import DailyIntro from '../components/daily/DailyIntro';
 import DailyCalendar from '../components/daily/DailyCalendar';
+import TrackSignalFeed from '../components/daily/TrackSignalFeed';
 import { useTranslation } from '../contexts/LanguageContext';
 import './DailyDigest.css';
 
@@ -714,6 +715,18 @@ export default function DailyDigest() {
                   </div>
                 </button>
               )}
+              {data?.date && (
+                <button
+                  className={`workspace-tab-btn haptic-trigger ${detailTab === 'track' ? 'active' : ''}`}
+                  onClick={() => setDetailTab('track')}
+                >
+                  <span className="btn-icon">🛰️</span>
+                  <div className="btn-label-group">
+                    <span className="btn-title">테크 트랙</span>
+                    <span className="btn-meta">Junior / Senior</span>
+                  </div>
+                </button>
+              )}
             </div>
 
             {/* ── Active Workspace Panels ── */}
@@ -866,6 +879,11 @@ export default function DailyDigest() {
                     )}
                   </div>
                 </div>
+              )}
+
+              {/* 4. Tech Track Signal (Data Contract v2 — junior/senior) */}
+              {detailTab === 'track' && data?.date && (
+                <TrackSignalFeed date={data.date} />
               )}
             </div>
           </>

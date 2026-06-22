@@ -408,6 +408,30 @@ app.get('/api/daily/:date', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch daily signal' });
   }
 });
+
+// --- Track Signal Feed (Data Contract v2 §1.2) — junior/senior 트랙 피드 GCS 프록시 ---
+// 트랙 피드는 tech-composer가 daily/${track}_${date}.json 로 가산 배포한다(ko 단일, 평탄화 불필요).
+app.get('/api/daily/:date/track/:track', async (req, res) => {
+  const { date: dateStr, track } = req.params;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return res.status(400).json({ error: 'Invalid date format' });
+  }
+  if (track !== 'junior' && track !== 'senior') {
+    return res.status(400).json({ error: 'Invalid track' });
+  }
+  if (!storage) {
+    return res.status(503).json({ error: 'Track feed storage unavailable' });
+  }
+  try {
+    const [content] = await storage.bucket(GCS_BUCKET).file(`daily/${track}_${dateStr}.json`).download();
+    const feed = JSON.parse(content.toString('utf-8'));
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    res.setHeader('Content-Type', 'application/json');
+    res.json(feed);
+  } catch (err) {
+    return res.status(404).json({ error: 'Track feed not found' });
+  }
+});
 // --- Dynamic Sitemap for Google/Naver SEO ---
 app.get('/sitemap.xml', async (req, res) => {
   try {
