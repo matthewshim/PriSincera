@@ -26,6 +26,40 @@ import { Router } from 'express';
 
 const router = Router();
 
+// ─── 트랙 피드 GCS 동기화 (Data Contract v2 §1 / 사업계획서 6.2.3·6.4.3) ──────────────
+// 인-프로세스 직렬 큐를 공유해야 하므로 싱글턴으로 1회만 생성한다(요청마다 재생성 금지).
+let _dailyGcsSync = null;
+async function getDailyGcsSync() {
+  if (_dailyGcsSync) return _dailyGcsSync;
+  const { writeJSON, readJSON } = await import('./pipeline/src/lib/storage.mjs');
+  const { createDailyGcsSync } = await import('./pipeline/src/lib/sync-daily-gcs.mjs');
+  _dailyGcsSync = createDailyGcsSync({ writeJSON, readJSON, purgeCache: makeCloudflarePurge() });
+  return _dailyGcsSync;
+}
+
+// Cloudflare 캐시 퍼지 — 환경변수 미구성 시 무해한 no-op(GCS 직접 서빙 환경 등).
+function makeCloudflarePurge() {
+  const zone = process.env.CF_ZONE_ID;
+  const token = process.env.CF_API_TOKEN;
+  const base = process.env.CDN_BASE_URL; // 예: https://data.prisincera.com
+  if (!zone || !token || !base) {
+    return async () => {};
+  }
+  return async (paths) => {
+    try {
+      const files = paths.map(p => `${base.replace(/\/$/, '')}/${p}`);
+      const r = await fetch(`https://api.cloudflare.com/client/v4/zones/${zone}/purge_cache`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ files }),
+      });
+      if (!r.ok) console.warn(`[Admin] Cloudflare purge 응답 ${r.status}`);
+    } catch (e) {
+      console.warn('[Admin] Cloudflare purge 실패(무시):', e.message);
+    }
+  };
+}
+
 // ─── Admin 데이터 레이어 (Firestore) ──────────────
 
 let _adminCache = null;
@@ -503,6 +537,28 @@ router.post('/daily/content', async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: '등록 실패' });
+  }
+});
+
+// 수준별 트랙 피드(junior/senior)를 GCS에 동기화 (Data Contract v2 §1.2 / 6.2.3)
+// 동시 요청은 인-프로세스 직렬 큐로 순서 보장, expectedVersion으로 낙관적 락(409) 지원.
+router.post('/daily/tracks/:date', async (req, res) => {
+  try {
+    const { date } = req.params;
+    const { junior, senior, expectedVersion } = req.body || {};
+    if (!junior || !Array.isArray(junior.cards) || !senior || !Array.isArray(senior.cards)) {
+      return res.status(400).json({ error: 'junior/senior 트랙 피드(cards 배열)가 필요합니다' });
+    }
+    const sync = await getDailyGcsSync();
+    const opts = expectedVersion != null ? { expectedVersion } : {};
+    const result = await sync.syncDailyGcs(date, { junior, senior }, opts);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    if (err.status === 409) {
+      return res.status(409).json({ error: err.message, code: err.code });
+    }
+    console.error('[Admin] 트랙 피드 동기화 실패:', err);
+    res.status(500).json({ error: err.message || '동기화 실패' });
   }
 });
 

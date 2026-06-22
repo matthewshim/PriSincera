@@ -165,6 +165,23 @@ gcloud run jobs update pacenote-composer \
   --image ${IMAGE} \
   --region ${REGION}
 
+# Tech Composer Job (매일 수준별 트랙 피드 생성 — Data Contract v2)
+gcloud run jobs create tech-composer \
+  --image ${IMAGE} \
+  --region ${REGION} \
+  --service-account ${SA_EMAIL} \
+  --command "node" \
+  --args "src/tech-composer.mjs" \
+  --set-env-vars "GCS_BUCKET=${BUCKET_NAME}" \
+  --set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest" \
+  --task-timeout 1800s \
+  --max-retries 0 \
+  --memory 512Mi \
+  --cpu 1 2>/dev/null || \
+gcloud run jobs update tech-composer \
+  --image ${IMAGE} \
+  --region ${REGION}
+
 # ─── 7. Cloud Scheduler 크론 생성 ───
 echo -e "\n[7/8] Cloud Scheduler 크론 생성..."
 
@@ -221,6 +238,20 @@ gcloud scheduler jobs create http pacenote-compose-daily \
   --http-method POST \
   --oauth-service-account-email ${SA_EMAIL} \
   --description "PaceNote: 매일 AI 추천 목표 풀 자동 갱신" 2>/dev/null || echo "  (이미 존재)"
+
+# 매일 06:45 KST — 수준별 트랙 피드 생성 (07:00 composer보다 먼저 준비)
+gcloud scheduler jobs create http tech-compose-daily \
+  --location ${REGION} \
+  --schedule "45 6 * * *" \
+  --time-zone "Asia/Seoul" \
+  --uri "https://${REGION}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${PROJECT_ID}/jobs/tech-composer:run" \
+  --http-method POST \
+  --oauth-service-account-email ${SA_EMAIL} \
+  --description "Tech: 매일 주니어/시니어 트랙 시그널 피드 자동 생성" 2>/dev/null || \
+gcloud scheduler jobs update http tech-compose-daily \
+  --location ${REGION} \
+  --schedule "45 6 * * *" \
+  --time-zone "Asia/Seoul"
 
 # ─── 8. Cloud Monitoring 알림 채널 설정 ───
 echo -e "\n[8/8] Cloud Monitoring 알림 설정..."

@@ -8,6 +8,7 @@
     "compose": "node src/composer.mjs",
     "monitor": "node src/monitor.mjs",
     "study:compose": "node src/study-composer.mjs",
+    "tech:compose": "node src/tech-composer.mjs",
     "pacenote:compose": "node src/pacenote-composer.mjs"
   },
   "dependencies": {

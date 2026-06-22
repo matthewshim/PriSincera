@@ -293,6 +293,31 @@ const localizeTask = (task, locale) => {
   };
 };
 
+// Data Contract v2 §2.2 — action_challenge -> 주간 오빗(부모 task + 3개 subtask)
+// 부모는 기존 flat Task 형상을 유지하고, 신규 subtasks 필드를 가산(구버전 UI는 무시 → 6.4.2).
+export function buildOrbitTask(actionChallenge) {
+  const ac = actionChallenge || {};
+  const title = (ac.title || '').toString().trim();
+  if (!title) throw new Error('action_challenge.title is required');
+
+  const rawTasks = Array.isArray(ac.tasks) ? ac.tasks : [];
+  const subtasks = rawTasks.slice(0, 3).map((t, i) => ({
+    seq: i + 1,
+    text: (typeof t === 'object' ? (t.text || '') : t).toString().trim(),
+    completed: false
+  }));
+
+  const smart = getSmartCategory(title);
+  return {
+    id: ac.id ? `orbit-${ac.id}` : `orbit-${Date.now()}`,
+    title,
+    category: smart.category,
+    color: smart.color,
+    completed: false,
+    subtasks
+  };
+}
+
 // 1. 유저의 Pace Note 데이터 조회 (현재 주간 + 과거 타임라인)
 pacenoteRouter.get('/', verifyUser, async (req, res) => {
   try {
@@ -505,6 +530,47 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
     res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
     console.error('[PaceNote API] Add Task Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 1-2. Click-to-Orbit: 데일리 카드의 action_challenge를 주간 오빗으로 주입 (계약 §2.2)
+pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const { action_challenge } = req.body;
+    if (!action_challenge || !action_challenge.title) {
+      return res.status(400).json({ error: 'action_challenge with title is required' });
+    }
+
+    let orbit;
+    try {
+      orbit = buildOrbitTask(action_challenge);
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+    }
+
+    const today = new Date();
+    const currentWeekId = getWeekNumber(today);
+    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+
+    const data = doc.data();
+    const currentPace = data.currentPace || [];
+
+    // 동일 action_challenge 중복 주입 방지
+    if (currentPace.some(t => t.id === orbit.id)) {
+      return res.status(409).json({ error: 'Orbit already added', currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
+    }
+
+    currentPace.push(orbit);
+    await docRef.update({ currentPace });
+
+    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
+  } catch (err) {
+    console.error('[PaceNote API] Add Orbit Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
