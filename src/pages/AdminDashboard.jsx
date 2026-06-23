@@ -415,17 +415,23 @@ function Dashboard({ token, adminEmail, onLogout }) {
       const beforeCreate = trackJobStatus?.createTime || '';
       await fetchApi('/daily/tracks/run', { method: 'POST' });
       // 잡은 보통 60~90초 소요 → 완료까지 폴링(최대 ~2.5분). 버튼은 '실행 중…' 유지.
-      let done = false;
+      let finalJob = null;
       for (let i = 0; i < 13; i++) {
         await new Promise(r => setTimeout(r, 12000));
         const job = await fetchApi('/daily/tracks/job-status').catch(() => null);
         if (job?.exists && (job.createTime || '') > beforeCreate && job.status !== 'running') {
-          done = true;
+          finalJob = job;
           break;
         }
       }
       await loadTrackStatus();
-      window.alert(done ? '✅ 생성 완료 — 결과가 반영됐습니다.' : '⏳ 아직 실행 중입니다. 잠시 후 ↻ 새로고침으로 확인하세요.');
+      if (!finalJob) {
+        window.alert('⏳ 아직 실행 중입니다. 잠시 후 ↻ 새로고침으로 확인하세요.');
+      } else if (finalJob.status === 'succeeded') {
+        window.alert('✅ 생성 완료 — 결과가 반영됐습니다.');
+      } else {
+        window.alert('❌ 실행 실패\n\n무료 Gemini 일일 할당량(모델당 20회/일) 초과일 수 있습니다.\n할당량은 매일 리셋되며, 매일 06:45 자동 실행만으로도 피드는 갱신됩니다.');
+      }
     } catch (err) {
       window.alert('실행 실패: ' + err.message);
     } finally {
