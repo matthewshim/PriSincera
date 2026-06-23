@@ -408,7 +408,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   }
 
   async function runTechComposer() {
-    if (!window.confirm('지금 tech-composer를 실행할까요? (Gemini 소액 과금 발생)')) return;
+    if (!window.confirm('지금 tech-composer를 실행할까요?\n\nGemini Flash 2회 호출(주니어/시니어 각 1회). 무료 API 키 한도 내에서는 과금되지 않습니다.')) return;
     setTrackRunning(true);
     try {
       await fetchApi('/daily/tracks/run', { method: 'POST' });
