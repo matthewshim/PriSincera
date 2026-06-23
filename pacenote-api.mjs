@@ -609,6 +609,37 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
   }
 });
 
+// 2-1. 오빗의 세부 할 일(subtask) 완료 토글 (Click-to-Orbit 3단계 액션)
+pacenoteRouter.post('/toggle-subtask', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const { taskId, seq } = req.body;
+    if (!taskId || seq == null) return res.status(400).json({ error: 'taskId and seq are required' });
+
+    const today = new Date();
+    const currentWeekId = getWeekNumber(today);
+    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+
+    const data = doc.data();
+    const currentPace = data.currentPace || [];
+    const task = currentPace.find(t => t.id === taskId);
+    if (!task || !Array.isArray(task.subtasks)) return res.status(404).json({ error: 'Task or subtasks not found' });
+    const sub = task.subtasks.find(s => s.seq === seq);
+    if (!sub) return res.status(404).json({ error: 'Subtask not found' });
+
+    sub.completed = !sub.completed;
+
+    await docRef.update({ currentPace });
+    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
+  } catch (err) {
+    console.error('[PaceNote API] Toggle Subtask Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // 3. 추천 미션을 내 궤도로 추가 (Accept)
 pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
   try {
