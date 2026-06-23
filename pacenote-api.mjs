@@ -318,6 +318,67 @@ export function buildOrbitTask(actionChallenge) {
   };
 }
 
+// 기본 주차 문서 생성 (GET / 와 add-orbit 공통 — 미존재 주차 자동 초기화)
+export function buildDefaultWeek(weekId, dailyPool) {
+  const { start, end } = getWeekDateRange(weekId);
+  const defaultCurrentPace = [
+    {
+      id: 'default-1',
+      title: {
+        ko: 'Daily Digest 오늘의 인사이트 1개 이상 읽기',
+        en: 'Read 1 or more daily insights in Daily Digest',
+        ja: 'Daily Digest 今日のインサイトを1つ以上読む'
+      },
+      category: 'Learning', color: '#60A5FA', completed: false
+    },
+    {
+      id: 'default-2',
+      title: {
+        ko: '이번 주 AI 스터디 프롬프트 직접 실행해보기',
+        en: "Try running this week's AI study prompt yourself",
+        ja: '今週のAIスタディプロンプトを直接実行してみる'
+      },
+      category: 'Learning', color: '#60A5FA', completed: false
+    },
+    {
+      id: 'default-3',
+      title: {
+        ko: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기',
+        en: 'Read the recommended business Japanese sentence aloud 3 times',
+        ja: 'ビジネス日本語の推奨文章を声に出して3回読む'
+      },
+      category: 'Learning', color: '#60A5FA', completed: false
+    },
+    {
+      id: 'default-4',
+      title: {
+        ko: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기',
+        en: 'Review S.I.G.N.A.L. analysis comments in Daily Digest',
+        ja: 'Daily DigestのS.I.G.N.A.L.分析コメントを復習する'
+      },
+      category: 'Productivity', color: '#F472B6', completed: false
+    },
+    {
+      id: 'default-5',
+      title: {
+        ko: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기',
+        en: 'Bookmark or take a note on an article of interest this week',
+        ja: '今週興味を持った記事にブックマークまたはメモを残す'
+      },
+      category: 'Learning', color: '#60A5FA', completed: false
+    }
+  ];
+  return {
+    weekId,
+    startDate: start,
+    endDate: end,
+    currentPace: defaultCurrentPace,
+    recommendedPace: replenishRecommendations(defaultCurrentPace, [], dailyPool, 3),
+    statement: '',
+    createdAt: new Date().toISOString()
+  };
+}
+
 // 1. 유저의 Pace Note 데이터 조회 (현재 주간 + 과거 타임라인)
 pacenoteRouter.get('/', verifyUser, async (req, res) => {
   try {
@@ -340,75 +401,8 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
     const dailyPool = await getDailyPool();
     
     if (!currentDoc.exists) {
-      // 데이터가 없으면 기본값 생성
-      const { start, end } = getWeekDateRange(currentWeekId);
-      const defaultCurrentPace = [
-        {
-          id: 'default-1',
-          title: {
-            ko: 'Daily Digest 오늘의 인사이트 1개 이상 읽기',
-            en: 'Read 1 or more daily insights in Daily Digest',
-            ja: 'Daily Digest 今日のインサイトを1つ以上読む'
-          },
-          category: 'Learning',
-          color: '#60A5FA',
-          completed: false
-        },
-        {
-          id: 'default-2',
-          title: {
-            ko: '이번 주 AI 스터디 프롬프트 직접 실행해보기',
-            en: "Try running this week's AI study prompt yourself",
-            ja: '今週のAIスタディプロンプトを直接実行してみる'
-          },
-          category: 'Learning',
-          color: '#60A5FA',
-          completed: false
-        },
-        {
-          id: 'default-3',
-          title: {
-            ko: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기',
-            en: 'Read the recommended business Japanese sentence aloud 3 times',
-            ja: 'ビジネス日本語の推奨文章を声に出して3回読む'
-          },
-          category: 'Learning',
-          color: '#60A5FA',
-          completed: false
-        },
-        {
-          id: 'default-4',
-          title: {
-            ko: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기',
-            en: 'Review S.I.G.N.A.L. analysis comments in Daily Digest',
-            ja: 'Daily DigestのS.I.G.N.A.L.分析コメントを復習する'
-          },
-          category: 'Productivity',
-          color: '#F472B6',
-          completed: false
-        },
-        {
-          id: 'default-5',
-          title: {
-            ko: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기',
-            en: 'Bookmark or take a note on an article of interest this week',
-            ja: '今週興味を持った記事にブックマークまたはメモを残す'
-          },
-          category: 'Learning',
-          color: '#60A5FA',
-          completed: false
-        }
-      ];
-      
-      currentWeekData = {
-        weekId: currentWeekId,
-        startDate: start,
-        endDate: end,
-        currentPace: defaultCurrentPace,
-        recommendedPace: replenishRecommendations(defaultCurrentPace, [], dailyPool, 3),
-        statement: '',
-        createdAt: new Date().toISOString()
-      };
+      // 데이터가 없으면 기본값 생성 (add-orbit과 공통 헬퍼 사용)
+      currentWeekData = buildDefaultWeek(currentWeekId, dailyPool);
       await weeksRef.doc(currentWeekId).set(currentWeekData);
     } else {
       currentWeekData = currentDoc.data();
@@ -555,7 +549,15 @@ pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
     const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
 
     const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+
+    // 이번 주 PaceNote를 아직 열지 않아 week 문서가 없으면 기본 주차를 자동 생성 후 오빗 주입
+    if (!doc.exists) {
+      const dailyPool = await getDailyPool();
+      const week = buildDefaultWeek(currentWeekId, dailyPool);
+      week.currentPace.push(orbit);
+      await docRef.set(week);
+      return res.json({ success: true, currentPace: week.currentPace.map(t => localizeTask(t, req.locale)) });
+    }
 
     const data = doc.data();
     const currentPace = data.currentPace || [];
