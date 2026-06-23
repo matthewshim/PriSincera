@@ -1,0 +1,161 @@
+/* ──────────────────────────────────────────────────────────────
+   Tech Track Feed — PriSincera Design System v5.0 정합
+   (Celestial 테마 / 테크 시그널 = Aether Cyan, 글래스 토큰 기반)
+   기존 인라인 off-system 색(#60A5FA/#A78BFA/#10B981) 전면 제거.
+   ────────────────────────────────────────────────────────────── */
+
+.track-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+/* ── 트랙 토글 (주니어/시니어) ── */
+.track-toggle { display: flex; gap: var(--space-sm); }
+
+.track-toggle-btn {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.015);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all var(--duration-fast) var(--ease-spring);
+}
+.track-toggle-btn:hover { border-color: var(--glass-border-hover); color: var(--text-secondary); }
+.track-toggle-btn.active {
+  border-color: rgba(34, 211, 238, 0.40);   /* Aether Cyan = 테크 시그널 */
+  background: rgba(34, 211, 238, 0.08);
+  color: var(--color-cyan);
+}
+.track-toggle-btn .track-toggle-icon { margin-right: 6px; }
+
+/* ── 관심 도메인 필터 칩 ── */
+.track-chips { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+.track-chip {
+  padding: 6px 13px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-spring);
+}
+.track-chip:hover { border-color: var(--glass-border-hover); color: var(--text-secondary); }
+.track-chip.active {
+  border-color: var(--glass-border-hover);
+  background: rgba(165, 180, 252, 0.10);   /* Nebula Indigo */
+  color: var(--color-indigo);
+}
+
+/* ── 상태 메시지 ── */
+.track-status {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 32px 0;
+  font-size: 0.9rem;
+}
+
+/* ── 카드 (signal-article-card 와 동일 글래스 스킨) ── */
+.track-card {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 14px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  transition: border-color var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+.track-card:hover { border-color: var(--glass-border-hover); transform: translateY(-2px); }
+
+.track-card-meta { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: 8px; flex-wrap: wrap; }
+
+.track-card-domain {
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(34, 211, 238, 0.10);
+  color: var(--color-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.track-card-tag { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+.track-card-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+.track-card-summary {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 0 14px;
+  line-height: 1.6;
+}
+
+/* ── action_challenge (실전 액션) ── */
+.track-challenge { border-top: 1px dashed var(--glass-border); padding-top: 12px; }
+
+.track-challenge-title { font-size: 0.84rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+.track-challenge-tasks {
+  margin: 0 0 12px;
+  padding-left: 18px;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+
+/* ── 오빗 추가 버튼 (Semantic Primary 차용) ── */
+.track-orbit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background: var(--gradient-brand);
+  color: #0E0E1A;                 /* 밝은 그라디언트 위 고대비 잉크 */
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(165, 180, 252, 0.18);
+  transition: all var(--duration-fast) var(--ease-spring);
+}
+.track-orbit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(165, 180, 252, 0.28); }
+.track-orbit-btn:disabled { cursor: default; }
+
+/* 추가됨 = 골드(완료/긍정 액센트) */
+.track-orbit-btn.added {
+  background: rgba(229, 178, 93, 0.12);
+  border-color: rgba(229, 178, 93, 0.40);
+  color: var(--color-gold);
+  box-shadow: none;
+}
+/* 실패 = 절제된 경고 */
+.track-orbit-btn.error {
+  background: rgba(248, 113, 113, 0.10);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #F87171;
+  box-shadow: none;
+}
+.track-orbit-btn.adding { opacity: 0.7; }
