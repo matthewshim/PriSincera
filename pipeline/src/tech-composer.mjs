@@ -109,8 +109,10 @@ async function updateIndex(dateStr) {
   }
   index.schemaVersion = 2;
   index.tracks = TRACKS;
+  index.version = Number(index.version || 0) + 1;
+  index.updatedAt = new Date().toISOString();
   await writeJSON('daily/index.json', index);
-  console.log(`[GCS] daily/index.json 갱신 완료 (dates: ${index.dates.length}개, tracks: ${TRACKS.join('/')})`);
+  console.log(`[GCS] daily/index.json 갱신 완료 (dates: ${index.dates.length}개, tracks: ${TRACKS.join('/')}, v${index.version})`);
 }
 
 async function main() {

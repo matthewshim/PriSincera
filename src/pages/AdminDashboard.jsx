@@ -411,9 +411,21 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (!window.confirm('지금 tech-composer를 실행할까요?\n\nGemini Flash 2회 호출(주니어/시니어 각 1회). 무료 API 키 한도 내에서는 과금되지 않습니다.')) return;
     setTrackRunning(true);
     try {
+      // 트리거 직전 최신 실행 시각(새 실행 완료 감지용)
+      const beforeCreate = trackJobStatus?.createTime || '';
       await fetchApi('/daily/tracks/run', { method: 'POST' });
-      window.alert('실행을 시작했습니다. 1~2분 후 새로고침되면 결과가 반영됩니다.');
-      setTimeout(loadTrackStatus, 4000);
+      // 잡은 보통 60~90초 소요 → 완료까지 폴링(최대 ~2.5분). 버튼은 '실행 중…' 유지.
+      let done = false;
+      for (let i = 0; i < 13; i++) {
+        await new Promise(r => setTimeout(r, 12000));
+        const job = await fetchApi('/daily/tracks/job-status').catch(() => null);
+        if (job?.exists && (job.createTime || '') > beforeCreate && job.status !== 'running') {
+          done = true;
+          break;
+        }
+      }
+      await loadTrackStatus();
+      window.alert(done ? '✅ 생성 완료 — 결과가 반영됐습니다.' : '⏳ 아직 실행 중입니다. 잠시 후 ↻ 새로고침으로 확인하세요.');
     } catch (err) {
       window.alert('실행 실패: ' + err.message);
     } finally {
