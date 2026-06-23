@@ -396,13 +396,17 @@ Pace Note는 사용자의 프라이버시를 최우선 가치로 삼으며, "기
 ### 10.4. 비범위 (데스크톱 단계로 이월)
 Tauri 셋업 · Rust 커맨드 · SQLite/IPC · Keychain BYOK · iCloud 동기화 · StoreKit IAP · 로컬 재랭킹 엔진. 본 Phase 0는 "계약 확정 + 라이브 웹 반영"까지만 수행합니다.
 
-### 10.5. 진행 현황 (2026-06-22 기준)
-| 단계 | 산출물 | 상태 | 검증 |
+### 10.5. 진행 현황 (2026-06-23 기준)
+| 단계 | 산출물 | 상태 | 비고 |
 |---|---|:--:|---|
-| 계약 동결 | [data_contract_v2.md](data_contract_v2.md) | ✅ v2.0 Frozen | 미결 4건 확정 |
-| A. 콘텐츠 파이프라인 | `pipeline/src/tech-composer.mjs` + `templates/tech-prompt.txt` | ✅ 구현 | 오프라인: 카드 정규화·domain enum 폴백·tasks 3개 보정 통과 |
-| B. 어드민 동기화 | `pipeline/src/lib/sync-daily-gcs.mjs` | ✅ 구현 | 오프라인: cross-date 동시성 index race 0·낙관적 락·유효성 통과 (버그 2건 수정) |
-| C. 오빗화 API | `pacenote-api.mjs` `POST /add-orbit` + `buildOrbitTask` | ✅ 구현 | 오프라인: 부모 오빗+3 subtask·flat Task 호환·방어로직 통과 |
-| C. 데이터 계층 훅 | `src/hooks/usePaceNoteData.js` | ✅ 구현 | 구문·IPC 커맨드명 6종 계약 일치 |
+| 계약 동결 | [data_contract_v2.md](data_contract_v2.md) | ✅ v2.1 | 구현 반영 갱신(subtask·자동주차·index version) |
+| A. 콘텐츠 파이프라인 | `tech-composer.mjs` + `tech-prompt.txt` + 스케줄러(06:45 KST) | ✅ **라이브 가동** | Cloud Run Job·스케줄러 등록, 일일 자동 생성 |
+| B. 어드민 동기화 | `sync-daily-gcs.mjs` + `POST /daily/tracks/*` | ✅ **라이브 배포** | 직렬 큐·낙관적 락 (버그 2건 수정) |
+| C. 오빗화 API | `POST /add-orbit`(+자동 주차 생성) · `POST /toggle-subtask` | ✅ **라이브 배포** | 404 제거, subtask 토글 추가 |
+| C. 트랙 UI | `TrackSignalFeed.jsx`(트랙 탭/필터/Click-to-Orbit) + 서버 프록시 | ✅ **라이브 배포** | Daily Digest 🛰️ 테크 트랙 탭 |
+| C. subtask UI | PaceNote 오빗 하위 3단계 체크리스트 | ✅ **라이브 배포** | 표시·토글 |
+| C. 데이터 계층 훅 | `usePaceNoteData.js` | ⏸ 미연결 | C2(웹 마이그레이션)는 데스크톱 단계로 이월 |
+| 어드민 모니터링 | `/daily/tracks/status·:date·run·job-status` + 콘텐츠 관리 「테크 트랙」 서브탭 | ✅ **라이브 배포** | 건강도·상세 검수·수동 트리거 |
+| 콘텐츠 출처 정책 | [content_sourcing_policy.md](daily-digest/content_sourcing_policy.md) | ✅ 문서화 | 트랙=AI 생성·출처 없음 명문화 |
 
-**남은 작업 (다음 증분)**: C2 `PaceNoteDashboard.jsx` 훅 마이그레이션 · C3 Daily Digest 트랙 탭/필터 칩 · C4 [오빗 추가] 버튼 연결 · B 어드민 라우트 박음질(실 GCS writer + Cloudflare 자격증명) · tech-composer 스케줄러 등록 · **라이브 E2E 검증**(Gemini+GCS, 승인 필요).
+**남은 작업**: C2 `PaceNoteDashboard.jsx` 훅 마이그레이션(데스크톱 포팅 시점 이월) · 트랙 콘텐츠 출처 거버넌스 결정(A/B/C, 정책 §6) · 데스크톱 단계(Tauri/Rust/IAP 등).

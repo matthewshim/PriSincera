@@ -1,10 +1,11 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-09
-version: v1.3
+last_updated: 2026-06-23
+version: v1.4
 target_files:
   - pipeline/src/lib/gemini.mjs
+  - pipeline/src/tech-composer.mjs
   - admin-api.mjs
 ---
 
@@ -18,6 +19,7 @@ target_files:
 | v1.1 | 2026-06-02 | Antigravity | 결제 계정 요금 차단 및 100% 무료 티어 운용을 위한 고효율 API 최적화 설계 반영 | gemini.mjs, admin-api.mjs |
 | v1.2 | 2026-06-08 | Antigravity | 개인 Gmail 발급 무료 API 키 이관 및 모델명(gemini-flash-latest) 호환성 패치 반영 | gemini.mjs, admin-api.mjs |
 | v1.3 | 2026-06-09 | Antigravity | Cloud Build IAM 권한 복구 및 pristudy-composer Job Secret Manager 이관 반영 | Cloud Build, Cloud Run Jobs |
+| v1.4 | 2026-06-23 | AI Agent | `tech-composer`(수준별 트랙 피드) 신규 Gemini 소비 추가 및 무료 티어 **일일 할당량(per-day 429)** 대응 — 할당량 소진 시 재시도 중단 최적화 반영 | gemini.mjs, tech-composer.mjs |
 
 ---
 
@@ -141,4 +143,21 @@ PriSincera 플랫폼은 기술 블로그인 **Builder's Log** 작성 시 본문 
   ```
 - **Job 구성의 Secret Manager 이관**: `pristudy-composer` Cloud Run Job에 하드코딩되어 있던 기존의 만료된 `GEMINI_API_KEY` 환경변수를 강제 제거하고, 다른 Job들과 동일하게 GCP Secret Manager(`GEMINI_API_KEY=GEMINI_API_KEY:latest`)를 바인딩하도록 직접 설정을 업데이트하였습니다.
 - **수동 복구 실행**: Job 설정을 복구한 직후 `pristudy-composer` Job을 즉시 기동하여 오늘 자 학습 콘텐츠를 성공적으로 Firestore에 복구하였습니다. (이후 수동 트리거한 Cloud Build도 모든 파이프라인을 100% 통과하여 `SUCCESS` 상태를 완료했습니다.)
+
+---
+
+## 5. 무료 티어 일일 할당량(per-day) 대응 — tech-composer 신규 소비 (v1.4)
+
+### 1) 신규 소비원
+- 수준별 트랙 피드 생성기 **`tech-composer`**가 추가되어, 1회 실행당 **Gemini Flash 2회 호출**(주니어/시니어 각 1회)을 소비한다. 매일 06:45 KST 자동 1회 = 하루 2요청으로, 무료 한도에 비해 미미하다.
+
+### 2) 발견된 한계 — 무료 티어 일일 요청 상한
+- 무료 티어는 **모델당 하루 20 요청**(`generate_content_free_tier_requests`, `GenerateRequestsPerDayPerProjectPerModel-FreeTier`) 상한이 있다. 초과 시 **HTTP 429**로 호출이 실패한다(과금이 아니라 거부).
+- 어드민 「테크 트랙」의 수동 "지금 생성"을 반복하면(특히 실패 시 재시도까지) 이 한도를 빠르게 소진할 수 있다.
+
+### 3) 최적화 — 일일 할당량 소진 시 재시도 중단
+- 기존 `callGemini`는 429에도 지수 백오프로 **최대 5회 재시도**하여, 일일 할당량이 떨어진 상태에선 남은 할당량을 더 빠르게 태웠다(1회 실패 실행이 최대 ~10요청 소모).
+- **개선**: 429를 무료 '일일' 할당량으로 식별(`per day`/`FreeTier`/`free_tier_requests` 패턴)하면 ① 안 써본 다른 모델(별도 20/일 할당량)만 **대기 없이 1회** 시도하고 ② 모든 모델이 한도면 **즉시 중단**한다. 분당 rate-limit·일시 오류는 기존 백오프 재시도를 유지한다.
+- **효과**: 할당량 소진일 1회 실패 실행 소모가 ~10 → 최대 4요청으로 감소, 무의미한 대기 제거. 전 composer(composer/study/pacenote/tech) 공통 적용.
+- **운영 가이드**: 평상시엔 일일 자동 실행(2요청)으로 충분하므로 수동 "지금 생성"을 남발하지 않는다. 할당량은 매일 리셋된다.
 

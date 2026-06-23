@@ -1,12 +1,14 @@
 ---
 status: active
 domain: DailyDigest
-last_updated: 2026-05-21
-version: v1.0
+last_updated: 2026-06-23
+version: v1.1
 target_files:
   - src/components/daily/DailyCalendar.jsx
   - src/components/daily/DailyCalendar.css
   - src/pages/DailyDigest.jsx
+  - src/components/daily/TrackSignalFeed.jsx
+  - server.mjs
 ---
 
 # PriSincera Daily Digest Chrono-Calendar & Quick Peek UI Specification
@@ -16,6 +18,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-05-21 | AI Agent | 42개 셀 고정 렌더링, 150ms 호버 디바운스, 2-Stage 모바일 UX 및 CLS 방지 사양서 작성 | DailyDigest UI |
+| v1.1 | 2026-06-23 | AI Agent | 상세 워크스페이스에 **🛰️ 테크 트랙 탭**(주니어/시니어 트랙 시그널 + 도메인 필터 + Click-to-Orbit) 가산. 트랙 피드 서버 프록시(`GET /api/daily/:date/track/:track`) 및 출처 정책(생성형·URL 없음) 명시 | DailyDigest Tech Track |
 
 본 문서는 일자별 다이제스트 목록을 직관적으로 탐색하고 프리미엄한 아카이브 경험을 전달하기 위해 설계된 **Daily Digest 캘린더 그리드(Chrono-Calendar) 및 0-Lag 퀵 피크(Quick Peek) UI/UX**의 최종 구현 사양서입니다.
 
@@ -279,3 +282,24 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
   * 모바일 기기 터치 시 활성 날짜를 살짝 누르기만 해도 의도치 않게 상세 콘텐츠 화면으로 급작스럽게 화면 전환이 이탈해버리는 UX 피로도를 원천 차단하기 위해 **2단계 검증 플로우**를 설계했습니다.
   * **1단계 (1st Tap)**: 모바일에서 날짜 셀 터치 시 상세 페이지로 다이렉트 이송하지 않고, 날짜 활성화 상태로 마킹한 후 하단에 위치한 **Quick Peek 요약 프리뷰 패널**에 데이터를 바인딩한 후 프리뷰 영역으로 `scrollIntoView({ behavior: 'smooth' })`를 유연히 발동합니다.
   * **2단계 (2nd Tap)**: 사용자가 프리뷰 패널에 노출된 핵심 카테고리 요약을 스캔하고, 의도적으로 **"전체 콘텐츠 상세히 보기 →"** 링크 버튼을 의도적으로 추가 터치했을 때만 최종 상세 화면(`/daily/{date}`)으로 이송합니다.
+
+---
+
+## 7. 테크 트랙 탭 (Tech Track) — v1.1
+
+상세 워크스페이스(`/daily/{date}`)의 세그먼트 탭에 기존 `signal` / `prompt` / `japanese`에 더해 **🛰️ 테크 트랙** 탭을 가산한다. 수준별(주니어/시니어) AI 생성 테크 시그널 카드를 노출하는 자립형 컴포넌트(`TrackSignalFeed.jsx`)이다.
+
+### 1) 데이터 경로
+* 서버 프록시 **`GET /api/daily/:date/track/:track`**(`server.mjs`)가 GCS의 `daily/${track}_${date}.json`을 중계한다(클라이언트는 GCS 직접 접근 안 함).
+* 탭은 `data.date`가 있을 때만 노출(아카이브/인덱스 뷰에서 `data`가 배열일 때 오작동 방지 가드).
+
+### 2) UI 구성
+* **트랙 토글**: `주니어-미드` / `시니어-리더` 세그먼트 전환(전환 시 해당 트랙 피드 재페치, 필터 초기화).
+* **관심 도메인 필터 칩**: `전체` + `ai_llm` / `system_design` / `devops` / `tech_lead` — 피드에 존재하는 도메인만 칩 노출.
+* **카드**: 도메인 배지 + 태그(`#소문자`) + 제목 + 요약 + `action_challenge`(3 task 미리보기) + **[＋오빗에 추가]** 버튼.
+
+### 3) Click-to-Orbit (배움 → 실행)
+* 카드의 **[＋오빗에 추가]** → `POST /api/pacenote/add-orbit`(로그인 필요, 401 시 토큰 갱신 재시도, 409=멱등 성공). 상세는 [pacenote/ui_specification.md](../pacenote/ui_specification.md) §12.
+
+### 4) 콘텐츠 출처 (중요)
+* 테크 트랙 카드는 **RSS 수집이 아닌 AI(Gemini) 생성** 콘텐츠로 **원문 URL이 없다.** "원문 읽기" 류 링크를 두지 않으며, 사실성·고지 정책은 [content_sourcing_policy.md](content_sourcing_policy.md)를 따른다. (기존 IT Tech Signal은 실제 RSS 수집·원문 링크 보유)

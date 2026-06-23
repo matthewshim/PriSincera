@@ -1,7 +1,7 @@
 # Data Contract v2 — Pace Note (웹 ↔ macOS 공유 데이터 계약)
 
 > **목적**: macOS 데스크톱 앱 착수 전, 웹에서 먼저 동결하는 단일 데이터 계약. 본 계약을 따르면 데스크톱은 "REST를 IPC/SQLite로 갈아끼우기"만으로 이식된다.
-> **상태**: ✅ **v2.0 Frozen** (2026-06-22, 미결 4건 확정) · **정본 위치**: `docs/data_contract_v2.md`
+> **상태**: ✅ **v2.1** (2026-06-23, 구현 반영: subtask 토글·자동 주차 생성 추가 / v2.0 Frozen 2026-06-22) · **정본 위치**: `docs/data_contract_v2.md`
 > **관련**: [mac_app_business_plan.md](mac_app_business_plan.md) 6장 / 10장(Phase 0)
 
 ---
@@ -89,9 +89,12 @@
 {
   "schemaVersion": 2,
   "dates": ["2026-06-22", "2026-06-21"],   // 현행 보존
-  "tracks": ["junior", "senior"]           // 신규 가산
+  "tracks": ["junior", "senior"],          // 신규 가산
+  "version": 3,                            // tech-composer 실행마다 증가 (어드민 모니터링 신선도 표시)
+  "updatedAt": "2026-06-23T05:04:15.000Z"  // 마지막 갱신 ISO
 }
 ```
+> `version`/`updatedAt`은 `tech-composer`의 `updateIndex()`와 어드민 동기화(`sync-daily-gcs`)가 함께 기록한다. 어드민 「테크 트랙」 모니터링 배너의 `index v:` 표기 근거.
 
 ---
 
@@ -122,6 +125,10 @@ interface WeekData {
   createdAt: string;     // ISO datetime
 }
 
+// 오빗화(Click-to-Orbit)로 주입된 task에만 존재하는 가산 필드 (일반 task에는 없음)
+interface Subtask { seq: number; text: string; completed: boolean; }
+// Task에 선택적으로 subtasks?: Subtask[] (정확히 3개) 가 붙는다 — 구버전 UI는 무시(6.4.2)
+
 interface TimelineEntry {
   weekId: string;
   startDate: string;
@@ -145,13 +152,17 @@ interface PaceNoteState {  // GET / 의 응답
 | 조회 | `GET /api/pacenote/` | `get_pacenote()` | — | `PaceNoteState` |
 | 커스텀 추가 | `POST /api/pacenote/add` | `add_custom_task(title)` | `{ title: string }` (≤100자) | `{ success, currentPace: Task[] }` |
 | 완료 토글 | `POST /api/pacenote/toggle` | `toggle_task(taskId)` | `{ taskId: string }` | `{ success, currentPace: Task[] }` |
+| **세부 할 일 토글(신규)** | `POST /api/pacenote/toggle-subtask` | `toggle_subtask(taskId, seq)` | `{ taskId: string, seq: number }` | `{ success, currentPace: Task[] }` |
 | 추천 수락 | `POST /api/pacenote/accept` | `accept_recommendation(taskId)` | `{ taskId: string }` | `{ success, currentPace, recommendedPace }` |
 | 회고 저장 | `POST /api/pacenote/diary` | `save_diary(statement)` | `{ statement: string }` (≤1000자) | `{ success, statement }` |
 | **오빗화(신규)** | `POST /api/pacenote/add-orbit` | `add_orbit_from_signal(card)` | `{ action_challenge: ActionChallenge }` | `{ success, currentPace: Task[] }` |
 
 > **오빗화(Click-to-Orbit) — 확정**: 데일리 카드의 `action_challenge`를 주간 오빗(부모 task) + 3개 세부 task로 일괄 주입한다. 웹은 **신규 `POST /api/pacenote/add-orbit`** 엔드포인트로 구현하고(기존 `/add`와 분리), 데스크톱은 `add_orbit_from_signal`로 동일 결과를 만든다. **두 경로의 결과 `currentPace` 형상은 동일**해야 한다.
 >
-> 요청 본문: `{ action_challenge: { id, title, tasks: [{seq,text}×3] } }`. 서버는 부모 오빗 1개(`id: 'ac-<...>'`, `title`)와 3개 자식 task를 `currentPace`에 추가한 뒤 `{ success, currentPace }`를 반환한다.
+> - 요청 본문: `{ action_challenge: { id, title, tasks: [{seq,text}×3] } }`. 서버는 **부모 오빗 1개**(`id: 'orbit-<ac.id>'`, `title`, `subtasks: Subtask[3]`)를 `currentPace`에 추가한 뒤 `{ success, currentPace }`를 반환한다.
+> - **자동 주차 생성**: 해당 주차 문서가 없으면(이번 주 PaceNote 미열람) 404 대신 **기본 주차를 자동 생성**한 뒤 오빗을 주입한다(`GET /`와 동일한 `buildDefaultWeek`). 데스크톱 IPC도 동일 보장.
+> - **중복 방지**: 동일 `orbit-<ac.id>` 재주입 시 409(멱등). 프론트는 409도 성공으로 처리.
+> - **세부 할 일 토글**: 주입된 오빗의 `subtasks[seq].completed`를 `toggle-subtask`로 개별 토글한다(부모 완료 토글과 독립).
 
 ### 2.3. 인증 차이 (계약상 명시)
 | | 웹 | 데스크톱 |
@@ -208,4 +219,11 @@ CREATE TABLE keyword_weights (    -- 로컬 재랭킹용 (데스크톱 전용)
 - [x] **데스크톱 `title` 저장**: 단일 사용자이므로 **locale 1종 평탄화 저장**(`{ko,en,ja}` 미보존). 표시 언어 변경은 데스크톱 단계에서 재생성으로 처리.
 - [x] **`action_challenge.tasks` 다국어화**: **ko 단일 생성**. 타깃이 국내 IT 종사자이므로 1종으로 시작, 글로벌 확장 시 본 계약 개정.
 
-> 4건 확정 완료 → 본 계약은 **v2.0 Frozen**. 워크스트림 A/B/C 구현의 기준 스펙으로 사용한다. 변경 시 버전을 v2.1로 올리고 변경 이력을 본 절에 남긴다.
+> 4건 확정 완료 → 본 계약은 **v2.0 Frozen**. 워크스트림 A/B/C 구현의 기준 스펙으로 사용한다. 변경 시 버전을 올리고 변경 이력을 아래에 남긴다.
+
+### 5.1. 변경 이력 (Changelog)
+
+| 버전 | 날짜 | 변경 | 영향 |
+| :--- | :--- | :--- | :--- |
+| v2.0 | 2026-06-22 | 미결 4건 확정, 계약 동결(Frozen) | — |
+| v2.1 | 2026-06-23 | 구현 반영: ① `Subtask` 타입 + `Task.subtasks?` 가산 ② `POST /toggle-subtask`(IPC `toggle_subtask`) 추가 ③ add-orbit 오빗 id `orbit-<ac.id>` 확정 + **주차 미존재 시 자동 생성**(404 제거) ④ 트랙 `index.json`에 `version`/`updatedAt` 기록(tech-composer) | §2.1, §2.2, §1.4 |
