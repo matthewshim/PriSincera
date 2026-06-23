@@ -138,9 +138,16 @@ export default function DailyDigest() {
   const fetchQuickPeekData = async (targetDate) => {
     setQuickPeekLoading(true);
     try {
-      const res = await fetch(`/api/daily/${targetDate}?lang=${locale}`);
+      // 다이제스트 + 테크 트랙 티저(주니어 피드)를 병렬 페치 — 트랙은 없어도 무해
+      const [res, trackRes] = await Promise.all([
+        fetch(`/api/daily/${targetDate}?lang=${locale}`),
+        fetch(`/api/daily/${targetDate}/track/junior`).catch(() => null),
+      ]);
       if (res.ok) {
         const digest = await res.json();
+        if (trackRes && trackRes.ok) {
+          try { digest.track = await trackRes.json(); } catch { /* 트랙 파싱 실패 무시 */ }
+        }
         setQuickPeekData(digest);
       } else {
         setQuickPeekData(null);
@@ -562,7 +569,25 @@ export default function DailyDigest() {
                             </div>
                           </div>
                         )}
-                        
+
+                        {/* 4. Tech Track (주니어 트랙 티저) */}
+                        {quickPeekData.track?.cards && quickPeekData.track.cards.length > 0 && (
+                          <div className="quick-peek-group track">
+                            <h4 className="group-title">🛰️ 테크 트랙</h4>
+                            <div className="group-items">
+                              {quickPeekData.track.cards.slice(0, 2).map((card, idx) => (
+                                <div key={idx} className="peek-item flat">
+                                  <span className="peek-bullet" style={{ color: 'var(--color-cyan)' }}>✦</span>
+                                  <span className="peek-text">{card.title}</span>
+                                </div>
+                              ))}
+                              {quickPeekData.track.cards.length > 2 && (
+                                <span className="peek-more-indicator">+{quickPeekData.track.cards.length - 2} 카드</span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
                         {/* Read Full Button */}
                         <button 
                           onClick={() => navigate(`/daily/${quickPeekDate}`)}
