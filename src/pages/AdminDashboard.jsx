@@ -166,6 +166,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [priStudyStats, setPriStudyStats] = useState(null);
   const [dailyContent, setDailyContent] = useState([]);
   const [contentModal, setContentModal] = useState(null);
+  // 테크 트랙 모니터링
+  const [contentSubTab, setContentSubTab] = useState('legacy'); // 'legacy' | 'track'
+  const [trackStatus, setTrackStatus] = useState(null);
+  const [trackJobStatus, setTrackJobStatus] = useState(null);
+  const [trackLoading, setTrackLoading] = useState(false);
+  const [trackRunning, setTrackRunning] = useState(false);
+  const [trackDetail, setTrackDetail] = useState(null); // { date, junior, senior } 모달
+  const [trackDetailLoading, setTrackDetailLoading] = useState(false);
   const [contentModalTab, setContentModalTab] = useState('basic');
   const [contentForm, setContentForm] = useState(null);
   const [contentAction, setContentAction] = useState(null);
@@ -367,6 +375,50 @@ function Dashboard({ token, adminEmail, onLogout }) {
       const data = await fetchApi('/daily/content');
       setDailyContent(data.contents || []);
     } catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
+  // ── 테크 트랙 모니터링 핸들러 ──
+  async function loadTrackStatus() {
+    setTrackLoading(true);
+    try {
+      const [status, job] = await Promise.all([
+        fetchApi('/daily/tracks/status?limit=14'),
+        fetchApi('/daily/tracks/job-status').catch(() => null),
+      ]);
+      setTrackStatus(status);
+      setTrackJobStatus(job);
+    } catch (err) {
+      if (err.message === 'AUTH_EXPIRED') onLogout();
+    } finally {
+      setTrackLoading(false);
+    }
+  }
+
+  async function openTrackDetail(date) {
+    setTrackDetail({ date, junior: null, senior: null });
+    setTrackDetailLoading(true);
+    try {
+      const d = await fetchApi(`/daily/tracks/${date}`);
+      setTrackDetail(d);
+    } catch (err) {
+      if (err.message === 'AUTH_EXPIRED') onLogout();
+    } finally {
+      setTrackDetailLoading(false);
+    }
+  }
+
+  async function runTechComposer() {
+    if (!window.confirm('지금 tech-composer를 실행할까요? (Gemini 소액 과금 발생)')) return;
+    setTrackRunning(true);
+    try {
+      await fetchApi('/daily/tracks/run', { method: 'POST' });
+      window.alert('실행을 시작했습니다. 1~2분 후 새로고침되면 결과가 반영됩니다.');
+      setTimeout(loadTrackStatus, 4000);
+    } catch (err) {
+      window.alert('실행 실패: ' + err.message);
+    } finally {
+      setTrackRunning(false);
+    }
   }
 
   async function loadPacers() {
@@ -777,6 +829,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'builderslog') loadBuildersLogMeta();
   }, [activeTab]);
 
+  useEffect(() => {
+    if (activeTab === 'content' && contentSubTab === 'track') loadTrackStatus();
+  }, [activeTab, contentSubTab]);
+
   if (loading) {
     return <div className="admin-loading"><div className="admin-spinner" />데이터 로딩 중...</div>;
   }
@@ -1096,26 +1152,156 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-subscribers">
             <div className="admin-section-header">
               <h2>콘텐츠 관리</h2>
-              <button className="admin-btn-primary btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
+              {contentSubTab === 'legacy' && (
+                <button className="admin-btn-primary btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
+              )}
             </div>
-            <div className="admin-table-wrap">
-              <table className="admin-table">
-                <thead><tr><th>날짜</th><th>IT 시그널</th><th>AI 프롬프트</th><th>일본어 문장</th><th>관리</th></tr></thead>
-                <tbody>
-                  {dailyContent.map((item, i) => (
-                    <tr key={i}>
-                      <td>{item.date}</td>
-                      <td>{item.signal?.articles?.length || 0}건</td>
-                      <td>{item.study?.prompt_snippet ? '✅' : '❌'}</td>
-                      <td className="admin-subject-cell">{item.study?.sentence_jp || '-'}</td>
-                      <td className="admin-actions-cell">
-                        <button className="admin-action-btn edit" onClick={() => openEditContent(item)} title="수정">✏️</button>
-                      </td>
-                    </tr>
-                  ))}
-                  {dailyContent.length === 0 && (<tr><td colSpan={5} className="admin-empty">콘텐츠가 없습니다</td></tr>)}
-                </tbody>
-              </table>
+
+            {/* 서브탭 토글 */}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+              {[{ id: 'legacy', label: '📚 기존 콘텐츠' }, { id: 'track', label: '🛰️ 테크 트랙' }].map(st => (
+                <button
+                  key={st.id}
+                  onClick={() => setContentSubTab(st.id)}
+                  style={{
+                    padding: '8px 16px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem',
+                    border: contentSubTab === st.id ? '1px solid var(--admin-accent, #A78BFA)' : '1px solid rgba(148,163,184,0.25)',
+                    background: contentSubTab === st.id ? 'rgba(167,139,250,0.14)' : 'transparent',
+                    color: contentSubTab === st.id ? 'var(--admin-accent, #A78BFA)' : '#9CA3AF',
+                  }}
+                >{st.label}</button>
+              ))}
+            </div>
+
+            {/* 기존 콘텐츠 (Signal + Study) */}
+            {contentSubTab === 'legacy' && (
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead><tr><th>날짜</th><th>IT 시그널</th><th>AI 프롬프트</th><th>일본어 문장</th><th>관리</th></tr></thead>
+                  <tbody>
+                    {dailyContent.map((item, i) => (
+                      <tr key={i}>
+                        <td>{item.date}</td>
+                        <td>{item.signal?.articles?.length || 0}건</td>
+                        <td>{item.study?.prompt_snippet ? '✅' : '❌'}</td>
+                        <td className="admin-subject-cell">{item.study?.sentence_jp || '-'}</td>
+                        <td className="admin-actions-cell">
+                          <button className="admin-action-btn edit" onClick={() => openEditContent(item)} title="수정">✏️</button>
+                        </td>
+                      </tr>
+                    ))}
+                    {dailyContent.length === 0 && (<tr><td colSpan={5} className="admin-empty">콘텐츠가 없습니다</td></tr>)}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* 테크 트랙 모니터링 (tech-composer) */}
+            {contentSubTab === 'track' && (
+              <div>
+                {/* 상태 배너 */}
+                <div style={{
+                  display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between',
+                  padding: '14px 18px', borderRadius: 12, marginBottom: 18,
+                  border: '1px solid rgba(148,163,184,0.2)', background: 'rgba(255,255,255,0.02)',
+                }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'center', fontSize: '0.88rem' }}>
+                    <span style={{ color: '#9CA3AF' }}>⏱ 스케줄: <strong style={{ color: '#E9D5FF' }}>{trackStatus?.schedule || '매일 06:45 (Asia/Seoul)'}</strong></span>
+                    <span style={{ color: '#9CA3AF' }}>index v: <strong style={{ color: '#E9D5FF' }}>{trackStatus?.indexVersion ?? '—'}</strong></span>
+                    <span style={{ color: '#9CA3AF' }}>
+                      최근 실행: {trackJobStatus?.exists ? (
+                        <strong style={{ color: trackJobStatus.status === 'succeeded' ? '#10B981' : trackJobStatus.status === 'failed' ? '#EF4444' : '#FBBF24' }}>
+                          {trackJobStatus.status === 'succeeded' ? '✅ 성공' : trackJobStatus.status === 'failed' ? '❌ 실패' : '⏳ 실행중'}
+                          {trackJobStatus.completionTime ? ` · ${new Date(trackJobStatus.completionTime).toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}` : ''}
+                        </strong>
+                      ) : <strong style={{ color: '#9CA3AF' }}>기록 없음</strong>}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button className="admin-btn-primary btn-primary" onClick={loadTrackStatus} disabled={trackLoading}>↻ 새로고침</button>
+                    <button className="admin-btn-primary btn-primary" onClick={runTechComposer} disabled={trackRunning}
+                      style={{ background: trackRunning ? '#6B7280' : undefined }}>
+                      {trackRunning ? '실행 중…' : '▶ 지금 생성'}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="admin-table-wrap">
+                  <table className="admin-table">
+                    <thead><tr><th>날짜</th><th>주니어</th><th>시니어</th><th>도메인</th><th>AC 완성</th><th>상태</th><th>관리</th></tr></thead>
+                    <tbody>
+                      {trackLoading && (<tr><td colSpan={7} className="admin-empty">불러오는 중…</td></tr>)}
+                      {!trackLoading && (trackStatus?.rows || []).map((row, i) => {
+                        const badge = row.status === 'ok'
+                          ? { t: '✅ 정상', c: '#10B981' }
+                          : row.status === 'partial' ? { t: '⚠️ 부분', c: '#FBBF24' } : { t: '❌ 미생성', c: '#EF4444' };
+                        const cell = (tk) => tk.exists
+                          ? `${tk.cardCount}카드 · ${tk.generatedAt ? new Date(tk.generatedAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '-'}`
+                          : '—';
+                        const acTotal = (row.junior.acTotal || 0) + (row.senior.acTotal || 0);
+                        const acDone = (row.junior.acComplete || 0) + (row.senior.acComplete || 0);
+                        return (
+                          <tr key={i}>
+                            <td><span className="admin-date-chip">{row.date}</span></td>
+                            <td>{cell(row.junior)}</td>
+                            <td>{cell(row.senior)}</td>
+                            <td style={{ fontSize: '0.8rem', color: '#9CA3AF' }}>{(row.junior.domains || []).join(', ') || '—'}</td>
+                            <td>{acTotal ? `${acDone}/${acTotal}` : '—'}</td>
+                            <td><strong style={{ color: badge.c }}>{badge.t}</strong></td>
+                            <td className="admin-actions-cell">
+                              <button className="admin-action-btn edit" onClick={() => openTrackDetail(row.date)} title="상세 검수">🔍</button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {!trackLoading && (trackStatus?.rows || []).length === 0 && (
+                        <tr><td colSpan={7} className="admin-empty">트랙 피드가 없습니다</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 트랙 상세 검수 모달 */}
+        {trackDetail && (
+          <div className="admin-modal-overlay" onClick={() => setTrackDetail(null)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+            <div onClick={e => e.stopPropagation()}
+              style={{ width: 'min(820px, 92vw)', maxHeight: '86vh', overflowY: 'auto', background: '#1a1730', borderRadius: 16, padding: 24, border: '1px solid rgba(148,163,184,0.2)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <h3 style={{ margin: 0 }}>🛰️ 트랙 피드 검수 — {trackDetail.date}</h3>
+                <button className="admin-action-btn" onClick={() => setTrackDetail(null)} style={{ cursor: 'pointer' }}>✕</button>
+              </div>
+              {trackDetailLoading ? (
+                <div className="admin-empty">불러오는 중…</div>
+              ) : (
+                ['junior', 'senior'].map(tk => (
+                  <div key={tk} style={{ marginBottom: 20 }}>
+                    <h4 style={{ color: '#E9D5FF', borderBottom: '1px solid rgba(148,163,184,0.2)', paddingBottom: 6 }}>
+                      {tk === 'junior' ? '🚀 주니어-미드' : '🧭 시니어-리더'} {trackDetail[tk] ? `(${(trackDetail[tk].cards || []).length}카드)` : '(없음)'}
+                    </h4>
+                    {!trackDetail[tk] && <div style={{ color: '#9CA3AF', fontSize: '0.85rem' }}>피드 없음</div>}
+                    {(trackDetail[tk]?.cards || []).map(card => (
+                      <div key={card.id} style={{ padding: '10px 0', borderBottom: '1px dashed rgba(148,163,184,0.15)' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#A78BFA', marginBottom: 2 }}>{card.domain} · {(card.tags || []).map(t => '#' + t).join(' ')}</div>
+                        <div style={{ fontWeight: 600 }}>{card.title}</div>
+                        <div style={{ fontSize: '0.85rem', color: '#9CA3AF', margin: '2px 0 6px' }}>{card.summary}</div>
+                        {card.action_challenge && (
+                          <div style={{ fontSize: '0.82rem', color: '#CBD5E1' }}>
+                            🎯 {card.action_challenge.title}
+                            <ol style={{ margin: '4px 0 0', paddingLeft: 18 }}>
+                              {(card.action_challenge.tasks || []).map(tsk => (<li key={tsk.seq}>{tsk.text}</li>))}
+                            </ol>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}

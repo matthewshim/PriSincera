@@ -540,6 +540,151 @@ router.post('/daily/content', async (req, res) => {
   }
 });
 
+// ─── 테크 트랙 파이프라인 모니터링 (tech-composer 산출물) ──────────────────────
+const TRACK_BUCKET = process.env.GCS_BUCKET || 'prisincera-prisignal-data';
+const RUN_PROJECT = process.env.GCP_PROJECT_ID || 'prisincera';
+const RUN_REGION = process.env.RUN_REGION || 'asia-northeast3';
+const TECH_JOB = 'tech-composer';
+
+// Cloud Run v2 API 호출용 인증 클라이언트 (Cloud Run 런타임에선 메타데이터 SA 사용)
+let _runAuthClient = null;
+async function runApiRequest(url, method = 'GET') {
+  if (!_runAuthClient) {
+    const { GoogleAuth } = await import('google-auth-library');
+    const auth = new GoogleAuth({ scopes: ['https://www.googleapis.com/auth/cloud-platform'] });
+    _runAuthClient = await auth.getClient();
+  }
+  const resp = await _runAuthClient.request({ url, method, data: method === 'POST' ? {} : undefined });
+  return resp.data;
+}
+
+// 단일 트랙 피드 다운로드 + 건강도 요약
+async function summarizeTrackFeed(bucket, date, track) {
+  try {
+    const [content] = await bucket.file(`daily/${track}_${date}.json`).download();
+    const feed = JSON.parse(content.toString('utf-8'));
+    const cards = Array.isArray(feed.cards) ? feed.cards : [];
+    const acComplete = cards.filter(c =>
+      c.action_challenge && Array.isArray(c.action_challenge.tasks) && c.action_challenge.tasks.length === 3
+    ).length;
+    return {
+      exists: true,
+      cardCount: cards.length,
+      domains: feed.domains || [],
+      generatedAt: feed.generatedAt || null,
+      schemaVersion: feed.schemaVersion || null,
+      acComplete,
+      acTotal: cards.length,
+    };
+  } catch {
+    return { exists: false };
+  }
+}
+
+// Phase 1 — 날짜별 트랙 건강도 요약
+router.get('/daily/tracks/status', async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 14, 60);
+    const { getStorage } = await import('firebase-admin/storage');
+    const bucket = getStorage().bucket(TRACK_BUCKET);
+
+    let index = {};
+    try {
+      const [c] = await bucket.file('daily/index.json').download();
+      index = JSON.parse(c.toString('utf-8'));
+    } catch { /* index 없음 */ }
+
+    const dates = (index.dates || []).slice(0, limit);
+    const rows = await Promise.all(dates.map(async (date) => {
+      const [junior, senior] = await Promise.all([
+        summarizeTrackFeed(bucket, date, 'junior'),
+        summarizeTrackFeed(bucket, date, 'senior'),
+      ]);
+      let status = 'missing';
+      if (junior.exists && senior.exists && junior.cardCount > 0 && senior.cardCount > 0) status = 'ok';
+      else if (junior.exists || senior.exists) status = 'partial';
+      return { date, junior, senior, status };
+    }));
+
+    res.json({
+      rows,
+      indexVersion: index.version || null,
+      indexUpdatedAt: index.updatedAt || null,
+      tracks: index.tracks || [],
+      schedule: '매일 06:45 (Asia/Seoul)',
+    });
+  } catch (err) {
+    console.error('[Admin] 트랙 상태 조회 실패:', err.message);
+    res.status(500).json({ error: err.message || '트랙 상태 조회 실패' });
+  }
+});
+
+// Phase 2 — tech-composer 최근 실행 상태 (Cloud Run v2 executions)
+router.get('/daily/tracks/job-status', async (req, res) => {
+  try {
+    const url = `https://run.googleapis.com/v2/projects/${RUN_PROJECT}/locations/${RUN_REGION}/jobs/${TECH_JOB}/executions?pageSize=5`;
+    const data = await runApiRequest(url, 'GET');
+    const execs = (data && data.executions) || [];
+    if (!execs.length) return res.json({ exists: false });
+    // createTime 최신순 정렬 후 1건
+    execs.sort((a, b) => String(b.createTime || '').localeCompare(String(a.createTime || '')));
+    const e = execs[0];
+    const failed = e.failedCount || 0;
+    let status = 'running';
+    if (e.completionTime) status = failed > 0 ? 'failed' : 'succeeded';
+    res.json({
+      exists: true,
+      name: String(e.name || '').split('/').pop(),
+      createTime: e.createTime || null,
+      completionTime: e.completionTime || null,
+      succeededCount: e.succeededCount || 0,
+      failedCount: failed,
+      taskCount: e.taskCount || 0,
+      status,
+    });
+  } catch (err) {
+    console.error('[Admin] 잡 상태 조회 실패:', err.message);
+    res.status(500).json({ error: err.message || '잡 상태 조회 실패' });
+  }
+});
+
+// Phase 2 — tech-composer 수동 트리거
+router.post('/daily/tracks/run', async (req, res) => {
+  try {
+    const url = `https://run.googleapis.com/v2/projects/${RUN_PROJECT}/locations/${RUN_REGION}/jobs/${TECH_JOB}:run`;
+    const data = await runApiRequest(url, 'POST');
+    res.json({ success: true, operation: data && data.name ? String(data.name).split('/').pop() : null });
+  } catch (err) {
+    console.error('[Admin] 잡 트리거 실패:', err.message);
+    res.status(500).json({ error: err.message || '잡 트리거 실패' });
+  }
+});
+
+// Phase 1 — 특정 날짜 트랙 피드 원문 (상세 검수 모달용)
+router.get('/daily/tracks/:date', async (req, res) => {
+  const { date } = req.params;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return res.status(400).json({ error: 'Invalid date format' });
+  }
+  try {
+    const { getStorage } = await import('firebase-admin/storage');
+    const bucket = getStorage().bucket(TRACK_BUCKET);
+    const load = async (track) => {
+      try {
+        const [c] = await bucket.file(`daily/${track}_${date}.json`).download();
+        return JSON.parse(c.toString('utf-8'));
+      } catch {
+        return null;
+      }
+    };
+    const [junior, senior] = await Promise.all([load('junior'), load('senior')]);
+    res.json({ date, junior, senior });
+  } catch (err) {
+    console.error('[Admin] 트랙 상세 조회 실패:', err.message);
+    res.status(500).json({ error: err.message || '트랙 상세 조회 실패' });
+  }
+});
+
 // 수준별 트랙 피드(junior/senior)를 GCS에 동기화 (Data Contract v2 §1.2 / 6.2.3)
 // 동시 요청은 인-프로세스 직렬 큐로 순서 보장, expectedVersion으로 낙관적 락(409) 지원.
 router.post('/daily/tracks/:date', async (req, res) => {
