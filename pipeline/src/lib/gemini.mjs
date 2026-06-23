@@ -52,8 +52,23 @@ export async function callGemini(prompt, maxRetries = 5) {
       return JSON.parse(jsonMatch[1].trim());
     } catch (err) {
       lastError = err;
+      const msg = String(err?.message || '');
+      const is429 = err?.status === 429 || /\b429\b|Too Many Requests|RESOURCE_EXHAUSTED/i.test(msg);
+      // 무료 티어 '일일(per-day)' 할당량 소진은 대기/재시도해도 오늘 안엔 회복 불가 +
+      // 같은 모델 재호출은 남은 할당량만 더 태움. 따라서 안 써본 다른 모델(별도 할당량)만
+      // 1회 더 시도하고, 모든 모델이 일일 한도면 즉시 중단(백오프 대기 없이).
+      const isDailyQuota = is429 && /per ?day|FreeTier|free_tier_requests/i.test(msg);
+      if (isDailyQuota) {
+        const triedAllModels = attempt >= modelsToTry.length;
+        if (triedAllModels) {
+          console.warn(`[Gemini] 무료 일일 할당량 소진(${modelName}) — 전 모델 한도 도달, 재시도 중단.`);
+          throw err;
+        }
+        console.warn(`[Gemini] 무료 일일 할당량 소진(${modelName}) — 대기 없이 다른 모델로 1회 시도.`);
+        continue; // 백오프 없이 다음 모델로
+      }
       if (attempt < maxRetries) {
-        // 실패 시 지수 백오프(Exponential Backoff) + 지터(Jitter)를 적용하여 대기 후 다음 단일 모델로 백업 시도
+        // 일시적 오류/분당 rate-limit: 지수 백오프(Exponential Backoff) + 지터(Jitter) 후 다음 모델 재시도
         const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
         console.warn(`[Gemini] 시도 ${attempt}/${maxRetries} (${modelName}) 실패. ${Math.round(delay / 10) / 100}초 후 재시도... 에러: ${err.message}`);
         await new Promise(r => setTimeout(r, delay));
