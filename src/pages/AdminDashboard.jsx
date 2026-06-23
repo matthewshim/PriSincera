@@ -380,18 +380,18 @@ function Dashboard({ token, adminEmail, onLogout }) {
   // ── 테크 트랙 모니터링 핸들러 ──
   async function loadTrackStatus() {
     setTrackLoading(true);
-    try {
-      const [status, job] = await Promise.all([
-        fetchApi('/daily/tracks/status?limit=14'),
-        fetchApi('/daily/tracks/job-status').catch(() => null),
-      ]);
-      setTrackStatus(status);
-      setTrackJobStatus(job);
-    } catch (err) {
-      if (err.message === 'AUTH_EXPIRED') onLogout();
-    } finally {
-      setTrackLoading(false);
-    }
+    // status/job을 독립적으로 로드 — 하나가 실패해도 다른 하나는 표시
+    let authExpired = false;
+    const status = await fetchApi('/daily/tracks/status?limit=14').catch(err => {
+      if (err.message === 'AUTH_EXPIRED') authExpired = true; return null;
+    });
+    const job = await fetchApi('/daily/tracks/job-status').catch(err => {
+      if (err.message === 'AUTH_EXPIRED') authExpired = true; return null;
+    });
+    setTrackStatus(status);
+    setTrackJobStatus(job);
+    setTrackLoading(false);
+    if (authExpired) onLogout();
   }
 
   async function openTrackDetail(date) {

@@ -559,10 +559,10 @@ async function runApiRequest(url, method = 'GET') {
 }
 
 // 단일 트랙 피드 다운로드 + 건강도 요약
-async function summarizeTrackFeed(bucket, date, track) {
+async function summarizeTrackFeed(readJSON, date, track) {
   try {
-    const [content] = await bucket.file(`daily/${track}_${date}.json`).download();
-    const feed = JSON.parse(content.toString('utf-8'));
+    const feed = await readJSON(`daily/${track}_${date}.json`);
+    if (!feed) return { exists: false };
     const cards = Array.isArray(feed.cards) ? feed.cards : [];
     const acComplete = cards.filter(c =>
       c.action_challenge && Array.isArray(c.action_challenge.tasks) && c.action_challenge.tasks.length === 3
@@ -585,20 +585,15 @@ async function summarizeTrackFeed(bucket, date, track) {
 router.get('/daily/tracks/status', async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 14, 60);
-    const { getStorage } = await import('firebase-admin/storage');
-    const bucket = getStorage().bucket(TRACK_BUCKET);
+    const { readJSON } = await import('./pipeline/src/lib/storage.mjs');
 
-    let index = {};
-    try {
-      const [c] = await bucket.file('daily/index.json').download();
-      index = JSON.parse(c.toString('utf-8'));
-    } catch { /* index 없음 */ }
+    const index = (await readJSON('daily/index.json')) || {};
 
     const dates = (index.dates || []).slice(0, limit);
     const rows = await Promise.all(dates.map(async (date) => {
       const [junior, senior] = await Promise.all([
-        summarizeTrackFeed(bucket, date, 'junior'),
-        summarizeTrackFeed(bucket, date, 'senior'),
+        summarizeTrackFeed(readJSON, date, 'junior'),
+        summarizeTrackFeed(readJSON, date, 'senior'),
       ]);
       let status = 'missing';
       if (junior.exists && senior.exists && junior.cardCount > 0 && senior.cardCount > 0) status = 'ok';
@@ -667,17 +662,11 @@ router.get('/daily/tracks/:date', async (req, res) => {
     return res.status(400).json({ error: 'Invalid date format' });
   }
   try {
-    const { getStorage } = await import('firebase-admin/storage');
-    const bucket = getStorage().bucket(TRACK_BUCKET);
-    const load = async (track) => {
-      try {
-        const [c] = await bucket.file(`daily/${track}_${date}.json`).download();
-        return JSON.parse(c.toString('utf-8'));
-      } catch {
-        return null;
-      }
-    };
-    const [junior, senior] = await Promise.all([load('junior'), load('senior')]);
+    const { readJSON } = await import('./pipeline/src/lib/storage.mjs');
+    const [junior, senior] = await Promise.all([
+      readJSON(`daily/junior_${date}.json`),
+      readJSON(`daily/senior_${date}.json`),
+    ]);
     res.json({ date, junior, senior });
   } catch (err) {
     console.error('[Admin] 트랙 상세 조회 실패:', err.message);
