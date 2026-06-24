@@ -1,8 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import './AdminDashboard.css';
+
+// 서비스 문서 허브 — docs 전체를 번들하므로 별도 청크로 lazy 로드
+const ServiceDocs = lazy(() => import('../components/admin/ServiceDocs'));
 
 const API_BASE = '/admin/api';
 
@@ -863,6 +866,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       label: 'Common',
       items: [
         { id: 'overview', label: '📊 대시보드' },
+        { id: 'docs', label: '📖 서비스 문서' },
         ...(isSuperAdmin ? [{ id: 'admins', label: '🔐 관리자' }] : [])
       ]
     },
@@ -943,6 +947,15 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {/* Content */}
         <main className="admin-content">
+        {activeTab === 'docs' && (
+          <div className="admin-subscribers">
+            <div className="admin-section-header"><h2>📖 서비스 문서</h2></div>
+            <Suspense fallback={<div className="admin-empty">문서 불러오는 중…</div>}>
+              <ServiceDocs />
+            </Suspense>
+          </div>
+        )}
+
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
             <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
