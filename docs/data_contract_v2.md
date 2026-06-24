@@ -1,7 +1,7 @@
 # Data Contract v2 — Pace Note (웹 ↔ macOS 공유 데이터 계약)
 
 > **목적**: macOS 데스크톱 앱 착수 전, 웹에서 먼저 동결하는 단일 데이터 계약. 본 계약을 따르면 데스크톱은 "REST를 IPC/SQLite로 갈아끼우기"만으로 이식된다.
-> **상태**: ✅ **v2.2** (2026-06-24, 하이브리드: `learning` 학습 레이어 + 실제 출처 URL 추가) · **정본 위치**: `docs/data_contract_v2.md`
+> **상태**: ✅ **v2.3** (2026-06-24, 오빗화 정책 변경: action 항목 N개 → 독립 궤도 N개, 도메인 카테고리, subtask 폐지) · **정본 위치**: `docs/data_contract_v2.md`
 > **관련**: [mac_app_business_plan.md](mac_app_business_plan.md) 6장 / 10장(Phase 0)
 
 ---
@@ -130,10 +130,6 @@ interface WeekData {
   createdAt: string;     // ISO datetime
 }
 
-// 오빗화(Click-to-Orbit)로 주입된 task에만 존재하는 가산 필드 (일반 task에는 없음)
-interface Subtask { seq: number; text: string; completed: boolean; }
-// Task에 선택적으로 subtasks?: Subtask[] (정확히 3개) 가 붙는다 — 구버전 UI는 무시(6.4.2)
-
 interface TimelineEntry {
   weekId: string;
   startDate: string;
@@ -157,17 +153,16 @@ interface PaceNoteState {  // GET / 의 응답
 | 조회 | `GET /api/pacenote/` | `get_pacenote()` | — | `PaceNoteState` |
 | 커스텀 추가 | `POST /api/pacenote/add` | `add_custom_task(title)` | `{ title: string }` (≤100자) | `{ success, currentPace: Task[] }` |
 | 완료 토글 | `POST /api/pacenote/toggle` | `toggle_task(taskId)` | `{ taskId: string }` | `{ success, currentPace: Task[] }` |
-| **세부 할 일 토글(신규)** | `POST /api/pacenote/toggle-subtask` | `toggle_subtask(taskId, seq)` | `{ taskId: string, seq: number }` | `{ success, currentPace: Task[] }` |
 | 추천 수락 | `POST /api/pacenote/accept` | `accept_recommendation(taskId)` | `{ taskId: string }` | `{ success, currentPace, recommendedPace }` |
 | 회고 저장 | `POST /api/pacenote/diary` | `save_diary(statement)` | `{ statement: string }` (≤1000자) | `{ success, statement }` |
-| **오빗화(신규)** | `POST /api/pacenote/add-orbit` | `add_orbit_from_signal(card)` | `{ action_challenge: ActionChallenge }` | `{ success, currentPace: Task[] }` |
+| **오빗화** | `POST /api/pacenote/add-orbit` | `add_orbit_from_signal(card)` | `{ action_challenge: ActionChallenge, domain: string }` | `{ success, added: number, currentPace: Task[] }` |
 
-> **오빗화(Click-to-Orbit) — 확정**: 데일리 카드의 `action_challenge`를 주간 오빗(부모 task) + 3개 세부 task로 일괄 주입한다. 웹은 **신규 `POST /api/pacenote/add-orbit`** 엔드포인트로 구현하고(기존 `/add`와 분리), 데스크톱은 `add_orbit_from_signal`로 동일 결과를 만든다. **두 경로의 결과 `currentPace` 형상은 동일**해야 한다.
+> **오빗화(Click-to-Orbit) — v2.3 정책**: 데일리 카드의 `action_challenge`의 **각 항목(task)을 각각 1개의 독립 궤도(flat Task)로** 주입한다(항목 N개 → 궤도 N개). 서브태스크/체크리스트 모델은 **폐지**되었다.
 >
-> - 요청 본문: `{ action_challenge: { id, title, tasks: [{seq,text}×3] } }`. 서버는 **부모 오빗 1개**(`id: 'orbit-<ac.id>'`, `title`, `subtasks: Subtask[3]`)를 `currentPace`에 추가한 뒤 `{ success, currentPace }`를 반환한다.
-> - **자동 주차 생성**: 해당 주차 문서가 없으면(이번 주 PaceNote 미열람) 404 대신 **기본 주차를 자동 생성**한 뒤 오빗을 주입한다(`GET /`와 동일한 `buildDefaultWeek`). 데스크톱 IPC도 동일 보장.
-> - **중복 방지**: 동일 `orbit-<ac.id>` 재주입 시 409(멱등). 프론트는 409도 성공으로 처리.
-> - **세부 할 일 토글**: 주입된 오빗의 `subtasks[seq].completed`를 `toggle-subtask`로 개별 토글한다(부모 완료 토글과 독립).
+> - 요청 본문: `{ action_challenge: { id, title, tasks: [{seq,text}…] }, domain: 'ai_llm'|... }`.
+> - 서버는 각 task를 `{ id: 'orbit-<ac.id>-<i>', title: task.text, category, color, completed:false }`로 만들어 `currentPace`에 추가한다. **카테고리/색상은 트랙 도메인에 매핑**(ai_llm→AI/LLM·cyan, system_design→System Design·indigo, devops→DevOps·mint, tech_lead→Tech Lead·gold).
+> - **자동 주차 생성**: 주차 문서가 없으면 404 대신 기본 주차를 자동 생성 후 주입(`buildDefaultWeek`).
+> - **멱등**: 이미 존재하는 `id`는 제외하고 신규만 추가. 전부 중복이면 409.
 
 ### 2.3. 인증 차이 (계약상 명시)
 | | 웹 | 데스크톱 |
@@ -233,3 +228,4 @@ CREATE TABLE keyword_weights (    -- 로컬 재랭킹용 (데스크톱 전용)
 | v2.0 | 2026-06-22 | 미결 4건 확정, 계약 동결(Frozen) | — |
 | v2.1 | 2026-06-23 | 구현 반영: ① `Subtask` 타입 + `Task.subtasks?` 가산 ② `POST /toggle-subtask`(IPC `toggle_subtask`) 추가 ③ add-orbit 오빗 id `orbit-<ac.id>` 확정 + **주차 미존재 시 자동 생성**(404 제거) ④ 트랙 `index.json`에 `version`/`updatedAt` 기록(tech-composer) | §2.1, §2.2, §1.4 |
 | v2.2 | 2026-06-24 | 하이브리드(출처 정책 경로 C): 트랙 카드에 ① **`learning`**(concept + key_points 2~4개) 학습 레이어 가산 ② 실제 RSS 근거 기사의 **`sourceUrl`/`sourceName`** 채움(코드 주입). [학습 → 실전 → 원문] 흐름 | §1.2 |
+| v2.3 | 2026-06-24 | 오빗화 정책 변경: `action_challenge`의 **각 항목을 독립 궤도 N개**로 주입(부모+subtask 모델 폐지), **카테고리를 트랙 도메인에 매핑**(req에 `domain` 추가), `POST /toggle-subtask` 및 `Subtask` 타입 제거 | §2.1, §2.2 |

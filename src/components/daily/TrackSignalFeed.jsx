@@ -58,7 +58,8 @@ export default function TrackSignalFeed({ date }) {
     const doFetch = (tok) => fetch('/api/pacenote/add-orbit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
-      body: JSON.stringify({ action_challenge: card.action_challenge }),
+      // 각 action 항목을 도메인 카테고리의 개별 궤도로 등록
+      body: JSON.stringify({ action_challenge: card.action_challenge, domain: card.domain }),
     });
     try {
       let res = await doFetch(token);
