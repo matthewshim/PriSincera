@@ -1,0 +1,135 @@
+/* ServiceDocs — Admin 서비스 문서 허브 */
+.svc-docs {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── 좌측 네비 ── */
+.svc-docs-nav {
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.svc-docs-search {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #E2E8F0;
+  font-size: 0.85rem;
+  outline: none;
+}
+.svc-docs-search:focus { border-color: rgba(165, 180, 252, 0.4); }
+
+.svc-docs-group { display: flex; flex-direction: column; gap: 3px; }
+.svc-docs-group-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #94A3B8;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  padding-left: 4px;
+}
+.svc-doc-item {
+  text-align: left;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #CBD5E1;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.svc-doc-item:hover { background: rgba(255, 255, 255, 0.05); color: #FAFAFA; }
+.svc-doc-item.active { background: rgba(165, 180, 252, 0.14); color: #A5B4FC; font-weight: 600; }
+
+.svc-docs-roletabs { display: flex; gap: 5px; margin-bottom: 6px; }
+.svc-role-tab {
+  flex: 1;
+  padding: 6px 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: #94A3B8;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+.svc-role-tab.active { border-color: rgba(229, 178, 93, 0.4); background: rgba(229, 178, 93, 0.1); color: #E5B25D; }
+.svc-docs-empty { color: #94A3B8; font-size: 0.85rem; padding: 12px; font-style: italic; }
+
+/* ── 우측 뷰 ── */
+.svc-docs-view {
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 28px 32px;
+}
+.svc-docs-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.svc-docs-path { font-family: var(--font-mono, monospace); font-size: 0.78rem; color: #94A3B8; }
+.svc-badge {
+  font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+  background: rgba(165, 180, 252, 0.14); color: #A5B4FC;
+}
+.svc-badge.muted { background: rgba(148, 163, 184, 0.12); color: #94A3B8; font-weight: 500; }
+.svc-badge.status-active { background: rgba(52, 211, 153, 0.14); color: #34D399; }
+.svc-badge.status-archived { background: rgba(148, 163, 184, 0.12); color: #94A3B8; }
+
+/* ── 마크다운 본문 ── */
+.svc-markdown { color: #D7DEE8; font-size: 0.92rem; line-height: 1.75; overflow-wrap: break-word; }
+.svc-markdown h1, .svc-markdown h2, .svc-markdown h3, .svc-markdown h4 { color: #FAFAFA; font-weight: 700; line-height: 1.3; margin: 1.6em 0 0.6em; }
+.svc-markdown h1 { font-size: 1.6rem; }
+.svc-markdown h2 { font-size: 1.3rem; padding-bottom: 0.3em; border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+.svc-markdown h3 { font-size: 1.1rem; }
+.svc-markdown h4 { font-size: 1rem; color: #E2E8F0; }
+.svc-markdown p { margin: 0.8em 0; }
+.svc-markdown a { color: #22D3EE; text-decoration: none; }
+.svc-markdown a:hover { text-decoration: underline; }
+.svc-markdown ul, .svc-markdown ol { padding-left: 1.5em; margin: 0.8em 0; }
+.svc-markdown li { margin: 0.3em 0; }
+.svc-markdown strong { color: #FAFAFA; }
+.svc-markdown blockquote {
+  margin: 1em 0; padding: 0.6em 1em;
+  border-left: 3px solid var(--color-indigo, #A5B4FC);
+  background: rgba(165, 180, 252, 0.06);
+  border-radius: 0 8px 8px 0; color: #C7D2FE;
+}
+.svc-markdown code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.15em 0.4em; border-radius: 5px;
+  font-family: var(--font-mono, monospace); font-size: 0.86em; color: #E5B25D;
+}
+.svc-markdown pre {
+  background: #0d1117; border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px; padding: 16px; overflow-x: auto; margin: 1em 0;
+}
+.svc-markdown pre code { background: transparent; padding: 0; color: inherit; font-size: 0.82rem; line-height: 1.6; }
+.svc-markdown table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.86rem; display: block; overflow-x: auto; }
+.svc-markdown th, .svc-markdown td { border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; text-align: left; }
+.svc-markdown th { background: rgba(255, 255, 255, 0.04); color: #FAFAFA; font-weight: 600; }
+.svc-markdown hr { border: none; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 1.8em 0; }
+
+/* 반응형 */
+@media (max-width: 900px) {
+  .svc-docs { grid-template-columns: 1fr; }
+  .svc-docs-nav { position: static; max-height: none; }
+}
