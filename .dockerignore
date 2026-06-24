@@ -5,9 +5,10 @@ dist
 .firebaserc
 scripts
 sound
-docs
 ci
 *.md
+!docs/*.md
+!docs/**/*.md
 *.log
 .env
 .env.*
