@@ -1307,6 +1307,17 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         <div style={{ fontSize: '0.75rem', color: '#A78BFA', marginBottom: 2 }}>{card.domain} · {(card.tags || []).map(t => '#' + t).join(' ')}</div>
                         <div style={{ fontWeight: 600 }}>{card.title}</div>
                         <div style={{ fontSize: '0.85rem', color: '#9CA3AF', margin: '2px 0 6px' }}>{card.summary}</div>
+                        {card.learning && (card.learning.concept || (card.learning.key_points || []).length > 0) && (
+                          <div style={{ fontSize: '0.82rem', background: 'rgba(165,180,252,0.06)', borderLeft: '3px solid #A5B4FC', borderRadius: '0 6px 6px 0', padding: '8px 10px', margin: '0 0 8px' }}>
+                            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#A5B4FC', marginBottom: 4 }}>📚 학습</div>
+                            {card.learning.concept && <div style={{ color: '#E2E8F0', lineHeight: 1.6 }}>{card.learning.concept}</div>}
+                            {(card.learning.key_points || []).length > 0 && (
+                              <ul style={{ margin: '6px 0 0', paddingLeft: 16, color: '#94A3B8' }}>
+                                {card.learning.key_points.map((p, i) => (<li key={i}>{p}</li>))}
+                              </ul>
+                            )}
+                          </div>
+                        )}
                         {card.action_challenge && (
                           <div style={{ fontSize: '0.82rem', color: '#CBD5E1' }}>
                             🎯 {card.action_challenge.title}
@@ -1314,6 +1325,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
                               {(card.action_challenge.tasks || []).map(tsk => (<li key={tsk.seq}>{tsk.text}</li>))}
                             </ol>
                           </div>
+                        )}
+                        {card.sourceUrl && (
+                          <a href={card.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: 8, fontSize: '0.8rem', color: '#22D3EE', textDecoration: 'none' }}>
+                            🔗 {card.sourceName || '원문'} 읽기 →
+                          </a>
                         )}
                       </div>
                     ))}

@@ -132,7 +132,20 @@ export default function TrackSignalFeed({ date }) {
             <h3 className="track-card-title">{card.title}</h3>
             <p className="track-card-summary">{card.summary}</p>
 
-            {/* action_challenge 미리보기 + 오빗 추가 (C4) */}
+            {/* 📚 학습 레이어 (개념 + 핵심 포인트) — 실전 전에 먼저 배운다 */}
+            {card.learning && (card.learning.concept || (card.learning.key_points || []).length > 0) && (
+              <div className="track-learning">
+                <div className="track-learning-label">📚 학습</div>
+                {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
+                {(card.learning.key_points || []).length > 0 && (
+                  <ul className="track-learning-points">
+                    {card.learning.key_points.map((p, i) => <li key={i}>{p}</li>)}
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {/* 🎯 action_challenge 미리보기 + 오빗 추가 (C4) */}
             {card.action_challenge && (
               <div className="track-challenge">
                 <div className="track-challenge-title">🎯 {card.action_challenge.title}</div>
@@ -149,6 +162,13 @@ export default function TrackSignalFeed({ date }) {
                   {st === 'added' ? '✓ 오빗에 추가됨' : st === 'adding' ? '추가 중…' : st === 'error' ? '실패 — 다시 시도' : '＋ 오빗에 추가'}
                 </button>
               </div>
+            )}
+
+            {/* 🔗 실제 출처 원문 링크 (하이브리드 — 근거 있는 경우만) */}
+            {card.sourceUrl && (
+              <a className="track-source-link" href={card.sourceUrl} target="_blank" rel="noopener noreferrer">
+                🔗 {card.sourceName || '원문'} 읽기 →
+              </a>
             )}
           </div>
         );

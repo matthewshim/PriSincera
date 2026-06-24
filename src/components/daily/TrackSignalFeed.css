@@ -112,6 +112,50 @@
   line-height: 1.6;
 }
 
+/* ── 📚 학습 레이어 (개념 + 핵심 포인트) — Nebula Indigo 인사이트 톤 ── */
+.track-learning {
+  background: rgba(165, 180, 252, 0.05);
+  border-left: 3px solid var(--color-indigo);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 14px;
+  margin: 0 0 14px;
+}
+.track-learning-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-indigo);
+  margin-bottom: 6px;
+}
+.track-learning-concept {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0 0 8px;
+}
+.track-learning-points {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+.track-learning-points li { margin-bottom: 2px; }
+
+/* ── 🔗 원문 링크 (Aether Cyan, 테크 시그널 톤) ── */
+.track-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-cyan);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.track-source-link:hover { color: var(--prism-lavender); text-decoration: underline; }
+
 /* ── action_challenge (실전 액션) ── */
 .track-challenge { border-top: 1px dashed var(--glass-border); padding-top: 12px; }
 

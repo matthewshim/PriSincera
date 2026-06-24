@@ -29,7 +29,7 @@ function loadTemplate(name) {
 /**
  * Gemini 호출 + JSON 파싱 (재시도 포함)
  */
-export async function callGemini(prompt, maxRetries = 5) {
+export async function callGemini(prompt, maxRetries = 5, genOverrides = {}) {
   // 최신 고효율/저비용 Flash 모델군만 배치하여 요금 폭탄 차단
   const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash'];
   const generationConfig = {
@@ -37,6 +37,7 @@ export async function callGemini(prompt, maxRetries = 5) {
     topP: 0.9,
     maxOutputTokens: 4096,
     responseMimeType: 'application/json',
+    ...genOverrides,   // 호출부 오버라이드(예: 학습 레이어 추가 시 maxOutputTokens 상향)
   };
 
   let lastError;
