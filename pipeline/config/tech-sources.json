@@ -1,0 +1,26 @@
+{
+  "_comment": "테크 트랙(tech-composer) 하이브리드 근거용 도메인별 RSS 피드 스타터 세트. 실패 피드는 graceful 무시되며, 운영하며 자유롭게 튜닝/추가하세요.",
+  "settings": {
+    "maxAgeDays": 21,
+    "maxPerSource": 5,
+    "seedsPerDomain": 1
+  },
+  "domains": {
+    "ai_llm": [
+      { "name": "Hugging Face Blog", "rss": "https://huggingface.co/blog/feed.xml", "category": "ai_llm", "tier": 1, "lang": "en", "active": true },
+      { "name": "Google Developers Blog", "rss": "https://developers.googleblog.com/feeds/posts/default", "category": "ai_llm", "tier": 1, "lang": "en", "active": true }
+    ],
+    "system_design": [
+      { "name": "Martin Fowler", "rss": "https://martinfowler.com/feed.atom", "category": "system_design", "tier": 1, "lang": "en", "active": true },
+      { "name": "ByteByteGo", "rss": "https://blog.bytebytego.com/feed", "category": "system_design", "tier": 1, "lang": "en", "active": true }
+    ],
+    "devops": [
+      { "name": "Kubernetes Blog", "rss": "https://kubernetes.io/feed.xml", "category": "devops", "tier": 1, "lang": "en", "active": true },
+      { "name": "The New Stack", "rss": "https://thenewstack.io/feed/", "category": "devops", "tier": 1, "lang": "en", "active": true }
+    ],
+    "tech_lead": [
+      { "name": "LeadDev", "rss": "https://leaddev.com/rss.xml", "category": "tech_lead", "tier": 1, "lang": "en", "active": true },
+      { "name": "The Pragmatic Engineer", "rss": "https://newsletter.pragmaticengineer.com/feed", "category": "tech_lead", "tier": 1, "lang": "en", "active": true }
+    ]
+  }
+}

@@ -54,18 +54,19 @@ export async function fetchOgImage(url) {
  * @param {Object} source - sources.json의 소스 객체
  * @returns {Promise<Array>} 정규화된 아티클 배열 (ogImage 포함)
  */
-export async function fetchFeed(source, maxPerSource = 5) {
+export async function fetchFeed(source, maxPerSource = 5, maxAgeDays = 1) {
   try {
     const feed = await parser.parseURL(source.rss);
     const now = new Date();
-    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    // 수집 윈도우 (기본 24시간). 테크 블로그처럼 발행 빈도가 낮은 소스는 넓혀서 사용.
+    const cutoff = new Date(now.getTime() - maxAgeDays * 24 * 60 * 60 * 1000);
 
     const articles = (feed.items || [])
       .filter(item => {
         if (!item.link) return false;
         const pubDate = item.pubDate ? new Date(item.pubDate) : null;
         // 날짜 정보가 없으면 포함 (최신으로 간주)
-        return !pubDate || pubDate >= oneDayAgo;
+        return !pubDate || pubDate >= cutoff;
       })
       .slice(0, maxPerSource) // 소스당 최대 N개만 수집 (최신순)
       .map(item => ({

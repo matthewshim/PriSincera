@@ -1,15 +1,17 @@
 ---
 status: active
 domain: DailyDigest
-last_updated: 2026-06-23
-version: v1.0
+last_updated: 2026-06-24
+version: v1.1
 target_files:
   - pipeline/src/collector.mjs
   - pipeline/src/composer.mjs
   - pipeline/src/study-composer.mjs
   - pipeline/src/tech-composer.mjs
   - pipeline/src/templates/tech-prompt.txt
+  - pipeline/src/lib/rss.mjs
   - pipeline/config/sources.json
+  - pipeline/config/tech-sources.json
   - src/components/daily/TrackSignalFeed.jsx
   - admin-api.mjs
 ---
@@ -23,6 +25,7 @@ Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 UR
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-23 | AI Agent | 콘텐츠 유형별 출처/URL 정책 최초 정의 — IT Tech Signal(RSS 수집) vs Tech Track·Language Dojo(AI 생성) 구분, 사실성 고지 의무화, 향후 거버넌스 결정 항목 등록 | tech-composer, collector, TrackSignalFeed |
+| v1.1 | 2026-06-24 | AI Agent | **거버넌스 §6 결정 = 경로 C(하이브리드) 채택.** Tech Track이 도메인별 RSS(`tech-sources.json`) 근거 위에 **학습 레이어(`learning`) + 실제 원문 `sourceUrl`**을 갖도록 전환 → "출처 없는 AI 생성"에서 "근거 기반 학습+실전+원문"으로 격상 | tech-composer, tech-sources.json, rss.mjs, TrackSignalFeed |
 
 ---
 
@@ -37,11 +40,11 @@ Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 UR
 | 콘텐츠 유형 | 생성 방식 | 실제 출처 | 원문(랜딩) URL | 사실성 책임 |
 | :--- | :--- | :--- | :--- | :--- |
 | **IT Tech Signal** | **실제 RSS 수집** 후 AI 스코어링/큐레이션 | ✅ 실제 매체 (HBR, First Round Review 등) | ✅ **있음** (`article.url`, "원문 읽기 →") | 원 매체 |
-| **Tech Track** (주니어/시니어) | **AI 생성(Gemini)** | ❌ 없음 (모델 학습 지식) | ❌ **없음** (`sourceUrl` 미채움) | 개발사(AI 생성물) |
+| **Tech Track** (주니어/시니어) | **하이브리드** — 도메인별 RSS 근거 위에 AI가 학습+실전 생성 (v1.1~) | ✅ 실제 매체 (`tech-sources.json`) | ✅ **있음** (`sourceUrl`, "🔗 원문 읽기") *근거 없는 도메인은 생략* | 원 매체 + 개발사 |
 | **AI Prompt / Language Dojo(어학)** | **AI 생성(Gemini)** | ❌ 없음 | ❌ 없음 | 개발사(AI 생성물) |
 | **PaceNote 추천 궤도** | AI 생성 + 익명 UGC(승인 후) | UGC는 익명 사용자 | ❌ 없음 | 개발사/검수 |
 
-> 한 줄 요약: **IT Tech Signal만 실제 출처·원문 링크를 가진 "수집형" 콘텐츠이고, Tech Track을 포함한 나머지는 출처·URL이 없는 "생성형" 콘텐츠다.**
+> 한 줄 요약: **IT Tech Signal·Tech Track은 실제 출처·원문 링크를 가진 콘텐츠이고(Tech Track은 하이브리드: 근거+학습+실전), 어학·AI 프롬프트는 순수 생성형이다.**
 
 ## 3. 파이프라인별 메커니즘 상세
 
@@ -50,11 +53,12 @@ Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 UR
 - **`composer.mjs`**: 수집된 실제 아티클을 Gemini로 **스코어링·큐레이션**(생성이 아님)하고, 상위 픽에 에디터 코멘트를 부착해 `daily/${date}.json`(signal)으로 배포한다.
 - **출처/URL**: 실제 매체 + 클릭 가능한 원문 링크 보유. 프론트엔드는 "원문 읽기 →" 링크를 렌더한다.
 
-### 3.2. 생성형(Generated) — Tech Track
-- **`tech-composer.mjs`**: 외부 수집을 **전혀 하지 않는다.** import는 `callGemini`, `readJSON/writeJSON`뿐이다.
-- **`templates/tech-prompt.txt`**: Gemini에게 도메인별 카드(title/summary/tags/action_challenge)를 **창작**하도록 지시한다. **URL·출처를 요청하지 않는다.**
-- 따라서 `buildCard`의 `sourceUrl`은 항상 `undefined`이며, 배포 JSON·관리자 상세 모달·유저 UI(`TrackSignalFeed.jsx`) 어디에도 **원문 링크가 없다.**
-- 콘텐츠 = **모델의 학습 지식에 기반한 합성물.** 날짜 라벨은 "그날 발행된 뉴스"가 아니라 "그날 생성된 학습 카드"를 의미한다.
+### 3.2. 하이브리드(Hybrid) — Tech Track (v1.1~, 경로 C)
+- **`tech-composer.mjs`**: ① `config/tech-sources.json`의 도메인별 RSS에서 `rss.mjs`(`fetchFeed`, `maxAgeDays`)로 최신 **근거 기사(seed)**를 도메인당 1개 수집 → ② Gemini가 그 근거 위에서 카드를 생성(**`learning`** 개념·핵심포인트 + `action_challenge`).
+- **`templates/tech-prompt.txt`**: [학습(개념 이해) → 실전(적용 액션)] 흐름을 강제. 근거 기사가 주어진 도메인은 그 내용에 충실하게, 없는 도메인은 보편 지식으로 작성.
+- **URL은 코드에서 주입**: `buildCard`가 seed 기사의 실제 `sourceUrl`/`sourceName`을 채운다(LLM이 생성한 URL은 환각 위험이라 사용 금지). 근거가 없는 도메인은 `sourceUrl`을 생략한다.
+- 유저 UI/관리자 모달은 `📚 학습 → 🎯 실전 → 🔗 원문 읽기` 순으로 렌더.
+- **잔여 리스크**: 학습 텍스트(concept/key_points)는 여전히 AI 생성이므로 근거 기사를 벗어난 추론·환각 가능성이 0은 아니다 → §5 고지·검수 정책 유지.
 
 ### 3.3. 생성형(Generated) — Language Dojo / AI Prompt
 - **`study-composer.mjs`**: Gemini로 일본어 학습 문장·실무 프롬프트를 생성한다. 외부 출처·URL 없음. (어학은 웹 전용으로 존치 — [data_contract_v2.md](../data_contract_v2.md) 참조)
@@ -75,17 +79,19 @@ Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 UR
   - 사실성 보장이 필요한 표현(특정 버전·수치·고유명 주장)은 생성형 콘텐츠에 의존하지 않는다.
 - **포지셔닝 권고**: Tech Track은 "실전 액션 챌린지(학습/실습)" 중심으로 포지셔닝한다. action_challenge(실습 과제)는 출처가 불필요한 영역이므로 생성형과 잘 맞는다.
 
-## 6. 향후 개선 옵션 및 거버넌스 결정 (Open)
+## 6. 거버넌스 결정 (Resolved) — 경로 C(하이브리드) 채택
 
-Tech Track의 출처 부재를 어떻게 다룰지는 **미결 결정 사항**이다. 아래 중 택일하여 본 문서를 개정한다.
+> **결정(2026-06-24)**: 옵션 **C(하이브리드)** 를 채택·구현 완료. Tech Track은 도메인별 RSS 근거 위에 **학습 레이어(`learning`) + 실전 액션 + 실제 원문 링크(`sourceUrl`)** 를 갖는다.
 
-| 옵션 | 내용 | 사실성 | 노력 |
-| :--- | :--- | :--- | :--- |
-| **A. 현행 유지 + 명시** | 생성형임을 UI에 명확히 라벨링(출처 없음 고지). action 학습 카드로 포지셔닝 | 동일 | 소 |
-| **B. 실제 수집 연동** | `tech-composer`도 `collector`처럼 RSS/뉴스를 수집 → 그 기사 위에서 트랙별 카드+action_challenge 생성 → **진짜 sourceUrl 부여**. 기존 `sources.json`/`rss.mjs` 재사용 | 높음 | 중 |
-| **C. 하이브리드(권고)** | 실제 기사 1~2건을 근거로 카드 생성 + **원문 링크 첨부** + 실전 액션 유지 | 높음 | 중 |
+| 옵션 | 내용 | 결정 |
+| :--- | :--- | :--- |
+| A. 현행 유지 + 명시 | 생성형 라벨링만 | 미채택 |
+| B. 실제 수집 연동 | RSS 근거 + sourceUrl | (C에 포함) |
+| **C. 하이브리드** | **근거 기사 + 학습+실전 + 원문 링크** | ✅ **채택·구현** |
 
-> **현재 상태(v1.0)**: 옵션 미결정. Tech Track은 **A의 "명시" 부분도 아직 미구현**(라벨 없음) 상태이므로, 최소한 §5의 고지 라벨은 단기 적용을 권고한다.
+**구현 요지**: `tech-sources.json`(도메인별 큐레이션 RSS) + `tech-composer` seed 수집 + `learning` 스키마 + `sourceUrl` 코드 주입 + UI(학습→실전→원문). 상세 §3.2.
+
+**남은 보완(선택)**: 근거 없는 도메인(피드 전부 실패 시) 카드에 대한 "AI 보편 지식 기반" 미세 라벨, 피드 소스 풀 확장·튜닝.
 
 ## 7. 관련 문서 / 코드
 

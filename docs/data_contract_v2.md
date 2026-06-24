@@ -1,7 +1,7 @@
 # Data Contract v2 — Pace Note (웹 ↔ macOS 공유 데이터 계약)
 
 > **목적**: macOS 데스크톱 앱 착수 전, 웹에서 먼저 동결하는 단일 데이터 계약. 본 계약을 따르면 데스크톱은 "REST를 IPC/SQLite로 갈아끼우기"만으로 이식된다.
-> **상태**: ✅ **v2.1** (2026-06-23, 구현 반영: subtask 토글·자동 주차 생성 추가 / v2.0 Frozen 2026-06-22) · **정본 위치**: `docs/data_contract_v2.md`
+> **상태**: ✅ **v2.2** (2026-06-24, 하이브리드: `learning` 학습 레이어 + 실제 출처 URL 추가) · **정본 위치**: `docs/data_contract_v2.md`
 > **관련**: [mac_app_business_plan.md](mac_app_business_plan.md) 6장 / 10장(Phase 0)
 
 ---
@@ -55,8 +55,13 @@
       "domain": "ai_llm",             // 관심사 필터 칩과 매칭되는 키
       "title": "React 19 Server Actions 실전 적용",
       "summary": "…요약 1~2문장…",
-      "sourceUrl": "https://…",       // 선택
+      "learning": {                   // ★ v2.2 — 학습 레이어(실전 전 개념 학습)
+        "concept": "핵심 개념/원리 설명 (3~4문장)",
+        "key_points": ["학습 포인트 1", "학습 포인트 2", "학습 포인트 3"]  // 2~4개
+      },
       "tags": ["react", "server-actions", "error-handling"],  // 로컬 재랭킹 가중치 조인 키
+      "sourceUrl": "https://…",       // ★ 하이브리드 근거 기사 실제 URL (없으면 생략)
+      "sourceName": "Hugging Face Blog",  // ★ 출처 매체명 (없으면 생략)
       "action_challenge": {
         "id": "ac-2026-06-22-j-01",
         "title": "Server Actions 실무 구현 챌린지",
@@ -227,3 +232,4 @@ CREATE TABLE keyword_weights (    -- 로컬 재랭킹용 (데스크톱 전용)
 | :--- | :--- | :--- | :--- |
 | v2.0 | 2026-06-22 | 미결 4건 확정, 계약 동결(Frozen) | — |
 | v2.1 | 2026-06-23 | 구현 반영: ① `Subtask` 타입 + `Task.subtasks?` 가산 ② `POST /toggle-subtask`(IPC `toggle_subtask`) 추가 ③ add-orbit 오빗 id `orbit-<ac.id>` 확정 + **주차 미존재 시 자동 생성**(404 제거) ④ 트랙 `index.json`에 `version`/`updatedAt` 기록(tech-composer) | §2.1, §2.2, §1.4 |
+| v2.2 | 2026-06-24 | 하이브리드(출처 정책 경로 C): 트랙 카드에 ① **`learning`**(concept + key_points 2~4개) 학습 레이어 가산 ② 실제 RSS 근거 기사의 **`sourceUrl`/`sourceName`** 채움(코드 주입). [학습 → 실전 → 원문] 흐름 | §1.2 |
