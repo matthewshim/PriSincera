@@ -396,6 +396,67 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* ── 오빗(세부 할 일 보유 task): 카드가 헤더 행 + 체크리스트를 함께 감쌈 ── */
+/* 일반 task(세부 없음)는 .pacenote-task-group에 스타일이 없어 기존과 동일하게 렌더 */
+.pacenote-task-group.has-subtasks {
+  background: rgba(17, 17, 17, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 4px solid var(--category-theme, #34D399);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+}
+
+.pacenote-task-group.has-subtasks:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 15px rgba(52, 211, 153, 0.03);
+}
+
+/* 그룹 카드 내부의 부모 행: 자체 카드 박스 제거 → 카드 헤더로 전환 */
+.pacenote-task-group.has-subtasks > .pacenote-task-item,
+.pacenote-task-group.has-subtasks > .pacenote-task-item:hover {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: none;
+}
+
+/* 세부 할 일 체크리스트: 카드 본문, 부모와 점선으로 구분, 제목 라인에 좌측 정렬 */
+.pacenote-subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 20px 18px 56px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.07);
+}
+
+.pacenote-subtask-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted, #94A3B8);
+  cursor: pointer;
+}
+
+.pacenote-subtask-item.readonly { cursor: default; }
+
+.pacenote-subtask-item input {
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: var(--category-theme, #34D399);
+}
+
+.pacenote-subtask-item.completed { color: rgba(16, 185, 129, 0.85); }
+.pacenote-subtask-item.completed .pacenote-subtask-text { text-decoration: line-through; }
+
 .pacenote-task-item input {
   display: none;
 }
