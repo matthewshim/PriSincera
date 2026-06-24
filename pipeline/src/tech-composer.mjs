@@ -112,7 +112,8 @@ async function collectSeeds() {
     let best = null;
     for (const src of sources) {
       try {
-        const articles = await fetchFeed(src, maxPerSource, maxAgeDays);
+        // OG 이미지 크롤 생략(withOgImage=false) — 근거 텍스트만 필요, 실행 속도↑
+        const articles = await fetchFeed(src, maxPerSource, maxAgeDays, false);
         for (const a of articles) {
           if (!best || new Date(a.publishedAt) > new Date(best.publishedAt)) best = a;
         }
