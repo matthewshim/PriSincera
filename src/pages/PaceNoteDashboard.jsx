@@ -941,7 +941,11 @@ export default function PaceNoteDashboard() {
                                 const isCompleted = task.completed;
                                 const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
                                 return (
-                                  <div key={task.id} className="pacenote-task-group">
+                                  <div
+                                    key={task.id}
+                                    className={`pacenote-task-group ${subtasks.length > 0 ? 'has-subtasks' : ''}`}
+                                    style={{ '--category-theme': task.color || '#A78BFA' }}
+                                  >
                                   <label
                                     className={`pacenote-task-item haptic-trigger ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
                                     style={{ '--category-theme': task.color || '#A78BFA' }}
@@ -963,17 +967,19 @@ export default function PaceNoteDashboard() {
                                     </div>
                                   </label>
                                   {subtasks.length > 0 && (
-                                    <div className="pacenote-subtasks" style={{ paddingLeft: '34px', marginTop: '2px', marginBottom: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    <div className="pacenote-subtasks">
                                       {subtasks.map((s) => (
-                                        <label key={s.seq} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', cursor: isCurrent ? 'pointer' : 'default', fontSize: '0.84rem', lineHeight: 1.5, color: s.completed ? '#10B981' : 'var(--text-muted, #9CA3AF)' }}>
+                                        <label
+                                          key={s.seq}
+                                          className={`pacenote-subtask-item ${s.completed ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
+                                        >
                                           <input
                                             type="checkbox"
                                             checked={!!s.completed}
                                             onChange={() => isCurrent && toggleSubtask(task.id, s.seq)}
                                             disabled={!isCurrent}
-                                            style={{ marginTop: '3px', flexShrink: 0 }}
                                           />
-                                          <span style={{ textDecoration: s.completed ? 'line-through' : 'none' }}>{s.text}</span>
+                                          <span className="pacenote-subtask-text">{s.text}</span>
                                         </label>
                                       ))}
                                     </div>
