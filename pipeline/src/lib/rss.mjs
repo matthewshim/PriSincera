@@ -54,7 +54,7 @@ export async function fetchOgImage(url) {
  * @param {Object} source - sources.json의 소스 객체
  * @returns {Promise<Array>} 정규화된 아티클 배열 (ogImage 포함)
  */
-export async function fetchFeed(source, maxPerSource = 5, maxAgeDays = 1) {
+export async function fetchFeed(source, maxPerSource = 5, maxAgeDays = 1, withOgImage = true) {
   try {
     const feed = await parser.parseURL(source.rss);
     const now = new Date();
@@ -82,18 +82,19 @@ export async function fetchFeed(source, maxPerSource = 5, maxAgeDays = 1) {
         collectedAt: now.toISOString(),
       }));
 
-    // OG 이미지 병렬 크롤링 (소스당 최대 5개이므로 부하 적음)
-    const ogResults = await Promise.allSettled(
-      articles.map(a => fetchOgImage(a.url))
-    );
-
-    articles.forEach((a, i) => {
-      a.ogImage = ogResults[i].status === 'fulfilled' ? ogResults[i].value : null;
-    });
-
-    const ogCount = articles.filter(a => a.ogImage).length;
-    if (ogCount > 0) {
-      console.log(`[RSS] ${source.name}: OG 이미지 ${ogCount}/${articles.length}개 수집`);
+    // OG 이미지 병렬 크롤링 (소스당 최대 5개이므로 부하 적음).
+    // tech-composer 등 OG가 불필요한 호출부는 withOgImage=false로 페이지 크롤을 생략(속도↑).
+    if (withOgImage) {
+      const ogResults = await Promise.allSettled(
+        articles.map(a => fetchOgImage(a.url))
+      );
+      articles.forEach((a, i) => {
+        a.ogImage = ogResults[i].status === 'fulfilled' ? ogResults[i].value : null;
+      });
+      const ogCount = articles.filter(a => a.ogImage).length;
+      if (ogCount > 0) {
+        console.log(`[RSS] ${source.name}: OG 이미지 ${ogCount}/${articles.length}개 수집`);
+      }
     }
 
     return articles;

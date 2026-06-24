@@ -414,10 +414,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
       // 트리거 직전 최신 실행 시각(새 실행 완료 감지용)
       const beforeCreate = trackJobStatus?.createTime || '';
       await fetchApi('/daily/tracks/run', { method: 'POST' });
-      // 잡은 보통 60~90초 소요 → 완료까지 폴링(최대 ~2.5분). 버튼은 '실행 중…' 유지.
+      // 하이브리드(RSS 수집 + Gemini 2회)는 보통 90~180초 소요 → 완료까지 폴링(최대 ~5분). 버튼은 '실행 중…' 유지.
       let finalJob = null;
-      for (let i = 0; i < 13; i++) {
-        await new Promise(r => setTimeout(r, 12000));
+      for (let i = 0; i < 20; i++) {
+        await new Promise(r => setTimeout(r, 15000));
         const job = await fetchApi('/daily/tracks/job-status').catch(() => null);
         if (job?.exists && (job.createTime || '') > beforeCreate && job.status !== 'running') {
           finalJob = job;
