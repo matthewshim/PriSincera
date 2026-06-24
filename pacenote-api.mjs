@@ -307,7 +307,8 @@ export function buildOrbitTasks(actionChallenge, domain) {
   const ac = actionChallenge || {};
   const rawTasks = Array.isArray(ac.tasks) ? ac.tasks : [];
   const items = rawTasks
-    .map(t => (typeof t === 'object' ? (t.text || '') : t).toString().trim())
+    // 끝 마침표/말줄임표 제거 — 기존 궤도 톤('~하기')과 일관되게
+    .map(t => (typeof t === 'object' ? (t.text || '') : t).toString().trim().replace(/[.。…]+$/u, '').trim())
     .filter(Boolean);
   if (items.length === 0) throw new Error('action_challenge.tasks is required');
 
