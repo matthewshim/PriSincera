@@ -293,29 +293,34 @@ const localizeTask = (task, locale) => {
   };
 };
 
-// Data Contract v2 §2.2 — action_challenge -> 주간 오빗(부모 task + 3개 subtask)
-// 부모는 기존 flat Task 형상을 유지하고, 신규 subtasks 필드를 가산(구버전 UI는 무시 → 6.4.2).
-export function buildOrbitTask(actionChallenge) {
+// 테크 트랙 도메인 → PaceNote 카테고리/색상 (디자인 시스템 토큰 정합)
+const TRACK_DOMAIN_META = {
+  ai_llm:        { category: 'AI/LLM',        color: '#22D3EE' },  // Aether Cyan
+  system_design: { category: 'System Design', color: '#A5B4FC' },  // Nebula Indigo
+  devops:        { category: 'DevOps',        color: '#34D399' },  // Mint
+  tech_lead:     { category: 'Tech Lead',     color: '#E5B25D' },  // Starlight Gold
+};
+
+// Click-to-Orbit: action_challenge의 각 항목(N개)을 각각 1개의 궤도(flat task)로 변환.
+// 카테고리/색상은 테크 트랙 도메인에 맞춘다. (subtask 체크리스트 정책 폐지)
+export function buildOrbitTasks(actionChallenge, domain) {
   const ac = actionChallenge || {};
-  const title = (ac.title || '').toString().trim();
-  if (!title) throw new Error('action_challenge.title is required');
-
   const rawTasks = Array.isArray(ac.tasks) ? ac.tasks : [];
-  const subtasks = rawTasks.slice(0, 3).map((t, i) => ({
-    seq: i + 1,
-    text: (typeof t === 'object' ? (t.text || '') : t).toString().trim(),
-    completed: false
-  }));
+  const items = rawTasks
+    .map(t => (typeof t === 'object' ? (t.text || '') : t).toString().trim())
+    .filter(Boolean);
+  if (items.length === 0) throw new Error('action_challenge.tasks is required');
 
-  const smart = getSmartCategory(title);
-  return {
-    id: ac.id ? `orbit-${ac.id}` : `orbit-${Date.now()}`,
-    title,
-    category: smart.category,
-    color: smart.color,
+  const meta = TRACK_DOMAIN_META[domain] || { category: 'Tech Track', color: '#A5B4FC' };
+  const base = ac.id ? `orbit-${ac.id}` : `orbit-${Date.now()}`;
+
+  return items.map((text, i) => ({
+    id: `${base}-${i + 1}`,
+    title: text,
+    category: meta.category,
+    color: meta.color,
     completed: false,
-    subtasks
-  };
+  }));
 }
 
 // 기본 주차 문서 생성 (GET / 와 add-orbit 공통 — 미존재 주차 자동 초기화)
@@ -532,14 +537,14 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
 pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
-    const { action_challenge } = req.body;
-    if (!action_challenge || !action_challenge.title) {
-      return res.status(400).json({ error: 'action_challenge with title is required' });
+    const { action_challenge, domain } = req.body;
+    if (!action_challenge || !Array.isArray(action_challenge.tasks) || action_challenge.tasks.length === 0) {
+      return res.status(400).json({ error: 'action_challenge with tasks is required' });
     }
 
-    let orbit;
+    let orbits;
     try {
-      orbit = buildOrbitTask(action_challenge);
+      orbits = buildOrbitTasks(action_challenge, domain);  // N개 flat task (도메인 카테고리)
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }
@@ -550,27 +555,29 @@ pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
 
     const doc = await docRef.get();
 
-    // 이번 주 PaceNote를 아직 열지 않아 week 문서가 없으면 기본 주차를 자동 생성 후 오빗 주입
+    // 이번 주 PaceNote를 아직 열지 않아 week 문서가 없으면 기본 주차를 자동 생성 후 주입
     if (!doc.exists) {
       const dailyPool = await getDailyPool();
       const week = buildDefaultWeek(currentWeekId, dailyPool);
-      week.currentPace.push(orbit);
+      week.currentPace.push(...orbits);
       await docRef.set(week);
-      return res.json({ success: true, currentPace: week.currentPace.map(t => localizeTask(t, req.locale)) });
+      return res.json({ success: true, added: orbits.length, currentPace: week.currentPace.map(t => localizeTask(t, req.locale)) });
     }
 
     const data = doc.data();
     const currentPace = data.currentPace || [];
 
-    // 동일 action_challenge 중복 주입 방지
-    if (currentPace.some(t => t.id === orbit.id)) {
-      return res.status(409).json({ error: 'Orbit already added', currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
+    // 이미 추가된 항목은 제외하고 신규만 주입 (멱등)
+    const existingIds = new Set(currentPace.map(t => t.id));
+    const fresh = orbits.filter(o => !existingIds.has(o.id));
+    if (fresh.length === 0) {
+      return res.status(409).json({ error: 'Orbits already added', currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
     }
 
-    currentPace.push(orbit);
+    currentPace.push(...fresh);
     await docRef.update({ currentPace });
 
-    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
+    res.json({ success: true, added: fresh.length, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
     console.error('[PaceNote API] Add Orbit Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -609,36 +616,6 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
   }
 });
 
-// 2-1. 오빗의 세부 할 일(subtask) 완료 토글 (Click-to-Orbit 3단계 액션)
-pacenoteRouter.post('/toggle-subtask', verifyUser, async (req, res) => {
-  try {
-    const uid = req.user.uid;
-    const { taskId, seq } = req.body;
-    if (!taskId || seq == null) return res.status(400).json({ error: 'taskId and seq are required' });
-
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
-
-    const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
-
-    const data = doc.data();
-    const currentPace = data.currentPace || [];
-    const task = currentPace.find(t => t.id === taskId);
-    if (!task || !Array.isArray(task.subtasks)) return res.status(404).json({ error: 'Task or subtasks not found' });
-    const sub = task.subtasks.find(s => s.seq === seq);
-    if (!sub) return res.status(404).json({ error: 'Subtask not found' });
-
-    sub.completed = !sub.completed;
-
-    await docRef.update({ currentPace });
-    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
-  } catch (err) {
-    console.error('[PaceNote API] Toggle Subtask Error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
 
 // 3. 추천 미션을 내 궤도로 추가 (Accept)
 pacenoteRouter.post('/accept', verifyUser, async (req, res) => {

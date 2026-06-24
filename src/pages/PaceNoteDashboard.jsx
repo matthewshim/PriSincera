@@ -432,36 +432,6 @@ export default function PaceNoteDashboard() {
     }
   };
 
-  // 오빗 세부 할 일(subtask) 완료 토글
-  const toggleSubtask = async (taskId, seq) => {
-    if (!userToken) {
-      alert(t('paceNote.loginToRecord'));
-      return handleLoginClick();
-    }
-
-    // Optimistic UI update
-    setData(prev => {
-      const currentPace = prev.current.currentPace.map(p =>
-        (p.id === taskId && Array.isArray(p.subtasks))
-          ? { ...p, subtasks: p.subtasks.map(s => s.seq === seq ? { ...s, completed: !s.completed } : s) }
-          : p
-      );
-      return { ...prev, current: { ...prev.current, currentPace } };
-    });
-
-    try {
-      const res = await fetchWithAuth(`/api/pacenote/toggle-subtask?lang=${locale}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taskId, seq })
-      });
-      if (!res.ok) fetchPaceData();
-    } catch (err) {
-      console.error(err);
-      fetchPaceData();
-    }
-  };
-
   const acceptRecommend = async (taskId) => {
     if (!userToken) {
       alert(t('paceNote.loginToRecord'));
@@ -939,14 +909,9 @@ export default function PaceNoteDashboard() {
                             {sortedPaceList && sortedPaceList.length > 0 ? (
                               sortedPaceList.map((task) => {
                                 const isCompleted = task.completed;
-                                const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
                                 return (
-                                  <div
-                                    key={task.id}
-                                    className={`pacenote-task-group ${subtasks.length > 0 ? 'has-subtasks' : ''}`}
-                                    style={{ '--category-theme': task.color || '#A78BFA' }}
-                                  >
                                   <label
+                                    key={task.id}
                                     className={`pacenote-task-item haptic-trigger ${isCompleted ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
                                     style={{ '--category-theme': task.color || '#A78BFA' }}
                                   >
@@ -966,25 +931,6 @@ export default function PaceNoteDashboard() {
                                       <span className="task-text">{task.title}</span>
                                     </div>
                                   </label>
-                                  {subtasks.length > 0 && (
-                                    <div className="pacenote-subtasks">
-                                      {subtasks.map((s) => (
-                                        <label
-                                          key={s.seq}
-                                          className={`pacenote-subtask-item ${s.completed ? 'completed' : ''} ${!isCurrent ? 'readonly' : ''}`}
-                                        >
-                                          <input
-                                            type="checkbox"
-                                            checked={!!s.completed}
-                                            onChange={() => isCurrent && toggleSubtask(task.id, s.seq)}
-                                            disabled={!isCurrent}
-                                          />
-                                          <span className="pacenote-subtask-text">{s.text}</span>
-                                        </label>
-                                      ))}
-                                    </div>
-                                  )}
-                                  </div>
                                 );
                               })
                             ) : (
