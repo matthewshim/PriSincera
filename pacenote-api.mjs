@@ -496,6 +496,25 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
   }
 });
 
+// 1-0. 현재 주차에 이미 추가된 오빗 base id 목록 (read-only — 주차 문서를 생성하지 않음)
+// 트랙 카드의 '이미 추가됨' 상태 표시용. base id = orbit-<ac.id> (항목 suffix 제거)
+pacenoteRouter.get('/orbit-ids', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const currentWeekId = getWeekNumber(new Date());
+    const doc = await db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId).get();
+    if (!doc.exists) return res.json({ orbitBaseIds: [] });
+    const ids = (doc.data().currentPace || [])
+      .map(t => t.id)
+      .filter(id => typeof id === 'string' && id.startsWith('orbit-'));
+    const baseIds = [...new Set(ids.map(id => id.replace(/-\d+$/, '')))];
+    res.json({ orbitBaseIds: baseIds });
+  } catch (err) {
+    console.error('[PaceNote API] orbit-ids Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // 1-1. 사용자 정의 미션 추가
 pacenoteRouter.post('/add', verifyUser, async (req, res) => {
   try {

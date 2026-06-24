@@ -31,7 +31,8 @@ export default function TrackSignalFeed({ date }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeDomain, setActiveDomain] = useState('all');
-  const [orbitState, setOrbitState] = useState({}); // cardId -> 'adding'|'added'|'error'
+  const [orbitState, setOrbitState] = useState({}); // cardId -> 'adding'|'error' (전송 중 상태)
+  const [addedBaseIds, setAddedBaseIds] = useState(new Set()); // 이미 추가된 orbit base id (orbit-<ac.id>)
 
   useEffect(() => {
     let cancelled = false;
@@ -49,11 +50,29 @@ export default function TrackSignalFeed({ date }) {
     return () => { cancelled = true; };
   }, [date, track]);
 
+  // 로그인 시 이번 주에 이미 추가된 궤도 base id 조회 (read-only — '이미 추가됨' 표시용)
+  useEffect(() => {
+    if (!user) { setAddedBaseIds(new Set()); return; }
+    let cancelled = false;
+    const doFetch = (tok) => fetch('/api/pacenote/orbit-ids', { headers: { Authorization: `Bearer ${tok}` } });
+    (async () => {
+      try {
+        let res = await doFetch(token);
+        if (res.status === 401) { const fresh = await user.getIdToken(true); res = await doFetch(fresh); }
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) setAddedBaseIds(new Set(data.orbitBaseIds || []));
+      } catch { /* 무시 */ }
+    })();
+    return () => { cancelled = true; };
+  }, [user, token]);
+
   const addOrbit = useCallback(async (card) => {
     if (!user) {
-      alert('오빗에 추가하려면 로그인이 필요합니다.');
+      alert('실행의 궤도에 추가하려면 로그인이 필요합니다.');
       return;
     }
+    const baseId = card.action_challenge?.id ? `orbit-${card.action_challenge.id}` : null;
     setOrbitState(s => ({ ...s, [card.id]: 'adding' }));
     const doFetch = (tok) => fetch('/api/pacenote/add-orbit', {
       method: 'POST',
@@ -67,8 +86,13 @@ export default function TrackSignalFeed({ date }) {
         const fresh = await user.getIdToken(true);
         res = await doFetch(fresh);
       }
-      // 409(이미 추가됨)도 멱등 성공으로 처리
-      setOrbitState(s => ({ ...s, [card.id]: (res.ok || res.status === 409) ? 'added' : 'error' }));
+      if (res.ok || res.status === 409) {
+        // 성공/이미추가(409) → 영구 '추가됨' 표시
+        if (baseId) setAddedBaseIds(prev => new Set(prev).add(baseId));
+        setOrbitState(s => { const n = { ...s }; delete n[card.id]; return n; });
+      } else {
+        setOrbitState(s => ({ ...s, [card.id]: 'error' }));
+      }
     } catch (e) {
       console.error('[TrackSignalFeed] add-orbit 실패:', e);
       setOrbitState(s => ({ ...s, [card.id]: 'error' }));
@@ -120,7 +144,9 @@ export default function TrackSignalFeed({ date }) {
 
       {/* 카드 목록 (C3) */}
       {!loading && !error && cards.map(card => {
-        const st = orbitState[card.id];
+        const baseId = card.action_challenge?.id ? `orbit-${card.action_challenge.id}` : null;
+        const isAdded = !!(baseId && addedBaseIds.has(baseId));
+        const st = isAdded ? 'added' : orbitState[card.id];
         return (
           <div key={card.id} className="track-card">
             <div className="track-card-meta">
@@ -160,7 +186,7 @@ export default function TrackSignalFeed({ date }) {
                   onClick={() => addOrbit(card)}
                   disabled={st === 'adding' || st === 'added'}
                 >
-                  {st === 'added' ? '✓ 오빗에 추가됨' : st === 'adding' ? '추가 중…' : st === 'error' ? '실패 — 다시 시도' : '＋ 오빗에 추가'}
+                  {st === 'added' ? '✓ 실행의 궤도에 추가됨' : st === 'adding' ? '추가 중…' : st === 'error' ? '실패 — 다시 시도' : '＋ 실행의 궤도에 추가'}
                 </button>
               </div>
             )}
