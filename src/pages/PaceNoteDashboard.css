@@ -396,8 +396,14 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* 태스크 래퍼: 고정 높이 flex 컨테이너(.pacenote-tasks)에서 압축되지 않도록 자연 높이 유지
+   (이게 없으면 항목이 많을 때 flex가 카드를 squish → has-subtasks의 overflow:hidden과 겹쳐 내용 클리핑) */
+.pacenote-task-group {
+  flex-shrink: 0;
+}
+
 /* ── 오빗(세부 할 일 보유 task): 카드가 헤더 행 + 체크리스트를 함께 감쌈 ── */
-/* 일반 task(세부 없음)는 .pacenote-task-group에 스타일이 없어 기존과 동일하게 렌더 */
+/* 일반 task(세부 없음)는 .pacenote-task-group에 카드 스타일이 없어 기존과 동일하게 렌더 */
 .pacenote-task-group.has-subtasks {
   background: rgba(17, 17, 17, 0.4);
   border-radius: 16px;
