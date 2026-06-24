@@ -46,11 +46,16 @@ export function normalizeTag(tag) {
   return String(tag).toLowerCase().trim().replace(/\s+/g, '-');
 }
 
+// 실행 궤도 톤 정규화: 끝의 마침표/말줄임표 제거 (기존 궤도 톤 '~하기'와 일관성)
+export function cleanActionText(s) {
+  return String(s).trim().replace(/[.。…]+$/u, '').trim();
+}
+
 // action_challenge.tasks를 정확히 3개로 보정 + seq 부여 (ko 단일 — 계약 §5)
 export function normalizeTasks(rawTasks) {
   const arr = Array.isArray(rawTasks) ? rawTasks.slice(0, 3) : [];
   while (arr.length < 3) arr.push('세부 할 일을 입력하세요');
-  return arr.map((text, i) => ({ seq: i + 1, text: String(text).trim() }));
+  return arr.map((text, i) => ({ seq: i + 1, text: cleanActionText(text) }));
 }
 
 // learning.key_points 정규화 (2~4개, 문자열 배열)
