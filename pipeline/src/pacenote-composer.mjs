@@ -20,7 +20,7 @@ async function main() {
     }
 
     const userDocs = await db.collection('pacenotes').listDocuments();
-    const poolStats = {}; // { id: pickCount }
+    const poolStats = {}; // { id: { picks, completes } }
     const CHUNK_SIZE = 50;
     for (let i = 0; i < userDocs.length; i += CHUNK_SIZE) {
       const chunk = userDocs.slice(i, i + CHUNK_SIZE);
@@ -28,16 +28,16 @@ async function main() {
         try {
           const weeksSnap = await docRef.collection('weeks').orderBy('weekId', 'desc').limit(10).get();
 
-          // (a) 추천 풀 통계(velocity 입력) — 기존 동작 유지
+          // (a) 추천 풀 통계 — Phase 2: 선택(pick) + 완료(complete) 모두 집계
           weeksSnap.docs.forEach(doc => {
             const data = doc.data();
-            if (data.currentPace) {
-              data.currentPace.forEach(task => {
-                if (!task.id.startsWith('custom-')) {
-                  poolStats[task.id] = (poolStats[task.id] || 0) + 1;
-                }
-              });
-            }
+            (data.currentPace || []).forEach(task => {
+              if (task.id && !task.id.startsWith('custom-')) {
+                const s = (poolStats[task.id] ||= { picks: 0, completes: 0 });
+                s.picks++;
+                if (task.completed) s.completes++;
+              }
+            });
           });
 
           // (b) Growth Loop Phase 1: 성장 프로파일 권위 재계산 (weeks → profile)
@@ -83,16 +83,19 @@ async function main() {
     const scoredPool = currentPool.map(item => {
       const createdAt = item.createdAt ? new Date(item.createdAt) : now;
       const daysAlive = Math.max(1, (now - createdAt) / (1000 * 60 * 60 * 24)); // 최소 1일로 설정
-      const picks = poolStats[item.id] || 0;
-      const velocity = picks / daysAlive;
-      return { ...item, daysAlive, velocity };
+      const s = poolStats[item.id] || { picks: 0, completes: 0 };
+      // Phase 2: 완료 가중 — '완료'가 '선택'보다 3배 가치 (저완료·고선택 = 고인물 → velocity 낮음)
+      const velocity = (s.completes * 3 + s.picks) / daysAlive;
+      return { ...item, daysAlive, picks: s.picks, completes: s.completes, velocity };
     });
 
     // 2. 명예의 전당(Hall of Fame) 추출 (프롬프트 주입용)
-    // Velocity 기준 상위 정렬
+    // 완료 가중 Velocity 기준 상위 정렬
     const sortedForHOF = [...scoredPool].sort((a, b) => b.velocity - a.velocity);
-    // 선택을 최소 2번 이상 받은 항목들 중 상위 3개 추출
-    const hallOfFame = sortedForHOF.filter(item => poolStats[item.id] >= 2).slice(0, 3);
+    // Phase 2: 실제 '완료된' 궤도를 우수 사례로 우선 (콜드 스타트 시 선택 2회 이상으로 폴백)
+    const hallOfFame = sortedForHOF
+      .filter(item => item.completes > 0 || item.picks >= 2)
+      .slice(0, 3);
     
     let hofPromptText = '';
     if (hallOfFame.length > 0) {
@@ -180,7 +183,7 @@ async function main() {
     }
 
     // 최종 풀 조합: 최신 궤도 + 살아남은 기존 궤도 (임시 필드 제거)
-    const cleanedSurvivingPool = survivingPool.map(({ daysAlive, velocity, ...rest }) => rest);
+    const cleanedSurvivingPool = survivingPool.map(({ daysAlive, velocity, picks, completes, ...rest }) => rest);
     const updatedPool = [...formattedRecs, ...cleanedSurvivingPool];
     
     console.log(`📊 퇴출 결과: TTL 만료 ${ttlEvicted}개 삭제, 실적 저조 ${velocityEvicted}개 삭제`);

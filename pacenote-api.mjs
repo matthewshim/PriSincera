@@ -248,21 +248,50 @@ const AI_RECOMMENDATION_POOL = [
 ];
 
 // 추천 풀에서 필요한 개수만큼 부족한 추천을 채워주는 함수
-function replenishRecommendations(currentPace = [], recommendedPace = [], pool = [], count = 3) {
+// Phase 2: affinity 인지형 추천 — 유저 강점 도메인 위주 + 마지막 1개는 스트레치(약점/미접촉).
+// affinity 미제공(콜드 스타트) 시 기존 랜덤 동작과 동일.
+function replenishRecommendations(currentPace = [], recommendedPace = [], pool = [], count = 3, affinity = null) {
   const currentIds = new Set(currentPace.map(p => p.id));
   const recIds = new Set(recommendedPace.map(p => p.id));
-  let newRecs = [...recommendedPace];
-  
-  // 이미 목표나 추천에 없는 항목들 필터링
-  const availablePool = pool.filter(item => !currentIds.has(item.id) && !recIds.has(item.id));
-  
-  // 랜덤 셔플
-  availablePool.sort(() => 0.5 - Math.random());
-  
-  while (newRecs.length < count && availablePool.length > 0) {
-    newRecs.push(availablePool.pop());
+  const newRecs = [...recommendedPace];
+  const need = count - newRecs.length;
+  if (need <= 0) return newRecs;
+
+  const available = pool.filter(item => !currentIds.has(item.id) && !recIds.has(item.id));
+  available.sort(() => 0.5 - Math.random()); // 동점 무작위화
+
+  // 콜드 스타트(프로파일 없음) → 기존 랜덤 동작 유지
+  const hasAffinity = affinity && Object.keys(affinity).length > 0;
+  if (!hasAffinity) {
+    while (newRecs.length < count && available.length > 0) newRecs.push(available.pop());
+    return newRecs;
   }
-  return newRecs;
+
+  const score = (item) => affinity[affinityKey(item.category)] || 0;
+  const byStrong = [...available].sort((a, b) => score(b) - score(a));   // 강점 우선
+  const byStretch = [...available].sort((a, b) => score(a) - score(b));  // 약점(스트레치) 우선
+
+  const stretchSlots = need >= 2 ? 1 : 0;  // 2개 이상 채울 때만 스트레치 1개 확보
+  const strongSlots = need - stretchSlots;
+  const chosen = [];
+  const taken = new Set();
+  const take = (item) => { if (item && !taken.has(item.id)) { taken.add(item.id); chosen.push(item); } };
+
+  for (const item of byStrong)  { if (chosen.length >= strongSlots) break; take(item); }
+  for (const item of byStretch) { if (chosen.length >= need) break; take(item); }
+  for (const item of available) { if (chosen.length >= need) break; take(item); } // 폴백
+
+  return [...newRecs, ...chosen.slice(0, need)];
+}
+
+// 유저 affinity(도메인 선호) 조회 — 추천 개인화 입력. 실패/부재 시 null(랜덤 폴백).
+async function getAffinity(uid) {
+  try {
+    const snap = await db.collection('pacenotes').doc(uid).get();
+    return (snap.exists && snap.data().profile?.domainAffinity) || null;
+  } catch {
+    return null;
+  }
 }
 
 // Daily Pool 조회 유틸 (Firestore에서 가져오되, 실패 시 하드코딩 배열 사용)
@@ -460,7 +489,8 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
       // 지속적인 추천 UX 제공을 위해 항상 추천 항목이 3개 미만이면 채워줌
       const oldRecCount = (currentWeekData.recommendedPace || []).length;
       if (oldRecCount < 3) {
-        currentWeekData.recommendedPace = replenishRecommendations(currentWeekData.currentPace, currentWeekData.recommendedPace || [], dailyPool, 3);
+        const affinity = await getAffinity(uid);
+        currentWeekData.recommendedPace = replenishRecommendations(currentWeekData.currentPace, currentWeekData.recommendedPace || [], dailyPool, 3, affinity);
         await weeksRef.doc(currentWeekId).update({ recommendedPace: currentWeekData.recommendedPace });
       }
     }
@@ -739,7 +769,8 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
     // 부족해진 추천 항목을 다시 3개로 채움
     if (recommendedPace.length < 3) {
       const dailyPool = await getDailyPool();
-      recommendedPace = replenishRecommendations(currentPace, recommendedPace, dailyPool, 3);
+      const affinity = await getAffinity(uid);
+      recommendedPace = replenishRecommendations(currentPace, recommendedPace, dailyPool, 3, affinity);
     }
     
     await docRef.update({ currentPace, recommendedPace });
