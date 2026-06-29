@@ -1357,6 +1357,116 @@ router.post('/builderslog/publish', async (req, res) => {
   }
 });
 
+// ─── 서비스 문서 인라인 수정 (GitHub 커밋 = 버전 이력) ──────────────────
+// 저장 = docs/**.md 1파일을 GitHub main에 커밋. 매 수정이 곧 커밋 1건이라
+// 별도 히스토리 저장소 없이 listCommits({path})로 콘텐츠별 이력을 제공한다.
+
+const DOC_SECRET_PATTERNS = [
+  /AIza[0-9A-Za-z\-_]{35}/,            // Google/Firebase API Key
+  /ghp_[a-zA-Z0-9]{36}/,               // GitHub PAT
+  /xox[baprs]-[a-zA-Z0-9]{10,48}/,     // Slack Token
+  /-----BEGIN (?:RSA |EC |OPENSSH |PGP )?PRIVATE KEY-----/, // Private Key
+];
+
+function isDocPathSafe(p) {
+  return typeof p === 'string'
+    && p.startsWith('docs/')
+    && p.endsWith('.md')
+    && !p.includes('..')
+    && !p.includes('\\')
+    && !p.includes('\0');
+}
+
+router.post('/docs/save', async (req, res) => {
+  try {
+    const { path: relPath, content, summary } = req.body || {};
+    if (!isDocPathSafe(relPath)) return res.status(400).json({ error: '허용되지 않은 문서 경로입니다. (docs/**.md 만 가능)' });
+    if (typeof content !== 'string' || !content.trim()) return res.status(400).json({ error: '본문이 비어 있습니다.' });
+    if (content.length > 500_000) return res.status(400).json({ error: '본문이 너무 큽니다(500KB 초과).' });
+
+    for (const re of DOC_SECRET_PATTERNS) {
+      if (re.test(content)) return res.status(400).json({ error: '보안 위반: 민감 정보(Secret) 패턴이 발견되어 저장이 차단되었습니다.' });
+    }
+
+    const editor = req.adminUser?.email || 'unknown';
+    const cleanSummary = (summary || '텍스트 수정').toString().replace(/[\r\n]+/g, ' ').trim().slice(0, 80) || '텍스트 수정';
+    const commitMessage = `docs(edit): ${relPath.replace(/^docs\//, '')} — ${cleanSummary} [${editor}]`;
+
+    const githubToken = process.env.GITHUB_TOKEN;
+    if (!githubToken) {
+      // 로컬 fallback: 직접 파일 쓰기
+      fs.writeFileSync(path.join(__dirname, relPath), content, 'utf-8');
+      return res.json({ success: true, local: true, editor, message: '로컬 환경에 저장되었습니다 (GITHUB_TOKEN 없음).' });
+    }
+
+    const { Octokit } = await import('@octokit/rest');
+    const octokit = new Octokit({ auth: githubToken });
+    const owner = 'matthewshim', repo = 'PriSincera', branch = 'main';
+
+    const ref = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
+    const baseSha = ref.data.object.sha;
+    const baseCommit = await octokit.rest.git.getCommit({ owner, repo, commit_sha: baseSha });
+    const blob = await octokit.rest.git.createBlob({ owner, repo, content, encoding: 'utf-8' });
+    const newTree = await octokit.rest.git.createTree({
+      owner, repo, base_tree: baseCommit.data.tree.sha,
+      tree: [{ path: relPath, mode: '100644', type: 'blob', sha: blob.data.sha }],
+    });
+    const newCommit = await octokit.rest.git.createCommit({
+      owner, repo, message: commitMessage, tree: newTree.data.sha, parents: [baseSha],
+    });
+    await octokit.rest.git.updateRef({ owner, repo, ref: `heads/${branch}`, sha: newCommit.data.sha });
+
+    res.json({
+      success: true,
+      sha: newCommit.data.sha.slice(0, 7),
+      editor,
+      message: 'GitHub main에 커밋되었습니다. 배포(재빌드) 반영까지 약 3~4분 소요됩니다.',
+    });
+  } catch (err) {
+    console.error('[ServiceDocs] save error:', err);
+    res.status(500).json({ error: `문서 저장 중 오류가 발생했습니다: ${err.message}` });
+  }
+});
+
+router.get('/docs/history', async (req, res) => {
+  try {
+    const relPath = req.query.path;
+    if (!isDocPathSafe(relPath)) return res.status(400).json({ error: '허용되지 않은 문서 경로입니다.' });
+
+    const githubToken = process.env.GITHUB_TOKEN;
+    if (!githubToken) return res.json({ history: [], local: true });
+
+    const limit = Math.min(parseInt(req.query.limit, 10) || 20, 50);
+    const { Octokit } = await import('@octokit/rest');
+    const octokit = new Octokit({ auth: githubToken });
+    const r = await octokit.rest.repos.listCommits({
+      owner: 'matthewshim', repo: 'PriSincera', path: relPath, per_page: limit,
+    });
+
+    const history = r.data.map(c => {
+      const firstLine = (c.commit.message || '').split('\n')[0];
+      const editorMatch = firstLine.match(/\[([^\]]+)\]\s*$/);
+      const editor = editorMatch ? editorMatch[1] : (c.commit.author?.name || '—');
+      const summary = firstLine
+        .replace(/^docs\(edit\):\s*/, '')
+        .replace(/^[^—]*—\s*/, '')       // "경로 — " 접두 제거
+        .replace(/\s*\[[^\]]+\]\s*$/, '') // 편집자 태그 제거
+        .trim() || firstLine;
+      return {
+        sha: c.sha.slice(0, 7),
+        summary,
+        editor,
+        date: c.commit.author?.date || c.commit.committer?.date || null,
+        url: c.html_url,
+      };
+    });
+    res.json({ history });
+  } catch (err) {
+    console.error('[ServiceDocs] history error:', err);
+    res.status(500).json({ error: `이력 조회 중 오류가 발생했습니다: ${err.message}` });
+  }
+});
+
 router.post('/builderslog/translate', async (req, res) => {
   try {
     const { title, subtitle, description, markdown } = req.body;

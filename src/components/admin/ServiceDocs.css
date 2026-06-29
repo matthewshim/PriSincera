@@ -141,8 +141,122 @@
 .svc-markdown th { background: rgba(255, 255, 255, 0.04); color: #FAFAFA; font-weight: 600; }
 .svc-markdown hr { border: none; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 1.8em 0; }
 
+/* ── 수정 버튼 / 편집 모드 ── */
+.svc-edit-btn {
+  margin-left: auto;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(165, 180, 252, 0.35);
+  background: rgba(165, 180, 252, 0.1);
+  color: #A5B4FC;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.svc-edit-btn:hover { background: rgba(165, 180, 252, 0.18); border-color: rgba(165, 180, 252, 0.55); }
+
+.svc-savemsg {
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.svc-savemsg.ok { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); color: #6EE7B7; }
+.svc-savemsg.err { background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); color: #FCA5A5; }
+
+.svc-editor { display: flex; flex-direction: column; gap: 10px; }
+.svc-editor-area {
+  width: 100%;
+  min-height: 460px;
+  resize: vertical;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(165, 180, 252, 0.25);
+  background: #0d1117;
+  color: #D7DEE8;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.84rem;
+  line-height: 1.65;
+  outline: none;
+  box-sizing: border-box;
+  tab-size: 2;
+}
+.svc-editor-area:focus { border-color: rgba(165, 180, 252, 0.5); }
+.svc-editor-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.svc-editor-summary {
+  flex: 1;
+  min-width: 220px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #E2E8F0;
+  font-size: 0.83rem;
+  outline: none;
+}
+.svc-editor-summary:focus { border-color: rgba(165, 180, 252, 0.4); }
+.svc-btn {
+  padding: 9px 16px;
+  border-radius: 9px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: opacity 0.15s, background 0.15s;
+}
+.svc-btn:disabled { opacity: 0.55; cursor: default; }
+.svc-btn.primary { background: rgba(165, 180, 252, 0.18); border-color: rgba(165, 180, 252, 0.45); color: #C7D2FE; }
+.svc-btn.primary:hover:not(:disabled) { background: rgba(165, 180, 252, 0.28); }
+.svc-btn.ghost { background: transparent; border-color: rgba(255, 255, 255, 0.14); color: #94A3B8; }
+.svc-btn.ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.05); color: #E2E8F0; }
+.svc-editor-hint { margin: 0; font-size: 0.76rem; color: #94A3B8; }
+
+/* ── 수정 이력 패널 ── */
+.svc-history {
+  margin-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 16px;
+}
+.svc-history-head {
+  background: none;
+  border: none;
+  color: #CBD5E1;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.svc-history-head:hover { color: #FAFAFA; }
+.svc-history-caret { color: #94A3B8; font-size: 0.78rem; }
+.svc-history-body { margin-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+.svc-history-empty { color: #94A3B8; font-size: 0.82rem; font-style: italic; padding: 8px 4px; }
+.svc-history-row {
+  display: grid;
+  grid-template-columns: 150px 180px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+.svc-history-row:hover { background: rgba(255, 255, 255, 0.03); }
+.svc-history-date { color: #94A3B8; font-variant-numeric: tabular-nums; }
+.svc-history-editor { color: #A5B4FC; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.svc-history-summary { color: #D7DEE8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.svc-history-diff { color: #22D3EE; text-decoration: none; font-size: 0.78rem; white-space: nowrap; }
+.svc-history-diff:hover { text-decoration: underline; }
+
 /* 반응형 */
 @media (max-width: 900px) {
   .svc-docs { grid-template-columns: 1fr; }
   .svc-docs-nav { position: static; max-height: none; }
+  .svc-history-row { grid-template-columns: 1fr auto; row-gap: 2px; }
+  .svc-history-date { grid-column: 1; }
+  .svc-history-editor { grid-column: 2; text-align: right; }
+  .svc-history-summary { grid-column: 1 / -1; white-space: normal; }
 }
