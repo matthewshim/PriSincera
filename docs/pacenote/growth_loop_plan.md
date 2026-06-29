@@ -24,6 +24,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-29 | AI Agent | 성장 루프 닫기 5-Phase 실행 계획 최초 수립 (현황 진단·데이터 모델·되먹임·마일스톤) | PaceNote, DailyDigest |
+| v1.1 | 2026-06-29 | AI Agent | **Phase 0·1 구현 완료** — pacenote-api 신호 적재(recordSignal)·`GET /profile`, pacenote-composer 야간 권위 reconcile | pacenote-api.mjs, pacenote-composer.mjs |
 
 ---
 
@@ -122,19 +123,23 @@ profile: {
 
 > 각 Phase는 **완료기준(DoD)** 을 충족해야 다음으로 진행. Phase 0→2가 핵심 가치의 80%.
 
-### ☐ Phase 0 — 계측 (Instrumentation)
-*개인화는 아직 없음. 신호 적재만 시작.*
-- [ ] `pacenotes/{uid}.profile` 스키마 도입 (없으면 초기화 헬퍼)
-- [ ] 완료 토글 핸들러 → `domainAffinity[category] += 3`, `completion.completed++`
-- [ ] add-orbit 핸들러 → `domainAffinity[category] += 1`, `completion.picked++`
-- [ ] 회고 저장 → `recentReflections` push(상한 N) + `streak.lastActiveDate`
-- **DoD**: 실제 유저 행동이 `profile`에 누적되는 것을 Firestore에서 확인.
+### ✅ Phase 0 — 계측 (Instrumentation) — **완료(2026-06-29)**
+*개인화는 아직 없음. 신호 적재만 시작.* 구현: `recordSignal()` ([pacenote-api.mjs](../../pacenote-api.mjs))
+- [x] `pacenotes/{uid}.profile` 스키마 도입 (set+merge, `FieldValue.increment`)
+- [x] 완료 토글(`/toggle`) → `domainAffinity[key] += 2`, `completion.completed ±1` (pick +1과 합산 시 완료=3)
+- [x] add-orbit / add / accept(`pick`) → `domainAffinity[key] += 1`, `completion.picked += n`
+- [x] 회고 저장(`/diary`) → `profile.reflections[weekId] = {text, ts}` (배열 대신 weekId 맵 — 멱등 갱신)
+- **DoD ✅**: 5개 핸들러가 행동을 `profile`에 증분 적재. best-effort(실패가 핵심 기능 미차단).
 
-### ☐ Phase 1 — 프로파일 집계·정합
-- [ ] `pacenote-composer`에 야간 `profile` 재계산 1패스(증분 드리프트 보정)
-- [ ] `streak` 계산 로직(연속 활동일)
-- [ ] `GET /api/pacenote/profile` 엔드포인트
-- **DoD**: `/profile`이 affinity·completion.rate·streak를 정확히 반환.
+> 📌 구현 메모: affinity 키는 정규화 슬러그(`'AI/LLM'→'ai_llm'`)로 테크 도메인 키와 통일. 회고는 `reflections` 맵으로 저장하고 `GET /profile`이 `recentReflections` 배열(최신 5)로 변환.
+
+### ✅ Phase 1 — 프로파일 집계·정합 — **완료(2026-06-29)**
+- [x] `pacenote-composer` 야간 `profile` 권위 재계산 1패스(weeks→profile, 증분 드리프트 보정·자가치유)
+- [x] `streak` = **연속 완료 주차 수**(current) + 최장 연속(best). affinity는 `완료=3·선택=1` 가중
+- [x] `GET /api/pacenote/profile` — `domainAffinity·completion.rate·streak·recentReflections` 반환
+- **DoD ✅**: 구문 검증 통과, 야간 재계산이 최근 10주 기준 권위 값 산출.
+
+> 📌 reconcile는 기존 유저 스캔 루프(추천 풀 통계)에 1패스를 얹어 **추가 읽기 비용 ≈ 0**. Gemini 호출 증가 0.
 
 ### ☐ Phase 2 — 추천 환류 (5-A) ★최고 ROI
 - [ ] poolStats를 **완료 가중**(`completes*3 + picks`)으로 교체

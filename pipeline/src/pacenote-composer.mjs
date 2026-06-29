@@ -1,6 +1,11 @@
 import { callGemini } from './lib/gemini.mjs';
 import { db } from './lib/firestore.mjs';
 
+// 카테고리/도메인 → affinity 키 ('AI/LLM'→'ai_llm') — pacenote-api와 동일 규칙
+function affinityKey(category) {
+  return String(category || 'general').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'general';
+}
+
 async function main() {
   console.log('🚀 [PaceNote Composer] 매일 새로운 AI 추천 궤도 생성 시작 (Phase 3 적용)...');
 
@@ -22,6 +27,8 @@ async function main() {
       await Promise.all(chunk.map(async (docRef) => {
         try {
           const weeksSnap = await docRef.collection('weeks').orderBy('weekId', 'desc').limit(10).get();
+
+          // (a) 추천 풀 통계(velocity 입력) — 기존 동작 유지
           weeksSnap.docs.forEach(doc => {
             const data = doc.data();
             if (data.currentPace) {
@@ -32,8 +39,41 @@ async function main() {
               });
             }
           });
+
+          // (b) Growth Loop Phase 1: 성장 프로파일 권위 재계산 (weeks → profile)
+          const affinity = {};
+          let picked = 0, completed = 0;
+          const reflections = {};
+          const weekFlags = []; // 최신순: 주차별 완료 여부
+          weeksSnap.docs.forEach(doc => {
+            const data = doc.data();
+            let wc = 0;
+            (data.currentPace || []).forEach(task => {
+              picked++;
+              affinity[affinityKey(task.category)] = (affinity[affinityKey(task.category)] || 0) + (task.completed ? 3 : 1);
+              if (task.completed) { completed++; wc++; }
+            });
+            if (data.weekId) weekFlags.push(wc > 0);
+            if (data.weekId && data.statement && String(data.statement).trim()) {
+              reflections[data.weekId] = { text: String(data.statement).trim(), ts: data.createdAt || null };
+            }
+          });
+          // streak: 최신 주차부터 연속 완료 주 수(current) + 최장 연속(best)
+          let streakCurrent = 0;
+          for (const has of weekFlags) { if (has) streakCurrent++; else break; }
+          let best = 0, run = 0;
+          for (const has of weekFlags) { if (has) { run++; best = Math.max(best, run); } else run = 0; }
+          const rate = picked > 0 ? +(completed / picked).toFixed(3) : 0;
+
+          await docRef.set({ profile: {
+            domainAffinity: affinity,
+            completion: { picked, completed, rate },
+            streak: { current: streakCurrent, best, lastReconciled: new Date().toISOString() },
+            reflections,
+            updatedAt: new Date().toISOString(),
+          } }, { merge: true });
         } catch (e) {
-          // ignore error for individual user
+          // 개별 유저 오류는 무시 (전체 파이프라인 보호)
         }
       }));
     }
