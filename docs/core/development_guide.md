@@ -1,12 +1,13 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-09
-version: v1.2
+last_updated: 2026-06-29
+version: v2.0
 target_files:
+  - server.mjs
   - Dockerfile
   - cloudbuild.yaml
-  - nginx.conf
+  - package.json
 ---
 
 # 📘 PriSincera — 개발 관리 & 운영 가이드
@@ -19,8 +20,11 @@ target_files:
 | v1.1 | 2026-05-21 | AI Agent | 도메인 중심(DDD) 폴더 구조 개편에 따른 표준 프론트매터 및 개정 내역 주입 | Documentation |
 | v1.2 | 2026-06-09 | Antigravity | Cloud Run Jobs 관리 및 CI/CD IAM 권한 위임(actAs) 설정 가이드 추가 | cloudbuild.yaml, Infrastructure |
 | v1.3 | 2026-06-10 | Antigravity | PriStudy Composer 스케줄 시간 변경(04:00 -> 07:30 KST) 및 재시도 옵션 반영 | Infrastructure, scheduler |
+| **v2.0** | **2026-06-29** | **AI Agent** | **아키텍처 현행화: Nginx 정적 서빙 → Node(Express) `server.mjs` 컨테이너 전환 반영. 디렉토리맵·Dockerfile·API 라우트·Cloud Build 11스텝·잡 6종(tech-composer 포함) 전면 갱신. 운영 런북/환경변수 레퍼런스 분리** | server.mjs, Dockerfile, cloudbuild.yaml |
 
-> **최종 업데이트**: 2026-06-10  
+> ⚠️ **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리의 `nginx.conf`는 **레거시(미사용)** 이며 Dockerfile이 COPY하지 않습니다.
+
+> **최종 업데이트**: 2026-06-29  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
 > CI/CD 파이프라인, 커스텀 도메인 연결까지의 전체 개발 운영 프로세스를 기록합니다.
 
@@ -88,12 +92,16 @@ prisincera.com (커스텀 도메인)
 | **프론트엔드** | React | 19.1.x | UI 프레임워크 |
 | **라우팅** | React Router DOM | 7.5.x | SPA 클라이언트 라우팅 |
 | **빌드** | Vite | 6.3.x | 빌드 도구 & 개발 서버 |
-| **호스팅** | GCP Cloud Run | — | Nginx 컨테이너 서빙 |
-| **CI/CD** | Cloud Build | — | 자동 빌드 & 배포 |
-| **이미지 저장** | Artifact Registry | — | Docker 이미지 저장 |
+| **웹 서버** | **Express** | **5.1.x** | **`server.mjs` — 정적 `dist/` 서빙 + API 라우터 마운트** |
+| **API 모듈** | `pacenote-api` · `admin-api` · `builderslog-api` · `study-api` | — | 라우터 단위 분리 (server.mjs가 마운트) |
+| **DB / 정적** | Firestore · GCS | — | 사용자 데이터(Firestore) + 정적 피드(GCS `daily/*.json`) |
+| **AI** | Gemini (`@google/genai`) | — | 콘텐츠 생성·커밋 매칭. 무료 티어 ([api_usage_analysis](api_usage_analysis.md)) |
+| **호스팅** | GCP Cloud Run | — | **Node(Express) 컨테이너** 서빙 (~~Nginx 아님~~) |
+| **CI/CD** | Cloud Build | — | 자동 빌드 & 배포 (web + 파이프라인 잡) |
+| **이미지 저장** | Artifact Registry | — | Docker 이미지 저장 (`web`, `pipeline`) |
 | **로드밸런서** | HTTPS Load Balancer | — | SSL 종단 & 글로벌 CDN |
 | **버전 관리** | Git + GitHub | — | 소스 코드 버전 관리 |
-| **런타임** | Node.js | LTS | 개발 환경 런타임 |
+| **런타임** | Node.js | 20 (alpine) | 빌드 & 프로덕션 서버 런타임 |
 
 ---
 
@@ -103,44 +111,47 @@ prisincera.com (커스텀 도메인)
 d:\prisincera\www\
 │
 ├── 📁 src/                     # ── React 소스 코드 ──
-│   ├── App.jsx                 # 루트 컴포넌트 (React Router 설정)
+│   ├── App.jsx                 # 루트 컴포넌트 (React Router — lazy 라우트)
 │   ├── main.jsx                # 엔트리 포인트
-│   ├── 📁 components/          # 재사용 가능한 UI 컴포넌트
-│   │   ├── 📁 common/          #   공통 컴포넌트
-│   │   ├── 📁 hero/            #   히어로 섹션 (Canvas 30fps 제한 적용)
-│   │   ├── 📁 layout/          #   레이아웃 (헤더, 푸터 등)
-│   │   ├── 📁 philosophy/      #   Belief 섹션 (철학 + 신념 카드)
-│   │   ├── 📁 journey/         #   Journey 섹션 (커리어 타임라인)
-│   │   ├── 📁 connect/         #   Connect 섹션 (연락처)
-│   │   └── 📁 prisignal/       #   PriSignal 컴포넌트 (Hero, Value, Archive 등)
-│   ├── 📁 hooks/               # 커스텀 React 훅
+│   ├── 📁 components/          # 재사용 UI (layout, daily, admin, pacenote, prisignal …)
+│   ├── 📁 hooks/               # 커스텀 React 훅 (usePaceNoteData 등)
+│   ├── 📁 data/                # 빌드 시 번들되는 정적 데이터 (buildersLogMeta.json 등)
 │   ├── 📁 pages/               # 페이지 컴포넌트
-│   │   ├── Home.jsx/css        #   메인 페이지
-│   │   ├── PriSignal.jsx/css   #   PriSignal 랜딩 (탭: 소개/데일리)
-│   │   └── PriSignalDaily.jsx/css  # PriSignal 데일리 상세 (/prisignal/:date)
-│   └── 📁 styles/              # 글로벌 CSS 스타일
+│   │   ├── Home.jsx            #   메인 랜딩
+│   │   ├── DailyDigest.jsx     #   /daily (시그널·테크 트랙·어학)
+│   │   ├── PaceNoteDashboard.jsx #  /pacenote (주차 캘린더·실행 궤도)
+│   │   ├── BuildersLog.jsx / BuildersLogDetail.jsx # /builders-log
+│   │   ├── AdminDashboard.jsx  #   /admin (콘텐츠·구독·서비스 문서 등)
+│   │   └── Sylphio*.jsx        #   /sylphio 랜딩·API 키 가이드
+│   └── 📁 styles/              # 글로벌 CSS
 │
-├── 📁 pipeline/                # ── PriSignal 데일리 파이프라인 ──
-│   ├── 📁 src/                 #   Cloud Run Jobs 소스
-│   │   ├── 📁 lib/             #   코어 모듈 (mailer, email-template, subscribers 등)
-│   │   └── 📁 tests/           #   단위/통합 테스트 (88건)
-│   ├── 📁 config/              #   소스 설정 (sources.json)
+├── 📄 server.mjs               # ★ 프로덕션 웹 서버(Express): dist 서빙 + API 마운트 + GCS 프록시
+├── 📄 pacenote-api.mjs         # /api/pacenote/* 라우터 (Firebase Auth)
+├── 📄 admin-api.mjs            # /admin/api/* 라우터 (관리자)
+├── 📄 builderslog-api.mjs      # /api/builderslog/* 라우터
+├── 📄 study-api.mjs            # 어학(Language Dojo) 라우터
+│
+├── 📁 pipeline/                # ── 배치 파이프라인 (Cloud Run Jobs) ──
+│   ├── 📁 src/                 #   잡 진입점: collector·composer·study-composer·
+│   │   │                       #              tech-composer·pacenote-composer·monitor
+│   │   ├── 📁 lib/             #   코어 (rss, gemini, storage, firestore, mailer, subscribers)
+│   │   ├── 📁 templates/       #   AI 프롬프트 템플릿 (tech-prompt.txt 등)
+│   │   └── 📁 tests/           #   단위/통합 테스트
+│   ├── 📁 config/              #   소스 설정 (sources.json, tech-sources.json)
+│   ├── Dockerfile              #   파이프라인 이미지 빌드
 │   └── setup-infra.sh          #   인프라 셋업 스크립트
 │
-├── 📁 public/                  # ── 정적 에셋 (빌드 시 dist로 복사) ──
-│   └── 📁 audio/               #   BGM 등 오디오 파일
-│
+├── 📁 docs/                    # ── 프로젝트 문서 허브 (Admin > 서비스 문서) ──
+├── 📁 public/                  # ── 정적 에셋 (content/logs 마크다운 포함) ──
 ├── 📁 dist/                    # ── Vite 빌드 출력 (gitignore) ──
-├── 📁 docs/                    # ── 프로젝트 문서 ──
-├── 📁 ci/                      # ── CI/브랜딩 관련 ──
 │
 ├── 📄 index.html               # Vite 진입 HTML
 ├── 📄 vite.config.js           # Vite 설정
-├── 📄 package.json             # 프로젝트 & 의존성 정의
-├── 📄 Dockerfile               # Docker 멀티스테이지 빌드 (Node→Nginx)
-├── 📄 nginx.conf               # Nginx 서버 설정 (SPA rewrite, API 프록시, 캐시)
-├── 📄 cloudbuild.yaml          # Cloud Build CI/CD 파이프라인 정의
-└── 📄 .gitignore               # Git 추적 제외 목록
+├── 📄 package.json             # 의존성 + scripts(dev/build/preview/start)
+├── 📄 Dockerfile               # 멀티스테이지 빌드 (Node 빌드 → Node 서버 `server.mjs`)
+├── 📄 nginx.conf               # ⚠️ 레거시(미사용) — Dockerfile이 COPY하지 않음
+├── 📄 cloudbuild.yaml          # Cloud Build CI/CD (web + 파이프라인 잡 11스텝)
+└── 📄 .dockerignore            # Docker 빌드 컨텍스트 제외 (docs/*.md는 예외 포함)
 ```
 
 ---
@@ -334,9 +345,10 @@ npm run dev
 
 | 스크립트 | 명령어 | 설명 |
 |----------|--------|------|
-| `dev` | `npm run dev` | Vite 개발 서버 실행 (HMR) |
+| `dev` | `npm run dev` | Vite 개발 서버 실행 (HMR, localhost:3000) |
 | `build` | `npm run build` | 프로덕션 빌드 → `dist/` 생성 |
 | `preview` | `npm run preview` | 빌드 결과물 로컬 프리뷰 |
+| `start` | `npm start` | **프로덕션 서버 기동 (`node server.mjs`) — 빌드 후 dist 서빙 + API** |
 
 ---
 
@@ -398,7 +410,7 @@ gcloud run deploy prisincera-web \
 
 | 구성 요소 | 리소스명 | 설명 |
 |----------|---------|------|
-| **Cloud Run 서비스** | `prisincera-web` | Nginx 컨테이너 (포트 8080) |
+| **Cloud Run 서비스** | `prisincera-web` | Node(Express) `server.mjs` 컨테이너 (포트 8080) |
 | **Artifact Registry** | `prisincera-images` | Docker 이미지 저장소 |
 | **Cloud Build 트리거** | `deploy-to-cloud-run` | GitHub main 푸시 시 웹 서비스 자동 빌드 |
 | **Cloud Build 트리거** | `deploy-pipeline` | GitHub main 푸시 시 파이프라인 이미지 빌드 |
@@ -412,39 +424,59 @@ gcloud run deploy prisincera-web \
 ### 7-2. Dockerfile (멀티스테이지 빌드)
 
 ```dockerfile
-# Stage 1: Node.js로 Vite SPA 빌드
+# ── Stage 1: Vite SPA 빌드 ──
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --production=false
 COPY . .
+ARG VITE_FIREBASE_API_KEY
+ENV VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}
 RUN npm run build
 
-# Stage 2: Nginx로 정적 파일 서빙
-FROM nginx:1.27-alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist /usr/share/nginx/html
+# ── Stage 2: Node(Express) 프로덕션 서버 ──
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY server.mjs admin-api.mjs study-api.mjs pacenote-api.mjs ./
+COPY pipeline/ ./pipeline/
+COPY src/data/ ./src/data/
+COPY public/content/ ./public/content/
+COPY package*.json ./
+RUN npm ci --omit=dev && npm install --prefix pipeline --omit=dev && npm cache clean --force
+RUN addgroup -g 1001 -S nodejs && adduser -S prisincera -u 1001 -G nodejs
+USER prisincera                 # 비루트 실행
 EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server.mjs"]      # ← Nginx 아님: Express 서버가 dist 서빙 + API 마운트
 ```
 
-### 7-3. nginx.conf (SPA 서빙 설정)
+> Stage 2가 `server.mjs`와 API 모듈, `pipeline/`(서버에서 일부 lib 재사용), 번들 데이터(`src/data/`)·블로그 마크다운(`public/content/`)을 함께 복사한다는 점에 유의. `VITE_FIREBASE_API_KEY`는 빌드 인자로 주입됩니다.
 
-| 설정 | 값 | 설명 |
-|------|-----|------|
-| `listen` | `8080` | Cloud Run 필수 포트 |
-| `try_files` | `$uri $uri/ /index.html` | SPA 라우팅 폴백 |
-| `gzip` | `on` | 텍스트 기반 리소스 압축 |
+### 7-3. SPA 서빙 (server.mjs — nginx.conf는 레거시)
 
-### 7-3a. API 라우트 (server.mjs — 2026-04-29 업데이트)
+> ⚠️ 과거에는 Nginx가 정적 서빙을 담당했으나, **현재는 `server.mjs`(Express)가 SPA 폴백·압축·API를 모두 처리**합니다. 리포지토리의 `nginx.conf`는 빌드/배포에 쓰이지 않는 **레거시 파일**입니다.
 
-| 경로 | 대상 | 용도 |
+| 책임 | 구현 (server.mjs) | 설명 |
 |------|------|------|
-| `POST /api/subscribe` | GCS `subscribers/active.json` | 이메일 구독 (직접 저장) |
-| `GET /api/unsubscribe` | GCS `subscribers/active.json` | HMAC 토큰 검증 후 구독 해지 |
-| `GET /api/archive` | 리다이렉트 | → `/api/daily/index` (deprecated) |
-| `GET /api/daily/:date` | GCS (`daily/:date.json`) | 데일리 시그널 JSON |
-| `GET /api/daily/index` | GCS (`daily/index.json`) | 데일리 시그널 목록 |
+| 포트 | `process.env.PORT` (기본 8080) | Cloud Run 주입 |
+| SPA 폴백 | `express.static(dist)` + `*` → `index.html` | 클라이언트 라우팅 폴백 |
+| 압축 | `compression` 미들웨어 | 텍스트 리소스 gzip |
+| 보안 헤더 | `helmet` | CSP/XFO 등 |
+| API | `/api/*`, `/admin/api/*` 라우터 마운트 | 아래 §7-3a |
+
+### 7-3a. API 라우트 (server.mjs 마운트 — 2026-06-29 현행)
+
+| 경로 (prefix) | 라우터 모듈 | 인증 | 용도 |
+|------|------|------|------|
+| `/api/daily/*` | server.mjs 내장 | — | 데일리 피드 GCS 프록시(`:date`, `index`), 트랙 피드(junior/senior) |
+| `/api/pacenote/*` | `pacenote-api.mjs` | Firebase idToken | 주차 데이터·실행 궤도 CRUD |
+| `/admin/api/*` | `admin-api.mjs` | 관리자 | 콘텐츠 생성 트리거·구독·통계·잡 실행 |
+| `/api/builderslog/*` | `builderslog-api.mjs` | (조회 공개) | Builder's Log 조회수·발행 |
+| 어학(Language Dojo) | `study-api.mjs` | — | 어학 콘텐츠 |
+| `POST /api/subscribe` | server.mjs | — | 이메일 구독 |
+| `GET /api/unsubscribe` | server.mjs | HMAC | `UNSUBSCRIBE_SECRET` 토큰 검증 후 해지 |
+
+> 전체 환경변수·시크릿은 [environment_reference](environment_reference.md), 인증 흐름은 [authentication_architecture](authentication_architecture.md) 참조.
 
 ### 7-4. 캐시 정책 (nginx.conf)
 
@@ -465,11 +497,20 @@ CMD ["nginx", "-g", "daemon off;"]
 ### 7-6. Cloud Build 파이프라인 (`cloudbuild.yaml`)
 
 ```
-git push → Cloud Build 트리거
-  ├── Step 1: Docker 이미지 빌드
-  ├── Step 2: Artifact Registry 푸시 (SHA 태그 + latest)
-  └── Step 3: Cloud Run 배포 (새 리비전)
+git push main → Cloud Build 트리거 (cloudbuild.yaml, 총 11스텝)
+  [Part 1] 웹 (prisincera-web)
+  ├── Step 0: npm ci + npm audit (critical 취약점 점검)
+  ├── Step 1: web Docker 이미지 빌드 (VITE_FIREBASE_API_KEY 주입)
+  ├── Step 2: Artifact Registry 푸시 (SHA + latest)
+  └── Step 3: Cloud Run 배포 + --set-secrets(GEMINI_API_KEY←GEMINI_ADMIN_API_KEY, GITHUB_TOKEN)
+  [Part 2] 파이프라인 (Cloud Run Jobs)
+  ├── Step 4~5: pipeline 이미지 빌드 & 푸시
+  └── Step 6~11: jobs update ×6
+        prisignal-collector · prisignal-composer · prisignal-monitor
+        pristudy-composer · pacenote-composer · tech-composer
 ```
+
+> ⚠️ **잡 갱신(Step 6~11)은 빌드 후반** — 코드 변경 후 잡을 수동 실행하려면 **Cloud Build SUCCESS를 먼저 확인**하세요(옛 이미지로 돌 수 있음). 잡 운영은 [operations_runbook](operations_runbook.md).
 
 Cloud Run 배포 설정:
 
@@ -484,12 +525,15 @@ Cloud Run 배포 설정:
 
 PriSignal의 데일리 수집 및 메일 발송 파이프라인 등 배치성 백그라운드 작업들은 별도의 **Cloud Run Jobs**로 실행되며, Cloud Scheduler를 통해 스케줄링됩니다.
 
-#### 1) 대상 Job 리스트
-- `prisignal-collector`: 매일 06:00 KST에 실행되어 RSS 피드를 수집합니다.
-- `prisignal-composer`: 매일 08:00 KST에 실행되어 아티클 스코어링 및 뉴스레터를 발송합니다.
-- `pristudy-composer`: 매일 07:30 KST에 실행되어 PriStudy 학습 문장 및 프롬프트를 자동 생성합니다.
-- `pacenote-composer`: 매일 00:00 KST에 실행되어 Pace Note 추천 미션 풀을 갱신합니다.
-- `prisignal-monitor`: 매주 월요일 08:30 KST에 실행되어 발송 상태를 최종 모니터링합니다.
+#### 1) 대상 Job 리스트 (cloudbuild.yaml Step 6~11 — 총 6종)
+- `prisignal-collector` (`src/collector.mjs`): RSS 피드 수집. timeout 300s / retry 2.
+- `prisignal-composer` (`src/composer.mjs`): 스코어링·DM픽·뉴스레터 발송·GCS 배포. timeout 1800s / retry 0.
+- `pristudy-composer` (`src/study-composer.mjs`): 어학(Language Dojo) 문장·프롬프트 생성. 1800s / retry 0.
+- **`tech-composer`** (`src/tech-composer.mjs`): 수준별 테크 트랙 하이브리드 피드(주니어/시니어). 1800s / retry 0.
+- `pacenote-composer` (`src/pacenote-composer.mjs`): PaceNote 추천 궤도 풀 갱신. 1800s / retry 0.
+- `prisignal-monitor` (`src/monitor.mjs`): 주간 발송/파이프라인 모니터링. 120s / retry 1.
+
+> **스케줄(KST)은 Cloud Scheduler에서 관리**(리포지토리에 cron 정의 없음). 기준 시각은 [architecture_overview](architecture_overview.md) §4, 잡 수동 재실행·장애 복구는 [operations_runbook](operations_runbook.md) 참조.
 
 #### 2) 서비스 계정 및 최소 권한
 모든 Job은 최소 권한 원칙에 따라 커스텀 파이프라인 서비스 계정(`prisignal-pipeline@prisincera.iam.gserviceaccount.com`)을 할당받아 실행됩니다.
