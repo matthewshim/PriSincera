@@ -33,6 +33,7 @@ export default function TrackSignalFeed({ date }) {
   const [activeDomain, setActiveDomain] = useState('all');
   const [orbitState, setOrbitState] = useState({}); // cardId -> 'adding'|'error' (전송 중 상태)
   const [addedBaseIds, setAddedBaseIds] = useState(new Set()); // 이미 추가된 orbit base id (orbit-<ac.id>)
+  const [affinity, setAffinity] = useState(null); // 성장 루프 Phase 3: 유저 도메인 선호(개인화 렌즈)
 
   useEffect(() => {
     let cancelled = false;
@@ -63,6 +64,23 @@ export default function TrackSignalFeed({ date }) {
         const data = await res.json();
         if (!cancelled) setAddedBaseIds(new Set(data.orbitBaseIds || []));
       } catch { /* 무시 */ }
+    })();
+    return () => { cancelled = true; };
+  }, [user, token]);
+
+  // 성장 루프 Phase 3: 유저 도메인 선호(affinity) 조회 → 개인화 렌즈(재정렬·하이라이트)
+  useEffect(() => {
+    if (!user) { setAffinity(null); return; }
+    let cancelled = false;
+    const doFetch = (tok) => fetch('/api/pacenote/profile', { headers: { Authorization: `Bearer ${tok}` } });
+    (async () => {
+      try {
+        let res = await doFetch(token);
+        if (res.status === 401) { const fresh = await user.getIdToken(true); res = await doFetch(fresh); }
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) setAffinity(data.domainAffinity || {});
+      } catch { /* 무시 — 비로그인/오류 시 글로벌 정렬 */ }
     })();
     return () => { cancelled = true; };
   }, [user, token]);
@@ -99,7 +117,23 @@ export default function TrackSignalFeed({ date }) {
     }
   }, [user, token]);
 
-  const cards = (feed?.cards || []).filter(c => activeDomain === 'all' || c.domain === activeDomain);
+  // ── Phase 3 개인화 렌즈 ── (affinity 키는 card.domain과 동일: ai_llm/system_design/devops/tech_lead)
+  const domainScore = (d) => (affinity && affinity[d]) || 0;
+  const myDomains = new Set(
+    affinity ? DOMAINS.map(d => d.key).filter(k => k !== 'all' && domainScore(k) > 0) : []
+  );
+  // '전체' 보기에서만 내 궤도 도메인을 상단으로 재정렬 (특정 도메인 필터 시엔 그대로)
+  let cards = (feed?.cards || []).filter(c => activeDomain === 'all' || c.domain === activeDomain);
+  if (activeDomain === 'all' && myDomains.size > 0) {
+    cards = [...cards].sort((a, b) => domainScore(b.domain) - domainScore(a.domain));
+  }
+  // 오늘 피드에 존재하면서 내 선호가 가장 높은 도메인 (배너용)
+  const topDomain = (() => {
+    if (!myDomains.size || !feed) return null;
+    const cand = (feed.domains || []).filter(d => myDomains.has(d));
+    if (!cand.length) return null;
+    return cand.sort((a, b) => domainScore(b) - domainScore(a))[0];
+  })();
 
   return (
     <div className="daily-section fade-in">
@@ -142,6 +176,17 @@ export default function TrackSignalFeed({ date }) {
       {loading && <div className="track-status">트랙 피드 불러오는 중…</div>}
       {!loading && error && <div className="track-status">{error}</div>}
 
+      {/* 🧭 실행→배움 연결 배너 (Phase 3): 내 궤도와 연결된 오늘의 도메인 */}
+      {!loading && !error && topDomain && activeDomain === 'all' && (
+        <button className="track-loop-banner haptic-trigger" onClick={() => setActiveDomain(topDomain)}>
+          <span className="track-loop-banner-icon">🧭</span>
+          <span className="track-loop-banner-text">
+            당신의 궤도와 연결된 오늘의 배움 · <strong>{DOMAIN_LABEL[topDomain] || topDomain}</strong>
+          </span>
+          <span className="track-loop-banner-cta">바로 보기 →</span>
+        </button>
+      )}
+
       {/* 카드 목록 (C3) */}
       {!loading && !error && cards.map(card => {
         const baseId = card.action_challenge?.id ? `orbit-${card.action_challenge.id}` : null;
@@ -151,6 +196,7 @@ export default function TrackSignalFeed({ date }) {
           <div key={card.id} className="track-card">
             <div className="track-card-meta">
               <span className="track-card-domain">{DOMAIN_LABEL[card.domain] || card.domain}</span>
+              {myDomains.has(card.domain) && <span className="track-card-mine">🧭 내 궤도</span>}
               {(card.tags || []).slice(0, 5).map(tag => (
                 <span key={tag} className="track-card-tag">#{tag}</span>
               ))}

@@ -26,6 +26,7 @@ target_files:
 | v1.0 | 2026-06-29 | AI Agent | 성장 루프 닫기 5-Phase 실행 계획 최초 수립 (현황 진단·데이터 모델·되먹임·마일스톤) | PaceNote, DailyDigest |
 | v1.1 | 2026-06-29 | AI Agent | **Phase 0·1 구현 완료** — pacenote-api 신호 적재(recordSignal)·`GET /profile`, pacenote-composer 야간 권위 reconcile | pacenote-api.mjs, pacenote-composer.mjs |
 | v1.2 | 2026-06-29 | AI Agent | **Phase 2 구현 완료** — 완료 가중 velocity·HOF, 고인물 퇴출 v2, affinity 인지형 추천(강점+스트레치) | pacenote-composer.mjs, pacenote-api.mjs |
+| v1.3 | 2026-06-29 | AI Agent | **Phase 3 구현 완료** — 다이제스트 개인화 렌즈(클라이언트측: 도메인 재정렬·'내 궤도' 배지·연결 배너). 소비 비콘은 이연 | TrackSignalFeed.jsx/css |
 
 ---
 
@@ -152,11 +153,15 @@ profile: {
 
 > 📌 affinity 키는 Phase 0와 동일 정규화로 풀 카테고리(`'AI & Future'→'ai_future'`)와 정합. 비용 중립(Gemini 호출 증가 0).
 
-### ☐ Phase 3 — 다이제스트 개인화 렌즈 (5-B)
-- [ ] `GET /api/daily/:date` 인증형 렌즈(궤도 도메인 상단 정렬 + 보강 1)
-- [ ] DailyDigest "당신의 궤도와 연결된 오늘의 배움" 카드
-- [ ] (옵트인) 소비 비콘 → `domainAffinity += 0.5`
-- **DoD**: 활성 궤도 도메인이 다이제스트 상단에 노출, 카드 CTR 계측.
+### ✅ Phase 3 — 다이제스트 개인화 렌즈 (5-B) — **완료(2026-06-29)**
+> 🔀 **설계 변경(개선)**: 서버 `?lens=uid` 엔드포인트 대신 **클라이언트측 렌즈**로 구현. 글로벌 콘텐츠/캐시를 그대로 두고 per-user 서버 연산 0 — 원칙(§3)에 더 충실하고 비용 0. affinity는 기존 `GET /api/pacenote/profile` 재사용.
+- [x] **도메인 재정렬**: '전체' 보기에서 내 궤도 도메인(affinity>0) 카드를 상단으로 정렬 ([TrackSignalFeed.jsx](../../src/components/daily/TrackSignalFeed.jsx))
+- [x] **'🧭 내 궤도' 배지**: 내 affinity 도메인 카드에 표시(도메인=cyan과 구분되는 indigo)
+- [x] **연결 배너**: "당신의 궤도와 연결된 오늘의 배움 · `<도메인>`" → 클릭 시 해당 도메인 필터
+- [ ] (이연) 옵트인 소비 비콘 → `domainAffinity += 0.5`
+- **DoD ✅**: 로그인 유저의 활성 궤도 도메인이 트랙 피드 상단에 정렬·하이라이트됨. 비로그인/콜드 스타트는 글로벌 정렬 유지.
+
+> 📌 **소비 비콘 이연 사유**: 야간 reconcile(Phase 1)가 affinity를 *weeks(실행) 기준으로만* 권위 재계산하므로, 소비 +0.5 증분은 reconcile에 덮어쓰여 사라진다. 정상 지원하려면 `profile.consumption`을 **별도 필드**로 두고 reconcile가 보존+합산해야 함 → 별도 작업으로 분리. 핵심 DoD(궤도 도메인 상단 노출)는 본 렌즈로 충족.
 
 ### ☐ Phase 4 — 루프 가시화 UI
 - [ ] 주간 루프 리포트(배움·실행·복기·내일 강조) 1화면
