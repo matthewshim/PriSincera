@@ -130,16 +130,25 @@
 }
 
 .admin-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 32px;
+  /* 풀폭 배경/보더는 유지하고, 내부 콘텐츠만 레이아웃 컨테이너 폭에 맞춰 정렬 */
   background: var(--admin-surface);
   border-bottom: 1px solid var(--admin-border);
   position: sticky;
   top: 0;
   z-index: 100;
   backdrop-filter: blur(12px);
+}
+
+/* LNB+콘텐츠(.admin-layout)와 동일한 max-width 1400px 중앙 정렬 규격 */
+.admin-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 16px 16px;
 }
 
 .admin-header-left {
@@ -938,7 +947,7 @@
   .stat-span-2 {
     grid-column: span 1;
   }
-  .admin-header {
+  .admin-header-inner {
     padding: 12px 16px;
   }
   .admin-content {

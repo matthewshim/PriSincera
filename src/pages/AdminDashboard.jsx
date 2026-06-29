@@ -901,19 +901,21 @@ function Dashboard({ token, adminEmail, onLogout }) {
     <div className="admin-dashboard">
       {/* Header */}
       <header className="admin-header">
-        <div className="admin-header-left">
-          <span className="admin-logo">🛡️</span>
-          <h1>PriSincera Admin</h1>
-        </div>
-        <div className="admin-header-right">
-          <button className="admin-profile-btn btn-secondary" onClick={openProfile} title="마이페이지">
-            <span className="admin-avatar">👤</span>
-            <span className="admin-profile-info">
-              <span className="admin-profile-email">{adminEmail}</span>
-              <span className={`admin-role-badge ${role}`}>{ROLE_LABEL[role] || role}</span>
-            </span>
-          </button>
-          <button className="admin-logout-btn btn-secondary" onClick={onLogout}>로그아웃</button>
+        <div className="admin-header-inner">
+          <div className="admin-header-left">
+            <span className="admin-logo">🛡️</span>
+            <h1>PriSincera Admin</h1>
+          </div>
+          <div className="admin-header-right">
+            <button className="admin-profile-btn btn-secondary" onClick={openProfile} title="마이페이지">
+              <span className="admin-avatar">👤</span>
+              <span className="admin-profile-info">
+                <span className="admin-profile-email">{adminEmail}</span>
+                <span className={`admin-role-badge ${role}`}>{ROLE_LABEL[role] || role}</span>
+              </span>
+            </button>
+            <button className="admin-logout-btn btn-secondary" onClick={onLogout}>로그아웃</button>
+          </div>
         </div>
       </header>
 
