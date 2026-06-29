@@ -12,11 +12,24 @@
   top: 16px;
   max-height: calc(100vh - 120px);
   overflow-y: auto;
-  padding-right: 6px;
+  padding-right: 8px;
   display: flex;
   flex-direction: column;
   gap: 18px;
+  /* Firefox — 얇고 은은한 스크롤바 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
 }
+/* WebKit — 얇은 오버레이형 스크롤바 (호버 시에만 강조) */
+.svc-docs-nav::-webkit-scrollbar { width: 5px; }
+.svc-docs-nav::-webkit-scrollbar-track { background: transparent; }
+.svc-docs-nav::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.18);
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+.svc-docs-nav:hover::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.32); }
+.svc-docs-nav::-webkit-scrollbar-thumb:hover { background: rgba(165, 180, 252, 0.5); }
 .svc-docs-search {
   width: 100%;
   padding: 9px 12px;
