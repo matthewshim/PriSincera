@@ -1,4 +1,4 @@
-# [기획서] Pace Note (Phase 3: Action & Branding)
+# ⛵ [기획서] Pace Note (Phase 3: Action & Branding)
 
 > 💡 **기획 및 비전 선언 (Pace Note Vision)**
 > 남들의 속도에 휩쓸리지 않고, 오직 자신만의 템포와 방향을 추구하며 나아가는 이들을 위해 PriSincera가 AI 기반의 퍼스널 브랜딩 액션 플랫폼, **Pace Note**를 선보입니다.

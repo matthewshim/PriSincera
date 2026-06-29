@@ -11,7 +11,7 @@ target_files:
   - server.mjs
 ---
 
-# PriSincera Daily Digest Chrono-Calendar & Quick Peek UI Specification
+# 🗓️ PriSincera Daily Digest Chrono-Calendar & Quick Peek UI Specification
 
 ## 📝 Revision History
 

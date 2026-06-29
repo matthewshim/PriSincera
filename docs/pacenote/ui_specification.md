@@ -12,7 +12,7 @@ target_files:
   - src/components/daily/TrackSignalFeed.jsx
 ---
 
-# PriSincera PaceNote Bento Weekly Calendar & Voyage Horizon UI Specification
+# 🍱 PriSincera PaceNote Bento Weekly Calendar & Voyage Horizon UI Specification
 
 ## 📝 Revision History
 
