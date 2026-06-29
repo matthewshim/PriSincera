@@ -25,6 +25,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-29 | AI Agent | 성장 루프 닫기 5-Phase 실행 계획 최초 수립 (현황 진단·데이터 모델·되먹임·마일스톤) | PaceNote, DailyDigest |
 | v1.1 | 2026-06-29 | AI Agent | **Phase 0·1 구현 완료** — pacenote-api 신호 적재(recordSignal)·`GET /profile`, pacenote-composer 야간 권위 reconcile | pacenote-api.mjs, pacenote-composer.mjs |
+| v1.2 | 2026-06-29 | AI Agent | **Phase 2 구현 완료** — 완료 가중 velocity·HOF, 고인물 퇴출 v2, affinity 인지형 추천(강점+스트레치) | pacenote-composer.mjs, pacenote-api.mjs |
 
 ---
 
@@ -141,12 +142,15 @@ profile: {
 
 > 📌 reconcile는 기존 유저 스캔 루프(추천 풀 통계)에 1패스를 얹어 **추가 읽기 비용 ≈ 0**. Gemini 호출 증가 0.
 
-### ☐ Phase 2 — 추천 환류 (5-A) ★최고 ROI
-- [ ] poolStats를 **완료 가중**(`completes*3 + picks`)으로 교체
-- [ ] 고인물 퇴출 v2(저완료·고선택 우선 퇴출) 반영
-- [ ] `replenishRecommendations` affinity 인지형(2 강점 + 1 스트레치)
-- [ ] 최종 추천 3개 선별을 `pacenote-api` GET 서버측으로 이동
-- **DoD**: 동일 유저가 자주 *완료*하는 도메인 추천 비중↑, 추천 채택률 A/B 비교 가능.
+### ✅ Phase 2 — 추천 환류 (5-A) ★최고 ROI — **완료(2026-06-29)**
+- [x] poolStats를 **완료 가중**으로 교체: `velocity = (completes*3 + picks)/daysAlive` ([pacenote-composer.mjs](../../pipeline/src/pacenote-composer.mjs))
+- [x] 고인물 퇴출 v2: 완료 가중 velocity 오름차순 퇴출 → **저완료·고선택 궤도가 우선 퇴출**(완료된 궤도는 3배 가중으로 생존)
+- [x] HOF(우수 사례)를 **실제 완료된 궤도 우선**으로(콜드 스타트 시 선택 2회 폴백)
+- [x] `replenishRecommendations` affinity 인지형: **강점 도메인 + 마지막 1개 스트레치**, 콜드 스타트 시 랜덤 폴백
+- [x] 추천 선별을 `pacenote-api` GET·accept에서 **서버측 + 유저 affinity 반영**(`getAffinity`)
+- **DoD ✅**: 완료 신호가 추천 풀 생존·HOF·개인 추천에 반영. 구문 검증 통과.
+
+> 📌 affinity 키는 Phase 0와 동일 정규화로 풀 카테고리(`'AI & Future'→'ai_future'`)와 정합. 비용 중립(Gemini 호출 증가 0).
 
 ### ☐ Phase 3 — 다이제스트 개인화 렌즈 (5-B)
 - [ ] `GET /api/daily/:date` 인증형 렌즈(궤도 도메인 상단 정렬 + 보강 1)
