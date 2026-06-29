@@ -908,7 +908,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
           <div className="admin-header-right">
             <button className="admin-profile-btn btn-secondary" onClick={openProfile} title="마이페이지">
-              <span className="admin-avatar">👤</span>
+              <span className={`admin-avatar ${role}`}>👤</span>
               <span className="admin-profile-info">
                 <span className="admin-profile-email">{adminEmail}</span>
                 <span className={`admin-role-badge ${role}`}>{ROLE_LABEL[role] || role}</span>
