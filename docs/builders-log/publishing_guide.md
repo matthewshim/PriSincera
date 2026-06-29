@@ -1,4 +1,4 @@
-# PriSincera Builder's Log 퍼블리싱 가이드 (Publishing Guide)
+# 📝 PriSincera Builder's Log 퍼블리싱 가이드 (Publishing Guide)
 
 본 문서는 PriSincera 웹사이트의 **Builder's Log (테크 블로그)**에 새로운 아티클을 작성하고 퍼블리싱하는 구체적인 워크플로우를 안내합니다. 프론트엔드 라우팅 및 렌더링 엔진(`react-markdown`) 아키텍처가 구축되어 있으므로, 데이터베이스(Firestore)를 거치지 않고 로컬 파일 시스템 제어만으로 즉시 포스팅이 가능합니다.
 

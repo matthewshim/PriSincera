@@ -16,7 +16,7 @@ target_files:
   - admin-api.mjs
 ---
 
-# PriSincera Daily Digest Content Sourcing & Provenance Policy
+# 📜 PriSincera Daily Digest Content Sourcing & Provenance Policy
 
 Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 URL 부여 기준, 사실성 책임 및 고지(Disclaimer) 정책**을 규정한다. 콘텐츠 유형마다 "실제 수집(Collected)"인지 "AI 생성(Generated)"인지가 다르며, 이 차이는 신뢰성·법적 책임·UX 표기에 직접적인 영향을 미치므로 본 정책으로 명문화한다.
 

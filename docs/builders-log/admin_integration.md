@@ -8,7 +8,7 @@ target_files:
   - builderslog-api.mjs
 ---
 
-# 서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남
+# ⚙️ 서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남
 
 ## 📝 Revision History
 
