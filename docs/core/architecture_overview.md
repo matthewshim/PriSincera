@@ -102,3 +102,4 @@ target_files:
 - AI 비용/할당량: [api_usage_analysis](api_usage_analysis.md)
 - 스케일업: [scaling_plan](scaling_plan.md)
 - 데이터 계약(웹↔데스크톱): [data_contract_v2](../data_contract_v2.md)
+- 추천 엔진·성장 루프(배움↔실행↔복기↔개인화): [ai_recommendation_engine](../pacenote/ai_recommendation_engine.md) · [growth_loop_plan](../pacenote/growth_loop_plan.md)
