@@ -97,6 +97,45 @@
 }
 .track-card-tag { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
 
+/* Phase 3: '내 궤도' 배지 (도메인=cyan과 구분되는 indigo=PaceNote 궤도 색) */
+.track-card-mine {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(165, 180, 252, 0.12);
+  color: var(--color-indigo);
+  border: 1px solid rgba(165, 180, 252, 0.28);
+  letter-spacing: 0.01em;
+}
+
+/* Phase 3: 실행→배움 연결 배너 */
+.track-loop-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(165, 180, 252, 0.28);
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.10), rgba(34, 211, 238, 0.06));
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.track-loop-banner:hover {
+  border-color: rgba(165, 180, 252, 0.5);
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.16), rgba(34, 211, 238, 0.09));
+}
+.track-loop-banner-icon { font-size: 1.05rem; flex-shrink: 0; }
+.track-loop-banner-text { flex: 1; font-size: 0.86rem; }
+.track-loop-banner-text strong { color: var(--color-indigo); font-weight: 700; }
+.track-loop-banner-cta { font-size: 0.8rem; font-weight: 600; color: var(--color-cyan); white-space: nowrap; }
+
 .track-card-title {
   font-family: var(--font-display);
   font-size: 1.05rem;
