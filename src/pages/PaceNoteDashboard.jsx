@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import LoopReport from '../components/pacenote/LoopReport';
 import useSEO from '../hooks/useSEO';
 import PaceNoteChronoRibbon from '../components/pacenote/PaceNoteChronoRibbon';
 import { useTranslation } from '../contexts/LanguageContext';
@@ -217,6 +218,24 @@ export default function PaceNoteDashboard() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const [showExportModal, setShowExportModal] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
+  // Phase 4: 추천 사유 라벨용 도메인 선호(affinity)
+  const [recAffinity, setRecAffinity] = useState(null);
+  const affKey = (c) => String(c || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  useEffect(() => {
+    if (!userToken || !user) { setRecAffinity(null); return; }
+    let cancelled = false;
+    const doFetch = (tok) => fetch('/api/pacenote/profile', { headers: { Authorization: `Bearer ${tok}` } });
+    (async () => {
+      try {
+        let res = await doFetch(userToken);
+        if (res.status === 401) { const fresh = await user.getIdToken(true); res = await doFetch(fresh); }
+        if (!res.ok) return;
+        const d = await res.json();
+        if (!cancelled) setRecAffinity(d.domainAffinity || {});
+      } catch { /* 무시 */ }
+    })();
+    return () => { cancelled = true; };
+  }, [userToken, user]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -821,6 +840,9 @@ export default function PaceNoteDashboard() {
               onSelectWeek={(wId) => setSelectedWeekId(wId)}
             />
 
+            {/* ── 성장 루프 리포트 (Phase 4) ── */}
+            <LoopReport />
+
             {/* ── Pace Tracker & AI Recommendations ── */}
             <div className={`pacenote-tracker-section ${selectedWeekId !== data.current.weekId ? 'past-view' : ''}`}>
               {(() => {
@@ -1132,7 +1154,14 @@ export default function PaceNoteDashboard() {
                     >
                       <div className="rec-icon" style={{ color: item.color || '#A78BFA' }}>✦</div>
                       <div className="rec-content">
-                        <div className="rec-cat" style={{ color: item.color || '#A78BFA' }}>{item.category}</div>
+                        <div className="rec-cat" style={{ color: item.color || '#A78BFA' }}>
+                          {item.category}
+                          {recAffinity && (
+                            recAffinity[affKey(item.category)] > 0
+                              ? <span className="rec-reason strong">강점 기반</span>
+                              : <span className="rec-reason stretch">새 도전</span>
+                          )}
+                        </div>
                         <div className="rec-title">{item.title}</div>
                       </div>
                       <div className="rec-action">{t('paceNote.addBtn')}</div>
