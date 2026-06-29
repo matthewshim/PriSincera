@@ -1,5 +1,6 @@
 import express from 'express';
 import { db, auth } from './pipeline/src/lib/firestore.mjs';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const pacenoteRouter = express.Router();
 
@@ -385,6 +386,35 @@ export function buildDefaultWeek(weekId, dailyPool) {
   };
 }
 
+// ─── 성장 신호 적재 (Growth Loop Phase 0) ──────────────────────────────
+// 유저 행동(선택/완료/회고)을 pacenotes/{uid}.profile 에 증분 병합한다.
+// best-effort: 신호 적재 실패가 핵심 기능을 막지 않는다.
+// 정확한 권위 값은 야간 reconcile(pacenote-composer Phase 1)이 보정한다.
+function affinityKey(category) {
+  return String(category || 'general').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'general';
+}
+
+async function recordSignal(uid, { affinity = [], pickedDelta = 0, completedDelta = 0, reflection = null } = {}) {
+  try {
+    const profile = { updatedAt: new Date().toISOString() };
+    if (affinity.length) {
+      profile.domainAffinity = {};
+      for (const { category, weight } of affinity) {
+        if (!weight) continue;
+        profile.domainAffinity[affinityKey(category)] = FieldValue.increment(weight);
+      }
+    }
+    if (pickedDelta) (profile.completion ||= {}).picked = FieldValue.increment(pickedDelta);
+    if (completedDelta) (profile.completion ||= {}).completed = FieldValue.increment(completedDelta);
+    if (reflection && reflection.weekId && reflection.text) {
+      profile.reflections = { [reflection.weekId]: { text: reflection.text, ts: new Date().toISOString() } };
+    }
+    await db.collection('pacenotes').doc(uid).set({ profile }, { merge: true });
+  } catch (e) {
+    console.warn('[PaceNote API] recordSignal failed:', e.message);
+  }
+}
+
 // 1. 유저의 Pace Note 데이터 조회 (현재 주간 + 과거 타임라인)
 pacenoteRouter.get('/', verifyUser, async (req, res) => {
   try {
@@ -516,6 +546,33 @@ pacenoteRouter.get('/orbit-ids', verifyUser, async (req, res) => {
   }
 });
 
+// 1-3. 유저 성장 프로파일 조회 (Growth Loop) — 루프 리포트·추천 개인화·Growth Profile 공용
+pacenoteRouter.get('/profile', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const snap = await db.collection('pacenotes').doc(uid).get();
+    const profile = (snap.exists && snap.data().profile) || {};
+    const completion = profile.completion || { picked: 0, completed: 0 };
+    const rate = completion.picked > 0 ? +(completion.completed / completion.picked).toFixed(3) : 0;
+    const reflMap = profile.reflections || {};
+    const recentReflections = Object.entries(reflMap)
+      .sort((a, b) => (a[0] < b[0] ? 1 : -1))   // weekId 내림차순(최신)
+      .slice(0, 5)
+      .map(([weekId, v]) => ({ weekId, text: v.text, ts: v.ts || null }));
+    res.json({
+      domainAffinity: profile.domainAffinity || {},
+      completion: { picked: completion.picked || 0, completed: completion.completed || 0, rate },
+      streak: profile.streak || { current: 0, best: 0 },
+      level: profile.level || null,
+      recentReflections,
+      updatedAt: profile.updatedAt || null,
+    });
+  } catch (err) {
+    console.error('[PaceNote API] Profile Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // 1-1. 사용자 정의 미션 추가
 pacenoteRouter.post('/add', verifyUser, async (req, res) => {
   try {
@@ -545,7 +602,8 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
     
     currentPace.push(newTask);
     await docRef.update({ currentPace });
-    
+    await recordSignal(uid, { affinity: [{ category: newTask.category, weight: 1 }], pickedDelta: 1 });
+
     res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
     console.error('[PaceNote API] Add Task Error:', err);
@@ -581,6 +639,7 @@ pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
       const week = buildDefaultWeek(currentWeekId, dailyPool);
       week.currentPace.push(...orbits);
       await docRef.set(week);
+      await recordSignal(uid, { affinity: [{ category: orbits[0].category, weight: orbits.length }], pickedDelta: orbits.length });
       return res.json({ success: true, added: orbits.length, currentPace: week.currentPace.map(t => localizeTask(t, req.locale)) });
     }
 
@@ -596,6 +655,7 @@ pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
 
     currentPace.push(...fresh);
     await docRef.update({ currentPace });
+    await recordSignal(uid, { affinity: [{ category: fresh[0].category, weight: fresh.length }], pickedDelta: fresh.length });
 
     res.json({ success: true, added: fresh.length, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
@@ -627,8 +687,13 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
     
     // Toggle
     currentPace[taskIndex].completed = !currentPace[taskIndex].completed;
-    
+
     await docRef.update({ currentPace });
+    const nowDone = currentPace[taskIndex].completed;
+    await recordSignal(uid, {
+      affinity: [{ category: currentPace[taskIndex].category, weight: nowDone ? 2 : -2 }],
+      completedDelta: nowDone ? 1 : -1,
+    });
     res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
     console.error('[PaceNote API] Toggle Error:', err);
@@ -678,6 +743,7 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
     }
     
     await docRef.update({ currentPace, recommendedPace });
+    await recordSignal(uid, { affinity: [{ category: taskToMove.category, weight: 1 }], pickedDelta: 1 });
     res.json({
       success: true,
       currentPace: currentPace.map(t => localizeTask(t, req.locale)),
@@ -708,7 +774,10 @@ pacenoteRouter.post('/diary', verifyUser, async (req, res) => {
     
     const cleanStatement = statement ? statement.trim() : '';
     await docRef.update({ statement: cleanStatement });
-    
+    if (cleanStatement) {
+      await recordSignal(uid, { reflection: { weekId: currentWeekId, text: cleanStatement } });
+    }
+
     res.json({ success: true, statement: cleanStatement });
   } catch (err) {
     console.error('[PaceNote API] Save Diary Error:', err);
