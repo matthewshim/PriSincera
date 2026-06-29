@@ -27,6 +27,13 @@ const FOLDER_LABEL = {
 };
 const FOLDER_ORDER = ['core', 'daily-digest', 'pacenote', 'builders-log', 'sylphio', 'archive', '_root'];
 
+// 제목에 이모지가 없는 문서에 부여할 폴더별 fallback 이모지 (이곳은 중복 무방)
+const FOLDER_EMOJI = {
+  core: '📘', 'daily-digest': '🗞️', pacenote: '⛵',
+  'builders-log': '📝', sylphio: '🌬️', archive: '🗄️', _root: '📄',
+};
+const LEADING_EMOJI_RE = /^\p{Extended_Pictographic}/u;
+
 // 역할별 필독 경로 (docs 상대 경로)
 const COMMON = ['core/service_overview.md', 'core/architecture_overview.md', 'core/onboarding_guide.md'];
 const ROLE_PATHS = {
@@ -71,7 +78,11 @@ export default function ServiceDocs() {
     for (const [absPath, raw] of Object.entries(RAW)) {
       const rel = absPath.replace(/^\/docs\//, '');
       const { fm, body, title } = parseDoc(raw);
-      map[rel] = { raw, fm, body, title: title || rel };
+      const t = title || rel;
+      // 제목에 이모지가 없으면 폴더 fallback 이모지를 붙여 목록 일관성 확보
+      const folder = rel.includes('/') ? rel.split('/')[0] : '_root';
+      const navTitle = LEADING_EMOJI_RE.test(t.trim()) ? t : `${FOLDER_EMOJI[folder] || '📄'} ${t}`;
+      map[rel] = { raw, fm, body, title: t, navTitle };
     }
     return map;
   }, []);
@@ -103,7 +114,7 @@ export default function ServiceDocs() {
 
   const NavItem = ({ rel }) => (
     <button className={`svc-doc-item ${selected === rel ? 'active' : ''}`} onClick={() => open(rel)} title={rel}>
-      {docs[rel]?.title || rel}
+      {docs[rel]?.navTitle || docs[rel]?.title || rel}
     </button>
   );
 
