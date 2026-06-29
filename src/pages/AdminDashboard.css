@@ -139,7 +139,9 @@
   backdrop-filter: blur(12px);
 }
 
-/* LNB+콘텐츠(.admin-layout)와 동일한 max-width 1400px 중앙 정렬 규격 */
+/* LNB+콘텐츠(.admin-layout)와 동일한 max-width 1400px 중앙 정렬 규격.
+   좌측 16px = 사이드바 패딩(BI를 LNB 메뉴에 정렬),
+   우측 48px = 콘텐츠 영역 패딩(로그인/로그아웃을 콘텐츠 카드 우측에 정렬) */
 .admin-header-inner {
   display: flex;
   align-items: center;
@@ -148,7 +150,7 @@
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
-  padding: 16px 16px;
+  padding: 16px 48px 16px 16px;
 }
 
 .admin-header-left {
