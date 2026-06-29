@@ -956,6 +956,21 @@
   margin-bottom: 2px;
 }
 
+/* Phase 4: 추천 사유 라벨 */
+.rec-reason {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  vertical-align: middle;
+}
+.rec-reason.strong { background: rgba(165, 180, 252, 0.14); color: #A5B4FC; border: 1px solid rgba(165, 180, 252, 0.3); }
+.rec-reason.stretch { background: rgba(229, 178, 93, 0.12); color: #E5B25D; border: 1px solid rgba(229, 178, 93, 0.3); }
+
 .rec-title {
   color: #F5F3FF;
   font-size: 0.95rem;

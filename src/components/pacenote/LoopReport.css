@@ -1,0 +1,47 @@
+/* LoopReport — 성장 루프 주간 리포트 (Phase 4) */
+.loop-report {
+  margin: 0 0 20px;
+  padding: 18px 20px;
+  border-radius: var(--radius-md, 16px);
+  border: 1px solid rgba(165, 180, 252, 0.22);
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.07), rgba(34, 211, 238, 0.04));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.loop-report-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.loop-report-icon { font-size: 1rem; }
+.loop-report-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary, #FAFAFA); }
+.loop-report-sub { font-size: 0.78rem; color: var(--text-muted, #94A3B8); }
+
+.loop-report-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.loop-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.loop-stat-label { font-size: 0.72rem; color: var(--text-muted, #94A3B8); font-weight: 600; }
+.loop-stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary, #FAFAFA); line-height: 1.1; }
+.loop-stat-unit { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary, #CBD5E1); margin-left: 2px; }
+.loop-stat-sub { font-size: 0.72rem; color: var(--text-muted, #94A3B8); }
+
+.loop-stat-domain { border-color: rgba(165, 180, 252, 0.22); background: rgba(165, 180, 252, 0.06); }
+.loop-stat-domain-name { font-size: 1.05rem; color: var(--color-indigo, #A5B4FC); }
+
+@media (max-width: 700px) {
+  .loop-report-stats { grid-template-columns: repeat(2, 1fr); }
+}

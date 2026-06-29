@@ -1,8 +1,8 @@
 ---
-status: draft
+status: active
 domain: PaceNote
 last_updated: 2026-06-29
-version: v1.0
+version: v1.4
 target_files:
   - pacenote-api.mjs
   - pipeline/src/pacenote-composer.mjs
@@ -27,6 +27,7 @@ target_files:
 | v1.1 | 2026-06-29 | AI Agent | **Phase 0·1 구현 완료** — pacenote-api 신호 적재(recordSignal)·`GET /profile`, pacenote-composer 야간 권위 reconcile | pacenote-api.mjs, pacenote-composer.mjs |
 | v1.2 | 2026-06-29 | AI Agent | **Phase 2 구현 완료** — 완료 가중 velocity·HOF, 고인물 퇴출 v2, affinity 인지형 추천(강점+스트레치) | pacenote-composer.mjs, pacenote-api.mjs |
 | v1.3 | 2026-06-29 | AI Agent | **Phase 3 구현 완료** — 다이제스트 개인화 렌즈(클라이언트측: 도메인 재정렬·'내 궤도' 배지·연결 배너). 소비 비콘은 이연 | TrackSignalFeed.jsx/css |
+| v1.4 | 2026-06-29 | AI Agent | **Phase 4 구현 완료 → 루프 닫힘(status active)** — 주간 루프 리포트(LoopReport) + 추천 사유 라벨(강점/스트레치) | LoopReport.jsx, PaceNoteDashboard.jsx |
 
 ---
 
@@ -163,10 +164,22 @@ profile: {
 
 > 📌 **소비 비콘 이연 사유**: 야간 reconcile(Phase 1)가 affinity를 *weeks(실행) 기준으로만* 권위 재계산하므로, 소비 +0.5 증분은 reconcile에 덮어쓰여 사라진다. 정상 지원하려면 `profile.consumption`을 **별도 필드**로 두고 reconcile가 보존+합산해야 함 → 별도 작업으로 분리. 핵심 DoD(궤도 도메인 상단 노출)는 본 렌즈로 충족.
 
-### ☐ Phase 4 — 루프 가시화 UI
-- [ ] 주간 루프 리포트(배움·실행·복기·내일 강조) 1화면
-- [ ] 추천 카드 "추천 사유" 라벨
-- **DoD**: 유저가 자신의 루프를 한 장으로 인지.
+### ✅ Phase 4 — 루프 가시화 UI — **완료(2026-06-29)**
+- [x] **주간 루프 리포트**([LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)): 실행 완료율 · 연속 주차(🔥) · 복기 수 · 집중 도메인(🧭) 한 장 요약. PaceNote ChronoRibbon 하단 배치, 콜드 스타트 시 숨김
+- [x] **추천 사유 라벨**([PaceNoteDashboard.jsx](../../src/pages/PaceNoteDashboard.jsx) 옴니바): `강점 기반`(indigo) / `새 도전`(gold) — affinity 기반 클라이언트 판정
+- **DoD ✅**: 유저가 배움→실행→복기 루프를 한 장으로 인지. 추천이 *왜* 떴는지 가시화.
+
+---
+
+## ✅ 루프 닫힘 (Loop Closed)
+```
+배움(Daily Digest) ──실행의 궤도에 추가──▶ 실행(PaceNote 궤도)
+        ▲                                          │
+        │ Phase 3 개인화 렌즈                       │ Phase 0 완료/회고 신호 적재
+        │ (내 궤도 도메인 상단)                      ▼
+   집중 도메인 ◀── Phase 2 affinity 추천 ◀── 복기·프로파일(Phase 1 정합)
+```
+**Phase 0~4 전부 구현 완료.** 새 제품 0 · 신규 Gemini 비용 0으로 모방 불가능한 데이터 해자를 확보. 남은 것은 운영 중 지표(완료율·리텐션) 관찰과 **후속 베팅(②Growth Profile 공개 · ③AI 코치 · 소비 비콘)**.
 
 ## 10. 리스크 & 대응
 
