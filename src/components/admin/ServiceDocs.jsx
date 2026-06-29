@@ -6,7 +6,7 @@
  * - react-markdown(remark-gfm, rehype-highlight) 재사용 — BuildersLog와 동일 렌더
  * - 문서 간 .md 링크는 뷰어 내에서 전환(내부 네비게이션)
  */
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -109,8 +109,93 @@ export default function ServiceDocs() {
       .map(([rel]) => rel);
   }, [query, docs]);
 
-  const doc = docs[selected];
-  const open = (rel) => { if (docs[rel]) { setSelected(rel); window.scrollTo?.(0, 0); } };
+  // 저장 후 낙관적 반영(배포 전까지 번들 raw 대신 편집본 표시): rel -> raw
+  const [overrides, setOverrides] = useState({});
+  const baseDoc = docs[selected];
+  const liveRaw = overrides[selected] ?? baseDoc?.raw;
+  const doc = useMemo(() => {
+    if (!liveRaw) return null;
+    const { fm, body, title } = parseDoc(liveRaw);
+    return { ...baseDoc, raw: liveRaw, fm, body, title: title || baseDoc?.title };
+  }, [liveRaw, baseDoc]);
+
+  // ── 수정 모드 ──
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState('');
+  const [summary, setSummary] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saveMsg, setSaveMsg] = useState(null); // { type:'ok'|'err', text }
+
+  // ── 수정 이력 ──
+  const [history, setHistory] = useState([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  const token = () => sessionStorage.getItem('admin_token');
+  const docPath = selected ? `docs/${selected}` : null;
+
+  const open = (rel) => {
+    if (docs[rel]) {
+      setSelected(rel);
+      setEditing(false);
+      setSaveMsg(null);
+      window.scrollTo?.(0, 0);
+    }
+  };
+
+  const loadHistory = useCallback(async () => {
+    if (!docPath) return;
+    setHistoryLoading(true);
+    try {
+      const res = await fetch(`/admin/api/docs/history?path=${encodeURIComponent(docPath)}`, {
+        headers: { Authorization: `Bearer ${token()}` },
+      });
+      const data = await res.json();
+      setHistory(res.ok ? (data.history || []) : []);
+    } catch {
+      setHistory([]);
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, [docPath]);
+
+  useEffect(() => { loadHistory(); }, [loadHistory]);
+
+  const startEdit = () => {
+    setDraft(liveRaw || '');
+    setSummary('');
+    setSaveMsg(null);
+    setEditing(true);
+  };
+
+  const saveEdit = async () => {
+    if (!draft.trim()) { setSaveMsg({ type: 'err', text: '본문이 비어 있습니다.' }); return; }
+    setSaving(true);
+    setSaveMsg(null);
+    try {
+      const res = await fetch('/admin/api/docs/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token()}` },
+        body: JSON.stringify({ path: docPath, content: draft, summary }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setSaveMsg({ type: 'err', text: data.error || '저장 실패' }); return; }
+      setOverrides(prev => ({ ...prev, [selected]: draft })); // 낙관적 반영
+      setEditing(false);
+      setSaveMsg({ type: 'ok', text: data.message || '저장되었습니다.' });
+      loadHistory();
+    } catch (e) {
+      setSaveMsg({ type: 'err', text: `네트워크 오류: ${e.message}` });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const fmtDate = (iso) => {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleString('ko-KR', { dateStyle: 'medium', timeStyle: 'short' }); }
+    catch { return iso.slice(0, 10); }
+  };
 
   const NavItem = ({ rel }) => (
     <button className={`svc-doc-item ${selected === rel ? 'active' : ''}`} onClick={() => open(rel)} title={rel}>
@@ -164,24 +249,80 @@ export default function ServiceDocs() {
               {doc.fm.status && <span className={`svc-badge status-${doc.fm.status}`}>{doc.fm.status}</span>}
               {doc.fm.version && <span className="svc-badge">{doc.fm.version}</span>}
               {doc.fm.last_updated && <span className="svc-badge muted">{doc.fm.last_updated}</span>}
+              {overrides[selected] && <span className="svc-badge status-active" title="저장됨 — 배포 반영 대기">● 편집본(반영 대기)</span>}
+              {!editing && <button className="svc-edit-btn" onClick={startEdit}>✏️ 수정</button>}
             </div>
-            <article className="markdown-body svc-markdown">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeHighlight]}
-                components={{
-                  a: ({ href, children }) => {
-                    const target = resolveRel(selected, href);
-                    if (target && docs[target]) {
-                      return <a href="#" onClick={(e) => { e.preventDefault(); open(target); }}>{children}</a>;
-                    }
-                    return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
-                  },
-                }}
-              >
-                {doc.body}
-              </ReactMarkdown>
-            </article>
+
+            {saveMsg && <div className={`svc-savemsg ${saveMsg.type}`}>{saveMsg.text}</div>}
+
+            {editing ? (
+              <div className="svc-editor">
+                <textarea
+                  className="svc-editor-area"
+                  value={draft}
+                  onChange={e => setDraft(e.target.value)}
+                  spellCheck={false}
+                />
+                <div className="svc-editor-bar">
+                  <input
+                    className="svc-editor-summary"
+                    placeholder="수정 요약 (예: 셋업 절차 보완) — 이력에 표시됩니다"
+                    value={summary}
+                    onChange={e => setSummary(e.target.value)}
+                    maxLength={80}
+                  />
+                  <button className="svc-btn ghost" onClick={() => setEditing(false)} disabled={saving}>취소</button>
+                  <button className="svc-btn primary" onClick={saveEdit} disabled={saving}>
+                    {saving ? '저장 중…' : '💾 저장(커밋)'}
+                  </button>
+                </div>
+                <p className="svc-editor-hint">저장 시 GitHub main에 커밋되며 약 3~4분 후 배포에 반영됩니다. 편집자는 로그인 계정으로 자동 기록됩니다.</p>
+              </div>
+            ) : (
+              <article className="markdown-body svc-markdown">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeHighlight]}
+                  components={{
+                    a: ({ href, children }) => {
+                      const target = resolveRel(selected, href);
+                      if (target && docs[target]) {
+                        return <a href="#" onClick={(e) => { e.preventDefault(); open(target); }}>{children}</a>;
+                      }
+                      return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
+                    },
+                  }}
+                >
+                  {doc.body}
+                </ReactMarkdown>
+              </article>
+            )}
+
+            {!editing && (
+              <section className="svc-history">
+                <button className="svc-history-head" onClick={() => setHistoryOpen(o => !o)}>
+                  📜 수정 이력 {history.length > 0 && `(${history.length})`} <span className="svc-history-caret">{historyOpen ? '▾' : '▸'}</span>
+                </button>
+                {historyOpen && (
+                  <div className="svc-history-body">
+                    {historyLoading ? (
+                      <div className="svc-history-empty">불러오는 중…</div>
+                    ) : history.length === 0 ? (
+                      <div className="svc-history-empty">기록된 수정 이력이 없습니다.</div>
+                    ) : (
+                      history.map(h => (
+                        <div className="svc-history-row" key={h.sha}>
+                          <span className="svc-history-date">{fmtDate(h.date)}</span>
+                          <span className="svc-history-editor">{h.editor}</span>
+                          <span className="svc-history-summary">{h.summary}</span>
+                          {h.url && <a className="svc-history-diff" href={h.url} target="_blank" rel="noopener noreferrer">diff ↗</a>}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+              </section>
+            )}
           </>
         ) : (
           <div className="svc-docs-empty">문서를 선택하세요.</div>
