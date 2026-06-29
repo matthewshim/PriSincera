@@ -959,7 +959,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
             <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ margin: 0 }}>Daily Digest 대시보드</h2>
+              <h2 style={{ margin: 0 }}>📊 Daily Digest 대시보드</h2>
             </div>
             <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
               <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
@@ -1065,7 +1065,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'subscribers' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>구독자 및 메일링 관리</h2>
+              <h2>👥 구독자 및 메일링 관리</h2>
               <button className="admin-btn-secondary" onClick={exportCsv}>📥 구독자 CSV 내보내기</button>
             </div>
 
@@ -1120,7 +1120,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {activeTab === 'pipeline' && pipeline && (
           <div className="admin-pipeline">
-            <h2>파이프라인 현황</h2>
+            <h2>⚙️ 파이프라인 현황</h2>
             <div className="admin-stat-grid">
               <StatCard label="Collector" value={pipeline.collector.status === 'success' ? '정상' : '대기'}
                 icon="📡" color={pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)'} />
@@ -1136,7 +1136,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'admins' && isSuperAdmin && (
           <div className="admin-admins">
             <div className="admin-section-header">
-              <h2>관리자 계정 관리</h2>
+              <h2>🔐 관리자 계정 관리</h2>
               <button className="admin-btn-primary btn-primary" onClick={openCreateAdmin}>➕ 관리자 추가</button>
             </div>
             <div className="admin-table-wrap">
@@ -1182,7 +1182,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'content' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>콘텐츠 관리</h2>
+              <h2>📚 콘텐츠 관리</h2>
               {contentSubTab === 'legacy' && (
                 <button className="admin-btn-primary btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
               )}
@@ -1355,7 +1355,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {activeTab === 'pacenotes' && (
           <div className="admin-subscribers">
-            <div className="admin-section-header"><h2>Pace Note (Pacer) 현황</h2></div>
+            <div className="admin-section-header"><h2>⛵ Pace Note (Pacer) 현황</h2></div>
             <div className="admin-table-wrap">
               <table className="admin-table">
                 <thead><tr><th>이메일</th><th>최근 접속 주차</th><th>현재 미션(개)</th><th>완료(개)</th></tr></thead>
@@ -1378,7 +1378,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'pacenote_insights' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>유저 커스텀 목표 인사이트</h2>
+              <h2>💡 유저 커스텀 목표 인사이트</h2>
             </div>
             <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
               Pacer들이 AI 추천에 의존하지 않고 직접 등록한 목표들을 분석하여, 향후 서비스 및 AI 추천 고도화에 활용할 수 있습니다.
@@ -1408,7 +1408,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'pacenote_pool' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>AI 추천 풀 관리</h2>
+              <h2>🎯 AI 추천 풀 관리</h2>
               <button className="admin-btn-primary btn-primary" onClick={openCreatePool}>➕ 항목 수동 추가</button>
             </div>
 
@@ -1452,7 +1452,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'builderslog' && (
           <div className="admin-builderslog">
             <div className="admin-section-header">
-              <h2>Builder's Log 퍼블리싱</h2>
+              <h2>📝 Builder's Log 퍼블리싱</h2>
               <button className="admin-btn-primary btn-primary" onClick={openCreateBuildersLog}>📝 새 아티클 작성</button>
             </div>
             <div className="admin-table-wrap">
