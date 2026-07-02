@@ -197,6 +197,23 @@ export default function ServiceDocs() {
     catch { return iso.slice(0, 10); }
   };
 
+  // 현재 문서(편집본 반영)를 .md 파일로 다운로드
+  const downloadMd = () => {
+    const raw = liveRaw || '';
+    if (!raw) return;
+    const base = (selected || 'document').split('/').pop();
+    const filename = base.endsWith('.md') ? base : `${base}.md`;
+    const blob = new Blob([raw], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
   const NavItem = ({ rel }) => (
     <button className={`svc-doc-item ${selected === rel ? 'active' : ''}`} onClick={() => open(rel)} title={rel}>
       {docs[rel]?.navTitle || docs[rel]?.title || rel}
@@ -322,6 +339,18 @@ export default function ServiceDocs() {
                   </div>
                 )}
               </section>
+            )}
+
+            {!editing && (
+              <div className="svc-docs-footer">
+                <button
+                  className="svc-download-btn"
+                  onClick={downloadMd}
+                  title={`${(selected || '').split('/').pop()} 내려받기`}
+                >
+                  📥 .md 다운로드
+                </button>
+              </div>
             )}
           </>
         ) : (
