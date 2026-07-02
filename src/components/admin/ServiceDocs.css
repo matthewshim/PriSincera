@@ -251,6 +251,33 @@
 .svc-history-diff { color: #22D3EE; text-decoration: none; font-size: 0.78rem; white-space: nowrap; }
 .svc-history-diff:hover { text-decoration: underline; }
 
+/* ── 하단: .md 다운로드 ── */
+.svc-docs-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  justify-content: flex-end;
+}
+.svc-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 9px;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: rgba(34, 211, 238, 0.08);
+  color: var(--color-cyan, #22D3EE);
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.svc-download-btn:hover {
+  background: rgba(34, 211, 238, 0.15);
+  border-color: rgba(34, 211, 238, 0.5);
+}
+
 /* 반응형 */
 @media (max-width: 900px) {
   .svc-docs { grid-template-columns: 1fr; }
