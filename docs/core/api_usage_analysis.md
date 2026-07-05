@@ -9,7 +9,7 @@ target_files:
   - admin-api.mjs
 ---
 
-# 📊 PriSincera API Usage & Cost Optimization Analysis
+# 🔍 API 사용량·과금 분석 (API Usage & Cost)
 
 ## 📝 Revision History
 

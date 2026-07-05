@@ -18,7 +18,7 @@ target_files:
   - src/components/philosophy/PhilosophySection.css
 ---
 
-# 📱 모바일 퍼스트 시대의 비주얼 격차 해소: 반응형 Bento와 가로 스와이프(Swipe) 최적화 여정
+# 🗺️ 모바일 최적화 제안서 (Mobile Optimization)
 
 ## 📝 Revision History
 

@@ -1,3 +1,11 @@
+---
+nav_title: ✍️ 데일리 다이제스트 v4.0 개편기
+status: active
+domain: BuildersLog
+last_updated: 2026-05-29
+version: v1.0
+---
+
 # 📬 노이즈 속의 나침반: 데일리 다이제스트(Daily Digest) 이메일 엔진 v4.0 개편기
 
 > **"Sincerity, Prioritized. 노이즈를 걷어내고 저마다의 궤도를 발견하도록."**

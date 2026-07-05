@@ -1,4 +1,11 @@
-# 📈 PriSincera — 서비스 확장 인프라 분석 보고서
+---
+status: active
+domain: Core
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 🗺️ 인프라 스케일업 계획서 (Scaling)
 
 > **작성일:** 2026-04-29  
 > **요청 배경:** Admin 기능 + PriStudy 론칭 + Cloud Run 한계 검토  

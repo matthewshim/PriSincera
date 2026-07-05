@@ -1,4 +1,11 @@
-# 🎯 PriSincera 디자인 시스템 재검토: BI 및 철학 기반 리뉴얼 (v3.0)
+---
+status: active
+domain: Core
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 📘 BI 중심 프리미엄 UX 가이드
 
 ## 1. 뼈아픈 반성과 방향성 재설정
 최근의 3D WebGL 도입 실패와 시각적 품질 저하는 **PriSincera의 본질적인 BI(Brand Identity)와 철학을 무시하고 "구현 기술의 화려함"에만 매몰된 결과**였습니다.

@@ -17,7 +17,7 @@ target_files:
   - src/components/connect/ConnectSection.jsx
 ---
 
-# ☄️ 스크롤 인터랙션 디자인 강화 제안서 — 실시간 스크롤 연동 및 프리미엄 톤앤매너 고도화
+# 🗺️ 스크롤 인터랙션 강화 제안서
 
 본 제안서는 메인 페이지(`Home.jsx`)의 스크롤 및 호버 인터랙션 디자인 품질을 **"실시간 스크롤 연동(Scroll-linked Interactions)"** 및 **"미니멀 프리미엄(Restrained Premium)"** 톤앤매너를 기반으로 고도화하기 위한 구체적인 계획을 제시합니다. 인위적인 카드 레벨의 모션을 배제하고 우주 배경 공간의 천체 물리 현상과 글래스모피즘(Glassmorphism)의 굴절 특성을 활용하여 깊이감 있는 프리미엄 UX를 제공하는 것을 목표로 합니다.
 

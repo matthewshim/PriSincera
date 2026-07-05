@@ -12,7 +12,7 @@ target_files:
   - admin-api.mjs
 ---
 
-# 🛠️ 운영 런북 (Operations Runbook)
+# 📘 운영 런북 (Operations Runbook)
 
 > **데이터 플레인(배치 파이프라인·GCS·Firestore·Gemini) 장애 시 무엇을 보고 어떻게 복구하는가.** 웹 서비스(사이트 다운·DNS·SSL·롤백) 대응은 [development_guide](development_guide.md) §13을, 환경변수·시크릿은 [environment_reference](environment_reference.md)를 참조하세요.
 

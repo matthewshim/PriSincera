@@ -7,7 +7,7 @@ target_files:
   - src/pages/SylphioApiKeyGuide.jsx
 ---
 
-# 🔑 Sylphio - AI 서비스별 API Key 발급 및 Pro 모드 연동 상세 가이드
+# 📘 Sylphio API Key 연동 가이드
 
 ## 📝 Revision History
 

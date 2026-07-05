@@ -13,7 +13,7 @@ target_files:
   - src/components/daily/TrackSignalFeed.jsx
 ---
 
-# 🔄 성장 루프 닫기 — 실행 계획안 (Growth Loop Closure)
+# 🗺️ 성장 루프 닫기 실행 계획서
 
 > **한 줄 요지**: 새 제품·신규 AI 비용 없이, 이미 저장 중인 `completed`·회고 신호를 *읽기 시작*하는 것만으로 **배움 → 실행 → 복기 → (개인화) 배움** 플라이휠을 닫는다. 모방 불가능한 데이터 해자를 만든다.
 >

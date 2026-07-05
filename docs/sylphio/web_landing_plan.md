@@ -7,7 +7,7 @@ target_files:
   - src/pages/SylphioLanding.jsx
 ---
 
-# 🌐 Sylphio - 통합 웹사이트 기획 및 UI 디자인 기술 명세서 (Web Landing Page Plan)
+# 📐 Sylphio 웹 랜딩 기획 명세서
 
 ## 📝 Revision History
 

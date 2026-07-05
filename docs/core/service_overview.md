@@ -10,7 +10,7 @@ target_files:
   - src/pages/SylphioLanding.jsx
 ---
 
-# 🌌 PriSincera 서비스 개요 (Service Overview)
+# 🧭 서비스 개요 (Service Overview)
 
 > **5분 안에 "PriSincera가 무엇인가"를 파악하기 위한 최상위 진입 문서.** 신규 합류자(기획·디자인·개발)는 이 문서를 가장 먼저 읽고, 이후 역할별 [온보딩 가이드](onboarding_guide.md)로 이동하세요.
 

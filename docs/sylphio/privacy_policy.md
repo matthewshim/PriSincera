@@ -7,7 +7,7 @@ target_files:
   - src/pages/SylphioPrivacy.jsx
 ---
 
-# 🔒 Sylphio Privacy Policy (개인정보 처리방침)
+# 📜 Sylphio 개인정보 처리방침 (Privacy)
 
 ## 📝 Revision History
 

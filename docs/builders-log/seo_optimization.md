@@ -1,4 +1,5 @@
 ---
+nav_title: ✍️ SEO 크롤러 대응 개발기
 status: active
 domain: BuildersLog
 last_updated: 2026-05-26

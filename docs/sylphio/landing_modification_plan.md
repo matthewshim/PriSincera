@@ -1,4 +1,11 @@
-# 📝 Sylphio 웹 소개 페이지(Landing Page) 팩트 및 정책 수정 계획서 (v2.1)
+---
+status: active
+domain: Sylphio
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 🗺️ Sylphio 랜딩 수정 계획서 (v2.1)
 
 본 계획서는 macOS 데스크톱 앱의 최신 정책(**영어 및 한국어 무제한 무료 지원, 그 외 10개 이상 다국어 및 AI 회의록 요약은 Pro Lifetime 라이선스 전용**)을 웹 소개 페이지에 정밀 반영하기 위한 수정 계획입니다.
 

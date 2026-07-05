@@ -1,4 +1,11 @@
-# 🩺 Front-end Stability Diagnostics Checklist (프런트엔드 장애 예방 자가진단 체크리스트)
+---
+status: active
+domain: Core
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 📘 프런트엔드 안정성 체크리스트 (FE Stability)
 
 이 문서는 웹 애플리케이션의 자바스크립트 런타임 오류, 리소스 로딩 실패, 스타일 누수 등 비즈니스에 치명적인 영향을 줄 수 있는 **프런트엔드 서비스 장애를 사전에 감지하고 차단하기 위한 기술 진단 표준 체크리스트**입니다.
 

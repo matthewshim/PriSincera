@@ -79,9 +79,11 @@ export default function ServiceDocs() {
       const rel = absPath.replace(/^\/docs\//, '');
       const { fm, body, title } = parseDoc(raw);
       const t = title || rel;
-      // 제목에 이모지가 없으면 폴더 fallback 이모지를 붙여 목록 일관성 확보
+      // 사이드바 라벨: nav_title frontmatter가 있으면 우선(편집형 개발기의 본문 H1 보존용), 없으면 H1
+      const label = fm.nav_title || t;
+      // 라벨에 선행 이모지가 없으면 폴더 fallback 이모지를 붙여 목록 일관성 확보
       const folder = rel.includes('/') ? rel.split('/')[0] : '_root';
-      const navTitle = LEADING_EMOJI_RE.test(t.trim()) ? t : `${FOLDER_EMOJI[folder] || '📄'} ${t}`;
+      const navTitle = LEADING_EMOJI_RE.test(label.trim()) ? label : `${FOLDER_EMOJI[folder] || '📄'} ${label}`;
       map[rel] = { raw, fm, body, title: t, navTitle };
     }
     return map;

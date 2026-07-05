@@ -1,4 +1,11 @@
-# 🔒 PriSincera — 웹서비스 보안 취약점 분석 및 조치 결과 보고서
+---
+status: active
+domain: Core
+last_updated: 2026-05-21
+version: v1.0
+---
+
+# 🔍 보안 취약점 점검 보고서 (Security Audit)
 
 > **최초 작성일**: 2026-04-23  
 > **최종 조치 및 업데이트**: 2026-05-21  

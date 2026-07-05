@@ -12,7 +12,7 @@ target_files:
   - cloudbuild.yaml
 ---
 
-# 🏗️ PriSincera 전체 아키텍처 (Architecture Overview)
+# 🏗️ 전체 아키텍처 개요 (Architecture Overview)
 
 > 흩어진 인프라·모듈을 **한 장으로 조망**하기 위한 문서. 신규 개발자는 [service_overview](service_overview.md) 다음으로 이 문서를 읽으세요.
 

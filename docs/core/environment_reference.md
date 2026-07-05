@@ -13,7 +13,7 @@ target_files:
   - pipeline/src/lib/storage.mjs
 ---
 
-# 🔑 환경변수 & 시크릿 레퍼런스 (Environment Reference)
+# 📘 환경변수·시크릿 레퍼런스 (Environment Reference)
 
 > 운영자·신규 개발자가 **"이 시스템이 쓰는 모든 환경변수와 그 저장 위치"** 를 한 곳에서 파악하기 위한 단일 레퍼런스. 키 로테이션·새 환경 구성 시 본 문서를 기준으로 점검하세요.
 

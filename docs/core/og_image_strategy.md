@@ -1,4 +1,11 @@
-# 🖼️ PriSignal 데일리 시그널 — OG 이미지 적용 구현 계획서
+---
+status: active
+domain: Core
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 🗺️ 동적 OG 이미지 전략 (OG Image)
 
 > **목표**: 현재 텍스트 중심의 밋밋한 데일리 시그널 UI를 OG 이미지 기반의 비주얼 카드 디자인으로 개선
 >

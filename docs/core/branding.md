@@ -1,4 +1,11 @@
-# 📘 퍼스널 브랜딩 가이드: PriSincera & Note A
+---
+status: active
+domain: Core
+last_updated: 2026-05-21
+version: v1.0
+---
+
+# 📘 브랜드 아이덴티티 가이드 (Branding)
 
 ## 1. 브랜드 아이덴티티 (Brand Identity)
 

@@ -12,7 +12,7 @@ target_files:
   - src/pages/PaceNoteDashboard.jsx
 ---
 
-# 📐 PriSincera Design System (v5.0: Celestial Overhaul & Contrast Optimization)
+# 📐 디자인 시스템 (Design System)
 
 ## 📝 Revision History
 

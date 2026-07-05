@@ -13,7 +13,7 @@ target_files:
   - src/pages/AdminDashboard.jsx
 ---
 
-# 🌐 PriSincera 글로벌 다국어 지원(i18n) 확장 계획서
+# 🗺️ 다국어 지원(i18n) 확장 계획서
 
 PriSincera 플랫폼이 글로벌 사용자를 대상으로 다국어(Korean, English, Japanese 등) 서비스를 매끄럽게 제공할 수 있도록 프론트엔드 다국어 바인딩, Firestore 콘텐츠 스키마 다국어화, SEO 최적화 및 인프라 가속화 전략을 수록한 표준 구현 계획서입니다.
 

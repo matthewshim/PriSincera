@@ -5,7 +5,7 @@ last_updated: 2026-05-21
 version: v1.0
 ---
 
-# 📬 이메일 SMTP 자체 발송 엔진 전환 및 파이프라인 리뉴얼 아카이브
+# 🗄️ 이메일 발송 엔진 전환 아카이브
 
 이 문서는 외부 뉴스레터 SaaS(Buttondown) 의존성을 제거하고, Google Workspace Gmail SMTP 기반의 자체 이메일 발송 엔진 구축 및 IT Signal & Study 콘텐츠 파이프라인 리뉴얼의 모든 설계 결정과 해결 이력을 통합한 역사적 기록 문서입니다.
 

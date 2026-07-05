@@ -1,4 +1,11 @@
-# 💼 PriSincera(프리신세라) 퍼스널 브랜딩 & 비즈니스 기획안
+---
+status: active
+domain: Core
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 🗺️ 비즈니스 모델 기획서 (Business Model)
 
 ## 1. 프로젝트 개요 (Identity)
 

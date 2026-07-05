@@ -1,4 +1,5 @@
 ---
+nav_title: ✍️ Admin 통합 CMS 개발기
 status: active
 domain: BuildersLog
 last_updated: 2026-05-21

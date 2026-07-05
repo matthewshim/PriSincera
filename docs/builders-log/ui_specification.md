@@ -8,7 +8,7 @@ target_files:
   - src/pages/BuildersLog.css
 ---
 
-# 🛠️ Builder's Log UI/UX 최종 구현 명세서 (Card UI & Responsive Grid)
+# 📐 Builder's Log UI 명세서
 
 본 명세서는 `Builder's Log` 콘텐츠 목록이 가지는 탐색 편의성과 시각적 밀도를 최상으로 끌어올리기 위한 프론트엔드 UI/UX 설계 지침입니다. 최신 포스트의 시인성 확보와 하위 포스트의 높은 인지 효율을 동시에 달성하기 위한 레이아웃, 반응형 중단점, 그리고 정교한 마이크로 인터랙션 사양을 규정합니다.
 

@@ -9,7 +9,7 @@ target_files:
   - docs/INDEX.md
 ---
 
-# 🚀 온보딩 가이드 (Onboarding Guide)
+# 🧭 온보딩 가이드 (Onboarding)
 
 > 신규 합류자가 **"어디부터 읽고, 어떻게 환경을 세팅할지"** 를 한 번에 해결하는 문서. 역할별 필독 경로 + 개발 환경 셋업 체크리스트.
 

@@ -1,4 +1,11 @@
-# 🔐 PriSincera 통합 인증 및 권한 아키텍처 (Authentication & Authorization Architecture)
+---
+status: active
+domain: Core
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 🏗️ 인증·권한 아키텍처 (Authentication)
 
 ## 1. 개요 (Overview)
 기존 `PriStudy` 서비스 시절의 이메일/비밀번호 가입 방식을 폐기하고, 전체 `PriSincera` 도메인(PaceNote, Daily Digest 등)에 **구글 로그인(Google OAuth) 단일 인증 체계**를 도입하여 적용 중인 아키텍처 명세서입니다.

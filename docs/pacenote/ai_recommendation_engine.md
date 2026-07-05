@@ -9,7 +9,7 @@ target_files:
   - admin-api.mjs
 ---
 
-# 🤖 PriSincera PaceNote AI 추천 확장 및 데이터 기반 고도화 계획서 (AI Recommendation Expansion & Data-Driven Optimization)
+# 🏗️ PaceNote AI 추천 엔진 명세서
 
 ## 📝 Revision History
 

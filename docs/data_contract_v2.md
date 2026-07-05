@@ -1,4 +1,11 @@
-# 🤝 Data Contract v2 — Pace Note (웹 ↔ macOS 공유 데이터 계약)
+---
+status: active
+domain: PaceNote
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 🏗️ 데이터 계약 v2 — 웹↔macOS (Data Contract)
 
 > **목적**: macOS 데스크톱 앱 착수 전, 웹에서 먼저 동결하는 단일 데이터 계약. 본 계약을 따르면 데스크톱은 "REST를 IPC/SQLite로 갈아끼우기"만으로 이식된다.
 > **상태**: ✅ **v2.3** (2026-06-24, 오빗화 정책 변경: action 항목 N개 → 독립 궤도 N개, 도메인 카테고리, subtask 폐지) · **정본 위치**: `docs/data_contract_v2.md`

@@ -1,4 +1,11 @@
-# 🔎 Sylphio 웹 소개 페이지 및 연동 문서 검토 보고서
+---
+status: active
+domain: Sylphio
+last_updated: 2026-06-29
+version: v1.0
+---
+
+# 🔍 Sylphio 랜딩 검토 보고서
 
 Sylphio 웹 프로젝트(`www/src/pages/`) 내의 주요 구성 파일들을 검토한 결과, 최신 macOS 데스크톱 앱의 개선 사항(마이크 명칭 통일, UI 스케일업 및 하이브리드 STT 폴백 등)과 비교했을 때 수정이 권장되는 일부 설명 오류 및 보완 사항을 발견했습니다.
 

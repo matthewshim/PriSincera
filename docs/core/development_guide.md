@@ -10,7 +10,7 @@ target_files:
   - package.json
 ---
 
-# 📘 PriSincera — 개발 관리 & 운영 가이드
+# 📘 개발·운영 가이드 (Development Guide)
 
 ## 📝 Revision History
 

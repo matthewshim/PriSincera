@@ -1,3 +1,11 @@
+---
+nav_title: ✍️ 천체 시뮬레이션 개발기
+status: active
+domain: BuildersLog
+last_updated: 2026-05-28
+version: v1.0
+---
+
 # 🌌 낭만을 코딩하다: 극사실주의 천체 시뮬레이션(Celestial Simulation) 개발기
 
 > **"Flowers at your feet, Stars in the distance."**
