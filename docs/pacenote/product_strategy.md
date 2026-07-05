@@ -3,6 +3,10 @@ status: active
 domain: PaceNote
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - src/pages/PaceNoteDashboard.jsx
+  - src/pages/DailyDigest.jsx
+  - pipeline/src/pacenote-composer.mjs
 ---
 
 # 🗺️ PaceNote 제품 전략서 (Product Strategy)

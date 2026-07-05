@@ -7,7 +7,6 @@ target_files:
   - server.mjs
   - pacenote-api.mjs
   - admin-api.mjs
-  - builderslog-api.mjs
   - pipeline/src/composer.mjs
   - cloudbuild.yaml
 ---

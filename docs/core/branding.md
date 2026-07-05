@@ -3,6 +3,9 @@ status: active
 domain: Core
 last_updated: 2026-05-21
 version: v1.0
+target_files:
+  - src/components/layout/Header.jsx
+  - src/components/layout/Footer.jsx
 ---
 
 # 📘 브랜드 아이덴티티 가이드 (Branding)

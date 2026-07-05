@@ -3,6 +3,9 @@ status: active
 domain: Core
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - src/styles/index.css
+  - src/App.jsx
 ---
 
 # 📘 BI 중심 프리미엄 UX 가이드

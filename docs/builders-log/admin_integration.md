@@ -6,7 +6,7 @@ last_updated: 2026-05-21
 version: v1.0
 target_files:
   - src/pages/BuildersLog.jsx
-  - builderslog-api.mjs
+  - admin-api.mjs
 ---
 
 # ⚙️ 서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남

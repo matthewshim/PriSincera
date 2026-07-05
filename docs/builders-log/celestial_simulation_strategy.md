@@ -4,6 +4,9 @@ status: active
 domain: BuildersLog
 last_updated: 2026-05-28
 version: v1.0
+target_files:
+  - src/components/hero/StarField.jsx
+  - src/components/hero/HeroSection.jsx
 ---
 
 # 🌌 낭만을 코딩하다: 극사실주의 천체 시뮬레이션(Celestial Simulation) 개발기

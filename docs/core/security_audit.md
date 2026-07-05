@@ -3,6 +3,12 @@ status: active
 domain: Core
 last_updated: 2026-05-21
 version: v1.0
+target_files:
+  - server.mjs
+  - pacenote-api.mjs
+  - pipeline/src/lib/mailer.mjs
+  - pipeline/src/collector.mjs
+  - src/pages/PaceNoteDashboard.jsx
 ---
 
 # 🔍 보안 취약점 점검 보고서 (Security Audit)

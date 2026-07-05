@@ -3,6 +3,7 @@ status: active
 domain: Core
 last_updated: 2026-06-29
 version: v1.0
+target_files: []  # 비즈니스 기획 문서 — 특정 코드 미지배
 ---
 
 # 🗺️ 비즈니스 모델 기획서 (Business Model)

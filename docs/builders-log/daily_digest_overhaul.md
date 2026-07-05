@@ -4,6 +4,10 @@ status: active
 domain: BuildersLog
 last_updated: 2026-05-29
 version: v1.0
+target_files:
+  - pipeline/src/composer.mjs
+  - pipeline/src/lib/email-template.mjs
+  - pipeline/src/tests/test-email-template.mjs
 ---
 
 # 📬 노이즈 속의 나침반: 데일리 다이제스트(Daily Digest) 이메일 엔진 v4.0 개편기

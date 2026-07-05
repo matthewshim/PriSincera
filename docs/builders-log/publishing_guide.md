@@ -3,6 +3,10 @@ status: active
 domain: BuildersLog
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - src/data/buildersLogMeta.json
+  - src/pages/BuildersLog.jsx
+  - src/pages/BuildersLogDetail.jsx
 ---
 
 # 📘 Builder's Log 퍼블리싱 가이드

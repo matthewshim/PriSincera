@@ -3,6 +3,10 @@ status: active
 domain: Core
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - server.mjs
+  - pipeline/src/backfill-og.mjs
+  - pipeline/src/lib/rss.mjs
 ---
 
 # 🗺️ 동적 OG 이미지 전략 (OG Image)

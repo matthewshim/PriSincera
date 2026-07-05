@@ -3,6 +3,12 @@ status: active
 domain: Core
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - server.mjs
+  - admin-api.mjs
+  - pacenote-api.mjs
+  - src/contexts/AuthContext.jsx
+  - src/pages/AdminDashboard.jsx
 ---
 
 # 🏗️ 인증·권한 아키텍처 (Authentication)

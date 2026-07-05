@@ -3,6 +3,15 @@ status: active
 domain: PaceNote
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - src/pages/PaceNoteDashboard.jsx
+  - src/pages/DailyDigest.jsx
+  - src/hooks/usePaceNoteData.js
+  - pipeline/src/tech-composer.mjs
+  - pipeline/src/pacenote-composer.mjs
+  - pipeline/src/lib/sync-daily-gcs.mjs
+  - admin-api.mjs
+  - server.mjs
 ---
 
 # 🗺️ PaceNote macOS 사업계획서

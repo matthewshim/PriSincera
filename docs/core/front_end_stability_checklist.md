@@ -3,6 +3,10 @@ status: active
 domain: Core
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - src/main.jsx
+  - src/App.jsx
+  - src/styles/index.css
 ---
 
 # 📘 프런트엔드 안정성 체크리스트 (FE Stability)

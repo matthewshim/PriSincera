@@ -3,6 +3,11 @@ status: active
 domain: PaceNote
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - pacenote-api.mjs
+  - src/hooks/usePaceNoteData.js
+  - pipeline/src/composer.mjs
+  - pipeline/src/study-composer.mjs
 ---
 
 # 🏗️ 데이터 계약 v2 — 웹↔macOS (Data Contract)

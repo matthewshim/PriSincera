@@ -3,6 +3,8 @@ status: active
 domain: Sylphio
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - src/pages/SylphioLanding.jsx
 ---
 
 # 🗺️ Sylphio 랜딩 수정 계획서 (v2.1)

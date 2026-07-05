@@ -3,6 +3,9 @@ status: active
 domain: Core
 last_updated: 2026-06-29
 version: v1.0
+target_files:
+  - server.mjs
+  - cloudbuild.yaml
 ---
 
 # 🗺️ 인프라 스케일업 계획서 (Scaling)
