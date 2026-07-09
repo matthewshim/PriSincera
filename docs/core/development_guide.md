@@ -555,6 +555,21 @@ gcloud iam service-accounts add-iam-policy-binding \
   --role="roles/iam.serviceAccountUser"
 ```
 
+#### 4) 웹 서비스 계정 — Firebase Auth 관리 권한 (필수)
+Admin > 관리자 추가/수정/삭제는 `admin-api.mjs`가 Firebase Admin SDK로 **Auth 사용자를 CRUD**(`createUser`/`updateUser`/`deleteUser`)합니다. `prisincera-web`이 실행되는 서비스 계정에 **`roles/firebaseauth.admin`** 이 없으면 로그인은 되지만 관리자 생성이 `insufficient permission`으로 실패합니다.
+- **필수 역할**: Firebase Authentication Admin (`roles/firebaseauth.admin`)
+- **대상 구성원**: `prisincera-web`의 실행 서비스 계정(미지정 시 기본 Compute SA `[PROJECT_NUMBER]-compute@developer.gserviceaccount.com`)
+
+```bash
+# 웹 서비스 SA 확인 (빈 값이면 기본 Compute SA)
+SA=$(gcloud run services describe prisincera-web --region asia-northeast3 \
+     --format='value(spec.template.spec.serviceAccountName)')
+gcloud projects add-iam-policy-binding prisincera \
+  --member="serviceAccount:${SA:-[PROJECT_NUMBER]-compute@developer.gserviceaccount.com}" \
+  --role="roles/firebaseauth.admin"
+```
+> 재배포 불필요(1~2분 내 반영). 코드는 이 오류를 감지해 안내 메시지로 치환합니다(`authPermissionHint`). 장애 대응 절차는 [operations_runbook](operations_runbook.md) §3.
+
 ---
 
 ## 8. 빌드 & 배포 프로세스

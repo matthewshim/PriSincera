@@ -111,6 +111,21 @@ gcloud run jobs update tech-composer --region asia-northeast3 \
 ### 🟢 주간 monitor 경보
 - `prisignal-monitor`(월요일)가 발송/파이프라인 이상을 리포트. 경보 시 직전 주 `composer` 실행 이력과 `email_logs`(Firestore)를 확인.
 
+### 🔴 관리자 계정 생성/수정 실패 — "insufficient permission" (Firebase Auth IAM)
+- **증상**: Admin > 관리자 추가 시 `Credential implementation provided to initializeApp() ... has insufficient permission to access the requested resource`.
+- **원인**: `prisincera-web` Cloud Run 서비스 계정에 **Firebase Auth 관리 권한(`roles/firebaseauth.admin`)** 누락. 로그인(`verifyIdToken`, 공개키 검증)은 되지만 `createUser`/`updateUser`/`deleteUser`(Identity Toolkit Admin API)가 거부됨.
+- **해결 (1회, 재배포 불필요·1~2분 반영)**:
+  ```bash
+  gcloud config set project prisincera
+  SA=$(gcloud run services describe prisincera-web --region asia-northeast3 \
+       --format='value(spec.template.spec.serviceAccountName)')
+  # SA가 빈 값이면 기본 Compute SA: <PROJECT_NUMBER>-compute@developer.gserviceaccount.com
+  gcloud projects add-iam-policy-binding prisincera \
+    --member="serviceAccount:${SA:-<PROJECT_NUMBER>-compute@developer.gserviceaccount.com}" \
+    --role="roles/firebaseauth.admin"
+  ```
+- 코드는 이 오류를 감지해 명확한 안내로 치환한다(`admin-api.mjs` `authPermissionHint`). 인프라 설정 근거는 [development_guide](development_guide.md) §7-7.
+
 ## 4. 데이터 보호 주의사항
 - **Firestore 자동 백업이 구성돼 있지 않다면** 중요 컬렉션(`pacenotes`, `subscribers`)은 주기적 수동 export 권장:
   ```bash
