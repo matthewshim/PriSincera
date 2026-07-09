@@ -155,6 +155,16 @@ function requireSuperAdmin(req, res, next) {
   next();
 }
 
+// Firebase Auth 관리 API(createUser/updateUser/deleteUser) 권한 부족(IAM) 감지.
+// Cloud Run 서비스 계정에 roles/firebaseauth.admin 이 없으면 발생 → 명확한 안내로 치환.
+function authPermissionHint(err) {
+  const m = String((err && err.message) || '');
+  if (/insufficient permission|permission_denied|caller does not have permission/i.test(m)) {
+    return 'Firebase Auth 관리 권한이 없습니다. Cloud Run 서비스 계정에 roles/firebaseauth.admin 부여가 필요합니다 (운영 런북 §관리자 계정 생성/수정 실패 참조).';
+  }
+  return null;
+}
+
 router.use(requireAdmin);
 
 // ─── 인증 확인 (역할 포함) ────────────────────────
@@ -972,6 +982,8 @@ router.post('/admins', requireSuperAdmin, async (req, res) => {
     console.error('[Admin CRUD] Create:', err.message);
     if (err.code === 'auth/email-already-exists') return res.status(409).json({ error: '이미 존재하는 이메일입니다' });
     if (err.code === 'auth/invalid-email') return res.status(400).json({ error: '유효하지 않은 이메일 형식입니다' });
+    const hint = authPermissionHint(err);
+    if (hint) return res.status(500).json({ error: hint });
     res.status(500).json({ error: `관리자 생성 실패: ${err.message}` });
   }
 });
@@ -1012,6 +1024,8 @@ router.put('/admins/:uid', requireSuperAdmin, async (req, res) => {
     console.error('[Admin CRUD] Update:', err.message);
     if (err.code === 'auth/user-not-found') return res.status(404).json({ error: '관리자를 찾을 수 없습니다' });
     if (err.code === 'auth/email-already-exists') return res.status(409).json({ error: '이미 사용 중인 이메일입니다' });
+    const hint = authPermissionHint(err);
+    if (hint) return res.status(500).json({ error: hint });
     res.status(500).json({ error: `관리자 수정 실패: ${err.message}` });
   }
 });
@@ -1035,6 +1049,8 @@ router.delete('/admins/:uid', requireSuperAdmin, async (req, res) => {
   } catch (err) {
     console.error('[Admin CRUD] Delete:', err.message);
     if (err.code === 'auth/user-not-found') return res.status(404).json({ error: '관리자를 찾을 수 없습니다' });
+    const hint = authPermissionHint(err);
+    if (hint) return res.status(500).json({ error: hint });
     res.status(500).json({ error: `관리자 삭제 실패: ${err.message}` });
   }
 });
