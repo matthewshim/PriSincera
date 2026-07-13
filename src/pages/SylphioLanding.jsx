@@ -64,13 +64,14 @@ const SCENARIOS = {
 const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
-    heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
+    heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\n회의 요약과 정밀 회의록을 Gemini·GPT 등 최상위 AI 엔진으로 강화하세요 (BYOK). 실시간 자막은 무료·온디바이스로 동작합니다.",
     heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
+    heroSysReq: "시스템 요구사항: macOS 13.0 (Ventura) 이상",
     featuresTitle: "가장 완벽한 실시간 AI 통역·회의록의 7대 무기",
     featuresSub: "기존 번역 솔루션의 침묵 장애와 캡처 실패 한계를 뛰어넘은 Mac 전용 아키텍처",
     f1Title: "AirPods Max & Bluetooth 동적 락온",
-    f1Desc: "회의 시작 시 블루투스 이어폰 탈착으로 인한 오디오 장치 유실을 방지합니다. 사용 중인 에어팟 실명을 동적으로 감지하여 실시간 100% 오디오 수집 스트림에 자동 매핑합니다.",
+    f1Desc: "회의 시작 시 블루투스 이어폰 탈착으로 인한 오디오 장치 유실을 방지합니다. 사용 중인 에어팟 실명을 동적으로 감지하여 실시간 오디오 수집 스트림에 자동 매핑하며, 연결이 끊기면 내장 마이크로 자연스럽게 폴백합니다.",
     f2Title: "하이브리드 로컬 STT 엔진",
     f2Desc: "기기 내부 오프라인 로컬 신경망을 기반으로 하되, 로컬 언어 팩이 없는 경우 Apple 보안 서버 STT로 자동 폴백하여 끊김 없고 정확한 음성 음절 추출을 지원합니다.",
     f3Title: "3종 오디오 소스 분리 캡처",
@@ -117,13 +118,14 @@ const TRANSLATIONS = {
   },
   en: {
     heroTitle: "Sylphio",
-    heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nExperience the powerful multilingual intelligence of Gemini and GPT flawlessly in a Mac native environment.",
+    heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nSupercharge your summaries and precise minutes with top-tier AI engines like Gemini and GPT (BYOK). Real-time subtitles run free, on-device.",
     heroCtaDownload: "📥 Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
+    heroSysReq: "Requires macOS 13.0 (Ventura) or later",
     featuresTitle: "7 Ultimate Weapons for Flawless Real-Time AI Translation & Minutes",
     featuresSub: "A Mac-dedicated architecture designed to eliminate silent freezes and capture failures.",
     f1Title: "AirPods Max & Bluetooth Dynamic Lock-on",
-    f1Desc: "Prevents audio device loss caused by detaching bluetooth earphones during meetings. It dynamically detects your AirPods' real name and maps it automatically to the audio stream.",
+    f1Desc: "Prevents audio device loss caused by detaching bluetooth earphones during meetings. It dynamically detects your AirPods' real name and maps it automatically to the audio stream, gracefully falling back to the built-in mic if the connection drops.",
     f2Title: "Hybrid Local STT Engine",
     f2Desc: "Powered primarily by local on-device neural networks, with an automatic fallback to Apple's secure server speech recognition when local language packs are unavailable, ensuring continuous and precise transcription.",
     f3Title: "Three-Source Separated Audio Capture",
@@ -170,13 +172,14 @@ const TRANSLATIONS = {
   },
   ja: {
     heroTitle: "Sylphio",
-    heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio。\n画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPTの強力な多言語知能を、Macのネイティブ環境で完璧に体験してください。",
+    heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio。\n画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\n会議要約と精密議事録を、Gemini・GPTなど最上位のAIエンジンで強化（BYOK）。リアルタイム字幕は無料・オンデバイスで動作します。",
     heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
+    heroSysReq: "動作環境: macOS 13.0 (Ventura) 以降",
     featuresTitle: "完璧なリアルタイムAI通訳・議事録を実現する7つの武器",
     featuresSub: "従来の翻訳ツールの沈黙フリーズやキャプチャ失敗の限界を克服した、Mac専用アーキテクチャ。",
     f1Title: "AirPods Max & Bluetooth 動的ロックオン",
-    f1Desc: "会議開始時のBluetoothイヤホン着脱によるオーディオデバイスの切断を防ぎます。お使いのAirPodsのデバイス名を動的に検知し、リアルタイムの集音ストリームへ自動マッピングします。",
+    f1Desc: "会議開始時のBluetoothイヤホン着脱によるオーディオデバイスの切断を防ぎます。お使いのAirPodsのデバイス名を動的に検知し、リアルタイムの集音ストリームへ自動マッピングし、接続が切れた場合は内蔵マイクへ自然にフォールバックします。",
     f2Title: "ハイブリッド・ローカル STTエンジン",
     f2Desc: "端末内のオフライン・ローカルニューラルエンジンを基本としつつ、ローカル言語パックがない場合はAppleのセキュア音声認識サーバーへ自動フォールバックし、途切れのない正確な文字起こしを実現します。",
     f3Title: "3種オーディオソースの分離キャプチャ",
@@ -360,6 +363,7 @@ export default function SylphioLanding() {
             <span>{d.heroCtaDownload}</span>
           </a>
         </div>
+        <p style={{ marginTop: '16px', fontSize: '0.82rem', opacity: 0.55, letterSpacing: '0.02em' }}>{d.heroSysReq}</p>
       </section>
       
       <SylphioNav />

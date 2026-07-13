@@ -566,8 +566,8 @@ app.use(async (req, res) => {
         description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
       }
     } else if (req.originalUrl.startsWith('/sylphio')) {
-      title = 'Sylphio (실피오) — macOS용 실시간 온디바이스 AI 동시통역 에이전트';
-      description = '맥OS 완벽 호환, 에어팟 실명 락온, 100% 로컬 온디바이스 STT 무제한 발화, Gemini 및 GPT AI 동시통역과 마크다운 회의록 자동 요약본을 제공하는 프리미엄 번역 비서 Sylphio를 만나보세요.';
+      title = 'Sylphio (실피오) — macOS용 실시간 AI 동시통역·회의록 에이전트';
+      description = 'macOS 실시간 AI 동시통역·회의록 에이전트. 온디바이스 STT(오프라인, 언어팩 없으면 Apple 서버 폴백)·에어팟 실명 락온·마이크/에어팟/시스템 사운드 3소스 캡처. 종료 후 녹음을 Gemini 2.5로 재분석하는 정밀 회의록과 마크다운(.md) 자동 요약까지.';
       if (req.originalUrl.includes('/guide')) {
         title = 'Sylphio API Key 연동 가이드 — Google Gemini & OpenAI';
         description = '개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고의 AI 실시간 번역 및 회의록 요약 기능을 한계 없이 누려보세요.';

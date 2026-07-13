@@ -8,7 +8,7 @@ import './SylphioPrivacy.css';
 const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
-    heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
+    heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\n회의 요약과 정밀 회의록을 Gemini·GPT 등 최상위 AI 엔진으로 강화하세요 (BYOK). 실시간 자막은 무료·온디바이스로 동작합니다.",
     heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
     badge: "데이터 무수집 원칙",
@@ -45,7 +45,7 @@ const TRANSLATIONS = {
   },
   en: {
     heroTitle: "Sylphio",
-    heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nExperience the powerful multilingual intelligence of Gemini and GPT flawlessly in a Mac native environment.",
+    heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nSupercharge your summaries and precise minutes with top-tier AI engines like Gemini and GPT (BYOK). Real-time subtitles run free, on-device.",
     heroCtaDownload: "📥 Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
     badge: "Zero Data Collection",
@@ -82,7 +82,7 @@ const TRANSLATIONS = {
   },
   ja: {
     heroTitle: "Sylphio",
-    heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio。\n画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\nGeminiとGPTの強力な多言語知能を、Macのネイティブ環境で完璧に体験してください。",
+    heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio。\n画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\n会議要約と精密議事録を、Gemini・GPTなど最上位のAIエンジンで強化（BYOK）。リアルタイム字幕は無料・オンデバイスで動作します。",
     heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
     badge: "データ無収集",
