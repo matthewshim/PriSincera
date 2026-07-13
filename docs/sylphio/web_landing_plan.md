@@ -1,10 +1,11 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-02
-version: v1.0
+last_updated: 2026-07-13
+version: v1.2
 target_files:
   - src/pages/SylphioLanding.jsx
+  - server.mjs
 ---
 
 # 📐 Sylphio 웹 랜딩 기획 명세서
@@ -15,6 +16,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-02 | Maker | 실피오 통합 랜딩 페이지(Web Landing Plan) 표준 기획 최초 정의 | docs/sylphio/ |
 | v1.1 | 2026-06-16 | Maker | 영어/한국어 무료 지원 및 타 다국어 Pro 라이선스 잠금 정책 반영 | docs/sylphio/ |
+| v1.2 | 2026-07-13 | AI Agent | 7대 무기(정밀 회의록 추가)·하이브리드 STT·3소스·Gemini 2.5·SEO 메타 최신화(라이브 정합) | src/pages/SylphioLanding.jsx, server.mjs |
 
 ---
 
@@ -67,9 +69,9 @@ graph TD
     Main -->|Sub Route| Privacy[개인정보 보호서약: /sylphio/privacy]
 ```
 
-* **`/sylphio` (Main Landing Page)**: 메인 제품 랜딩 페이지. (소개, 5대 기능, 가상 데모, 가격 모델)
+* **`/sylphio` (Main Landing Page)**: 메인 제품 랜딩 페이지. (소개, 7대 기능, 가상 데모, 가격 모델)
 * **`/sylphio/guide` (API Key Tutorial)**: OpenAI 및 Google Gemini API Key를 발급받고 적용하는 3단계 시각 가이드 페이지. (`docs/sylphio/api_key_guide.md` 연계)
-* **`/sylphio/privacy` (Privacy Policy)**: App Store 심사 완벽 통과 및 신뢰 획득을 위한 **"100% 로컬 데이터 무수집"** 서약 페이지.
+* **`/sylphio/privacy` (Privacy Policy)**: App Store 심사 완벽 통과 및 신뢰 획득을 위한 **"데이터 무수집(Zero-Data)"** 서약 페이지.
 
 ---
 
@@ -84,19 +86,23 @@ graph TD
   - 📥 **`[Mac App Store에서 무료 다운로드]`** (Apple 공식 배지 디자인 차용) - 메인 버튼
   - 💡 **`[API Key 발급 가이드 보기]`** - 보조 고스트 버튼
 
-### ❖ Section 2: Features (가장 완벽한 기술 5대장 3D 카드)
-마우스 호버 시 3D 자이로스코프 공간감을 주며 기우는 Tilt 카드를 사용하여 Sylphio의 5대 압도적 무기를 각인시킵니다.
+### ❖ Section 2: Features (가장 완벽한 7대 무기 3D 카드)
+마우스 호버 시 3D 자이로스코프 공간감을 주며 기우는 Tilt 카드를 사용하여 Sylphio의 7대 압도적 무기를 각인시킵니다.
 
 1. **🎙 AirPods Max & Bluetooth 동적 락온**
-   - 윈도우/맥을 넘나들며 음성 캡처 실패를 유발하던 에어팟 및 블루투스 마이크를 startup 단계에서 진짜 실명('광식의 AirPods Max')으로 동적 스캔하여 실시간 100% 매핑합니다.
-2. **🛡 100% 로컬 온디바이스 STT 엔진**
-   - 애플 클라우드 ASR 서버의 60초 통신 차단 제한 및 네트워크 장애 시 발생하는 침묵 장애(Silent Hang)를 완전 박멸했습니다. 기기 내부 로컬 신경망 엔진을 강제 가동하여 0ms 레이턴시 무제한 무중단 STT를 제공합니다.
-3. **💻 시스템 & 마이크 듀얼 캡처**
-   - 화상회의(Zoom, Teams), 유튜브, 시스템 사운드를 가로채는 ScreenCaptureKit 아키텍처와 실제 내장 마이크의 동시 수집 파이프라인을 자랑합니다.
-4. **🧠 AI PRO 번역 및 Keychain 보안 저장소**
-   - 유저가 발급한 API Key를 macOS Secure Keychain에 완벽히 암호화 보관하고, Gemini/GPT-4o-mini 엔진을 통한 다국어 정밀 통역을 실행합니다.
-5. **📊 마크다운 회의록 & AI Executive Summary**
-   - 대화 로그를 타임라인 테이블과 주요 Action Items 체크리스트가 결합된 최고급 마크다운 보고서로 즉시 요약 보존합니다.
+   - 음성 캡처 실패를 유발하던 에어팟 및 블루투스 마이크를 startup 단계에서 진짜 실명('광식의 AirPods Max')으로 동적 스캔하여 실시간 오디오 스트림에 자동 매핑하며, 연결이 끊기면 내장 마이크로 자연스럽게 폴백합니다.
+2. **🛡 하이브리드 로컬 STT 엔진**
+   - 기기 내부 오프라인 로컬 신경망을 기반으로 하되, 로컬 언어팩이 없는 경우 Apple 보안 서버 STT로 자동 폴백하여 끊김 없고 정확한 음성 추출을 제공합니다.
+3. **💻 3종 오디오 소스 분리 캡처**
+   - ScreenCaptureKit 아키텍처로 내장 마이크·에어팟(블루투스)·시스템 사운드 3가지 소스를 혼선 없이 분리 수집합니다. (시스템 사운드 캡처에는 macOS 화면 녹화 권한 사용)
+4. **🧠 AI PRO 엔진 & Keychain 보안 저장소**
+   - 유저가 발급한 API Key를 macOS Secure Keychain에 암호화 보관합니다. 실시간 자막은 무료·온디바이스로 동작하고, 요약·정밀 회의록은 Google Gemini(2.5 Flash/Pro) 등 선택한 제공사로 직접 전송됩니다.
+5. **📊 AI 회의록 자동 생성 & 2가지 모드**
+   - 대화 로그를 Action Items 체크리스트가 결합된 마크다운(.md) 보고서로 즉시 요약합니다. 실시간 통역 모드와, 번역 없이 전사·요약만 하는 회의록 전용 모드를 함께 지원합니다.
+6. **🖥 데스크톱 네이티브 프리미엄 UI**
+   - 일원화된 레이아웃, 자막 뷰어 내 동적 폰트 스케일업(슬라이더), 대기 인디케이터·회의 제목 입력 등 네이티브 사용성을 제공합니다.
+7. **🎧 정밀 회의록 (녹음 재분석)**
+   - 세션 종료 후 녹음된 오디오(.m4a)를 Google Gemini 2.5 멀티모달로 재분석하여 실시간 자막보다 훨씬 정밀한 전사·요약(통역 모드는 번역까지)을 생성합니다. 다중 구간 병합·정밀 재생성 지원. (BYOK Pro · 오디오가 본인 API로 Google에 업로드)
 
 ### ❖ Section 3: Interactive Web Simulator (가상 데모)
 * **인터랙션 기획**: 
@@ -105,10 +111,10 @@ graph TD
 
 ### ❖ Section 4: Pricing (결제 저항 붕괴 및 평생 라이선스 요약)
 * **무료 버전 (Free)**: 
-  - 평생 무료 다운로드. 영어(English) 및 한국어(Korean)에 대한 100% 로컬 온디바이스 STT 및 실시간 번역 자막 무제한 제공. (무료 지원 언어 외 타 다국어 번역 및 세션 종료 후 AI 요약본 생성 미지원)
+  - 평생 무료 다운로드. 영어(English) 및 한국어(Korean)에 대한 온디바이스/하이브리드 STT 및 실시간 번역 자막 무제한 제공. 3종 오디오 소스 캡처와 전체 세션 녹음(.m4a) 저장·다운로드도 무료. (무료 지원 언어 외 타 다국어 번역 및 세션 종료 후 AI 요약/정밀 회의록 생성 미지원)
 * **Pro 평생 라이선스 (BYOK - $9.99)**: 
   - *"커피 두 잔 값으로 매월 나가는 AI 구독료를 평생 끊어보세요."* 
-  - 단 1회 결제 시 영구 평생 소장 라이선스 제공. 12개 다국어(일본어, 중국어 등) 번역 기능 잠금 전면 해제, 개인 API Key 연동 잠금 해제, 그리고 AI 실시간 회의록 자동 요약 및 Markdown 파일 생성 기능 완벽 지원.
+  - 단 1회 결제 시 영구 평생 소장 라이선스 제공. 10개 이상 다국어(일본어, 중국어 등) 번역 잠금 전면 해제, 개인 API Key 연동, AI 실시간 회의록 자동 요약(.md), 그리고 **정밀 회의록(녹음을 Gemini 2.5로 재분석)** 기능까지 지원.
 
 ---
 
@@ -118,8 +124,8 @@ graph TD
 
 ### ❖ SEO 메타 태그 명세
 ```html
-<title>Sylphio (실피오) - macOS용 실시간 온디바이스 AI 동시통역 정령 에이전트</title>
-<meta name="description" content="맥OS 완벽 호환, 에어팟 실명 락온, 100% 로컬 온디바이스 STT 무제한 발화, Gemini 및 GPT AI 동시통역과 마크다운 회의록 자동 요약본을 제공하는 프리미엄 번역 비서 Sylphio를 다운로드하세요.">
+<title>Sylphio (실피오) — macOS용 실시간 AI 동시통역·회의록 에이전트</title>
+<meta name="description" content="macOS 실시간 AI 동시통역·회의록 에이전트. 온디바이스 STT(오프라인, 언어팩 없으면 Apple 서버 폴백)·에어팟 실명 락온·마이크/에어팟/시스템 사운드 3소스 캡처. 종료 후 녹음을 Gemini 2.5로 재분석하는 정밀 회의록과 마크다운(.md) 자동 요약까지.">
 <meta name="keywords" content="실피오, Sylphio, 맥북 번역, macOS 동시통역, 실시간 자막, 에어팟 마이크 번역, 온디바이스 STT, AI 회의록 요약, Gemini 번역, OpenAI gpt 번역">
 <meta property="og:title" content="Sylphio - macOS Real-time AI Translation Assistant">
 <meta property="og:image" content="https://sylphio.prisincera.com/assets/og_aurora_core.png">
