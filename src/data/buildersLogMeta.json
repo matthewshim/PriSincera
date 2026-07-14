@@ -1,5 +1,50 @@
 [
   {
+    "id": "ep12",
+    "slug": "seo-meta-ssot-unified-titles-and-brand-og",
+    "chapterNo": "12",
+    "title": {
+      "ko": "🧭 하나의 진실(SSOT): 카테고리별로 흩어진 페이지 타이틀·메타 통일기",
+      "en": "🧭 One Source of Truth (SSOT): Unifying Scattered Page Titles & Meta Across Categories",
+      "ja": "🧭 唯一の真実(SSOT)：カテゴリごとにばらついたページタイトル・メタの統一記"
+    },
+    "subtitle": {
+      "ko": "서버 SSR과 클라이언트가 따로 만들던 이중 메타를 공유 모듈로 일원화하고, 히어로의 Star Prism 아이덴티티를 소셜 카드로 옮긴 과정",
+      "en": "Consolidating the dual meta systems (server SSR + client) into one shared module, standardizing titles for SEO, and turning the hero's Star Prism identity into the social card",
+      "ja": "サーバーSSRとクライアントが別々に生成していた二重メタを共有モジュールへ一元化し、タイトルをSEO向けに標準化、ヒーローのStar Prismアイデンティティをソーシャルカードへ"
+    },
+    "tags": [
+      "SEO",
+      "Open Graph",
+      "SSOT",
+      "i18n"
+    ],
+    "description": {
+      "ko": "PriSincera SPA는 서버 SSR과 클라이언트 훅이 각자 페이지 메타를 만들어, 같은 페이지도 크롤러 뷰와 브라우저 탭 제목이 어긋나는 드리프트를 겪었습니다. 이를 route→meta 단일 소스(SSOT) 공유 모듈로 통일하고, 표준 타이틀 포맷·canonical·다국어 hreflang을 방출하며, 메인 히어로의 Star Prism 아이덴티티를 브랜드 OG 카드로 생성·적용한 엔지니어링 기록입니다.",
+      "en": "PriSincera's SPA had its server SSR and client hook each build page meta, causing drift where a crawler's title and the browser tab title diverged for the same page. This article details unifying them into a single route→meta source of truth (SSOT), standardizing the title format, emitting canonical and multilingual hreflang, and generating a brand OG card from the main hero's Star Prism identity.",
+      "ja": "PriSinceraのSPAは、サーバーSSRとクライアントフックがそれぞれページメタを生成し、同じページでもクローラーのタイトルとブラウザタブのタイトルが食い違うドリフトを抱えていました。これをroute→metaの単一の真実(SSOT)共有モジュールへ統一し、標準タイトルフォーマット・canonical・多言語hreflangを出力し、メインヒーローのStar PrismアイデンティティをブランドOGカードとして生成・適用したエンジニアリング記録です。"
+    },
+    "accent": "#1E80FF",
+    "date": "2026-07-14",
+    "commits": [
+      {
+        "hash": "399bd8a",
+        "type": "feat",
+        "msg": "unify page titles/meta via a shared SSOT module across all categories"
+      },
+      {
+        "hash": "9bf6111",
+        "type": "feat",
+        "msg": "emit ko/en/ja + x-default hreflang and og:locale for i18n SEO"
+      },
+      {
+        "hash": "4fc203b",
+        "type": "feat",
+        "msg": "redesign the brand OG image around the hero Star Prism identity"
+      }
+    ]
+  },
+  {
     "id": "ep11",
     "slug": "scroll-linked-interaction-and-minimal-focus",
     "chapterNo": "11",
