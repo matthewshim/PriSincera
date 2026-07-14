@@ -20,6 +20,7 @@ target_files:
 | v1.1 | 2026-07-14 | AI Agent | 결정(A유지·B아포스트로피·C단일폴백·D공유모듈) 반영 및 구현 완료 — SSOT `src/data/seoMeta.mjs` 신설, server.mjs·useSEO·전 페이지 정합, Sylphio useSEO 편입, canonical/keywords 방출·중복 태그 제거 | src/data/seoMeta.mjs |
 | v1.2 | 2026-07-14 | AI Agent | 후속 완료 — 다국어 hreflang·og:locale SSR 방출 추가. 카테고리 전용 OG 이미지는 디자인 에셋 의존 백로그로 유지(단일 폴백). | src/data/seoMeta.mjs, server.mjs |
 | v1.3 | 2026-07-14 | AI Agent | 별도 에셋 부재로 디자인 시스템 팔레트 기반 공통 대표 OG(1200×630) 생성·적용(레거시 PriSignal 교체) | public/og-image.png, public/daily-og.png |
+| v1.4 | 2026-07-14 | AI Agent | 대표 OG를 메인 히어로 Star Prism Identity(글래스 프리즘·골드 액센트·오빗) 디자인 기반으로 리디자인 | public/og-image.png, public/daily-og.png |
 
 ---
 
@@ -170,7 +171,7 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 
 ## 9. 잔여 백로그 (에셋/대공사 의존)
 
-- **공통 대표 OG 이미지**: ✅ 디자인 시스템 팔레트로 **PriSincera 대표 OG(1200×630 PNG)를 생성해 `og-image.png`·`daily-og.png`에 공통 적용**(레거시 PriSignal 카드 교체, Pillow 스크립트로 생성 — 2x 슈퍼샘플→LANCZOS 다운스케일). 카테고리별 전용 이미지는 추후 동적 OG 파이프라인 확장 과제로 유지.
+- **공통 대표 OG 이미지**: ✅ 메인 히어로의 **Star Prism Identity**(글래스 육망성 프리즘·골드 액센트·오빗·다크 스타필드+골드 앰비언트)를 반영한 **대표 OG(1200×630 PNG)를 생성해 `og-image.png`·`daily-og.png`에 공통 적용**(레거시 PriSignal 카드 교체, Pillow 2x 슈퍼샘플→LANCZOS). 카테고리별 전용 이미지는 추후 동적 OG 파이프라인 확장 과제로 유지.
 - **언어별 SSR 본문**: 현 SSR은 ko 단일 메타/HTML을 서빙(클라이언트 i18n). 완전한 언어별 검색 색인을 원하면 `?lang`별 서버 렌더가 필요 → 대공사 후속.
 
 > 관련 문서: [SEO 아키텍처 및 크롤러 대응 명세서](../builders-log/seo_optimization.md), [동적 OG 이미지 전략](og_image_strategy.md).
