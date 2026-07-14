@@ -170,7 +170,7 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 
 ## 9. 잔여 백로그 (에셋/대공사 의존)
 
-- **공통 대표 OG 이미지**: ✅ 디자인 시스템 팔레트로 **PriSincera 대표 OG(1200×630 PNG)를 생성해 `og-image.png`·`daily-og.png`에 공통 적용**(레거시 PriSignal 카드 교체, 생성 스크립트 `scripts/gen_og_image.py`). 카테고리별 전용 이미지는 추후 동적 OG 파이프라인 확장 과제로 유지.
+- **공통 대표 OG 이미지**: ✅ 디자인 시스템 팔레트로 **PriSincera 대표 OG(1200×630 PNG)를 생성해 `og-image.png`·`daily-og.png`에 공통 적용**(레거시 PriSignal 카드 교체, Pillow 스크립트로 생성 — 2x 슈퍼샘플→LANCZOS 다운스케일). 카테고리별 전용 이미지는 추후 동적 OG 파이프라인 확장 과제로 유지.
 - **언어별 SSR 본문**: 현 SSR은 ko 단일 메타/HTML을 서빙(클라이언트 i18n). 완전한 언어별 검색 색인을 원하면 `?lang`별 서버 렌더가 필요 → 대공사 후속.
 
 > 관련 문서: [SEO 아키텍처 및 크롤러 대응 명세서](../builders-log/seo_optimization.md), [동적 OG 이미지 전략](og_image_strategy.md).
