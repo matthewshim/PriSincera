@@ -18,6 +18,7 @@ import rateLimit from 'express-rate-limit';
 import adminRouter from './admin-api.mjs';
 import studyRouter from './study-api.mjs';
 import pacenoteRouter from './pacenote-api.mjs';
+import { resolveMeta, PAGE_META } from './src/data/seoMeta.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -509,9 +510,7 @@ app.use(async (req, res) => {
   const baseUrl = 'https://www.prisincera.com';
   const currentUrl = baseUrl + req.originalUrl;
   
-  let title = 'PriSincera — Sincerity, Prioritized.';
-  let description = 'PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.';
-  let image = `${baseUrl}/daily-og.png`; // Premium fallback image
+  let override = null;   // 동적 페이지(글 상세/날짜)용 메타
 
   try {
     const dailyMatch = req.originalUrl.match(/^\/daily\/(\d{4}-\d{2}-\d{2})/);
@@ -530,18 +529,19 @@ app.use(async (req, res) => {
       if (signalData && signalData.articles && signalData.articles.length > 0) {
         // Find top article for SEO representation
         const topArticle = signalData.articles.sort((a,b) => (b.weightedScore||0) - (a.weightedScore||0))[0];
-        title = `${topArticle.title} | Daily Digest — PriSincera`;
-        description = topArticle.summary ? topArticle.summary.substring(0, 150) + '...' : description;
-        image = topArticle.ogImage || image;
+        override = {
+          pageTitle: `${topArticle.title} — Daily Digest`,
+          description: topArticle.summary ? topArticle.summary.substring(0, 150) + '...' : PAGE_META['/daily'].description,
+          keywords: PAGE_META['/daily'].keywords,
+          ogImage: topArticle.ogImage || undefined,
+        };
       } else {
-        title = `${dateStr} Daily Digest | PriSincera`;
+        override = {
+          pageTitle: `${dateStr} Daily Digest`,
+          description: PAGE_META['/daily'].description,
+          keywords: PAGE_META['/daily'].keywords,
+        };
       }
-    } else if (req.originalUrl.startsWith('/daily')) {
-      title = 'Daily Digest — 노이즈 속의 시그널과 실무 지식 | PriSincera';
-      description = '매일 아침, 전 세계 비즈니스/테크 동향 중 가장 중요한 시그널과 핵심 실무 지식(Study)을 선별해 전해드립니다.';
-    } else if (req.originalUrl.startsWith('/pacenote')) {
-      title = 'Pace Note — 목표와 회고 | PriSincera';
-      description = '스스로의 우선순위를 지키기 위한 주간 목표 달성률과 투명한 성찰을 기록하는 페이스 노트입니다.';
     } else if (req.originalUrl.startsWith('/builders-log')) {
       const logMatch = req.originalUrl.match(/^\/builders-log\/([a-zA-Z0-9-_]+)/);
       if (logMatch) {
@@ -555,41 +555,38 @@ app.use(async (req, res) => {
             }
             return obj;
           };
-          title = `${getLocaleVal(article.title)} | Builder's Log`;
-          description = getLocaleVal(article.description).substring(0, 150) + '...';
-        } else {
-          title = 'Builders Log — 서비스 구축의 기록 | PriSincera';
-          description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
+          override = {
+            pageTitle: `${getLocaleVal(article.title)} — Builder's Log`,
+            description: getLocaleVal(article.description).substring(0, 150) + '...',
+            keywords: PAGE_META['/builders-log'].keywords,
+          };
         }
-      } else {
-        title = 'Builders Log — 서비스 구축의 기록 | PriSincera';
-        description = 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록합니다.';
-      }
-    } else if (req.originalUrl.startsWith('/sylphio')) {
-      title = 'Sylphio (실피오) — macOS용 실시간 AI 동시통역·회의록 에이전트';
-      description = 'macOS 실시간 AI 동시통역·회의록 에이전트. 온디바이스 STT(오프라인, 언어팩 없으면 Apple 서버 폴백)·에어팟 실명 락온·마이크/에어팟/시스템 사운드 3소스 캡처. 종료 후 녹음을 Gemini 2.5로 재분석하는 정밀 회의록과 마크다운(.md) 자동 요약까지.';
-      if (req.originalUrl.includes('/guide')) {
-        title = 'Sylphio API Key 연동 가이드 — Google Gemini & OpenAI';
-        description = '개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고의 AI 실시간 번역 및 회의록 요약 기능을 한계 없이 누려보세요.';
-      } else if (req.originalUrl.includes('/privacy')) {
-        title = 'Sylphio Privacy Policy (Zero Data Collection) — PriSincera';
-        description = '어떠한 개인 정보, 오디오 녹음 파일, 또는 번역된 텍스트 데이터도 당사의 서버로 수집, 저장, 전송하지 않는 Sylphio의 데이터 무수집 개인정보 처리방침입니다.';
       }
     }
   } catch(err) {
     console.error('[SEO Proxy] Error generating meta tags:', err.message);
   }
 
+  const meta = resolveMeta(req.originalUrl, { override });
+  const title = meta.title;
+  const description = meta.description;
+  const keywords = meta.keywords;
+  const image = meta.ogImage;
+
   // Escape quotes
   const safeDesc = description.replace(/"/g, '&quot;');
+  const safeKeywords = (keywords || '').replace(/"/g, '&quot;');
+  const canonicalUrl = meta.canonical;
   
   const metaTags = `
     <title>${title}</title>
     <meta name="description" content="${safeDesc}">
+    <meta name="keywords" content="${safeKeywords}">
+    <link rel="canonical" href="${canonicalUrl}">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${safeDesc}">
     <meta property="og:image" content="${image}">
-    <meta property="og:url" content="${currentUrl}">
+    <meta property="og:url" content="${canonicalUrl}">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
@@ -599,7 +596,10 @@ app.use(async (req, res) => {
 
   // Inject meta tags by replacing the static ones
   html = html.replace(/<title>.*<\/title>/is, '');
-  html = html.replace(/<meta name="description" content="[^"]*">/is, '');
+  html = html.replace(/<meta name="description"[^>]*>/is, '');
+  html = html.replace(/<meta name="keywords"[^>]*>/is, '');
+  html = html.replace(/<meta property="og:(title|description|image|url)"[^>]*>/gis, '');
+  html = html.replace(/<meta name="twitter:(title|description|image)"[^>]*>/gis, '');
   html = html.replace('</head>', `${metaTags}\n</head>`);
 
   res.send(html);

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 import useScrollReveal from '../hooks/useScrollReveal';
 import logMeta from '../data/buildersLogMeta.json';
 import { useTranslation } from '../contexts/LanguageContext';
@@ -187,9 +188,9 @@ const ChapterCard = ({ chapter, index }) => {
 export default function BuildersLog() {
   const { t } = useTranslation();
   useSEO({
-    title: 'Builders Log',
-    description: t('buildersLog.seoDescription'),
-    keywords: 'PriSincera, 빌더스 로그, 개발 일지, 프로덕트, 기술 블로그, 아키텍처',
+    title: PAGE_META['/builders-log'].pageTitle,
+    description: PAGE_META['/builders-log'].description,
+    keywords: PAGE_META['/builders-log'].keywords,
     ogUrl: 'https://www.prisincera.com/builders-log'
   });
 

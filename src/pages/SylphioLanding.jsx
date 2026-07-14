@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioLanding.css';
+import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 
 // 3D Tilt Hover Feature Card Component
 function FeatureCard({ icon, title, description }) {
@@ -228,6 +230,13 @@ const TRANSLATIONS = {
 
 export default function SylphioLanding() {
   const { locale, t } = useTranslation();
+
+  useSEO({
+    title: PAGE_META['/sylphio'].pageTitle,
+    description: PAGE_META['/sylphio'].description,
+    keywords: PAGE_META['/sylphio'].keywords,
+    ogUrl: 'https://www.prisincera.com/sylphio'
+  });
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
   // GNB activation hook (adds hero-ready class to document.body)

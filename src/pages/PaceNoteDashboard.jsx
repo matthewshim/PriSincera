@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import LoopReport from '../components/pacenote/LoopReport';
 import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 import PaceNoteChronoRibbon from '../components/pacenote/PaceNoteChronoRibbon';
 import { useTranslation } from '../contexts/LanguageContext';
 import './PaceNoteDashboard.css';
@@ -152,9 +153,9 @@ export default function PaceNoteDashboard() {
 
 
   useSEO({
-    title: 'Pace Note',
-    description: t('paceNote.heroSubtitle') ? t('paceNote.heroSubtitle').replace(/\n/g, ' ') : 'Pace Note',
-    keywords: t('home.seoKeywords'),
+    title: PAGE_META['/pacenote'].pageTitle,
+    description: PAGE_META['/pacenote'].description,
+    keywords: PAGE_META['/pacenote'].keywords,
     ogUrl: 'https://www.prisincera.com/pacenote'
   });
   

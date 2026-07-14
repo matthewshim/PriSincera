@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
+import { brandTitle, DEFAULT_OG_IMAGE } from '../data/seoMeta.mjs';
 
 export default function useSEO({ title, description, keywords, ogImage, ogUrl }) {
   useEffect(() => {
-    // 1. Title
-    const siteTitle = 'PriSincera';
-    const fullTitle = title ? `${title} | ${siteTitle}` : 'PriSincera — Sincerity, Prioritized.';
+    // 1. Title (SSOT 포맷)
+    const fullTitle = brandTitle(title);
     document.title = fullTitle;
 
     // Helper to safely set meta tags
@@ -47,9 +47,8 @@ export default function useSEO({ title, description, keywords, ogImage, ogUrl })
       setMeta('keywords', null, keywords);
     }
 
-    // 5. Open Graph Image
-    const defaultOgImage = 'https://www.prisincera.com/og-image.png'; // Make sure you have a default OG image
-    const finalOgImage = ogImage || defaultOgImage;
+    // 5. Open Graph Image (SSOT 단일 폴백)
+    const finalOgImage = ogImage || DEFAULT_OG_IMAGE;
     
     setMeta(null, 'og:image', finalOgImage);
     setMeta('twitter:image', null, finalOgImage);

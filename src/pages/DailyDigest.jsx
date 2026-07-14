@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 import DailyIntro from '../components/daily/DailyIntro';
 import DailyCalendar from '../components/daily/DailyCalendar';
 import TrackSignalFeed from '../components/daily/TrackSignalFeed';
@@ -115,9 +116,9 @@ export default function DailyDigest() {
 
   
   useSEO({
-    title: date ? `Daily Digest (${date})` : 'Daily Digest',
-    description: 'PriSincera가 큐레이션 하는 글로벌 IT, 비즈니스, AI 트렌드 및 시그널 데일리 리포트입니다.',
-    keywords: 'PriSincera, 데일리 다이제스트, IT 뉴스, AI 트렌드, 비즈니스 인사이트, 시그널',
+    title: date ? `${date} Daily Digest` : PAGE_META['/daily'].pageTitle,
+    description: PAGE_META['/daily'].description,
+    keywords: PAGE_META['/daily'].keywords,
     ogUrl: `https://www.prisincera.com/daily${date ? `/${date}` : ''}`
   });
 

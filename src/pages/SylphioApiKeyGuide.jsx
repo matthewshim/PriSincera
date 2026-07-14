@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioApiKeyGuide.css';
+import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 
 // Local Translation Dict for Premium UX
 const TRANSLATIONS = {
@@ -154,6 +156,13 @@ const TRANSLATIONS = {
 
 export default function SylphioApiKeyGuide() {
   const { locale, t } = useTranslation();
+
+  useSEO({
+    title: PAGE_META['/sylphio/guide'].pageTitle,
+    description: PAGE_META['/sylphio/guide'].description,
+    keywords: PAGE_META['/sylphio/guide'].keywords,
+    ogUrl: 'https://www.prisincera.com/sylphio/guide'
+  });
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
 

@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/atom-one-dark.css'; // Premium dark theme for code
 import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 import logMeta from '../data/buildersLogMeta.json';
 import { useTranslation } from '../contexts/LanguageContext';
 import './BuildersLogDetail.css';
@@ -39,9 +40,9 @@ export default function BuildersLogDetail() {
   const localizedDescription = articleMeta ? localize(articleMeta.description) : 'PriSincera 기술 블로그 아티클입니다.';
 
   useSEO({
-    title: `${localizedTitle} | Builder's Log`,
+    title: `${localizedTitle} — Builder's Log`,
     description: localizedDescription,
-    keywords: articleMeta && articleMeta.tags ? articleMeta.tags.join(', ') : 'PriSincera, 기술블로그',
+    keywords: articleMeta && articleMeta.tags ? articleMeta.tags.join(', ') : PAGE_META['/builders-log'].keywords,
     ogUrl: `https://www.prisincera.com/builders-log/${slug}`
   });
 

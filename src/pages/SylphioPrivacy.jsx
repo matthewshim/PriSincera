@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioPrivacy.css';
+import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 
 // Local Multilingual Translation Dict for Privacy Policy
 const TRANSLATIONS = {
@@ -121,6 +123,13 @@ const TRANSLATIONS = {
 
 export default function SylphioPrivacy() {
   const { locale, t } = useTranslation();
+
+  useSEO({
+    title: PAGE_META['/sylphio/privacy'].pageTitle,
+    description: PAGE_META['/sylphio/privacy'].description,
+    keywords: PAGE_META['/sylphio/privacy'].keywords,
+    ogUrl: 'https://www.prisincera.com/sylphio/privacy'
+  });
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   
 

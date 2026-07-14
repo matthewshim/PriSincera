@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import useSEO from '../hooks/useSEO';
+import { PAGE_META } from '../data/seoMeta.mjs';
 import { useTranslation } from '../contexts/LanguageContext';
 import HeroSection from '../components/hero/HeroSection';
 import BeliefSection from '../components/philosophy/PhilosophySection';
@@ -19,9 +20,9 @@ function Home() {
   const { t } = useTranslation();
 
   useSEO({
-    title: '', // Empty uses default 'PriSincera — Sincerity, Prioritized.'
-    description: t('home.seoDescription'),
-    keywords: t('home.seoKeywords'),
+    title: '', // 빈 값 → 홈 브랜드 타이틀
+    description: PAGE_META['/'].description,
+    keywords: PAGE_META['/'].keywords,
     ogUrl: 'https://www.prisincera.com/'
   });
 
