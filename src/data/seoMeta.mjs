@@ -86,3 +86,27 @@ export function resolveMeta(pathname, opts = {}) {
     canonical: opts.canonical || `${BASE_URL}${cleanPath === '/' ? '/' : cleanPath}`,
   };
 }
+
+
+// ── 다국어(i18n) SEO 신호 ──
+export const LOCALES = ['ko', 'en', 'ja'];
+export const DEFAULT_LOCALE = 'ko';
+export const OG_LOCALE = { ko: 'ko_KR', en: 'en_US', ja: 'ja_JP' };
+
+/** hreflang 대체 링크 태그(SSR용). canonical은 쿼리 없는 자기참조 URL. */
+export function hreflangLinks(canonical) {
+  const lines = LOCALES.map(
+    (loc) => `<link rel="alternate" hreflang="${loc}" href="${canonical}?lang=${loc}">`
+  );
+  lines.push(`<link rel="alternate" hreflang="x-default" href="${canonical}">`);
+  return lines.join('\n    ');
+}
+
+/** og:locale + 대체 로케일 태그(SSR용). */
+export function ogLocaleTags(current = DEFAULT_LOCALE) {
+  const main = OG_LOCALE[current] || OG_LOCALE[DEFAULT_LOCALE];
+  const alts = Object.entries(OG_LOCALE)
+    .filter(([k]) => OG_LOCALE[k] !== main)
+    .map(([, v]) => `<meta property="og:locale:alternate" content="${v}">`);
+  return [`<meta property="og:locale" content="${main}">`, ...alts].join('\n    ');
+}

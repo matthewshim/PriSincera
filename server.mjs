@@ -18,7 +18,7 @@ import rateLimit from 'express-rate-limit';
 import adminRouter from './admin-api.mjs';
 import studyRouter from './study-api.mjs';
 import pacenoteRouter from './pacenote-api.mjs';
-import { resolveMeta, PAGE_META } from './src/data/seoMeta.mjs';
+import { resolveMeta, PAGE_META, hreflangLinks, ogLocaleTags } from './src/data/seoMeta.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -583,6 +583,8 @@ app.use(async (req, res) => {
     <meta name="description" content="${safeDesc}">
     <meta name="keywords" content="${safeKeywords}">
     <link rel="canonical" href="${canonicalUrl}">
+    ${hreflangLinks(canonicalUrl)}
+    ${ogLocaleTags(req.locale)}
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${safeDesc}">
     <meta property="og:image" content="${image}">

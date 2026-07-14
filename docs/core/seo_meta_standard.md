@@ -18,6 +18,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-14 | AI Agent | 페이지 타이틀·메타 현황 감사 + 카테고리 일관 표준(SEO 최적화 병행) 및 적용 계획 최초 정의 | server.mjs, src/hooks/useSEO.js |
 | v1.1 | 2026-07-14 | AI Agent | 결정(A유지·B아포스트로피·C단일폴백·D공유모듈) 반영 및 구현 완료 — SSOT `src/data/seoMeta.mjs` 신설, server.mjs·useSEO·전 페이지 정합, Sylphio useSEO 편입, canonical/keywords 방출·중복 태그 제거 | src/data/seoMeta.mjs |
+| v1.2 | 2026-07-14 | AI Agent | 후속 완료 — 다국어 hreflang·og:locale SSR 방출 추가. 카테고리 전용 OG 이미지는 디자인 에셋 의존 백로그로 유지(단일 폴백). | src/data/seoMeta.mjs, server.mjs |
 
 ---
 
@@ -147,7 +148,7 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 5. **[Sylphio 편입]** SylphioLanding/ApiKeyGuide/Privacy 3종에 `useSEO` 도입(canonical·og 포함).
 6. **[정적 기본값]** `index.html` 기본 태그를 표준과 정합(폴백 og:image 통일).
 7. **[검증]** 각 route에 대해 (a) SSR HTML의 `<title>`/메타, (b) 브라우저 탭 타이틀이 **동일**한지 확인. `curl -A "facebookexternalhit"` 로 SSR 스냅샷 점검, 배포 후 **OG 캐시 재스크랩**(FB Sharing Debugger 등).
-8. **[사이트맵/hreflang]** (선택) canonical·`?lang` 정책 점검, 다국어 hreflang 여부 후속 검토.
+8. **[다국어 hreflang]** ✅ 완료 — 전 페이지 SSR에 `ko/en/ja` + `x-default` hreflang 대체 링크와 `og:locale`/`og:locale:alternate` 방출(`hreflangLinks()`·`ogLocaleTags()` in seoMeta), canonical은 쿼리 없는 자기참조. ※ SSR 본문 메타는 현재 ko 단일 → 완전한 언어별 색인은 '언어별 SSR'(§9) 후속.
 
 ---
 
@@ -165,5 +166,10 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 - **위험**: 타이틀 변경은 검색 스니펫·CTR·순위에 영향 → 카테고리 대량 동시 변경 시 일시적 순위 변동 가능. 완화: 키워드부 보존으로 급격한 변화 최소화.
 - **위험**: SSR/CSR 리팩터 중 특정 route 메타 누락 → 홈 기본값으로 폴백. 완화: route별 스냅샷 회귀 점검(§6-7).
 - **검증 지표**: (1) 전 route SSR·CSR 타이틀 일치, (2) 타이틀 길이 ≤ 60자, (3) canonical 자기참조 존재, (4) description 중복 0, (5) 소셜 카드 재스크랩 정상.
+
+## 9. 잔여 백로그 (에셋/대공사 의존)
+
+- **카테고리 전용 OG 이미지**: 현재 전 카테고리 단일 폴백(`og-image.png`). 카테고리별 1200×630 이미지는 **디자인 에셋 제작** 또는 동적 OG 생성 파이프라인 확장이 필요 → 별도 과제(코드만으로 완결 불가).
+- **언어별 SSR 본문**: 현 SSR은 ko 단일 메타/HTML을 서빙(클라이언트 i18n). 완전한 언어별 검색 색인을 원하면 `?lang`별 서버 렌더가 필요 → 대공사 후속.
 
 > 관련 문서: [SEO 아키텍처 및 크롤러 대응 명세서](../builders-log/seo_optimization.md), [동적 OG 이미지 전략](og_image_strategy.md).
