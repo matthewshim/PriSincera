@@ -8,6 +8,8 @@ import DailyCalendar from '../components/daily/DailyCalendar';
 import TrackSignalFeed from '../components/daily/TrackSignalFeed';
 import PromptSection from '../components/daily/PromptSection';
 import JapaneseSection from '../components/daily/JapaneseSection';
+import SignalSection from '../components/daily/SignalSection';
+import { getCategoryStyles } from '../components/daily/categoryStyles';
 import { useTranslation } from '../contexts/LanguageContext';
 import './DailyDigest.css';
 
@@ -29,86 +31,6 @@ function formatNavDate(dateStr, locale = 'ko') {
     return `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}(${days[dt.getDay()]})`;
   }
 }
-
-const SignalArticleCard = ({ article, getCategoryStyles }) => {
-  const cardRef = React.useRef(null);
-  const [tiltStyle, setTiltStyle] = React.useState({});
-
-  const handleMouseMove = (e) => {
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouchDevice) return;
-
-    const card = cardRef.current;
-    if (!card) return;
-
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const xc = rect.width / 2;
-    const yc = rect.height / 2;
-    const dx = (x - xc) / xc;
-    const dy = (y - yc) / yc;
-
-    // 최대 5~6도 묵직한 3D Tilt + 공중부유(-4px) + scale3d(1.01) (디자인 시스템 4.5 규격 준수)
-    const tiltX = (dy * -5).toFixed(2);
-    const tiltY = (dx * 5).toFixed(2);
-
-    setTiltStyle({
-      transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px) scale3d(1.01, 1.01, 1.01)`
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTiltStyle({
-      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)'
-    });
-  };
-
-  return (
-    <a 
-      href={article.url} 
-      target="_blank" 
-      rel="noopener noreferrer" 
-      className={`signal-article-card premium-3d-card haptic-trigger ${article.isDmPick ? 'dm-featured-card' : ''}`}
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={tiltStyle}
-      data-hover-text="VIEW"
-    >
-      {article.og_image && (
-        <div className="signal-article-image">
-          <img src={article.og_image} alt={article.title} loading="lazy" />
-        </div>
-      )}
-      <div className="signal-article-body">
-        <div className="signal-article-meta-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
-          {article.isDmPick && (
-            <span className="dm-pick-badge">
-              ✦ DM Pick
-            </span>
-          )}
-          {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
-          
-          <div className="signal-article-meta-info" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-            {article.weightedScore && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <span style={{ color: '#FCD34D' }}>★</span> {Number(article.weightedScore).toFixed(1)} {article.tier === 1 && '🌟'}
-              </span>
-            )}
-            {article.weightedScore && article.source && <span style={{ opacity: 0.3 }}>|</span>}
-            {article.source && <span className="article-source-name">{article.source}</span>}
-          </div>
-        </div>
-        <h3>{article.title}</h3>
-        {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
-        <p>{article.summary}</p>
-        <span className="signal-link">원문 읽기 →</span>
-      </div>
-    </a>
-  );
-};
 
 export default function DailyDigest() {
   const { date } = useParams();
@@ -346,42 +268,6 @@ export default function DailyDigest() {
   };
 
 
-
-  const getCategoryStyles = (category) => {
-    if (!category) return {};
-    const cat = category.toLowerCase();
-    
-    // AI / 인공지능 (Cyan)
-    if (cat.includes('ai') || cat.includes('인공지능') || cat.includes('intelligence')) 
-      return { color: 'var(--color-cyan)', background: 'rgba(34, 211, 238, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(34, 211, 238, 0.25)' };
-    
-    // Attitude / Mindset (Emerald/Green)
-    if (cat.includes('attitude') || cat.includes('mindset') || cat.includes('태도')) 
-      return { color: '#34D399', background: 'rgba(52, 211, 153, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(52, 211, 153, 0.25)' };
-    
-    // Priority / Strategy (Amber/Yellow)
-    if (cat.includes('priority') || cat.includes('strategy') || cat.includes('전략')) 
-      return { color: '#FBBF24', background: 'rgba(251, 191, 36, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(251, 191, 36, 0.25)' };
-    
-    // Global / Trend (Blue)
-    if (cat.includes('global') || cat.includes('글로벌') || cat.includes('trend') || cat.includes('트렌드')) 
-      return { color: '#60A5FA', background: 'rgba(96, 165, 250, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(96, 165, 250, 0.25)' };
-    
-    // Startup / Business (Gold)
-    if (cat.includes('startup') || cat.includes('스타트업') || cat.includes('business') || cat.includes('비즈니스')) 
-      return { color: 'var(--prism-gold)', background: 'rgba(229, 178, 93, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(229, 178, 93, 0.25)' };
-    
-    // Tech / Dev / SW (Indigo)
-    if (cat.includes('tech') || cat.includes('개발') || cat.includes('software')) 
-      return { color: 'var(--color-indigo)', background: 'rgba(129, 140, 248, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(129, 140, 248, 0.25)' };
-    
-    // Security / Defense (Red)
-    if (cat.includes('security') || cat.includes('보안')) 
-      return { color: '#F87171', background: 'rgba(248, 113, 113, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(248, 113, 113, 0.25)' };
-    
-    // Default (Lavender)
-    return { color: 'var(--prism-lavender)', background: 'rgba(199, 210, 254, 0.12)', boxShadow: 'inset 0 0 0 1px rgba(199, 210, 254, 0.25)' };
-  };
 
   const handleTabChange = (key) => {
     setActiveTab(key);
@@ -735,30 +621,8 @@ export default function DailyDigest() {
 
             {/* ── Active Workspace Panels ── */}
             <div className="workspace-content-pane">
-              {/* 1. IT Tech Signal */}
-              {detailTab === 'signal' && data.signal && (
-                <div className="daily-section fade-in">
-                  <div className="daily-section-header">
-                    <span className="daily-section-icon">📰</span>
-                    <h2 className="daily-section-title">IT Tech Signal</h2>
-                  </div>
-                  <div className="signal-articles-grid">
-                    {[...(data.signal.articles || [])]
-                      .sort((a, b) => {
-                        if (a.isDmPick && !b.isDmPick) return -1;
-                        if (!a.isDmPick && b.isDmPick) return 1;
-                        return b.weightedScore - a.weightedScore;
-                      })
-                      .map((article, idx) => (
-                      <SignalArticleCard 
-                        key={idx} 
-                        article={article} 
-                        getCategoryStyles={getCategoryStyles} 
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* 1. IT Tech Signal — ReLearn Phase B-0 추출 컴포넌트 (동작 동일) */}
+              {detailTab === 'signal' && <SignalSection signal={data.signal} />}
 
               {/* 2. AI Prompt — ReLearn Phase B-0 추출 컴포넌트 (동작 동일) */}
               {detailTab === 'prompt' && <PromptSection study={data.study} />}
