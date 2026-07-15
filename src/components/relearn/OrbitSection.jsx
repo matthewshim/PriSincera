@@ -9,16 +9,32 @@
  *   current   — usePaceNoteData().data.current ({ currentPace, recommendedPace, ... })
  *   onToggle  — (taskId) => Promise  (완료 토글)
  *   onAccept  — (taskId) => Promise  (추천 수락)
+ *   onAdd     — (title) => Promise   (커스텀 궤도 자유 입력 — 패리티 P1, /add 100자 제한)
  *   affinity  — profile.domainAffinity (nullable — 추천 사유 라벨용)
  */
 import { useState } from 'react';
 import './ReLearnSections.css';
 
+const ADD_MAX = 100; // pacenote-api /add 제한과 동일
+
 // 성장 루프 affinity 키 정규화 — pacenote-api recordSignal 과 동일 규칙
 const affKey = (c) => String(c || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
-export default function OrbitSection({ current, onToggle, onAccept, affinity = null }) {
+export default function OrbitSection({ current, onToggle, onAccept, onAdd, affinity = null }) {
   const [busyId, setBusyId] = useState(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [adding, setAdding] = useState(false);
+
+  const handleAdd = async () => {
+    const title = newTitle.trim();
+    if (!title || !onAdd || adding) return;
+    setAdding(true);
+    try {
+      await onAdd(title);
+      setNewTitle('');
+    } catch (e) { console.error('[OrbitSection] add 실패:', e); }
+    finally { setAdding(false); }
+  };
 
   const pace = current?.currentPace || [];
   const recs = current?.recommendedPace || [];
@@ -63,6 +79,23 @@ export default function OrbitSection({ current, onToggle, onAccept, affinity = n
             <div className="rl-empty">아직 이번 주 궤도가 없어요 — 위 배움에서 “궤도로” 한 번이면 시작됩니다.</div>
           )}
         </div>
+
+        {/* 커스텀 궤도 자유 입력 (패리티 P1 — PaceNote 승계) */}
+        {onAdd && (
+          <div className="rl-add-row">
+            <input
+              className="rl-add-input"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value.slice(0, ADD_MAX))}
+              onKeyDown={e => { if (e.key === 'Enter') handleAdd(); }}
+              placeholder="나만의 궤도 직접 추가 (예: 사이드 프로젝트 30분 진행하기)"
+              maxLength={ADD_MAX}
+            />
+            <button className="rl-add-btn haptic-trigger" onClick={handleAdd} disabled={adding || !newTitle.trim()}>
+              {adding ? '추가 중…' : '＋ 추가'}
+            </button>
+          </div>
+        )}
       </div>
 
       {recs.length > 0 && (
