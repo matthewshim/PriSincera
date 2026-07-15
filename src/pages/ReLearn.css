@@ -225,6 +225,16 @@
   transition: border-color 0.15s, color 0.15s;
 }
 .rl-expand-btn:hover { border-color: var(--glass-border-hover); color: var(--text-primary); }
+
+/* ── 채널 푸터: 궤도 CTA(좌) + 전체 보기 링크(맨 우측) 한 행 정렬 ── */
+.rl-ch-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap; margin-top: 14px;
+}
+.rl-ch-foot .rl-mini-orbit { margin-top: 0; }
+.rl-ch-foot .rl-more-link { margin-left: auto; }
+/* 트랙 내부 전체 보기 링크도 동일하게 우측 정렬 */
+.rl-ch-sec[data-rl-ch="track"] .rl-more-link { display: block; text-align: right; margin-top: 12px; }
 /* CTA 문법 통일(리디자인 P4): 트랙 카드의 track-orbit-btn과 동일 비주얼 */
 .rl-mini-orbit {
   display: inline-flex; align-items: center; gap: 6px;

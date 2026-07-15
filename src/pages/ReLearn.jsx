@@ -241,7 +241,7 @@ export default function ReLearn() {
   // ① 스테이지 감지: ②실행·③복기 구간에서는 배움 2뎁스 비노출
   // ② 채널 감지: 기준선(뷰포트 상단 260px)을 지난 마지막 채널 섹션을 활성 표시
   //    — 콘텐츠 교체/강제 스크롤 없음: 내리면 다음, 올리면 이전 책갈피가 자연히 켜진다
-  const [stageInView, setStageInView] = useState(1);
+  const [subnavOn, setSubnavOn] = useState(true);
   useEffect(() => {
     if (view !== 'today') return;
     let raf = 0;
@@ -254,7 +254,10 @@ export default function ReLearn() {
         let stage = 1;
         if (refTop <= 200) stage = 3;
         else if (runTop <= 200) stage = 2;
-        setStageInView(stage);
+        // ①구간이면서, 스티키 그룹(마커+2뎁스 ≈ 340px @top120)이 머물 세로 공간이
+        // 남아 있을 때만 2뎁스 노출 — 스테이지 경계에서 다음 마커와 겹쳐 보이는 구간 방지
+        const learnBottom = document.getElementById('rl-learn')?.getBoundingClientRect().bottom ?? 0;
+        setSubnavOn(stage === 1 && learnBottom > 430);
         let act = null;
         document.querySelectorAll('[data-rl-ch]').forEach(s => {
           if (s.getBoundingClientRect().top <= 260) act = s.dataset.rlCh;
@@ -386,7 +389,7 @@ export default function ReLearn() {
               {/* 좌측 레일 2뎁스: ① 마커 + 채널 서브 앵커 (콘텐츠를 덮지 않는 책갈피) */}
               <div className="rl-marker-group">
                 <div className="rl-marker" aria-hidden="true">📚</div>
-                <div className={`rl-rail-subnav${stageInView !== 1 ? ' faded' : ''}`} role="group" aria-label="배움 채널 책갈피">
+                <div className={`rl-rail-subnav${subnavOn ? '' : ' faded'}`} role="group" aria-label="배움 채널 책갈피">
                   {LEARN_CHANNELS.map(c => (
                     <button
                       key={c.key}
@@ -424,10 +427,12 @@ export default function ReLearn() {
                 {daily?.signal && (
                   <div className="rl-ch-sec" data-rl-ch="signal">
                     <SignalSection signal={daily.signal} limit={SIGNAL_LIMIT} compact />
-                    {(daily.signal.articles || []).length > SIGNAL_LIMIT && (
-                      <Link className="rl-more-link" to={`/daily/${date}`}>시그널 전체 보기 →</Link>
-                    )}
-                    {user && <ChannelOrbitBtn ch="signal" />}
+                    <div className="rl-ch-foot">
+                      {user && <ChannelOrbitBtn ch="signal" />}
+                      {(daily.signal.articles || []).length > SIGNAL_LIMIT && (
+                        <Link className="rl-more-link" to={`/daily/${date}`}>시그널 전체 보기 →</Link>
+                      )}
+                    </div>
                   </div>
                 )}
 
