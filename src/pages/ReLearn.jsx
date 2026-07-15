@@ -90,6 +90,35 @@ export default function ReLearn() {
 
   const affinity = profile?.domainAffinity || null;
 
+  // ── 이메일 구독 (문맥 CTA — 배움 하단): 로그인 유저 & 미구독일 때만 노출 ──
+  // 해지·관리 풀 UX는 /daily 위임 (부정 액션을 신규 서비스 전면에 두지 않음)
+  const [subState, setSubState] = useState('unknown'); // unknown|unsubscribed|subscribed|loading|done|error
+  useEffect(() => {
+    if (!user?.email) { setSubState('unknown'); return; }
+    let cancelled = false;
+    fetch(`/api/subscribe/check?email=${encodeURIComponent(user.email)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (!cancelled && d) setSubState(d.subscribed ? 'subscribed' : 'unsubscribed'); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [user]);
+
+  const handleSubscribe = async () => {
+    if (!user?.email || subState === 'loading') return;
+    setSubState('loading');
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email_address: user.email }),
+      });
+      const d = await res.json();
+      setSubState(res.ok ? (d.code === 'already_subscribed' ? 'subscribed' : 'done') : 'error');
+    } catch {
+      setSubState('error');
+    }
+  };
+
   // ── 채널 '궤도로' (v1.3): 이미 이번 주에 동일 제목이 있으면 '추가됨' ──
   const [addedCh, setAddedCh] = useState({});
   const paceTitles = useMemo(
@@ -172,6 +201,12 @@ export default function ReLearn() {
           <span className="rl-hero-arrow">→</span>
           <span className="rl-hero-chip c3">③ 복기 · Reflect</span>
         </div>
+        {/* 히어로 CTA는 단 1개(우선순위 원칙): 비로그인 시 로그인 유도. 구독은 배움 하단 문맥 CTA로 분리 */}
+        {!user && (
+          <button className="rl-hero-cta haptic-trigger" onClick={loginWithGoogle}>
+            나의 루프 시작하기 — Google로 로그인
+          </button>
+        )}
       </header>
 
       {/* ── 뷰 전환: 오늘 | 기록 ── */}
@@ -261,6 +296,23 @@ export default function ReLearn() {
                   <div className="rl-ch-sec">
                     <JapaneseSection study={study} />
                     {user && <ChannelOrbitBtn ch="jp" />}
+                  </div>
+                )}
+
+                {/* 이메일 구독 — 배움의 문맥 CTA (로그인·미구독 시에만) */}
+                {user && subState === 'unsubscribed' && (
+                  <div className="rl-subscribe">
+                    <span className="rl-subscribe-t">오늘의 배움, 매일 아침 메일로도 받아보세요</span>
+                    <button className="rl-subscribe-btn haptic-trigger" onClick={handleSubscribe}>📬 무료 구독</button>
+                  </div>
+                )}
+                {user && subState === 'loading' && <div className="rl-subscribe"><span className="rl-subscribe-t">구독 처리 중…</span></div>}
+                {user && subState === 'done' && <div className="rl-subscribe ok"><span className="rl-subscribe-t">✓ 구독 완료 — 내일 아침 첫 메일이 도착합니다</span></div>}
+                {user && subState === 'error' && <div className="rl-subscribe err"><span className="rl-subscribe-t">구독 처리에 실패했어요 — 잠시 후 다시 시도해 주세요</span></div>}
+                {user && subState === 'subscribed' && (
+                  <div className="rl-subscribe ok">
+                    <span className="rl-subscribe-t">📬 데일리 메일 구독 중</span>
+                    <Link className="rl-subscribe-manage" to="/daily">구독 관리 →</Link>
                   </div>
                 )}
 
