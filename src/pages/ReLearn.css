@@ -67,6 +67,31 @@
   background: var(--bg-void); border: 1.5px solid; font-size: 21px; z-index: 2;
 }
 .rl-stage.s1 .rl-marker { border-color: rgba(34, 211, 238, 0.5); box-shadow: 0 0 22px rgba(34, 211, 238, 0.12); }
+
+/* 좌측 레일 2뎁스: ① 마커 + 채널 서브 앵커 (그룹이 스티키, 마커는 그룹 안에서 정적) */
+.rl-marker-group {
+  position: sticky; top: 120px; align-self: start; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  width: 56px;
+}
+.rl-marker-group .rl-marker { position: static; top: auto; }
+.rl-rail-subnav {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 6px 0; background: var(--bg-void);
+}
+.rl-rail-ch {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
+  display: grid; place-items: center; font-size: 14px; line-height: 1;
+  color: var(--text-muted); cursor: pointer; font-family: inherit;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.rl-rail-ch:hover { border-color: var(--glass-border-hover); }
+.rl-rail-ch.on {
+  border-color: rgba(34, 211, 238, 0.55);
+  background: rgba(34, 211, 238, 0.10);
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.15);
+}
 .rl-stage.s2 .rl-marker { border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 22px rgba(165, 180, 252, 0.12); }
 .rl-stage.s3 .rl-marker { border-color: rgba(229, 178, 93, 0.5); box-shadow: 0 0 22px rgba(229, 178, 93, 0.12); }
 .rl-body { padding-bottom: 46px; min-width: 0; }
@@ -78,14 +103,9 @@
 .rl-stage-title { font-size: 1.28rem; font-weight: 800; color: var(--text-primary); margin: 0; }
 .rl-stage-desc { font-size: 0.84rem; color: var(--text-muted); margin: 0 0 18px; }
 
-/* ── 배움 채널 (스티키 책갈피 — 스크롤 중에도 채널 점프 가능) ── */
-.rl-learn-chips {
-  display: flex; gap: 6px; flex-wrap: wrap;
-  position: sticky; top: 76px; z-index: 30;
-  margin: 0 0 12px; padding: 8px 0;
-  background: rgba(2, 2, 5, 0.9);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-}
+/* ── 배움 채널 칩 — 모바일 전용(레일 숨김 폭), 비스티키 인라인.
+     데스크톱은 좌측 레일 2뎁스(.rl-rail-subnav)가 책갈피를 담당 ── */
+.rl-learn-chips { display: none; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
 .rl-learn-chip {
   padding: 6px 13px; border-radius: var(--radius-pill);
   border: 1px solid var(--glass-border); background: transparent;
@@ -182,8 +202,9 @@
   .rl-m-chip.c1 { color: var(--color-cyan); }
   .rl-m-chip.c2 { color: var(--color-indigo); }
   .rl-m-chip.c3 { color: var(--color-gold); }
-  /* 모바일: 스테이지 앵커 탭(top 64px) 아래에 채널 책갈피 적층 */
-  .rl-learn-chips { top: 112px; }
+  /* 모바일: 레일이 숨으므로 채널 칩을 인라인으로 노출 */
+  .rl-marker-group { display: none; }
+  .rl-learn-chips { display: flex; }
 }
 
 @media (prefers-reduced-motion: reduce) {
