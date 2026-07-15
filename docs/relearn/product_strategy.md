@@ -144,11 +144,12 @@ target_files:
 - [ ] **`relearn-theme` 액센트 토큰** 정의 — [Header.jsx](../../src/components/layout/Header.jsx)가 경로별 테마 클래스(`daily-theme`/`pacenote-theme`) 적용 중, 동일 패턴 확장
 - **DoD**: 화면 구조·컴포넌트 매핑표·i18n 키 목록 확정.
 
-### ☐ Phase B-0 — 섹션 컴포넌트 추출 (v1.1 신설)
-- [ ] 배움 카드 섹션(시그널·어학)을 DailyDigest에서 컴포넌트로 추출
-- [ ] 궤도 리스트 섹션(리스트·완료 토글·회고 입력)을 PaceNoteDashboard에서 추출([usePaceNoteData](../../src/hooks/usePaceNoteData.js) 재사용)
-- [ ] **기존 페이지가 추출 컴포넌트를 사용하도록 치환**(동작 동일성 회귀 확인)
-- **DoD**: 기존 `/daily`·`/pacenote` 화면·기능 무변화 상태에서 추출 완료(순수 리팩토링).
+### ✅ Phase B-0 — 섹션 컴포넌트 추출 — **완료(2026-07-15)**
+- [x] **배움 3종 추출(1/3·2/3)**: `SignalSection`+`SignalArticleCard`+`categoryStyles`(공유 모듈), `PromptSection`, `JapaneseSection` — DailyDigest 렌더 블록을 마크업·동작 동일하게 컴포넌트화 후 **기존 /daily가 치환 사용**(순수 리팩토링, 빌드·잔여참조 0 검증)
+- [x] **실행·복기 신작(3/3)**: `relearn/OrbitSection`(진행바·완료 토글·추천+사유 라벨) + `relearn/ReflectionSection`(디바운스 자동저장, /diary 제한 1000자 동일) + `ReLearnSections.css`(토큰만 사용)
+- **DoD ✅**: `/daily` 화면·기능 무변화, 신규 컴포넌트 esbuild 구문 검증·빌드 통과.
+
+> 🔀 **설계 수정(3/3)**: 계획의 "PaceNoteDashboard에서 추출" 대신 **[usePaceNoteData](../../src/hooks/usePaceNoteData.js) 위에 리런 전용 프레젠테이션 신작 + PaceNoteDashboard 무접촉**으로 변경. 사유: ① 리런 시안(v4)의 컴팩트 스테이지 레이아웃은 PaceNote 벤토 카드와 **다른 프레젠테이션**이라 마크업 공유가 목적에 안 맞음, ② 공유해야 할 로직(조회·토글·수락·회고 저장·낙관 병합)은 **usePaceNoteData 훅에서 이미 단일화**됨(웹 REST↔데스크톱 IPC 계약 포함), ③ 1,900줄 라이브 페이지 수술 회피 = **기존 서비스 무영향 원칙(§4-1) 강화**.
 
 ### ☐ Phase B — 통합 셸 구축
 - [ ] `/relearn` 신규 라우트 + `ReLearn.jsx` 셸 (추출 컴포넌트 조합, 데이터는 셸 레벨 1회 페치)
