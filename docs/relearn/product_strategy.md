@@ -2,7 +2,7 @@
 status: draft
 domain: ReLearn
 last_updated: 2026-07-15
-version: v1.1
+version: v1.2
 target_files:
   - src/pages/DailyDigest.jsx
   - src/pages/PaceNoteDashboard.jsx
@@ -25,6 +25,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-09 | AI Agent | 통합 서비스(리런) 명칭 확정 + 추가형 리뉴얼 추진 계획 최초 수립 | ReLearn, DailyDigest, PaceNote |
 | v1.1 | 2026-07-15 | AI Agent | **코드 실측 재검토 반영** — Phase B-0(섹션 추출) 신설, SEO SSOT(`seoMeta.mjs`)·i18n(ko/en/ja)·인증 4상태 매트릭스·GA4 퍼널 계측·모바일 축약·Phase E 게이트 기준 보강 | Roadmap, Risks, Metrics |
+| v1.2 | 2026-07-15 | AI Agent | **시안 검토 결정: '기록' 뷰(A안)** — 실행 내역·회고 아카이브를 별도 랜딩이 아닌 리런 내 `오늘 \| 기록` 뷰 전환으로 제공. 루프 리포트 지표 타일 = 기록 뷰 드릴다운 진입점. 데이터는 기존 PaceNote timeline 재사용(신규 API 0) | Concept §3, Phase B |
 
 ---
 
@@ -52,6 +53,12 @@ target_files:
 │  ③ 복기   완료 체크 + 한 줄 회고                        │
 └────────────────────────────────────────────────────┘
 ```
+**뷰 구조 (v1.2 — 시안 검토 결정, A안):** 리런은 단일 라우트 안에서 **`오늘 | 기록` 두 뷰**를 전환한다.
+- **오늘**: 위 3-stage 루프(당일 실행 화면)
+- **기록**: 주차별 항해 기록 아카이브 — 완료 궤도 목록(카테고리 칩) + 회고(statement) 원문. 데이터는 기존 PaceNote `GET /`의 **timeline 그대로 재사용(신규 API 0)**, 주차 카드는 PaceNote 타임라인 컴포넌트의 Phase B-0 추출 대상
+- **루프 리포트는 두 뷰 공통 상주**(다리 역할)하며, 각 지표 타일(완료율·연속·복기·집중 도메인)이 **기록 뷰로의 드릴다운 진입점**
+- 별도 랜딩(`/relearn/records`)·기존 PaceNote 위임(링크) 안은 기각 — 통합 체감·SEO 표면 최소화 우선
+
 **인증 상태 매트릭스 (v1.1 — 2분법에서 4상태로 정밀화):**
 
 | 상태 | 화면 구성 |
@@ -95,6 +102,7 @@ target_files:
 ### ☐ Phase B — 통합 셸 구축
 - [ ] `/relearn` 신규 라우트 + `ReLearn.jsx` 셸 (추출 컴포넌트 조합, 데이터는 셸 레벨 1회 페치)
 - [ ] 상단 LoopReport + ① 배움 + ② 실행 + ③ 복기 배치
+- [ ] **`오늘 | 기록` 뷰 전환(v1.2 A안)**: 기록 뷰 = 주차 타임라인+회고 아카이브(기존 timeline 데이터), 리포트 지표 타일 드릴다운 연결
 - [ ] **SEO SSOT 등록**: [seoMeta.mjs](../../src/data/seoMeta.mjs) `PAGE_META['/relearn']`(타이틀·설명·OG) + 동적 사이트맵 포함 — 누락 시 SEO 표준([seo_meta_standard](../core/seo_meta_standard.md)) 위반 상태로 출시됨
 - **DoD**: 3-stage가 한 화면에서 동작, 기존 라우트 무손상, SSR/CSR 메타 방출 확인.
 
