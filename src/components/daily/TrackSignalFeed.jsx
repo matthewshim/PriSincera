@@ -24,7 +24,8 @@ const DOMAINS = [
 ];
 const DOMAIN_LABEL = Object.fromEntries(DOMAINS.map(d => [d.key, d.label]));
 
-export default function TrackSignalFeed({ date }) {
+// affinity(옵션): 셸(ReLearn)이 1회 페치한 domainAffinity 주입용 — 제공 시 자체 profile 페치 생략
+export default function TrackSignalFeed({ date, affinity: externalAffinity }) {
   const { user, token } = useAuth();
   const [track, setTrack] = useState('junior');
   const [feed, setFeed] = useState(null);
@@ -70,6 +71,7 @@ export default function TrackSignalFeed({ date }) {
 
   // 성장 루프 Phase 3: 유저 도메인 선호(affinity) 조회 → 개인화 렌즈(재정렬·하이라이트)
   useEffect(() => {
+    if (externalAffinity !== undefined) { setAffinity(externalAffinity); return; }
     if (!user) { setAffinity(null); return; }
     let cancelled = false;
     const doFetch = (tok) => fetch('/api/pacenote/profile', { headers: { Authorization: `Bearer ${tok}` } });
@@ -83,7 +85,7 @@ export default function TrackSignalFeed({ date }) {
       } catch { /* 무시 — 비로그인/오류 시 글로벌 정렬 */ }
     })();
     return () => { cancelled = true; };
-  }, [user, token]);
+  }, [user, token, externalAffinity]);
 
   const addOrbit = useCallback(async (card) => {
     if (!user) {

@@ -454,6 +454,7 @@ app.get('/sitemap.xml', async (req, res) => {
     const staticPages = [
       { url: '/', changefreq: 'weekly', priority: 1.0 },
       { url: '/daily', changefreq: 'daily', priority: 0.9 },
+      { url: '/relearn', changefreq: 'daily', priority: 0.9 },
       { url: '/builders-log', changefreq: 'weekly', priority: 0.8 },
       { url: '/pacenote', changefreq: 'weekly', priority: 0.8 },
       { url: '/sylphio', changefreq: 'weekly', priority: 0.9 },

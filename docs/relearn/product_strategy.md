@@ -151,13 +151,15 @@ target_files:
 
 > 🔀 **설계 수정(3/3)**: 계획의 "PaceNoteDashboard에서 추출" 대신 **[usePaceNoteData](../../src/hooks/usePaceNoteData.js) 위에 리런 전용 프레젠테이션 신작 + PaceNoteDashboard 무접촉**으로 변경. 사유: ① 리런 시안(v4)의 컴팩트 스테이지 레이아웃은 PaceNote 벤토 카드와 **다른 프레젠테이션**이라 마크업 공유가 목적에 안 맞음, ② 공유해야 할 로직(조회·토글·수락·회고 저장·낙관 병합)은 **usePaceNoteData 훅에서 이미 단일화**됨(웹 REST↔데스크톱 IPC 계약 포함), ③ 1,900줄 라이브 페이지 수술 회피 = **기존 서비스 무영향 원칙(§4-1) 강화**.
 
-### ☐ Phase B — 통합 셸 구축
-- [ ] `/relearn` 신규 라우트 + `ReLearn.jsx` 셸 (추출 컴포넌트 조합, 데이터는 셸 레벨 1회 페치)
-- [ ] 상단 LoopReport + ① 배움 + ② 실행 + ③ 복기 배치
-- [ ] **`오늘 | 기록` 뷰 전환(v1.2 A안)**: 기록 뷰 = 주차 타임라인+회고 아카이브(기존 timeline 데이터), 리포트 지표 타일 드릴다운 연결
-- [ ] **배움 4채널 구성(v1.3)**: 시그널·트랙·프롬프트·어학 + 채널 필터 칩. 트랙 외 3채널에 '궤도로 추가'(`/add` 재사용, 당일 콘텐츠 문맥 제목) + "지난 다이제스트 보기 →" 링크
-- [ ] **SEO SSOT 등록**: [seoMeta.mjs](../../src/data/seoMeta.mjs) `PAGE_META['/relearn']`(타이틀·설명·OG) + 동적 사이트맵 포함 — 누락 시 SEO 표준([seo_meta_standard](../core/seo_meta_standard.md)) 위반 상태로 출시됨
-- **DoD**: 3-stage가 한 화면에서 동작, 기존 라우트 무손상, SSR/CSR 메타 방출 확인.
+### ✅ Phase B — 통합 셸 구축 — **완료(2026-07-15)**
+- [x] `/relearn` 라우트(lazy) + [ReLearn.jsx](../../src/pages/ReLearn.jsx) 셸 — 프로파일 **셸 1회 페치 후 주입**(LoopReport·TrackSignalFeed에 옵션 prop 신설, 미제공 시 자체 페치 하위호환)
+- [x] LoopReport(기록 드릴다운 래퍼) + ① 배움 + ② 실행(OrbitSection) + ③ 복기(ReflectionSection) + 루프 레일
+- [x] **`오늘 | 기록` 뷰 전환(A안)**: 기록 뷰 = 현재 주(진행 중 배지)+timeline 주차 카드+회고 인용 — 기존 `GET /` 데이터 그대로(신규 API 0)
+- [x] **배움 4채널(v1.3)**: 트랙(TrackSignalFeed)·시그널·프롬프트·어학 + 채널 필터 칩 + 3채널 '궤도로'(`/add` 재사용, 동일 제목 중복 방지) + "지난 다이제스트 보기 →"
+- [x] **SEO SSOT**: `PAGE_META['/relearn']` 등록 + 동적 사이트맵 staticPages 포함
+- **DoD ✅**: 3-stage 단일 화면 동작, 기존 라우트 무변경(추가만), 빌드에서 ReLearn lazy 청크 분리 확인.
+
+> 📌 GNB 진입점(데스크톱·모바일 Bento)·온보딩은 **Phase C**에서 — 그 전까지 `/relearn`은 직접 URL로 접근하는 소프트 런치 상태(기존 사용자 영향 0).
 
 ### ☐ Phase C — 진입점·온보딩
 - [ ] 네비 진입점 **2곳** 추가: 데스크톱 `nav-links` + **모바일 Bento 오버레이**(별도 마크업) — 기존 메뉴 유지, **라벨 `ReLearn`(전 언어 공통·이모지 없음), Sylphio 좌측 배치**(v1.5)

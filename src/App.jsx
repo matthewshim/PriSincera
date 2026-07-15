@@ -9,6 +9,7 @@ const Home = lazy(() => import('./pages/Home'));
 const DailyDigest = lazy(() => import('./pages/DailyDigest'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const PaceNoteDashboard = lazy(() => import('./pages/PaceNoteDashboard'));
+const ReLearn = lazy(() => import('./pages/ReLearn'));
 const BuildersLog = lazy(() => import('./pages/BuildersLog'));
 const BuildersLogDetail = lazy(() => import('./pages/BuildersLogDetail'));
 
@@ -54,6 +55,9 @@ function App() {
 
             {/* Pace Note Routes */}
             <Route path="pacenote" element={<PaceNoteDashboard />} />
+
+            {/* ReLearn — 배움·실행·복기 통합 성장 루프 (추가형: 기존 라우트 보존) */}
+            <Route path="relearn" element={<ReLearn />} />
             
             {/* Sylphio Routes */}
             <Route path="sylphio" element={<SylphioLanding />} />
