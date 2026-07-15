@@ -2,7 +2,7 @@
 status: draft
 domain: ReLearn
 last_updated: 2026-07-15
-version: v1.6
+version: v1.7
 target_files:
   - src/pages/DailyDigest.jsx
   - src/pages/PaceNoteDashboard.jsx
@@ -30,6 +30,7 @@ target_files:
 | v1.4 | 2026-07-15 | AI Agent | **§4-1 파이프라인 무영향 검증 명문화** — Phase A~D 잡·cloudbuild·데이터 계약 무접촉 근거(custom- 통계 제외 실측 포함) + 유일한 예외(Phase E 이메일 템플릿) 경계 명시 | §4-1 |
 | v1.5 | 2026-07-15 | AI Agent | **착수 전 확정(Phase A 완료)** — 데이터 방침 = **연속 사용·공유(마이그레이션·리셋 불필요)**. 표기 = **전 언어 공통 영문 `ReLearn`**(UI 타이틀·GNB, 이모지 없음 / '리런'은 국문 커뮤니케이션 병용). 라우트 `/relearn` 확정, **GNB 위치 = Sylphio 좌측**. 디자인 = 기존 시스템 완전 준수(신규 컬러 0) | §2, §4-2, Phase A·C |
 | v1.6 | 2026-07-15 | AI Agent | **포지셔닝 재정의: 병행 → 승계(Successor)** — 리런 안정화 시 Daily Digest·Pace Note는 **노출 종료** 확정. "추가형"은 전환기 전략으로 재규정, Phase E = 확정 일몰(패리티 게이트) + §5-1 기능 패리티 체크리스트 신설. 원칙: **노출 종료 ≠ URL 삭제**(콘텐츠 상세 URL·SEO 자산 영구 보존) | §4, §5-E, §5-1 |
+| v1.7 | 2026-07-15 | AI Agent | **패리티 P2~P5 해소** — P2 구독 해지 자체화·P3 경량 아카이브 구현, P4(캘린더)·P5(옴니/포트폴리오) 폐기·이관 판단 확정 → **일몰 게이트의 기능 항목 전부 해소, 잔여 = P6 + 지표 게이트** | §5-1 |
 
 ---
 
@@ -190,10 +191,10 @@ target_files:
 | # | 기존 기능 | 출처 | 상태 / 방침 |
 | :--- | :--- | :--- | :--- |
 | P1 | **커스텀 궤도 자유 입력** | PaceNote | ✅ **완료(2026-07-15)** — OrbitSection에 입력 UI 추가(`onAdd`=addTask, 100자 제한 동일) |
-| P2 | **구독 해지/관리 UI** | Daily Digest | ☐ 전환기엔 `/daily` 위임(현행) → 일몰 전 리런 자체화 |
-| P3 | 과거 날짜 아카이브 탐색(Chrono-Calendar) | Daily Digest | ☐ 판단 필요 — `/daily/:date` URL 영구 보존 전제면 리런은 링크로 충분(이식 불요) 가설 |
-| P4 | 13주 Bento 캘린더·과거 주차 상세 탐색 | PaceNote | ☐ 판단 필요 — 기록 뷰(최근 10주)로 충분한지 vs 분기 캘린더 이식 |
-| P5 | 옴니 검색 모달 / AI 포트폴리오 내보내기 | PaceNote | ☐ 승계 vs 폐기 결정 항목 |
+| P2 | **구독 해지/관리 UI** | Daily Digest | ✅ **완료(2026-07-15)** — 리런 자체화: 구독 중 상태에 절제된 '구독 해지'(confirm → `POST /api/unsubscribe`). `/daily` 위임 제거 |
+| P3 | 과거 날짜 아카이브 탐색 | Daily Digest | ✅ **완료(2026-07-15)** — 리런에 **경량 날짜 리스트**(`GET /api/daily/index` 최근 14일, 펼침형). 상세는 영구 보존 URL `/daily/:date`로 연결 — Chrono-Calendar **이식 불요** 확정 |
+| P4 | 13주 Bento 캘린더·과거 주차 상세 탐색 | PaceNote | ✅ **판단 확정(2026-07-15): 이식하지 않음(폐기)** — 기록 뷰(주차별 완료·회고 타임라인)가 핵심 정보를 전부 제공. 분기 시각화는 장식 가치 대비 이식 비용 과대. 일몰 전 이의 없으면 확정 |
+| P5 | 옴니 검색 모달 / AI 포트폴리오 내보내기 | PaceNote | ✅ **판단 확정(2026-07-15)** — 옴니 검색 = **폐기**(리런의 자유 입력+AI 추천이 동일 잡무 대체). 포트폴리오 내보내기 = **후속 베팅 ②(Growth Profile)로 이관**(공개 성장 기록이 상위 호환) |
 | P6 | 서비스 소개(인트로 탭) 콘텐츠 | Daily Digest | ☐ 리런 온보딩(Phase C)으로 흡수 검토 |
 | P7 | macOS 데스크톱 계약(IPC) | PaceNote | ✅ 무영향 — 리런이 `usePaceNoteData`(동일 계약) 사용 |
 | P8 | 회고(항해 일지) 열람 | PaceNote | ✅ 기록 뷰가 커버 |

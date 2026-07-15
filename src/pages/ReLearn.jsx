@@ -112,6 +112,40 @@ export default function ReLearn() {
     return () => { cancelled = true; };
   }, [user]);
 
+  // P2(일몰 게이트): 구독 해지 자체화 — /daily 위임 제거
+  const handleUnsubscribe = async () => {
+    if (!user?.email || subState === 'loading') return;
+    if (!window.confirm('데일리 메일 구독을 해지할까요?')) return;
+    setSubState('loading');
+    try {
+      const res = await fetch('/api/unsubscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email_address: user.email }),
+      });
+      setSubState(res.ok ? 'unsubscribed' : 'error');
+    } catch {
+      setSubState('error');
+    }
+  };
+
+  // P3(일몰 게이트): 경량 아카이브 — 날짜 리스트만 리런이 제공, 상세는 /daily/:date(영구 보존 URL)로
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveDates, setArchiveDates] = useState(null);
+  const toggleArchive = async () => {
+    const next = !archiveOpen;
+    setArchiveOpen(next);
+    if (next && archiveDates === null) {
+      try {
+        const res = await fetch('/api/daily/index');
+        const d = res.ok ? await res.json() : null;
+        setArchiveDates((d?.dates || []).slice(0, 14));
+      } catch {
+        setArchiveDates([]);
+      }
+    }
+  };
+
   const handleSubscribe = async () => {
     if (!user?.email || subState === 'loading') return;
     setSubState('loading');
@@ -362,11 +396,22 @@ export default function ReLearn() {
                 {user && subState === 'subscribed' && (
                   <div className="rl-subscribe ok">
                     <span className="rl-subscribe-t">📬 데일리 메일 구독 중</span>
-                    <Link className="rl-subscribe-manage" to="/daily">구독 관리 →</Link>
+                    <button className="rl-subscribe-unsub" onClick={handleUnsubscribe}>구독 해지</button>
                   </div>
                 )}
-
-                <Link className="rl-archive-link" to="/daily">지난 다이제스트 보기 →</Link>
+                {/* P3: 경량 아카이브 — 날짜 리스트(상세는 /daily/:date 영구 URL) */}
+                <button className="rl-archive-link" onClick={toggleArchive}>
+                  지난 다이제스트 보기 {archiveOpen ? '▾' : '→'}
+                </button>
+                {archiveOpen && (
+                  <div className="rl-archive-list">
+                    {archiveDates === null && <span className="rl-archive-empty">불러오는 중…</span>}
+                    {archiveDates?.length === 0 && <span className="rl-archive-empty">아카이브가 비어 있어요.</span>}
+                    {archiveDates?.map(d => (
+                      <Link key={d} className="rl-archive-date" to={`/daily/${d}`}>{d}</Link>
+                    ))}
+                  </div>
+                )}
               </div>
             </section>
 
