@@ -100,8 +100,9 @@
 /* ── 스테이지 레일 ── */
 .rl-stages { position: relative; display: grid; grid-template-columns: 56px 1fr; gap: 0 26px; }
 .rl-rail {
-  position: absolute; left: 27px; top: 34px; bottom: 30px; width: 2px;
-  background: linear-gradient(180deg, var(--color-cyan) 0%, var(--color-indigo) 50%, var(--color-gold) 100%);
+  position: absolute; left: 27px; top: 6px; bottom: 10px; width: 2px;
+  /* 양 끝을 투명으로 페이드아웃해 라인이 잘려 보이는 현상 방지 */
+  background: linear-gradient(180deg, transparent 0%, var(--color-cyan) 7%, var(--color-indigo) 50%, var(--color-gold) 93%, transparent 100%);
   opacity: 0.35;
 }
 .rl-stage { display: contents; }
@@ -118,12 +119,17 @@
   position: sticky; top: 120px; align-self: start; z-index: 2;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
   width: 56px;
+  background: var(--bg-void); /* 마커-서브나브 사이 틈으로 라인이 끊겨 보이지 않도록 마스킹 */
+  padding-bottom: 6px;
 }
 .rl-marker-group .rl-marker { position: static; top: auto; }
 .rl-rail-subnav {
   display: flex; flex-direction: column; gap: 6px;
   padding: 6px 0; background: var(--bg-void);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
+/* ②실행·③복기 스테이지에서는 배움 2뎁스 비노출 */
+.rl-rail-subnav.faded { opacity: 0; transform: translateY(-4px); pointer-events: none; }
 .rl-rail-ch {
   width: 34px; height: 34px; border-radius: 50%;
   border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
