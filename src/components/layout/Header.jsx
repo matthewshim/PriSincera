@@ -207,7 +207,7 @@ function Header() {
           <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">{t('header.buildersLog')}</Link>
           {/* ReLearn — 승계 위상 반영: 루프 서비스군 선두(공존형 A안). 전 언어 공통 영문 표기 */}
           <Link to="/relearn" className={`nav-link nav-link-relearn${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
-            ReLearn<span className="nav-new-chip">NEW</span>
+            ReLearn<span className="nav-new-dot" title="NEW" aria-label="NEW"></span>
           </Link>
           <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">{t('header.dailyDigest')}</Link>
           <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">{t('header.paceNote')}</Link>
@@ -360,7 +360,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label" style={{ color: 'var(--color-indigo)' }}>Unified Growth Loop</div>
-              <h3 className="bento-card-title">ReLearn<span className="bento-new-chip">NEW</span></h3>
+              <h3 className="bento-card-title">ReLearn<span className="bento-new-dot" title="NEW" aria-label="NEW"></span></h3>
               <div className="bento-card-arrow">🔄 Learn · Run · Reflect →</div>
             </div>
             <div className="bento-card-visual">
