@@ -334,7 +334,7 @@ export default function ReLearn() {
                 ) : paceLoading ? (
                   <div className="rl-status">궤도 불러오는 중…</div>
                 ) : (
-                  <OrbitSection current={data?.current} onToggle={toggleTask} onAccept={acceptTask} affinity={affinity} />
+                  <OrbitSection current={data?.current} onToggle={toggleTask} onAccept={acceptTask} onAdd={addTask} affinity={affinity} />
                 )}
               </div>
             </section>
