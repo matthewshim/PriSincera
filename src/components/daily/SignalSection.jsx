@@ -7,8 +7,16 @@
 import SignalArticleCard from './SignalArticleCard';
 import '../../pages/DailyDigest.css';
 
-export default function SignalSection({ signal }) {
+// limit(옵션): 표시할 아티클 상한 — ReLearn 배움 채널의 스크롤 피로 축소용. 미지정 시 전체(/daily 기존 동작).
+export default function SignalSection({ signal, limit }) {
   if (!signal) return null;
+
+  const sorted = [...(signal.articles || [])].sort((a, b) => {
+    if (a.isDmPick && !b.isDmPick) return -1;
+    if (!a.isDmPick && b.isDmPick) return 1;
+    return b.weightedScore - a.weightedScore;
+  });
+  const shown = typeof limit === 'number' ? sorted.slice(0, limit) : sorted;
 
   return (
     <div className="daily-section fade-in">
@@ -17,13 +25,7 @@ export default function SignalSection({ signal }) {
         <h2 className="daily-section-title">IT Tech Signal</h2>
       </div>
       <div className="signal-articles-grid">
-        {[...(signal.articles || [])]
-          .sort((a, b) => {
-            if (a.isDmPick && !b.isDmPick) return -1;
-            if (!a.isDmPick && b.isDmPick) return 1;
-            return b.weightedScore - a.weightedScore;
-          })
-          .map((article, idx) => (
+        {shown.map((article, idx) => (
           <SignalArticleCard
             key={idx}
             article={article}

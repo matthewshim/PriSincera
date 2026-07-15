@@ -32,12 +32,15 @@ const CHANNEL_ORBITS = {
 };
 
 const LEARN_CHANNELS = [
-  { key: 'all', label: '전체' },
   { key: 'track', label: '🛰️ 테크 트랙' },
   { key: 'signal', label: '📡 시그널' },
   { key: 'prompt', label: '🤖 프롬프트' },
   { key: 'jp', label: '🇯🇵 어학' },
+  { key: 'all', label: '전체' },
 ];
+
+// ReLearn 배움 채널의 시그널 표시 상한 (전체는 /daily 아카이브에서)
+const SIGNAL_LIMIT = 4;
 
 export default function ReLearn() {
   const { user, token, loginWithGoogle } = useAuth();
@@ -51,7 +54,8 @@ export default function ReLearn() {
   });
 
   const [view, setView] = useState('today');            // today | records
-  const [channel, setChannel] = useState('all');        // 배움 채널 필터
+  // 스크롤 피로 축소: 기본은 단일 채널(트랙 — 개인화 렌즈 적용 채널). '전체'는 선택지.
+  const [channel, setChannel] = useState('track');
   const [daily, setDaily] = useState(null);             // 오늘의 daily JSON (signal+study)
   const [dailyError, setDailyError] = useState(null);
   const [profile, setProfile] = useState(null);         // 셸 1회 페치 → 하위 주입
@@ -198,9 +202,18 @@ export default function ReLearn() {
                 <div className="rl-stage-head"><span className="rl-stage-no">STAGE 01</span><h2 className="rl-stage-title">배움 — 오늘의 다이제스트</h2></div>
                 <p className="rl-stage-desc">Daily Digest 4채널 전체가 이곳으로. 로그인하면 내 궤도 도메인이 상단에 정렬됩니다.</p>
 
-                <div className="rl-learn-chips" role="group" aria-label="배움 채널 필터">
+                {/* 스티키 책갈피: 스크롤 중에도 상단 고정 — 채널 즉시 점프 */}
+                <div className="rl-learn-chips" role="group" aria-label="배움 채널 책갈피">
                   {LEARN_CHANNELS.map(c => (
-                    <button key={c.key} className={`rl-learn-chip ${channel === c.key ? 'on' : ''}`} onClick={() => setChannel(c.key)}>
+                    <button
+                      key={c.key}
+                      className={`rl-learn-chip ${channel === c.key ? 'on' : ''}`}
+                      onClick={() => {
+                        setChannel(c.key);
+                        // 깊이 스크롤된 상태에서 채널 전환 시 배움 상단으로 복귀
+                        document.getElementById('rl-learn')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                    >
                       {c.label}
                     </button>
                   ))}
@@ -216,7 +229,10 @@ export default function ReLearn() {
 
                 {isChannel('signal') && daily?.signal && (
                   <div className="rl-ch-sec">
-                    <SignalSection signal={daily.signal} />
+                    <SignalSection signal={daily.signal} limit={SIGNAL_LIMIT} />
+                    {(daily.signal.articles || []).length > SIGNAL_LIMIT && (
+                      <Link className="rl-more-link" to={`/daily/${date}`}>시그널 전체 보기 →</Link>
+                    )}
                     {user && <ChannelOrbitBtn ch="signal" />}
                   </div>
                 )}
