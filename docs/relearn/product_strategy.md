@@ -1,13 +1,16 @@
 ---
 status: draft
 domain: ReLearn
-last_updated: 2026-07-09
-version: v1.0
+last_updated: 2026-07-15
+version: v1.1
 target_files:
   - src/pages/DailyDigest.jsx
   - src/pages/PaceNoteDashboard.jsx
   - src/components/daily/TrackSignalFeed.jsx
   - src/components/pacenote/LoopReport.jsx
+  - src/hooks/usePaceNoteData.js
+  - src/data/seoMeta.mjs
+  - src/components/layout/Header.jsx
 ---
 
 # 🏃 리런 (ReLearn) — 통합 서비스 리뉴얼 추진 계획
@@ -21,6 +24,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-09 | AI Agent | 통합 서비스(리런) 명칭 확정 + 추가형 리뉴얼 추진 계획 최초 수립 | ReLearn, DailyDigest, PaceNote |
+| v1.1 | 2026-07-15 | AI Agent | **코드 실측 재검토 반영** — Phase B-0(섹션 추출) 신설, SEO SSOT(`seoMeta.mjs`)·i18n(ko/en/ja)·인증 4상태 매트릭스·GA4 퍼널 계측·모바일 축약·Phase E 게이트 기준 보강 | Roadmap, Risks, Metrics |
 
 ---
 
@@ -48,56 +52,93 @@ target_files:
 │  ③ 복기   완료 체크 + 한 줄 회고                        │
 └────────────────────────────────────────────────────┘
 ```
-- **비로그인**: 배움 중심(진입장벽↓) → 로그인 유도
-- **로그인**: 루프 전체 노출(개인화 추천·렌즈·리포트)
+**인증 상태 매트릭스 (v1.1 — 2분법에서 4상태로 정밀화):**
+
+| 상태 | 화면 구성 |
+| :--- | :--- |
+| 비로그인 | ① 배움만 + 로그인 유도 CTA |
+| 로그인 · **콜드 스타트**(궤도 0) | ① 배움 + "첫 궤도 추가" 온보딩. LoopReport는 숨김(현 구현 유지) |
+| 로그인 · 궤도 있음 | 풀 루프(리포트 + ①②③ + 개인화 렌즈·추천) |
+| 로그인 · **이번 주 미개시** | `add-orbit`의 주차 자동 생성(기 구현)을 그대로 활용 — 별도 안내 없이 첫 추가로 개시 |
+
+> ⚠️ **중복 페치 금지 원칙**: 셸이 배움·실행 stage를 함께 그리므로 `profile`·`orbit-ids`·트랙 피드는 **셸 레벨에서 1회 페치 후 하위로 전달**(또는 [usePaceNoteData](../../src/hooks/usePaceNoteData.js) 등 훅 공유). stage마다 각자 호출하지 않는다.
 
 ## 4. 추진 전략 — 추가형(Additive), 무파괴
 > **핵심 제약**: 기존 카테고리(Daily Digest·Pace Note)는 **그대로 두고**, 신규 버전을 **병렬 추가**한다.
-- 신규 라우트 **`/relearn`** + 네비 진입점 **1개 추가** — 기존 `/daily`·`/pacenote` **URL·SEO 완전 보존**
-- **기존 컴포넌트 재사용**([DailyDigest](../../src/pages/DailyDigest.jsx)·[TrackSignalFeed](../../src/components/daily/TrackSignalFeed.jsx)·[PaceNote 조각](../../src/pages/PaceNoteDashboard.jsx)·[LoopReport](../../src/components/pacenote/LoopReport.jsx))을 조합하는 **셸(composition) 레이어**만 신규 → 로직 리라이트 0, 저위험
+- 신규 라우트 **`/relearn`** + 네비 진입점 추가(데스크톱 `nav-links` + **모바일 Bento 오버레이**, 별도 마크업 2곳) — 기존 `/daily`·`/pacenote` **URL·SEO 완전 보존**
+- **재사용 실측 (v1.1 교정)** — "셸만 신규·리라이트 0"은 부분적으로만 성립:
+
+  | 조각 | 실태 | 재사용 |
+  | :--- | :--- | :--- |
+  | [TrackSignalFeed](../../src/components/daily/TrackSignalFeed.jsx) · [LoopReport](../../src/components/pacenote/LoopReport.jsx) · ChronoRibbon | 독립 컴포넌트 | ✅ 즉시 조합 |
+  | 배움(시그널·어학 카드) | [DailyDigest.jsx](../../src/pages/DailyDigest.jsx)에 탭·구독·Quick Peek과 한 덩어리 | ⚠️ **추출 필요(Phase B-0)** |
+  | 실행(궤도 리스트·토글·회고) | PaceNoteDashboard(~1,900줄 모놀리식)에 내장. 데이터 계층은 [usePaceNoteData](../../src/hooks/usePaceNoteData.js) 기존재 | ⚠️ **추출 필요(Phase B-0)** |
+
+  → 추출한 섹션 컴포넌트는 **기존 페이지도 함께 사용**하도록 치환(로직 단일화) — 중복이 아니라 부채 감소.
 - 검증 후에만 기존 메뉴 → 신규 점진 유도(전환은 마지막·선택)
 
 ## 5. 추진 로드맵 (Phase Gate)
 
 ### ☐ Phase A — 확정·설계
-- [ ] 명칭·태그라인 확정 (✅ 리런 결정) / 로고·컬러 토큰 정합(디자인 시스템)
-- [ ] IA·와이어프레임(3-stage: 배움·실행·복기) + 비로그인/로그인 분기 정의
-- **DoD**: 화면 구조·컴포넌트 매핑표 확정.
+- [ ] 명칭·태그라인 확정 (✅ 리런 결정) + **다국어 표기 확정**(en: ReLearn / ja 표기·태그라인 번역 — 사이트는 ko/en/ja 완전 다국어)
+- [ ] IA·와이어프레임(3-stage) + **인증 4상태 매트릭스**(§3) 화면 분기 확정
+- [ ] **모바일 축약 스펙**: 3-stage 세로 스택이 길어지므로 stage 아코디언 또는 앵커 탭
+- [ ] **`relearn-theme` 액센트 토큰** 정의 — [Header.jsx](../../src/components/layout/Header.jsx)가 경로별 테마 클래스(`daily-theme`/`pacenote-theme`) 적용 중, 동일 패턴 확장
+- **DoD**: 화면 구조·컴포넌트 매핑표·i18n 키 목록 확정.
+
+### ☐ Phase B-0 — 섹션 컴포넌트 추출 (v1.1 신설)
+- [ ] 배움 카드 섹션(시그널·어학)을 DailyDigest에서 컴포넌트로 추출
+- [ ] 궤도 리스트 섹션(리스트·완료 토글·회고 입력)을 PaceNoteDashboard에서 추출([usePaceNoteData](../../src/hooks/usePaceNoteData.js) 재사용)
+- [ ] **기존 페이지가 추출 컴포넌트를 사용하도록 치환**(동작 동일성 회귀 확인)
+- **DoD**: 기존 `/daily`·`/pacenote` 화면·기능 무변화 상태에서 추출 완료(순수 리팩토링).
 
 ### ☐ Phase B — 통합 셸 구축
-- [ ] `/relearn` 신규 라우트 + `ReLearn.jsx` 셸 (기존 컴포넌트 조합)
-- [ ] 상단 LoopReport + ① 배움(DailyDigest/TrackSignalFeed) + ② 실행 + ③ 복기 배치
-- **DoD**: 기존 3개 화면 기능이 한 화면에서 동작, 기존 라우트 무손상.
+- [ ] `/relearn` 신규 라우트 + `ReLearn.jsx` 셸 (추출 컴포넌트 조합, 데이터는 셸 레벨 1회 페치)
+- [ ] 상단 LoopReport + ① 배움 + ② 실행 + ③ 복기 배치
+- [ ] **SEO SSOT 등록**: [seoMeta.mjs](../../src/data/seoMeta.mjs) `PAGE_META['/relearn']`(타이틀·설명·OG) + 동적 사이트맵 포함 — 누락 시 SEO 표준([seo_meta_standard](../core/seo_meta_standard.md)) 위반 상태로 출시됨
+- **DoD**: 3-stage가 한 화면에서 동작, 기존 라우트 무손상, SSR/CSR 메타 방출 확인.
 
 ### ☐ Phase C — 진입점·온보딩
-- [ ] 헤더/홈 네비에 "리런" 추가(기존 메뉴 유지)
-- [ ] 통합 온보딩(첫 방문 시 루프 개념 1-스텝 안내)
-- **DoD**: 신규 진입점 노출, 기존 진입점 병존.
+- [ ] 네비 진입점 **2곳** 추가: 데스크톱 `nav-links` + **모바일 Bento 오버레이**(별도 마크업) — 기존 메뉴 유지
+- [ ] 통합 온보딩(첫 방문 시 루프 개념 1-스텝 안내) — 3개 국어
+- **DoD**: 데스크톱·모바일 양쪽 진입점 노출, 기존 진입점 병존.
 
-### ☐ Phase D — 개인화 표면화·지표
+### ☐ Phase D — 개인화 표면화·퍼널 계측
 - [ ] Phase 2/3 추천·렌즈·리포트를 통합 화면에 노출(추천 사유 라벨·내 궤도 배지)
-- [ ] 핵심 지표 계측(완료율·루프 회기당 체류·재방문)
-- **DoD**: 로그인 유저가 개인화된 하루 루프를 한 화면에서 완주.
+- [ ] **GA4 이벤트 스키마 정의·계측**(react-ga4 기존재): `relearn_learn_view → relearn_orbit_add → relearn_complete_toggle → relearn_reflect_save` 퍼널 — 이것이 §7 "루프 완주율"의 측정 수단
+- **DoD**: 로그인 유저가 개인화된 하루 루프를 한 화면에서 완주 + 퍼널 데이터 수집 개시.
 
 ### ☐ Phase E — (선택) 점진 전환
-- [ ] 지표 양호 시 기존 `/daily`·`/pacenote` → `/relearn` 유도(리다이렉트/배너)
+- [ ] **게이트 기준(수치)**: 리런 경유 궤도 추가/완료율이 기존 경로 대비 **동등 이상** + 이탈률 악화 없음 + 퍼널 완주율 유의미 — 충족 시에만 진행
+- [ ] 기존 `/daily`·`/pacenote` → `/relearn` 유도(배너→리다이렉트 순) + **이메일 다이제스트 CTA 링크**(`/daily` 지향) 템플릿도 전환 대상에 포함
 - **DoD**: 전환율·이탈 모니터링 후 결정.
 
 ## 6. 리스크 & 대응
 | 리스크 | 대응 |
 | :--- | :--- |
-| 정보 과부하(두 서비스 합침) | 3-stage 단계 노출 · 비로그인은 배움만 |
+| 정보 과부하(두 서비스 합침) | 3-stage 단계 노출 · 비로그인은 배움만 · 모바일 아코디언 축약 |
 | 기존 URL/SEO 손실 | 기존 라우트 **완전 보존**(추가형) |
-| 중복 유지보수 | 신규는 **조합 셸**만 — 로직 중복 없음 |
-| 로그인 상태별 혼선 | 상태별 UX 분기(비로그인=배움, 로그인=루프 전체) |
+| **모놀리식 추출 리스크** (v1.1) | Phase B-0을 **순수 리팩토링**으로 분리 — 기존 페이지 동작 동일성 회귀 후 셸 착수 |
+| 중복 유지보수 | 추출 컴포넌트를 기존 페이지도 사용(로직 단일화) — 셸은 조합만 |
+| **중복 API 페치** (v1.1) | 셸 레벨 1회 페치 + 훅 공유(§3 원칙) |
+| **SEO 표준 위반 출시** (v1.1) | Phase B DoD에 `PAGE_META`·사이트맵 등록 포함 |
+| **i18n 누락** (v1.1) | Phase A에서 3개 국어 키 목록 확정, C 온보딩까지 적용 |
+| 로그인 상태별 혼선 | **인증 4상태 매트릭스**(§3)로 화면 분기 명세 |
 
-## 7. 성공 지표
-- 루프 **완주율**(배움→실행→복기 한 세션 내) ↑
+## 7. 성공 지표 (+ 측정 수단)
+- 루프 **완주율**(배움→실행→복기 한 세션 내) ↑ — **GA4 퍼널**(`relearn_learn_view → orbit_add → complete_toggle → reflect_save`)로 측정
 - **재방문(D7/D30)** ↑ — 통합이 습관 형성에 기여하는가
 - 궤도 추가·완료율 ↑, 다이제스트 궤도 연결 카드 CTR ↑
+- Phase E 게이트: 위 수치가 기존 경로 대비 **동등 이상**일 때만 전환 착수(§5-E)
 
-## 8. 참조
+## 8. 후속 문서 동기화 (출시 시점)
+- [ ] [service_overview](../core/service_overview.md) 제품 포트폴리오에 리런 추가
+- [ ] [architecture_overview](../core/architecture_overview.md) 라우트 맵에 `/relearn` 반영
+- [ ] 상세 화면 스펙은 `relearn/ui_specification.md` **별도 문서**로 신설(INDEX 동기화)
+
+## 9. 참조
 - 성장 루프(백엔드 연결): [[growth-loop-plan]]
+- SEO 메타 표준(SSOT): [seo_meta_standard](../core/seo_meta_standard.md)
 - Daily Digest UI/정책: [content_sourcing_policy](../daily-digest/content_sourcing_policy.md) · [ui_specification](../daily-digest/ui_specification.md)
 - PaceNote 전략·추천: [product_strategy](../pacenote/product_strategy.md) · [ai_recommendation_engine](../pacenote/ai_recommendation_engine.md)
 - 디자인 시스템: [design_system](../core/design_system.md)
