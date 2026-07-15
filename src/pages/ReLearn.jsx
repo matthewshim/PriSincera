@@ -54,6 +54,14 @@ export default function ReLearn() {
   });
 
   const [view, setView] = useState('today');            // today | records
+  // 온보딩(Phase C): 첫 방문 1-스텝 안내 — 닫으면 다시 안 보임
+  const [showOnboard, setShowOnboard] = useState(() => {
+    try { return !localStorage.getItem('relearn_onboarded_v1'); } catch { return false; }
+  });
+  const dismissOnboard = () => {
+    setShowOnboard(false);
+    try { localStorage.setItem('relearn_onboarded_v1', '1'); } catch { /* 무시 */ }
+  };
   // 스크롤 피로 축소: 기본은 단일 채널(트랙 — 개인화 렌즈 적용 채널). '전체'는 선택지.
   const [channel, setChannel] = useState('track');
   const [daily, setDaily] = useState(null);             // 오늘의 daily JSON (signal+study)
@@ -208,6 +216,17 @@ export default function ReLearn() {
           </button>
         )}
       </header>
+
+      {/* ── 온보딩 (첫 방문 1-스텝) ── */}
+      {showOnboard && (
+        <div className="rl-onboard-banner" role="note">
+          <span className="rl-onboard-icon">🔄</span>
+          <span className="rl-onboard-text">
+            <strong>ReLearn이 처음이신가요?</strong> 하루가 하나의 루프입니다 — ①에서 <b>배우고</b>, 마음에 든 액션을 <b>궤도로</b> 보내 ②에서 <b>완료</b>하고, ③에서 <b>한 줄 복기</b>. 이 기록이 내일의 배움을 바꿉니다.
+          </span>
+          <button className="rl-onboard-close haptic-trigger" onClick={dismissOnboard} aria-label="안내 닫기">알겠어요 ✕</button>
+        </div>
+      )}
 
       {/* ── 뷰 전환: 오늘 | 기록 ── */}
       <nav className="rl-view-tabs" aria-label="리런 뷰 전환">

@@ -192,6 +192,43 @@
     background: var(--color-indigo); /* Nebula Indigo */
 }
 
+.nav.relearn-theme .gnb-bgm-btn.active .waveform-bar {
+    background: var(--color-cyan); /* Aether Cyan — ReLearn (배움+러닝) */
+}
+
+/* ── ReLearn GNB — NEW 칩 (데스크톱 nav-link) ── */
+.nav-link-relearn { position: relative; }
+.nav-new-chip {
+    position: absolute; top: -5px; right: -6px;
+    font-size: 8px; font-weight: 800; letter-spacing: 0.08em; line-height: 1;
+    padding: 2px 5px; border-radius: 9999px;
+    background: linear-gradient(135deg, var(--color-indigo), var(--color-cyan));
+    color: #0A0A14;
+}
+
+/* ── ReLearn 모바일 Bento — 루프(배움→실행→복기) 미니 비주얼 ── */
+.bento-new-chip {
+    margin-left: 8px; vertical-align: middle;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.08em; line-height: 1;
+    padding: 2px 7px; border-radius: 9999px;
+    background: linear-gradient(135deg, var(--color-indigo), var(--color-cyan));
+    color: #0A0A14; display: inline-block;
+}
+.relearn-mockup {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%;
+}
+.relearn-loop-track {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px; border-radius: 9999px;
+    border: 1px solid rgba(165, 180, 252, 0.25);
+    background: linear-gradient(135deg, rgba(165, 180, 252, 0.08), rgba(34, 211, 238, 0.05));
+}
+.relearn-loop-dot { width: 10px; height: 10px; border-radius: 50%; }
+.relearn-loop-dot.d1 { background: var(--color-cyan); box-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
+.relearn-loop-dot.d2 { background: var(--color-indigo); box-shadow: 0 0 10px rgba(165, 180, 252, 0.5); }
+.relearn-loop-dot.d3 { background: var(--color-gold); box-shadow: 0 0 10px rgba(229, 178, 93, 0.5); }
+
 .gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(1) { height: 40%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0s; }
 .gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(2) { height: 70%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.15s; }
 .gnb-bgm-btn .waveform-bars.on .waveform-bar:nth-child(3) { height: 100%; animation: gnbWave 0.8s ease-in-out infinite alternate; animation-delay: 0.3s; }
