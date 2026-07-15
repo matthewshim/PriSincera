@@ -2,7 +2,7 @@
 status: draft
 domain: ReLearn
 last_updated: 2026-07-15
-version: v1.7
+version: v1.8
 target_files:
   - src/pages/DailyDigest.jsx
   - src/pages/PaceNoteDashboard.jsx
@@ -31,6 +31,7 @@ target_files:
 | v1.5 | 2026-07-15 | AI Agent | **착수 전 확정(Phase A 완료)** — 데이터 방침 = **연속 사용·공유(마이그레이션·리셋 불필요)**. 표기 = **전 언어 공통 영문 `ReLearn`**(UI 타이틀·GNB, 이모지 없음 / '리런'은 국문 커뮤니케이션 병용). 라우트 `/relearn` 확정, **GNB 위치 = Sylphio 좌측**. 디자인 = 기존 시스템 완전 준수(신규 컬러 0) | §2, §4-2, Phase A·C |
 | v1.6 | 2026-07-15 | AI Agent | **포지셔닝 재정의: 병행 → 승계(Successor)** — 리런 안정화 시 Daily Digest·Pace Note는 **노출 종료** 확정. "추가형"은 전환기 전략으로 재규정, Phase E = 확정 일몰(패리티 게이트) + §5-1 기능 패리티 체크리스트 신설. 원칙: **노출 종료 ≠ URL 삭제**(콘텐츠 상세 URL·SEO 자산 영구 보존) | §4, §5-E, §5-1 |
 | v1.7 | 2026-07-15 | AI Agent | **패리티 P2~P5 해소** — P2 구독 해지 자체화·P3 경량 아카이브 구현, P4(캘린더)·P5(옴니/포트폴리오) 폐기·이관 판단 확정 → **일몰 게이트의 기능 항목 전부 해소, 잔여 = P6 + 지표 게이트** | §5-1 |
+| v1.8 | 2026-07-15 | AI Agent | **공존형 GNB 재배치(A안)** — ReLearn을 루프 서비스군 **선두**로 승격(Builder's Log · **ReLearn** · Daily Digest · Pace Note · Sylphio, 데스크톱·모바일 동일). v1.5의 "Sylphio 좌측" 배치 결정을 대체. 일몰 시 뒤의 두 메뉴만 제거하면 완료되는 구조 | §4-3, GNB |
 
 ---
 

@@ -205,12 +205,12 @@ function Header() {
         </Link>
         <div className="nav-links">
           <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">{t('header.buildersLog')}</Link>
-          <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">{t('header.dailyDigest')}</Link>
-          <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">{t('header.paceNote')}</Link>
-          {/* ReLearn — 전 언어 공통 영문 표기(v1.5), Sylphio 좌측 */}
+          {/* ReLearn — 승계 위상 반영: 루프 서비스군 선두(공존형 A안). 전 언어 공통 영문 표기 */}
           <Link to="/relearn" className={`nav-link nav-link-relearn${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
             ReLearn<span className="nav-new-chip">NEW</span>
           </Link>
+          <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">{t('header.dailyDigest')}</Link>
+          <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">{t('header.paceNote')}</Link>
           <Link to="/sylphio" className={`nav-link${location.pathname.startsWith('/sylphio') ? ' active' : ''}`} id="navSylphio">{t('header.sylphio')}</Link>
         </div>
         <div className="nav-right">
@@ -352,7 +352,30 @@ function Header() {
             </div>
           </Link>
 
-          {/* 3. Daily Digest (AI Curation) */}
+          {/* 3. ReLearn (Unified Growth Loop) — 승계 위상: 루프 서비스군 선두(공존형 A안) */}
+          <Link
+            to="/relearn"
+            className={`mobile-bento-nav-item relearn-loop-theme${location.pathname.startsWith('/relearn') ? ' active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: 'var(--color-indigo)' }}>Unified Growth Loop</div>
+              <h3 className="bento-card-title">ReLearn<span className="bento-new-chip">NEW</span></h3>
+              <div className="bento-card-arrow">🔄 Learn · Run · Reflect →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup relearn-mockup">
+                <div className="relearn-loop-track">
+                  <span className="relearn-loop-dot d1"></span>
+                  <span className="relearn-loop-dot d2"></span>
+                  <span className="relearn-loop-dot d3"></span>
+                </div>
+              </div>
+              <div className="visual-blur-orb indigo"></div>
+            </div>
+          </Link>
+
+          {/* 4. Daily Digest (AI Curation) */}
           <Link
             to="/daily"
             className={`mobile-bento-nav-item daily-cyan-theme${location.pathname.startsWith('/daily') ? ' active' : ''}`}
@@ -383,7 +406,7 @@ function Header() {
             </div>
           </Link>
 
-          {/* 4. Pace Note (Action Tracker) */}
+          {/* 5. Pace Note (Action Tracker) */}
           <Link
             to="/pacenote"
             className={`mobile-bento-nav-item pace-green-theme${location.pathname.startsWith('/pacenote') ? ' active' : ''}`}
@@ -406,29 +429,6 @@ function Header() {
                 </div>
               </div>
               <div className="visual-blur-orb emerald"></div>
-            </div>
-          </Link>
-
-          {/* 5. ReLearn (Unified Growth Loop) — 전 언어 공통 영문 표기, Sylphio 좌측 */}
-          <Link
-            to="/relearn"
-            className={`mobile-bento-nav-item relearn-loop-theme${location.pathname.startsWith('/relearn') ? ' active' : ''}`}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: 'var(--color-indigo)' }}>Unified Growth Loop</div>
-              <h3 className="bento-card-title">ReLearn<span className="bento-new-chip">NEW</span></h3>
-              <div className="bento-card-arrow">🔄 Learn · Run · Reflect →</div>
-            </div>
-            <div className="bento-card-visual">
-              <div className="dynamic-mockup relearn-mockup">
-                <div className="relearn-loop-track">
-                  <span className="relearn-loop-dot d1"></span>
-                  <span className="relearn-loop-dot d2"></span>
-                  <span className="relearn-loop-dot d3"></span>
-                </div>
-              </div>
-              <div className="visual-blur-orb indigo"></div>
             </div>
           </Link>
 
