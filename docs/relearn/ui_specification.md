@@ -28,8 +28,10 @@ target_files:
 
 ```
 GNB (ReLearn 활성 시 relearn-theme·cyan)
-├─ 히어로: eyebrow · "ReLearn"(indigo→cyan 그라데이션 serif) · 태그라인 ·
-│         ①배움→②실행→③복기 칩 · [비로그인] 로그인 CTA 1개(gold)
+├─ 히어로(표준 서비스 히어로 규격 — Daily/PaceNote/Builder's Log 동일 패턴):
+│         🔄 아이콘(3rem float) · "ReLearn"(--font-display 3rem 700, --gradient-brand) ·
+│         태그라인(1.15rem --crystal-light) · ①배움→②실행→③복기 칩 ·
+│         [비로그인] 로그인 CTA 1개(gold)
 ├─ 온보딩 배너(첫 방문 1회, localStorage `relearn_onboarded_v1`)
 ├─ 뷰 탭: [오늘 | 기록]
 ├─ 루프 리포트(LoopReport 재사용 — 두 뷰 공통, 클릭=기록 드릴다운)
