@@ -216,10 +216,10 @@ target_files:
 - 궤도 추가·완료율 ↑, 다이제스트 궤도 연결 카드 CTR ↑
 - Phase E 게이트: 위 수치가 기존 경로 대비 **동등 이상**일 때만 전환 착수(§5-E)
 
-## 8. 후속 문서 동기화 (출시 시점)
-- [ ] [service_overview](../core/service_overview.md) 제품 포트폴리오에 리런 추가
-- [ ] [architecture_overview](../core/architecture_overview.md) 라우트 맵에 `/relearn` 반영
-- [ ] 상세 화면 스펙은 `relearn/ui_specification.md` **별도 문서**로 신설(INDEX 동기화)
+## 8. 후속 문서 동기화 (출시 시점) — ✅ 완료(2026-07-15)
+- [x] [service_overview](../core/service_overview.md) v1.1 — 포트폴리오에 ReLearn(승계자) 등재 + 플라이휠 2층 구현 주석
+- [x] [architecture_overview](../core/architecture_overview.md) 라우트 맵에 `/relearn` 반영
+- [x] [ui_specification](ui_specification.md) 신설(출하 기준 화면 명세) + INDEX 동기화
 
 ## 9. 참조
 - 성장 루프(백엔드 연결): [[growth-loop-plan]]
