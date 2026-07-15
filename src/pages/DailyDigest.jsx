@@ -6,6 +6,8 @@ import { PAGE_META } from '../data/seoMeta.mjs';
 import DailyIntro from '../components/daily/DailyIntro';
 import DailyCalendar from '../components/daily/DailyCalendar';
 import TrackSignalFeed from '../components/daily/TrackSignalFeed';
+import PromptSection from '../components/daily/PromptSection';
+import JapaneseSection from '../components/daily/JapaneseSection';
 import { useTranslation } from '../contexts/LanguageContext';
 import './DailyDigest.css';
 
@@ -127,7 +129,6 @@ export default function DailyDigest() {
   const [data, setData] = useState(null); // Detail data or Archive list
   const [subStatus, setSubStatus] = useState('');
   const [subEmail, setSubEmail] = useState('');
-  const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [detailTab, setDetailTab] = useState('signal');
   
   const [publishedDates, setPublishedDates] = useState([]);
@@ -193,18 +194,6 @@ export default function DailyDigest() {
       }
     };
   }, []);
-
-  const synth = window.speechSynthesis;
-
-  const copyToClipboard = (text) => {
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedPrompt(true);
-      setTimeout(() => setCopiedPrompt(false), 2000);
-    }).catch(err => {
-      console.error('Failed to copy text: ', err);
-    });
-  };
 
   const { user, loginWithGoogle, logout } = useAuth();
 
@@ -354,17 +343,6 @@ export default function DailyDigest() {
       console.error(err);
       setSubStatus('error');
     }
-  };
-
-
-
-  const playAudio = (text) => {
-    if (!text) return;
-    synth.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ja-JP';
-    utterance.rate = 0.85;
-    synth.speak(utterance);
   };
 
 
@@ -782,130 +760,11 @@ export default function DailyDigest() {
                 </div>
               )}
 
-              {/* 2. AI Prompt */}
-              {detailTab === 'prompt' && data.study?.prompt_snippet && (
-                <div className="daily-section fade-in">
-                  <div className="daily-section-header">
-                    <span className="daily-section-icon">🤖</span>
-                    <h2 className="daily-section-title">{t('dailyDigest.aiPromptOnePick')}</h2>
-                  </div>
-                  <div className="ai-prompt-card">
-                    <div className="terminal-header">
-                      <div className="terminal-dots">
-                        <span className="dot red"></span>
-                        <span className="dot yellow"></span>
-                        <span className="dot green"></span>
-                      </div>
-                      <div className="terminal-title">SYSTEM PROMPT // terminal</div>
-                      <button className={`terminal-copy-btn ${copiedPrompt ? 'copied' : ''}`} onClick={() => copyToClipboard(data.study.prompt_snippet)}>
-                        {copiedPrompt ? t('dailyDigest.copied') : t('dailyDigest.copy')}
-                      </button>
-                    </div>
-                    <div className="terminal-body">
-                      <div className="study-snippet-container">
-                        <pre className="study-snippet"><code>{data.study.prompt_snippet}</code></pre>
-                      </div>
-                      {data.study.explanation && <div className="study-kr">{data.study.explanation}</div>}
-                      {data.study.business_context && (
-                        <div className="signal-insight ai-insight">
-                          <div className="insight-badge">{t('dailyDigest.practicalTip')}</div>
-                          <p>{data.study.business_context}</p>
-                        </div>
-                      )}
-                      {data.study.parameters && data.study.parameters.length > 0 && (
-                        <div className="prompt-params-container">
-                          <div className="params-header">{t('dailyDigest.promptParams')}</div>
-                          <div className="params-table">
-                            <div className="params-table-header">
-                              <span className="col-name">{t('dailyDigest.paramNameCol')}</span>
-                              <span className="col-desc">{t('dailyDigest.paramDescCol')}</span>
-                            </div>
-                            <div className="params-list">
-                              {data.study.parameters.map((p, i) => (
-                                <div key={i} className="param-row">
-                                  <span className="param-name">[{p.name}]</span>
-                                  <span className="param-desc">{p.description}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* 2. AI Prompt — ReLearn Phase B-0 추출 컴포넌트 (동작 동일) */}
+              {detailTab === 'prompt' && <PromptSection study={data.study} />}
 
-              {/* 3. Business Japanese */}
-              {detailTab === 'japanese' && data.study?.sentence_jp && (
-                <div className="daily-section fade-in">
-                  <div className="daily-section-header">
-                    <span className="daily-section-icon">🇯🇵</span>
-                    <h2 className="daily-section-title">{t('dailyDigest.businessJpOnePick')}</h2>
-                    <button className="japanese-audio-play-main" onClick={() => playAudio(data.study.sentence_jp)}>
-                      <svg viewBox="0 0 24 24" width="14" height="14" style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }}>
-                        <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.45v2.06c2.89.86 5 3.54 5 6.49s-2.11 5.63-5 6.49v2.06c4.01-.91 7-4.49 7-8.55s-2.99-7.64-7-8.55z"/>
-                      </svg>
-                      {t('dailyDigest.playFullAudio')}
-                    </button>
-                  </div>
-                  <div className="japanese-study-card">
-                    <div className="japanese-hero-block">
-                      <div className="japanese-sentence-box">
-                        <div className="study-jp">{data.study.sentence_jp}</div>
-                        <div className="study-furigana">{data.study.sentence_furigana}</div>
-                      </div>
-                      {data.study.sentence_pronunciation_kr && (
-                        <div className="study-pronunciation">
-                          <span className="pronunciation-label">{t('dailyDigest.koreanPronunciation')}</span>
-                          <span className="pronunciation-text">[{data.study.sentence_pronunciation_kr}]</span>
-                        </div>
-                      )}
-                      <div className="study-translation">
-                        {data.study.sentence_kr}
-                      </div>
-                    </div>
-                    
-                    {(!data.study.prompt_snippet && data.study.business_context) && (
-                       <div className="signal-insight jp-insight">
-                         <div className="insight-badge">{t('dailyDigest.businessContextTip')}</div>
-                         <p>{data.study.business_context}</p>
-                       </div>
-                    )}
-
-                    {data.study.vocabulary && data.study.vocabulary.length > 0 && (
-                      <div className="vocab-section">
-                        <h3 className="vocab-title">{t('dailyDigest.keyVocab')}</h3>
-                        <div className="study-vocab-grid">
-                          {data.study.vocabulary.map((v, i) => (
-                            <div key={i} className="study-vocab-card">
-                              <div className="vocab-card-header">
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                  <span className="vocab-word">{v.word}</span>
-                                  <span className="vocab-reading">[{v.reading}]</span>
-                                </div>
-                                <button 
-                                  className="vocab-audio-btn" 
-                                  onClick={() => playAudio(v.word)}
-                                  title={t('dailyDigest.listenPron')}
-                                >
-                                  <svg className="play-svg" viewBox="0 0 24 24" width="12" height="12">
-                                    <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
-                                  </svg>
-                                </button>
-                              </div>
-                              {v.pronunciation_kr && (
-                                <span className="vocab-pronunciation">[{v.pronunciation_kr}]</span>
-                              )}
-                              <div className="vocab-meaning">{v.meaning}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* 3. Business Japanese — ReLearn Phase B-0 추출 컴포넌트 (동작 동일) */}
+              {detailTab === 'japanese' && <JapaneseSection study={data.study} />}
 
               {/* 4. Tech Track Signal (Data Contract v2 — junior/senior) */}
               {detailTab === 'track' && data?.date && (
