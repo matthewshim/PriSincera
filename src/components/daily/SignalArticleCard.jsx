@@ -50,9 +50,9 @@ const SignalArticleCard = ({ article, compact }) => {
       rel="noopener noreferrer"
       className={`signal-article-card premium-3d-card haptic-trigger ${article.isDmPick ? 'dm-featured-card' : ''}${compact ? ' compact' : ''}`}
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={tiltStyle}
+      onMouseMove={compact ? undefined : handleMouseMove}
+      onMouseLeave={compact ? undefined : handleMouseLeave}
+      style={compact ? undefined : tiltStyle}
       data-hover-text="VIEW"
     >
       {!compact && article.og_image && (

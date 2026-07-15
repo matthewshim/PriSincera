@@ -131,22 +131,21 @@
 .rl-rail-subnav.faded { opacity: 0; transform: translateY(-4px); pointer-events: none; }
 .rl-rail-ch {
   width: 34px; height: 34px; border-radius: 50%;
-  border: 1px solid var(--glass-border);
+  /* 아웃라인은 전 상태 동일(가시 밝기) — 활성 구분은 배경색만으로 */
+  border: 1px solid rgba(255, 255, 255, 0.16);
   background: linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02)), var(--bg-void);
   display: grid; place-items: center; font-size: 14px; line-height: 1;
   color: var(--text-muted); cursor: pointer; font-family: inherit;
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 }
-.rl-rail-ch:hover { border-color: var(--glass-border-hover); }
+.rl-rail-ch:hover { background: linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)), var(--bg-void); }
 .rl-rail-ch.on {
-  border-color: rgba(34, 211, 238, 0.55);
-  background: linear-gradient(rgba(34, 211, 238, 0.10), rgba(34, 211, 238, 0.10)), var(--bg-void);
-  box-shadow: 0 0 14px rgba(34, 211, 238, 0.15);
+  background: linear-gradient(rgba(34, 211, 238, 0.18), rgba(34, 211, 238, 0.18)), var(--bg-void);
 }
-/* 책갈피 활성색 = 채널 존 컬러와 동기화 */
-.rl-rail-ch.ch-signal.on { border-color: rgba(199, 210, 254, 0.55); background: linear-gradient(rgba(199, 210, 254, 0.10), rgba(199, 210, 254, 0.10)), var(--bg-void); box-shadow: 0 0 14px rgba(199, 210, 254, 0.15); }
-.rl-rail-ch.ch-prompt.on { border-color: rgba(165, 180, 252, 0.55); background: linear-gradient(rgba(165, 180, 252, 0.10), rgba(165, 180, 252, 0.10)), var(--bg-void); box-shadow: 0 0 14px rgba(165, 180, 252, 0.15); }
-.rl-rail-ch.ch-jp.on     { border-color: rgba(229, 178, 93, 0.55);  background: linear-gradient(rgba(229, 178, 93, 0.10), rgba(229, 178, 93, 0.10)), var(--bg-void);  box-shadow: 0 0 14px rgba(229, 178, 93, 0.15); }
+/* 책갈피 활성 배경 = 채널 존 컬러와 동기화 (아웃라인은 불변) */
+.rl-rail-ch.ch-signal.on { background: linear-gradient(rgba(199, 210, 254, 0.18), rgba(199, 210, 254, 0.18)), var(--bg-void); }
+.rl-rail-ch.ch-prompt.on { background: linear-gradient(rgba(165, 180, 252, 0.18), rgba(165, 180, 252, 0.18)), var(--bg-void); }
+.rl-rail-ch.ch-jp.on     { background: linear-gradient(rgba(229, 178, 93, 0.18),  rgba(229, 178, 93, 0.18)),  var(--bg-void); }
 .rl-stage.s2 .rl-marker { border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 22px rgba(165, 180, 252, 0.12); }
 .rl-stage.s3 .rl-marker { border-color: rgba(229, 178, 93, 0.5); box-shadow: 0 0 22px rgba(229, 178, 93, 0.12); }
 .rl-body { padding-bottom: 46px; min-width: 0; }
@@ -194,10 +193,23 @@
 
 /* ── 시그널 콤팩트(이미지 제거·2열 그리드 — 가로 폭 활용) ── */
 .rl-ch-sec .signal-articles-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.rl-ch-sec .signal-article-card.compact { padding: 14px 16px; }
 .rl-ch-sec .signal-article-card.compact h3 { font-size: 1rem; margin: 0 0 6px; }
-.rl-ch-sec .signal-article-card.compact .signal-insight {
-  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+/* 인사이트는 클램프 없이 전체 노출 (정보 잘림 방지) */
+
+/* ── 카드 규격 통일: 내부 여백 18px·호버 translateY(-2px)+보더 ── */
+.rl-ch-sec .track-card,
+.rl-ch-sec .signal-article-card.compact,
+.rl-ch-sec .study-vocab-card {
+  padding: 18px;
+  transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.rl-ch-sec .track-card:hover,
+.rl-ch-sec .signal-article-card.compact:hover,
+.rl-ch-sec .study-vocab-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-border-hover);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: none;
 }
 
 /* ── 접기(Progressive Disclosure) 공통 ── */
@@ -218,7 +230,7 @@
   mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
 }
 .rl-expand-btn {
-  display: inline-block; margin: 10px 0 0; padding: 6px 14px;
+  display: inline-block; margin: 14px 0 0; padding: 6px 14px;
   border-radius: var(--radius-pill); border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.02); color: var(--text-secondary);
   font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: inherit;
@@ -234,7 +246,7 @@
 .rl-ch-foot .rl-mini-orbit { margin-top: 0; }
 .rl-ch-foot .rl-more-link { margin-left: auto; }
 /* 트랙 내부 전체 보기 링크도 동일하게 우측 정렬 */
-.rl-ch-sec[data-rl-ch="track"] .rl-more-link { display: block; text-align: right; margin-top: 12px; }
+.rl-ch-sec[data-rl-ch="track"] .rl-more-link { display: block; text-align: right; margin-top: 14px; }
 /* CTA 문법 통일(리디자인 P4): 트랙 카드의 track-orbit-btn과 동일 비주얼 */
 .rl-mini-orbit {
   display: inline-flex; align-items: center; gap: 6px;
@@ -252,7 +264,7 @@
 }
 .rl-mini-orbit:disabled { cursor: default; }
 .rl-archive-link {
-  display: block; text-align: center; margin-top: 6px;
+  display: block; text-align: center; margin-top: 14px;
   font-size: 0.8rem; color: var(--text-muted); text-decoration: none;
 }
 .rl-archive-link:hover { color: var(--color-cyan); }
