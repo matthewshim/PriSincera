@@ -200,7 +200,8 @@
 .nav-link-relearn { position: relative; }
 /* NEW 인디케이터 — 닷 형식, PriSincera 메인 포인트 컬러(Starlight Gold) */
 .nav-new-dot {
-    position: absolute; top: 4px; right: -10px;
+    position: absolute; top: -8px; left: 50%;
+    transform: translateX(-50%);
     width: 5px; height: 5px; border-radius: 50%;
     background: var(--color-gold);
     box-shadow: 0 0 6px rgba(229, 178, 93, 0.8);
