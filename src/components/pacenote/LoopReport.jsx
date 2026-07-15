@@ -15,11 +15,13 @@ const DOMAIN_LABEL = {
 const prettyDomain = (key) =>
   DOMAIN_LABEL[key] || key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-export default function LoopReport() {
+// externalProfile: 셸(ReLearn)이 1회 페치한 프로파일 주입용 — 제공 시 자체 페치 생략(중복 방지)
+export default function LoopReport({ profile: externalProfile }) {
   const { user, token } = useAuth();
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
+    if (externalProfile !== undefined) { setProfile(externalProfile); return; }
     if (!user) { setProfile(null); return; }
     let cancelled = false;
     const doFetch = (tok) => fetch('/api/pacenote/profile', { headers: { Authorization: `Bearer ${tok}` } });
@@ -33,7 +35,7 @@ export default function LoopReport() {
       } catch { /* 무시 */ }
     })();
     return () => { cancelled = true; };
-  }, [user, token]);
+  }, [user, token, externalProfile]);
 
   if (!user || !profile) return null;
 

@@ -30,6 +30,11 @@ export const PAGE_META = {
     description: '스스로의 우선순위를 지키기 위한 주간 목표 달성률과 투명한 성찰을 기록하는 페이스 노트. 배움을 실행으로, 실행을 복기로 잇습니다.',
     keywords: 'PriSincera, 페이스 노트, 주간 목표, 회고, 성장 트래커, 생산성',
   },
+  '/relearn': {
+    pageTitle: 'ReLearn — 배움·실행·복기 통합 성장 루프',
+    description: '매일 제로에서, 다시 배우고 다시 달린다. Daily Digest의 배움과 Pace Note의 실행·복기를 하나의 여정으로 잇는 통합 성장 루프 서비스입니다.',
+    keywords: 'PriSincera, ReLearn, 리런, 성장 루프, 데일리 다이제스트, 페이스 노트, 배움, 실행, 회고',
+  },
   '/builders-log': {
     pageTitle: "Builder's Log — 서비스 구축의 기록",
     description: 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록하는 빌더스 로그입니다.',
