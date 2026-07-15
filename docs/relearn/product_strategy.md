@@ -2,7 +2,7 @@
 status: draft
 domain: ReLearn
 last_updated: 2026-07-15
-version: v1.3
+version: v1.4
 target_files:
   - src/pages/DailyDigest.jsx
   - src/pages/PaceNoteDashboard.jsx
@@ -27,6 +27,7 @@ target_files:
 | v1.1 | 2026-07-15 | AI Agent | **코드 실측 재검토 반영** — Phase B-0(섹션 추출) 신설, SEO SSOT(`seoMeta.mjs`)·i18n(ko/en/ja)·인증 4상태 매트릭스·GA4 퍼널 계측·모바일 축약·Phase E 게이트 기준 보강 | Roadmap, Risks, Metrics |
 | v1.2 | 2026-07-15 | AI Agent | **시안 검토 결정: '기록' 뷰(A안)** — 실행 내역·회고 아카이브를 별도 랜딩이 아닌 리런 내 `오늘 \| 기록` 뷰 전환으로 제공. 루프 리포트 지표 타일 = 기록 뷰 드릴다운 진입점. 데이터는 기존 PaceNote timeline 재사용(신규 API 0) | Concept §3, Phase B |
 | v1.3 | 2026-07-15 | AI Agent | **배움 채널 대통합(시안 누락 보완)** — ①배움 = 다이제스트 **4채널 전체**(시그널·테크 트랙·AI 프롬프트·어학) + **채널별 궤도 연결 매핑**(트랙=add-orbit 기 구현, 나머지 3채널=`/add` 커스텀 궤도 재사용). 아카이브(과거 날짜)는 기존 `/daily` 존치 | Concept §3, Phase B |
+| v1.4 | 2026-07-15 | AI Agent | **§4-1 파이프라인 무영향 검증 명문화** — Phase A~D 잡·cloudbuild·데이터 계약 무접촉 근거(custom- 통계 제외 실측 포함) + 유일한 예외(Phase E 이메일 템플릿) 경계 명시 | §4-1 |
 
 ---
 
@@ -98,6 +99,21 @@ target_files:
 
   → 추출한 섹션 컴포넌트는 **기존 페이지도 함께 사용**하도록 치환(로직 단일화) — 중복이 아니라 부채 감소.
 - 검증 후에만 기존 메뉴 → 신규 점진 유도(전환은 마지막·선택)
+
+### 4-1. 파이프라인 무영향 검증 (v1.4 — 개발·오픈 시 기존 백엔드 보호)
+
+**Phase A~D는 배치 파이프라인(Cloud Run Jobs 6종)에 구조적으로 무영향** — 근거:
+
+| 검증 항목 | 결과 |
+| :--- | :--- |
+| 방향 분리 | 파이프라인 = 콘텐츠 **생성(쓰기)** 경로, 리런 = 기존 API **읽기** + 기존 사용자 쓰기 API 재사용. 접점 파일 없음 |
+| 코드 접점 | 신규 API 0 · 신규 잡 0 · `cloudbuild.yaml` 변경 0 · 스케줄 변경 0 · Phase B-0 추출도 `src/`(프론트)만 |
+| **추천 통계 오염 방지** | '궤도로'가 만드는 `custom-` 궤도는 [pacenote-composer](../../pipeline/src/pacenote-composer.mjs)의 풀 통계에서 **명시적 제외**(`!task.id.startsWith('custom-')`) — 리런發 대량 추가가 velocity·퇴출·HOF를 왜곡하지 않음 (profile affinity 반영은 성장 루프의 의도된 동작) |
+| 배포 격리 | 잡 이미지(`pipeline:$SHA`)는 web 이미지와 별도 — 리런 빌드 실패 시에도 기존 잡은 기존 이미지로 정상 가동 지속 |
+| 트래픽 | 읽기 증가는 웹 서비스 몫(GCS 정적 피드 비용 ≈ 0 + rate limiter) — 잡 실행과 무관 |
+| 데이터 계약 | Data Contract v2 additive 원칙 유지, 스키마 변경 없음 |
+
+> ⚠️ **유일한 예외 — Phase E**: 이메일 다이제스트 CTA(`/daily` 지향)를 `/relearn`으로 바꾸는 경우에만 `pipeline/src/lib`(이메일 템플릿) 수정이 발생한다. 링크 URL 변경뿐이지만 **전 로드맵에서 유일한 파이프라인 코드 접점**이므로, Phase E 착수 시 별도 브랜치·회귀(발송 테스트) 필수.
 
 ## 5. 추진 로드맵 (Phase Gate)
 
