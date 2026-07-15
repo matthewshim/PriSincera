@@ -20,6 +20,7 @@ import JapaneseSection from '../components/daily/JapaneseSection';
 import TrackSignalFeed from '../components/daily/TrackSignalFeed';
 import OrbitSection from '../components/relearn/OrbitSection';
 import ReflectionSection from '../components/relearn/ReflectionSection';
+import { trackRelearn } from '../components/relearn/funnel';
 import './ReLearn.css';
 
 const todayKST = () => new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -121,6 +122,7 @@ export default function ReLearn() {
         body: JSON.stringify({ email_address: user.email }),
       });
       const d = await res.json();
+      if (res.ok) trackRelearn('relearn_subscribe');
       setSubState(res.ok ? (d.code === 'already_subscribed' ? 'subscribed' : 'done') : 'error');
     } catch {
       setSubState('error');
@@ -140,6 +142,7 @@ export default function ReLearn() {
     setAddedCh(s => ({ ...s, [key]: 'adding' }));
     try {
       await addTask(CHANNEL_ORBITS[key]);
+      trackRelearn('relearn_orbit_add', { source: key });
       setAddedCh(s => ({ ...s, [key]: 'added' }));
     } catch (e) {
       console.error('[ReLearn] 채널 궤도 추가 실패:', e);
@@ -188,8 +191,36 @@ export default function ReLearn() {
   const isChannel = (k) => channel === 'all' || channel === k;
   const selectChannel = (key) => {
     setChannel(key);
+    trackRelearn('relearn_channel_select', { channel: key });
     // 깊이 스크롤된 상태에서 채널 전환 시 배움 상단으로 복귀
     document.getElementById('rl-learn')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  // ── GA4 퍼널 (Phase D): learn_view → orbit_add → complete_toggle → reflect_save ──
+  useEffect(() => { trackRelearn('relearn_learn_view'); }, []);
+  const openView = (v) => {
+    setView(v);
+    if (v === 'records') trackRelearn('relearn_view_records');
+  };
+  const handleToggle = async (taskId) => {
+    const r = await toggleTask(taskId);
+    trackRelearn('relearn_complete_toggle');
+    return r;
+  };
+  const handleAccept = async (taskId) => {
+    const r = await acceptTask(taskId);
+    trackRelearn('relearn_orbit_add', { source: 'recommend' });
+    return r;
+  };
+  const handleAddCustom = async (title) => {
+    const r = await addTask(title);
+    trackRelearn('relearn_orbit_add', { source: 'custom' });
+    return r;
+  };
+  const handleReflectSave = async (text) => {
+    const r = await saveDiary(text);
+    trackRelearn('relearn_reflect_save');
+    return r;
   };
 
   return (
@@ -211,7 +242,7 @@ export default function ReLearn() {
         </div>
         {/* 히어로 CTA는 단 1개(우선순위 원칙): 비로그인 시 로그인 유도. 구독은 배움 하단 문맥 CTA로 분리 */}
         {!user && (
-          <button className="rl-hero-cta haptic-trigger" onClick={loginWithGoogle}>
+          <button className="rl-hero-cta haptic-trigger" onClick={() => { trackRelearn('relearn_login_cta'); loginWithGoogle(); }}>
             나의 루프 시작하기 — Google로 로그인
           </button>
         )}
@@ -230,14 +261,14 @@ export default function ReLearn() {
 
       {/* ── 뷰 전환: 오늘 | 기록 ── */}
       <nav className="rl-view-tabs" aria-label="리런 뷰 전환">
-        <button className={`rl-view-tab ${view === 'today' ? 'on' : ''}`} onClick={() => setView('today')}>오늘</button>
-        <button className={`rl-view-tab ${view === 'records' ? 'on' : ''}`} onClick={() => setView('records')}>기록</button>
+        <button className={`rl-view-tab ${view === 'today' ? 'on' : ''}`} onClick={() => openView('today')}>오늘</button>
+        <button className={`rl-view-tab ${view === 'records' ? 'on' : ''}`} onClick={() => openView('records')}>기록</button>
       </nav>
 
       {/* ── 루프 리포트 (두 뷰 공통 다리 — 클릭 시 기록 드릴다운) ── */}
       {user && (
-        <div className="rl-report-wrap" onClick={() => setView('records')} role="button" tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter') setView('records'); }} title="기록 보기">
+        <div className="rl-report-wrap" onClick={() => openView('records')} role="button" tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter') openView('records'); }} title="기록 보기">
           <LoopReport profile={profile} />
         </div>
       )}
@@ -290,7 +321,7 @@ export default function ReLearn() {
 
                 {isChannel('track') && (
                   <div className="rl-ch-sec">
-                    <TrackSignalFeed date={date} affinity={affinity} />
+                    <TrackSignalFeed date={date} affinity={affinity} onOrbitAdded={(domain) => trackRelearn('relearn_orbit_add', { source: 'track', domain })} />
                   </div>
                 )}
 
@@ -353,7 +384,7 @@ export default function ReLearn() {
                 ) : paceLoading ? (
                   <div className="rl-status">궤도 불러오는 중…</div>
                 ) : (
-                  <OrbitSection current={data?.current} onToggle={toggleTask} onAccept={acceptTask} onAdd={addTask} affinity={affinity} />
+                  <OrbitSection current={data?.current} onToggle={handleToggle} onAccept={handleAccept} onAdd={handleAddCustom} affinity={affinity} />
                 )}
               </div>
             </section>
@@ -370,7 +401,7 @@ export default function ReLearn() {
                     <button className="rl-login-btn haptic-trigger" onClick={loginWithGoogle}>나의 페이스 만들기</button>
                   </div>
                 ) : (
-                  <ReflectionSection statement={data?.current?.statement || ''} onSave={saveDiary} />
+                  <ReflectionSection statement={data?.current?.statement || ''} onSave={handleReflectSave} />
                 )}
               </div>
             </section>

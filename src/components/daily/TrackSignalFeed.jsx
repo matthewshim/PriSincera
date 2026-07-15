@@ -25,7 +25,8 @@ const DOMAINS = [
 const DOMAIN_LABEL = Object.fromEntries(DOMAINS.map(d => [d.key, d.label]));
 
 // affinity(옵션): 셸(ReLearn)이 1회 페치한 domainAffinity 주입용 — 제공 시 자체 profile 페치 생략
-export default function TrackSignalFeed({ date, affinity: externalAffinity }) {
+// onOrbitAdded(옵션): 궤도 추가 성공 시 콜백 — ReLearn 퍼널 계측용(/daily에선 미전달)
+export default function TrackSignalFeed({ date, affinity: externalAffinity, onOrbitAdded }) {
   const { user, token } = useAuth();
   const [track, setTrack] = useState('junior');
   const [feed, setFeed] = useState(null);
@@ -110,6 +111,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity }) {
         // 성공/이미추가(409) → 영구 '추가됨' 표시
         if (baseId) setAddedBaseIds(prev => new Set(prev).add(baseId));
         setOrbitState(s => { const n = { ...s }; delete n[card.id]; return n; });
+        if (res.ok) onOrbitAdded?.(card.domain);
       } else {
         setOrbitState(s => ({ ...s, [card.id]: 'error' }));
       }
@@ -117,7 +119,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity }) {
       console.error('[TrackSignalFeed] add-orbit 실패:', e);
       setOrbitState(s => ({ ...s, [card.id]: 'error' }));
     }
-  }, [user, token]);
+  }, [user, token, onOrbitAdded]);
 
   // ── Phase 3 개인화 렌즈 ── (affinity 키는 card.domain과 동일: ai_llm/system_design/devops/tech_lead)
   const domainScore = (d) => (affinity && affinity[d]) || 0;
