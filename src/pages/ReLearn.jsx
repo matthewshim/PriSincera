@@ -70,6 +70,14 @@ export default function ReLearn() {
   const [profile, setProfile] = useState(null);         // 셸 1회 페치 → 하위 주입
   const date = todayKST();
 
+  // 헤더(GNB) 노출을 위한 hero-ready 클래스 제어 — 타 페이지와 동일 패턴
+  useEffect(() => {
+    document.body.classList.add('hero-ready');
+    return () => {
+      document.body.classList.remove('hero-ready');
+    };
+  }, []);
+
   // ── 오늘의 글로벌 콘텐츠 (공개 — 비로그인도 배움 제공) ──
   useEffect(() => {
     let cancelled = false;
