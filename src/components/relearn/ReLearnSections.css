@@ -1,0 +1,98 @@
+/* ReLearn Stage 섹션 스킨 — 시안 v4 기준, 디자인 시스템 토큰만 사용 (신규 컬러 0) */
+
+.rl-card {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── Stage ② 실행: 진행바 + 궤도 리스트 ── */
+.rl-progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.rl-progress-track {
+  flex: 1; height: 6px; border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.06); overflow: hidden;
+}
+.rl-progress-fill {
+  height: 100%; border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--color-indigo), var(--color-cyan));
+  transition: width 0.3s ease;
+}
+.rl-progress-num {
+  font-size: 0.78rem; color: var(--text-muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.rl-orbit-list { display: grid; gap: 8px; }
+.rl-orbit-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  transition: border-color 0.15s;
+}
+.rl-orbit-item:hover { border-color: var(--glass-border-hover); }
+.rl-orbit-check {
+  width: 20px; height: 20px; border-radius: 6px; flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.25); background: transparent;
+  display: grid; place-items: center; font-size: 12px; color: transparent;
+  cursor: pointer; transition: all 0.15s;
+}
+.rl-orbit-check:disabled { opacity: 0.5; cursor: default; }
+.rl-orbit-item.done .rl-orbit-check { background: var(--color-indigo); border-color: var(--color-indigo); color: #0A0A14; }
+.rl-orbit-item.done .rl-orbit-t { color: var(--text-muted); text-decoration: line-through; }
+.rl-orbit-t { flex: 1; font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5; }
+.rl-orbit-cat {
+  font-size: 0.66rem; font-weight: 700; padding: 2px 9px;
+  border-radius: var(--radius-pill); white-space: nowrap;
+}
+.rl-empty { color: var(--text-muted); font-size: 0.84rem; font-style: italic; padding: 10px 4px; }
+
+/* ── Stage ② 추천 ── */
+.rl-recs { margin-top: 16px; }
+.rl-recs-head {
+  font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+  margin-bottom: 8px; letter-spacing: 0.04em;
+}
+.rl-rec-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: var(--radius-md);
+  border: 1px dashed rgba(255, 255, 255, 0.1); margin-bottom: 7px;
+}
+.rl-rec-star { flex-shrink: 0; }
+.rl-rec-t { flex: 1; font-size: 0.82rem; color: var(--text-secondary); }
+.rl-rec-reason {
+  font-size: 0.64rem; font-weight: 700; padding: 2px 8px;
+  border-radius: var(--radius-pill); white-space: nowrap;
+}
+.rl-rec-reason.strong { background: rgba(165, 180, 252, 0.14); color: var(--color-indigo); border: 1px solid rgba(165, 180, 252, 0.3); }
+.rl-rec-reason.stretch { background: rgba(229, 178, 93, 0.12); color: var(--color-gold); border: 1px solid rgba(229, 178, 93, 0.3); }
+.rl-rec-add {
+  font-size: 0.76rem; font-weight: 700; color: var(--color-indigo);
+  background: none; border: none; padding: 4px 8px; cursor: pointer;
+}
+.rl-rec-add:disabled { opacity: 0.5; cursor: default; }
+
+/* ── Stage ③ 복기 ── */
+.rl-reflect-area {
+  width: 100%; min-height: 110px; resize: vertical;
+  padding: 14px 16px; border-radius: var(--radius-md);
+  border: 1px solid rgba(229, 178, 93, 0.22);
+  background: rgba(229, 178, 93, 0.03);
+  color: var(--text-secondary);
+  font-family: var(--font-body); font-size: 0.86rem; line-height: 1.7;
+  outline: none; box-sizing: border-box;
+}
+.rl-reflect-area:focus { border-color: rgba(229, 178, 93, 0.45); }
+.rl-reflect-area::placeholder { color: var(--text-muted); }
+.rl-reflect-foot { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.rl-reflect-save { font-size: 0.72rem; color: var(--text-muted); }
+.rl-reflect-save.saved, .rl-reflect-save.idle { color: #34D399; }
+.rl-reflect-save.saving { color: var(--color-gold); }
+.rl-reflect-save.error { color: #F87171; }
+.rl-reflect-count {
+  margin-left: auto; font-size: 0.7rem; color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
