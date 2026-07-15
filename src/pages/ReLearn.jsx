@@ -44,7 +44,7 @@ const LEARN_CHANNELS = [
 const SIGNAL_LIMIT = 4;
 
 export default function ReLearn() {
-  const { user, token, loginWithGoogle } = useAuth();
+  const { user, token, loginWithGoogle, logout } = useAuth();
   const { data, loading: paceLoading, toggleTask, acceptTask, saveDiary, addTask } = usePaceNoteData();
 
   useSEO({
@@ -299,6 +299,30 @@ export default function ReLearn() {
         <button className={`rl-view-tab ${view === 'records' ? 'on' : ''}`} onClick={() => openView('records')}>기록</button>
       </nav>
 
+      {/* ── 계정·구독 유틸리티 바 (로그인 시 상시 노출 — 직접 운영 가능한 관리 지점) ── */}
+      {user && (
+        <div className="rl-account" aria-label="계정 및 구독 관리">
+          <span className="rl-account-user" title={user.email}>👤 {user.email}</span>
+          <span className="rl-account-right">
+            {subState === 'unknown' && <span className="rl-account-sub muted">구독 상태 확인 중…</span>}
+            {subState === 'loading' && <span className="rl-account-sub muted">구독 처리 중…</span>}
+            {subState === 'unsubscribed' && (
+              <button className="rl-account-btn sub haptic-trigger" onClick={handleSubscribe}>📬 데일리 메일 구독</button>
+            )}
+            {(subState === 'subscribed' || subState === 'done') && (
+              <>
+                <span className="rl-account-sub ok">📬 구독 중</span>
+                <button className="rl-account-btn ghost haptic-trigger" onClick={handleUnsubscribe}>해지</button>
+              </>
+            )}
+            {subState === 'error' && (
+              <button className="rl-account-btn err haptic-trigger" onClick={handleSubscribe}>구독 실패 — 재시도</button>
+            )}
+            <button className="rl-account-btn ghost haptic-trigger" onClick={logout}>로그아웃</button>
+          </span>
+        </div>
+      )}
+
       {/* ── 루프 리포트 (두 뷰 공통 다리 — 클릭 시 기록 드릴다운) ── */}
       {user && (
         <div className="rl-report-wrap" onClick={() => openView('records')} role="button" tabIndex={0}
@@ -383,22 +407,8 @@ export default function ReLearn() {
                   </div>
                 )}
 
-                {/* 이메일 구독 — 배움의 문맥 CTA (로그인·미구독 시에만) */}
-                {user && subState === 'unsubscribed' && (
-                  <div className="rl-subscribe">
-                    <span className="rl-subscribe-t">오늘의 배움, 매일 아침 메일로도 받아보세요</span>
-                    <button className="rl-subscribe-btn haptic-trigger" onClick={handleSubscribe}>📬 무료 구독</button>
-                  </div>
-                )}
-                {user && subState === 'loading' && <div className="rl-subscribe"><span className="rl-subscribe-t">구독 처리 중…</span></div>}
-                {user && subState === 'done' && <div className="rl-subscribe ok"><span className="rl-subscribe-t">✓ 구독 완료 — 내일 아침 첫 메일이 도착합니다</span></div>}
-                {user && subState === 'error' && <div className="rl-subscribe err"><span className="rl-subscribe-t">구독 처리에 실패했어요 — 잠시 후 다시 시도해 주세요</span></div>}
-                {user && subState === 'subscribed' && (
-                  <div className="rl-subscribe ok">
-                    <span className="rl-subscribe-t">📬 데일리 메일 구독 중</span>
-                    <button className="rl-subscribe-unsub" onClick={handleUnsubscribe}>구독 해지</button>
-                  </div>
-                )}
+                {/* 구독 관리 UI는 상단 계정·구독 바로 단일화 (하단 매몰·중복 방지) */}
+
                 {/* P3: 경량 아카이브 — 날짜 리스트(상세는 /daily/:date 영구 URL) */}
                 <button className="rl-archive-link" onClick={toggleArchive}>
                   지난 다이제스트 보기 {archiveOpen ? '▾' : '→'}
