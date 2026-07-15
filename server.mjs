@@ -605,6 +605,12 @@ app.use(async (req, res) => {
   html = html.replace(/<meta name="twitter:(title|description|image)"[^>]*>/gis, '');
   html = html.replace('</head>', `${metaTags}\n</head>`);
 
+  // SPA HTML은 절대 캐시 금지 — 헤더 부재 시 브라우저/CDN 휴리스틱 캐시로
+  // 경로별(예: /relearn) 옛 번들 HTML이 고착되는 문제 방지 (express.static의
+  // index.html no-cache 설정은 이 fallback 경로에는 적용되지 않음)
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(html);
 });
 
