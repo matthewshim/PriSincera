@@ -1,7 +1,7 @@
 /* ReLearn — 통합 성장 루프 페이지 (시안 v4 기준, 디자인 시스템 토큰만 사용) */
 
 .rl-page {
-  max-width: 1080px;
+  max-width: 1160px;
   margin: 0 auto;
   padding: 110px 32px 80px;   /* GNB 높이 보정 */
   color: var(--text-secondary);
@@ -119,20 +119,20 @@
   position: sticky; top: 120px; align-self: start; z-index: 2;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
   width: 56px;
-  background: var(--bg-void); /* 마커-서브나브 사이 틈으로 라인이 끊겨 보이지 않도록 마스킹 */
-  padding-bottom: 6px;
+  /* 배경 마스킹 금지: 레일 라인은 마커·서브나브 사이 틈과 ②③ 구간에서 연속으로 보여야 한다 */
 }
 .rl-marker-group .rl-marker { position: static; top: auto; }
 .rl-rail-subnav {
   display: flex; flex-direction: column; gap: 6px;
-  padding: 6px 0; background: var(--bg-void);
+  padding: 6px 0; /* 배경 없음 — 레일 라인이 버튼 사이 틈으로 연속해 보이도록 */
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 /* ②실행·③복기 스테이지에서는 배움 2뎁스 비노출 */
 .rl-rail-subnav.faded { opacity: 0; transform: translateY(-4px); pointer-events: none; }
 .rl-rail-ch {
   width: 34px; height: 34px; border-radius: 50%;
-  border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  background: linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02)), var(--bg-void);
   display: grid; place-items: center; font-size: 14px; line-height: 1;
   color: var(--text-muted); cursor: pointer; font-family: inherit;
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
@@ -140,13 +140,13 @@
 .rl-rail-ch:hover { border-color: var(--glass-border-hover); }
 .rl-rail-ch.on {
   border-color: rgba(34, 211, 238, 0.55);
-  background: rgba(34, 211, 238, 0.10);
+  background: linear-gradient(rgba(34, 211, 238, 0.10), rgba(34, 211, 238, 0.10)), var(--bg-void);
   box-shadow: 0 0 14px rgba(34, 211, 238, 0.15);
 }
 /* 책갈피 활성색 = 채널 존 컬러와 동기화 */
-.rl-rail-ch.ch-signal.on { border-color: rgba(199, 210, 254, 0.55); background: rgba(199, 210, 254, 0.10); box-shadow: 0 0 14px rgba(199, 210, 254, 0.15); }
-.rl-rail-ch.ch-prompt.on { border-color: rgba(165, 180, 252, 0.55); background: rgba(165, 180, 252, 0.10); box-shadow: 0 0 14px rgba(165, 180, 252, 0.15); }
-.rl-rail-ch.ch-jp.on     { border-color: rgba(229, 178, 93, 0.55);  background: rgba(229, 178, 93, 0.10);  box-shadow: 0 0 14px rgba(229, 178, 93, 0.15); }
+.rl-rail-ch.ch-signal.on { border-color: rgba(199, 210, 254, 0.55); background: linear-gradient(rgba(199, 210, 254, 0.10), rgba(199, 210, 254, 0.10)), var(--bg-void); box-shadow: 0 0 14px rgba(199, 210, 254, 0.15); }
+.rl-rail-ch.ch-prompt.on { border-color: rgba(165, 180, 252, 0.55); background: linear-gradient(rgba(165, 180, 252, 0.10), rgba(165, 180, 252, 0.10)), var(--bg-void); box-shadow: 0 0 14px rgba(165, 180, 252, 0.15); }
+.rl-rail-ch.ch-jp.on     { border-color: rgba(229, 178, 93, 0.55);  background: linear-gradient(rgba(229, 178, 93, 0.10), rgba(229, 178, 93, 0.10)), var(--bg-void);  box-shadow: 0 0 14px rgba(229, 178, 93, 0.15); }
 .rl-stage.s2 .rl-marker { border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 22px rgba(165, 180, 252, 0.12); }
 .rl-stage.s3 .rl-marker { border-color: rgba(229, 178, 93, 0.5); box-shadow: 0 0 22px rgba(229, 178, 93, 0.12); }
 .rl-body { padding-bottom: 46px; min-width: 0; }
@@ -172,18 +172,18 @@
 .rl-learn-chip.ch-signal.on { border-color: rgba(199, 210, 254, 0.4); background: rgba(199, 210, 254, 0.08); color: var(--prism-lavender); }
 .rl-learn-chip.ch-prompt.on { border-color: rgba(165, 180, 252, 0.4); background: rgba(165, 180, 252, 0.08); color: var(--color-indigo); }
 .rl-learn-chip.ch-jp.on     { border-color: rgba(229, 178, 93, 0.4);  background: rgba(229, 178, 93, 0.08);  color: var(--color-gold); }
-/* ── 채널 존(Zoning) — 리디자인 §4: 채널별 액센트 패널로 전환 인지 강화 ── */
+/* ── 채널 존(Zoning) — 채널 식별은 배경 틴트 + 헤더 언더라인 + 책갈피 동기화로.
+     (좌측 컬러바는 스테이지 레일 라인과 시각 충돌하므로 사용하지 않는다) ── */
 .rl-ch-sec {
   margin-bottom: 56px; scroll-margin-top: 120px; /* 스티키 GNB 보정 앵커 여백 */
   padding: 20px 22px 18px;
   border: 1px solid var(--glass-border);
-  border-left: 3px solid var(--glass-border);
   border-radius: var(--radius-lg);
 }
-.rl-ch-sec[data-rl-ch="track"]  { border-left-color: rgba(34, 211, 238, 0.55);  background: rgba(34, 211, 238, 0.035); }
-.rl-ch-sec[data-rl-ch="signal"] { border-left-color: rgba(199, 210, 254, 0.55); background: rgba(199, 210, 254, 0.035); }
-.rl-ch-sec[data-rl-ch="prompt"] { border-left-color: rgba(165, 180, 252, 0.55); background: rgba(165, 180, 252, 0.035); }
-.rl-ch-sec[data-rl-ch="jp"]     { border-left-color: rgba(229, 178, 93, 0.55);  background: rgba(229, 178, 93, 0.035); }
+.rl-ch-sec[data-rl-ch="track"]  { background: rgba(34, 211, 238, 0.045); }
+.rl-ch-sec[data-rl-ch="signal"] { background: rgba(199, 210, 254, 0.045); }
+.rl-ch-sec[data-rl-ch="prompt"] { background: rgba(165, 180, 252, 0.045); }
+.rl-ch-sec[data-rl-ch="jp"]     { background: rgba(229, 178, 93, 0.045); }
 .rl-ch-sec .daily-section { margin-bottom: 0; }
 /* 채널 헤더 언더라인 = 채널 컬러 (존 아이덴티티 이중 보강) */
 .rl-ch-sec .daily-section-header { padding-bottom: 10px; margin-bottom: 16px; border-bottom: 1px solid transparent; }
@@ -192,8 +192,8 @@
 .rl-ch-sec[data-rl-ch="prompt"] .daily-section-header { border-bottom-color: rgba(165, 180, 252, 0.22); }
 .rl-ch-sec[data-rl-ch="jp"] .daily-section-header     { border-bottom-color: rgba(229, 178, 93, 0.22); }
 
-/* ── 시그널 콤팩트 리스트(이미지 제거·1열 행) ── */
-.rl-ch-sec .signal-articles-grid { grid-template-columns: 1fr; gap: 10px; }
+/* ── 시그널 콤팩트(이미지 제거·2열 그리드 — 가로 폭 활용) ── */
+.rl-ch-sec .signal-articles-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .rl-ch-sec .signal-article-card.compact { padding: 14px 16px; }
 .rl-ch-sec .signal-article-card.compact h3 { font-size: 1rem; margin: 0 0 6px; }
 .rl-ch-sec .signal-article-card.compact .signal-insight {
@@ -355,6 +355,7 @@
 @media (max-width: 760px) {
   .rl-page { padding: 92px 18px 64px; }
   .rl-ch-sec { padding: 16px 14px 14px; margin-bottom: 40px; }
+  .rl-ch-sec .signal-articles-grid { grid-template-columns: 1fr; }
   .rl-hero { padding-top: 28px; } /* 92+28 = 표준 모바일 120px 보정 */
   .rl-hero-title { font-size: 2.2rem; } /* daily-title 모바일 규격 일치 */
   .rl-stages { grid-template-columns: 1fr; }

@@ -193,8 +193,9 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
         </button>
       )}
 
-      {/* 카드 목록 (C3) — compact(ReLearn 배움)에서는 상위 3개 + 전체 보기 링크 */}
-      {!loading && !error && (compact ? cards.slice(0, 3) : cards).map(card => {
+      {/* 카드 목록 (C3) — compact(ReLearn 배움)에서는 상위 4개(2×2 그리드) + 전체 보기 링크 */}
+      <div className={`track-cards${compact ? ' compact' : ''}`}>
+      {!loading && !error && (compact ? cards.slice(0, 4) : cards).map(card => {
         const baseId = card.action_challenge?.id ? `orbit-${card.action_challenge.id}` : null;
         const isAdded = !!(baseId && addedBaseIds.has(baseId));
         const st = isAdded ? 'added' : orbitState[card.id];
@@ -281,12 +282,13 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
           </div>
         );
       })}
+      </div>
 
       {!loading && !error && cards.length === 0 && (
         <div className="track-status">해당 도메인의 카드가 없습니다.</div>
       )}
 
-      {compact && !loading && !error && cards.length > 3 && (
+      {compact && !loading && !error && cards.length > 4 && (
         <Link
           className="rl-more-link"
           to={`/daily/${date}`}

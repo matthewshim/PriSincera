@@ -2,7 +2,7 @@
 status: active
 domain: ReLearn
 last_updated: 2026-07-15
-version: v1.1
+version: v1.2
 target_files:
   - src/pages/ReLearn.jsx
   - src/pages/ReLearn.css
@@ -20,6 +20,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-15 | AI Agent | STAGE 01 배움 4채널의 지면 효율·채널 구획·정보 생략 전방위 진단 및 리디자인 제안 최초 작성 | ReLearn 배움 스테이지 |
 | v1.1 | 2026-07-15 | AI Agent | 결정 확정(옵션1·이미지 완전 제거·전부 접힘·CTA 통일 포함) 및 Phase 1~3 구현 완료 | ReLearn.jsx/css, daily 채널 컴포넌트 4종 |
+| v1.2 | 2026-07-15 | AI Agent | 정돈 패스 — 존 좌측 컬러바 제거(레일 충돌), 레일 마스킹 핵 제거(라인 연속성 복원), 가로 폭 활용(컨테이너 1160px·트랙 2×2·시그널 2열) | ReLearn.css, TrackSignalFeed |
 
 ---
 
