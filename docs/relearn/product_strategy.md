@@ -170,10 +170,12 @@ target_files:
 - [x] 온보딩: 첫 방문 1-스텝 배너(루프 개념 안내, localStorage 기억·닫기) — 표기 정책상 서비스명은 영문 공통, 안내문은 국문 우선(다국어 키 확장은 후속)
 - **DoD ✅**: 데스크톱·모바일 양쪽 정식 노출, 기존 진입점 병존, 빌드 통과.
 
-### ☐ Phase D — 개인화 표면화·퍼널 계측
-- [ ] Phase 2/3 추천·렌즈·리포트를 통합 화면에 노출(추천 사유 라벨·내 궤도 배지)
-- [ ] **GA4 이벤트 스키마 정의·계측**(react-ga4 기존재): `relearn_learn_view → relearn_orbit_add → relearn_complete_toggle → relearn_reflect_save` 퍼널 — 이것이 §7 "루프 완주율"의 측정 수단
-- **DoD**: 로그인 유저가 개인화된 하루 루프를 한 화면에서 완주 + 퍼널 데이터 수집 개시.
+### ✅ Phase D — 개인화 표면화·퍼널 계측 — **완료(2026-07-15)**
+- [x] 개인화 표면화: 추천 사유 라벨(OrbitSection)·내 궤도 배지/렌즈(TrackSignalFeed)·루프 리포트 — Phase B 셸에서 노출 완료
+- [x] **GA4 퍼널 계측**([funnel.js](../../src/components/relearn/funnel.js)): `relearn_learn_view → relearn_orbit_add{source: track|signal|prompt|jp|custom|recommend} → relearn_complete_toggle → relearn_reflect_save`
+- [x] 보조 이벤트: `relearn_channel_select`·`relearn_view_records`·`relearn_subscribe`·`relearn_login_cta`
+- [x] 계측은 셸 콜백 래핑으로 배선(컴포넌트 순수 유지). TrackSignalFeed만 `onOrbitAdded` 옵션 콜백(미전달 시 /daily 무영향)
+- **DoD ✅**: 로그인 유저의 개인화 루프 한 화면 완주 + 퍼널 수집 개시 → **Phase E 게이트 판정 데이터 축적 시작**.
 
 ### ☐ Phase E — 승계 전환·일몰 (v1.6: 선택 → **확정**, 패리티 게이트 후)
 - [ ] **게이트 = §5-1 패리티 체크리스트 전항 통과** + 지표(리런 경유 궤도 추가/완료율 기존 대비 동등 이상, 이탈률 악화 없음, 퍼널 완주율 유의미)
