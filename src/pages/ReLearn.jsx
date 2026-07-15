@@ -198,8 +198,9 @@ export default function ReLearn() {
         className={`rl-mini-orbit haptic-trigger ${st === 'added' ? 'added' : ''}`}
         onClick={() => addChannelOrbit(ch)}
         disabled={st !== 'idle'}
+        title={CHANNEL_ORBITS[ch]}
       >
-        {st === 'added' ? '✓ 궤도에 추가됨' : st === 'adding' ? '추가 중…' : `＋ ${CHANNEL_ORBITS[ch]} — 궤도로`}
+        {st === 'added' ? '✓ 실행의 궤도에 추가됨' : st === 'adding' ? '추가 중…' : '＋ 실행의 궤도에 추가'}
       </button>
     );
   };
@@ -389,7 +390,7 @@ export default function ReLearn() {
                   {LEARN_CHANNELS.map(c => (
                     <button
                       key={c.key}
-                      className={`rl-rail-ch ${channel === c.key ? 'on' : ''}`}
+                      className={`rl-rail-ch ch-${c.key} ${channel === c.key ? 'on' : ''}`}
                       title={c.label}
                       aria-label={c.label}
                       onClick={() => selectChannel(c.key)}
@@ -406,7 +407,7 @@ export default function ReLearn() {
                 {/* 모바일 전용 채널 칩 (레일이 숨는 폭에서만 노출, 비스티키) */}
                 <div className="rl-learn-chips" role="group" aria-label="배움 채널">
                   {LEARN_CHANNELS.map(c => (
-                    <button key={c.key} className={`rl-learn-chip ${channel === c.key ? 'on' : ''}`} onClick={() => selectChannel(c.key)}>
+                    <button key={c.key} className={`rl-learn-chip ch-${c.key} ${channel === c.key ? 'on' : ''}`} onClick={() => selectChannel(c.key)}>
                       {c.icon} {c.label}
                     </button>
                   ))}
@@ -416,13 +417,13 @@ export default function ReLearn() {
 
                 {(
                   <div className="rl-ch-sec" data-rl-ch="track">
-                    <TrackSignalFeed date={date} affinity={affinity} onOrbitAdded={(domain) => trackRelearn('relearn_orbit_add', { source: 'track', domain })} />
+                    <TrackSignalFeed date={date} affinity={affinity} compact onOrbitAdded={(domain) => trackRelearn('relearn_orbit_add', { source: 'track', domain })} />
                   </div>
                 )}
 
                 {daily?.signal && (
                   <div className="rl-ch-sec" data-rl-ch="signal">
-                    <SignalSection signal={daily.signal} limit={SIGNAL_LIMIT} />
+                    <SignalSection signal={daily.signal} limit={SIGNAL_LIMIT} compact />
                     {(daily.signal.articles || []).length > SIGNAL_LIMIT && (
                       <Link className="rl-more-link" to={`/daily/${date}`}>시그널 전체 보기 →</Link>
                     )}
@@ -432,14 +433,14 @@ export default function ReLearn() {
 
                 {study?.prompt_snippet && (
                   <div className="rl-ch-sec" data-rl-ch="prompt">
-                    <PromptSection study={study} />
+                    <PromptSection study={study} compact />
                     {user && <ChannelOrbitBtn ch="prompt" />}
                   </div>
                 )}
 
                 {study?.sentence_jp && (
                   <div className="rl-ch-sec" data-rl-ch="jp">
-                    <JapaneseSection study={study} />
+                    <JapaneseSection study={study} compact />
                     {user && <ChannelOrbitBtn ch="jp" />}
                   </div>
                 )}

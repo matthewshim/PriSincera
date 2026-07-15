@@ -5,11 +5,14 @@
  * 동작·마크업 동일하게 컴포넌트화. /daily 와 /relearn(배움 채널)이 공용.
  * 스킨(CSS)은 DailyDigest.css 공유.
  */
+import { useState } from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
+import { trackRelearn } from '../relearn/funnel';
 import '../../pages/DailyDigest.css';
 
-export default function JapaneseSection({ study }) {
+export default function JapaneseSection({ study, compact }) {
   const { t } = useTranslation();
+  const [showAllVocab, setShowAllVocab] = useState(false); // compact = 어휘 4개 상한
 
   if (!study?.sentence_jp) return null;
 
@@ -63,7 +66,7 @@ export default function JapaneseSection({ study }) {
           <div className="vocab-section">
             <h3 className="vocab-title">{t('dailyDigest.keyVocab')}</h3>
             <div className="study-vocab-grid">
-              {study.vocabulary.map((v, i) => (
+              {(compact && !showAllVocab ? study.vocabulary.slice(0, 4) : study.vocabulary).map((v, i) => (
                 <div key={i} className="study-vocab-card">
                   <div className="vocab-card-header">
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -87,6 +90,14 @@ export default function JapaneseSection({ study }) {
                 </div>
               ))}
             </div>
+            {compact && !showAllVocab && study.vocabulary.length > 4 && (
+              <button
+                className="rl-expand-btn"
+                onClick={() => { setShowAllVocab(true); trackRelearn('relearn_learn_expand', { block: 'jp_vocab' }); }}
+              >
+                어휘 {study.vocabulary.length - 4}개 더 보기 ▾
+              </button>
+            )}
           </div>
         )}
       </div>

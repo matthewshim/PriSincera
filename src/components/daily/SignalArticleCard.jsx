@@ -8,7 +8,7 @@ import React from 'react';
 import { getCategoryStyles } from './categoryStyles';
 import '../../pages/DailyDigest.css';
 
-const SignalArticleCard = ({ article }) => {
+const SignalArticleCard = ({ article, compact }) => {
   const cardRef = React.useRef(null);
   const [tiltStyle, setTiltStyle] = React.useState({});
 
@@ -48,14 +48,14 @@ const SignalArticleCard = ({ article }) => {
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`signal-article-card premium-3d-card haptic-trigger ${article.isDmPick ? 'dm-featured-card' : ''}`}
+      className={`signal-article-card premium-3d-card haptic-trigger ${article.isDmPick ? 'dm-featured-card' : ''}${compact ? ' compact' : ''}`}
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={tiltStyle}
       data-hover-text="VIEW"
     >
-      {article.og_image && (
+      {!compact && article.og_image && (
         <div className="signal-article-image">
           <img src={article.og_image} alt={article.title} loading="lazy" />
         </div>
@@ -81,7 +81,7 @@ const SignalArticleCard = ({ article }) => {
         </div>
         <h3>{article.title}</h3>
         {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
-        <p>{article.summary}</p>
+        {!compact && <p>{article.summary}</p>}
         <span className="signal-link">원문 읽기 →</span>
       </div>
     </a>

@@ -143,6 +143,10 @@
   background: rgba(34, 211, 238, 0.10);
   box-shadow: 0 0 14px rgba(34, 211, 238, 0.15);
 }
+/* 책갈피 활성색 = 채널 존 컬러와 동기화 */
+.rl-rail-ch.ch-signal.on { border-color: rgba(199, 210, 254, 0.55); background: rgba(199, 210, 254, 0.10); box-shadow: 0 0 14px rgba(199, 210, 254, 0.15); }
+.rl-rail-ch.ch-prompt.on { border-color: rgba(165, 180, 252, 0.55); background: rgba(165, 180, 252, 0.10); box-shadow: 0 0 14px rgba(165, 180, 252, 0.15); }
+.rl-rail-ch.ch-jp.on     { border-color: rgba(229, 178, 93, 0.55);  background: rgba(229, 178, 93, 0.10);  box-shadow: 0 0 14px rgba(229, 178, 93, 0.15); }
 .rl-stage.s2 .rl-marker { border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 22px rgba(165, 180, 252, 0.12); }
 .rl-stage.s3 .rl-marker { border-color: rgba(229, 178, 93, 0.5); box-shadow: 0 0 22px rgba(229, 178, 93, 0.12); }
 .rl-body { padding-bottom: 46px; min-width: 0; }
@@ -165,16 +169,78 @@
 }
 .rl-learn-chip:hover { border-color: var(--glass-border-hover); color: var(--text-secondary); }
 .rl-learn-chip.on { border-color: rgba(34, 211, 238, 0.4); background: rgba(34, 211, 238, 0.08); color: var(--color-cyan); }
-.rl-ch-sec { margin-bottom: 34px; scroll-margin-top: 120px; /* 스티키 GNB 보정 앵커 여백 */ }
-.rl-mini-orbit {
-  margin-top: 10px; padding: 8px 16px; border-radius: var(--radius-pill);
-  border: 1px solid rgba(165, 180, 252, 0.35); background: rgba(165, 180, 252, 0.08);
-  color: var(--color-indigo); font-size: 0.78rem; font-weight: 700;
-  cursor: pointer; transition: background 0.15s; font-family: inherit;
+.rl-learn-chip.ch-signal.on { border-color: rgba(199, 210, 254, 0.4); background: rgba(199, 210, 254, 0.08); color: var(--prism-lavender); }
+.rl-learn-chip.ch-prompt.on { border-color: rgba(165, 180, 252, 0.4); background: rgba(165, 180, 252, 0.08); color: var(--color-indigo); }
+.rl-learn-chip.ch-jp.on     { border-color: rgba(229, 178, 93, 0.4);  background: rgba(229, 178, 93, 0.08);  color: var(--color-gold); }
+/* ── 채널 존(Zoning) — 리디자인 §4: 채널별 액센트 패널로 전환 인지 강화 ── */
+.rl-ch-sec {
+  margin-bottom: 56px; scroll-margin-top: 120px; /* 스티키 GNB 보정 앵커 여백 */
+  padding: 20px 22px 18px;
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--glass-border);
+  border-radius: var(--radius-lg);
 }
-.rl-mini-orbit:hover:not(:disabled) { background: rgba(165, 180, 252, 0.16); }
+.rl-ch-sec[data-rl-ch="track"]  { border-left-color: rgba(34, 211, 238, 0.55);  background: rgba(34, 211, 238, 0.035); }
+.rl-ch-sec[data-rl-ch="signal"] { border-left-color: rgba(199, 210, 254, 0.55); background: rgba(199, 210, 254, 0.035); }
+.rl-ch-sec[data-rl-ch="prompt"] { border-left-color: rgba(165, 180, 252, 0.55); background: rgba(165, 180, 252, 0.035); }
+.rl-ch-sec[data-rl-ch="jp"]     { border-left-color: rgba(229, 178, 93, 0.55);  background: rgba(229, 178, 93, 0.035); }
+.rl-ch-sec .daily-section { margin-bottom: 0; }
+/* 채널 헤더 언더라인 = 채널 컬러 (존 아이덴티티 이중 보강) */
+.rl-ch-sec .daily-section-header { padding-bottom: 10px; margin-bottom: 16px; border-bottom: 1px solid transparent; }
+.rl-ch-sec[data-rl-ch="track"] .daily-section-header  { border-bottom-color: rgba(34, 211, 238, 0.22); }
+.rl-ch-sec[data-rl-ch="signal"] .daily-section-header { border-bottom-color: rgba(199, 210, 254, 0.22); }
+.rl-ch-sec[data-rl-ch="prompt"] .daily-section-header { border-bottom-color: rgba(165, 180, 252, 0.22); }
+.rl-ch-sec[data-rl-ch="jp"] .daily-section-header     { border-bottom-color: rgba(229, 178, 93, 0.22); }
+
+/* ── 시그널 콤팩트 리스트(이미지 제거·1열 행) ── */
+.rl-ch-sec .signal-articles-grid { grid-template-columns: 1fr; gap: 10px; }
+.rl-ch-sec .signal-article-card.compact { padding: 14px 16px; }
+.rl-ch-sec .signal-article-card.compact h3 { font-size: 1rem; margin: 0 0 6px; }
+.rl-ch-sec .signal-article-card.compact .signal-insight {
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* ── 접기(Progressive Disclosure) 공통 ── */
+.rl-fold-summary {
+  cursor: pointer; list-style: none;
+  font-size: 0.82rem; font-weight: 600; color: var(--text-muted);
+  padding: 6px 0; user-select: none;
+}
+.rl-fold-summary::-webkit-details-marker { display: none; }
+.rl-fold-summary::before { content: '▸ '; }
+.rl-fold[open] > .rl-fold-summary::before { content: '▾ '; }
+.rl-fold-summary:hover { color: var(--text-secondary); }
+
+/* ── 프롬프트 스니펫 프리뷰(하단 페이드) + 펼치기 버튼 ── */
+.rl-snippet-collapsed {
+  max-height: 10.5em; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+}
+.rl-expand-btn {
+  display: inline-block; margin: 10px 0 0; padding: 6px 14px;
+  border-radius: var(--radius-pill); border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.02); color: var(--text-secondary);
+  font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+}
+.rl-expand-btn:hover { border-color: var(--glass-border-hover); color: var(--text-primary); }
+/* CTA 문법 통일(리디자인 P4): 트랙 카드의 track-orbit-btn과 동일 비주얼 */
+.rl-mini-orbit {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 14px; padding: 8px 16px; border-radius: var(--radius-pill);
+  border: 1px solid transparent; background: var(--gradient-brand);
+  color: #0E0E1A; font-weight: 700; font-size: 0.85rem;
+  box-shadow: 0 4px 18px rgba(165, 180, 252, 0.18);
+  cursor: pointer; font-family: var(--font-body);
+  transition: all var(--duration-fast) var(--ease-spring);
+}
+.rl-mini-orbit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(165, 180, 252, 0.28); }
+.rl-mini-orbit.added {
+  background: rgba(229, 178, 93, 0.12); border-color: rgba(229, 178, 93, 0.40);
+  color: var(--color-gold); box-shadow: none;
+}
 .rl-mini-orbit:disabled { cursor: default; }
-.rl-mini-orbit.added { border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.08); color: #34D399; }
 .rl-archive-link {
   display: block; text-align: center; margin-top: 6px;
   font-size: 0.8rem; color: var(--text-muted); text-decoration: none;
@@ -288,6 +354,7 @@
 .rl-m-stage-nav { display: none; }
 @media (max-width: 760px) {
   .rl-page { padding: 92px 18px 64px; }
+  .rl-ch-sec { padding: 16px 14px 14px; margin-bottom: 40px; }
   .rl-hero { padding-top: 28px; } /* 92+28 = 표준 모바일 120px 보정 */
   .rl-hero-title { font-size: 2.2rem; } /* daily-title 모바일 규격 일치 */
   .rl-stages { grid-template-columns: 1fr; }

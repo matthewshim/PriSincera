@@ -8,7 +8,7 @@ import SignalArticleCard from './SignalArticleCard';
 import '../../pages/DailyDigest.css';
 
 // limit(옵션): 표시할 아티클 상한 — ReLearn 배움 채널의 스크롤 피로 축소용. 미지정 시 전체(/daily 기존 동작).
-export default function SignalSection({ signal, limit }) {
+export default function SignalSection({ signal, limit, compact }) {
   if (!signal) return null;
 
   const sorted = [...(signal.articles || [])].sort((a, b) => {
@@ -29,6 +29,7 @@ export default function SignalSection({ signal, limit }) {
           <SignalArticleCard
             key={idx}
             article={article}
+            compact={compact}
           />
         ))}
       </div>

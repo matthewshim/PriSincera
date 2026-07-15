@@ -7,11 +7,13 @@
  */
 import { useState } from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
+import { trackRelearn } from '../relearn/funnel';
 import '../../pages/DailyDigest.css';
 
-export default function PromptSection({ study }) {
+export default function PromptSection({ study, compact }) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const [expanded, setExpanded] = useState(!compact); // compact = 스니펫 프리뷰 접힘
 
   if (!study?.prompt_snippet) return null;
 
@@ -44,9 +46,17 @@ export default function PromptSection({ study }) {
           </button>
         </div>
         <div className="terminal-body">
-          <div className="study-snippet-container">
+          <div className={`study-snippet-container${expanded ? '' : ' rl-snippet-collapsed'}`}>
             <pre className="study-snippet"><code>{study.prompt_snippet}</code></pre>
           </div>
+          {!expanded && (
+            <button
+              className="rl-expand-btn"
+              onClick={() => { setExpanded(true); trackRelearn('relearn_learn_expand', { block: 'prompt_snippet' }); }}
+            >
+              프롬프트 전체 보기 ▾
+            </button>
+          )}
           {study.explanation && <div className="study-kr">{study.explanation}</div>}
           {study.business_context && (
             <div className="signal-insight ai-insight">
@@ -54,9 +64,8 @@ export default function PromptSection({ study }) {
               <p>{study.business_context}</p>
             </div>
           )}
-          {study.parameters && study.parameters.length > 0 && (
-            <div className="prompt-params-container">
-              <div className="params-header">{t('dailyDigest.promptParams')}</div>
+          {study.parameters && study.parameters.length > 0 && (() => {
+            const paramsTable = (
               <div className="params-table">
                 <div className="params-table-header">
                   <span className="col-name">{t('dailyDigest.paramNameCol')}</span>
@@ -71,8 +80,26 @@ export default function PromptSection({ study }) {
                   ))}
                 </div>
               </div>
-            </div>
-          )}
+            );
+            return (
+              <div className="prompt-params-container">
+                {compact ? (
+                  <details
+                    className="rl-fold"
+                    onToggle={(e) => e.currentTarget.open && trackRelearn('relearn_learn_expand', { block: 'prompt_params' })}
+                  >
+                    <summary className="rl-fold-summary">{t('dailyDigest.promptParams')} 보기</summary>
+                    {paramsTable}
+                  </details>
+                ) : (
+                  <>
+                    <div className="params-header">{t('dailyDigest.promptParams')}</div>
+                    {paramsTable}
+                  </>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

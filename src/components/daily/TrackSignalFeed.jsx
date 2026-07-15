@@ -7,7 +7,9 @@
  * 스타일: PriSincera Design System v5.0 정합 (TrackSignalFeed.css, Celestial/Cyan 토큰).
  */
 import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { trackRelearn } from '../relearn/funnel';
 import './TrackSignalFeed.css';
 
 const TRACKS = [
@@ -26,7 +28,7 @@ const DOMAIN_LABEL = Object.fromEntries(DOMAINS.map(d => [d.key, d.label]));
 
 // affinity(옵션): 셸(ReLearn)이 1회 페치한 domainAffinity 주입용 — 제공 시 자체 profile 페치 생략
 // onOrbitAdded(옵션): 궤도 추가 성공 시 콜백 — ReLearn 퍼널 계측용(/daily에선 미전달)
-export default function TrackSignalFeed({ date, affinity: externalAffinity, onOrbitAdded }) {
+export default function TrackSignalFeed({ date, affinity: externalAffinity, onOrbitAdded, compact }) {
   const { user, token } = useAuth();
   const [track, setTrack] = useState('junior');
   const [feed, setFeed] = useState(null);
@@ -191,8 +193,8 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
         </button>
       )}
 
-      {/* 카드 목록 (C3) */}
-      {!loading && !error && cards.map(card => {
+      {/* 카드 목록 (C3) — compact(ReLearn 배움)에서는 상위 3개 + 전체 보기 링크 */}
+      {!loading && !error && (compact ? cards.slice(0, 3) : cards).map(card => {
         const baseId = card.action_challenge?.id ? `orbit-${card.action_challenge.id}` : null;
         const isAdded = !!(baseId && addedBaseIds.has(baseId));
         const st = isAdded ? 'added' : orbitState[card.id];
@@ -201,7 +203,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
             <div className="track-card-meta">
               <span className="track-card-domain">{DOMAIN_LABEL[card.domain] || card.domain}</span>
               {myDomains.has(card.domain) && <span className="track-card-mine">🧭 내 궤도</span>}
-              {(card.tags || []).slice(0, 5).map(tag => (
+              {(card.tags || []).slice(0, compact ? 2 : 5).map(tag => (
                 <span key={tag} className="track-card-tag">#{tag}</span>
               ))}
             </div>
@@ -209,28 +211,57 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
             <h3 className="track-card-title">{card.title}</h3>
             <p className="track-card-summary">{card.summary}</p>
 
-            {/* 📚 학습 레이어 (개념 + 핵심 포인트) — 실전 전에 먼저 배운다 */}
+            {/* 📚 학습 레이어 (개념 + 핵심 포인트) — compact에서는 접힘(Progressive Disclosure) */}
             {card.learning && (card.learning.concept || (card.learning.key_points || []).length > 0) && (
-              <div className="track-learning">
-                <div className="track-learning-label">📚 학습</div>
-                {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
-                {(card.learning.key_points || []).length > 0 && (
-                  <ul className="track-learning-points">
-                    {card.learning.key_points.map((p, i) => <li key={i}>{p}</li>)}
-                  </ul>
-                )}
-              </div>
+              compact ? (
+                <details
+                  className="track-learning rl-fold"
+                  onToggle={(e) => e.currentTarget.open && trackRelearn('relearn_learn_expand', { block: 'track_learning' })}
+                >
+                  <summary className="rl-fold-summary">📚 학습 포인트 보기</summary>
+                  {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
+                  {(card.learning.key_points || []).length > 0 && (
+                    <ul className="track-learning-points">
+                      {card.learning.key_points.map((p, i) => <li key={i}>{p}</li>)}
+                    </ul>
+                  )}
+                </details>
+              ) : (
+                <div className="track-learning">
+                  <div className="track-learning-label">📚 학습</div>
+                  {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
+                  {(card.learning.key_points || []).length > 0 && (
+                    <ul className="track-learning-points">
+                      {card.learning.key_points.map((p, i) => <li key={i}>{p}</li>)}
+                    </ul>
+                  )}
+                </div>
+              )
             )}
 
             {/* 🎯 action_challenge 미리보기 + 오빗 추가 (C4) */}
             {card.action_challenge && (
               <div className="track-challenge">
                 <div className="track-challenge-title">🎯 {card.action_challenge.title}</div>
-                <ol className="track-challenge-tasks">
-                  {(card.action_challenge.tasks || []).map(tk => (
-                    <li key={tk.seq}>{tk.text}</li>
-                  ))}
-                </ol>
+                {compact ? (
+                  <details
+                    className="rl-fold"
+                    onToggle={(e) => e.currentTarget.open && trackRelearn('relearn_learn_expand', { block: 'track_tasks' })}
+                  >
+                    <summary className="rl-fold-summary">할 일 {(card.action_challenge.tasks || []).length}개 보기</summary>
+                    <ol className="track-challenge-tasks">
+                      {(card.action_challenge.tasks || []).map(tk => (
+                        <li key={tk.seq}>{tk.text}</li>
+                      ))}
+                    </ol>
+                  </details>
+                ) : (
+                  <ol className="track-challenge-tasks">
+                    {(card.action_challenge.tasks || []).map(tk => (
+                      <li key={tk.seq}>{tk.text}</li>
+                    ))}
+                  </ol>
+                )}
                 <button
                   className={`track-orbit-btn haptic-trigger ${st || ''}`}
                   onClick={() => addOrbit(card)}
@@ -253,6 +284,16 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
 
       {!loading && !error && cards.length === 0 && (
         <div className="track-status">해당 도메인의 카드가 없습니다.</div>
+      )}
+
+      {compact && !loading && !error && cards.length > 3 && (
+        <Link
+          className="rl-more-link"
+          to={`/daily/${date}`}
+          onClick={() => trackRelearn('relearn_learn_more', { channel: 'track' })}
+        >
+          트랙 시그널 전체 보기 →
+        </Link>
       )}
     </div>
   );
