@@ -32,11 +32,11 @@ const CHANNEL_ORBITS = {
 };
 
 const LEARN_CHANNELS = [
-  { key: 'track', label: '🛰️ 테크 트랙' },
-  { key: 'signal', label: '📡 시그널' },
-  { key: 'prompt', label: '🤖 프롬프트' },
-  { key: 'jp', label: '🇯🇵 어학' },
-  { key: 'all', label: '전체' },
+  { key: 'track', icon: '🛰️', label: '테크 트랙' },
+  { key: 'signal', icon: '📡', label: '시그널' },
+  { key: 'prompt', icon: '🤖', label: '프롬프트' },
+  { key: 'jp', icon: '🇯🇵', label: '어학' },
+  { key: 'all', icon: '≡', label: '전체' },
 ];
 
 // ReLearn 배움 채널의 시그널 표시 상한 (전체는 /daily 아카이브에서)
@@ -149,6 +149,11 @@ export default function ReLearn() {
 
   const study = daily?.study;
   const isChannel = (k) => channel === 'all' || channel === k;
+  const selectChannel = (key) => {
+    setChannel(key);
+    // 깊이 스크롤된 상태에서 채널 전환 시 배움 상단으로 복귀
+    document.getElementById('rl-learn')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="rl-page">
@@ -197,24 +202,32 @@ export default function ReLearn() {
 
             {/* ════ ① 배움 ════ */}
             <section className="rl-stage s1">
-              <div className="rl-marker" aria-hidden="true">📡</div>
+              {/* 좌측 레일 2뎁스: ① 마커 + 채널 서브 앵커 (콘텐츠를 덮지 않는 책갈피) */}
+              <div className="rl-marker-group">
+                <div className="rl-marker" aria-hidden="true">📚</div>
+                <div className="rl-rail-subnav" role="group" aria-label="배움 채널 책갈피">
+                  {LEARN_CHANNELS.map(c => (
+                    <button
+                      key={c.key}
+                      className={`rl-rail-ch ${channel === c.key ? 'on' : ''}`}
+                      title={c.label}
+                      aria-label={c.label}
+                      onClick={() => selectChannel(c.key)}
+                    >
+                      {c.icon}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div className="rl-body" id="rl-learn">
                 <div className="rl-stage-head"><span className="rl-stage-no">STAGE 01</span><h2 className="rl-stage-title">배움 — 오늘의 다이제스트</h2></div>
                 <p className="rl-stage-desc">Daily Digest 4채널 전체가 이곳으로. 로그인하면 내 궤도 도메인이 상단에 정렬됩니다.</p>
 
-                {/* 스티키 책갈피: 스크롤 중에도 상단 고정 — 채널 즉시 점프 */}
-                <div className="rl-learn-chips" role="group" aria-label="배움 채널 책갈피">
+                {/* 모바일 전용 채널 칩 (레일이 숨는 폭에서만 노출, 비스티키) */}
+                <div className="rl-learn-chips" role="group" aria-label="배움 채널">
                   {LEARN_CHANNELS.map(c => (
-                    <button
-                      key={c.key}
-                      className={`rl-learn-chip ${channel === c.key ? 'on' : ''}`}
-                      onClick={() => {
-                        setChannel(c.key);
-                        // 깊이 스크롤된 상태에서 채널 전환 시 배움 상단으로 복귀
-                        document.getElementById('rl-learn')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }}
-                    >
-                      {c.label}
+                    <button key={c.key} className={`rl-learn-chip ${channel === c.key ? 'on' : ''}`} onClick={() => selectChannel(c.key)}>
+                      {c.icon} {c.label}
                     </button>
                   ))}
                 </div>
