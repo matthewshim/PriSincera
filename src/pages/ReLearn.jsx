@@ -269,10 +269,12 @@ export default function ReLearn() {
     <div className="rl-page">
       {/* ── 히어로 ── */}
       <header className="rl-hero">
-        <div className="rl-hero-icon">🔄</div>
+        <div className="rl-hero-icon">🪐</div>
         <h1 className="rl-hero-title">ReLearn</h1>
         <p className="rl-hero-tagline">
-          매일 제로에서, 다시 배우고 다시 달린다 — Learn from zero, run again.
+          매일 제로에서, 다시 배우고 다시 달린다
+          <br />
+          Learn from zero, run again.
         </p>
         <div className="rl-hero-chips" aria-label="루프 3단계">
           <span className="rl-hero-chip c1">① 배움 · Learn</span>
