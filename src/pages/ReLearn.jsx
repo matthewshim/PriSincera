@@ -62,7 +62,7 @@ export default function ReLearn() {
     setShowOnboard(false);
     try { localStorage.setItem('relearn_onboarded_v1', '1'); } catch { /* 무시 */ }
   };
-  // 스크롤 피로 축소: 단일 채널 노출(기본 트랙 — 개인화 렌즈 적용 채널). 스크롤 완독 시 자동으로 다음 채널로 순환.
+  // 배움 4채널은 연속 스택으로 렌더하고, 좌측 2뎁스는 스크롤스파이 책갈피로 현재 위치를 하이라이트한다.
   const [channel, setChannel] = useState('track');
   const [daily, setDaily] = useState(null);             // 오늘의 daily JSON (signal+study)
   const [dailyError, setDailyError] = useState(null);
@@ -229,51 +229,42 @@ export default function ReLearn() {
   }, [data]);
 
   const study = daily?.study;
-  const isChannel = (k) => channel === k;
+  // 채널 책갈피 클릭 = 해당 채널 섹션으로 앵커 스크롤 (콘텐츠는 항상 연속 스택)
   const selectChannel = (key) => {
     setChannel(key);
     trackRelearn('relearn_channel_select', { channel: key });
-    // 깊이 스크롤된 상태에서 채널 전환 시 배움 상단으로 복귀
-    document.getElementById('rl-learn')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelector(`[data-rl-ch="${key}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  // ── 레일 스크롤스파이 + 배움 채널 자동 전환 ──
-  // ① 현재 스테이지 감지: ②실행·③복기 구간에서는 배움 2뎁스(채널 책갈피)를 비노출
-  // ② 아래로 스크롤 중 배움 콘텐츠 하단이 뷰포트 60% 선 위로 지나가면(완독) 다음 채널로 자동 이동
+  // ── 레일 스크롤스파이(책갈피) ──
+  // ① 스테이지 감지: ②실행·③복기 구간에서는 배움 2뎁스 비노출
+  // ② 채널 감지: 기준선(뷰포트 상단 260px)을 지난 마지막 채널 섹션을 활성 표시
+  //    — 콘텐츠 교체/강제 스크롤 없음: 내리면 다음, 올리면 이전 책갈피가 자연히 켜진다
   const [stageInView, setStageInView] = useState(1);
   useEffect(() => {
     if (view !== 'today') return;
-    let lastY = window.scrollY;
-    let cooldownUntil = 0;
-    const keys = LEARN_CHANNELS.map(c => c.key);
+    let raf = 0;
     const onScroll = () => {
-      const y = window.scrollY;
-      const down = y > lastY;
-      lastY = y;
-      const learn = document.getElementById('rl-learn');
-      const run = document.getElementById('rl-run');
-      const reflect = document.getElementById('rl-reflect');
-      if (!learn) return;
-      const line = y + 180; // 스티키 마커(120px) 아래 활성 기준선
-      let stage = 1;
-      if (reflect && reflect.offsetTop <= line) stage = 3;
-      else if (run && run.offsetTop <= line) stage = 2;
-      setStageInView(stage);
-      if (!down || stage !== 1 || Date.now() < cooldownUntil) return;
-      const learnBottom = learn.offsetTop + learn.offsetHeight;
-      if (learnBottom < y + window.innerHeight * 0.6) {
-        const i = keys.indexOf(channel);
-        if (i > -1 && i < keys.length - 1) {
-          cooldownUntil = Date.now() + 1400; // 연쇄 전환 방지
-          setChannel(keys[i + 1]);
-          trackRelearn('relearn_channel_autoadvance', { channel: keys[i + 1] });
-          document.getElementById('rl-learn')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const runTop = document.getElementById('rl-run')?.getBoundingClientRect().top ?? Infinity;
+        const refTop = document.getElementById('rl-reflect')?.getBoundingClientRect().top ?? Infinity;
+        let stage = 1;
+        if (refTop <= 200) stage = 3;
+        else if (runTop <= 200) stage = 2;
+        setStageInView(stage);
+        let act = null;
+        document.querySelectorAll('[data-rl-ch]').forEach(s => {
+          if (s.getBoundingClientRect().top <= 260) act = s.dataset.rlCh;
+        });
+        if (act) setChannel(prev => (prev === act ? prev : act));
+      });
     };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [view, channel]);
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, [view]);
 
   // ── GA4 퍼널 (Phase D): learn_view → orbit_add → complete_toggle → reflect_save ──
   useEffect(() => { trackRelearn('relearn_learn_view'); }, []);
@@ -423,14 +414,14 @@ export default function ReLearn() {
 
                 {dailyError && !daily && <div className="rl-status">{dailyError}</div>}
 
-                {isChannel('track') && (
-                  <div className="rl-ch-sec">
+                {(
+                  <div className="rl-ch-sec" data-rl-ch="track">
                     <TrackSignalFeed date={date} affinity={affinity} onOrbitAdded={(domain) => trackRelearn('relearn_orbit_add', { source: 'track', domain })} />
                   </div>
                 )}
 
-                {isChannel('signal') && daily?.signal && (
-                  <div className="rl-ch-sec">
+                {daily?.signal && (
+                  <div className="rl-ch-sec" data-rl-ch="signal">
                     <SignalSection signal={daily.signal} limit={SIGNAL_LIMIT} />
                     {(daily.signal.articles || []).length > SIGNAL_LIMIT && (
                       <Link className="rl-more-link" to={`/daily/${date}`}>시그널 전체 보기 →</Link>
@@ -439,15 +430,15 @@ export default function ReLearn() {
                   </div>
                 )}
 
-                {isChannel('prompt') && study?.prompt_snippet && (
-                  <div className="rl-ch-sec">
+                {study?.prompt_snippet && (
+                  <div className="rl-ch-sec" data-rl-ch="prompt">
                     <PromptSection study={study} />
                     {user && <ChannelOrbitBtn ch="prompt" />}
                   </div>
                 )}
 
-                {isChannel('jp') && study?.sentence_jp && (
-                  <div className="rl-ch-sec">
+                {study?.sentence_jp && (
+                  <div className="rl-ch-sec" data-rl-ch="jp">
                     <JapaneseSection study={study} />
                     {user && <ChannelOrbitBtn ch="jp" />}
                   </div>
