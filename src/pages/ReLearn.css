@@ -44,6 +44,26 @@
 }
 .rl-hero-cta:hover { background: rgba(229, 178, 93, 0.2); box-shadow: 0 4px 24px rgba(229, 178, 93, 0.15); }
 
+/* ── 온보딩 배너 (첫 방문 1-스텝) ── */
+.rl-onboard-banner {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin: 0 0 20px; padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.06), rgba(165, 180, 252, 0.05));
+}
+.rl-onboard-icon { font-size: 1.1rem; flex-shrink: 0; }
+.rl-onboard-text { flex: 1; min-width: 240px; font-size: 0.84rem; color: var(--text-secondary); line-height: 1.65; }
+.rl-onboard-text strong { color: var(--text-primary); }
+.rl-onboard-text b { color: var(--color-indigo); font-weight: 600; }
+.rl-onboard-close {
+  padding: 7px 14px; border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border); background: transparent;
+  color: var(--text-muted); font-size: 0.76rem; font-weight: 600;
+  cursor: pointer; font-family: inherit; white-space: nowrap; transition: all 0.15s;
+}
+.rl-onboard-close:hover { border-color: var(--glass-border-hover); color: var(--text-secondary); }
+
 /* ── 뷰 전환 ── */
 .rl-view-tabs { display: flex; justify-content: center; gap: 6px; margin: 0 0 26px; }
 .rl-view-tab {
