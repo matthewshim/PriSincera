@@ -27,7 +27,7 @@ target_files:
 
 ```
 ┌─────────────────────────── 사용자(브라우저) ───────────────────────────┐
-│  React + Vite SPA   /daily  /pacenote  /builderslog  /sylphio  /admin   │
+│  React + Vite SPA  /relearn  /daily  /pacenote  /builders-log  /sylphio  /admin │
 └───────────────────────────────┬─────────────────────────────────────────┘
                                  │ HTTPS (Cloudflare CDN)
 ┌────────────────────────────────▼─────────────────────────────────────────┐

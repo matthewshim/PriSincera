@@ -1,9 +1,10 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-24
-version: v1.0
+last_updated: 2026-07-15
+version: v1.1
 target_files:
+  - src/pages/ReLearn.jsx
   - src/pages/DailyDigest.jsx
   - src/pages/PaceNoteDashboard.jsx
   - src/pages/BuildersLog.jsx
@@ -19,6 +20,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-24 | AI Agent | 서비스 전체 개요·제품 포트폴리오·성장 플라이휠 최초 정의 | Service |
+| v1.1 | 2026-07-15 | AI Agent | **ReLearn 출시 반영** — 통합 성장 루프 서비스(`/relearn`) 포트폴리오 등재. Daily Digest·PaceNote는 전환기 병존 후 리런으로 승계 예정([relearn/product_strategy](../relearn/product_strategy.md) §4·§5-1) | Service, ReLearn |
 
 ---
 
@@ -32,8 +34,9 @@ target_files:
 
 | 제품 | 경로 | 핵심 가치 | 성격 |
 | :--- | :--- | :--- | :--- |
-| **Daily Digest** | `/daily` | 매일 아침 큐레이션된 IT 시그널·AI 프롬프트·어학·테크 트랙 | 배움(Input) |
-| **PaceNote** | `/pacenote` | 주간 실행 궤도(Orbit) + 회고(항해 일지) | 실행·복기(Action·Feedback) |
+| **🆕 ReLearn** | `/relearn` | **배움→실행→복기 통합 성장 루프** — 다이제스트 4채널 + 궤도 + 회고 + 기록을 한 여정으로. "매일 제로에서, 다시 배우고 다시 달린다" | **통합(Loop)** — 아래 두 서비스의 **승계자** |
+| Daily Digest | `/daily` | 매일 아침 큐레이션된 IT 시그널·AI 프롬프트·어학·테크 트랙 | 배움(Input) — *전환기 병존, 리런으로 승계 예정* |
+| PaceNote | `/pacenote` | 주간 실행 궤도(Orbit) + 회고(항해 일지) | 실행·복기 — *전환기 병존, 리런으로 승계 예정* |
 | **Builder's Log** | `/builderslog` | 제작 과정을 투명 공개하는 정적 CMS 블로그 | 브랜딩 |
 | **Sylphio** | `/sylphio` | 온디바이스 AI 동시통역 비서(별도 데스크톱 제품) | 확장 제품 |
 | **Admin** | `/admin` | 콘텐츠/파이프라인/구독/문서 관리 대시보드 | 내부 운영 |
@@ -57,6 +60,8 @@ target_files:
        ▲                                                              │
        └───────────────  다음 주 개인화 피드(키워드 가중치)  ◀──────────┘
 ```
+
+> **2026-07 현재**: 이 플라이휠은 두 층으로 구현되어 있다 — ① **데이터 층**은 성장 루프([growth_loop_plan](../pacenote/growth_loop_plan.md), Phase 0~4 가동 중: 완료/회고 신호 → 추천·다이제스트 렌즈 환류), ② **화면 층**은 **ReLearn**(`/relearn`)이 배움·실행·복기를 단일 여정으로 표면화. 상세: [relearn/product_strategy](../relearn/product_strategy.md) · [relearn/ui_specification](../relearn/ui_specification.md).
 
 ## 4. 비즈니스 모델 (요약)
 - 무료(Free) + 일부 PRO/구독, 데스크톱 앱은 **BYOK(사용자 API Key)** 로 AI 원가화.
