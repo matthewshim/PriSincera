@@ -192,24 +192,41 @@
 .rl-ch-sec[data-rl-ch="jp"] .daily-section-header     { border-bottom-color: rgba(229, 178, 93, 0.22); }
 
 /* ── 시그널 콤팩트(이미지 제거·2열 그리드 — 가로 폭 활용) ── */
-.rl-ch-sec .signal-articles-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.rl-ch-sec .signal-articles-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } /* 카드 그리드 gap 14px 통일(§9-3) */
 .rl-ch-sec .signal-article-card.compact h3 { font-size: var(--fs-100); margin: 0 0 6px; }
 /* 인사이트는 클램프 없이 전체 노출 (정보 잘림 방지) */
 
-/* ── 카드 규격 통일: 내부 여백 18px·호버 translateY(-2px)+보더 ── */
+/* ── 카드 2계층 규격 (design_system.md §9-3 v5.3) ──
+   리스트형(트랙·시그널·어휘): 실효 패딩 18px·radius-md·공통 표면
+   컨테이너형(터미널·어학):    실효 패딩 24px·radius-lg·고유 스킨 유지 */
+
+/* 리스트형 — 실효 패딩 18px (시그널은 루트 0 + body 18로 이중 패딩 방지) */
+.rl-ch-sec .track-card,
+.rl-ch-sec .study-vocab-card {
+  padding: 18px;
+}
+.rl-ch-sec .signal-article-card.compact { padding: 0; }
+.rl-ch-sec .signal-article-card.compact .signal-article-body { padding: 18px; }
+
+/* 리스트형 — 공통 표면(배경·보더·그림자) */
 .rl-ch-sec .track-card,
 .rl-ch-sec .signal-article-card.compact,
 .rl-ch-sec .study-vocab-card {
-  padding: 18px;
+  background: rgba(255, 255, 255, 0.015);
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
   transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
 }
+
+/* 컨테이너형 — 어학 카드 실효 패딩 32px→24px 정렬(터미널 body는 이미 24px) */
+.rl-ch-sec .japanese-study-card { padding: 24px; }
+
+/* 호버 단일 규격: transform+보더만 변화, 기본 그림자·배경 유지(§9-3) */
 .rl-ch-sec .track-card:hover,
 .rl-ch-sec .signal-article-card.compact:hover,
 .rl-ch-sec .study-vocab-card:hover {
   transform: translateY(-2px);
   border-color: var(--glass-border-hover);
-  background: rgba(255, 255, 255, 0.02);
-  box-shadow: none;
 }
 
 /* ── 접기(Progressive Disclosure) 공통 ── */
