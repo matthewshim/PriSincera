@@ -230,6 +230,28 @@ export default function ReLearn() {
   }, [data]);
 
   const study = daily?.study;
+
+  // ── 기록 내보내기(.md) — PaceNote 포트폴리오 내보내기의 리런 자체화(Phase 1) ──
+  const exportRecords = () => {
+    const tt = (v) => (typeof v === 'object' ? v.ko : v);
+    const lines = ['# ReLearn 항해 기록 (Voyage Log)', '', `내보낸 날짜: ${todayKST()}`, ''];
+    records.forEach(w => {
+      lines.push(`## ${w.weekId}${w.startDate ? ` (${w.startDate} – ${w.endDate || ''})` : ''}${w.inProgress ? ' · 진행 중' : ''}`);
+      const done = w.tasks || [];
+      lines.push(`완료한 궤도 ${done.length}개${w.total ? ` / 전체 ${w.total}개` : ''}`);
+      done.forEach(t2 => lines.push(`- [x] ${tt(t2.title)}`));
+      if (done.length === 0) lines.push('- (완료된 궤도 없음)');
+      lines.push('', '### 복기', w.statement ? `> ${w.statement}` : '> (회고 없음)', '');
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `relearn-voyage-log-${todayKST()}.md`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    trackRelearn('relearn_export_records');
+  };
+
   // 채널 책갈피 클릭 = 해당 채널 섹션으로 앵커 스크롤 (콘텐츠는 항상 연속 스택)
   const selectChannel = (key) => {
     setChannel(key);
@@ -430,7 +452,7 @@ export default function ReLearn() {
                     <div className="rl-ch-foot">
                       {user && <ChannelOrbitBtn ch="signal" />}
                       {(daily.signal.articles || []).length > SIGNAL_LIMIT && (
-                        <Link className="rl-more-link" to={`/daily/${date}`}>시그널 전체 보기 →</Link>
+                        <Link className="rl-more-link" to={`/relearn/daily/${date}`}>시그널 전체 보기 →</Link>
                       )}
                     </div>
                   </div>
@@ -461,7 +483,7 @@ export default function ReLearn() {
                     {archiveDates === null && <span className="rl-archive-empty">불러오는 중…</span>}
                     {archiveDates?.length === 0 && <span className="rl-archive-empty">아카이브가 비어 있어요.</span>}
                     {archiveDates?.map(d => (
-                      <Link key={d} className="rl-archive-date" to={`/daily/${d}`}>{d}</Link>
+                      <Link key={d} className="rl-archive-date" to={`/relearn/daily/${d}`}>{d}</Link>
                     ))}
                   </div>
                 )}
@@ -518,7 +540,11 @@ export default function ReLearn() {
           ) : records.length === 0 ? (
             <div className="rl-status">아직 기록이 없어요 — 오늘 뷰에서 첫 궤도를 완료해 보세요.</div>
           ) : (
-            records.map(w => (
+            <>
+              <div className="rl-rec-toolbar">
+                <button className="rl-expand-btn" onClick={exportRecords}>📥 기록 내보내기 (.md)</button>
+              </div>
+              {records.map(w => (
               <article key={w.weekId} className="rl-card rl-rec-week">
                 <div className="rl-rec-head">
                   <span className="rl-rec-id">{w.weekId}</span>
@@ -544,7 +570,8 @@ export default function ReLearn() {
                   ? <div className="rl-rec-reflect"><span className="rl-rec-lb">복기</span>{w.statement}</div>
                   : <div className="rl-rec-noreflect">이 주는 회고가 남지 않았어요.</div>}
               </article>
-            ))
+              ))}
+            </>
           )}
         </section>
       )}

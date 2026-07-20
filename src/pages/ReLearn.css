@@ -372,6 +372,8 @@
 .rl-rec-mk { color: #34D399; font-size: var(--fs-075); flex-shrink: 0; }
 .rl-rec-t { flex: 1; }
 .rl-rec-none { font-size: var(--fs-080); color: var(--text-muted); font-style: italic; padding: 4px 2px; }
+.rl-rec-toolbar { display: flex; justify-content: flex-end; margin-bottom: 14px; }
+.rl-rec-toolbar .rl-expand-btn { margin: 0; }
 .rl-rec-reflect {
   margin-top: 10px; padding: 11px 14px; border-radius: 0 10px 10px 0;
   border-left: 3px solid var(--color-gold); background: rgba(229, 178, 93, 0.05);

@@ -291,7 +291,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
       {compact && !loading && !error && cards.length > 4 && (
         <Link
           className="rl-more-link"
-          to={`/daily/${date}`}
+          to={`/relearn/daily/${date}`}
           onClick={() => trackRelearn('relearn_learn_more', { channel: 'track' })}
         >
           트랙 시그널 전체 보기 →

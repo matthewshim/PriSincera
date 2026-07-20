@@ -1,0 +1,17 @@
+/* ReLearnDaily — 아카이브 상세 헤더 (존 스킨·폭·타이포는 ReLearn.css/토큰 재사용) */
+.rl-daily-head { padding: 6px 0 28px; }
+.rl-daily-back {
+  font-size: var(--fs-085); color: var(--text-muted); text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.rl-daily-back:hover { color: var(--text-secondary); }
+.rl-daily-title {
+  font-family: var(--font-display); font-size: var(--fs-150); font-weight: 700;
+  color: var(--text-primary); margin: 12px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+.rl-daily-title span {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.rl-daily-sub { font-size: var(--fs-090); color: var(--text-muted); margin: 0; }
