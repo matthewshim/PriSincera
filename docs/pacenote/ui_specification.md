@@ -1,5 +1,5 @@
 ---
-status: active
+status: archived
 domain: PaceNote
 last_updated: 2026-06-24
 version: v1.5
@@ -13,6 +13,8 @@ target_files:
 ---
 
 # 📐 PaceNote UI 명세서 (Bento Calendar)
+
+> 🗄️ **[ARCHIVED — ReLearn 통합]** 본 문서가 규정하던 /pacenote 페이지 UI는 2026-07-20 ReLearn으로 통합·비공개되었습니다. 궤도·회고 기능은 ReLearn 실행·복기 스테이지가 승계했습니다(usePaceNoteData·Data Contract v2).
 
 ## 📝 Revision History
 

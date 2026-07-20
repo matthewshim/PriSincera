@@ -1,8 +1,6 @@
 {
   "header": {
     "buildersLog": "Builder's Log",
-    "dailyDigest": "Daily Digest",
-    "paceNote": "Pace Note",
     "sylphio": "Sylphio",
     "sylphioAlert": "Oops, not yet! 🙈\n\nSylphio, the wind spirit, is working hard on preparing for its debut.\nIt will bring some magical features soon, so please stay tuned! 🍃✨"
   },
@@ -73,10 +71,6 @@
     "serviceBaseCta": "⚡ Explore Open Source & System Architecture",
     "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
     "serviceBuildersCta": "🚀 Read Development Journey & Engineering Growth Stories",
-    "serviceDailyDesc": "5 minutes a day, IT trend insights, AI prompts, and even business Japanese.\nIn the flood of information, we gather only the necessary signals and deliver them every morning.",
-    "serviceDailyCta": "✨ Free Subscription to Daily Digest in 5 Minutes",
-    "servicePaceDesc": "A micro action tracker that eases your anxiety and helps you build your own orbit.\nTurn daily small insights into actionable tasks, and record steady growth.",
-    "servicePaceCta": "⛵ Log in in 3 Seconds & Create Your Orbit",
     "serviceSylphioDesc": "An AI real-time translation app that captures all screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nFlawlessly experience the powerful multilingual intelligence of Gemini and GPT in a native Mac environment.",
     "serviceSylphioCta": "🍃 Meet Sylphio, the Real-Time AI Translator",
     "connectTitle": "Let's ",

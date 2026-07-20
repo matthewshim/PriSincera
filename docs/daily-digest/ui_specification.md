@@ -1,5 +1,5 @@
 ---
-status: active
+status: archived
 domain: DailyDigest
 last_updated: 2026-06-23
 version: v1.1
@@ -12,6 +12,8 @@ target_files:
 ---
 
 # 📐 Daily Digest UI 명세서 (Chrono-Calendar)
+
+> 🗄️ **[ARCHIVED — ReLearn 통합]** 본 문서가 규정하던 /daily 페이지 UI는 2026-07-20 ReLearn으로 통합·비공개되었습니다. 채널 콘텐츠 규격은 공용 컴포넌트(Signal/Prompt/Japanese/Track)로 승계되어 ReLearn이 소비합니다.
 
 ## 📝 Revision History
 

@@ -1,8 +1,6 @@
 {
   "header": {
     "buildersLog": "Builder's Log",
-    "dailyDigest": "Daily Digest",
-    "paceNote": "Pace Note",
     "sylphio": "Sylphio",
     "sylphioAlert": "おっと、まだ準備中ですよ！ 🙈\n\n風の精霊 Sylphio がデビューに向けて一生懸命準備しています。\n間もなく魔法のような驚きの機能でお会いできるので、少々お待ちください！ 🍃✨"
   },
@@ -73,10 +71,6 @@
     "serviceBaseCta": "⚡ オープンソースとシステムアーキテクチャを見る",
     "serviceBuildersDesc": "Vibe codingとGCPサーバーレスを基盤に設計を進めるPriSinceraの執拗な開発旅路です。\n難易度の高いバックエンドのトラブルシューティング、AIパイプライン拡張記、セキュリティ監査など、生々しい成長の記録をリアルタイムで共有します。",
     "serviceBuildersCta": "🚀 開発プロセスとエンジニアリング成長記を読む",
-    "serviceDailyDesc": "1日5分、ITトレンドのインサイトからAIプロンプト、ビジネス日本語の学習まで。\n情報の洪水の中で、本当に必要なシグナルだけを集めて毎朝お届けします。",
-    "serviceDailyCta": "✨ 1日5分、ダイジェストを無料購読",
-    "servicePaceDesc": "焦りを和らげ、自分だけの軌道（Pace）を創り出すマイクロ行動トラッカー。\n日々の小さな気づきを実行可能なタスクに変え、ブレない成長を記録しましょう。",
-    "servicePaceCta": "⛵ 3秒でログインして自分だけの軌道を創る",
     "serviceSylphioDesc": "画面上のすべての音声とマイク入力をリアルタイムでキャプチャし、オンデバイスで遅延なく字幕を表示するAIリアルタイム通訳アプリです。\nGeminiとGPTの強力な多言語インテリジェンスをMacネイティブ環境で完璧に体験してください。",
     "serviceSylphioCta": "🍃 リアルタイムAI通訳者 Sylphio に出会う",
     "connectTitle": "一緒に",

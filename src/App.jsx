@@ -6,9 +6,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 
 /* ── Code Splitting: page-level lazy imports ── */
 const Home = lazy(() => import('./pages/Home'));
-const DailyDigest = lazy(() => import('./pages/DailyDigest'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const PaceNoteDashboard = lazy(() => import('./pages/PaceNoteDashboard'));
 const ReLearn = lazy(() => import('./pages/ReLearn'));
 const ReLearnDaily = lazy(() => import('./pages/ReLearnDaily'));
 const BuildersLog = lazy(() => import('./pages/BuildersLog'));
@@ -50,13 +48,7 @@ function App() {
             <Route path="builders-log" element={<BuildersLog />} />
             <Route path="builders-log/:slug" element={<BuildersLogDetail />} />
 
-            {/* Unified Daily Digest Routes */}
-            <Route path="daily" element={<DailyDigest />} />
-            <Route path="daily/:date" element={<DailyDigest />} />
-
-            {/* Pace Note Routes */}
-            <Route path="pacenote" element={<PaceNoteDashboard />} />
-
+            {/* Daily Digest·Pace Note는 ReLearn으로 통합 — 서버 301이 선행 처리 */}
             {/* ReLearn — 배움·실행·복기 통합 성장 루프 (추가형: 기존 라우트 보존) */}
             <Route path="relearn" element={<ReLearn />} />
             <Route path="relearn/daily/:date" element={<ReLearnDaily />} />
@@ -67,8 +59,8 @@ function App() {
             <Route path="sylphio/privacy" element={<SylphioPrivacy />} />
             
             {/* Legacy Redirects */}
-            <Route path="signal/*" element={<Navigate to="/daily" replace />} />
-            <Route path="study/*" element={<Navigate to="/daily" replace />} />
+            <Route path="signal/*" element={<Navigate to="/relearn" replace />} />
+            <Route path="study/*" element={<Navigate to="/relearn" replace />} />
             
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

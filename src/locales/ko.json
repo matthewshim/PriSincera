@@ -1,8 +1,6 @@
 {
   "header": {
     "buildersLog": "Builder's Log",
-    "dailyDigest": "Daily Digest",
-    "paceNote": "Pace Note",
     "sylphio": "Sylphio",
     "sylphioAlert": "앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"
   },
@@ -73,10 +71,6 @@
     "serviceBaseCta": "⚡ 오픈 소스 및 시스템 아키텍처 살펴보기",
     "serviceBuildersDesc": "Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.\n어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.",
     "serviceBuildersCta": "🚀 개발 여정 및 엔지니어링 성장기 읽기",
-    "serviceDailyDesc": "하루 5분, IT 트렌드 인사이트와 AI 프롬프트, 비즈니스 일본어 학습까지.\n정보의 홍수 속에서 꼭 필요한 시그널만 모아 매일 아침 전해드립니다.",
-    "serviceDailyCta": "✨ 하루 5분, 다이제스트 무료 구독",
-    "servicePaceDesc": "조급함을 덜어주고 나만의 궤도를 만들어가는 마이크로 행동 트래커.\n매일의 작은 인사이트를 실천 과제로 만들고, 흔들림 없는 성장을 기록하세요.",
-    "servicePaceCta": "⛵ 3초 만에 로그인하고 나만의 궤도 만들기",
     "serviceSylphioDesc": "화면의 모든 소리와 마이크를 실시간 캡처하여 온디바이스에서 지체 없이 자막으로 구현하는 AI 실시간 통역 앱입니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
     "serviceSylphioCta": "🍃 실시간 AI 통역사 Sylphio 만나기",
     "connectTitle": "함께 ",

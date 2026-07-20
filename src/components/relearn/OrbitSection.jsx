@@ -3,7 +3,7 @@
  *
  * Phase B-0 3/3: 프레젠테이션은 리런 시안(v4) 기준 신작, 데이터·뮤테이션은
  * usePaceNoteData(웹 REST ↔ 데스크톱 IPC 단일 계약)를 셸에서 받아 사용한다.
- * (PaceNoteDashboard는 무접촉 — 로직 단일화는 데이터 계층에서 달성)
+ * (구 PaceNote 대시보드의 궤도 UI를 승계 — 데이터 계층은 usePaceNoteData로 단일화)
  *
  * props:
  *   current   — usePaceNoteData().data.current ({ currentPace, recommendedPace, ... })

@@ -20,16 +20,6 @@ export const PAGE_META = {
     description: 'PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.',
     keywords: "PriSincera, 프리싱케라, ReLearn, 성장 루프, Builder's Log, Sylphio, Daily Digest, Pace Note, AI Curation",
   },
-  '/daily': {
-    pageTitle: 'Daily Digest — 매일의 IT·비즈니스 시그널',
-    description: '매일 아침, 전 세계 IT·비즈니스·AI 동향 중 가장 중요한 시그널과 핵심 실무 지식을 큐레이션해 전해드리는 데일리 리포트입니다.',
-    keywords: 'PriSincera, 데일리 다이제스트, IT 뉴스, AI 트렌드, 비즈니스 인사이트, 시그널',
-  },
-  '/pacenote': {
-    pageTitle: 'Pace Note — 주간 목표·회고 트래커',
-    description: '스스로의 우선순위를 지키기 위한 주간 목표 달성률과 투명한 성찰을 기록하는 페이스 노트. 배움을 실행으로, 실행을 복기로 잇습니다.',
-    keywords: 'PriSincera, 페이스 노트, 주간 목표, 회고, 성장 트래커, 생산성',
-  },
   '/relearn': {
     pageTitle: 'ReLearn — 배움·실행·복기 통합 성장 루프',
     description: '매일 제로에서, 다시 배우고 다시 달린다. Daily Digest의 배움과 Pace Note의 실행·복기를 하나의 여정으로 잇는 통합 성장 루프 서비스입니다.',
