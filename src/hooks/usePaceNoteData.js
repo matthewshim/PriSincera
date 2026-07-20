@@ -135,8 +135,13 @@ export function usePaceNoteData() {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taskId }),
     }).then(applyMutation), [call, applyMutation]);
 
-  const removeTask = useCallback((taskId) =>
-    call('/remove', 'remove_task', { taskId }, {
+  const excludeTask = useCallback((taskId) =>
+    call('/exclude', 'exclude_task', { taskId }, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taskId }),
+    }).then(applyMutation), [call, applyMutation]);
+
+  const restoreTask = useCallback((taskId) =>
+    call('/restore', 'restore_task', { taskId }, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taskId }),
     }).then(applyMutation), [call, applyMutation]);
 
@@ -164,7 +169,8 @@ export function usePaceNoteData() {
     reload,
     addTask,
     toggleTask,
-    removeTask,
+    excludeTask,
+    restoreTask,
     acceptTask,
     saveDiary,
     addOrbit,

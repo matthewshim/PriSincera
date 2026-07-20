@@ -20,7 +20,7 @@ const ADD_MAX = 100; // pacenote-api /add 제한과 동일
 // 성장 루프 affinity 키 정규화 — pacenote-api recordSignal 과 동일 규칙
 const affKey = (c) => String(c || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
-export default function OrbitSection({ current, onToggle, onAccept, onAdd, onRemove, affinity = null }) {
+export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExclude, onRestore, affinity = null }) {
   const [busyId, setBusyId] = useState(null);
   const [newTitle, setNewTitle] = useState('');
   const [adding, setAdding] = useState(false);
@@ -36,7 +36,10 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onRem
     finally { setAdding(false); }
   };
 
-  const pace = current?.currentPace || [];
+  // 제외(excluded)된 궤도는 목록·진행률에서 숨기되 데이터는 보존 — 하단 접기에서 복원 가능
+  const allPace = current?.currentPace || [];
+  const pace = allPace.filter(t => !t.excluded);
+  const excludedPace = allPace.filter(t => t.excluded);
   const recs = current?.recommendedPace || [];
 
   // ── 궤도 검색 모달 (PaceNote 옴니 검색 승계): 추천 풀 검색 + 커스텀 추가 결합 ──
@@ -101,12 +104,12 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onRem
                 {task.completed ? '✓' : ''}
               </button>
               <span className="rl-orbit-t">{task.title}</span>
-              {!task.completed && onRemove && (
+              {!task.completed && onExclude && (
                 <button
                   className="rl-orbit-del haptic-trigger"
-                  title="궤도에서 제외 (실수 추가 정정)"
-                  aria-label="궤도에서 제외"
-                  onClick={() => { if (window.confirm(`"${task.title}" 궤도를 제외할까요?`)) onRemove(task.id); }}
+                  title="목록에서 제외 (데이터는 보존되며 아래 '제외된 궤도'에서 복원 가능)"
+                  aria-label="목록에서 제외"
+                  onClick={() => onExclude(task.id)}
                 >×</button>
               )}
               {task.category && (
@@ -139,6 +142,25 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onRem
               🔍 검색
             </button>
           </div>
+        )}
+
+        {/* ── 제외된 궤도 (복원 가능 — 데이터 보존) ── */}
+        {excludedPace.length > 0 && (
+          <details className="rl-fold rl-excluded-fold">
+            <summary className="rl-fold-summary">제외된 궤도 {excludedPace.length}개 보기</summary>
+            <div className="rl-excluded-list">
+              {excludedPace.map(task => (
+                <div key={task.id} className="rl-excluded-item">
+                  <span className="rl-excluded-t">{task.title}</span>
+                  {onRestore && (
+                    <button className="rl-excluded-restore haptic-trigger" onClick={() => onRestore(task.id)}>
+                      ↩ 복원
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </details>
         )}
 
         {/* ── 궤도 검색 모달 ── */}

@@ -732,8 +732,9 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
 });
 
 
-// 2-b. 궤도 제거 — 실수로 추가한 궤도 정정용 (미완료 항목만 허용: 완료 통계·성장 시그널 왜곡 방지)
-pacenoteRouter.post('/remove', verifyUser, async (req, res) => {
+// 2-b. 궤도 제외(soft) — 실수 추가 정정용. 데이터는 보존하고 excluded 플래그만 기록한다.
+//      (하드 삭제 금지: 복구 가능성·이력 보존. 미완료 항목만 허용 — 완료 통계·시그널 왜곡 방지)
+pacenoteRouter.post('/exclude', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
     const { taskId } = req.body;
@@ -753,14 +754,44 @@ pacenoteRouter.post('/remove', verifyUser, async (req, res) => {
     const taskIndex = currentPace.findIndex(t => t.id === taskId);
     if (taskIndex === -1) return res.status(404).json({ error: 'Task not found' });
     if (currentPace[taskIndex].completed) {
-      return res.status(400).json({ error: 'Completed tasks cannot be removed' });
+      return res.status(400).json({ error: 'Completed tasks cannot be excluded' });
     }
 
-    currentPace.splice(taskIndex, 1);
+    currentPace[taskIndex].excluded = true;
     await docRef.update({ currentPace });
     res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
   } catch (err) {
-    console.error('[PaceNote API] Remove Error:', err);
+    console.error('[PaceNote API] Exclude Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 2-c. 궤도 제외 복원 — excluded 플래그 해제
+pacenoteRouter.post('/restore', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const { taskId } = req.body;
+
+    if (!taskId) return res.status(400).json({ error: 'taskId is required' });
+
+    const today = new Date();
+    const currentWeekId = getWeekNumber(today);
+    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+
+    const data = doc.data();
+    const currentPace = data.currentPace || [];
+
+    const taskIndex = currentPace.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return res.status(404).json({ error: 'Task not found' });
+
+    currentPace[taskIndex].excluded = false;
+    await docRef.update({ currentPace });
+    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
+  } catch (err) {
+    console.error('[PaceNote API] Restore Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

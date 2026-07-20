@@ -44,7 +44,7 @@ const SIGNAL_LIMIT = 4;
 
 export default function ReLearn() {
   const { user, token, loginWithGoogle, logout } = useAuth();
-  const { data, loading: paceLoading, toggleTask, acceptTask, saveDiary, addTask, removeTask } = usePaceNoteData();
+  const { data, loading: paceLoading, toggleTask, acceptTask, saveDiary, addTask, excludeTask, restoreTask } = usePaceNoteData();
 
   useSEO({
     title: PAGE_META['/relearn'].pageTitle,
@@ -298,9 +298,14 @@ export default function ReLearn() {
     setView(v);
     if (v === 'records') trackRelearn('relearn_view_records');
   };
-  const handleRemove = async (taskId) => {
-    const r = await removeTask(taskId);
-    trackRelearn('relearn_orbit_remove');
+  const handleExclude = async (taskId) => {
+    const r = await excludeTask(taskId);
+    trackRelearn('relearn_orbit_exclude');
+    return r;
+  };
+  const handleRestore = async (taskId) => {
+    const r = await restoreTask(taskId);
+    trackRelearn('relearn_orbit_restore');
     return r;
   };
   const handleToggle = async (taskId) => {
@@ -509,7 +514,7 @@ export default function ReLearn() {
                 ) : paceLoading ? (
                   <div className="rl-status">궤도 불러오는 중…</div>
                 ) : (
-                  <OrbitSection current={data?.current} onToggle={handleToggle} onAccept={handleAccept} onAdd={handleAddCustom} onRemove={handleRemove} affinity={affinity} />
+                  <OrbitSection current={data?.current} onToggle={handleToggle} onAccept={handleAccept} onAdd={handleAddCustom} onExclude={handleExclude} onRestore={handleRestore} affinity={affinity} />
                 )}
               </div>
             </section>
