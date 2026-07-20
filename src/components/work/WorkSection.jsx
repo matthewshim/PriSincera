@@ -248,17 +248,17 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 3. Daily Digest Flagship */}
+        {/* 3. ReLearn Flagship (Daily Digest + Pace Note 통합 성장 루프) */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
           style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
           data-accent-color="34,211,238"
         >
           <div className="flagship-content">
-            <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>ReLearn · Learn — Daily Curation</div>
-            <h3 className="flagship-title">Daily Digest</h3>
+            <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>Unified Growth Loop — Learn · Run · Reflect</div>
+            <h3 className="flagship-title">ReLearn</h3>
             <p className="flagship-desc">
-              {t('home.serviceDailyDesc').split('\n').map((line, idx) => (
+              {t('home.serviceReLearnDesc').split('\n').map((line, idx) => (
                 <React.Fragment key={idx}>
                   {line}
                   <br />
@@ -266,9 +266,9 @@ export default function WorkSection() {
               ))}
             </p>
             <div className="work-card-tags">
-              <span className="work-tag">AI Curation</span>
-              <span className="work-tag">Microlearning</span>
-              <span className="work-tag">Newsletter</span>
+              <span className="work-tag">Daily Curation</span>
+              <span className="work-tag">Action Tracker</span>
+              <span className="work-tag">AI Reflection</span>
             </div>
             <div className="flagship-cta-wrap">
               <Link to="/relearn" className="btn-primary flagship-cta-btn cyan">
@@ -277,78 +277,21 @@ export default function WorkSection() {
             </div>
           </div>
           <div className="flagship-visual">
-            <div className="dynamic-mockup daily-mockup">
-              <div className="mockup-header">
-                <div className="mockup-dot"></div><div className="mockup-dot"></div><div className="mockup-dot"></div>
-              </div>
-              <div className="mockup-body">
-                <div className="mockup-skeleton-title"></div>
-                <div className="mockup-skeleton-text"></div>
-                <div className="mockup-skeleton-text short"></div>
-                <div className="mockup-ai-card">
-                  <span className="ai-spark">✨</span>
-                  <div className="ai-lines">
-                    <div className="ai-line"></div>
-                    <div className="ai-line"></div>
-                  </div>
-                </div>
+            <div className="dynamic-mockup relearn-mockup">
+              <div className="relearn-loop-track">
+                <span className="relearn-loop-dot d1"></span>
+                <span className="relearn-loop-dot d2"></span>
+                <span className="relearn-loop-dot d3"></span>
               </div>
             </div>
             <div className="visual-blur-orb cyan"></div>
           </div>
         </div>
 
-        {/* 4. Pace Note Flagship */}
+        {/* 4. Sylphio Flagship */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(52, 211, 153, 0.4)' }}
-          data-accent-color="52,211,153"
-        >
-          <div className="flagship-content">
-            <div className="flagship-label" style={{ color: '#34D399' }}>ReLearn · Run — Action Tracker</div>
-            <h3 className="flagship-title">Pace Note</h3>
-            <p className="flagship-desc">
-              {t('home.servicePaceDesc').split('\n').map((line, idx) => (
-                <React.Fragment key={idx}>
-                  {line}
-                  <br />
-                </React.Fragment>
-              ))}
-            </p>
-            <div className="work-card-tags">
-              <span className="work-tag">Action Tracker</span>
-              <span className="work-tag">AI Guide</span>
-              <span className="work-tag">Timeline</span>
-            </div>
-            <div className="flagship-cta-wrap">
-              <Link to="/relearn" className="btn-primary flagship-cta-btn green">
-                Explore in ReLearn →
-              </Link>
-            </div>
-          </div>
-          <div className="flagship-visual">
-            <div className="dynamic-mockup pacenote-mockup">
-              <div className="pacenote-grid">
-                {[...Array(20)].map((_, i) => (
-                  <div key={i} className={`pace-cell ${[5,6,12,14,18].includes(i) ? 'active' : ''} ${i === 14 ? 'pulse' : ''}`}></div>
-                ))}
-              </div>
-              <div className="pace-floating-card">
-                <div className="pace-check">✓</div>
-                <div className="pace-card-lines">
-                  <div className="pace-line"></div>
-                  <div className="pace-line"></div>
-                </div>
-              </div>
-            </div>
-            <div className="visual-blur-orb emerald"></div>
-          </div>
-        </div>
-
-        {/* 5. Sylphio Flagship */}
-        <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 4 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.6s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
+          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
           data-accent-color="0,242,254"
         >
           <div className="flagship-content">

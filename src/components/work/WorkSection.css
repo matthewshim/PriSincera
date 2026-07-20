@@ -967,3 +967,7 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 }
+
+/* ── ReLearn 플래그십 목업 — 벤토(Header)용 루프 트랙의 대형 캔버스 스케일 보정 ── */
+.flagship-visual .relearn-loop-track { gap: 22px; padding: 16px 28px; }
+.flagship-visual .relearn-loop-dot { width: 14px; height: 14px; }

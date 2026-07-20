@@ -18,7 +18,7 @@ export const PAGE_META = {
   '/': {
     pageTitle: null,
     description: 'PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.',
-    keywords: "PriSincera, 프리싱케라, Bento Grid, Pace Note, Daily Digest, Builder's Log, Sylphio, AI Curation",
+    keywords: "PriSincera, 프리싱케라, ReLearn, 성장 루프, Builder's Log, Sylphio, Daily Digest, Pace Note, AI Curation",
   },
   '/daily': {
     pageTitle: 'Daily Digest — 매일의 IT·비즈니스 시그널',
