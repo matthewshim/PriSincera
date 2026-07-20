@@ -5,7 +5,7 @@ dist
 .firebaserc
 scripts
 sound
-ci
+# ci/ 는 prebuild 게이트(design-check.mjs)가 빌드 시 필요하므로 포함한다
 *.md
 !docs/*.md
 !docs/**/*.md
