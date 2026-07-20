@@ -59,7 +59,7 @@
   padding: 8px 18px;
   color: var(--text-muted, #9CA3AF);
   font-family: var(--font-display, 'Outfit', sans-serif);
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   font-weight: 500;
   cursor: pointer;
   display: flex;
@@ -114,7 +114,7 @@
   justify-content: center;
   color: var(--text-muted, #9CA3AF);
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   flex-shrink: 0;
@@ -307,7 +307,7 @@
 
 .ribbon-card-week-label {
   font-family: var(--font-display, 'Outfit', sans-serif);
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.85);
   transition: color 0.2s ease;
@@ -323,7 +323,7 @@
 
 .ribbon-pct-text {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   color: rgba(255, 255, 255, 0.5);
   font-weight: 600;
 }
@@ -334,7 +334,7 @@
 }
 
 .ribbon-badge-text {
-  font-size: 0.7rem;
+  font-size: var(--fs-070);
   color: rgba(255, 255, 255, 0.25);
   font-weight: 500;
   background: rgba(255, 255, 255, 0.03);
@@ -343,12 +343,12 @@
 }
 
 .ribbon-lock-icon {
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   opacity: 0.6;
 }
 
 .ribbon-trophy-icon {
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.6));
   display: inline-block;
   animation: trophyFloat 2.5s infinite ease-in-out;
@@ -391,7 +391,7 @@
 
 /* 카드 최하단 딤드 레이블 (상태 텍스트 설명) */
 .ribbon-status-label {
-  font-size: 0.7rem;
+  font-size: var(--fs-070);
   font-weight: 500;
   text-align: center;
   color: rgba(255, 255, 255, 0.25);
@@ -428,7 +428,7 @@
   
   .quarter-segment-btn {
     padding: 6px 10px;
-    font-size: 0.75rem;
+    font-size: var(--fs-075);
     white-space: nowrap;
     flex-shrink: 0;
   }
@@ -441,7 +441,7 @@
   }
   
   .ribbon-card-week-label {
-    font-size: 0.75rem;
+    font-size: var(--fs-075);
   }
   
   .ribbon-status-label {

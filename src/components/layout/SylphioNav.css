@@ -31,7 +31,7 @@
   border: none;
   color: var(--text-muted, #71717a);
   font-family: 'Outfit', 'Pretendard', sans-serif;
-  font-size: 0.88rem;
+  font-size: var(--fs-090);
   font-weight: 500;
   padding: var(--space-sm, 8px) var(--space-md, 16px); /* 데일리 다이제스트 LNB와 100% 동일하게 패딩 슬림화 */
   cursor: pointer;
@@ -44,7 +44,7 @@
 }
 
 .sylphio-tab-icon {
-  font-size: 1rem; /* 데일리 다이제스트 LNB와 100% 동일하게 이모지 크기 규격 적용 */
+  font-size: var(--fs-100); /* 데일리 다이제스트 LNB와 100% 동일하게 이모지 크기 규격 적용 */
 }
 
 .sylphio-tab:hover {
@@ -102,7 +102,7 @@
   }
 
   .sylphio-tab {
-    font-size: 0.78rem;
+    font-size: var(--fs-080);
     padding: 12px 14px; /* 터치 영역 양옆 확보 */
     letter-spacing: -0.02em;
     white-space: nowrap; /* 글자가 아래로 찌그러져 개행되는 현상 원천 차단 */

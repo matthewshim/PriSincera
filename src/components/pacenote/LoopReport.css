@@ -15,9 +15,9 @@
   gap: 8px;
   margin-bottom: 14px;
 }
-.loop-report-icon { font-size: 1rem; }
-.loop-report-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary, #FAFAFA); }
-.loop-report-sub { font-size: 0.78rem; color: var(--text-muted, #94A3B8); }
+.loop-report-icon { font-size: var(--fs-100); }
+.loop-report-title { font-size: var(--fs-095); font-weight: 700; color: var(--text-primary, #FAFAFA); }
+.loop-report-sub { font-size: var(--fs-080); color: var(--text-muted, #94A3B8); }
 
 .loop-report-stats {
   display: grid;
@@ -34,10 +34,10 @@
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
-.loop-stat-label { font-size: 0.72rem; color: var(--text-muted, #94A3B8); font-weight: 600; }
-.loop-stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary, #FAFAFA); line-height: 1.1; }
-.loop-stat-unit { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary, #CBD5E1); margin-left: 2px; }
-.loop-stat-sub { font-size: 0.72rem; color: var(--text-muted, #94A3B8); }
+.loop-stat-label { font-size: var(--fs-075); color: var(--text-muted, #94A3B8); font-weight: 600; }
+.loop-stat-value { font-size: var(--fs-150); font-weight: 800; color: var(--text-primary, #FAFAFA); line-height: 1.1; }
+.loop-stat-unit { font-size: var(--fs-090); font-weight: 600; color: var(--text-secondary, #CBD5E1); margin-left: 2px; }
+.loop-stat-sub { font-size: var(--fs-075); color: var(--text-muted, #94A3B8); }
 
 .loop-stat-domain { border-color: rgba(165, 180, 252, 0.22); background: rgba(165, 180, 252, 0.06); }
 .loop-stat-domain-name { font-size: 1.05rem; color: var(--color-indigo, #A5B4FC); }

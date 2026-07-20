@@ -188,7 +188,7 @@
 
 .flagship-label {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--fs-075);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--orbit-cyan);
@@ -217,7 +217,7 @@
 
 .flagship-cta-btn {
     padding: 14px 28px;
-    font-size: 1rem;
+    font-size: var(--fs-100);
     font-weight: 500;
 }
 
@@ -327,7 +327,7 @@
     animation: pulseAI 4s infinite ease-in-out;
 }
 .ai-spark {
-    font-size: 1.5rem;
+    font-size: var(--fs-150);
     animation: sparkSpin 6s linear infinite;
 }
 .ai-lines {
@@ -407,7 +407,7 @@
     background: #34D399;
     color: var(--bg-surface);
     display: flex; align-items: center; justify-content: center;
-    font-weight: bold; font-size: 0.8rem;
+    font-weight: bold; font-size: var(--fs-080);
 }
 .pace-card-lines .pace-line {
     height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.2);
@@ -491,13 +491,13 @@
 }
 
 .node-title {
-    font-size: 0.9rem;
+    font-size: var(--fs-090);
     font-weight: 600;
     color: var(--text-primary);
 }
 
 .node-meta {
-    font-size: 0.72rem;
+    font-size: var(--fs-075);
     color: var(--text-muted);
 }
 
@@ -569,7 +569,7 @@
 }
 
 .work-card-desc {
-    font-size: 0.9rem;
+    font-size: var(--fs-090);
     color: var(--text-muted);
     line-height: 1.7;
     margin-bottom: var(--space-md);

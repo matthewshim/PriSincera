@@ -23,7 +23,7 @@
   color: var(--text-muted);
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   cursor: pointer;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -47,7 +47,7 @@
   background: transparent;
   color: var(--text-muted);
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   font-weight: 500;
   cursor: pointer;
   transition: all var(--duration-fast) var(--ease-spring);
@@ -64,7 +64,7 @@
   text-align: center;
   color: var(--text-muted);
   padding: 32px 0;
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
 }
 
 /* ── 카드 (signal-article-card 와 동일 글래스 스킨) ── */
@@ -86,7 +86,7 @@
 
 .track-card-domain {
   display: inline-flex;
-  font-size: 0.72rem;
+  font-size: var(--fs-075);
   font-weight: 700;
   padding: 3px 10px;
   border-radius: var(--radius-pill);
@@ -95,13 +95,13 @@
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
-.track-card-tag { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
+.track-card-tag { font-size: var(--fs-075); color: var(--text-muted); font-family: var(--font-mono); }
 
 /* Phase 3: '내 궤도' 배지 (도메인=cyan과 구분되는 indigo=PaceNote 궤도 색) */
 .track-card-mine {
   display: inline-flex;
   align-items: center;
-  font-size: 0.7rem;
+  font-size: var(--fs-070);
   font-weight: 700;
   padding: 3px 9px;
   border-radius: var(--radius-pill);
@@ -132,9 +132,9 @@
   background: linear-gradient(135deg, rgba(165, 180, 252, 0.16), rgba(34, 211, 238, 0.09));
 }
 .track-loop-banner-icon { font-size: 1.05rem; flex-shrink: 0; }
-.track-loop-banner-text { flex: 1; font-size: 0.86rem; }
+.track-loop-banner-text { flex: 1; font-size: var(--fs-090); }
 .track-loop-banner-text strong { color: var(--color-indigo); font-weight: 700; }
-.track-loop-banner-cta { font-size: 0.8rem; font-weight: 600; color: var(--color-cyan); white-space: nowrap; }
+.track-loop-banner-cta { font-size: var(--fs-080); font-weight: 600; color: var(--color-cyan); white-space: nowrap; }
 
 .track-card-title {
   font-family: var(--font-display);
@@ -145,7 +145,7 @@
   line-height: 1.4;
 }
 .track-card-summary {
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   color: var(--text-secondary);
   margin: 0 0 14px;
   line-height: 1.6;
@@ -160,14 +160,14 @@
   margin: 0 0 14px;
 }
 .track-learning-label {
-  font-size: 0.72rem;
+  font-size: var(--fs-075);
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--color-indigo);
   margin-bottom: 6px;
 }
 .track-learning-concept {
-  font-size: 0.88rem;
+  font-size: var(--fs-090);
   color: var(--text-secondary);
   line-height: 1.65;
   margin: 0 0 8px;
@@ -176,7 +176,7 @@
   margin: 0;
   padding-left: 18px;
   color: var(--text-muted);
-  font-size: 0.84rem;
+  font-size: var(--fs-085);
   line-height: 1.7;
 }
 .track-learning-points li { margin-bottom: 2px; }
@@ -187,7 +187,7 @@
   align-items: center;
   gap: 4px;
   margin-top: 12px;
-  font-size: 0.82rem;
+  font-size: var(--fs-085);
   font-weight: 600;
   color: var(--color-cyan);
   text-decoration: none;
@@ -198,12 +198,12 @@
 /* ── action_challenge (실전 액션) ── */
 .track-challenge { border-top: 1px dashed var(--glass-border); padding-top: 12px; }
 
-.track-challenge-title { font-size: 0.84rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+.track-challenge-title { font-size: var(--fs-085); font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
 .track-challenge-tasks {
   margin: 0 0 12px;
   padding-left: 18px;
   color: var(--text-muted);
-  font-size: 0.84rem;
+  font-size: var(--fs-085);
   line-height: 1.7;
 }
 
@@ -219,7 +219,7 @@
   color: #0E0E1A;                 /* 밝은 그라디언트 위 고대비 잉크 */
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   cursor: pointer;
   box-shadow: 0 4px 18px rgba(165, 180, 252, 0.18);
   transition: all var(--duration-fast) var(--ease-spring);

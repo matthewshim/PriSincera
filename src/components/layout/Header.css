@@ -53,7 +53,7 @@
 
 .nav-wordmark {
     font-family: var(--font-display);
-    font-size: 1.1rem;
+    font-size: var(--fs-110);
     font-weight: 600;
     letter-spacing: 0.04em;
     background: var(--gradient-brand);
@@ -69,7 +69,7 @@
 
 .nav-link {
     font-family: var(--font-body);
-    font-size: 0.85rem;
+    font-size: var(--fs-085);
     font-weight: 400;
     color: var(--text-muted);
     text-decoration: none;
@@ -268,7 +268,7 @@
     border: none;
     color: var(--text-muted);
     font-family: var(--font-mono, monospace);
-    font-size: 0.72rem;
+    font-size: var(--fs-075);
     font-weight: 500;
     cursor: pointer;
     transition: all var(--duration-fast, 0.2s) var(--ease-smooth, ease);
@@ -287,7 +287,7 @@
 }
 
 .locale-dropdown-trigger .globe-icon {
-    font-size: 0.8rem;
+    font-size: var(--fs-080);
     opacity: 0.6;
     transition: opacity 0.2s ease;
 }
@@ -360,7 +360,7 @@
     border-radius: var(--radius-sm, 4px);
     color: var(--text-muted);
     font-family: var(--font-body, inherit);
-    font-size: 0.76rem;
+    font-size: var(--fs-075);
     font-weight: 400;
     text-align: left;
     cursor: pointer;
@@ -405,7 +405,7 @@
     .nav-links { display: none; }
     .nav-right { gap: var(--space-sm); }
     .nav-symbol { width: 28px; height: 28px; }
-    .nav-wordmark { font-size: 0.95rem; }
+    .nav-wordmark { font-size: var(--fs-095); }
     .gnb-bgm-btn { width: 28px; height: 28px; }
 
     .mobile-menu-toggle {
@@ -471,7 +471,7 @@
         letter-spacing: -0.01em;
     }
     .mobile-menu-subtitle {
-        font-size: 0.76rem;
+        font-size: var(--fs-075);
         color: var(--text-muted);
         font-weight: 400;
         letter-spacing: 0.01em;
@@ -580,14 +580,14 @@
     }
     .bento-card-title {
         font-family: var(--font-display);
-        font-size: 1.15rem;
+        font-size: var(--fs-115);
         font-weight: 700;
         color: var(--text-primary);
         margin: 2px 0 6px 0;
     }
     .bento-card-arrow {
         font-family: var(--font-body);
-        font-size: 0.72rem;
+        font-size: var(--fs-075);
         color: var(--text-muted);
         font-weight: 500;
         transition: color 0.2s;
@@ -802,12 +802,12 @@
         gap: 2px;
     }
     .mobile-bento-nav-item .node-title {
-        font-size: 0.9rem;
+        font-size: var(--fs-090);
         font-weight: 600;
         color: var(--text-primary);
     }
     .mobile-bento-nav-item .node-meta {
-        font-size: 0.72rem;
+        font-size: var(--fs-075);
         color: var(--text-muted);
     }
 
@@ -859,7 +859,7 @@
         animation: pulseAI 4s infinite ease-in-out;
     }
     .mobile-bento-nav-item .ai-spark {
-        font-size: 1.3rem;
+        font-size: var(--fs-130);
         animation: sparkSpin 6s linear infinite;
     }
     .mobile-bento-nav-item .ai-lines {
@@ -921,7 +921,7 @@
         background: #34D399;
         color: #0A0714;
         display: flex; align-items: center; justify-content: center;
-        font-weight: bold; font-size: 0.75rem;
+        font-weight: bold; font-size: var(--fs-075);
     }
 
     /* Ambient Blur Orbs inside Cards */
@@ -1009,7 +1009,7 @@
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-md);
         font-family: var(--font-display);
-        font-size: 0.85rem;
+        font-size: var(--fs-085);
         font-weight: 500;
         color: var(--text-muted);
         transition: all 0.2s var(--ease-smooth);

@@ -22,7 +22,7 @@
 }
 
 .pacenote-hero-icon {
-  font-size: 3rem;
+  font-size: var(--fs-300);
   margin-bottom: 16px;
   animation: float 6s ease-in-out infinite;
 }
@@ -46,7 +46,7 @@
 }
 
 .pacenote-subtitle {
-  font-size: 1.15rem;
+  font-size: var(--fs-115);
   color: var(--crystal-light);
   line-height: 1.6;
   opacity: 0.9;
@@ -176,7 +176,7 @@
 }
 
 .pacenote-progress-label {
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   color: #34D399;
   font-weight: 600;
   text-transform: uppercase;
@@ -184,7 +184,7 @@
 }
 
 .pacenote-progress-status-text {
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   font-weight: 600;
   color: #34D399;
   font-family: var(--font-mono), monospace;
@@ -217,7 +217,7 @@
 }
 
 .panel-sub-title {
-  font-size: 1.15rem;
+  font-size: var(--fs-115);
   font-weight: 600;
   color: #E2E8F0;
   margin-top: 0;
@@ -265,7 +265,7 @@
 }
 
 .pacenote-card-header h2 {
-  font-size: 1.5rem;
+  font-size: var(--fs-150);
   font-weight: 700;
   color: #F5F3FF;
   margin: 0;
@@ -273,7 +273,7 @@
 
 .pacenote-card-desc {
   color: #9CA3AF;
-  font-size: 0.95rem;
+  font-size: var(--fs-095);
   margin-bottom: 24px;
 }
 
@@ -292,7 +292,7 @@
   border: 1px solid rgba(52, 211, 153, 0.25);
   padding: 4px 12px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   font-weight: 600;
   font-family: var(--font-mono);
 }
@@ -303,13 +303,13 @@
   border: 1px solid rgba(199, 210, 254, 0.3);
   padding: 4px 12px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   font-weight: 600;
 }
 
 .pacenote-btn-export {
   padding: 6px 14px;
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
 }
 
 /* ── Tasks (Tracker) ── */
@@ -447,7 +447,7 @@
 }
 
 .task-category-text {
-  font-size: 0.72rem;
+  font-size: var(--fs-075);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -456,7 +456,7 @@
 
 .task-text {
   color: #E2E8F0;
-  font-size: 0.98rem;
+  font-size: var(--fs-100);
   line-height: 1.5;
   word-break: keep-all;
   overflow-wrap: break-word;
@@ -509,7 +509,7 @@
 }
 
 .pacenote-ai-header p {
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   color: #9CA3AF;
   margin: 0;
 }
@@ -544,7 +544,7 @@
 }
 
 .pacenote-rec-cat {
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   color: #34D399;
   font-weight: 600;
   text-transform: uppercase;
@@ -554,7 +554,7 @@
 
 .pacenote-rec-title {
   color: #F5F3FF;
-  font-size: 1rem;
+  font-size: var(--fs-100);
   line-height: 1.5;
   margin-bottom: 16px;
   flex-grow: 1;
@@ -566,7 +566,7 @@
   border: 1px solid rgba(165, 180, 252, 0.25);
   padding: 8px 16px;
   border-radius: 8px;
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -648,7 +648,7 @@
   background: transparent;
   border: none;
   color: #9CA3AF;
-  font-size: 1.5rem;
+  font-size: var(--fs-150);
   cursor: pointer;
   padding: 4px 8px;
   transition: color 0.2s;
@@ -701,7 +701,7 @@
 }
 
 .cell-num {
-  font-size: 1.15rem;
+  font-size: var(--fs-115);
   font-weight: 700;
   color: #E2E8F0;
   margin-bottom: 6px;
@@ -712,7 +712,7 @@
 }
 
 .cell-count {
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   color: #34D399;
   font-weight: 600;
 }
@@ -744,7 +744,7 @@
 }
 
 .add-icon {
-  font-size: 1.5rem;
+  font-size: var(--fs-150);
   color: var(--color-indigo);
   font-weight: 300;
 }
@@ -754,7 +754,7 @@
   background: transparent;
   border: none;
   color: #F5F3FF;
-  font-size: 1rem;
+  font-size: var(--fs-100);
   outline: none;
 }
 
@@ -768,7 +768,7 @@
   border: 1px solid rgba(165, 180, 252, 0.25);
   padding: 8px 16px;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -836,7 +836,7 @@
 }
 
 .omnibar-icon {
-  font-size: 1.1rem;
+  font-size: var(--fs-110);
   margin-right: 12px;
   opacity: 0.8;
 }
@@ -846,7 +846,7 @@
   background: transparent;
   border: none;
   color: #F5F3FF;
-  font-size: 1rem;
+  font-size: var(--fs-100);
   font-family: inherit;
   outline: none;
 }
@@ -858,7 +858,7 @@
 .omnibar-submit-btn {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   font-weight: 600;
   white-space: nowrap;
   margin-left: 12px;
@@ -891,7 +891,7 @@
 }
 
 .omnibar-dropdown-title {
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -899,7 +899,7 @@
 }
 
 .omnibar-refresh-btn {
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -949,7 +949,7 @@
 }
 
 .rec-cat {
-  font-size: 0.7rem;
+  font-size: var(--fs-070);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -973,17 +973,17 @@
 
 .rec-title {
   color: #F5F3FF;
-  font-size: 0.95rem;
+  font-size: var(--fs-095);
 }
 
 .rec-desc {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   margin-top: 2px;
 }
 
 .rec-action {
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   color: var(--text-muted);
   font-weight: 600;
   opacity: 0;
@@ -998,7 +998,7 @@
   padding: 24px;
   text-align: center;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   font-style: italic;
 }
 
@@ -1031,13 +1031,13 @@
   flex-grow: 1;
   text-align: left;
   color: #6B7280;
-  font-size: 1rem;
+  font-size: var(--fs-100);
 }
 .omnibar-shortcut {
   background: rgba(255, 255, 255, 0.06);
   padding: 3px 6px;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   color: #E2E8F0;
   font-family: var(--font-mono);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -1093,7 +1093,7 @@
 
 /* Auto Save Status Badge */
 .auto-save-status {
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -1148,7 +1148,7 @@
   padding: 16px;
   color: #E9D5FF;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: var(--fs-095);
   line-height: 1.6;
   resize: none;
   outline: none;
@@ -1196,7 +1196,7 @@
   position: absolute;
   bottom: 12px;
   right: 16px;
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   color: rgba(156, 163, 175, 0.6);
   pointer-events: none;
   display: flex;
@@ -1296,7 +1296,7 @@
 
 .log-text {
   font-family: 'Georgia', 'Times New Roman', 'Chosunilbo_myungjo', serif;
-  font-size: 1.1rem;
+  font-size: var(--fs-110);
   font-style: italic;
   color: #F1F5F9;
   line-height: 1.85;
@@ -1313,7 +1313,7 @@
   padding: 32px;
   text-align: center;
   color: rgba(156, 163, 175, 0.5);
-  font-size: 0.95rem;
+  font-size: var(--fs-095);
   font-style: italic;
   border: 1px dashed rgba(255, 255, 255, 0.05);
   border-radius: 12px;
@@ -1347,7 +1347,7 @@
   color: #9CA3AF;
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -1391,7 +1391,7 @@
 }
 
 .footer-shortcut-item {
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   color: rgba(156, 163, 175, 0.5);
   display: flex;
   align-items: center;
@@ -1442,7 +1442,7 @@
   background: transparent;
   border: none;
   color: #9CA3AF;
-  font-size: 1.5rem;
+  font-size: var(--fs-150);
   cursor: pointer;
   transition: color 0.2s;
   line-height: 1;
@@ -1460,7 +1460,7 @@
 }
 
 .export-desc {
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   color: #D1D5DB;
   line-height: 1.6;
   margin: 0;
@@ -1482,7 +1482,7 @@
   resize: none;
   outline: none;
   font-family: var(--font-mono), monospace;
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   color: #E2E8F0;
   line-height: 1.5;
   scrollbar-width: thin;
@@ -1503,7 +1503,7 @@
   justify-content: center;
   gap: 8px;
   padding: 10px 20px;
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   font-weight: 600;
 }
 
@@ -1514,7 +1514,7 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
   padding: 4px 14px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   font-weight: 600;
   font-family: var(--font-mono), monospace;
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
@@ -1551,7 +1551,7 @@
 }
 
 .footer-export-btn {
-  font-size: 0.95rem;
+  font-size: var(--fs-095);
   padding: 10px 24px;
 }
 

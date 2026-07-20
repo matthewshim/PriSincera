@@ -107,7 +107,7 @@
 
 .connect-btn {
     padding: 14px 32px;
-    font-size: 0.9rem;
+    font-size: var(--fs-090);
     font-weight: 500;
     letter-spacing: 0.02em;
 }

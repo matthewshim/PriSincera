@@ -88,7 +88,7 @@
 
 .hero-label {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--fs-075);
     letter-spacing: 0.18em;
     color: var(--color-indigo);
     margin-bottom: var(--space-md);

@@ -205,7 +205,7 @@ button { background: none; border: none; font: inherit; color: inherit; }
     justify-content: center;
     gap: 8px;
     padding: 12px 28px;
-    font-size: 0.95rem;
+    font-size: var(--fs-095);
     font-weight: 600;
     background: var(--btn-primary-bg);
     color: #FFFFFF;
@@ -232,7 +232,7 @@ button { background: none; border: none; font: inherit; color: inherit; }
     justify-content: center;
     gap: 8px;
     padding: 12px 28px;
-    font-size: 0.95rem;
+    font-size: var(--fs-095);
     font-weight: 600;
     background: var(--btn-secondary-bg);
     color: var(--crystal-light);

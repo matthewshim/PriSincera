@@ -53,7 +53,7 @@
   display: inline-block;
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   margin-bottom: var(--space-xl);
   transition: color var(--duration-fast) var(--ease-out);
 }
@@ -73,7 +73,7 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: var(--fs-075);
   font-weight: 700;
   color: var(--accent-color);
   background: color-mix(in srgb, var(--accent-color) 15%, transparent);
@@ -86,7 +86,7 @@
 }
 
 .date-badge {
-  font-size: 0.85rem;
+  font-size: var(--fs-085);
   color: var(--text-muted);
 }
 
@@ -136,7 +136,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: var(--space-xs) var(--space-md);
   border-radius: var(--radius-full);
-  font-size: 0.8rem;
+  font-size: var(--fs-080);
   color: var(--text-muted);
 }
 
@@ -217,7 +217,7 @@
 
 .markdown-body code {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 0.9rem;
+  font-size: var(--fs-090);
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
@@ -235,7 +235,7 @@
   border-collapse: collapse;
   margin-top: var(--space-lg, 1.5rem);
   margin-bottom: var(--space-lg, 1.5rem);
-  font-size: 0.95rem;
+  font-size: var(--fs-095);
   line-height: 1.5;
   border-spacing: 0;
   border-radius: var(--radius-md, 8px);
