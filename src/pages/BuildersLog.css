@@ -15,7 +15,7 @@
 .log-container {
   position: relative;
   z-index: 1;
-  max-width: 1200px;
+  max-width: var(--container); /* §3-3 v5.5 */
   margin: 0 auto;
   padding: var(--space-xl) var(--space-xl) 0;
 }

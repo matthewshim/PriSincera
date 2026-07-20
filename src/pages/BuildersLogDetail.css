@@ -21,7 +21,7 @@
 
 .detail-container {
   width: 100%;
-  max-width: 900px; /* §3-3 정독 아티클 핏 — 가독 임계 준수 */
+  max-width: var(--measure); /* §3-3 가독 단 */
   position: relative;
   z-index: 1;
 }

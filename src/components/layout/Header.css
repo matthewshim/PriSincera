@@ -29,7 +29,7 @@
 .nav-inner {
     position: relative;
     z-index: 1002;
-    max-width: 1200px;
+    max-width: var(--container); /* §3-3 v5.5 */
     margin: 0 auto;
     display: flex;
     align-items: center;

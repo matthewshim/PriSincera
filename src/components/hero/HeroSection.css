@@ -27,7 +27,7 @@
     justify-content: center;
     gap: var(--space-xl);
     padding: var(--space-3xl) var(--space-md);
-    max-width: 900px;
+    max-width: var(--measure); /* §3-3 가독 단 */
     width: 100%;
 }
 

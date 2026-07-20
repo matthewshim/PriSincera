@@ -10,7 +10,7 @@
 .footer-inner {
     position: relative;
     z-index: 2; /* Sits cleanly above the absolute background scene */
-    max-width: 1200px;
+    max-width: var(--container); /* §3-3 v5.5 */
     margin: 0 auto;
 }
 

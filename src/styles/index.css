@@ -67,6 +67,11 @@
     --space-lg: 24px;
     --space-xl: 32px;
 
+    /* Layout Width 토큰 — 유일 허용 폭 (design_system.md §3-3 v5.5)
+       컨테이너는 --container만, 장문 단은 --measure만. 대역[880,2000]px 리터럴 금지. */
+    --container: 1200px;  /* 모든 페이지 셸·GNB·푸터·섹션 */
+    --measure: 860px;     /* 장문 프로스 단·좁은 중앙 스택 (≈74자) */
+
     /* Typography Scale 토큰 — 유일 허용 폰트 사이즈 (design_system.md §4-2 규범)
        규칙: font-size는 아래 토큰(또는 동일 값)만 사용. px·임의 값 금지.
        신규 단계가 필요하면 design_system.md 개정을 통해서만 추가한다. */

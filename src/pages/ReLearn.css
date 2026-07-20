@@ -1,7 +1,7 @@
 /* ReLearn — 통합 성장 루프 페이지 (시안 v4 기준, 디자인 시스템 토큰만 사용) */
 
 .rl-page {
-  max-width: 1200px; /* §3-3 대시보드·랜딩 핏 */
+  max-width: var(--container); /* §3-3 v5.5 */ /* §3-3 대시보드·랜딩 핏 */
   margin: 0 auto;
   padding: 110px 32px 80px;   /* GNB 높이 보정 */
   color: var(--text-secondary);

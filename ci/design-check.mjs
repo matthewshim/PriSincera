@@ -34,6 +34,16 @@ for (const file of cssFiles(ROOT)) {
   const rel = file.split('\\').join('/');
   if (EXCLUDE.has(rel)) continue;
   const css = readFileSync(file, 'utf-8');
+  // §3-3 v5.5: 대역[880,2000]px의 px max-width 리터럴 금지 (--container/--measure 토큰만)
+  const wre = /(?<!\()max-width:\s*([0-9]+)px/g;
+  let wm;
+  while ((wm = wre.exec(css)) !== null) {
+    const w = parseInt(wm[1], 10);
+    if (w >= 880 && w <= 2000) {
+      const line = css.slice(0, wm.index).split('\n').length;
+      errors.push(`${rel}:${line} max-width: ${w}px (§3-3 — var(--container)/var(--measure)만 허용)`);
+    }
+  }
   const re = /font-size:\s*([0-9.]+)(rem|px)/g;
   let m;
   while ((m = re.exec(css)) !== null) {

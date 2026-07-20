@@ -103,7 +103,7 @@
 
 /* ── Daily View (The Feed) ── */
 .daily-feed-container {
-  max-width: 1100px;
+  max-width: var(--container); /* §3-3 v5.5 */
   margin: 0 auto;
   padding: 0 var(--space-md) var(--space-xl);
 }
@@ -773,7 +773,7 @@
 
 /* ── Archive List View ── */
 .archive-container {
-  max-width: 1100px; /* Match standard page width */
+  max-width: var(--container); /* §3-3 v5.5 */ /* Match standard page width */
   margin: 40px auto;
   padding: 0 var(--space-md);
 }
@@ -931,7 +931,7 @@
 .daily-detail-header {
   text-align: center;
   width: 100%;
-  max-width: 1100px;
+  max-width: var(--container); /* §3-3 v5.5 */
   margin: 40px auto 32px auto;
   border-bottom: 1px solid var(--glass-border);
   padding: 0 20px 24px;
@@ -1024,7 +1024,7 @@
   justify-content: center;
   margin: 0 auto 36px;
   width: 100%;
-  max-width: 1100px; /* Expanded to match content area */
+  max-width: var(--container); /* §3-3 v5.5 */ /* Expanded to match content area */
   position: relative;
   z-index: 10;
   backdrop-filter: none;
@@ -1367,7 +1367,7 @@
   grid-template-columns: 1.2fr 0.8fr;
   gap: 32px;
   align-items: start;
-  max-width: 1100px;
+  max-width: var(--container); /* §3-3 v5.5 */
   margin: 40px auto;
   padding: 0 var(--space-md);
 }

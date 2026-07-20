@@ -136,7 +136,7 @@
 }
 
 .sylphio-guide-container {
-  max-width: 1000px;
+  max-width: var(--measure); /* §3-3 가독 단 */
   width: calc(100% - 48px); /* 모바일/태블릿 반응형 여백 사수 */
   margin-top: 40px; /* LNB와의 여백을 시원하게 확보 */
   background: var(--glass-bg); /* 디자인 시스템 표준 Glassmorphism 배경 */

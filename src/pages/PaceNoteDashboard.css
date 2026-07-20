@@ -66,7 +66,7 @@
 
 /* ── Bento Container ── */
 .pacenote-container {
-  max-width: 1200px;
+  max-width: var(--container); /* §3-3 v5.5 */
   margin: 0 auto;
   padding: 0 24px;
   position: relative;
@@ -97,7 +97,7 @@
 /* ── Split Workstation Layout Grid ── */
 .pacenote-tracker-section {
   display: block;
-  max-width: 1200px;
+  max-width: var(--container); /* §3-3 v5.5 */
   margin: 32px auto 0 auto;
 }
 
@@ -613,7 +613,7 @@
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   width: 90%;
-  max-width: 1000px;
+  max-width: var(--measure); /* §3-3 가독 단 */
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);

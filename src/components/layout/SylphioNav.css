@@ -21,7 +21,7 @@
   display: flex;
   position: relative;
   gap: var(--space-md, 24px);
-  max-width: 1200px;
+  max-width: var(--container); /* §3-3 v5.5 */
   width: 100%;
   justify-content: center;
 }
