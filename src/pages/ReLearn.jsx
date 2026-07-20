@@ -44,7 +44,7 @@ const SIGNAL_LIMIT = 4;
 
 export default function ReLearn() {
   const { user, token, loginWithGoogle, logout } = useAuth();
-  const { data, loading: paceLoading, toggleTask, acceptTask, saveDiary, addTask } = usePaceNoteData();
+  const { data, loading: paceLoading, toggleTask, acceptTask, saveDiary, addTask, removeTask } = usePaceNoteData();
 
   useSEO({
     title: PAGE_META['/relearn'].pageTitle,
@@ -298,6 +298,11 @@ export default function ReLearn() {
     setView(v);
     if (v === 'records') trackRelearn('relearn_view_records');
   };
+  const handleRemove = async (taskId) => {
+    const r = await removeTask(taskId);
+    trackRelearn('relearn_orbit_remove');
+    return r;
+  };
   const handleToggle = async (taskId) => {
     const r = await toggleTask(taskId);
     trackRelearn('relearn_complete_toggle');
@@ -504,7 +509,7 @@ export default function ReLearn() {
                 ) : paceLoading ? (
                   <div className="rl-status">궤도 불러오는 중…</div>
                 ) : (
-                  <OrbitSection current={data?.current} onToggle={handleToggle} onAccept={handleAccept} onAdd={handleAddCustom} affinity={affinity} />
+                  <OrbitSection current={data?.current} onToggle={handleToggle} onAccept={handleAccept} onAdd={handleAddCustom} onRemove={handleRemove} affinity={affinity} />
                 )}
               </div>
             </section>

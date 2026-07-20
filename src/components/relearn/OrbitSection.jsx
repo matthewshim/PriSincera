@@ -12,7 +12,7 @@
  *   onAdd     — (title) => Promise   (커스텀 궤도 자유 입력 — 패리티 P1, /add 100자 제한)
  *   affinity  — profile.domainAffinity (nullable — 추천 사유 라벨용)
  */
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './ReLearnSections.css';
 
 const ADD_MAX = 100; // pacenote-api /add 제한과 동일
@@ -20,7 +20,7 @@ const ADD_MAX = 100; // pacenote-api /add 제한과 동일
 // 성장 루프 affinity 키 정규화 — pacenote-api recordSignal 과 동일 규칙
 const affKey = (c) => String(c || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
-export default function OrbitSection({ current, onToggle, onAccept, onAdd, affinity = null }) {
+export default function OrbitSection({ current, onToggle, onAccept, onAdd, onRemove, affinity = null }) {
   const [busyId, setBusyId] = useState(null);
   const [newTitle, setNewTitle] = useState('');
   const [adding, setAdding] = useState(false);
@@ -38,6 +38,39 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, affin
 
   const pace = current?.currentPace || [];
   const recs = current?.recommendedPace || [];
+
+  // ── 궤도 검색 모달 (PaceNote 옴니 검색 승계): 추천 풀 검색 + 커스텀 추가 결합 ──
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [focusIdx, setFocusIdx] = useState(0);
+  const filteredRecs = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return recs;
+    return recs.filter(r =>
+      (r.title || '').toLowerCase().includes(q) ||
+      (r.category || '').toLowerCase().includes(q)
+    );
+  }, [recs, query]);
+  const navigable = useMemo(() => {
+    const items = [];
+    if (query.trim()) items.push({ id: '__custom__', title: query.trim(), isCustom: true });
+    filteredRecs.forEach(r => items.push(r));
+    return items;
+  }, [query, filteredRecs]);
+  useEffect(() => { setFocusIdx(0); }, [navigable.length]);
+  const closeSearch = () => { setSearchOpen(false); setQuery(''); };
+  const pickItem = async (item) => {
+    if (!item) return;
+    if (item.isCustom) { if (onAdd) await onAdd(item.title); }
+    else if (onAccept) await onAccept(item.id);
+    closeSearch();
+  };
+  const onSearchKey = (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setFocusIdx(p => (navigable.length ? (p + 1) % navigable.length : 0)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setFocusIdx(p => (navigable.length ? (p - 1 + navigable.length) % navigable.length : 0)); }
+    else if (e.key === 'Enter') { e.preventDefault(); pickItem(navigable[focusIdx]); }
+    else if (e.key === 'Escape') { closeSearch(); }
+  };
   const done = pace.filter(t => t.completed).length;
   const total = pace.length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
@@ -68,6 +101,14 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, affin
                 {task.completed ? '✓' : ''}
               </button>
               <span className="rl-orbit-t">{task.title}</span>
+              {!task.completed && onRemove && (
+                <button
+                  className="rl-orbit-del haptic-trigger"
+                  title="궤도에서 제외 (실수 추가 정정)"
+                  aria-label="궤도에서 제외"
+                  onClick={() => { if (window.confirm(`"${task.title}" 궤도를 제외할까요?`)) onRemove(task.id); }}
+                >×</button>
+              )}
               {task.category && (
                 <span className="rl-orbit-cat" style={{ color: task.color || 'var(--color-indigo)', background: 'rgba(255,255,255,0.05)' }}>
                   {task.category}
@@ -94,6 +135,43 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, affin
             <button className="rl-add-btn haptic-trigger" onClick={handleAdd} disabled={adding || !newTitle.trim()}>
               {adding ? '추가 중…' : '＋ 추가'}
             </button>
+            <button className="rl-osearch-btn haptic-trigger" onClick={() => setSearchOpen(true)} title="누적 추천 궤도 검색">
+              🔍 검색
+            </button>
+          </div>
+        )}
+
+        {/* ── 궤도 검색 모달 ── */}
+        {searchOpen && (
+          <div className="rl-osearch-backdrop" onClick={closeSearch}>
+            <div className="rl-osearch-modal" role="dialog" aria-label="궤도 검색" onClick={e => e.stopPropagation()}>
+              <div className="rl-osearch-inputrow">
+                <span className="rl-osearch-ic">✨</span>
+                <input
+                  className="rl-osearch-input"
+                  autoFocus
+                  value={query}
+                  onChange={e => { setQuery(e.target.value.slice(0, ADD_MAX)); }}
+                  onKeyDown={onSearchKey}
+                  placeholder="추천 궤도 검색 또는 새 궤도 입력 — ↑↓ 이동 · Enter 추가 · Esc 닫기"
+                />
+              </div>
+              <div className="rl-osearch-list">
+                {navigable.map((item, i) => (
+                  <button
+                    key={item.id}
+                    className={`rl-osearch-item ${i === focusIdx ? 'focus' : ''}`}
+                    onMouseEnter={() => setFocusIdx(i)}
+                    onClick={() => pickItem(item)}
+                  >
+                    {item.isCustom
+                      ? <><span className="rl-osearch-tag custom">새 궤도</span><span className="rl-osearch-t">"{item.title}" 직접 추가</span></>
+                      : <><span className="rl-osearch-tag" style={{ color: item.color || 'var(--color-indigo)' }}>{item.category || '추천'}</span><span className="rl-osearch-t">{item.title}</span></>}
+                  </button>
+                ))}
+                {navigable.length === 0 && <div className="rl-osearch-empty">검색 결과가 없어요 — 입력한 문장은 Enter로 새 궤도가 됩니다.</div>}
+              </div>
+            </div>
           </div>
         )}
       </div>

@@ -165,6 +165,7 @@ interface PaceNoteState {  // GET / 의 응답
 | 조회 | `GET /api/pacenote/` | `get_pacenote()` | — | `PaceNoteState` |
 | 커스텀 추가 | `POST /api/pacenote/add` | `add_custom_task(title)` | `{ title: string }` (≤100자) | `{ success, currentPace: Task[] }` |
 | 완료 토글 | `POST /api/pacenote/toggle` | `toggle_task(taskId)` | `{ taskId: string }` | `{ success, currentPace: Task[] }` |
+| **궤도 제거** | `POST /api/pacenote/remove` | `remove_task(taskId)` | `{ taskId: string }` | `{ success, currentPace: Task[] }` — **미완료 항목만 허용**(완료 통계·시그널 왜곡 방지, 완료 항목은 400) |
 | 추천 수락 | `POST /api/pacenote/accept` | `accept_recommendation(taskId)` | `{ taskId: string }` | `{ success, currentPace, recommendedPace }` |
 | 회고 저장 | `POST /api/pacenote/diary` | `save_diary(statement)` | `{ statement: string }` (≤1000자) | `{ success, statement }` |
 | **오빗화** | `POST /api/pacenote/add-orbit` | `add_orbit_from_signal(card)` | `{ action_challenge: ActionChallenge, domain: string }` | `{ success, added: number, currentPace: Task[] }` |

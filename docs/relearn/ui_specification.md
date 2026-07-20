@@ -44,6 +44,8 @@ GNB (ReLearn 활성 시 relearn-theme·cyan)
 │   │    4채널 연속 스택(트랙→시그널→프롬프트→어학) + '궤도로' + 구독 문맥 CTA + 아카이브 링크
 │   │    · 전체 보기·아카이브 날짜 → /relearn/daily/:date (자체 아카이브 상세 — 독립 운영 Phase 1)
 │   │    · 기록 뷰: 항해 기록 .md 내보내기 툴바 (PaceNote 포트폴리오 내보내기 자체화)
+│   ├─ ② 실행: 궤도 검색 모달(누적 추천 풀 검색·↑↓/Enter — PaceNote 옴니 검색 승계)
+│   │    · 미완료 궤도 hover × 제외(실수 정정, POST /remove — 완료 항목 불가)
 │   ├─ ② 실행 ⛵  OrbitSection(진행바·토글·자유 입력·AI 추천+사유 라벨)
 │   └─ ③ 복기 📝  ReflectionSection(디바운스 1.2s 자동저장, 1000자)
 │   └─ 루프 닫힘 푸터

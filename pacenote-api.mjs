@@ -732,6 +732,39 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
 });
 
 
+// 2-b. 궤도 제거 — 실수로 추가한 궤도 정정용 (미완료 항목만 허용: 완료 통계·성장 시그널 왜곡 방지)
+pacenoteRouter.post('/remove', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const { taskId } = req.body;
+
+    if (!taskId) return res.status(400).json({ error: 'taskId is required' });
+
+    const today = new Date();
+    const currentWeekId = getWeekNumber(today);
+    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+
+    const data = doc.data();
+    const currentPace = data.currentPace || [];
+
+    const taskIndex = currentPace.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return res.status(404).json({ error: 'Task not found' });
+    if (currentPace[taskIndex].completed) {
+      return res.status(400).json({ error: 'Completed tasks cannot be removed' });
+    }
+
+    currentPace.splice(taskIndex, 1);
+    await docRef.update({ currentPace });
+    res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
+  } catch (err) {
+    console.error('[PaceNote API] Remove Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // 3. 추천 미션을 내 궤도로 추가 (Accept)
 pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
   try {

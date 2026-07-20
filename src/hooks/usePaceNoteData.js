@@ -135,6 +135,11 @@ export function usePaceNoteData() {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taskId }),
     }).then(applyMutation), [call, applyMutation]);
 
+  const removeTask = useCallback((taskId) =>
+    call('/remove', 'remove_task', { taskId }, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taskId }),
+    }).then(applyMutation), [call, applyMutation]);
+
   const acceptTask = useCallback((taskId) =>
     call('/accept', 'accept_recommendation', { taskId }, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taskId }),
@@ -159,6 +164,7 @@ export function usePaceNoteData() {
     reload,
     addTask,
     toggleTask,
+    removeTask,
     acceptTask,
     saveDiary,
     addOrbit,
