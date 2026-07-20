@@ -21,9 +21,18 @@
 
 .detail-container {
   width: 100%;
-  max-width: var(--measure); /* §3-3 가독 단 */
+  max-width: var(--container); /* §3-3 페이지 셸 — 전 페이지 엣지 일관(1200) */
   position: relative;
   z-index: 1;
+}
+
+/* 장문 프로스 스택(헤더·본문·푸터)만 내부에서 가독 단(--measure)으로 중앙 제한 (§3-3 규칙 2) */
+.detail-container .detail-header,
+.detail-container .markdown-body,
+.detail-container .detail-footer {
+  max-width: var(--measure);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .detail-header {
