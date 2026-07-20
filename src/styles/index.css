@@ -66,6 +66,24 @@
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 32px;
+
+    /* Typography Scale 토큰 — 유일 허용 폰트 사이즈 (design_system.md §4-2 규범)
+       규칙: font-size는 아래 토큰(또는 동일 값)만 사용. px·임의 값 금지.
+       신규 단계가 필요하면 design_system.md 개정을 통해서만 추가한다. */
+    --fs-070: 0.7rem;   /* 미세 캡션·뱃지 */
+    --fs-075: 0.75rem;  /* Caption/Tag (모노 라벨) */
+    --fs-080: 0.8rem;   /* 보조 텍스트·링크 */
+    --fs-085: 0.85rem;  /* 콤팩트 본문·버튼·접기 요약 */
+    --fs-090: 0.9rem;   /* 스몰 본문·상태 문구 */
+    --fs-095: 0.95rem;  /* 서브 본문 */
+    --fs-100: 1rem;     /* Body Base */
+    --fs-110: 1.1rem;   /* 강조 본문 */
+    --fs-115: 1.15rem;  /* Body Large — 서비스 히어로 서브카피 */
+    --fs-130: 1.3rem;   /* 소형 헤딩·마커 아이콘 */
+    --fs-140: 1.4rem;   /* 섹션 타이틀 */
+    --fs-150: 1.5rem;   /* Heading 2 하한 */
+    --fs-220: 2.2rem;   /* 서비스 히어로 타이틀(모바일) */
+    --fs-300: 3rem;     /* 서비스 히어로 타이틀(데스크톱) */
     --space-2xl: 64px;
     --space-3xl: 128px;
 
