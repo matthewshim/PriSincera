@@ -209,8 +209,6 @@ function Header() {
           <Link to="/relearn" className={`nav-link nav-link-relearn${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
             ReLearn<span className="nav-new-dot" title="NEW" aria-label="NEW"></span>
           </Link>
-          <Link to="/daily" className={`nav-link${location.pathname.startsWith('/daily') ? ' active' : ''}`} id="navDailyDigest">{t('header.dailyDigest')}</Link>
-          <Link to="/pacenote" className={`nav-link${location.pathname.startsWith('/pacenote') ? ' active' : ''}`} id="navPaceNote">{t('header.paceNote')}</Link>
           <Link to="/sylphio" className={`nav-link${location.pathname.startsWith('/sylphio') ? ' active' : ''}`} id="navSylphio">{t('header.sylphio')}</Link>
         </div>
         <div className="nav-right">
@@ -375,64 +373,7 @@ function Header() {
             </div>
           </Link>
 
-          {/* 4. Daily Digest (AI Curation) */}
-          <Link
-            to="/daily"
-            className={`mobile-bento-nav-item daily-cyan-theme${location.pathname.startsWith('/daily') ? ' active' : ''}`}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: 'var(--orbit-cyan)' }}>AI Curation</div>
-              <h3 className="bento-card-title">Daily Digest</h3>
-              <div className="bento-card-arrow">📡 View Curation →</div>
-            </div>
-            <div className="bento-card-visual">
-              <div className="dynamic-mockup daily-mockup">
-                <div className="mockup-header">
-                  <div className="mockup-dot"></div><div className="mockup-dot"></div><div className="mockup-dot"></div>
-                </div>
-                <div className="mockup-body">
-                  <div className="mockup-skeleton-title"></div>
-                  <div className="mockup-skeleton-text"></div>
-                  <div className="mockup-ai-card">
-                    <span className="ai-spark">✨</span>
-                    <div className="ai-lines">
-                      <div className="ai-line"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="visual-blur-orb cyan"></div>
-            </div>
-          </Link>
-
-          {/* 5. Pace Note (Action Tracker) */}
-          <Link
-            to="/pacenote"
-            className={`mobile-bento-nav-item pace-green-theme${location.pathname.startsWith('/pacenote') ? ' active' : ''}`}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: '#34D399' }}>Action & Tracker</div>
-              <h3 className="bento-card-title">Pace Note</h3>
-              <div className="bento-card-arrow">🎯 Track Goals →</div>
-            </div>
-            <div className="bento-card-visual">
-              <div className="dynamic-mockup pacenote-mockup">
-                <div className="pacenote-grid">
-                  {[...Array(20)].map((_, i) => (
-                    <div key={i} className={`pace-cell ${[5,6,12,14,18].includes(i) ? 'active' : ''} ${i === 14 ? 'pulse' : ''}`}></div>
-                  ))}
-                </div>
-                <div className="pace-floating-card">
-                  <div className="pace-check">✓</div>
-                </div>
-              </div>
-              <div className="visual-blur-orb emerald"></div>
-            </div>
-          </Link>
-
-          {/* 6. Sylphio (AI Translation) */}
+          {/* 4. Sylphio (AI Translation) */}
           <Link
             to="/sylphio"
             className={`mobile-bento-nav-item sylphio-blue-theme${location.pathname.startsWith('/sylphio') ? ' active' : ''}`}

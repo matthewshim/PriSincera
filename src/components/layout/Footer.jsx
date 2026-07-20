@@ -54,8 +54,7 @@ function Footer() {
               <h4 className="footer-col-title">{t('footer.navigate')}</h4>
               <Link to="/" className="footer-link">Home</Link>
               <Link to="/builders-log" className="footer-link">{t('header.buildersLog')}</Link>
-              <Link to="/daily" className="footer-link">{t('header.dailyDigest')}</Link>
-              <Link to="/pacenote" className="footer-link">{t('header.paceNote')}</Link>
+              <Link to="/relearn" className="footer-link">ReLearn</Link>
               <Link to="/sylphio" className="footer-link">{t('header.sylphio')}</Link>
             </div>
             <div className="footer-col">

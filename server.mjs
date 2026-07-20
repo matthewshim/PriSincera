@@ -453,10 +453,8 @@ app.get('/sitemap.xml', async (req, res) => {
     const baseUrl = 'https://www.prisincera.com';
     const staticPages = [
       { url: '/', changefreq: 'weekly', priority: 1.0 },
-      { url: '/daily', changefreq: 'daily', priority: 0.9 },
       { url: '/relearn', changefreq: 'daily', priority: 0.9 },
       { url: '/builders-log', changefreq: 'weekly', priority: 0.8 },
-      { url: '/pacenote', changefreq: 'weekly', priority: 0.8 },
       { url: '/sylphio', changefreq: 'weekly', priority: 0.9 },
       { url: '/sylphio/guide', changefreq: 'weekly', priority: 0.8 },
       { url: '/sylphio/privacy', changefreq: 'monthly', priority: 0.5 },
@@ -473,7 +471,7 @@ app.get('/sitemap.xml', async (req, res) => {
 
     // Add daily digest issues
     for (const date of allDates) {
-      xml += `  <url>\n    <loc>${baseUrl}/daily/${date}</loc>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+      xml += `  <url>\n    <loc>${baseUrl}/relearn/daily/${date}</loc>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
     }
 
     // Add builders log chapters
@@ -496,6 +494,11 @@ app.get('/sitemap.xml', async (req, res) => {
 // --- SPA fallback & Dynamic SEO Proxy ---
 let cachedIndexHtml = null;
 
+// ── ReLearn 통합: 구 독립 서비스 경로 301 (SEO 자산·과거 발송 메일 링크 보전) ──
+app.get(/^\/daily\/(\d{4}-\d{2}-\d{2})$/, (req, res) => res.redirect(301, `/relearn/daily/${req.params[0]}`));
+app.get(/^\/daily(\/.*)?$/, (req, res) => res.redirect(301, '/relearn'));
+app.get(/^\/pacenote(\/.*)?$/, (req, res) => res.redirect(301, '/relearn'));
+
 app.use(async (req, res) => {
   const indexPath = join(DIST_DIR, 'index.html');
   if (!existsSync(indexPath)) {
@@ -514,7 +517,7 @@ app.use(async (req, res) => {
   let override = null;   // 동적 페이지(글 상세/날짜)용 메타
 
   try {
-    const dailyMatch = req.originalUrl.match(/^\/daily\/(\d{4}-\d{2}-\d{2})/);
+    const dailyMatch = req.originalUrl.match(/^\/relearn\/daily\/(\d{4}-\d{2}-\d{2})/);
     if (dailyMatch) {
       const dateStr = dailyMatch[1];
       const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');

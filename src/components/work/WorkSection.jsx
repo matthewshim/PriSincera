@@ -255,7 +255,7 @@ export default function WorkSection() {
           data-accent-color="34,211,238"
         >
           <div className="flagship-content">
-            <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>Daily Curation & Learning</div>
+            <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>ReLearn · Learn — Daily Curation</div>
             <h3 className="flagship-title">Daily Digest</h3>
             <p className="flagship-desc">
               {t('home.serviceDailyDesc').split('\n').map((line, idx) => (
@@ -271,8 +271,8 @@ export default function WorkSection() {
               <span className="work-tag">Newsletter</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/daily" className="btn-primary flagship-cta-btn cyan">
-                {t('home.serviceDailyCta')}
+              <Link to="/relearn" className="btn-primary flagship-cta-btn cyan">
+                Explore in ReLearn →
               </Link>
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function WorkSection() {
           data-accent-color="52,211,153"
         >
           <div className="flagship-content">
-            <div className="flagship-label" style={{ color: '#34D399' }}>Action & Branding</div>
+            <div className="flagship-label" style={{ color: '#34D399' }}>ReLearn · Run — Action Tracker</div>
             <h3 className="flagship-title">Pace Note</h3>
             <p className="flagship-desc">
               {t('home.servicePaceDesc').split('\n').map((line, idx) => (
@@ -321,8 +321,8 @@ export default function WorkSection() {
               <span className="work-tag">Timeline</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/pacenote" className="btn-primary flagship-cta-btn green">
-                {t('home.servicePaceCta')}
+              <Link to="/relearn" className="btn-primary flagship-cta-btn green">
+                Explore in ReLearn →
               </Link>
             </div>
           </div>

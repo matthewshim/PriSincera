@@ -271,7 +271,7 @@ function renderStudySection(studyData, date) {
         <tr>
           <td bgcolor="#8B5CF6"
               style="background:linear-gradient(135deg,#8B5CF6,#6D28D9); border-radius:100px; padding:8px 22px;">
-            <a href="https://www.prisincera.com/pacenote"
+            <a href="https://www.prisincera.com/relearn"
                style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
               → 나만의 궤도 기록하기 (Pace Note)
             </a>
@@ -355,7 +355,7 @@ function renderPaceNoteSection(paceNotes) {
         <tr>
           <td bgcolor="#4F46E5"
               style="background:linear-gradient(135deg,#4F46E5,#6D28D9); border-radius:100px; padding:8px 22px;">
-            <a href="https://www.prisincera.com/pacenote"
+            <a href="https://www.prisincera.com/relearn"
                style="font-family:'Inter','Pretendard',-apple-system,sans-serif; font-size:13px; font-weight:600; color:#FFFFFF; text-decoration:none; display:inline-block;">
               → 페이스노트 캘린더에서 기록하기
             </a>
