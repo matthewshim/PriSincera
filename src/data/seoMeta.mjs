@@ -21,26 +21,31 @@ export const PAGE_META = {
     keywords: "PriSincera, 프리싱케라, ReLearn, 성장 루프, Builder's Log, Sylphio, Daily Digest, Pace Note, AI Curation",
   },
   '/relearn': {
+    ogImage: `${BASE_URL}/og-relearn.png`,
     pageTitle: 'ReLearn — 배움·실행·복기 통합 성장 루프',
     description: '매일 제로에서, 다시 배우고 다시 달린다. Daily Digest의 배움과 Pace Note의 실행·복기를 하나의 여정으로 잇는 통합 성장 루프 서비스입니다.',
     keywords: 'PriSincera, ReLearn, 리런, 성장 루프, 데일리 다이제스트, 페이스 노트, 배움, 실행, 회고',
   },
   '/builders-log': {
+    ogImage: `${BASE_URL}/og-builderslog.png`,
     pageTitle: "Builder's Log — 서비스 구축의 기록",
     description: 'PriSincera 프로덕트가 만들어지는 과정과 디자인, 기술적 의사결정을 날것 그대로 기록하는 빌더스 로그입니다.',
     keywords: 'PriSincera, 빌더스 로그, 개발 일지, 프로덕트, 기술 블로그, 아키텍처',
   },
   '/sylphio': {
+    ogImage: `${BASE_URL}/og-sylphio.png`,
     pageTitle: 'Sylphio — macOS 실시간 AI 통역·회의록',
     description: 'macOS 실시간 AI 동시통역·회의록 에이전트. 온디바이스 STT(오프라인, 언어팩 없으면 Apple 서버 폴백)·에어팟 실명 락온·마이크/에어팟/시스템 사운드 3소스 캡처. 종료 후 녹음을 Gemini 2.5로 재분석하는 정밀 회의록과 마크다운(.md) 자동 요약까지.',
     keywords: '실피오, Sylphio, macOS 동시통역, 실시간 자막, 에어팟 번역, 온디바이스 STT, AI 회의록, 정밀 회의록, Gemini',
   },
   '/sylphio/guide': {
+    ogImage: `${BASE_URL}/og-sylphio.png`,
     pageTitle: 'Sylphio API Key 연동 가이드',
     description: '개인용 AI API Key(Google Gemini·OpenAI)를 Sylphio에 연동해 월 구독료 없이 AI 회의록 요약과 정밀 회의록 기능을 누리는 방법을 안내합니다.',
     keywords: 'Sylphio API Key, Gemini API, OpenAI API, BYOK, 실피오 연동 가이드',
   },
   '/sylphio/privacy': {
+    ogImage: `${BASE_URL}/og-sylphio.png`,
     pageTitle: 'Sylphio 개인정보 처리방침',
     description: '로컬 녹음 저장·BYOK 오디오 전송·화면 녹화 권한·하이브리드 STT를 투명하게 고지하는 Sylphio 개인정보 처리방침(데이터 무수집 원칙).',
     keywords: 'Sylphio 개인정보, 데이터 무수집, 프라이버시, BYOK, 온디바이스',
