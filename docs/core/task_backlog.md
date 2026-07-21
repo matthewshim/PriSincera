@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-07-20
-version: v1.0
+last_updated: 2026-07-21
+version: v1.1
 target_files: []  # 작업 백로그 — 특정 코드 미지배
 ---
 
@@ -13,6 +13,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-20 | AI Agent | 리런 통폐합(Phase 1~3) 완료 시점의 잔여 작업 정본 목록 최초 작성 | 전 도메인 |
+| v1.1 | 2026-07-21 | AI Agent | 1-1·1-2 검증 완료(아카이브 SSR 메타 결함 발견·수정 포함), 2-1 완료 | server.mjs, ReLearnDaily |
 
 > **운영 규칙**: 본 문서가 잔여 작업의 단일 정본(SSOT)입니다. 작업 착수·완료 시 상태를 갱신하고, 완료 항목은 ~~취소선~~ + 완료일을 남깁니다. 새 작업은 우선순위 표에 추가하십시오.
 
@@ -22,8 +23,8 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 
 | # | 작업 | 성격 | 비고 |
 | :--- | :--- | :--- | :--- |
-| 1-1 | 배포 검증: `/relearn` 오늘·기록 뷰 전 기능, `/daily`·`/pacenote` 301, 메인·GNB·Footer | 운영 확인(1회) | Phase 3(-3,477줄) 직후 필수 |
-| 1-2 | 빌드 로그 `[design-check] PASS` 확인 | 운영 확인(1회) | prebuild 게이트 실가동 확인 |
+| ~~1-1~~ | ~~배포 검증~~ | ✅ 2026-07-21 | 301 3종·리런 SSR·사이트맵(80건/구 URL 0) 라이브 검증. **아카이브 상세 SSR 메타 결함 발견**(Phase 3의 PAGE_META 삭제가 server.mjs 참조를 깨뜨림 — src/만 검증한 누락) → 폴백 보장 구조로 수정 |
+| ~~1-2~~ | ~~빌드 로그 `[design-check] PASS` 확인~~ | ✅ 2026-07-21 | 게이트 도입 이후 커밋들이 라이브 반영됨(사이트맵 이관 확인) = 게이트 통과 간접 검증 |
 | 1-3 | **ReLearn.jsx(~750줄) 스테이지별 컴포넌트 분리 리팩터** | 개발 | LearnStage/RunStage/ReflectStage + 계정바·아카이브 분리. **빌드 검증 가능 환경(node)에서 진행** — 1-1 안정 확인 후 |
 | 1-4 | 서치콘솔 색인 전환 모니터링 (`/daily/:date` → `/relearn/daily/:date`) | 운영(수 주) | 301 효과 추적 |
 | 1-5 | 소셜 OG 캐시 재스크랩 (카카오·페이스북 디버거) | 사용자 액션 | 새 Star Prism OG 카드 반영 |
@@ -32,7 +33,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 
 | # | 작업 | 비고 |
 | :--- | :--- | :--- |
-| 2-1 | ReLearnDaily(아카이브 상세)에 이전/다음 날짜 네비게이션 | 현재는 목록 복귀만 가능 |
+| ~~2-1~~ | ~~ReLearnDaily 이전/다음 날짜 네비게이션~~ | ✅ 2026-07-21 — /api/daily/index 기반 |
 | 2-2 | GA 퍼널 검증: `learn_expand`·`learn_more`·`orbit_add/exclude/restore` 데이터로 콤팩트 축약 강도 조정 | 리디자인 §6 검증 지표 |
 
 ## 3. 🟡 디자인 시스템 백로그 (design_system.md §9-7 연동)

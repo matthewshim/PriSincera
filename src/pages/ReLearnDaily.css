@@ -15,3 +15,15 @@
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .rl-daily-sub { font-size: var(--fs-090); color: var(--text-muted); margin: 0; }
+.rl-daily-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 14px;
+}
+.rl-daily-navlink {
+  font-size: var(--fs-085); color: var(--text-secondary); text-decoration: none;
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.rl-daily-navlink:hover { border-color: var(--glass-border-hover); color: var(--text-primary); }

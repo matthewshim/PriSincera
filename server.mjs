@@ -520,31 +520,35 @@ app.use(async (req, res) => {
     const dailyMatch = req.originalUrl.match(/^\/relearn\/daily\/(\d{4}-\d{2}-\d{2})/);
     if (dailyMatch) {
       const dateStr = dailyMatch[1];
-      const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
-      let signalData = await getDailySignal(dateStr);
-      
-      if (!signalData && storage) {
-        try {
-          const [content] = await storage.bucket(GCS_BUCKET).file(`daily/${dateStr}.json`).download();
-          signalData = JSON.parse(content.toString('utf-8'));
-        } catch(e) {}
-      }
-      
-      if (signalData && signalData.articles && signalData.articles.length > 0) {
-        // Find top article for SEO representation
-        const topArticle = signalData.articles.sort((a,b) => (b.weightedScore||0) - (a.weightedScore||0))[0];
-        override = {
-          pageTitle: `${topArticle.title} — Daily Digest`,
-          description: topArticle.summary ? topArticle.summary.substring(0, 150) + '...' : PAGE_META['/daily'].description,
-          keywords: PAGE_META['/daily'].keywords,
-          ogImage: topArticle.ogImage || undefined,
-        };
-      } else {
-        override = {
-          pageTitle: `${dateStr} Daily Digest`,
-          description: PAGE_META['/daily'].description,
-          keywords: PAGE_META['/daily'].keywords,
-        };
+      // 날짜 메타는 데이터 조회 성패와 무관하게 항상 보장 (조회 실패 시 이 폴백이 그대로 나감)
+      override = {
+        pageTitle: `${dateStr} Daily Digest — ReLearn`,
+        description: `${dateStr} 데일리 다이제스트 아카이브 — IT 시그널·테크 트랙·AI 프롬프트·비즈니스 일본어 전체 기록.`,
+        keywords: PAGE_META['/relearn'].keywords,
+      };
+      // 대표글 OG 승격은 별도 격리 — 실패해도 위 폴백 메타는 유지된다
+      try {
+        const { getDailySignal } = await import('./pipeline/src/repositories/DailyRepository.mjs');
+        let signalData = await getDailySignal(dateStr);
+
+        if (!signalData && storage) {
+          try {
+            const [content] = await storage.bucket(GCS_BUCKET).file(`daily/${dateStr}.json`).download();
+            signalData = JSON.parse(content.toString('utf-8'));
+          } catch(e) {}
+        }
+
+        if (signalData && signalData.articles && signalData.articles.length > 0) {
+          const topArticle = signalData.articles.sort((a,b) => (b.weightedScore||0) - (a.weightedScore||0))[0];
+          override = {
+            pageTitle: `${topArticle.title} — Daily Digest`,
+            description: topArticle.summary ? topArticle.summary.substring(0, 150) + '...' : override.description,
+            keywords: override.keywords,
+            ogImage: topArticle.ogImage || undefined,
+          };
+        }
+      } catch (e) {
+        console.error('[SEO Proxy] 아카이브 상세 대표글 조회 실패 — 날짜 폴백 메타 사용:', e.message);
       }
     } else if (req.originalUrl.startsWith('/builders-log')) {
       const logMatch = req.originalUrl.match(/^\/builders-log\/([a-zA-Z0-9-_]+)/);

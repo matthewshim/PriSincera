@@ -19,6 +19,16 @@ export default function ReLearnDaily() {
   const valid = /^\d{4}-\d{2}-\d{2}$/.test(date || '');
   const [daily, setDaily] = useState(null);
   const [error, setError] = useState(null);
+  const [dates, setDates] = useState(null);   // 아카이브 전체 날짜(최신순) — 이전/다음 네비용
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/daily/index')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (!cancelled) setDates(d?.dates || []); })
+      .catch(() => { if (!cancelled) setDates([]); });
+    return () => { cancelled = true; };
+  }, []);
 
   useSEO({
     title: `${date} Daily Digest — ReLearn`,
@@ -46,6 +56,10 @@ export default function ReLearnDaily() {
 
   if (!valid) return <Navigate to="/relearn" replace />;
   const study = daily?.study;
+  // dates는 최신순 — 다음(newer)은 앞 인덱스, 이전(older)은 뒤 인덱스
+  const di = dates ? dates.indexOf(date) : -1;
+  const newer = di > 0 ? dates[di - 1] : null;
+  const older = di > -1 && di < (dates?.length || 0) - 1 ? dates[di + 1] : null;
 
   return (
     <div className="rl-page rl-daily-page">
@@ -53,6 +67,12 @@ export default function ReLearnDaily() {
         <Link className="rl-daily-back" to="/relearn">← ReLearn</Link>
         <h1 className="rl-daily-title">{date} <span>Daily Digest</span></h1>
         <p className="rl-daily-sub">그날의 배움 아카이브 — 4채널 전체 기록</p>
+        {(older || newer) && (
+          <nav className="rl-daily-nav" aria-label="아카이브 날짜 이동">
+            {older ? <Link className="rl-daily-navlink" to={`/relearn/daily/${older}`}>← {older}</Link> : <span />}
+            {newer ? <Link className="rl-daily-navlink" to={`/relearn/daily/${newer}`}>{newer} →</Link> : <span />}
+          </nav>
+        )}
       </header>
 
       {error && <div className="rl-status">{error}</div>}
