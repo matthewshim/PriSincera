@@ -355,7 +355,7 @@
 
 .stat-label {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: var(--fs-065);
     letter-spacing: 0.15em;
     color: var(--text-muted);
     text-transform: uppercase;

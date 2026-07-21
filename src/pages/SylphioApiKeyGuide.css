@@ -171,7 +171,7 @@
 }
 
 .sylphio-guide-subtitle {
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   color: var(--text-secondary, #a1a1aa);
   line-height: 1.6;
   max-width: 620px;
@@ -190,7 +190,7 @@
 }
 
 .sylphio-guide-byok-icon {
-  font-size: 1.6rem;
+  font-size: var(--fs-160);
 }
 
 .sylphio-guide-byok-content h4 {
@@ -262,7 +262,7 @@
 
 .sylphio-guide-section-title h2 {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: var(--fs-145);
   color: var(--text-primary, #fafafa);
   margin: 0;
   font-weight: 700;
@@ -330,7 +330,7 @@
 
 .sylphio-guide-pricing-header {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   color: var(--text-primary, #fafafa);
   margin-bottom: 16px;
   font-weight: 700;
@@ -415,7 +415,7 @@
 
 .sylphio-guide-faq h3 {
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: var(--fs-160);
   color: var(--text-primary, #fafafa);
   margin: 0 0 20px 0;
   font-weight: 800;
@@ -452,7 +452,7 @@
     border-radius: 16px;
   }
   .sylphio-guide-header h1 {
-    font-size: 1.8rem;
+    font-size: var(--fs-180);
   }
 }
 

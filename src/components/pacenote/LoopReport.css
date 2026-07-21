@@ -40,7 +40,7 @@
 .loop-stat-sub { font-size: var(--fs-075); color: var(--text-muted, #94A3B8); }
 
 .loop-stat-domain { border-color: rgba(165, 180, 252, 0.22); background: rgba(165, 180, 252, 0.06); }
-.loop-stat-domain-name { font-size: 1.05rem; color: var(--color-indigo, #A5B4FC); }
+.loop-stat-domain-name { font-size: var(--fs-105); color: var(--color-indigo, #A5B4FC); }
 
 @media (max-width: 700px) {
   .loop-report-stats { grid-template-columns: repeat(2, 1fr); }

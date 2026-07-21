@@ -184,7 +184,7 @@
 
 .scroll-text {
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: var(--fs-055);
     letter-spacing: 0.2em;
     color: var(--text-muted);
     opacity: 0.5;
@@ -281,7 +281,7 @@
     top: 50%;
     transform: translateY(-50%);
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: var(--fs-060);
     letter-spacing: 0.12em;
     color: var(--text-muted);
     white-space: nowrap;

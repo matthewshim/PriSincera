@@ -195,7 +195,7 @@
 }
 
 .today-badge {
-  font-size: 0.5rem;
+  font-size: var(--fs-050);
   font-weight: 800;
   color: #FBBF24;
   letter-spacing: 0.05em;

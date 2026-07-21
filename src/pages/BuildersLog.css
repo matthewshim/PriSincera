@@ -343,7 +343,7 @@
 
 .chapter-title {
   font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-size: var(--fs-180);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.3;
@@ -354,7 +354,7 @@
 }
 
 .builder-card-featured .chapter-title {
-  font-size: 2.4rem;
+  font-size: var(--fs-240);
   line-height: 1.2;
   letter-spacing: -0.03em;
 }
@@ -478,7 +478,7 @@
 
 .shipment-badge {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: var(--fs-065);
   font-weight: 700;
   text-transform: uppercase;
   padding: 1px 5px;
@@ -640,7 +640,7 @@
   }
 
   .builder-card-featured .chapter-title {
-    font-size: 1.8rem;
+    font-size: var(--fs-180);
   }
 }
 
@@ -669,7 +669,7 @@
   }
 
   .builder-card-featured .chapter-title {
-    font-size: 1.7rem; /* Prominent title size for the top post */
+    font-size: var(--fs-170); /* Prominent title size for the top post */
     line-height: 1.25;
     letter-spacing: -0.02em;
   }

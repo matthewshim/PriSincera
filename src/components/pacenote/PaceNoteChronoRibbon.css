@@ -445,7 +445,7 @@
   }
   
   .ribbon-status-label {
-    font-size: 0.65rem;
+    font-size: var(--fs-065);
   }
   
   .ribbon-arrow {

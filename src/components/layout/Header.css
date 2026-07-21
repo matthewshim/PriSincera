@@ -302,7 +302,7 @@
 }
 
 .locale-dropdown-trigger .dropdown-arrow {
-    font-size: 0.55rem;
+    font-size: var(--fs-055);
     opacity: 0.4;
     transition: transform 0.25s var(--ease-smooth, ease), opacity 0.2s ease;
     margin-left: 2px;
@@ -462,7 +462,7 @@
     }
     .mobile-menu-title {
         font-family: var(--font-display);
-        font-size: 1.55rem;
+        font-size: var(--fs-155);
         font-weight: 700;
         background: var(--gradient-brand);
         -webkit-background-clip: text;
@@ -573,7 +573,7 @@
     }
     .bento-card-label {
         font-family: var(--font-mono);
-        font-size: 0.65rem;
+        font-size: var(--fs-065);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 500;
@@ -708,7 +708,7 @@
         border-radius: 8px;
         padding: 10px;
         font-family: var(--font-mono);
-        font-size: 0.65rem;
+        font-size: var(--fs-065);
         color: rgba(255, 255, 255, 0.7);
         width: 190px;
         box-sizing: border-box;

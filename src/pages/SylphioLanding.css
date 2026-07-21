@@ -153,7 +153,7 @@
 
 .sylphio-section-header p {
   color: var(--text-muted, #71717a);
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   max-width: 580px;
   margin: 0 auto;
   white-space: pre-line; /* \n 개행 문자가 마크업 훼손 없이 줄바꿈으로 자연스럽게 작동하도록 바인딩 */
@@ -195,7 +195,7 @@
 }
 
 .sylphio-feature-icon {
-  font-size: 2rem;
+  font-size: var(--fs-200);
   margin-bottom: var(--space-md, 16px);
   display: inline-block;
   transform: translateZ(30px);
@@ -203,7 +203,7 @@
 
 .premium-card h3 {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: var(--fs-120);
   font-weight: 700;
   margin: 0 0 10px 0;
   color: var(--text-primary, #fafafa);
@@ -296,7 +296,7 @@
 }
 
 .sylphio-sim-source {
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   font-weight: 400;
   color: var(--text-primary, #fafafa);
   line-height: 1.6;
@@ -305,7 +305,7 @@
 }
 
 .sylphio-sim-translated {
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   font-weight: 600;
   color: #87A9EC;
   line-height: 1.6;
@@ -360,7 +360,7 @@
   background: linear-gradient(135deg, #1e3c72 0%, #87A9EC 100%);
   color: #050505;
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: var(--fs-065);
   font-weight: 800;
   padding: 4px 32px; /* 가로 길이를 넓게 빼서 모서리를 풍성히 채우고 클리핑 유도 */
   letter-spacing: 0.08em;
@@ -437,7 +437,7 @@
   background: linear-gradient(135deg, rgba(135, 169, 236, 0.15) 0%, rgba(30, 60, 114, 0.15) 100%);
   border: 1px solid rgba(135, 169, 236, 0.35);
   color: #87A9EC; /* 실피오 블루 오로라 색상 */
-  font-size: 9px;
+  font-size: var(--fs-055);
   font-weight: 900;
   margin-top: 2px; /* 줄바꿈 텍스트 상단에 정확히 일치 */
   box-shadow: 0 0 8px rgba(135, 169, 236, 0.2);
@@ -533,7 +533,7 @@
 }
 
 .badge-tier {
-  font-size: 0.65rem;
+  font-size: var(--fs-065);
   font-weight: 900;
   padding: 2.5px 6px;
   border-radius: 4px;
@@ -549,7 +549,7 @@
 }
 
 .badge-source {
-  font-size: 0.65rem;
+  font-size: var(--fs-065);
   font-weight: 700;
   padding: 2.5px 6px;
   border-radius: 4px;
@@ -565,7 +565,7 @@
 }
 
 .sylphio-sim-lang-code {
-  font-size: 0.65rem;
+  font-size: var(--fs-065);
   font-weight: 900;
   color: white;
   padding: 3px 6.5px;
@@ -602,7 +602,7 @@
 .btn-sim-pro-badge {
   background: linear-gradient(135deg, #ffb800, #ff8a00);
   color: #050505;
-  font-size: 0.58rem;
+  font-size: var(--fs-060);
   font-weight: 900;
   padding: 1.5px 4px;
   border-radius: 3px;
@@ -645,7 +645,7 @@
   position: absolute;
   top: 16px;
   right: 20px;
-  font-size: 18px;
+  font-size: var(--fs-115);
   color: rgba(255,255,255,0.4);
   cursor: pointer;
   transition: color 0.2s;
@@ -655,7 +655,7 @@
 }
 
 .paywall-header h2 {
-  font-size: 1.6rem;
+  font-size: var(--fs-160);
   font-weight: 900;
   margin: 0 0 8px 0;
   background: linear-gradient(135deg, #3b82f6, #10b981);
@@ -726,7 +726,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: var(--fs-175);
   font-weight: bold;
   margin: 0 auto 16px;
   animation: popSuccess 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);

@@ -84,7 +84,7 @@
 .rl-rec-star { flex-shrink: 0; }
 .rl-rec-t { flex: 1; font-size: var(--fs-085); color: var(--text-secondary); }
 .rl-rec-reason {
-  font-size: 0.64rem; font-weight: 700; padding: 2px 8px;
+  font-size: var(--fs-065); font-weight: 700; padding: 2px 8px;
   border-radius: var(--radius-pill); white-space: nowrap;
 }
 .rl-rec-reason.strong { background: rgba(165, 180, 252, 0.14); color: var(--color-indigo); border: 1px solid rgba(165, 180, 252, 0.3); }

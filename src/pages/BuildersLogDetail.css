@@ -151,7 +151,7 @@
 
 /* Markdown Body Styles */
 .markdown-body {
-  font-size: 1.0625rem; /* 17px: 가독성이 뛰어난 본문 크기 */
+  font-size: var(--fs-105); /* 본문 가독 크기 — v5.6 그리드 스냅(17→16.8px) */
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.85);
   word-break: keep-all;
@@ -171,13 +171,13 @@
 }
 
 .markdown-body h2 {
-  font-size: 1.6rem;
+  font-size: var(--fs-160);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
 }
 
 .markdown-body h3 {
-  font-size: 1.35rem;
+  font-size: var(--fs-135);
 }
 
 .markdown-body p {
@@ -326,10 +326,10 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .detail-title {
-    font-size: 1.75rem;
+    font-size: var(--fs-175);
   }
   .detail-subtitle {
-    font-size: 1.05rem;
+    font-size: var(--fs-105);
   }
   .builders-log-detail-wrapper {
     padding-top: 96px;

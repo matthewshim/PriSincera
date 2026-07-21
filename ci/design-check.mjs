@@ -17,8 +17,12 @@ const EXCLUDE = new Set([
   'src/pages/AdminDashboard.css',        // 내부 어드민 — 별도 관례(§9-7)
   'src/components/admin/ServiceDocs.css',
 ]);
-const TOKENS = new Set(['0.7', '0.75', '0.8', '0.85', '0.9', '0.95', '1', '1.1', '1.15', '1.3', '1.4', '1.5', '2.2', '3']);
-const BAND = [0.66, 1.0]; // ERROR 대상 밴드 [min, max) — max는 미포함으로 비교
+// v5.6 그리드 전면화: 0.05rem 그리드 위 '등재 토큰 값'만 허용 (전 범위 ERROR)
+const TOKENS = new Set([
+  '0.5', '0.55', '0.6', '0.65', '0.7', '0.75', '0.8', '0.85', '0.9', '0.95',
+  '1', '1.05', '1.1', '1.15', '1.2', '1.25', '1.3', '1.35', '1.4', '1.45',
+  '1.5', '1.55', '1.6', '1.7', '1.75', '1.8', '2', '2.2', '2.4', '3',
+]);
 
 function* cssFiles(dir) {
   for (const name of readdirSync(dir)) {
@@ -53,9 +57,7 @@ for (const file of cssFiles(ROOT)) {
     if (unit === 'rem' && TOKENS.has(String(num))) continue; // 토큰 값 리터럴 허용(토큰 정의부 포함)
     if (unit === 'px' && num === 16) continue;               // html 루트 기준값 허용
     const line = css.slice(0, m.index).split('\n').length;
-    const msg = `${rel}:${line} font-size: ${m[1]}${unit}`;
-    if (remVal >= BAND[0] && remVal < BAND[1]) errors.push(msg);
-    else warns.push(msg);
+    errors.push(`${rel}:${line} font-size: ${m[1]}${unit} (§4-2 v5.6 — --fs-* 등재 토큰만 허용)`);
   }
 }
 

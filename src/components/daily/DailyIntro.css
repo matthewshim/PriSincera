@@ -125,13 +125,13 @@
 }
 
 .bento-icon {
-  font-size: 2rem;
+  font-size: var(--fs-200);
   margin-bottom: 16px;
   display: inline-block;
 }
 .bento-title {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: var(--fs-135);
   font-weight: 700;
   color: var(--crystal-white);
   margin-bottom: 12px;
@@ -310,7 +310,7 @@
 .section-heading {
   text-align: center;
   font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-size: var(--fs-180);
   margin-bottom: 40px;
 }
 .pipeline-steps {

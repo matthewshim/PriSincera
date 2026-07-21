@@ -131,14 +131,14 @@
   border-color: rgba(165, 180, 252, 0.5);
   background: linear-gradient(135deg, rgba(165, 180, 252, 0.16), rgba(34, 211, 238, 0.09));
 }
-.track-loop-banner-icon { font-size: 1.05rem; flex-shrink: 0; }
+.track-loop-banner-icon { font-size: var(--fs-105); flex-shrink: 0; }
 .track-loop-banner-text { flex: 1; font-size: var(--fs-090); }
 .track-loop-banner-text strong { color: var(--color-indigo); font-weight: 700; }
 .track-loop-banner-cta { font-size: var(--fs-080); font-weight: 600; color: var(--color-cyan); white-space: nowrap; }
 
 .track-card-title {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 6px;

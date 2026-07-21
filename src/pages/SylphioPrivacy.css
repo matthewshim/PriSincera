@@ -178,7 +178,7 @@
 }
 
 .sylphio-privacy-intro {
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   line-height: 1.65;
   color: var(--text-secondary, #a1a1aa);
   margin-bottom: var(--space-xl, 40px);
@@ -209,7 +209,7 @@
 
 .sylphio-privacy-section h3 {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: var(--fs-105);
   color: var(--text-primary, #fafafa);
   margin: 24px 0 10px 0;
   font-weight: 700;
@@ -267,7 +267,7 @@
     border-radius: 16px;
   }
   .sylphio-privacy-header h1 {
-    font-size: 1.8rem;
+    font-size: var(--fs-180);
   }
 }
 

@@ -261,7 +261,7 @@
 
 .signal-article-body h3 {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: var(--fs-125);
   line-height: 1.4;
   margin: 0 0 var(--space-sm);
   color: var(--text-primary);
@@ -553,7 +553,7 @@
 
 .study-jp {
   font-family: 'Outfit', 'Pretendard', 'Noto Serif JP', serif;
-  font-size: 1.8rem;
+  font-size: var(--fs-180);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: 0.05em;
@@ -668,7 +668,7 @@
 }
 
 .vocab-word {
-  font-size: 1.2rem;
+  font-size: var(--fs-120);
   color: var(--text-primary);
   font-weight: 700;
 }
@@ -1326,7 +1326,7 @@
   }
   
   .study-jp {
-    font-size: 1.45rem;
+    font-size: var(--fs-145);
   }
   
   .study-translation {

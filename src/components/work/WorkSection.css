@@ -198,14 +198,14 @@
 
 .flagship-title {
     font-family: var(--font-display);
-    font-size: 2rem;
+    font-size: var(--fs-200);
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 16px;
 }
 
 .flagship-desc {
-    font-size: 1.05rem;
+    font-size: var(--fs-105);
     color: var(--text-muted);
     line-height: 1.7;
     margin-bottom: 24px;
@@ -540,7 +540,7 @@
 
 .work-card-label {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: var(--fs-065);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--orbit-cyan);
@@ -550,7 +550,7 @@
 
 .work-card-name {
     font-family: var(--font-display);
-    font-size: 1.2rem;
+    font-size: var(--fs-120);
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: var(--space-xs);
@@ -561,7 +561,7 @@
 
 .work-card-tag {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: var(--fs-060);
     letter-spacing: 0.08em;
     color: var(--text-muted);
     opacity: 0.6;
@@ -584,7 +584,7 @@
 
 .work-tag {
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: var(--fs-060);
     letter-spacing: 0.08em;
     color: rgba(196, 181, 253, 0.6);
     padding: 3px 10px;
@@ -620,7 +620,7 @@
 }
 
 .work-card-emoji {
-    font-size: 1.6rem;
+    font-size: var(--fs-160);
     line-height: 1;
 }
 
@@ -747,7 +747,7 @@
     border-radius: 8px;
     padding: 10px;
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: var(--fs-065);
     color: rgba(255, 255, 255, 0.7);
     box-shadow: 0 10px 30px rgba(0,0,0,0.55);
     text-align: left;
