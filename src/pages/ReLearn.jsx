@@ -8,19 +8,16 @@
  * usePaceNoteData + profile 을 셸 레벨에서 1회 페치해 하위로 주입한다.
  */
 import { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
 import usePaceNoteData from '../hooks/usePaceNoteData';
 import LoopReport from '../components/pacenote/LoopReport';
-import SignalSection from '../components/daily/SignalSection';
-import PromptSection from '../components/daily/PromptSection';
-import JapaneseSection from '../components/daily/JapaneseSection';
-import TrackSignalFeed from '../components/daily/TrackSignalFeed';
-import OrbitSection from '../components/relearn/OrbitSection';
-import ReflectionSection from '../components/relearn/ReflectionSection';
 import { trackRelearn } from '../components/relearn/funnel';
+import LearnStage from '../components/relearn/LearnStage';
+import RunStage from '../components/relearn/RunStage';
+import ReflectStage from '../components/relearn/ReflectStage';
+import RecordsView from '../components/relearn/RecordsView';
 import './ReLearn.css';
 
 const todayKST = () => new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -31,16 +28,6 @@ const CHANNEL_ORBITS = {
   prompt: '오늘의 AI 프롬프트 직접 실행해보기',
   jp: '오늘의 비즈니스 일본어 문장 소리 내어 3번 읽기',
 };
-
-const LEARN_CHANNELS = [
-  { key: 'track', icon: '🛰️', label: '테크 트랙' },
-  { key: 'signal', icon: '📡', label: '시그널' },
-  { key: 'prompt', icon: '🤖', label: '프롬프트' },
-  { key: 'jp', icon: '🇯🇵', label: '어학' },
-];
-
-// ReLearn 배움 채널의 시그널 표시 상한 (전체는 /daily 아카이브에서)
-const SIGNAL_LIMIT = 4;
 
 export default function ReLearn() {
   const { user, token, loginWithGoogle, logout } = useAuth();
@@ -231,27 +218,6 @@ export default function ReLearn() {
 
   const study = daily?.study;
 
-  // ── 기록 내보내기(.md) — PaceNote 포트폴리오 내보내기의 리런 자체화(Phase 1) ──
-  const exportRecords = () => {
-    const tt = (v) => (typeof v === 'object' ? v.ko : v);
-    const lines = ['# ReLearn 항해 기록 (Voyage Log)', '', `내보낸 날짜: ${todayKST()}`, ''];
-    records.forEach(w => {
-      lines.push(`## ${w.weekId}${w.startDate ? ` (${w.startDate} – ${w.endDate || ''})` : ''}${w.inProgress ? ' · 진행 중' : ''}`);
-      const done = w.tasks || [];
-      lines.push(`완료한 궤도 ${done.length}개${w.total ? ` / 전체 ${w.total}개` : ''}`);
-      done.forEach(t2 => lines.push(`- [x] ${tt(t2.title)}`));
-      if (done.length === 0) lines.push('- (완료된 궤도 없음)');
-      lines.push('', '### 복기', w.statement ? `> ${w.statement}` : '> (회고 없음)', '');
-    });
-    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `relearn-voyage-log-${todayKST()}.md`;
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-    trackRelearn('relearn_export_records');
-  };
-
   // 채널 책갈피 클릭 = 해당 채널 섹션으로 앵커 스크롤 (콘텐츠는 항상 연속 스택)
   const selectChannel = (key) => {
     setChannel(key);
@@ -417,173 +383,30 @@ export default function ReLearn() {
             <div className="rl-rail" aria-hidden="true" />
 
             {/* ════ ① 배움 ════ */}
-            <section className="rl-stage s1">
-              {/* 좌측 레일 2뎁스: ① 마커 + 채널 서브 앵커 (콘텐츠를 덮지 않는 책갈피) */}
-              <div className="rl-marker-group">
-                <div className="rl-marker" aria-hidden="true">📚</div>
-                <div className={`rl-rail-subnav${subnavOn ? '' : ' faded'}`} role="group" aria-label="배움 채널 책갈피">
-                  {LEARN_CHANNELS.map(c => (
-                    <button
-                      key={c.key}
-                      className={`rl-rail-ch ch-${c.key} ${channel === c.key ? 'on' : ''}`}
-                      title={c.label}
-                      aria-label={c.label}
-                      onClick={() => selectChannel(c.key)}
-                    >
-                      {c.icon}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="rl-body" id="rl-learn">
-                <div className="rl-stage-head"><span className="rl-stage-no">STAGE 01</span><h2 className="rl-stage-title">배움 — 오늘의 다이제스트</h2></div>
-                <p className="rl-stage-desc">Daily Digest 4채널 전체가 이곳으로. 로그인하면 내 궤도 도메인이 상단에 정렬됩니다.</p>
-
-                {/* 모바일 전용 채널 칩 (레일이 숨는 폭에서만 노출, 비스티키) */}
-                <div className="rl-learn-chips" role="group" aria-label="배움 채널">
-                  {LEARN_CHANNELS.map(c => (
-                    <button key={c.key} className={`rl-learn-chip ch-${c.key} ${channel === c.key ? 'on' : ''}`} onClick={() => selectChannel(c.key)}>
-                      {c.icon} {c.label}
-                    </button>
-                  ))}
-                </div>
-
-                {dailyError && !daily && <div className="rl-status">{dailyError}</div>}
-
-                {(
-                  <div className="rl-ch-sec" data-rl-ch="track">
-                    <TrackSignalFeed date={date} affinity={affinity} compact onOrbitAdded={(domain) => trackRelearn('relearn_orbit_add', { source: 'track', domain })} />
-                  </div>
-                )}
-
-                {daily?.signal && (
-                  <div className="rl-ch-sec" data-rl-ch="signal">
-                    <SignalSection signal={daily.signal} limit={SIGNAL_LIMIT} compact />
-                    <div className="rl-ch-foot">
-                      {user && <ChannelOrbitBtn ch="signal" />}
-                      {(daily.signal.articles || []).length > SIGNAL_LIMIT && (
-                        <Link className="rl-more-link" to={`/relearn/daily/${date}`}>시그널 전체 보기 →</Link>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {study?.prompt_snippet && (
-                  <div className="rl-ch-sec" data-rl-ch="prompt">
-                    <PromptSection study={study} compact />
-                    {user && <ChannelOrbitBtn ch="prompt" />}
-                  </div>
-                )}
-
-                {study?.sentence_jp && (
-                  <div className="rl-ch-sec" data-rl-ch="jp">
-                    <JapaneseSection study={study} compact />
-                    {user && <ChannelOrbitBtn ch="jp" />}
-                  </div>
-                )}
-
-                {/* 구독 관리 UI는 상단 계정·구독 바로 단일화 (하단 매몰·중복 방지) */}
-
-                {/* P3: 경량 아카이브 — 날짜 리스트(상세는 /daily/:date 영구 URL) */}
-                <button className="rl-archive-link" onClick={toggleArchive}>
-                  지난 다이제스트 보기 {archiveOpen ? '▾' : '→'}
-                </button>
-                {archiveOpen && (
-                  <div className="rl-archive-list">
-                    {archiveDates === null && <span className="rl-archive-empty">불러오는 중…</span>}
-                    {archiveDates?.length === 0 && <span className="rl-archive-empty">아카이브가 비어 있어요.</span>}
-                    {archiveDates?.map(d => (
-                      <Link key={d} className="rl-archive-date" to={`/relearn/daily/${d}`}>{d}</Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </section>
+            <LearnStage
+              subnavOn={subnavOn} channel={channel} selectChannel={selectChannel}
+              daily={daily} dailyError={dailyError} study={study} date={date}
+              user={user} affinity={affinity} ChannelOrbitBtn={ChannelOrbitBtn}
+              archiveOpen={archiveOpen} archiveDates={archiveDates} toggleArchive={toggleArchive}
+            />
 
             {/* ════ ② 실행 ════ */}
-            <section className="rl-stage s2">
-              <div className="rl-marker" aria-hidden="true">⛵</div>
-              <div className="rl-body" id="rl-run">
-                <div className="rl-stage-head"><span className="rl-stage-no">STAGE 02</span><h2 className="rl-stage-title">실행 — 이번 주 궤도</h2></div>
-                <p className="rl-stage-desc">배움에서 추가한 액션이 오늘 할 일이 됩니다.</p>
-                {!user ? (
-                  <div className="rl-login-cta">
-                    <p>실행의 궤도는 로그인 후 나만의 기록으로 관리됩니다.</p>
-                    <button className="rl-login-btn haptic-trigger" onClick={loginWithGoogle}>나의 페이스 만들기</button>
-                  </div>
-                ) : paceLoading ? (
-                  <div className="rl-status">궤도 불러오는 중…</div>
-                ) : (
-                  <OrbitSection current={data?.current} onToggle={handleToggle} onAccept={handleAccept} onAdd={handleAddCustom} onExclude={handleExclude} onRestore={handleRestore} affinity={affinity} />
-                )}
-              </div>
-            </section>
+            <RunStage
+              user={user} loginWithGoogle={loginWithGoogle} paceLoading={paceLoading}
+              current={data?.current} affinity={affinity}
+              handleToggle={handleToggle} handleAccept={handleAccept} handleAddCustom={handleAddCustom}
+              handleExclude={handleExclude} handleRestore={handleRestore}
+            />
 
             {/* ════ ③ 복기 ════ */}
-            <section className="rl-stage s3">
-              <div className="rl-marker" aria-hidden="true">📝</div>
-              <div className="rl-body" id="rl-reflect">
-                <div className="rl-stage-head"><span className="rl-stage-no">STAGE 03</span><h2 className="rl-stage-title">복기 — 항해 일지</h2></div>
-                <p className="rl-stage-desc">오늘의 실행을 한 줄로. 이 기록이 내일의 배움과 추천을 바꿉니다.</p>
-                {!user ? (
-                  <div className="rl-login-cta">
-                    <p>복기는 로그인 후 주간 항해 일지로 저장됩니다.</p>
-                    <button className="rl-login-btn haptic-trigger" onClick={loginWithGoogle}>나의 페이스 만들기</button>
-                  </div>
-                ) : (
-                  <ReflectionSection statement={data?.current?.statement || ''} onSave={handleReflectSave} />
-                )}
-              </div>
-            </section>
+            <ReflectStage
+              user={user} loginWithGoogle={loginWithGoogle}
+              statement={data?.current?.statement || ''} handleReflectSave={handleReflectSave}
+            />
           </div>
         </>
       ) : (
-        /* ── 기록 뷰 (A안: 주차별 실행·복기 아카이브 — 기존 timeline 재사용) ── */
-        <section className="rl-records" aria-label="항해 기록">
-          {!user ? (
-            <div className="rl-login-cta">
-              <p>항해 기록은 로그인 후 나만의 아카이브로 쌓입니다.</p>
-              <button className="rl-login-btn haptic-trigger" onClick={loginWithGoogle}>나의 페이스 만들기</button>
-            </div>
-          ) : paceLoading ? (
-            <div className="rl-status">기록 불러오는 중…</div>
-          ) : records.length === 0 ? (
-            <div className="rl-status">아직 기록이 없어요 — 오늘 뷰에서 첫 궤도를 완료해 보세요.</div>
-          ) : (
-            <>
-              <div className="rl-rec-toolbar">
-                <button className="rl-expand-btn" onClick={exportRecords}>📥 기록 내보내기 (.md)</button>
-              </div>
-              {records.map(w => (
-              <article key={w.weekId} className="rl-card rl-rec-week">
-                <div className="rl-rec-head">
-                  <span className="rl-rec-id">{w.weekId}</span>
-                  {w.startDate && <span className="rl-rec-range">{w.startDate}{w.endDate ? ` – ${w.endDate}` : ''}</span>}
-                  {w.inProgress && <span className="rl-rec-badge">진행 중</span>}
-                  <span className="rl-rec-count">
-                    {w.inProgress ? `${w.tasks.length}/${w.total} 완료` : `완료 ${w.tasks.length}개`}
-                  </span>
-                </div>
-                {w.tasks.map(task => (
-                  <div key={task.id} className="rl-rec-done">
-                    <span className="rl-rec-mk">✓</span>
-                    <span className="rl-rec-t">{typeof task.title === 'object' ? task.title.ko : task.title}</span>
-                    {task.category && (
-                      <span className="rl-orbit-cat" style={{ color: task.color || 'var(--color-indigo)', background: 'rgba(255,255,255,0.05)' }}>
-                        {task.category}
-                      </span>
-                    )}
-                  </div>
-                ))}
-                {w.tasks.length === 0 && <div className="rl-rec-none">완료된 궤도가 아직 없어요.</div>}
-                {w.statement
-                  ? <div className="rl-rec-reflect"><span className="rl-rec-lb">복기</span>{w.statement}</div>
-                  : <div className="rl-rec-noreflect">이 주는 회고가 남지 않았어요.</div>}
-              </article>
-              ))}
-            </>
-          )}
-        </section>
+        <RecordsView user={user} loginWithGoogle={loginWithGoogle} paceLoading={paceLoading} records={records} todayStr={date} />
       )}
 
       {/* ── 루프 닫힘 푸터 ── */}

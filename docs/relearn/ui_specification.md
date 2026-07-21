@@ -27,6 +27,11 @@ target_files:
 ## 1. 화면 구조 (위 → 아래)
 
 ```
+[컴포넌트 구조 — 1-3 리팩터] ReLearn.jsx(셸: 상태·핸들러·SEO·스크롤스파이)
+  ├─ LearnStage(①배움 존·책갈피·아카이브) · RunStage(②궤도) · ReflectStage(③일지)
+  ├─ RecordsView(기록 뷰·.md 내보내기) · OrbitSection · ReflectionSection · LoopReport
+  └─ daily 공용: TrackSignalFeed·Signal/Prompt/JapaneseSection (compact prop)
+
 GNB (ReLearn 활성 시 relearn-theme·cyan)
 ├─ 히어로(표준 서비스 히어로 규격 — Daily/PaceNote/Builder's Log 동일 패턴):
 │         🪐 아이콘(3rem float) · "ReLearn"(--font-display 3rem 700, --gradient-brand) ·
