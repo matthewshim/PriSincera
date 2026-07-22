@@ -278,10 +278,27 @@ export default function WorkSection() {
           </div>
           <div className="flagship-visual">
             <div className="dynamic-mockup relearn-mockup">
-              <div className="relearn-loop-track">
-                <span className="relearn-loop-dot d1"></span>
-                <span className="relearn-loop-dot d2"></span>
-                <span className="relearn-loop-dot d3"></span>
+              {/* 상단: 성장 루프 궤도 — 코어(🪐) + 3 스테이지 노드 + 공전 코멧 */}
+              <div className="rlm-orbit-canvas">
+                <div className="rlm-orbit-ring"></div>
+                <div className="rlm-orbit-rotor"><span className="rlm-comet"></span></div>
+                <div className="rlm-core">🪐</div>
+                <div className="rlm-node n1"><span className="rlm-node-ico">📚</span><span className="rlm-node-tag">Learn</span></div>
+                <div className="rlm-node n2"><span className="rlm-node-ico">⛵</span><span className="rlm-node-tag">Run</span></div>
+                <div className="rlm-node n3"><span className="rlm-node-ico">📝</span><span className="rlm-node-tag">Reflect</span></div>
+              </div>
+              {/* 하단: 루프 리포트 미니 터미널 (Base 터미널과 동일 문법) */}
+              <div className="rlm-report">
+                <div className="rlm-report-header">
+                  <span className="rlm-report-title">growth-loop.state</span>
+                  <span className="rlm-report-status">LOOPING</span>
+                </div>
+                <div className="rlm-report-row">
+                  <span className="rlm-report-label">Run</span>
+                  <span className="rlm-report-bar"><i className="rlm-report-fill"></i></span>
+                  <span className="rlm-report-val">68%</span>
+                </div>
+                <div className="rlm-report-meta">🔥 6-week streak · Learn → Run → Reflect</div>
               </div>
             </div>
             <div className="visual-blur-orb cyan"></div>
@@ -319,8 +336,25 @@ export default function WorkSection() {
           </div>
           <div className="flagship-visual">
             <div className="dynamic-mockup sylphio-mockup">
-              <div className="sylphio-bento-core">
-                <div className="sylphio-bento-pulse"></div>
+              {/* 상단: 오로라 코어(앱 아이콘) + 리스닝 파형 */}
+              <div className="sym-stage">
+                <div className="sym-aurora">
+                  <img src="/sylphio-icon.png?v=3" alt="Sylphio" className="sym-core-img" />
+                  <span className="sym-ring r1"></span>
+                  <span className="sym-ring r2"></span>
+                </div>
+                <div className="sym-wave" aria-hidden="true">
+                  <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                </div>
+              </div>
+              {/* 하단: 실시간 통역 캡션 창 (원문 → 번역 타이핑) */}
+              <div className="sym-caption">
+                <div className="sym-caption-header">
+                  <span className="sym-caption-title">live-interpret.session</span>
+                  <span className="sym-caption-status">ON AIR</span>
+                </div>
+                <div className="sym-line src">"Let's align on the Q3 roadmap."</div>
+                <div className="sym-line dst">Q3 로드맵을 함께 맞춰보시죠.<span className="sym-caret"></span></div>
               </div>
             </div>
             <div className="visual-blur-orb blue"></div>
