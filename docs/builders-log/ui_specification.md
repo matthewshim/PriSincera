@@ -2,10 +2,12 @@
 status: active
 domain: BuildersLog
 last_updated: 2026-07-22
-version: v1.1
+version: v1.2
 target_files:
   - src/pages/BuildersLog.jsx
   - src/pages/BuildersLog.css
+  - src/pages/BuildersLogDetail.jsx
+  - src/pages/BuildersLogDetail.css
 ---
 
 # 📐 Builder's Log UI 명세서
@@ -20,6 +22,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-05-21 | AI Agent | Builder's Log 목록 카드 UI/UX 및 반응형 그리드 명세 정의 | BuildersLog.jsx, BuildersLog.css |
 | v1.1 | 2026-07-22 | AI Agent | §5 인터랙션 현행화 — v4.5 JS 3D Tilt 이관 반영, `prefers-reduced-motion` 가드·`:focus-visible` 키보드 패리티 규정, 폐기된 호버 커밋 패널 잔재 CSS 정리 | BuildersLog.jsx, BuildersLog.css |
+| v1.2 | 2026-07-22 | AI Agent | 상세 헤더 뒤로가기 `← Builder's Log` → 위치 경로 브레드크럼 `Builder's Log › 아티클`(로케일 대응, [design_system §9-9](../core/design_system.md)) — 리런 아카이브와 상세 내비 문법 통일 | BuildersLogDetail.jsx, BuildersLogDetail.css |
 
 ---
 

@@ -71,6 +71,30 @@
   color: var(--text-primary);
 }
 
+/* 위치 경로 브레드크럼 (design_system §9-9) — 챕터 액센트 컬러를 링크 hover에 반영 */
+.detail-crumb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-090);
+  margin-bottom: var(--space-xl);
+}
+.detail-crumb-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.detail-crumb-link:hover {
+  color: var(--accent-color, var(--text-primary));
+}
+.detail-crumb-sep {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+.detail-crumb-cur {
+  color: var(--text-secondary);
+}
+
 .detail-meta {
   display: flex;
   align-items: center;

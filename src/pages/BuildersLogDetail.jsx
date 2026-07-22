@@ -108,7 +108,12 @@ export default function BuildersLogDetail() {
     <div className="builders-log-detail-wrapper">
       <div className="detail-container">
         <div className="detail-header" style={{ '--accent-color': articleMeta.accent }}>
-          <Link to="/builders-log" className="back-btn">← Builder's Log</Link>
+          {/* 위치 경로 브레드크럼 — GNB에 Builder's Log 활성인 상세 화면의 뒤로가기 동어반복 해소 (design_system §9-9) */}
+          <nav className="detail-crumb" aria-label={locale === 'ko' ? '위치 경로' : 'Breadcrumb'}>
+            <Link to="/builders-log" className="detail-crumb-link">Builder's Log</Link>
+            <span className="detail-crumb-sep" aria-hidden="true">›</span>
+            <span className="detail-crumb-cur" aria-current="page">{locale === 'ko' ? '아티클' : 'Article'}</span>
+          </nav>
           <div className="detail-meta">
             <span className="chapter-badge">Chapter {articleMeta.chapterNo}</span>
             <span className="date-badge">{new Date(articleMeta.date).toLocaleDateString()}</span>
