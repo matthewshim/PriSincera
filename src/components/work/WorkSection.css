@@ -866,14 +866,132 @@
     box-shadow: 0 8px 30px rgba(0, 242, 254, 0.3);
 }
 
-/* Sylphio Mockup CSS Art */
+/* Sylphio Mockup CSS Art — 실시간 통역 세션 미러 (Base 목업과 동일 규격) */
 .sylphio-mockup {
-    width: 280px;
-    height: 280px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 20px;
+    background: rgba(17, 17, 17, 0.7);
+    border: 1px solid rgba(0, 242, 254, 0.25);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.sym-stage {
+    height: 132px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+.sym-aurora {
+    position: relative;
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+.sym-core-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    box-shadow: 0 0 26px rgba(30, 128, 255, 0.45), 0 0 54px rgba(0, 242, 254, 0.25);
+    animation: symFloat 5s ease-in-out infinite;
+}
+.sym-ring {
+    position: absolute;
+    inset: -8px;
+    border: 1.5px solid rgba(0, 242, 254, 0.4);
+    border-radius: 20px;
+    animation: symRing 2.6s infinite linear;
+}
+.sym-ring.r2 { animation-delay: 1.3s; }
+@keyframes symRing {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.45); opacity: 0; }
+}
+@keyframes symFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+.sym-wave {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 22px;
+}
+.sym-wave i {
+    width: 4px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #00F2FE, rgba(30, 128, 255, 0.5));
+    animation: symWave 1.1s ease-in-out infinite alternate;
+}
+.sym-wave i:nth-child(1) { height: 30%; animation-delay: 0s; }
+.sym-wave i:nth-child(2) { height: 70%; animation-delay: 0.12s; }
+.sym-wave i:nth-child(3) { height: 100%; animation-delay: 0.24s; }
+.sym-wave i:nth-child(4) { height: 55%; animation-delay: 0.36s; }
+.sym-wave i:nth-child(5) { height: 85%; animation-delay: 0.48s; }
+.sym-wave i:nth-child(6) { height: 45%; animation-delay: 0.6s; }
+.sym-wave i:nth-child(7) { height: 25%; animation-delay: 0.72s; }
+@keyframes symWave {
+    0% { transform: scaleY(0.45); opacity: 0.55; }
+    100% { transform: scaleY(1); opacity: 1; }
+}
+
+.sym-caption {
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-065);
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+.sym-caption-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+}
+.sym-caption-title { color: rgba(255, 255, 255, 0.45); }
+.sym-caption-status {
+    color: #00F2FE;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.sym-caption-status::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #00F2FE;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00F2FE;
+    animation: statusBlink 1.5s infinite;
+}
+.sym-line { line-height: 1.6; }
+.sym-line.src { color: rgba(255, 255, 255, 0.5); }
+.sym-line.dst { color: rgba(0, 242, 254, 0.9); }
+.sym-caret {
+    display: inline-block;
+    width: 6px;
+    height: 11px;
+    margin-left: 3px;
+    background: #00F2FE;
+    vertical-align: -1px;
+    animation: statusBlink 0.9s infinite;
+}
+
+/* (레거시) 헤더 모바일 벤토가 사용하는 기본형 — 유지 */
 .sylphio-bento-core {
     width: 60px;
     height: 60px;
@@ -968,6 +1086,174 @@
     }
 }
 
-/* ── ReLearn 플래그십 목업 — 벤토(Header)용 루프 트랙의 대형 캔버스 스케일 보정 ── */
-.flagship-visual .relearn-loop-track { gap: 22px; padding: 16px 28px; }
-.flagship-visual .relearn-loop-dot { width: 14px; height: 14px; }
+/* ============================================
+   ReLearn Mockup CSS Art — 성장 루프 궤도 + 리포트 (Base 목업과 동일 규격)
+   ============================================ */
+.relearn-mockup {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 20px;
+    background: rgba(17, 17, 17, 0.7);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.rlm-orbit-canvas {
+    height: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rlm-orbit-ring {
+    position: absolute;
+    width: 118px;
+    height: 118px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.08) inset;
+}
+.rlm-orbit-rotor {
+    position: absolute;
+    width: 118px;
+    height: 118px;
+    animation: rlmSpin 9s linear infinite;
+}
+.rlm-comet {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    margin-left: -3.5px;
+    border-radius: 50%;
+    background: #22D3EE;
+    box-shadow: 0 0 10px #22D3EE, 0 0 22px rgba(34, 211, 238, 0.6);
+}
+@keyframes rlmSpin {
+    100% { transform: rotate(360deg); }
+}
+.rlm-core {
+    font-size: var(--fs-150);
+    animation: symFloat 6s ease-in-out infinite;
+    filter: drop-shadow(0 0 14px rgba(165, 180, 252, 0.5));
+}
+.rlm-node {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+.rlm-node .rlm-node-ico {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: var(--fs-090);
+    background: rgba(17, 17, 17, 0.9);
+    border: 1.5px solid;
+}
+.rlm-node .rlm-node-tag {
+    font-family: var(--font-mono);
+    font-size: var(--fs-060);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+.rlm-node.n1 { top: 0; left: 50%; transform: translateX(-50%); }
+.rlm-node.n1 .rlm-node-ico { border-color: rgba(34, 211, 238, 0.6); box-shadow: 0 0 14px rgba(34, 211, 238, 0.25); }
+.rlm-node.n1 .rlm-node-tag { color: #22D3EE; }
+.rlm-node.n2 { bottom: 4px; right: 22px; }
+.rlm-node.n2 .rlm-node-ico { border-color: rgba(165, 180, 252, 0.6); box-shadow: 0 0 14px rgba(165, 180, 252, 0.25); }
+.rlm-node.n2 .rlm-node-tag { color: #A5B4FC; }
+.rlm-node.n3 { bottom: 4px; left: 22px; }
+.rlm-node.n3 .rlm-node-ico { border-color: rgba(229, 178, 93, 0.6); box-shadow: 0 0 14px rgba(229, 178, 93, 0.25); }
+.rlm-node.n3 .rlm-node-tag { color: #E5B25D; }
+
+.rlm-report {
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-065);
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+.rlm-report-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+}
+.rlm-report-title { color: rgba(255, 255, 255, 0.45); }
+.rlm-report-status {
+    color: #22D3EE;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.rlm-report-status::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #22D3EE;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #22D3EE;
+    animation: statusBlink 1.5s infinite;
+}
+.rlm-report-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.rlm-report-label { color: rgba(255, 255, 255, 0.55); }
+.rlm-report-bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+.rlm-report-fill {
+    display: block;
+    height: 100%;
+    width: 68%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #A5B4FC, #22D3EE);
+    animation: rlmFill 2.4s ease-out both;
+}
+@keyframes rlmFill {
+    from { width: 0; }
+    to { width: 68%; }
+}
+.rlm-report-val { color: #22D3EE; font-weight: bold; }
+.rlm-report-meta { color: rgba(255, 255, 255, 0.5); }
+
+/* ── 모바일 목업 일괄 보정: 85vw 카드(내부 ≤288px)에서 300px 고정폭 잘림 방지 ── */
+@media (max-width: 768px) {
+    .dynamic-mockup {
+        transform: none;               /* 3D 기울임 해제 — 좁은 폭 클리핑 방지 */
+        width: 100%;
+        max-width: 280px;
+        box-sizing: border-box;
+    }
+    .flagship-card:hover .dynamic-mockup { transform: translateY(-6px); }
+    .base-mockup, .builderslog-mockup, .relearn-mockup, .sylphio-mockup {
+        width: 100%;
+        height: auto;
+    }
+    .rlm-orbit-canvas { height: 140px; }
+    .rlm-node.n2 { right: 12px; }
+    .rlm-node.n3 { left: 12px; }
+    .sym-stage { height: 120px; }
+    .sym-line.src { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
