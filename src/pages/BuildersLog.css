@@ -183,6 +183,25 @@
   transform: scale(1.15);
 }
 
+/* Keyboard Parity — 호버 표면 피드백의 :focus-visible 미러링 (디자인 시스템 §9-3) */
+.builder-card-link-wrapper:focus-visible {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+.builder-card-link-wrapper:focus-visible .builder-card-glass {
+  background: rgba(255, 255, 255, 0.025);
+  border-color: color-mix(in srgb, var(--accent-color) 35%, rgba(255, 255, 255, 0.05));
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5),
+              0 0 24px color-mix(in srgb, var(--accent-color) 8%, transparent);
+}
+
+.builder-card-link-wrapper:focus-visible .card-glow-bg {
+  opacity: 0.12;
+  transform: scale(1.15);
+}
+
 /* --- Split Layout for Featured Card --- */
 .card-layout-split {
   display: flex;
@@ -555,8 +574,8 @@
   transform: translateX(4px);
 }
 
+/* 눌림 transform은 전역 햅틱 규격(index.css .haptic-trigger:active !important)이 담당 */
 .builder-card-link-wrapper:active .builder-card-glass {
-  transform: translateY(0) scale(0.99);
   background: rgba(255, 255, 255, 0.015);
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
 }
@@ -699,20 +718,6 @@
 
   .card-tags {
     margin-top: var(--space-sm);
-  }
-
-  /* Micro Commits Panel adjustments on Mobile */
-  .card-hover-commits-panel {
-    padding: 12px 16px;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-  }
-
-  .builder-card.has-hover-panel:hover .builder-card-glass {
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-  }
-
-  .hover-commit-row {
-    font-size: var(--fs-075);
   }
 
   .card-footer {

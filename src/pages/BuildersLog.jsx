@@ -17,8 +17,11 @@ const ChapterCard = ({ chapter, index }) => {
   const [tiltStyle, setTiltStyle] = useState({});
 
   const handleMouseMove = (e) => {
+    // 터치 기기·모션 민감(reduced-motion) 환경에서는 JS 틸트 전면 비활성 (디자인 시스템 §6-3)
+    // 전역 CSS reduced-motion 킬 스위치는 인라인 transform을 차단하지 못하므로 JS 가드 필수
     const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouchDevice) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isTouchDevice || prefersReducedMotion) return;
 
     const card = cardRef.current;
     if (!card) return;

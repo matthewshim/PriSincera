@@ -1,8 +1,8 @@
 ---
 status: active
 domain: BuildersLog
-last_updated: 2026-05-21
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
   - src/pages/BuildersLog.jsx
   - src/pages/BuildersLog.css
@@ -19,6 +19,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-05-21 | AI Agent | Builder's Log 목록 카드 UI/UX 및 반응형 그리드 명세 정의 | BuildersLog.jsx, BuildersLog.css |
+| v1.1 | 2026-07-22 | AI Agent | §5 인터랙션 현행화 — v4.5 JS 3D Tilt 이관 반영, `prefers-reduced-motion` 가드·`:focus-visible` 키보드 패리티 규정, 폐기된 호버 커밋 패널 잔재 CSS 정리 | BuildersLog.jsx, BuildersLog.css |
 
 ---
 
@@ -101,4 +102,8 @@ target_files:
 
 *   **Glassmorphism 2.0**: 불필요한 백그라운드 명도를 걷어내고, 초저명도 백그라운드(`rgba(255, 255, 255, 0.01)`)와 하이 블러(`backdrop-filter: blur(32px)`)를 조합하여 미니멀하고 단정한 유리 질감을 연출합니다.
 *   **Radial Glow Border**: 마우스를 카드 위에 올렸을 때(Hover), 액센트 컬러(`chapter.accent`)가 테두리를 따라 부드럽게 감싸는 그라데이션 보더 효과를 적용하여 생동감을 불어넣습니다.
-*   **Micro Hover Physics**: 마우스 오버 시 카드가 부드럽게 위로 `y: -4px` 부유하고, 우측의 "Read Article →"의 화살표가 `x: 6px` 밀려나는 미세 트랜지션 애니메이션을 제공합니다.
+*   **3D Tilt Hover Physics (v4.5 이관)**: 마우스 오버 물리 효과는 CSS 호버가 아닌 **JS 마우스 추적 3D 틸트**(디자인 시스템 §6-3)로 제공합니다 — 최대 `5도` 기울기 + `translateY(-4px)` 공중부유 + `scale3d(1.015)`를 인라인 transform으로 주입하며, "Read Article →" 화살표는 `x: 4px` 밀림 트랜지션을 동반합니다.
+*   **접근성 가드 (필수)**:
+    *   **모션 민감**: `prefers-reduced-motion: reduce` 시 JS 틸트 연산을 전면 비활성화합니다 (터치 가드와 동일한 `matchMedia` JS 레이어 — 전역 CSS 킬 스위치는 인라인 transform을 차단하지 못함). 액센트 보더·글로우 등 정적 호버 피드백은 유지합니다.
+    *   **키보드 패리티**: 카드 전체가 단일 `<Link>`이므로, 호버 표면 피드백(액센트 보더·배경·그림자)을 `:focus-visible`에 미러링하고 가시 포커스 링을 병행합니다 (디자인 시스템 §9-3).
+*   **폐기 이력**: 카드 하단 확장형 호버 커밋 패널(`.card-hover-commits-panel`)은 정적 인라인 Shipments 패널로 대체되어 폐기되었습니다. 관련 잔재 CSS는 2026-07-22 정리 완료.
