@@ -37,7 +37,7 @@ const LEADING_EMOJI_RE = /^\p{Extended_Pictographic}/u;
 // 역할별 필독 경로 (docs 상대 경로)
 const COMMON = ['core/service_overview.md', 'core/architecture_overview.md', 'core/onboarding_guide.md'];
 const ROLE_PATHS = {
-  '🧭 기획': ['core/business_model.md', 'pacenote/product_strategy.md', 'daily-digest/content_sourcing_policy.md', 'mac_app_business_plan.md'],
+  '🧭 기획': ['core/business_model.md', 'pacenote/product_strategy.md', 'daily-digest/content_sourcing_policy.md'],
   '🎨 디자인': ['core/design_system.md', 'core/branding.md', 'core/bi_centered_ux_guide.md'],
   '💻 개발': ['core/development_guide.md', 'core/authentication_architecture.md', 'core/api_usage_analysis.md', 'data_contract_v2.md'],
 };

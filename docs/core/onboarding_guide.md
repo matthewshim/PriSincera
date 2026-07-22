@@ -37,7 +37,6 @@ target_files:
 | 1 | [business_model](business_model.md) | 수익 모델·타깃·비용 철학 |
 | 2 | [pacenote/product_strategy](../pacenote/product_strategy.md) | PaceNote 제품 전략 |
 | 3 | [daily-digest/content_sourcing_policy](../daily-digest/content_sourcing_policy.md) | 콘텐츠 출처·사실성 정책 |
-| 4 | [mac_app_business_plan](../mac_app_business_plan.md) | 데스크톱 앱 확장 계획 |
 
 ### 🎨 디자이너 (Design)
 | 순서 | 문서 | 목적 |

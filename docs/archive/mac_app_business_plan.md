@@ -1,8 +1,8 @@
 ---
-status: active
+status: archived
 domain: PaceNote
-last_updated: 2026-06-29
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
   - src/pages/PaceNoteDashboard.jsx
   - src/pages/DailyDigest.jsx
@@ -17,9 +17,11 @@ target_files:
 # 🗺️ PaceNote macOS 사업계획서
 **부제: 제로부터 다시 배우는 러너(Learner & Runner)를 위한 일일 배움 및 주간 복기 통합 플랫폼**
 
+> 🗄️ **[ARCHIVED — 계획 폐기, 2026-07-22]** macOS 데스크톱 앱 제작 계획 자체가 폐기되어 본 문서는 기록 목적으로만 보존됩니다. 단, 본 계획의 Phase 0(웹 선행)에서 태어난 산출물 중 **Data Contract v2, tech-composer 트랙 파이프라인, 어드민 `sync-daily-gcs` 동기화는 웹 ReLearn 트랙 피드가 실사용 중이므로 폐기 대상이 아닙니다.** `composer.mjs`의 GCS 집계 JSON 배포(Phase 5)는 미커밋 상태에서 함께 폐기되었습니다.
+
 본 문서는 웹 서비스로 개별 제공되던 'Daily Digest(데일리 지식/트렌드 시그널)'와 'Pace Note(주간 액션 및 성찰 기록)'를 하나로 결합하고, macOS 네이티브 환경의 특장점을 극대화하여 새로운 독립적 수익 파이프라인을 구축하기 위한 사업 계획 및 제품 정의서입니다.
 
-> **문서 정본 안내**: 본 파일(`docs/mac_app_business_plan.md`)이 단일 정본(Canonical)입니다. 바탕화면 등 외부 사본은 본 파일과 동기화하여 사용합니다.
+> **문서 정본 안내**: 본 파일(`docs/archive/mac_app_business_plan.md`)이 단일 정본(Canonical)입니다. 바탕화면 등 외부 사본은 본 파일과 동기화하여 사용합니다.
 
 > **착수 전 확정 결정사항 (2026-06-22, 6장 기술 검토 기준)**
 > 1. **인증/데이터 모델**: 무인증 로컬 단일 사용자(Zero-Auth Local Single-User)로 진행 → 6.2.1 반영.

@@ -64,9 +64,9 @@ target_files:
 > **2026-07 현재**: 이 플라이휠은 두 층으로 구현되어 있다 — ① **데이터 층**은 성장 루프([growth_loop_plan](../pacenote/growth_loop_plan.md), Phase 0~4 가동 중: 완료/회고 신호 → 추천·다이제스트 렌즈 환류), ② **화면 층**은 **ReLearn**(`/relearn`)이 배움·실행·복기를 단일 여정으로 표면화. 상세: [relearn/product_strategy](../relearn/product_strategy.md) · [relearn/ui_specification](../relearn/ui_specification.md).
 
 ## 4. 비즈니스 모델 (요약)
-- 무료(Free) + 일부 PRO/구독, 데스크톱 앱은 **BYOK(사용자 API Key)** 로 AI 원가화.
+- 무료(Free) + 일부 PRO/구독.
 - 인프라: Firestore·GCS·Cloudflare 무료 티어 + Gemini 무료 키 → **개발사 가변비 ≈ 0**.
-- 상세: [business_model](business_model.md), 데스크톱 앱 사업계획 [mac_app_business_plan](../mac_app_business_plan.md).
+- 상세: [business_model](business_model.md). (macOS 데스크톱 앱 확장 계획은 2026-07-22 폐기 — [archive/mac_app_business_plan](../archive/mac_app_business_plan.md))
 
 ## 5. 다음에 읽을 것
 - **전체 기술 구조** → [architecture_overview](architecture_overview.md)

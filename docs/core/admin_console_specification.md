@@ -79,7 +79,7 @@ target_files:
 | 항목 | 조치 | 근거 |
 | :--- | :--- | :--- |
 | `PUT /admin/api/profile` | **제거** | 프론트가 Firebase Identity Toolkit REST를 직접 호출하도록 변경된 뒤 완전 미사용(죽은 API) |
-| `POST /admin/api/daily/tracks/:date` | **유지 + 용도 주석 명시** | Admin UI 미호출이나 외부 클라이언트(macOS 앱)·파이프라인의 GCS write 경로로 설계된 엔드포인트 |
+| `POST /admin/api/daily/tracks/:date` | **유지 + 용도 주석 명시** | 어드민 콘텐츠 수정을 웹 트랙 피드 GCS JSON(`daily/{track}_{date}.json` + index)으로 동기화하는 write 경로(`sync-daily-gcs`) — 웹 ReLearn이 소비하므로 유지 (macOS 앱 전제 유지 사유는 2026-07-22 계획 폐기로 대체) |
 | 발송 메일 CTA `…/daily/${date}` | `…/relearn/daily/${date}`로 전환 | 301 의존 제거 + 리런 브랜딩 — [product_strategy \\#Phase E](../relearn/product_strategy.md)의 "유일한 파이프라인 접점" 해소 |
 | 메일·언서브 페이지 "Daily Digest" 문구 | ReLearn 브랜딩으로 교체 | 승계 후 명칭 일원화 |
 

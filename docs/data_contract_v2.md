@@ -12,9 +12,9 @@ target_files:
 
 # 🏗️ 데이터 계약 v2 — 웹↔macOS (Data Contract)
 
-> **목적**: macOS 데스크톱 앱 착수 전, 웹에서 먼저 동결하는 단일 데이터 계약. 본 계약을 따르면 데스크톱은 "REST를 IPC/SQLite로 갈아끼우기"만으로 이식된다.
+> **목적**: 웹 트랙 피드(ReLearn `TrackSignalFeed`)·파이프라인·어드민 동기화가 공유하는 단일 데이터 계약. (원래 macOS 데스크톱 앱 이식을 전제로 동결했으나, **앱 계획은 2026-07-22 폐기** — 계약 자체는 웹이 실사용 중이므로 유효)
 > **상태**: ✅ **v2.3** (2026-06-24, 오빗화 정책 변경: action 항목 N개 → 독립 궤도 N개, 도메인 카테고리, subtask 폐지) · **정본 위치**: `docs/data_contract_v2.md`
-> **관련**: [mac_app_business_plan.md](mac_app_business_plan.md) 6장 / 10장(Phase 0)
+> **관련**: [archive/mac_app_business_plan.md](archive/mac_app_business_plan.md) 6장 / 10장(Phase 0) *(archived)*
 
 ---
 
