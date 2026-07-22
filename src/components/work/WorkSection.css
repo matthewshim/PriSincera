@@ -1102,7 +1102,9 @@
 }
 
 .rlm-orbit-canvas {
+    width: 236px;              /* 고정폭 + 중앙 정렬 — 노드 절대 오프셋을 폭 변화와 무관하게 안정화 */
     height: 150px;
+    margin: 0 auto;
     position: relative;
     display: flex;
     align-items: center;
@@ -1164,13 +1166,14 @@
     font-weight: 700;
     letter-spacing: 0.06em;
 }
+/* 노드 3개를 링(118px) 위 120° 지점에 정착 — 12시 / 4시 / 8시 */
 .rlm-node.n1 { top: 0; left: 50%; transform: translateX(-50%); }
 .rlm-node.n1 .rlm-node-ico { border-color: rgba(34, 211, 238, 0.6); box-shadow: 0 0 14px rgba(34, 211, 238, 0.25); }
 .rlm-node.n1 .rlm-node-tag { color: #22D3EE; }
-.rlm-node.n2 { bottom: 4px; right: 22px; }
+.rlm-node.n2 { bottom: 10px; right: 46px; }
 .rlm-node.n2 .rlm-node-ico { border-color: rgba(165, 180, 252, 0.6); box-shadow: 0 0 14px rgba(165, 180, 252, 0.25); }
 .rlm-node.n2 .rlm-node-tag { color: #A5B4FC; }
-.rlm-node.n3 { bottom: 4px; left: 22px; }
+.rlm-node.n3 { bottom: 10px; left: 46px; }
 .rlm-node.n3 .rlm-node-ico { border-color: rgba(229, 178, 93, 0.6); box-shadow: 0 0 14px rgba(229, 178, 93, 0.25); }
 .rlm-node.n3 .rlm-node-tag { color: #E5B25D; }
 
@@ -1251,9 +1254,7 @@
         width: 100%;
         height: auto;
     }
-    .rlm-orbit-canvas { height: 140px; }
-    .rlm-node.n2 { right: 12px; }
-    .rlm-node.n3 { left: 12px; }
+    .rlm-orbit-canvas { max-width: 100%; }
     .sym-stage { height: 120px; }
     .sym-line.src { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
