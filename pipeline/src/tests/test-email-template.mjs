@@ -111,7 +111,7 @@ const html = renderDailyEmail({
   date: '2026-04-29',
   articles: mockArticles,
   totalCount: 16,
-  dailyPageUrl: 'https://www.prisincera.com/daily/2026-04-29',
+  dailyPageUrl: 'https://www.prisincera.com/relearn/daily/2026-04-29',
   unsubscribeUrl: 'https://www.prisincera.com/api/unsubscribe?email=test%40example.com&token=abc123',
   studyData: {
     prompt_snippet: 'Act as a senior product manager...',

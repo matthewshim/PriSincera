@@ -31,7 +31,8 @@ export async function isEmailAlreadySent(todayStr) {
  * @param {Object} [studyData]
  */
 export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, studyData, paceNotes, latestBuilderLog) {
-  const dailyPageUrl = `https://www.prisincera.com/daily/${todayStr}`;
+  // 리런 승계 이후 CTA는 리런 아카이브 상세로 직결 (301 경유 제거)
+  const dailyPageUrl = `https://www.prisincera.com/relearn/daily/${todayStr}`;
   
   // 날짜 한국어 포맷 (예: 5/3(일))
   const [y, m, d] = todayStr.split('-');
@@ -39,7 +40,7 @@ export async function dispatchDailyEmail(todayStr, finalArticles, subscribers, s
   const dateObj = new Date(Number(y), Number(m) - 1, Number(d));
   const dateKr = `${Number(m)}/${Number(d)}(${days[dateObj.getDay()]})`;
 
-  const subject = `📬 Daily Digest - ${dateKr}`;
+  const subject = `📬 ReLearn Daily - ${dateKr}`;
 
   // 발송 시작 전 Pending(Lock) 상태 기록하여 중복 트리거 차단
   try {

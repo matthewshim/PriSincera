@@ -176,6 +176,6 @@ export function buildUnsubscribeUrl(email) {
     return `https://www.prisincera.com/api/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
   } catch (err) {
     console.error('[Subscribers] buildUnsubscribeUrl 실패:', err.message);
-    return `https://www.prisincera.com/daily`;
+    return `https://www.prisincera.com/relearn`;
   }
 }

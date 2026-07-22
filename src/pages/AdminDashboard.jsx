@@ -169,8 +169,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
   const [priStudyStats, setPriStudyStats] = useState(null);
   const [dailyContent, setDailyContent] = useState([]);
   const [contentModal, setContentModal] = useState(null);
-  // 테크 트랙 모니터링
-  const [contentSubTab, setContentSubTab] = useState('legacy'); // 'legacy' | 'track'
+  // 배움 콘텐츠 서브탭 — track(자동 파이프라인)이 기본, legacy(수동)·pipeline(수집 현황) 병렬
+  const [contentSubTab, setContentSubTab] = useState('track'); // 'track' | 'legacy' | 'pipeline'
   const [trackStatus, setTrackStatus] = useState(null);
   const [trackJobStatus, setTrackJobStatus] = useState(null);
   const [trackLoading, setTrackLoading] = useState(false);
@@ -185,7 +185,6 @@ function Dashboard({ token, adminEmail, onLogout }) {
   // Pace Note
   const [pacers, setPacers] = useState([]);
   const [paceInsights, setPaceInsights] = useState([]);
-  const [poolStats, setPoolStats] = useState({});
   const [pacePool, setPacePool] = useState([]);
   const [paceMeta, setPaceMeta] = useState({});
   const [poolModal, setPoolModal] = useState(null);
@@ -453,7 +452,6 @@ function Dashboard({ token, adminEmail, onLogout }) {
     try {
       const data = await fetchApi('/pacenotes/insights');
       setPaceInsights(data.insights || []);
-      setPoolStats(data.poolStats || {});
     } catch (err) { setPaceInsights([]); if (err.message === 'AUTH_EXPIRED') onLogout(); }
   }
 
@@ -844,9 +842,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
     if (activeTab === 'overview') { loadPriStudyStats(); loadBuildersLogMeta(); loadEmailLogs(); }
     if (activeTab === 'content') loadDailyContent();
-    if (activeTab === 'pacenotes') loadPacers();
-    if (activeTab === 'pacenote_insights') loadPaceInsights();
-    if (activeTab === 'pacenote_pool') { loadPacePool(); loadPaceInsights(); }
+    if (activeTab === 'pacenotes') { loadPacers(); loadPaceInsights(); }
+    if (activeTab === 'pacenote_pool') loadPacePool();
     if (activeTab === 'builderslog') loadBuildersLogMeta();
   }, [activeTab]);
 
@@ -860,6 +857,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   const ROLE_LABEL = { super_admin: '슈퍼 관리자', admin: '관리자' };
 
+  // 1Depth 순서는 프론트 GNB와 동일: Common → Builder's Log → ReLearn
+  // (구 Daily Digest·Pace Note 그룹은 리런 승계에 따라 ReLearn 단일 그룹으로 병합 — docs/core/admin_console_specification.md)
   const menuGroups = [
     {
       id: 'common',
@@ -878,21 +877,13 @@ function Dashboard({ token, adminEmail, onLogout }) {
       ]
     },
     {
-      id: 'daily',
-      label: 'Daily Digest',
+      id: 'relearn',
+      label: 'ReLearn',
       items: [
-        { id: 'subscribers', label: '👥 구독 및 이메일 발송' },
-        { id: 'content', label: '📚 콘텐츠 관리' },
-        { id: 'pipeline', label: '⚙️ 파이프라인' },
-      ]
-    },
-    {
-      id: 'pacenote',
-      label: 'Pace Note',
-      items: [
-        { id: 'pacenotes', label: '⛵ Pacer 현황' },
-        { id: 'pacenote_insights', label: '💡 유저 목표 인사이트' },
-        { id: 'pacenote_pool', label: '🎯 AI 추천 풀 관리' },
+        { id: 'content', label: '📚 배움 콘텐츠' },
+        { id: 'subscribers', label: '📧 구독·발송' },
+        { id: 'pacenotes', label: '⛵ 학습자 현황' },
+        { id: 'pacenote_pool', label: '🎯 AI 추천 풀' },
       ]
     }
   ];
@@ -961,14 +952,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
             <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ margin: 0 }}>📊 Daily Digest 대시보드</h2>
+              <h2 style={{ margin: 0 }}>📊 통합 대시보드</h2>
             </div>
             <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
               <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" onClick={() => setActiveTab('subscribers')} />
               <StatCard label="누적 콘텐츠" value={priStudyStats?.totalContent || 0} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
-              <StatCard label="Pacer 참여자" value={`${priStudyStats?.totalLearners || 0}명`} icon="⛵" color="var(--admin-blue)" onClick={() => setActiveTab('pacenotes')} />
+              <StatCard label="학습자" value={`${priStudyStats?.totalLearners || 0}명`} icon="⛵" color="var(--admin-blue)" onClick={() => setActiveTab('pacenotes')} />
               <StatCard 
                 label="방문자 통계" 
                 value="GA4" 
@@ -1120,21 +1111,6 @@ function Dashboard({ token, adminEmail, onLogout }) {
           </div>
         )}
 
-        {activeTab === 'pipeline' && pipeline && (
-          <div className="admin-pipeline">
-            <h2>⚙️ 파이프라인 현황</h2>
-            <div className="admin-stat-grid">
-              <StatCard label="Collector" value={pipeline.collector.status === 'success' ? '정상' : '대기'}
-                icon="📡" color={pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)'} />
-              <StatCard label="누적 데일리" value={`${pipeline.totalDates}일`} icon="📅" color="var(--admin-blue)" />
-            </div>
-            <h3>최근 7일</h3>
-            <div className="admin-recent-dates">
-              {(pipeline.recentDates || []).map(d => (<span key={d} className="admin-date-chip">{d}</span>))}
-            </div>
-          </div>
-        )}
-
         {activeTab === 'admins' && isSuperAdmin && (
           <div className="admin-admins">
             <div className="admin-section-header">
@@ -1184,15 +1160,15 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'content' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>📚 콘텐츠 관리</h2>
+              <h2>📚 배움 콘텐츠</h2>
               {contentSubTab === 'legacy' && (
                 <button className="admin-btn-primary btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
               )}
             </div>
 
-            {/* 서브탭 토글 */}
+            {/* 서브탭 토글 — track(자동 생성)이 기본 운영 대상 */}
             <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-              {[{ id: 'legacy', label: '📚 기존 콘텐츠' }, { id: 'track', label: '🛰️ 테크 트랙' }].map(st => (
+              {[{ id: 'track', label: '🛰️ 테크 트랙' }, { id: 'legacy', label: '✍️ 수동 콘텐츠' }, { id: 'pipeline', label: '⚙️ 수집 파이프라인' }].map(st => (
                 <button
                   key={st.id}
                   onClick={() => setContentSubTab(st.id)}
@@ -1206,7 +1182,22 @@ function Dashboard({ token, adminEmail, onLogout }) {
               ))}
             </div>
 
-            {/* 기존 콘텐츠 (Signal + Study) */}
+            {/* 수집 파이프라인 현황 (collector — 읽기 전용) */}
+            {contentSubTab === 'pipeline' && pipeline && (
+              <div className="admin-pipeline">
+                <div className="admin-stat-grid">
+                  <StatCard label="Collector" value={pipeline.collector.status === 'success' ? '정상' : '대기'}
+                    icon="📡" color={pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)'} />
+                  <StatCard label="누적 데일리" value={`${pipeline.totalDates}일`} icon="📅" color="var(--admin-blue)" />
+                </div>
+                <h3>최근 7일</h3>
+                <div className="admin-recent-dates">
+                  {(pipeline.recentDates || []).map(d => (<span key={d} className="admin-date-chip">{d}</span>))}
+                </div>
+              </div>
+            )}
+
+            {/* 수동 콘텐츠 (Signal + Study) */}
             {contentSubTab === 'legacy' && (
               <div className="admin-table-wrap">
                 <table className="admin-table">
@@ -1357,8 +1348,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {activeTab === 'pacenotes' && (
           <div className="admin-subscribers">
-            <div className="admin-section-header"><h2>⛵ Pace Note (Pacer) 현황</h2></div>
-            <div className="admin-table-wrap">
+            <div className="admin-section-header"><h2>⛵ 학습자 현황</h2></div>
+            <div className="admin-table-wrap" style={{ marginBottom: '32px' }}>
               <table className="admin-table">
                 <thead><tr><th>이메일</th><th>최근 접속 주차</th><th>현재 미션(개)</th><th>완료(개)</th></tr></thead>
                 <tbody>
@@ -1370,20 +1361,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       <td>{l.completedTasks}</td>
                     </tr>
                   ))}
-                  {pacers.length === 0 && (<tr><td colSpan={4} className="admin-empty">Pace Note 데이터가 없습니다</td></tr>)}
+                  {pacers.length === 0 && (<tr><td colSpan={4} className="admin-empty">학습자 데이터가 없습니다</td></tr>)}
                 </tbody>
               </table>
             </div>
-          </div>
-        )}
 
-        {activeTab === 'pacenote_insights' && (
-          <div className="admin-subscribers">
-            <div className="admin-section-header">
-              <h2>💡 유저 커스텀 목표 인사이트</h2>
-            </div>
+            <h3>💡 유저 커스텀 목표 인사이트</h3>
             <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
-              Pacer들이 AI 추천에 의존하지 않고 직접 등록한 목표들을 분석하여, 향후 서비스 및 AI 추천 고도화에 활용할 수 있습니다.
+              학습자들이 AI 추천에 의존하지 않고 직접 등록한 목표들을 분석하여, 향후 서비스 및 AI 추천 고도화에 활용할 수 있습니다.
             </p>
             <div className="admin-table-wrap">
               <table className="admin-table">
@@ -1394,8 +1379,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       <td><span className="admin-date-chip">{insight.weekId}</span></td>
                       <td style={{ color: '#E9D5FF' }}>{insight.title}</td>
                       <td>
-                        {insight.completed 
-                          ? <span style={{ color: '#10B981', fontWeight: 'bold' }}>달성 완료</span> 
+                        {insight.completed
+                          ? <span style={{ color: '#10B981', fontWeight: 'bold' }}>달성 완료</span>
                           : <span style={{ color: '#9CA3AF' }}>진행 중</span>}
                       </td>
                     </tr>

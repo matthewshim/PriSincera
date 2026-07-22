@@ -207,35 +207,8 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-router.put('/profile', async (req, res) => {
-  const { displayName, password } = req.body;
-  if ((displayName !== undefined && typeof displayName !== 'string') || 
-      (password !== undefined && typeof password !== 'string')) {
-    return res.status(400).json({ error: 'Invalid input types' });
-  }
-
-  try {
-    // 비밀번호 변경은 클라이언트 사이드에서 Firebase REST API로 처리
-    // 서버에서는 displayName만 Firestore에 저장
-    if (displayName === undefined) {
-      return res.status(400).json({ error: '변경할 내용이 없습니다' });
-    }
-    const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
-    const key = emailToKey(req.adminUser.email);
-    await db.collection(COLLECTIONS.ADMIN_CONFIG).doc('settings').set({
-      admins: { [key]: { displayName, updatedAt: new Date() } },
-      updatedAt: new Date(),
-    }, { merge: true });
-    console.log(`[Admin Profile] Updated displayName for: ${req.adminUser.email}`);
-    res.json({
-      success: true,
-      displayName: displayName || '',
-    });
-  } catch (err) {
-    console.error('[Admin Profile]', err.message);
-    res.status(500).json({ error: `프로필 수정 실패: ${err.message}` });
-  }
-});
+// 프로필 수정(PUT /profile)은 제공하지 않음 — 프론트가 Firebase Identity Toolkit REST로
+// displayName·password를 직접 갱신한다 (AdminDashboard.jsx handleProfileSubmit).
 
 // ─── 통계 ─────────────────────────────────────────
 
@@ -365,7 +338,7 @@ router.post('/email/send-test', async (req, res) => {
       date: todayStr,
       articles: articles,
       totalCount: articles.length,
-      dailyPageUrl: `https://www.prisincera.com/daily/${todayStr}`,
+      dailyPageUrl: `https://www.prisincera.com/relearn/daily/${todayStr}`,
       unsubscribeUrl: `https://www.prisincera.com/unsubscribe?email=${encodeURIComponent(to)}`,
       studyData: studyData,
       paceNotes: paceNotes,
@@ -686,6 +659,7 @@ router.get('/daily/tracks/:date', async (req, res) => {
 
 // 수준별 트랙 피드(junior/senior)를 GCS에 동기화 (Data Contract v2 §1.2 / 6.2.3)
 // 동시 요청은 인-프로세스 직렬 큐로 순서 보장, expectedVersion으로 낙관적 락(409) 지원.
+// Admin 대시보드 UI는 호출하지 않음 — 외부 클라이언트(macOS 앱)·파이프라인 전용 write 경로이므로 삭제 금지.
 router.post('/daily/tracks/:date', async (req, res) => {
   try {
     const { date } = req.params;

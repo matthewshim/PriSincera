@@ -117,7 +117,7 @@ export function assembleNewsletter({ issueNumber, editorNote, articles, closingR
   lines.push(`💬 **이번 주의 한 마디**\n`);
   lines.push(closingRemark);
   lines.push(`\n---\n`);
-  lines.push(`🔗 [prisincera.com에서 더 보기](https://www.prisincera.com/daily)`);
+  lines.push(`🔗 [prisincera.com에서 더 보기](https://www.prisincera.com/relearn)`);
 
   return lines.join('\n');
 }
@@ -183,7 +183,7 @@ export function assembleDailyDM({ date, articles, dailyPageUrl, totalCount }) {
   lines.push(`📂 **오늘의 시그널 전체 보기 (${totalCount}개)**`);
   lines.push(`[👉 ${dailyPageUrl}](${dailyPageUrl})\n`);
   lines.push(`---\n`);
-  lines.push(`🔗 [Daily Digest 구독 관리](https://www.prisincera.com/daily)`);
+  lines.push(`🔗 [ReLearn 구독 관리](https://www.prisincera.com/relearn)`);
 
   return lines.join('\n');
 }

@@ -303,7 +303,7 @@ function renderUnsubPage(message, success) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Digest — 구독 해지</title>
+  <title>ReLearn — 구독 해지</title>
   <style>
     body { margin:0; padding:0; background:#0A0714; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:'Noto Sans KR',-apple-system,sans-serif; }
     .card { background:#1A1035; border:1px solid rgba(196,181,253,0.08); border-radius:16px; padding:48px; text-align:center; max-width:400px; }
@@ -317,7 +317,7 @@ function renderUnsubPage(message, success) {
   <div class="card">
     <div class="icon">${icon}</div>
     <p class="msg" style="color:${color};">${message}</p>
-    <a href="https://www.prisincera.com/daily" class="link">← Daily Digest로 돌아가기</a>
+    <a href="https://www.prisincera.com/relearn" class="link">← ReLearn으로 돌아가기</a>
   </div>
 </body>
 </html>`;
