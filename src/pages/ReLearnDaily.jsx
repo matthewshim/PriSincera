@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import DailyBriefing from '../components/daily/DailyBriefing';
+import DailyWeekStrip from '../components/daily/DailyWeekStrip';
 import SignalSection from '../components/daily/SignalSection';
 import PromptSection from '../components/daily/PromptSection';
 import JapaneseSection from '../components/daily/JapaneseSection';
@@ -122,10 +123,6 @@ export default function ReLearnDaily() {
   }, []);
 
   if (!valid) return <Navigate to="/relearn" replace />;
-  // dates는 최신순 — 다음(newer)은 앞 인덱스, 이전(older)은 뒤 인덱스
-  const di = dates ? dates.indexOf(date) : -1;
-  const newer = di > 0 ? dates[di - 1] : null;
-  const older = di > -1 && di < (dates?.length || 0) - 1 ? dates[di + 1] : null;
 
   // skim 상태의 존 상단 부분 펼침 토글 (정독 모드에선 불필요 — 이미 전량)
   const zoneTools = (z) => mode === 'skim' && (
@@ -138,16 +135,15 @@ export default function ReLearnDaily() {
 
   return (
     <div className="rl-page rl-daily-page">
+      {/* §9-1 표준 서비스 히어로 정합 — .rl-hero 규격 클래스 재사용 (아이콘→타이틀→서브카피) */}
       <header className="rl-daily-head">
         <Link className="rl-daily-back" to="/relearn">← ReLearn</Link>
-        <h1 className="rl-daily-title">{date} <span>Daily Digest</span></h1>
-        <p className="rl-daily-sub">그날의 배움 아카이브 — 4채널 전체 기록</p>
-        {(older || newer) && (
-          <nav className="rl-daily-nav" aria-label="아카이브 날짜 이동">
-            {older ? <Link className="rl-daily-navlink" to={`/relearn/daily/${older}`}>← {older}</Link> : <span />}
-            {newer ? <Link className="rl-daily-navlink" to={`/relearn/daily/${newer}`}>{newer} →</Link> : <span />}
-          </nav>
-        )}
+        <div className="rl-hero rl-daily-hero">
+          <div className="rl-hero-icon">📅</div>
+          <h1 className="rl-hero-title rl-daily-htitle">{date} Daily Digest</h1>
+          <p className="rl-hero-tagline">그날의 배움 아카이브 — 4채널 훑어보기, 정독은 토글로</p>
+        </div>
+        <DailyWeekStrip date={date} dates={dates} />
       </header>
 
       {error && <div className="rl-status">{error}</div>}

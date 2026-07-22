@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-07-22
-version: v2.3
+version: v2.4
 target_files: []  # 작업 백로그 — 특정 코드 미지배
 ---
 
@@ -19,6 +19,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | v2.1 | 2026-07-22 | AI Agent | 7구간(Admin 콘솔 리런 정합화) 신설 — 메뉴 재편·중복 탭 통합·죽은 API 제거·이메일 브랜딩 전환 | AdminDashboard, admin-api, server |
 | v2.2 | 2026-07-22 | AI Agent | 8구간(아카이브 상세 UI 재편) 신설·P1/P2 완료 — 훑어보기 기본 + 브리핑 히어로 + 스티키 채널 내비, 기본 상태 페이지 높이 9,753→6,099px(-37%, 첫 스크린 오버뷰 완결) | ReLearnDaily, SignalSection, DailyBriefing |
 | v2.3 | 2026-07-22 | AI Agent | 9구간(docs 최신화 전수 감사·정합화) 신설·완료 — 사실 오류 3건(개요·인증·INDEX)·target_files 삭제파일 잔존·archived 2종 이동 등 일괄 해소 | docs 전반 |
+| v2.4 | 2026-07-22 | AI Agent | 8-7 완료 — 아카이브 상세 헤더 §9-1 히어로 정합 + 주간 달력 스트립(DailyWeekStrip) 교체 (design_system v5.9 동반) | ReLearnDaily, DailyWeekStrip |
 
 > **운영 규칙**: 본 문서가 잔여 작업의 단일 정본(SSOT)입니다. 작업 착수·완료 시 상태를 갱신하고, 완료 항목은 ~~취소선~~ + 완료일을 남깁니다. 새 작업은 우선순위 표에 추가하십시오.
 
@@ -95,6 +96,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | ~~8-4~~ | ~~스티키 채널 내비 — 4채널 앵커 + 스크롤 스파이 + 존 컬러 동기화~~ | ✅ 2026-07-22 |
 | 8-5 | 배포 후 하단 채널 도달률 검증 (`relearn_daily_jump`·`relearn_daily_mode` GA 이벤트) | ⏳ 외부 의존(GA 데이터 축적) — 2-2와 함께 판정 |
 | 8-6 | 아티클 21건 상시화 시 파이프라인 카테고리 캡 재조정 검토 (`pipeline/src/composer.mjs`) | 선택 — 데이터 소스 다이어트 |
+| ~~8-7~~ | ~~헤더 히어로 정합 — §9-1 표준 히어로(📅·`.rl-hero` 재사용) 적용 + 이전/다음 pill → 주간 달력 스트립(`DailyWeekStrip`) + 서브카피 갱신 (일관성 QA 환류, design_system v5.9 적용범위 명시 동반)~~ | ✅ 2026-07-22 |
 
 ## 9. 📄 docs 최신화 전수 감사·정합화 (2026-07-22 신설·완료)
 

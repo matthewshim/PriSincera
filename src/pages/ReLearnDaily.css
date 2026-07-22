@@ -1,32 +1,53 @@
-/* ReLearnDaily — 아카이브 상세 헤더 (존 스킨·폭·타이포는 ReLearn.css/토큰 재사용) */
-.rl-daily-head { padding: 6px 0 28px; }
+/* ReLearnDaily — 아카이브 상세 헤더 (§9-1 표준 히어로 = ReLearn.css .rl-hero 재사용) */
+.rl-daily-head { position: relative; padding: 0 0 24px; }
+/* 브레드크럼은 절대 배치로 플로우에서 제외 — §9-1 상단 보정(110+30=140px)이 정확히 유지되도록 */
 .rl-daily-back {
+  position: absolute; top: 6px; left: 0;
   font-size: var(--fs-085); color: var(--text-muted); text-decoration: none;
   transition: color var(--duration-fast) var(--ease-out);
 }
 .rl-daily-back:hover { color: var(--text-secondary); }
-.rl-daily-title {
-  font-family: var(--font-display); font-size: var(--fs-150); font-weight: 700;
-  color: var(--text-primary); margin: 12px 0 4px;
-  font-variant-numeric: tabular-nums;
-}
-.rl-daily-title span {
-  background: var(--gradient-brand);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.rl-daily-sub { font-size: var(--fs-090); color: var(--text-muted); margin: 0; }
-.rl-daily-nav {
+.rl-daily-hero { padding-bottom: 24px; }
+.rl-daily-htitle { font-variant-numeric: tabular-nums; }
+
+/* ── 주간 달력 스트립 (PaceNote Bento Weekly 선례 계승) ── */
+.rl-week { max-width: 560px; margin: 0 auto; }
+.rl-week-head {
   display: flex; justify-content: space-between; align-items: center;
-  margin-top: 14px;
+  gap: 10px; margin-bottom: 8px;
 }
-.rl-daily-navlink {
-  font-size: var(--fs-085); color: var(--text-secondary); text-decoration: none;
-  padding: 6px 14px; border-radius: var(--radius-pill);
+.rl-week-label {
+  font-size: var(--fs-075); color: var(--text-muted);
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+}
+.rl-week-arrow {
+  flex-shrink: 0; width: 34px; height: 30px; border-radius: var(--radius-pill);
   border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
-  font-variant-numeric: tabular-nums;
-  transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  color: var(--text-muted); font-size: var(--fs-085); font-family: inherit;
+  cursor: pointer; transition: border-color 0.15s, color 0.15s;
 }
-.rl-daily-navlink:hover { border-color: var(--glass-border-hover); color: var(--text-primary); }
+.rl-week-arrow:hover:not(:disabled) { border-color: var(--glass-border-hover); color: var(--text-primary); }
+.rl-week-arrow:disabled { opacity: 0.35; cursor: default; }
+.rl-week-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.rl-week-day {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 7px 0 8px; border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
+  text-decoration: none; transition: border-color 0.15s, background 0.15s;
+}
+.rl-week-day:hover { border-color: rgba(34, 211, 238, 0.4); }
+.rl-week-dow { font-size: var(--fs-070); color: var(--text-muted); }
+.rl-week-num {
+  font-size: var(--fs-090); font-weight: 700; color: var(--text-secondary);
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums; line-height: 1;
+}
+.rl-week-day:hover .rl-week-num { color: var(--color-cyan); }
+.rl-week-day.on {
+  border-color: rgba(34, 211, 238, 0.4); background: rgba(34, 211, 238, 0.08);
+}
+.rl-week-day.on .rl-week-num { color: var(--color-cyan); }
+.rl-week-day.on .rl-week-dow { color: var(--color-cyan); opacity: 0.75; }
+.rl-week-day.off { opacity: 0.32; pointer-events: none; }
 
 /* ═══ UI 재편(2026-07): 훑어보기 기본 + 브리핑 히어로 + 스티키 채널 내비 ═══ */
 

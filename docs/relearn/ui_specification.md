@@ -32,6 +32,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-15 | AI Agent | Phase B~D 출하분 화면 명세 최초 작성 (3-stage·뷰 전환·레일 2뎁스·4채널·퍼널) | ReLearn UI |
 | v1.1 | 2026-07-22 | AI Agent | §8 아카이브 상세 UI 재편 명세 신설 — 훑어보기 기본·브리핑 히어로·스티키 채널 내비·시그널 이원화 | ReLearnDaily |
+| v1.2 | 2026-07-22 | AI Agent | §8 헤더 히어로 정합 — §9-1 표준 히어로(📅·`.rl-hero` 재사용) 적용, 이전/다음 pill → 주간 달력 스트립(`DailyWeekStrip`) 교체, 서브카피 갱신 | ReLearnDaily, DailyWeekStrip |
 
 ---
 
@@ -115,10 +116,16 @@ GNB (ReLearn 활성 시 relearn-theme·cyan)
 
 ## 8. 아카이브 상세 `/relearn/daily/:date` (UI 재편 2026-07-22)
 
-> 원칙: **Overview first, details on demand.** 전량 펼침(비-compact) 스택이 유발한 스크롤·가독 피로(21아티클 카드 포함 9,753px)를, 정보 손실 0으로 훑어보기 구조로 전환(기본 6,099px). 컴포넌트: `ReLearnDaily.jsx` + `DailyBriefing.jsx`.
+> 원칙: **Overview first, details on demand.** 전량 펼침(비-compact) 스택이 유발한 스크롤·가독 피로(21아티클 카드 포함 9,753px)를, 정보 손실 0으로 훑어보기 구조로 전환(기본 6,099px). 컴포넌트: `ReLearnDaily.jsx` + `DailyBriefing.jsx` + `DailyWeekStrip.jsx`.
 
 ```
-헤더(← ReLearn · 날짜 타이틀 · 이전/다음 네비)
+헤더 — §9-1 표준 히어로 정합(v1.2, `.rl-hero` 재사용):
+│    ← ReLearn 브레드크럼(좌상단) ·
+│    📅 아이콘(3rem float) → "{date} Daily Digest"(--fs-300/모바일 --fs-220·gradient-brand·tabular-nums)
+│    → 서브카피 "그날의 배움 아카이브 — 4채널 훑어보기, 정독은 토글로"(--fs-115)
+│    → 주간 달력 스트립(DailyWeekStrip): 월~일 7칸(요일+일자), /api/daily/index로
+│       존재일만 링크·현재일 aria-current(cyan 활성)·없는 날 disabled,
+│       ←→ = 주 단위 이동(해당 방향에 아카이브 없으면 비활성), PaceNote Bento Weekly 선례 계승
 ├─ 스티키 채널 내비(.rl-daily-sticky, top 76px/모바일 64px):
 │    4채널 앵커 칩(존 컬러 동기화·시그널 카운트 배지·스크롤 스파이 top≤220px 기준) +
 │    읽기 모드 토글 [훑어보기(기본) | 정독] — localStorage `rl_daily_readmode` 유지
