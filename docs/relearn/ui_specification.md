@@ -1,11 +1,15 @@
 ---
 status: active
 domain: ReLearn
-last_updated: 2026-07-15
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
   - src/pages/ReLearn.jsx
   - src/pages/ReLearn.css
+  - src/pages/ReLearnDaily.jsx
+  - src/pages/ReLearnDaily.css
+  - src/components/daily/DailyBriefing.jsx
+  - src/components/daily/SignalSection.jsx
   - src/components/relearn/OrbitSection.jsx
   - src/components/relearn/ReflectionSection.jsx
   - src/components/relearn/ReLearnSections.css
@@ -21,6 +25,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-15 | AI Agent | Phase B~D 출하분 화면 명세 최초 작성 (3-stage·뷰 전환·레일 2뎁스·4채널·퍼널) | ReLearn UI |
+| v1.1 | 2026-07-22 | AI Agent | §8 아카이브 상세 UI 재편 명세 신설 — 훑어보기 기본·브리핑 히어로·스티키 채널 내비·시그널 이원화 | ReLearnDaily |
 
 ---
 
@@ -101,3 +106,25 @@ GNB (ReLearn 활성 시 relearn-theme·cyan)
 
 ## 7. 접근성·모션
 - 채널 앵커 `aria-label`/`title`, 리포트 래퍼 키보드 진입(Enter), `prefers-reduced-motion` 전환 제거
+
+## 8. 아카이브 상세 `/relearn/daily/:date` (UI 재편 2026-07-22)
+
+> 원칙: **Overview first, details on demand.** 전량 펼침(비-compact) 스택이 유발한 스크롤·가독 피로(21아티클 카드 포함 9,753px)를, 정보 손실 0으로 훑어보기 구조로 전환(기본 6,099px). 컴포넌트: `ReLearnDaily.jsx` + `DailyBriefing.jsx`.
+
+```
+헤더(← ReLearn · 날짜 타이틀 · 이전/다음 네비)
+├─ 스티키 채널 내비(.rl-daily-sticky, top 76px/모바일 64px):
+│    4채널 앵커 칩(존 컬러 동기화·시그널 카운트 배지·스크롤 스파이 top≤220px 기준) +
+│    읽기 모드 토글 [훑어보기(기본) | 정독] — localStorage `rl_daily_readmode` 유지
+├─ 오늘의 브리핑(.rl-brief): 채널 스탯 4종 · 정독 예상 시간(≈총 자수/500자·분) ·
+│    DM Pick 헤드라인 5(클릭 → `sig-pick-N` 카드 앵커 점프)
+└─ 4채널 존(rl-ch-sec, 기존 존 스킨 그대로) — 훑어보기 시 각 존 우상단 '전체 펼치기' 부분 토글
+     ① 트랙: compact(학습·할 일 <details> 접힘)
+     ② 시그널 이원화: DM Pick만 카드형(이미지 유지) + 나머지 1줄 헤드라인 리스트(.signal-headline-row)
+     ③ 프롬프트: compact(스니펫 프리뷰 접힘 — 모드 전환 시 key 리마운트로 재초기화)
+     ④ 어학: compact(어휘 4개 상한)
+```
+
+- **정독 모드 = 기존 아카이브 전량 렌더와 동일** (하위호환·정보 보존). 크롤러는 CSR 본문을 못 보므로 접힘의 SEO 영향 없음(메타는 server.mjs 주입 유지) — i18n SSR(백로그 4-2) 진행 시 접힘 콘텐츠 DOM 포함 여부만 재확인.
+- §2의 "상단 스티키 바 금지"는 좌측 레일이 있는 `/relearn` 셸에 한정 — 아카이브 상세는 레일이 없어 스티키 내비가 유일한 지도(모바일 셸의 스티키 스테이지 탭과 동일 관례, 컴팩트 1줄·블러 배경으로 가림 최소화).
+- GA 보조 이벤트 추가: `relearn_daily_mode{mode}` · `relearn_daily_jump{zone}` · 존 펼침은 기존 `relearn_learn_expand{block: daily_zone_*}` 재사용.

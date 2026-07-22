@@ -27,3 +27,119 @@
   transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
 }
 .rl-daily-navlink:hover { border-color: var(--glass-border-hover); color: var(--text-primary); }
+
+/* ═══ UI 재편(2026-07): 훑어보기 기본 + 브리핑 히어로 + 스티키 채널 내비 ═══ */
+
+/* ── 스티키 채널 내비 — 긴 페이지의 '지도' (앵커 점프 + 스크롤 스파이) ── */
+.rl-daily-sticky {
+  position: sticky; top: 76px; z-index: 40;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 0 0 18px; padding: 8px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(2, 2, 5, 0.88);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+.rl-daily-chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; min-width: 0; }
+.rl-daily-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border); background: transparent;
+  color: var(--text-muted); font-size: var(--fs-080); font-weight: 600;
+  cursor: pointer; font-family: inherit; white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.rl-daily-chip:hover { border-color: var(--glass-border-hover); color: var(--text-secondary); }
+/* 활성 칩 = 채널 존 컬러 동기화 (rl-ch-sec 배경 틴트와 동일 계열) */
+.rl-daily-chip.ch-track.on  { border-color: rgba(34, 211, 238, 0.4);  background: rgba(34, 211, 238, 0.08);  color: var(--color-cyan); }
+.rl-daily-chip.ch-signal.on { border-color: rgba(199, 210, 254, 0.4); background: rgba(199, 210, 254, 0.08); color: var(--prism-lavender); }
+.rl-daily-chip.ch-prompt.on { border-color: rgba(165, 180, 252, 0.4); background: rgba(165, 180, 252, 0.08); color: var(--color-indigo); }
+.rl-daily-chip.ch-jp.on     { border-color: rgba(229, 178, 93, 0.4);  background: rgba(229, 178, 93, 0.08);  color: var(--color-gold); }
+.rl-daily-chip-n {
+  font-family: var(--font-mono); font-size: var(--fs-070); font-weight: 700;
+  padding: 1px 7px; border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.06); color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 읽기 모드 토글 — 훑어보기(기본) / 정독(기존 전량 렌더) */
+.rl-daily-mode {
+  display: inline-flex; flex-shrink: 0; overflow: hidden;
+  border: 1px solid var(--glass-border); border-radius: var(--radius-pill);
+}
+.rl-daily-mode-btn {
+  padding: 6px 14px; border: none; background: transparent;
+  color: var(--text-muted); font-size: var(--fs-080); font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s;
+}
+.rl-daily-mode-btn.on {
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.16), rgba(34, 211, 238, 0.12));
+  color: var(--text-primary);
+}
+
+/* ── 오늘의 브리핑 (오버뷰 히어로) ── */
+.rl-brief {
+  margin: 0 0 22px; padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(165, 180, 252, 0.18);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.045), rgba(165, 180, 252, 0.05), rgba(229, 178, 93, 0.04));
+}
+.rl-brief-head { display: flex; align-items: baseline; gap: 10px; }
+.rl-brief-badge {
+  font-family: var(--font-display); font-size: var(--fs-075); font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.rl-brief-time {
+  margin-left: auto; font-size: var(--fs-075); color: var(--text-muted);
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.rl-brief-stats { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+.rl-brief-stat { font-size: var(--fs-080); color: var(--text-muted); }
+.rl-brief-stat b { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.rl-brief-picks {
+  list-style: none; margin: 12px 0 0; padding: 10px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: grid; gap: 2px;
+}
+.rl-brief-pick {
+  display: flex; align-items: baseline; gap: 10px; width: 100%; text-align: left;
+  padding: 6px 8px; border: none; border-radius: var(--radius-sm);
+  background: transparent; cursor: pointer; font-family: inherit;
+  transition: background 0.15s;
+}
+.rl-brief-pick:hover { background: rgba(255, 255, 255, 0.04); }
+.rl-brief-pick-no {
+  flex-shrink: 0; font-family: var(--font-mono); font-size: var(--fs-070);
+  font-weight: 700; color: #10B981; /* dm-pick-badge 컬러 계열 */
+  font-variant-numeric: tabular-nums;
+}
+.rl-brief-pick-title { font-size: var(--fs-090); font-weight: 600; color: var(--text-secondary); line-height: 1.5; }
+.rl-brief-pick:hover .rl-brief-pick-title { color: var(--text-primary); }
+.rl-brief-pick-src {
+  margin-left: auto; flex-shrink: 0;
+  font-size: var(--fs-070); color: var(--text-muted); font-family: var(--font-mono);
+}
+
+/* ── 존 단위 부분 펼침 (skim 모드 전용) + 스티키 내비 높이만큼 앵커 여백 보정 ── */
+.rl-daily-page .rl-ch-sec { scroll-margin-top: 150px; }
+.rl-daily-page .signal-article-card { scroll-margin-top: 150px; } /* 브리핑 → DM Pick 카드 점프 */
+.rl-zone-tools { display: flex; justify-content: flex-end; margin: -6px 0 4px; }
+.rl-zone-expand {
+  padding: 5px 12px; border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted); font-size: var(--fs-075); font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: border-color 0.15s, color 0.15s;
+}
+.rl-zone-expand:hover { border-color: var(--glass-border-hover); color: var(--text-primary); }
+
+@media (max-width: 760px) {
+  .rl-daily-sticky { top: 64px; padding: 6px 8px; gap: 6px; }
+  .rl-daily-chip { padding: 6px 10px; }
+  .rl-daily-chip-label { display: none; } /* 모바일: 아이콘(+카운트)만 */
+  .rl-daily-page .rl-ch-sec { scroll-margin-top: 124px; }
+  .rl-daily-page .signal-article-card { scroll-margin-top: 124px; }
+  .rl-brief { padding: 14px 14px; }
+  .rl-brief-pick-src { display: none; }
+}

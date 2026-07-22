@@ -1666,3 +1666,74 @@
   }
 }
 
+
+/* ── Signal 헤드라인 리스트 (아카이브 훑어보기 — DM Pick 외 아티클의 1줄 강등형) ── */
+.signal-headline-block { margin-top: var(--space-lg); }
+.signal-headline-label {
+  font-family: var(--font-display);
+  font-size: var(--fs-075);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+.signal-headline-label span { color: var(--prism-lavender); font-family: var(--font-mono); }
+.signal-headline-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015);
+  overflow: hidden;
+}
+.signal-headline-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background var(--duration-fast);
+}
+.signal-headline-row:last-child { border-bottom: none; }
+.signal-headline-row:hover { background: rgba(255, 255, 255, 0.035); }
+.signal-headline-cat {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: var(--fs-070);
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.signal-headline-title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-090);
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.signal-headline-row:hover .signal-headline-title { color: var(--text-primary); }
+.signal-headline-meta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-075);
+  color: var(--text-muted);
+}
+.signal-headline-score { color: #FCD34D; font-variant-numeric: tabular-nums; }
+@media (max-width: 768px) {
+  .signal-headline-title { white-space: normal; } /* 모바일: 말줄임 대신 줄바꿈(정보 잘림 방지) */
+  .signal-headline-meta { display: none; }
+}
