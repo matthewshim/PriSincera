@@ -1,8 +1,8 @@
 ---
 status: draft
 domain: ReLearn
-last_updated: 2026-07-15
-version: v1.8
+last_updated: 2026-07-22
+version: v1.9
 target_files:
   - src/pages/ReLearn.jsx
   - src/pages/ReLearnDaily.jsx
@@ -33,7 +33,7 @@ target_files:
 | v1.6 | 2026-07-15 | AI Agent | **포지셔닝 재정의: 병행 → 승계(Successor)** — 리런 안정화 시 Daily Digest·Pace Note는 **노출 종료** 확정. "추가형"은 전환기 전략으로 재규정, Phase E = 확정 일몰(패리티 게이트) + §5-1 기능 패리티 체크리스트 신설. 원칙: **노출 종료 ≠ URL 삭제**(콘텐츠 상세 URL·SEO 자산 영구 보존) | §4, §5-E, §5-1 |
 | v1.7 | 2026-07-15 | AI Agent | **패리티 P2~P5 해소** — P2 구독 해지 자체화·P3 경량 아카이브 구현, P4(캘린더)·P5(옴니/포트폴리오) 폐기·이관 판단 확정 → **일몰 게이트의 기능 항목 전부 해소, 잔여 = P6 + 지표 게이트** | §5-1 |
 | v1.8 | 2026-07-15 | AI Agent | **공존형 GNB 재배치(A안)** — ReLearn을 루프 서비스군 **선두**로 승격(Builder's Log · **ReLearn** · Daily Digest · Pace Note · Sylphio, 데스크톱·모바일 동일). v1.5의 "Sylphio 좌측" 배치 결정을 대체. 일몰 시 뒤의 두 메뉴만 제거하면 완료되는 구조 | §4-3, GNB |
-| v1.9 | 2026-07-22 | AI Agent | frontmatter `target_files` 현행화 — Phase 3에서 삭제된 구 페이지(DailyDigest.jsx·PaceNoteDashboard.jsx)를 리런 실파일(ReLearn.jsx 등)로 교체. Admin 콘솔 재편은 [admin_console_specification](../core/admin_console_specification.md) 참조 | frontmatter |
+| v1.9 | 2026-07-22 | AI Agent | frontmatter `target_files` 현행화 — Phase 3에서 삭제된 구 페이지(DailyDigest.jsx·PaceNoteDashboard.jsx)를 리런 실파일(ReLearn.jsx 등)로 교체. **본문 정합**: §3 아카이브 방침을 P3 대체(자체 아카이브 상세)로, §4-3 GNB 배치를 v1.8 결정으로 현행화. Admin 콘솔 재편은 [admin_console_specification](../core/admin_console_specification.md) 참조 | frontmatter, §3, §4-3 |
 
 ---
 
@@ -74,7 +74,7 @@ target_files:
 
 > 💡 **설계 근거**: PaceNote `buildDefaultWeek`의 기본 궤도 5종("AI 스터디 프롬프트 직접 실행해보기"·"비즈니스 일본어 문장 3번 읽기" 등)이 이미 이 매핑의 **하드코딩판**이다. 대통합 = 이를 "오늘의 실제 콘텐츠에서 동적으로 추가"로 승격(제목에 당일 콘텐츠 문맥 포함). 기본 궤도는 콜드 스타트 폴백으로 유지. **신규 API 0** — 트랙 외 3채널은 기존 `/add`(커스텀 궤도)로 충분.
 >
-> **아카이브 방침**: 과거 날짜 열람(Chrono-Calendar·Quick Peek)은 기존 `/daily`가 계속 담당 — 리런 배움은 **'오늘'만** + "지난 다이제스트 보기 →" 링크. (기록 뷰는 '나의 실행/복기' 아카이브, `/daily` 아카이브는 '콘텐츠' 아카이브로 역할 분리)
+> **아카이브 방침**: ~~과거 날짜 열람(Chrono-Calendar·Quick Peek)은 기존 `/daily`가 계속 담당~~ → **§5-1 P3에서 대체**(전환기 한정 방침이었음). 현재는 리런 자체 아카이브 상세 `/relearn/daily/:date`(경량 아카이브 + 이전/다음 네비, [ui_specification §8](ui_specification.md))가 담당하며 구 `/daily/:date`는 301. 리런 배움은 **'오늘'만** + "지난 다이제스트 보기 →" 링크. (기록 뷰는 '나의 실행/복기' 아카이브, 콘텐츠 아카이브와 역할 분리)
 **뷰 구조 (v1.2 — 시안 검토 결정, A안):** 리런은 단일 라우트 안에서 **`오늘 | 기록` 두 뷰**를 전환한다.
 - **오늘**: 위 3-stage 루프(당일 실행 화면)
 - **기록**: 주차별 항해 기록 아카이브 — 완료 궤도 목록(카테고리 칩) + 회고(statement) 원문. 데이터는 기존 PaceNote `GET /`의 **timeline 그대로 재사용(신규 API 0)**, 주차 카드는 PaceNote 타임라인 컴포넌트의 Phase B-0 추출 대상
@@ -102,7 +102,7 @@ target_files:
   | 조각 | 실태 | 재사용 |
   | :--- | :--- | :--- |
   | [TrackSignalFeed](../../src/components/daily/TrackSignalFeed.jsx) · [LoopReport](../../src/components/pacenote/LoopReport.jsx) · ChronoRibbon | 독립 컴포넌트 | ✅ 즉시 조합 |
-  | 배움(시그널·어학 카드) | [DailyDigest.jsx](../../src/pages/DailyDigest.jsx)에 탭·구독·Quick Peek과 한 덩어리 | ⚠️ **추출 필요(Phase B-0)** |
+  | 배움(시그널·어학 카드) | 구 `DailyDigest.jsx`(현재 삭제, Phase 3)에 탭·구독·Quick Peek과 한 덩어리 | ⚠️ **추출 필요(Phase B-0)** — ✅ 이후 `daily/` 섹션 컴포넌트로 추출 완료 |
   | 실행(궤도 리스트·토글·회고) | PaceNoteDashboard(~1,900줄 모놀리식)에 내장. 데이터 계층은 [usePaceNoteData](../../src/hooks/usePaceNoteData.js) 기존재 | ⚠️ **추출 필요(Phase B-0)** |
 
   → 추출한 섹션 컴포넌트는 **기존 페이지도 함께 사용**하도록 치환(로직 단일화) — 중복이 아니라 부채 감소.
@@ -138,9 +138,9 @@ target_files:
 
 - 분리/리셋 안 기각: 별도 컬렉션·이중 유지보수·기록 뷰 공백 + **대통합 취지와 모순**. "제로부터 다시"는 매일의 마음가짐(브랜딩)이지 데이터 초기화가 아님.
 
-### 4-3. 표기·진입점 확정 (v1.5)
+### 4-3. 표기·진입점 확정 (v1.5 → 배치는 v1.8로 대체)
 - **UI 타이틀·GNB 라벨 = 전 언어 공통 영문 `ReLearn`** (이모지 없음). '리런'은 국문 문서·커뮤니케이션에서 병용.
-- 라우트 `/relearn` 확정. **GNB 배치 = Sylphio 좌측** (Builder's Log · Daily Digest · Pace Note · **ReLearn** · Sylphio). 태그라인 등 부속 카피는 각 언어 번역.
+- 라우트 `/relearn` 확정. **GNB 배치**: ~~Sylphio 좌측(v1.5)~~ → **v1.8 공존형 재배치(A안)로 대체** — ReLearn을 루프 서비스군 선두로(Builder's Log · **ReLearn** · Daily Digest · Pace Note · Sylphio), 이후 일몰로 Daily·Pace 메뉴 제거 완료. 태그라인 등 부속 카피는 각 언어 번역.
 
 ## 5. 추진 로드맵 (Phase Gate)
 

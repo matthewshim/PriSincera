@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-07-14
-version: v1.5
+last_updated: 2026-07-22
+version: v1.6
 target_files:
   - src/data/seoMeta.mjs
   - server.mjs
@@ -22,6 +22,7 @@ target_files:
 | v1.3 | 2026-07-14 | AI Agent | 별도 에셋 부재로 디자인 시스템 팔레트 기반 공통 대표 OG(1200×630) 생성·적용(레거시 PriSignal 교체) | public/og-image.png, public/daily-og.png |
 | v1.4 | 2026-07-14 | AI Agent | 대표 OG를 메인 히어로 Star Prism Identity(글래스 프리즘·골드 액센트·오빗) 디자인 기반으로 리디자인 | public/og-image.png, public/daily-og.png |
 | v1.5 | 2026-07-21 | AI Agent | 카테고리별 OG 3종(ReLearn·Builder's Log·Sylphio) 생성·PAGE_META 매핑, 제너레이터 ci/ 등재(재현성) | ci/gen_og_images.py, seoMeta.mjs |
+| v1.6 | 2026-07-22 | AI Agent | **리런 통합 라우트 정합** — §1.3·§5 표의 `/daily`·`/pacenote`는 감사·이행 당시 기록임을 명시하고 현행 라우트 매핑(`/relearn`·`/relearn/daily/:date`) 추가. 아카이브된 OG 전략 문서 링크 경로 갱신 | §1, §5 |
 
 ---
 
@@ -43,7 +44,7 @@ target_files:
 ### 1.2 클라이언트 CSR — `useSEO.js` (SPA 런타임/브라우저 탭)
 - `document.title = \`${title} | ${siteTitle}\`` 고정 포맷([useSEO.js](../../src/hooks/useSEO.js) L7). `description`/`og`/`twitter`/`keywords`/`canonical` 갱신.
 - og:image 기본값은 **`og-image.png`** (SSR과 다른 파일).
-- 사용처: Home · DailyDigest · PaceNoteDashboard · BuildersLog · BuildersLogDetail.
+- 사용처(감사 당시): Home · DailyDigest · PaceNoteDashboard · BuildersLog · BuildersLogDetail. *(현재 DailyDigest·PaceNoteDashboard는 ReLearn·ReLearnDaily로 승계)*
 - **미사용: SylphioLanding / SylphioApiKeyGuide / SylphioPrivacy** → SPA 이동 시 탭 타이틀·canonical이 갱신되지 않음.
 
 ### 1.3 카테고리별 현재 타이틀 (SSR vs CSR)
@@ -140,6 +141,14 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 - Sylphio 3종은 **키워드부를 앞에 유지**(macOS·실시간·AI·통역·회의록 / API Key 연동 / 개인정보)하면서 접미어만 표준화 → SEO 손실 없이 일관화.
 - description은 §4.2 규격으로 카테고리별 재정리(기존 문구 축약·키워드 정렬). 상세 문안은 구현 단계에서 확정.
 
+> **⚠️ 라우트 현행화 (2026-07-20 리런 통합 이후)**: 위 §1.3·§5 표의 `/daily`·`/pacenote`는 감사·이행 당시 기록이다. 현행 `PAGE_META`(seoMeta.mjs) 키는 다음과 같다 — `/daily`·`/pacenote`는 서버 301로 소멸.
+>
+> | 현행 라우트 | 표준 타이틀 |
+> | :--- | :--- |
+> | `/relearn` | `ReLearn — 배움·실행·복기 통합 성장 루프 \| PriSincera` (og: `og-relearn.png`) |
+> | `/relearn/daily/:date` | `{date} Daily Digest — ReLearn \| PriSincera` (아카이브 상세, 대표글 변형 포함) |
+> | `/builders-log`(및 상세)·`/sylphio` 3종·`/` | 위 표와 동일 |
+
 ---
 
 ## 6. 적용 계획 (단계별) — ✅ 1~6 구현 완료(2026-07-14), 7~8 배포 후 검증 예정
@@ -175,4 +184,4 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 - **공통 대표 OG 이미지**: ✅ Star Prism Identity 대표 OG 적용(v1.4). ✅ **카테고리별 변형 3종**(ReLearn 시안·Builder's Log 인디고·Sylphio 실프 블루)을 `ci/gen_og_images.py`(재현 가능)로 생성해 PAGE_META `ogImage`로 매핑(v1.5). 잔여: 없음 — 신규 카테고리는 제너레이터 VARIANTS에 추가.
 - **언어별 SSR 본문**: 현 SSR은 ko 단일 메타/HTML을 서빙(클라이언트 i18n). 완전한 언어별 검색 색인을 원하면 `?lang`별 서버 렌더가 필요 → 대공사 후속.
 
-> 관련 문서: [SEO 아키텍처 및 크롤러 대응 명세서](../builders-log/seo_optimization.md), [동적 OG 이미지 전략](og_image_strategy.md).
+> 관련 문서: [SEO 아키텍처 및 크롤러 대응 명세서](../builders-log/seo_optimization.md), [동적 OG 이미지 전략 아카이브](../archive/og_image_strategy.md).

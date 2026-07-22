@@ -40,11 +40,11 @@ target_files:
 
 | 변수 | 용도 | 저장 위치 | 비고 |
 | :--- | :--- | :--- | :--- |
-| `PORT` | 리슨 포트 | Cloud Run 자동 주입 | 기본 `8080` ([server.mjs:24](../../server.mjs#L24)) |
+| `PORT` | 리슨 포트 | Cloud Run 자동 주입 | 기본 `8080` ([server.mjs:25](../../server.mjs#L25)) |
 | `GCS_BUCKET` | 정적 피드 버킷명 | Cloud Run env | 기본 `prisincera-prisignal-data` |
 | `GEMINI_API_KEY` | Admin AI 커밋 매칭·요약, Builder's Log | **Secret Manager** | cloudbuild `--set-secrets GEMINI_API_KEY=`**`GEMINI_ADMIN_API_KEY`**`:latest` ✅확정 |
 | `GITHUB_TOKEN` | Builder's Log Git-less 원격 커밋(GitHub API) | **Secret Manager** `GITHUB_TOKEN:latest` | cloudbuild `--set-secrets` ✅확정 |
-| `UNSUBSCRIBE_SECRET` | 구독 해지 HMAC 토큰 검증 | Cloud Run env/Secret | [server.mjs:614](../../server.mjs#L614) |
+| `UNSUBSCRIBE_SECRET` | 구독 해지 HMAC 토큰 검증 | Cloud Run env/Secret | [server.mjs:630](../../server.mjs#L630) |
 | `GCP_PROJECT_ID` | Firestore·Job 제어 프로젝트 | Cloud Run env | 기본 `prisincera` ([admin-api.mjs:545](../../admin-api.mjs#L545)) |
 | `RUN_REGION` | Admin "지금 생성"이 Job 실행 시 리전 | Cloud Run env | 기본 `asia-northeast3` |
 | `CF_ZONE_ID` | Cloudflare 캐시 퍼지 존 ID | Cloud Run env/Secret | 선택 ([admin-api.mjs:42](../../admin-api.mjs#L42)) |

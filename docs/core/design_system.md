@@ -9,8 +9,8 @@ target_files:
   - src/components/hero/TelescopeCursor.jsx
   - src/components/hero/TelescopeCursor.css
   - src/pages/BuildersLog.jsx
-  - src/pages/DailyDigest.jsx
-  - src/pages/PaceNoteDashboard.jsx
+  - src/pages/ReLearn.jsx
+  - src/pages/ReLearnDaily.jsx
 ---
 
 # 📐 디자인 시스템 (Design System)
@@ -37,7 +37,7 @@ target_files:
 | v5.8 | 2026-07-22 | AI Agent | **§9-8 인접 인터랙티브 컨트롤 간격 규범 신설** — 독립 컨트롤 수직 적층 최소 `--space-md`(16px)·수평 나열 최소 `--space-sm`(8px), 음수 마진 근접 배치 금지 (아카이브 상세 존 도구줄 ↔ 어학 '전체 발음 듣기' 근접 적층 QA 환류) | 컨트롤 간격 규범, ReLearnDaily |
 
 > **"Sincerity, Prioritized."**
-> 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 v4.6 표준 가이드라인입니다. 
+> 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 디자인 시스템 표준 가이드라인입니다. 현행 버전은 frontmatter `version`(Revision History 최신 행)을 따릅니다.
 
 ---
 
@@ -352,7 +352,7 @@ target_files:
 
 ## 7. 🧩 핵심 레이아웃 패턴 (The Unified Bento Grid)
 
-현재 `PaceNoteDashboard`와 `BuildersLog`에 파편화된 **Bento Grid**를 메인 공식 UI 패턴으로 승격합니다.
+구 `PaceNoteDashboard`(현 ReLearn으로 승계)와 `BuildersLog`에 파편화되어 있던 **Bento Grid**를 메인 공식 UI 패턴으로 승격합니다.
 
 1. **Gaps**: 그리드 간격은 항상 `var(--space-lg)` (24px) 또는 `var(--space-md)` (16px) 유지.
 2. **Spans**: 12-column 그리드 체제를 표준으로 하여, 정보 위계에 따라 `span 8`, `span 4` (비대칭 2:1) 혹은 `span 7`, `span 5` 등 다이내믹한 조합 사용.

@@ -17,6 +17,8 @@ target_files:
 
 PriSincera 플랫폼이 글로벌 사용자를 대상으로 다국어(Korean, English, Japanese 등) 서비스를 매끄럽게 제공할 수 있도록 프론트엔드 다국어 바인딩, Firestore 콘텐츠 스키마 다국어화, SEO 최적화 및 인프라 가속화 전략을 수록한 표준 구현 계획서입니다.
 
+> ℹ️ **문서 관계 (2026-07-22 추기)**: 본 계획의 상당 부분(프론트 사전 바인딩·로케일 감지·어드민 다국어 입력)은 **기구현**되어 있습니다. 잔여 대공사인 **언어별 SSR·URL 로케일 전략**은 후속 계획서 [i18n_ssr_plan.md](i18n_ssr_plan.md)(백로그 4-2)가 별도로 다룹니다 — 본 문서는 FE/DB/번역 파이프라인 축, SSR 계획서는 서버 렌더·라우팅 축으로 상보 관계입니다.
+
 ## 📝 Revision History
 
 | Version | Date | Author | Description | Impact Area |

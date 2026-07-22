@@ -1,18 +1,20 @@
 ---
-status: active
+status: archived
 domain: Core
-last_updated: 2026-06-29
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
   - server.mjs
   - cloudbuild.yaml
 ---
 
-# 🗺️ 인프라 스케일업 계획서 (Scaling)
+# 🗄️ 인프라 스케일업 계획서 아카이브 (Scaling)
+
+> 🗄️ **아카이브 안내 (2026-07-22)**: 본 계획서가 제안한 사항(Firestore·Firebase Auth 도입, 메모리 증설, min-instances, 파이프라인 잡 확장)은 **전부 구현 완료되어 현행 인프라가 되었습니다**. §1의 "현재 아키텍처"(DB 없음·인증 없음·잡 3종)는 2026-04 시점 기록이며 현 상태가 아닙니다. 현행 구조는 [core/architecture_overview.md](../core/architecture_overview.md), 운영 절차는 [core/operations_runbook.md](../core/operations_runbook.md)를 보십시오.
 
 > **작성일:** 2026-04-29  
 > **요청 배경:** Admin 기능 + PriStudy 론칭 + Cloud Run 한계 검토  
-> **상태:** ✅ Phase 0-1 구현 완료 (Phase 2 미착수)
+> **상태:** ✅ Phase 0-1 구현 완료 → 이후 전면 구현으로 역할 종료 (아카이브)
 
 ---
 

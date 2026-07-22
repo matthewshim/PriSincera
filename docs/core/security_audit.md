@@ -8,7 +8,7 @@ target_files:
   - pacenote-api.mjs
   - pipeline/src/lib/mailer.mjs
   - pipeline/src/collector.mjs
-  - src/pages/PaceNoteDashboard.jsx
+  - src/pages/ReLearn.jsx
 ---
 
 # 🔍 보안 취약점 점검 보고서 (Security Audit)
@@ -114,7 +114,7 @@ study_progress, email_logs)
   - 어드민 API (`/admin/api`): 15분당 최대 100회 (`adminLimiter`)
 
 ### 🟠 HIGH — CORS 와일드카드 설정 해제
-- **조치 사항 (Resolved)**: Nginx 및 Express 레벨의 `cors` 미들웨어 적용을 완료하여 와일드카드(`*`) 허용 정책을 폐기하고, 오직 지정 오리진(`https://www.prisincera.com`)에서 송신되는 요청에 대해서만 응답하도록 제한했습니다.
+- **조치 사항 (Resolved)**: Express 레벨의 `cors` 미들웨어 적용을 완료하여 와일드카드(`*`) 허용 정책을 폐기하고, 오직 지정 오리진(`https://www.prisincera.com`)에서 송신되는 요청에 대해서만 응답하도록 제한했습니다. (구 Nginx 프록시 계층은 Express 단일 컨테이너 전환으로 소멸)
 
 ---
 
@@ -203,7 +203,7 @@ match /study_progress/{userId} {
 | 보안 헤더 | 조치 이전 (04-23) | 조치 이후 및 현재 (05-21) | 평가 |
 |:---|:---:|:---:|:---:|
 | `X-Content-Type-Options` | `nosniff` | `nosniff` | ✅ 안전 |
-| `X-Frame-Options` | `DENY` | `DENY` | ✅ 클릭재킹 원천 방지 |
+| `X-Frame-Options` | `DENY` | `SAMEORIGIN` (helmet 기본값) | ✅ 외부 도메인 클릭재킹 방지 (동일 오리진 임베드만 허용) |
 | `X-XSS-Protection` | `1; mode=block` | `false` (Deprecated) | ✅ CSP 최적 적용 및 충돌 배제 |
 | `Content-Security-Policy` | ❌ 미설정 | 🌟 strict CSP 정의 완료 | ✅ 외부 악성 스크립트 실행 불가 |
 | `Strict-Transport-Security` | ❌ 미설정 | 🌟 `max-age=31536000; includeSubDomains; preload` | ✅ HTTPS 연결 보장 |
@@ -282,7 +282,7 @@ Pace Note 내 **'사색의 기록(Captain's Log, 주간 회고)'** 텍스트 박
 * **진단 결과**: **완벽하게 안전함 (Stored XSS 불가)**
 * **상세 분석**:
   - **React 자동 이스케이프**: React는 `{diaryText}`와 같이 JSX 중괄호 속에 동적으로 문자열을 바인딩할 때, 렌더링 엔진 내부에서 모든 문자열 특수기호를 HTML Entity로 자동 변환(Escape)하여 **단순 텍스트 노드(Text Node)로만 화면에 출력**합니다.
-  - 렌더링 영역인 `PaceNoteDashboard.jsx`를 보면 데이터가 직접 노출됩니다.
+  - 렌더링 영역(구 `PaceNoteDashboard.jsx`, 현 리런 복기 스테이지 `ReflectionSection.jsx`)을 보면 데이터가 직접 노출됩니다.
     ```javascript
     <p className="log-text">{diaryText}</p>
     ```

@@ -10,6 +10,12 @@ target_files:
   - src/pages/ReLearnDaily.css
   - src/components/daily/DailyBriefing.jsx
   - src/components/daily/SignalSection.jsx
+  - src/components/daily/PromptSection.jsx
+  - src/components/daily/JapaneseSection.jsx
+  - src/components/relearn/LearnStage.jsx
+  - src/components/relearn/RunStage.jsx
+  - src/components/relearn/ReflectStage.jsx
+  - src/components/relearn/RecordsView.jsx
   - src/components/relearn/OrbitSection.jsx
   - src/components/relearn/ReflectionSection.jsx
   - src/components/relearn/ReLearnSections.css

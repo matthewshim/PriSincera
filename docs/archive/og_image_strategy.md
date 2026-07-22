@@ -1,15 +1,18 @@
 ---
-status: active
+status: archived
 domain: Core
-last_updated: 2026-06-29
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
-  - server.mjs
   - pipeline/src/backfill-og.mjs
   - pipeline/src/lib/rss.mjs
 ---
 
-# 🗺️ 동적 OG 이미지 전략 (OG Image)
+# 🗄️ 동적 OG 이미지 전략 아카이브 (OG Image)
+
+> 🗄️ **아카이브 안내 (2026-07-22)**: 본 문서의 UI/와이어프레임 부분은 삭제된 구 PriSignal 화면(`PriSignalArchive.jsx`·`PriSignalDaily.jsx`, 라우트 `/prisignal`) 기준의 레거시 기록입니다(해당 화면은 이후 Daily Digest → ReLearn으로 승계).
+> **여전히 유효한 것**: 아티클 OG 수집 파이프라인 — `pipeline/src/lib/rss.mjs`의 `fetchOgImage`(RSS 수집 시 `ogImage` 필드 주입)와 소급 스크립트 `pipeline/src/backfill-og.mjs`는 현행 가동 중입니다.
+> **현행 규범**: 사이트 자체 OG 이미지 전략은 [core/seo_meta_standard.md](../core/seo_meta_standard.md)(카테고리별 OG 매핑)와 제너레이터 `ci/gen_og_images.py`가 대체합니다.
 
 > **목표**: 현재 텍스트 중심의 밋밋한 데일리 시그널 UI를 OG 이미지 기반의 비주얼 카드 디자인으로 개선
 >

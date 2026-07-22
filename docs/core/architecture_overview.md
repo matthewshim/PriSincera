@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-24
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
   - server.mjs
   - pacenote-api.mjs
@@ -20,6 +20,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-24 | AI Agent | 전체 스택·데이터 흐름·파이프라인 맵 최초 정의 | Architecture |
+| v1.1 | 2026-07-22 | AI Agent | **리런 통합·실측 정합** — SPA 라우트에서 구 `/daily`·`/pacenote`를 301 표기로 전환, 유령 `builderslog-api.mjs` 참조를 실제 구조(server.mjs 인라인 + admin-api)로 정정 | §1, §2 |
 
 ---
 
@@ -27,7 +28,8 @@ target_files:
 
 ```
 ┌─────────────────────────── 사용자(브라우저) ───────────────────────────┐
-│  React + Vite SPA  /relearn  /daily  /pacenote  /builders-log  /sylphio  /admin │
+│  React + Vite SPA  /relearn  /builders-log  /sylphio  /admin                    │
+│  (구 /daily·/pacenote → /relearn 서버 301 — 2026-07-20 리런 승계)                │
 └───────────────────────────────┬─────────────────────────────────────────┘
                                  │ HTTPS (Cloudflare CDN)
 ┌────────────────────────────────▼─────────────────────────────────────────┐
@@ -37,7 +39,8 @@ target_files:
 │       /api/daily/*            (GCS/Firestore 프록시, 트랙 피드)            │
 │       /api/pacenote/*         → pacenote-api.mjs (Firebase Auth 필요)      │
 │       /admin/api/*            → admin-api.mjs (관리자 인증)                 │
-│       /api/builderslog/*      → builderslog-api.mjs                         │
+│       /api/study/*            → study-api.mjs (어학, 별칭 /api/pristudy)    │
+│       /api/builderslog/:slug/view (server.mjs 인라인 — 조회수)              │
 │       /api/subscribe, /api/daily/index …                                   │
 └──────┬───────────────────────────────┬───────────────────────────┬────────┘
        │                               │                           │
@@ -64,7 +67,7 @@ target_files:
 | :--- | :--- | :--- |
 | **프론트엔드** | `src/` React + Vite SPA | 라우트별 lazy chunk. 마크다운은 `react-markdown`+`remark-gfm`+`rehype-highlight` |
 | **웹 서버** | `server.mjs` (Express, Cloud Run `prisincera-web`) | dist 서빙 + API 라우터 마운트 + GCS 프록시 |
-| **API 모듈** | `pacenote-api.mjs` · `admin-api.mjs` · `builderslog-api.mjs` · `study-api.mjs` | 라우터 단위 분리 |
+| **API 모듈** | `pacenote-api.mjs` · `admin-api.mjs` · `study-api.mjs` | 라우터 단위 분리. Builder's Log는 조회수만 server.mjs 인라인, 발행·통계는 admin-api 내 `/builderslog/*` |
 | **DB** | **Firestore** | `pacenotes/{uid}/weeks/{weekId}`, `daily_signals`, `study_content`, `subscribers`, `config`, `admin_config`, `email_logs` 등 |
 | **정적 콘텐츠** | **GCS** + Cloudflare CDN | `daily/${date}.json`(signal+study), `daily/junior_·senior_${date}.json`(트랙), `daily/index.json` |
 | **파이프라인** | `pipeline/src/*` → Cloud Run Jobs | `lib/rss.mjs`(수집), `lib/gemini.mjs`(AI), `lib/storage.mjs`(GCS) |
@@ -99,6 +102,6 @@ target_files:
 - 개발 환경·브랜치·배포: [development_guide](development_guide.md)
 - 인증: [authentication_architecture](authentication_architecture.md)
 - AI 비용/할당량: [api_usage_analysis](api_usage_analysis.md)
-- 스케일업: [scaling_plan](scaling_plan.md)
+- 스케일업 이력: [scaling_plan 아카이브](../archive/scaling_plan.md) *(제안 전부 구현 완료 — 2026-07-22 archived)*
 - 데이터 계약(웹↔데스크톱): [data_contract_v2](../data_contract_v2.md)
 - 추천 엔진·성장 루프(배움↔실행↔복기↔개인화): [ai_recommendation_engine](../pacenote/ai_recommendation_engine.md) · [growth_loop_plan](../pacenote/growth_loop_plan.md)

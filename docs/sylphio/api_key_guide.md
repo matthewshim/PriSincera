@@ -1,6 +1,6 @@
 ---
 status: active
-domain: Core
+domain: Sylphio
 last_updated: 2026-07-13
 version: v1.2
 target_files:

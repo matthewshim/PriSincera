@@ -5,7 +5,6 @@ last_updated: 2026-05-26
 version: v1.6
 target_files:
   - src/styles/index.css
-  - src/pages/PaceNoteDashboard.css
   - src/components/pacenote/PaceNoteChronoRibbon.css
   - src/components/daily/DailyCalendar.css
   - src/pages/DailyDigest.css

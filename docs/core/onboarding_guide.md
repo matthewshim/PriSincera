@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-24
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
   - package.json
   - cloudbuild.yaml
@@ -18,6 +18,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-24 | AI Agent | 역할별 필독 경로 + dev 셋업 체크리스트 최초 정의 | Onboarding |
+| v1.1 | 2026-07-22 | AI Agent | **리런 통합 반영** — 기획자 경로에 relearn 전략·UI 명세 편입(구 PaceNote 전략서는 근거 문서로 격하), admin 재편 정본 안내, 유령 `builderslog-api.mjs` 참조 제거 | §1, §4 |
 
 ---
 
@@ -35,8 +36,11 @@ target_files:
 | 순서 | 문서 | 목적 |
 | :--- | :--- | :--- |
 | 1 | [business_model](business_model.md) | 수익 모델·타깃·비용 철학 |
-| 2 | [pacenote/product_strategy](../pacenote/product_strategy.md) | PaceNote 제품 전략 |
-| 3 | [daily-digest/content_sourcing_policy](../daily-digest/content_sourcing_policy.md) | 콘텐츠 출처·사실성 정책 |
+| 2 | [relearn/product_strategy](../relearn/product_strategy.md) | **플래그십 리런** 통합 전략·승계 로드맵 |
+| 3 | [relearn/ui_specification](../relearn/ui_specification.md) | 리런 출하 화면 명세 (3-stage 루프) |
+| 4 | [daily-digest/content_sourcing_policy](../daily-digest/content_sourcing_policy.md) | 콘텐츠 출처·사실성 정책 |
+| 5 | [pacenote/product_strategy](../pacenote/product_strategy.md) · [growth_loop_plan](../pacenote/growth_loop_plan.md) | 실행·복기 도메인 근거 전략(리런에 승계) + 성장 루프 데이터층 |
+| 6 | [admin_console_specification](admin_console_specification.md) | 운영 콘솔 메뉴·기능 구조 |
 
 ### 🎨 디자이너 (Design)
 | 순서 | 문서 | 목적 |
@@ -94,7 +98,7 @@ npm run tech:compose        # 테크 트랙 피드 생성 (node src/tech-compose
 | 찾는 것 | 위치 |
 | :--- | :--- |
 | 화면/컴포넌트 | `src/pages/`, `src/components/` |
-| 웹 서버·API | `server.mjs`, `pacenote-api.mjs`, `admin-api.mjs`, `builderslog-api.mjs` |
+| 웹 서버·API | `server.mjs`, `pacenote-api.mjs`, `admin-api.mjs`, `study-api.mjs` (Builder's Log 조회수는 server.mjs 인라인, 발행은 admin-api) |
 | 배치 파이프라인 | `pipeline/src/` (`lib/`, `templates/`, `config/`) |
 | CI/CD·인프라 | `cloudbuild.yaml`, `pipeline/setup-infra.sh` |
 | 전체 문서 | 본 **Admin > 서비스 문서** 또는 `docs/INDEX.md` |

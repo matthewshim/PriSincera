@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-07-22
-version: v2.2
+version: v2.3
 target_files: []  # 작업 백로그 — 특정 코드 미지배
 ---
 
@@ -18,6 +18,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | v2.0 | 2026-07-21 | AI Agent | **실행 가능 항목 전량 소진** — 3구간(타이포 그리드 v5.6)·4-1(카테고리 OG)·6구간 결정 확정. 잔여는 외부 의존·대공사만 | 전 도메인 |
 | v2.1 | 2026-07-22 | AI Agent | 7구간(Admin 콘솔 리런 정합화) 신설 — 메뉴 재편·중복 탭 통합·죽은 API 제거·이메일 브랜딩 전환 | AdminDashboard, admin-api, server |
 | v2.2 | 2026-07-22 | AI Agent | 8구간(아카이브 상세 UI 재편) 신설·P1/P2 완료 — 훑어보기 기본 + 브리핑 히어로 + 스티키 채널 내비, 기본 상태 페이지 높이 9,753→6,099px(-37%, 첫 스크린 오버뷰 완결) | ReLearnDaily, SignalSection, DailyBriefing |
+| v2.3 | 2026-07-22 | AI Agent | 9구간(docs 최신화 전수 감사·정합화) 신설·완료 — 사실 오류 3건(개요·인증·INDEX)·target_files 삭제파일 잔존·archived 2종 이동 등 일괄 해소 | docs 전반 |
 
 > **운영 규칙**: 본 문서가 잔여 작업의 단일 정본(SSOT)입니다. 작업 착수·완료 시 상태를 갱신하고, 완료 항목은 ~~취소선~~ + 완료일을 남깁니다. 새 작업은 우선순위 표에 추가하십시오.
 
@@ -94,3 +95,14 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | ~~8-4~~ | ~~스티키 채널 내비 — 4채널 앵커 + 스크롤 스파이 + 존 컬러 동기화~~ | ✅ 2026-07-22 |
 | 8-5 | 배포 후 하단 채널 도달률 검증 (`relearn_daily_jump`·`relearn_daily_mode` GA 이벤트) | ⏳ 외부 의존(GA 데이터 축적) — 2-2와 함께 판정 |
 | 8-6 | 아티클 21건 상시화 시 파이프라인 카테고리 캡 재조정 검토 (`pipeline/src/composer.mjs`) | 선택 — 데이터 소스 다이어트 |
+
+## 9. 📄 docs 최신화 전수 감사·정합화 (2026-07-22 신설·완료)
+
+리런 통폐합(07-20)·admin 재편(07-22)·macOS 계획 폐기(07-22) 이후 docs 약 40종을 코드 실상과 전수 대조해 일괄 정합화.
+
+| # | 작업 | 상태 |
+| :--- | :--- | :--- |
+| ~~9-1~~ | ~~사실 오류 해소 — service_overview 승계 완료 재서술(3제품 체제), authentication_architecture 실측 정정(Firebase Bearer+화이트리스트·adminApp·Google 로그인), INDEX 설명 오류 2건(인증 JWT/쿠키 표기·design_system 구버전 소개)~~ | ✅ 2026-07-22 |
+| ~~9-2~~ | ~~기계 정리 — active 문서 frontmatter의 삭제파일(target_files) 잔존 제거 7종, sylphio 3종 domain 오기, last_updated 드리프트, admin-api 헤더 주석 잔재~~ | ✅ 2026-07-22 |
+| ~~9-3~~ | ~~archived 처리 — scaling_plan(제안 전부 구현 완료)·og_image_strategy(삭제된 PriSignal 화면 기준)를 docs/archive/ 이동+경위 배너. **구현 완료 제안서(scroll·mobile·learn_stage·sylphio landing 2종)는 보존 결정**~~ | ✅ 2026-07-22 |
+| ~~9-4~~ | ~~내용 개정 — business_model §6 제품 수익모델 신설, onboarding 기획자 경로 리런 편입, seo_meta_standard 현행 라우트 표, development_guide·architecture_overview 유령 builderslog-api/Nginx/helmet 정정, relearn/product_strategy §3·§4-3 자기모순 해소, pacenote 전략 2종 승계 배너, daily_digest_overhaul 리브랜딩 추기, i18n 2종 상호링크~~ | ✅ 2026-07-22 |

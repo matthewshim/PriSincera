@@ -1,19 +1,29 @@
 ---
 status: active
 domain: PaceNote
-last_updated: 2026-06-29
-version: v1.0
+last_updated: 2026-07-22
+version: v1.1
 target_files:
-  - src/pages/PaceNoteDashboard.jsx
-  - src/pages/DailyDigest.jsx
+  - src/pages/ReLearn.jsx
+  - src/hooks/usePaceNoteData.js
+  - pacenote-api.mjs
   - pipeline/src/pacenote-composer.mjs
 ---
 
 # 🗺️ PaceNote 제품 전략서 (Product Strategy)
 
+> ⚠️ **위상 안내 (2026-07-22)**: PaceNote 독립 웹 UI(`/pacenote`)는 **2026-07-20 통합 서비스 리런(ReLearn, `/relearn`)으로 승계**되어 비공개입니다(구 경로 301). 본 문서는 리런의 **실행·복기 도메인**을 지배하는 전략·데이터 모델의 근거 문서로 유지되며, 화면 명세는 [relearn/ui_specification](../relearn/ui_specification.md), 승계 경위는 [relearn/product_strategy](../relearn/product_strategy.md)를 보십시오. 본문 중 `PaceNoteDashboard.jsx` 등 구 화면 파일 언급은 작성 당시 기록입니다.
+
 > 💡 **기획 및 비전 선언 (Pace Note Vision)**
 > 남들의 속도에 휩쓸리지 않고, 오직 자신만의 템포와 방향을 추구하며 나아가는 이들을 위해 PriSincera가 AI 기반의 퍼스널 브랜딩 액션 플랫폼, **Pace Note**를 선보입니다.
 > 본 문서는 PriSincera의 3S 파이프라인(Signal ➔ Study ➔ Step)을 완성하는 최종 단계인 Pace Note의 기획 및 기술 명세서입니다.
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-29 | AI Agent | PaceNote 제품 전략·MVP 사양·동적 퇴출 알고리즘 정리 | PaceNote |
+| v1.1 | 2026-07-22 | AI Agent | **리런 승계 반영** — 위상 안내 배너 추가, target_files를 현행 파일(ReLearn·usePaceNoteData·pacenote-api)로 교체, §6 구현 서술에 승계 경위 명시 | frontmatter, §6 |
 
 ---
 
@@ -165,7 +175,7 @@ REFLECT (Monthly)     Analyze Monthly Branding Log
 
 Pace Note는 견고하고 확장 가능한 현대 웹 아키텍처를 바탕으로 동작합니다.
 
-*   **Frontend**: React (기존 `DailyDigest.jsx`와 긴밀하게 라우팅 연동되며, `src/pages/PaceNoteDashboard.jsx`가 새롭게 신설됩니다.)
+*   **Frontend**: React (계획 당시 `PaceNoteDashboard.jsx` 신설·`DailyDigest.jsx` 라우팅 연동으로 구현 → 2026-07-20 리런 승계 후 현재는 `ReLearn.jsx` + `usePaceNoteData.js` 훅이 담당)
 *   **Backend / DB**: Firebase Firestore (`pace_missions`, `user_portfolios` 컬렉션이 신설되어 사용자 미션과 포트폴리오 데이터를 안전하게 관리합니다.)
 *   **AI 파이프라인**: `pacenote-composer.mjs`가 신설되어 주말마다 유저별 활동 로그를 분석, Gemini API를 통해 개인화된 미션 페이로드를 생성하고 DB에 저장합니다.
 *   **인증**: 기 구현된 Firebase Google Auth 연동을 활용하여 seamless하고 안전한 사용자 인증 환경을 제공합니다.

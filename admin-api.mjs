@@ -1,5 +1,5 @@
 /**
- * Admin API 라우터 — PriSignal 관리 대시보드 백엔드
+ * Admin API 라우터 — PriSincera 관리 대시보드 백엔드
  *
  * 엔드포인트:
  *   GET  /admin/api/auth/verify     — Firebase ID 토큰 검증 + 역할 반환
@@ -12,7 +12,7 @@
  *
  *   === Profile (본인) ===
  *   GET  /admin/api/profile         — 본인 프로필 조회
- *   PUT  /admin/api/profile         — 본인 프로필 수정 (이름/비밀번호)
+ *   (프로필 수정은 서버 미경유 — 프론트가 Firebase Identity Toolkit REST 직접 호출)
  *
  *   === Admin CRUD (super_admin 전용) ===
  *   GET    /admin/api/admins        — 관리자 목록 조회
@@ -26,7 +26,7 @@ import { Router } from 'express';
 
 const router = Router();
 
-// ─── 트랙 피드 GCS 동기화 (Data Contract v2 §1 / 사업계획서 6.2.3·6.4.3) ──────────────
+// ─── 트랙 피드 GCS 동기화 (Data Contract v2 §1) ──────────────
 // 인-프로세스 직렬 큐를 공유해야 하므로 싱글턴으로 1회만 생성한다(요청마다 재생성 금지).
 let _dailyGcsSync = null;
 async function getDailyGcsSync() {

@@ -1,15 +1,15 @@
 ---
 status: active
 domain: PaceNote
-last_updated: 2026-06-29
-version: v1.4
+last_updated: 2026-07-22
+version: v1.5
 target_files:
   - pacenote-api.mjs
   - pipeline/src/pacenote-composer.mjs
   - pipeline/src/tech-composer.mjs
   - server.mjs
-  - src/pages/PaceNoteDashboard.jsx
-  - src/pages/DailyDigest.jsx
+  - src/pages/ReLearn.jsx
+  - src/components/pacenote/LoopReport.jsx
   - src/components/daily/TrackSignalFeed.jsx
 ---
 
@@ -28,14 +28,15 @@ target_files:
 | v1.2 | 2026-06-29 | AI Agent | **Phase 2 구현 완료** — 완료 가중 velocity·HOF, 고인물 퇴출 v2, affinity 인지형 추천(강점+스트레치) | pacenote-composer.mjs, pacenote-api.mjs |
 | v1.3 | 2026-06-29 | AI Agent | **Phase 3 구현 완료** — 다이제스트 개인화 렌즈(클라이언트측: 도메인 재정렬·'내 궤도' 배지·연결 배너). 소비 비콘은 이연 | TrackSignalFeed.jsx/css |
 | v1.4 | 2026-06-29 | AI Agent | **Phase 4 구현 완료 → 루프 닫힘(status active)** — 주간 루프 리포트(LoopReport) + 추천 사유 라벨(강점/스트레치) | LoopReport.jsx, PaceNoteDashboard.jsx |
+| v1.5 | 2026-07-22 | AI Agent | **리런 승계 반영** — 데이터 층(Phase 0~4)은 현행 유지, UI 표면(다이제스트 렌즈·LoopReport·추천 라벨)은 ReLearn(`/relearn`)으로 승계됨을 명시. 제품 목록·target_files 현행화 | frontmatter, §1 |
 
 ---
 
 ## 1. 배경과 목적
 
-PriSincera는 **프로덕트 우선** 방향으로 진화한다. 현재 4개 제품(Daily Digest·PaceNote·Builder's Log·Sylphio)은 각각 동작하지만 **서로 복리로 엮이지 않는다.** 가장 높은 레버리지는 새 제품이 아니라 **기존 제품을 하나의 성장 루프로 용접**하는 것이다.
+PriSincera는 **프로덕트 우선** 방향으로 진화한다. 계획 수립 당시 4개 제품(Daily Digest·PaceNote·Builder's Log·Sylphio)은 각각 동작하지만 **서로 복리로 엮이지 않았다.** 가장 높은 레버리지는 새 제품이 아니라 **기존 제품을 하나의 성장 루프로 용접**하는 것이다. *(2026-07-20 이후 이 용접의 화면 층은 통합 서비스 **ReLearn**(`/relearn`)이 담당하며, 본 문서의 데이터 층(Phase 0~4)은 그대로 리런을 구동한다 — [relearn/product_strategy](../relearn/product_strategy.md))*
 
-브랜드 철학의 척추 = **배움(Daily Digest) → 실행(PaceNote 궤도) → 복기(Voyage Log) → 다시 배움**. 이 루프를 닫으면:
+브랜드 철학의 척추 = **배움(다이제스트 4채널) → 실행(궤도) → 복기(Voyage Log) → 다시 배움**. 이 루프를 닫으면:
 - 유저마다 루프가 **복리로 누적** → 리텐션·차별화
 - 세 단계를 모두 소유해야만 가능 → **경쟁 모방 불가(해자)**
 
@@ -165,8 +166,8 @@ profile: {
 > 📌 **소비 비콘 이연 사유**: 야간 reconcile(Phase 1)가 affinity를 *weeks(실행) 기준으로만* 권위 재계산하므로, 소비 +0.5 증분은 reconcile에 덮어쓰여 사라진다. 정상 지원하려면 `profile.consumption`을 **별도 필드**로 두고 reconcile가 보존+합산해야 함 → 별도 작업으로 분리. 핵심 DoD(궤도 도메인 상단 노출)는 본 렌즈로 충족.
 
 ### ✅ Phase 4 — 루프 가시화 UI — **완료(2026-06-29)**
-- [x] **주간 루프 리포트**([LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)): 실행 완료율 · 연속 주차(🔥) · 복기 수 · 집중 도메인(🧭) 한 장 요약. PaceNote ChronoRibbon 하단 배치, 콜드 스타트 시 숨김
-- [x] **추천 사유 라벨**([PaceNoteDashboard.jsx](../../src/pages/PaceNoteDashboard.jsx) 옴니바): `강점 기반`(indigo) / `새 도전`(gold) — affinity 기반 클라이언트 판정
+- [x] **주간 루프 리포트**([LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)): 실행 완료율 · 연속 주차(🔥) · 복기 수 · 집중 도메인(🧭) 한 장 요약. 당시 PaceNote ChronoRibbon 하단 배치 → 현재는 리런([ReLearn.jsx](../../src/pages/ReLearn.jsx)) 두 뷰 공통 상주로 승계, 콜드 스타트 시 숨김
+- [x] **추천 사유 라벨**(구 `PaceNoteDashboard.jsx` 옴니바 → 현 리런 궤도 섹션 [OrbitSection.jsx](../../src/components/relearn/OrbitSection.jsx)): `강점 기반`(indigo) / `새 도전`(gold) — affinity 기반 클라이언트 판정
 - **DoD ✅**: 유저가 배움→실행→복기 루프를 한 장으로 인지. 추천이 *왜* 떴는지 가시화.
 
 ---
