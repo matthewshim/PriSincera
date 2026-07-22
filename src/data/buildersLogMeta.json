@@ -1,5 +1,55 @@
 [
   {
+    "id": "ep13",
+    "slug": "relearn-grand-unification-daily-digest-pacenote-successor",
+    "chapterNo": "13",
+    "title": {
+      "ko": "🪐 두 서비스를 하나의 여정으로: Daily Digest·Pace Note를 ReLearn으로 대통합한 승계기",
+      "en": "🪐 Two Services, One Journey: How We Unified Daily Digest & Pace Note into ReLearn",
+      "ja": "🪐 二つのサービスを一つの旅へ：Daily Digest・Pace NoteをReLearnへ大統合した継承記"
+    },
+    "subtitle": {
+      "ko": "분리돼 있던 배움·실행·복기를 단일 성장 루프로 묶고, 신규 API 0·URL 100% 보존으로 두 서비스를 무파괴 승계한 과정",
+      "en": "Binding separated learning, action, and reflection into a single growth loop — a non-destructive succession with zero new APIs and 100% URL preservation",
+      "ja": "分離されていた学び・実行・振り返りを単一の成長ループへ束ね、新規API 0・URL 100%保存で二つのサービスを非破壊で継承した過程"
+    },
+    "tags": [
+      "ReLearn",
+      "Service Integration",
+      "Growth Loop",
+      "Refactoring"
+    ],
+    "description": {
+      "ko": "PriSincera의 성장 철학(배움→실행→복기)은 하나였지만 Daily Digest와 Pace Note가 두 개의 메뉴로 분리돼 사용자가 루프를 체감하지 못했습니다. 백엔드에 이미 존재하던 성장 플라이휠을 화면으로 표면화하기 위해, 두 서비스를 통합 서비스 ReLearn으로 승계한 엔지니어링 기록입니다. 신규 API·신규 잡·신규 컬러 토큰 0, 모놀리식 2페이지의 섹션 컴포넌트 추출(부채 상환), 구 경로 301·SEO 자산 100% 보존, 그리고 오늘|기록 2뷰와 배움 4채널-궤도 매핑까지 — '통합은 뺄셈'이라는 원칙으로 완성한 과정을 담았습니다.",
+      "en": "PriSincera's growth philosophy (learn→act→reflect) was one, but Daily Digest and Pace Note were split into two menus, so users never felt the loop. This is the engineering record of succeeding both services into the unified service ReLearn, to surface on screen the growth flywheel that already existed in the backend. Zero new APIs, jobs, or color tokens; extraction of two monolithic pages into section components (debt repayment); old-path 301s with 100% SEO preservation; and the Today|Records dual view with the four learning-channel-to-orbit mapping — all built on the principle that 'unification is subtraction.'",
+      "ja": "PriSinceraの成長哲学(学び→実行→振り返り)は一つでしたが、Daily DigestとPace Noteが二つのメニューに分離し、ユーザーがループを実感できませんでした。バックエンドにすでに存在していた成長フライホイールを画面へ表出させるため、二つのサービスを統合サービスReLearnへ継承したエンジニアリング記録です。新規API・新規ジョブ・新規カラートークン 0、モノリシックな2ページのセクションコンポーネント抽出(負債返済)、旧経路301・SEO資産100%保存、そして今日|記録の2ビューと学び4チャネル-軌道マッピングまで — 「統合は引き算」という原則で完成させた過程を収めました。"
+    },
+    "accent": "#22D3EE",
+    "date": "2026-07-22",
+    "commits": [
+      {
+        "hash": "a35a551",
+        "type": "feat",
+        "msg": "리런 독립 운영 Phase 1 — 자체 아카이브 상세·내부 링크 전환·기록 내보내기"
+      },
+      {
+        "hash": "d369cd5",
+        "type": "feat",
+        "msg": "리런 독립 운영 Phase 2 — 진입점 리런 전환·구경로 301·SEO 이관"
+      },
+      {
+        "hash": "56429c8",
+        "type": "feat",
+        "msg": "리런 독립 운영 Phase 3 — 구 페이지 코드·라우트·메타·문서 위상 정리"
+      },
+      {
+        "hash": "dba4af5",
+        "type": "feat",
+        "msg": "리런 정합 Admin 메뉴 재편 — 그룹 4→3·탭 10→8"
+      }
+    ]
+  },
+  {
     "id": "ep12",
     "slug": "seo-meta-ssot-unified-titles-and-brand-og",
     "chapterNo": "12",
