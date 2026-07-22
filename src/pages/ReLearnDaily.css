@@ -125,7 +125,8 @@
 /* ── 존 단위 부분 펼침 (skim 모드 전용) + 스티키 내비 높이만큼 앵커 여백 보정 ── */
 .rl-daily-page .rl-ch-sec { scroll-margin-top: 150px; }
 .rl-daily-page .signal-article-card { scroll-margin-top: 150px; } /* 브리핑 → DM Pick 카드 점프 */
-.rl-zone-tools { display: flex; justify-content: flex-end; margin: -6px 0 4px; }
+/* 존 도구줄 — 아래 헤더의 우측 컨트롤(예: 어학 '전체 발음 듣기')과 §9-8 컨트롤 간격 준수 */
+.rl-zone-tools { display: flex; justify-content: flex-end; margin: 0 0 var(--space-md); }
 .rl-zone-expand {
   padding: 5px 12px; border-radius: var(--radius-pill);
   border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
