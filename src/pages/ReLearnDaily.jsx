@@ -137,7 +137,11 @@ export default function ReLearnDaily() {
     <div className="rl-page rl-daily-page">
       {/* §9-1 표준 서비스 히어로 정합 — .rl-hero 규격 클래스 재사용 (아이콘→타이틀→서브카피) */}
       <header className="rl-daily-head">
-        <Link className="rl-daily-back" to="/relearn">← ReLearn</Link>
+        <nav className="rl-daily-crumb" aria-label="위치 경로">
+          <Link className="rl-daily-crumb-link" to="/relearn">ReLearn</Link>
+          <span className="rl-daily-crumb-sep" aria-hidden="true">›</span>
+          <span className="rl-daily-crumb-cur" aria-current="page">아카이브</span>
+        </nav>
         <div className="rl-hero rl-daily-hero">
           <div className="rl-hero-icon">📅</div>
           <h1 className="rl-hero-title rl-daily-htitle">{date} Daily Digest</h1>

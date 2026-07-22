@@ -2,7 +2,7 @@
 status: active
 domain: ReLearn
 last_updated: 2026-07-22
-version: v1.1
+version: v1.3
 target_files:
   - src/pages/ReLearn.jsx
   - src/pages/ReLearn.css
@@ -33,6 +33,7 @@ target_files:
 | v1.0 | 2026-07-15 | AI Agent | Phase B~D 출하분 화면 명세 최초 작성 (3-stage·뷰 전환·레일 2뎁스·4채널·퍼널) | ReLearn UI |
 | v1.1 | 2026-07-22 | AI Agent | §8 아카이브 상세 UI 재편 명세 신설 — 훑어보기 기본·브리핑 히어로·스티키 채널 내비·시그널 이원화 | ReLearnDaily |
 | v1.2 | 2026-07-22 | AI Agent | §8 헤더 히어로 정합 — §9-1 표준 히어로(📅·`.rl-hero` 재사용) 적용, 이전/다음 pill → 주간 달력 스트립(`DailyWeekStrip`) 교체, 서브카피 갱신 | ReLearnDaily, DailyWeekStrip |
+| v1.3 | 2026-07-22 | AI Agent | §8 헤더 뒤로가기 `← ReLearn` → 위치 경로 브레드크럼 `ReLearn › 아카이브` — 리런 내 상주 화면에서의 동어반복 해소(오너 QA 환류) | ReLearnDaily |
 
 ---
 
@@ -120,7 +121,8 @@ GNB (ReLearn 활성 시 relearn-theme·cyan)
 
 ```
 헤더 — §9-1 표준 히어로 정합(v1.2, `.rl-hero` 재사용):
-│    ← ReLearn 브레드크럼(좌상단) ·
+│    브레드크럼(좌상단, v1.3): `ReLearn › 아카이브` — GNB에 ReLearn이 이미 활성인 화면에서
+│      "← ReLearn" 뒤로가기가 유발하던 동어반복 해소. 위치 경로형(상위 `/relearn` 링크 + 현재 구역 비링크) ·
 │    📅 아이콘(3rem float) → "{date} Daily Digest"(--fs-300/모바일 --fs-220·gradient-brand·tabular-nums)
 │    → 서브카피 "그날의 배움 아카이브 — 4채널 훑어보기, 정독은 토글로"(--fs-115)
 │    → 주간 달력 스트립(DailyWeekStrip): 월~일 7칸(요일+일자), /api/daily/index로
