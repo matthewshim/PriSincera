@@ -296,9 +296,9 @@
 /* 책갈피 탭은 전 화면 공통 상단 가로 배치 — 세로 레일은 2분할 컬럼 폭을 잠식해 폐지(오너 환류).
    긴 콘텐츠에서도 채널 전환이 닿도록 상단 sticky. */
 .rl-bm-tabs {
-  position: sticky; top: 0; z-index: 20;
-  padding-top: 8px;
-  background: linear-gradient(to bottom, var(--bg-void) 78%, transparent);
+  position: sticky; top: 52px; z-index: 20;  /* 고정 GNB(scrolled 53px) 바로 아래 고정 — 1px는 GNB가 덮어 틈 없음 */
+  padding-top: 10px;
+  background: linear-gradient(to bottom, var(--bg-void) 72%, transparent);
 }
 
 /* ── 책갈피 탭 — 일기장 (실행 | 복기 | 리포트) ── */
