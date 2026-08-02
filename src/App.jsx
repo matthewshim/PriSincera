@@ -7,8 +7,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 /* ── Code Splitting: page-level lazy imports ── */
 const Home = lazy(() => import('./pages/Home'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const ReLearn = lazy(() => import('./pages/ReLearn'));
-const ReLearnDaily = lazy(() => import('./pages/ReLearnDaily'));
+const DailyView = lazy(() => import('./pages/DailyView'));
 const BuildersLog = lazy(() => import('./pages/BuildersLog'));
 const BuildersLogDetail = lazy(() => import('./pages/BuildersLogDetail'));
 
@@ -49,9 +48,9 @@ function App() {
             <Route path="builders-log/:slug" element={<BuildersLogDetail />} />
 
             {/* Daily Digest·Pace Note는 ReLearn으로 통합 — 서버 301이 선행 처리 */}
-            {/* ReLearn — 배움·실행·복기 통합 성장 루프 (추가형: 기존 라우트 보존) */}
-            <Route path="relearn" element={<ReLearn />} />
-            <Route path="relearn/daily/:date" element={<ReLearnDaily />} />
+            {/* ReLearn — 하나의 날짜 뷰(DailyView): date 없으면 오늘, 있으면 그 날짜 (일자축 Phase 2) */}
+            <Route path="relearn" element={<DailyView />} />
+            <Route path="relearn/daily/:date" element={<DailyView />} />
             
             {/* Sylphio Routes */}
             <Route path="sylphio" element={<SylphioLanding />} />

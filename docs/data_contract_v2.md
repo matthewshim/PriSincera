@@ -1,7 +1,7 @@
 ---
 status: active
 domain: PaceNote
-last_updated: 2026-06-29
+last_updated: 2026-07-27
 version: v1.0
 target_files:
   - pacenote-api.mjs
@@ -130,8 +130,18 @@ interface Task {
   category: string;      // 'Learning' | 'Productivity' | 'Mindset' | ...
   color: string;         // hex
   completed: boolean;
+  completedAt?: string;  // ISO datetime — 완료 토글 시 기록, 해제 시 제거 (v2.4 가산; 과거 데이터엔 없음)
 }
 
+interface DayData {       // v2.5 일자축 Phase 3 — 활동 문서 (pacenotes/{uid}/days/{date})
+  date: string;          // 'YYYY-MM-DD' (KST)
+  currentPace: Task[];   // 그날의 궤도 — 기본 빈 배열("매일 제로에서", default-* 폐지)
+  recommendedPace: Task[];
+  statement: string;     // 그날의 회고/일기 (<=1000자)
+  createdAt: string;     // ISO datetime
+}
+
+// LEGACY(v2.5) — 전환 이전 주 아카이브 (pacenotes/{uid}/weeks/{weekId}, 읽기 전용 보존)
 interface WeekData {
   weekId: string;        // ISO week, 예: '2026-W26'
   startDate: string;     // 'YYYY-MM-DD'
@@ -142,16 +152,18 @@ interface WeekData {
   createdAt: string;     // ISO datetime
 }
 
-interface TimelineEntry {
-  weekId: string;
-  startDate: string;
-  endDate: string;
-  tasks: Task[];         // 완료된 것만
+interface TimelineEntry {  // v2.5 이원 해상도 — kind로 판별 (읽기 어댑터가 일/주 합류)
+  kind: 'day' | 'week';
+  date?: string;         // kind='day'
+  weekId?: string;       // kind='week' (레거시)
+  startDate?: string;    // kind='week'
+  endDate?: string;      // kind='week'
+  tasks: Task[];         // 완료된 것만 (day는 회고만 있는 날도 포함)
   statement: string;
 }
 
 interface PaceNoteState {  // GET / 의 응답
-  current: WeekData;
+  current: DayData;
   timeline: TimelineEntry[];
 }
 ```
@@ -243,3 +255,5 @@ CREATE TABLE keyword_weights (    -- 로컬 재랭킹용 (데스크톱 전용)
 | v2.1 | 2026-06-23 | 구현 반영: ① `Subtask` 타입 + `Task.subtasks?` 가산 ② `POST /toggle-subtask`(IPC `toggle_subtask`) 추가 ③ add-orbit 오빗 id `orbit-<ac.id>` 확정 + **주차 미존재 시 자동 생성**(404 제거) ④ 트랙 `index.json`에 `version`/`updatedAt` 기록(tech-composer) | §2.1, §2.2, §1.4 |
 | v2.2 | 2026-06-24 | 하이브리드(출처 정책 경로 C): 트랙 카드에 ① **`learning`**(concept + key_points 2~4개) 학습 레이어 가산 ② 실제 RSS 근거 기사의 **`sourceUrl`/`sourceName`** 채움(코드 주입). [학습 → 실전 → 원문] 흐름 | §1.2 |
 | v2.3 | 2026-06-24 | 오빗화 정책 변경: `action_challenge`의 **각 항목을 독립 궤도 N개**로 주입(부모+subtask 모델 폐지), **카테고리를 트랙 도메인에 매핑**(req에 `domain` 추가), `POST /toggle-subtask` 및 `Subtask` 타입 제거 | §2.1, §2.2 |
+| v2.4 | 2026-07-27 | `Task.completedAt?` 가산 — 일자축 통일 Phase 0: `/toggle` 완료 시 ISO 시각 기록, 해제 시 필드 제거. 과거 데이터 소급 없음(additive) | §2.1 |
+| v2.5 | 2026-07-27 | **일자축 통일 Phase 3** — 활동 그릇 `weeks/{weekId}` → `days/{date}`(KST): ① `DayData` 신설, `WeekData`는 읽기 전용 레거시 ② `TimelineEntry` 이원 해상도(`kind: day\|week`) ③ 기본 일자 문서 = 빈 궤도 + 추천 3(default-* 5궤도 폐지) ④ `add`·`add-orbit`·`diary` 오늘 문서 자동 생성 ⑤ 회고 `profile.reflections` 키 일자화(레거시 주차 키 병존, `/profile`은 ts 우선 최신순) | §2.1, §2.2 |

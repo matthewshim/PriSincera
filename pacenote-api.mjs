@@ -20,33 +20,15 @@ async function verifyUser(req, res, next) {
   }
 }
 
-// ISO 8601 Week Number 계산 함수
-function getWeekNumber(d) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
-  const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1)/7);
-  return `${date.getUTCFullYear()}-W${weekNo.toString().padStart(2, '0')}`;
+// KST 일자 ID (YYYY-MM-DD) — 활동 문서 특정 (일자축 Phase 3: weeks/{weekId} → days/{date})
+function getDayId(d = new Date()) {
+  return new Date(d.getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
-function getWeekDateRange(weekStr) {
-  const [yearStr, weekNumStr] = weekStr.split('-W');
-  const year = parseInt(yearStr, 10);
-  const week = parseInt(weekNumStr, 10);
-  const simple = new Date(year, 0, 1 + (week - 1) * 7);
-  const dow = simple.getDay();
-  const ISOweekStart = simple;
-  if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-  else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-  
-  const end = new Date(ISOweekStart);
-  end.setDate(ISOweekStart.getDate() + 6);
-  
-  return {
-    start: ISOweekStart.toISOString().split('T')[0],
-    end: end.toISOString().split('T')[0],
-  };
+// 오늘(KST)의 활동 문서 참조 — 모든 핸들러 공통
+function todayActivityRef(uid) {
+  const dayId = getDayId();
+  return { dayId, docRef: db.collection('pacenotes').doc(uid).collection('days').doc(dayId) };
 }
 
 // 스마트 카테고리 매퍼 함수 (제목 기반 자동 매핑)
@@ -323,6 +305,24 @@ const localizeTask = (task, locale) => {
   };
 };
 
+// 레거시 주차 키 'YYYY-Www' → 그 주 월요일 'YYYY-MM-DD' (회고 정렬 정규화용). 일자 키·비주차 문자열은 null.
+function isoWeekMonday(key) {
+  const m = /^(\d{4})-W(\d{2})$/.exec(String(key));
+  if (!m) return null;
+  const [y, w] = [Number(m[1]), Number(m[2])];
+  const jan4 = new Date(Date.UTC(y, 0, 4));                 // ISO 1주는 항상 1/4 포함
+  const week1Mon = new Date(jan4); week1Mon.setUTCDate(jan4.getUTCDate() - ((jan4.getUTCDay() + 6) % 7));
+  const mon = new Date(week1Mon); mon.setUTCDate(week1Mon.getUTCDate() + (w - 1) * 7);
+  return mon.toISOString().slice(0, 10);
+}
+
+// 카테고리 누락 궤도 보정 — GET /·GET /day/:date 공통 (과거 데이터 자가치유)
+const fixCategories = (tasks = []) => tasks.map(task => {
+  if (task.category) return task;
+  const smart = getSmartCategory(task.title);
+  return { ...task, category: smart.category, color: smart.color };
+});
+
 // 테크 트랙 도메인 → PaceNote 카테고리/색상 (디자인 시스템 토큰 정합)
 const TRACK_DOMAIN_META = {
   ai_llm:        { category: 'AI/LLM',        color: '#22D3EE' },  // Aether Cyan
@@ -354,62 +354,14 @@ export function buildOrbitTasks(actionChallenge, domain) {
   }));
 }
 
-// 기본 주차 문서 생성 (GET / 와 add-orbit 공통 — 미존재 주차 자동 초기화)
-export function buildDefaultWeek(weekId, dailyPool) {
-  const { start, end } = getWeekDateRange(weekId);
-  const defaultCurrentPace = [
-    {
-      id: 'default-1',
-      title: {
-        ko: 'Daily Digest 오늘의 인사이트 1개 이상 읽기',
-        en: 'Read 1 or more daily insights in Daily Digest',
-        ja: 'Daily Digest 今日のインサイトを1つ以上読む'
-      },
-      category: 'Learning', color: '#60A5FA', completed: false
-    },
-    {
-      id: 'default-2',
-      title: {
-        ko: '이번 주 AI 스터디 프롬프트 직접 실행해보기',
-        en: "Try running this week's AI study prompt yourself",
-        ja: '今週のAIスタディプロンプトを直接実行してみる'
-      },
-      category: 'Learning', color: '#60A5FA', completed: false
-    },
-    {
-      id: 'default-3',
-      title: {
-        ko: '비즈니스 일본어 추천 문장 소리 내어 3번 읽기',
-        en: 'Read the recommended business Japanese sentence aloud 3 times',
-        ja: 'ビジネス日本語の推奨文章を声に出して3回読む'
-      },
-      category: 'Learning', color: '#60A5FA', completed: false
-    },
-    {
-      id: 'default-4',
-      title: {
-        ko: 'Daily Digest의 S.I.G.N.A.L. 분석 코멘트 복습하기',
-        en: 'Review S.I.G.N.A.L. analysis comments in Daily Digest',
-        ja: 'Daily DigestのS.I.G.N.A.L.分析コメントを復習する'
-      },
-      category: 'Productivity', color: '#F472B6', completed: false
-    },
-    {
-      id: 'default-5',
-      title: {
-        ko: '이번 주 관심 있었던 아티클 북마크 또는 메모 남기기',
-        en: 'Bookmark or take a note on an article of interest this week',
-        ja: '今週興味を持った記事にブックマークまたはメモを残す'
-      },
-      category: 'Learning', color: '#60A5FA', completed: false
-    }
-  ];
+// 기본 일자 문서 생성 (GET / 와 쓰기 핸들러 공통 — 미존재 일자 자동 초기화)
+// "매일 제로에서": 기본 궤도 주입 없이 빈 궤도 + 추천 3개로 시작한다.
+// (주 컨테이너 시절의 default-* 5궤도는 일 단위에선 매일 재주입되어 picked 통계 왜곡·완료 부담 — 폐지)
+export function buildDefaultDay(date, dailyPool, affinity = null) {
   return {
-    weekId,
-    startDate: start,
-    endDate: end,
-    currentPace: defaultCurrentPace,
-    recommendedPace: replenishRecommendations(defaultCurrentPace, [], dailyPool, 3),
+    date,
+    currentPace: [],
+    recommendedPace: replenishRecommendations([], [], dailyPool, 3, affinity),
     statement: '',
     createdAt: new Date().toISOString()
   };
@@ -435,8 +387,8 @@ async function recordSignal(uid, { affinity = [], pickedDelta = 0, completedDelt
     }
     if (pickedDelta) (profile.completion ||= {}).picked = FieldValue.increment(pickedDelta);
     if (completedDelta) (profile.completion ||= {}).completed = FieldValue.increment(completedDelta);
-    if (reflection && reflection.weekId && reflection.text) {
-      profile.reflections = { [reflection.weekId]: { text: reflection.text, ts: new Date().toISOString() } };
+    if (reflection && reflection.id && reflection.text) {
+      profile.reflections = { [reflection.id]: { text: reflection.text, ts: new Date().toISOString() } };
     }
     await db.collection('pacenotes').doc(uid).set({ profile }, { merge: true });
   } catch (e) {
@@ -449,83 +401,75 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
     const email = req.user.email || '이메일 없음';
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    
+    const dayId = getDayId();
+
     const userRef = db.collection('pacenotes').doc(uid);
     // 프론트엔드 로그인 세션(토큰)에서 확보한 이메일을 DB에 즉시 저장
     await userRef.set({ email, lastActive: new Date().toISOString() }, { merge: true });
-    
-    const weeksRef = userRef.collection('weeks');
-    
-    // 현재 주간 데이터 조회
-    const currentDoc = await weeksRef.doc(currentWeekId).get();
-    let currentWeekData = null;
-    
+
+    const daysRef = userRef.collection('days');
+
+    // 오늘 활동 문서 조회
+    const currentDoc = await daysRef.doc(dayId).get();
+    let currentDayData = null;
+
     // DB 혹은 하드코딩 풀 가져오기
     const dailyPool = await getDailyPool();
-    
+
     if (!currentDoc.exists) {
-      // 데이터가 없으면 기본값 생성 (add-orbit과 공통 헬퍼 사용)
-      currentWeekData = buildDefaultWeek(currentWeekId, dailyPool);
-      await weeksRef.doc(currentWeekId).set(currentWeekData);
+      // 문서가 없으면 기본값 생성 — 빈 궤도 + affinity 추천 3개
+      const affinity = await getAffinity(uid);
+      currentDayData = buildDefaultDay(dayId, dailyPool, affinity);
+      await daysRef.doc(dayId).set(currentDayData);
     } else {
-      currentWeekData = currentDoc.data();
-      if (!currentWeekData.hasOwnProperty('statement')) {
-        currentWeekData.statement = '';
+      currentDayData = currentDoc.data();
+      if (!currentDayData.hasOwnProperty('statement')) {
+        currentDayData.statement = '';
       }
-      
+
       // 기존 저장된 데이터 중 카테고리가 누락된 항목이 있다면 보정
-      if (currentWeekData.currentPace) {
-        currentWeekData.currentPace = currentWeekData.currentPace.map(task => {
-          if (!task.category) {
-            const smart = getSmartCategory(task.title);
-            return { ...task, category: smart.category, color: smart.color };
-          }
-          return task;
-        });
+      if (currentDayData.currentPace) {
+        currentDayData.currentPace = fixCategories(currentDayData.currentPace);
       }
-      
+
       // 지속적인 추천 UX 제공을 위해 항상 추천 항목이 3개 미만이면 채워줌
-      const oldRecCount = (currentWeekData.recommendedPace || []).length;
+      const oldRecCount = (currentDayData.recommendedPace || []).length;
       if (oldRecCount < 3) {
         const affinity = await getAffinity(uid);
-        currentWeekData.recommendedPace = replenishRecommendations(currentWeekData.currentPace, currentWeekData.recommendedPace || [], dailyPool, 3, affinity);
-        await weeksRef.doc(currentWeekId).update({ recommendedPace: currentWeekData.recommendedPace });
+        currentDayData.recommendedPace = replenishRecommendations(currentDayData.currentPace, currentDayData.recommendedPace || [], dailyPool, 3, affinity);
+        await daysRef.doc(dayId).update({ recommendedPace: currentDayData.recommendedPace });
       }
     }
 
-    // 과거 데이터 (Timeline 용) - 최신순 10개 내외를 가져오되,
-    // 복합 인덱스(Composite Index) 배포 번거로움을 피하기 위해 range filter(<) 없이
-    // 기본 단일 필드 인덱스를 사용하는 orderBy만 적용한 뒤 메모리 상에서 필터링합니다.
-    const pastDocs = await weeksRef
-      .orderBy('weekId', 'desc')
-      .limit(20)
-      .get();
-      
+    // 타임라인 — 이원 스키마 읽기 어댑터(계획 §6): 과거 일 문서(신규) + 주 문서(레거시 아카이브) 합류
+    const [pastDayDocs, legacyWeekDocs] = await Promise.all([
+      daysRef.orderBy('date', 'desc').limit(20).get(),
+      userRef.collection('weeks').orderBy('weekId', 'desc').limit(10).get(),
+    ]);
+
     const pastLogs = [];
-    pastDocs.forEach(doc => {
+    // (1) 일 해상도 — 전환 시점 이후 (완료 궤도 또는 회고가 있는 날만)
+    pastDayDocs.forEach(doc => {
       const data = doc.data();
-      // 현재 주차 및 혹시 모를 미래 주차는 과거 타임라인에서 제외
-      if (data.weekId >= currentWeekId) {
-        return;
-      }
-      // 최대 10개만 타임라인에 노출
-      if (pastLogs.length >= 10) {
-        return;
-      }
-      // 완료된 미션들만 타임라인에 표시
-      let completedTasks = (data.currentPace || []).filter(t => t.completed);
-      if (completedTasks.length > 0) {
-        // 과거 데이터의 카테고리 누락 보정
-        completedTasks = completedTasks.map(task => {
-          if (!task.category) {
-            const smart = getSmartCategory(task.title);
-            return { ...task, category: smart.category, color: smart.color };
-          }
-          return task;
-        });
+      if (!data.date || data.date >= dayId) return;   // 오늘·미래 제외
+      if (pastLogs.length >= 14) return;              // 최대 14일 노출
+      const completedTasks = fixCategories((data.currentPace || []).filter(t => t.completed));
+      if (completedTasks.length > 0 || (data.statement || '').trim()) {
         pastLogs.push({
+          kind: 'day',
+          date: data.date,
+          tasks: completedTasks,
+          statement: data.statement || ''
+        });
+      }
+    });
+    // (2) 주 해상도 — 전환 시점 이전 레거시 (읽기 전용 보존)
+    legacyWeekDocs.forEach(doc => {
+      const data = doc.data();
+      const completedTasks = fixCategories((data.currentPace || []).filter(t => t.completed));
+      if (completedTasks.length > 0) {
+        pastLogs.push({
+          kind: 'week',
           weekId: data.weekId,
           startDate: data.startDate,
           endDate: data.endDate,
@@ -537,11 +481,11 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
 
     // 클라이언트 언어 환경에 맞게 제목 평탄화(Flatten)하여 전달
     const localizedCurrent = {
-      ...currentWeekData,
-      currentPace: (currentWeekData.currentPace || []).map(t => localizeTask(t, req.locale)),
-      recommendedPace: (currentWeekData.recommendedPace || []).map(t => localizeTask(t, req.locale))
+      ...currentDayData,
+      currentPace: (currentDayData.currentPace || []).map(t => localizeTask(t, req.locale)),
+      recommendedPace: (currentDayData.recommendedPace || []).map(t => localizeTask(t, req.locale))
     };
-    
+
     const localizedTimeline = pastLogs.map(log => ({
       ...log,
       tasks: (log.tasks || []).map(t => localizeTask(t, req.locale))
@@ -557,13 +501,54 @@ pacenoteRouter.get('/', verifyUser, async (req, res) => {
   }
 });
 
-// 1-0. 현재 주차에 이미 추가된 오빗 base id 목록 (read-only — 주차 문서를 생성하지 않음)
+// 1-0-b. 특정 날짜의 실행·복기 조회 (읽기 전용 — 문서 생성 없음, 과거 열람용)
+// 일자축 Phase 3 어댑터: days/{date}(신규) 우선, 없으면 그 날이 속한 주 문서(레거시)로 폴백.
+// GET / 타임라인 윈도우(최근 N일)에 의존하지 않으므로 임의 과거 날짜도 유실 없이 열람된다.
+pacenoteRouter.get('/day/:date', verifyUser, async (req, res) => {
+  try {
+    const uid = req.user.uid;
+    const date = req.params.date;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return res.status(400).json({ error: 'Invalid date format' });
+
+    const userRef = db.collection('pacenotes').doc(uid);
+    const dayDoc = await userRef.collection('days').doc(date).get();
+    if (dayDoc.exists) {
+      const data = dayDoc.data();
+      const tasks = fixCategories((data.currentPace || []).filter(t => t.completed));
+      const statement = data.statement || '';
+      if (tasks.length > 0 || statement.trim()) {
+        return res.json({ kind: 'day', date, tasks: tasks.map(t => localizeTask(t, req.locale)), statement });
+      }
+    }
+
+    // 레거시 주 문서 폴백 — 그 날짜를 포함하는 주(startDate ≤ date ≤ endDate) 검색.
+    // 복합 인덱스 회피: 최근 주 문서를 메모리에서 스캔 (레거시 주는 전환 이전으로 유한).
+    const weeksSnap = await userRef.collection('weeks').orderBy('weekId', 'desc').limit(60).get();
+    for (const doc of weeksSnap.docs) {
+      const w = doc.data();
+      if (w.startDate && w.endDate && w.startDate <= date && date <= w.endDate) {
+        const tasks = fixCategories((w.currentPace || []).filter(t => t.completed));
+        return res.json({
+          kind: 'week', weekId: w.weekId, startDate: w.startDate, endDate: w.endDate,
+          tasks: tasks.map(t => localizeTask(t, req.locale)), statement: w.statement || ''
+        });
+      }
+    }
+
+    res.json({ kind: 'none', date });
+  } catch (err) {
+    console.error('[PaceNote API] Get Day Error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 1-0. 오늘 이미 추가된 오빗 base id 목록 (read-only — 일자 문서를 생성하지 않음)
 // 트랙 카드의 '이미 추가됨' 상태 표시용. base id = orbit-<ac.id> (항목 suffix 제거)
 pacenoteRouter.get('/orbit-ids', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
-    const currentWeekId = getWeekNumber(new Date());
-    const doc = await db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId).get();
+    const { docRef } = todayActivityRef(uid);
+    const doc = await docRef.get();
     if (!doc.exists) return res.json({ orbitBaseIds: [] });
     const ids = (doc.data().currentPace || [])
       .map(t => t.id)
@@ -585,14 +570,16 @@ pacenoteRouter.get('/profile', verifyUser, async (req, res) => {
     const completion = profile.completion || { picked: 0, completed: 0 };
     const rate = completion.picked > 0 ? +(completion.completed / completion.picked).toFixed(3) : 0;
     const reflMap = profile.reflections || {};
+    const reflSortKey = ([id, v]) => v?.ts || isoWeekMonday(id) || id;  // ts 우선 → 주차키는 월요일 환산 → 일자키 그대로
     const recentReflections = Object.entries(reflMap)
-      .sort((a, b) => (a[0] < b[0] ? 1 : -1))   // weekId 내림차순(최신)
+      .sort((a, b) => String(reflSortKey(b)).localeCompare(String(reflSortKey(a))))  // 최신순 (동종 ISO 일자 비교)
       .slice(0, 5)
-      .map(([weekId, v]) => ({ weekId, text: v.text, ts: v.ts || null }));
+      .map(([id, v]) => ({ id, text: v.text, ts: v.ts || null }));
     res.json({
       domainAffinity: profile.domainAffinity || {},
       completion: { picked: completion.picked || 0, completed: completion.completed || 0, rate },
-      streak: profile.streak || { current: 0, best: 0 },
+      streak: profile.streak || { current: 0, best: 0 }, // DEPRECATED(주 단위) — practice가 대체, Phase 4 제거 예정
+      practice: profile.practice || { monthDays: 0, last7Days: 0, current: 0, best: 0, lastActive: null },
       level: profile.level || null,
       recentReflections,
       updatedAt: profile.updatedAt || null,
@@ -611,16 +598,13 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
     if (!title || !title.trim()) return res.status(400).json({ error: 'title is required' });
     if (title.trim().length > 100) return res.status(400).json({ error: 'Title must be 100 characters or less' });
 
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    const { dayId, docRef } = todayActivityRef(uid);
     
     const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
-    
-    const data = doc.data();
+    // 오늘 문서가 아직 없으면 자동 생성 후 추가
+    const data = doc.exists ? doc.data() : buildDefaultDay(dayId, await getDailyPool(), await getAffinity(uid));
     const currentPace = data.currentPace || [];
-    
+
     const smart = getSmartCategory(title.trim());
     const newTask = {
       id: `custom-${Date.now()}`,
@@ -631,7 +615,7 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
     };
     
     currentPace.push(newTask);
-    await docRef.update({ currentPace });
+    await docRef.set({ ...data, currentPace });
     await recordSignal(uid, { affinity: [{ category: newTask.category, weight: 1 }], pickedDelta: 1 });
 
     res.json({ success: true, currentPace: currentPace.map(t => localizeTask(t, req.locale)) });
@@ -641,7 +625,7 @@ pacenoteRouter.post('/add', verifyUser, async (req, res) => {
   }
 });
 
-// 1-2. Click-to-Orbit: 데일리 카드의 action_challenge를 주간 오빗으로 주입 (계약 §2.2)
+// 1-2. Click-to-Orbit: 데일리 카드의 action_challenge를 오늘의 오빗으로 주입 (계약 §2.2)
 pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
@@ -657,20 +641,18 @@ pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
       return res.status(400).json({ error: e.message });
     }
 
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    const { dayId, docRef } = todayActivityRef(uid);
 
     const doc = await docRef.get();
 
-    // 이번 주 PaceNote를 아직 열지 않아 week 문서가 없으면 기본 주차를 자동 생성 후 주입
+    // 오늘 문서가 아직 없으면 기본 일자 문서를 자동 생성 후 주입
     if (!doc.exists) {
       const dailyPool = await getDailyPool();
-      const week = buildDefaultWeek(currentWeekId, dailyPool);
-      week.currentPace.push(...orbits);
-      await docRef.set(week);
+      const day = buildDefaultDay(dayId, dailyPool, await getAffinity(uid));
+      day.currentPace.push(...orbits);
+      await docRef.set(day);
       await recordSignal(uid, { affinity: [{ category: orbits[0].category, weight: orbits.length }], pickedDelta: orbits.length });
-      return res.json({ success: true, added: orbits.length, currentPace: week.currentPace.map(t => localizeTask(t, req.locale)) });
+      return res.json({ success: true, added: orbits.length, currentPace: day.currentPace.map(t => localizeTask(t, req.locale)) });
     }
 
     const data = doc.data();
@@ -694,7 +676,7 @@ pacenoteRouter.post('/add-orbit', verifyUser, async (req, res) => {
   }
 });
 
-// 2. 현재 주간 미션 완료 상태 토글
+// 2. 오늘 궤도 완료 상태 토글
 pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
@@ -702,12 +684,10 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
     
     if (!taskId) return res.status(400).json({ error: 'taskId is required' });
 
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    const { docRef } = todayActivityRef(uid);
     
     const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+    if (!doc.exists) return res.status(404).json({ error: 'Day not found' });
     
     const data = doc.data();
     const currentPace = data.currentPace || [];
@@ -715,8 +695,13 @@ pacenoteRouter.post('/toggle', verifyUser, async (req, res) => {
     const taskIndex = currentPace.findIndex(t => t.id === taskId);
     if (taskIndex === -1) return res.status(404).json({ error: 'Task not found' });
     
-    // Toggle
+    // Toggle — 완료 시 completedAt(일 해상도) 기록, 해제 시 제거(스테일 시각 방지)
     currentPace[taskIndex].completed = !currentPace[taskIndex].completed;
+    if (currentPace[taskIndex].completed) {
+      currentPace[taskIndex].completedAt = new Date().toISOString();
+    } else {
+      delete currentPace[taskIndex].completedAt;
+    }
 
     await docRef.update({ currentPace });
     const nowDone = currentPace[taskIndex].completed;
@@ -741,12 +726,10 @@ pacenoteRouter.post('/exclude', verifyUser, async (req, res) => {
 
     if (!taskId) return res.status(400).json({ error: 'taskId is required' });
 
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    const { docRef } = todayActivityRef(uid);
 
     const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+    if (!doc.exists) return res.status(404).json({ error: 'Day not found' });
 
     const data = doc.data();
     const currentPace = data.currentPace || [];
@@ -774,12 +757,10 @@ pacenoteRouter.post('/restore', verifyUser, async (req, res) => {
 
     if (!taskId) return res.status(400).json({ error: 'taskId is required' });
 
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    const { docRef } = todayActivityRef(uid);
 
     const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+    if (!doc.exists) return res.status(404).json({ error: 'Day not found' });
 
     const data = doc.data();
     const currentPace = data.currentPace || [];
@@ -804,12 +785,10 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
     
     if (!taskId) return res.status(400).json({ error: 'taskId is required' });
 
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    const { docRef } = todayActivityRef(uid);
     
     const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
+    if (!doc.exists) return res.status(404).json({ error: 'Day not found' });
     
     const data = doc.data();
     let currentPace = data.currentPace || [];
@@ -850,7 +829,7 @@ pacenoteRouter.post('/accept', verifyUser, async (req, res) => {
   }
 });
 
-// 4. 주간 회고/일기 작성 및 저장
+// 4. 오늘의 회고/일기 작성 및 저장
 pacenoteRouter.post('/diary', verifyUser, async (req, res) => {
   try {
     const uid = req.user.uid;
@@ -860,17 +839,20 @@ pacenoteRouter.post('/diary', verifyUser, async (req, res) => {
       return res.status(400).json({ error: 'Diary entry must be 1000 characters or less' });
     }
 
-    const today = new Date();
-    const currentWeekId = getWeekNumber(today);
-    const docRef = db.collection('pacenotes').doc(uid).collection('weeks').doc(currentWeekId);
+    const { dayId, docRef } = todayActivityRef(uid);
     
     const doc = await docRef.get();
-    if (!doc.exists) return res.status(404).json({ error: 'Week not found' });
-    
     const cleanStatement = statement ? statement.trim() : '';
-    await docRef.update({ statement: cleanStatement });
+    if (!doc.exists) {
+      // 오늘 문서가 없어도 복기를 먼저 남길 수 있게 자동 생성
+      const day = buildDefaultDay(dayId, await getDailyPool(), await getAffinity(uid));
+      day.statement = cleanStatement;
+      await docRef.set(day);
+    } else {
+      await docRef.update({ statement: cleanStatement });
+    }
     if (cleanStatement) {
-      await recordSignal(uid, { reflection: { weekId: currentWeekId, text: cleanStatement } });
+      await recordSignal(uid, { reflection: { id: dayId, text: cleanStatement } });
     }
 
     res.json({ success: true, statement: cleanStatement });

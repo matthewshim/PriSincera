@@ -1,13 +1,13 @@
 ---
 status: active
 domain: ReLearn
-last_updated: 2026-07-22
-version: v1.3
+last_updated: 2026-07-27
+version: v1.5
 target_files:
-  - src/pages/ReLearn.jsx
+  - src/pages/DailyView.jsx
   - src/pages/ReLearn.css
-  - src/pages/ReLearnDaily.jsx
   - src/pages/ReLearnDaily.css
+  - src/components/relearn/DiaryDock.jsx
   - src/components/daily/DailyBriefing.jsx
   - src/components/daily/SignalSection.jsx
   - src/components/daily/PromptSection.jsx
@@ -34,15 +34,23 @@ target_files:
 | v1.1 | 2026-07-22 | AI Agent | §8 아카이브 상세 UI 재편 명세 신설 — 훑어보기 기본·브리핑 히어로·스티키 채널 내비·시그널 이원화 | ReLearnDaily |
 | v1.2 | 2026-07-22 | AI Agent | §8 헤더 히어로 정합 — §9-1 표준 히어로(📅·`.rl-hero` 재사용) 적용, 이전/다음 pill → 주간 달력 스트립(`DailyWeekStrip`) 교체, 서브카피 갱신 | ReLearnDaily, DailyWeekStrip |
 | v1.3 | 2026-07-22 | AI Agent | §8 헤더 뒤로가기 `← ReLearn` → 위치 경로 브레드크럼 `ReLearn › 아카이브` — 리런 내 상주 화면에서의 동어반복 해소(오너 QA 환류) | ReLearnDaily |
+| v1.4 | 2026-07-27 | AI Agent | **일자축 통일 Phase 2** — ReLearn.jsx+ReLearnDaily.jsx → 단일 `DailyView.jsx` 수렴(오늘/과거 동일 골격), 시간 네비(DailyWeekStrip) 오늘 뷰 상시화, `기록` 탭 → `TimeOverview`(날짜 칩 인덱스+주 단위 기록), 오늘 날짜 아카이브 URL → `/relearn` 수렴 | DailyView, TimeOverview |
+| v1.5 | 2026-07-27 | AI Agent | **교재/일기장 분리 재편(오너 환류)** — 본문=배움 콘텐츠 통일 렌더, 실행·복기=DiaryDock(본문 2분할 우측 컬럼 span 8/4·모바일 하단 도크), `오늘\|기록` 탭·TimeOverview·3-stage 스택 폐지, Learn/Run/ReflectStage·RecordsView 소거 | DailyView, DiaryDock |
 
 ---
 
 ## 1. 화면 구조 (위 → 아래)
 
 ```
-[컴포넌트 구조 — 1-3 리팩터] ReLearn.jsx(셸: 상태·핸들러·SEO·스크롤스파이)
-  ├─ LearnStage(①배움 존·책갈피·아카이브) · RunStage(②궤도) · ReflectStage(③일지)
-  ├─ RecordsView(기록 뷰·.md 내보내기) · OrbitSection · ReflectionSection · LoopReport
+[컴포넌트 구조 — 일자축 Phase 2 재편: 교재/일기장 분리] DailyView.jsx(단일 날짜 뷰 셸)
+  ├─ 📖 교재(본문): DailyBriefing + 책갈피 탭(전 화면 상단 가로·sticky — 세로 레일은 2분할 컬럼 폭 잠식으로 기각) — 카테고리별
+  │    구분, 각 탭 전부 펼침(훑어보기/정독 모드·스티키 칩 바 폐지). 오늘은 탭 패널에 '＋일기장 궤도에
+  │    추가' 브리지(signal/prompt/jp, 트랙은 카드 자체 오빗화)
+  ├─ ✍️ 일기장: DiaryDock(플로팅 — 데스크톱 우측 고정 패널 · 모바일 하단 도크→시트)
+  │    레이아웃: 본문 2분할(--container 내 span 8/4) — 좌 교재 · 우 일기장(sticky), 모바일 1열+하단 도크
+  │    내부 책갈피 탭: 실행 | 복기 | (오늘) 리포트 — 오늘: OrbitSection·ReflectionSection·LoopReport(.md 내보내기)
+  │    · 과거: 일 해상도 열람 — 전환 이전 날짜는 그 날이 속한 주 기록(주 해상도)으로 폴백
+  ├─ 공통: DailyWeekStrip(유일한 날짜 탐색 축) — 오늘 날짜의 /relearn/daily/:date는 /relearn으로 수렴
   └─ daily 공용: TrackSignalFeed·Signal/Prompt/JapaneseSection (compact prop)
 
 GNB (ReLearn 활성 시 relearn-theme·cyan)
@@ -117,7 +125,7 @@ GNB (ReLearn 활성 시 relearn-theme·cyan)
 
 ## 8. 아카이브 상세 `/relearn/daily/:date` (UI 재편 2026-07-22)
 
-> 원칙: **Overview first, details on demand.** 전량 펼침(비-compact) 스택이 유발한 스크롤·가독 피로(21아티클 카드 포함 9,753px)를, 정보 손실 0으로 훑어보기 구조로 전환(기본 6,099px). 컴포넌트: `ReLearnDaily.jsx` + `DailyBriefing.jsx` + `DailyWeekStrip.jsx`.
+> 원칙: **Overview first, details on demand.** 전량 펼침(비-compact) 스택이 유발한 스크롤·가독 피로(21아티클 카드 포함 9,753px)를, 정보 손실 0으로 훑어보기 구조로 전환(기본 6,099px). 컴포넌트: `DailyView.jsx`(일자축 Phase 2에서 ReLearn.jsx와 병합, 과거 분기) + `DailyBriefing.jsx` + `DailyWeekStrip.jsx`.
 
 ```
 헤더 — §9-1 표준 히어로 정합(v1.2, `.rl-hero` 재사용):

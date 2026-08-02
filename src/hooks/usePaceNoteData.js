@@ -35,9 +35,7 @@ function normalizeState(raw) {
   const current = raw?.current || {};
   return {
     current: {
-      weekId: current.weekId || '',
-      startDate: current.startDate || '',
-      endDate: current.endDate || '',
+      date: current.date || '',   // 일자축 Phase 3 — 활동 문서가 주(weekId)에서 일(date)로
       currentPace: Array.isArray(current.currentPace) ? current.currentPace : [],
       recommendedPace: Array.isArray(current.recommendedPace) ? current.recommendedPace : [],
       statement: current.statement || '',

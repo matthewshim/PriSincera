@@ -1,5 +1,6 @@
 import { callGemini } from './lib/gemini.mjs';
 import { db } from './lib/firestore.mjs';
+import { kstDateOf, computePractice } from './lib/practice-stats.mjs';
 
 // 카테고리/도메인 → affinity 키 ('AI/LLM'→'ai_llm') — pacenote-api와 동일 규칙
 function affinityKey(category) {
@@ -20,17 +21,27 @@ async function main() {
     }
 
     const userDocs = await db.collection('pacenotes').listDocuments();
+    const todayKst = kstDateOf(new Date().toISOString());
     const poolStats = {}; // { id: { picks, completes } }
     const CHUNK_SIZE = 50;
     for (let i = 0; i < userDocs.length; i += CHUNK_SIZE) {
       const chunk = userDocs.slice(i, i + CHUNK_SIZE);
       await Promise.all(chunk.map(async (docRef) => {
         try {
-          const weeksSnap = await docRef.collection('weeks').orderBy('weekId', 'desc').limit(10).get();
+          // 일자축 Phase 3 — 순회 윈도우 "최근 10주" → 일 단위 재정의(70일, 통계 연속성 유지).
+          // 이원 스키마(§6): 일 문서(신규)와 주 문서(레거시 아카이브, 정적)를 합류해 경계 시점을 잇는다.
+          const ACTIVITY_WINDOW_DAYS = 70;
+          const [daysSnap, weeksSnap] = await Promise.all([
+            docRef.collection('days').orderBy('date', 'desc').limit(ACTIVITY_WINDOW_DAYS).get(),
+            docRef.collection('weeks').orderBy('weekId', 'desc').limit(10).get(),
+          ]);
+          const activityDocs = [
+            ...daysSnap.docs.map(d => ({ data: d.data(), kind: 'day' })),
+            ...weeksSnap.docs.map(d => ({ data: d.data(), kind: 'week' })),
+          ];
 
-          // (a) 추천 풀 통계 — Phase 2: 선택(pick) + 완료(complete) 모두 집계
-          weeksSnap.docs.forEach(doc => {
-            const data = doc.data();
+          // (a) 추천 풀 통계 — Phase 2: 선택(pick) + 완료(complete) 모두 집계 (일+주 합산)
+          activityDocs.forEach(({ data }) => {
             (data.currentPace || []).forEach(task => {
               if (task.id && !task.id.startsWith('custom-')) {
                 const s = (poolStats[task.id] ||= { picks: 0, completes: 0 });
@@ -40,22 +51,28 @@ async function main() {
             });
           });
 
-          // (b) Growth Loop Phase 1: 성장 프로파일 권위 재계산 (weeks → profile)
+          // (b) Growth Loop Phase 1: 성장 프로파일 권위 재계산 (days+weeks → profile)
           const affinity = {};
           let picked = 0, completed = 0;
           const reflections = {};
-          const weekFlags = []; // 최신순: 주차별 완료 여부
-          weeksSnap.docs.forEach(doc => {
-            const data = doc.data();
-            let wc = 0;
+          const weekFlags = []; // 최신순: 주차별 완료 여부 (레거시 streak 전용 — Phase 4 제거 예정)
+          const practiceDates = []; // completedAt → KST 실천일 (일자축 Phase 1)
+          activityDocs.forEach(({ data, kind }) => {
+            let dc = 0;
             (data.currentPace || []).forEach(task => {
               picked++;
               affinity[affinityKey(task.category)] = (affinity[affinityKey(task.category)] || 0) + (task.completed ? 3 : 1);
-              if (task.completed) { completed++; wc++; }
+              if (task.completed) { completed++; dc++; }
+              // 실천일: completedAt(일 해상도) 우선, 일 문서는 문서 일자로 폴백(그날의 활동이므로)
+              if (task.completed) {
+                if (task.completedAt) practiceDates.push(kstDateOf(task.completedAt));
+                else if (kind === 'day' && data.date) practiceDates.push(data.date);
+              }
             });
-            if (data.weekId) weekFlags.push(wc > 0);
-            if (data.weekId && data.statement && String(data.statement).trim()) {
-              reflections[data.weekId] = { text: String(data.statement).trim(), ts: data.createdAt || null };
+            if (kind === 'week' && data.weekId) weekFlags.push(dc > 0);
+            const key = kind === 'day' ? data.date : data.weekId;   // 회고 키 — 일자(신규)/주차(레거시)
+            if (key && data.statement && String(data.statement).trim()) {
+              reflections[key] = { text: String(data.statement).trim(), ts: data.createdAt || null };
             }
           });
           // streak: 최신 주차부터 연속 완료 주 수(current) + 최장 연속(best)
@@ -68,7 +85,8 @@ async function main() {
           await docRef.set({ profile: {
             domainAffinity: affinity,
             completion: { picked, completed, rate },
-            streak: { current: streakCurrent, best, lastReconciled: new Date().toISOString() },
+            streak: { current: streakCurrent, best, lastReconciled: new Date().toISOString() }, // DEPRECATED(주 단위) — practice가 대체, Phase 4 제거 예정
+            practice: computePractice(practiceDates, todayKst),
             reflections,
             updatedAt: new Date().toISOString(),
           } }, { merge: true });

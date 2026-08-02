@@ -1,8 +1,8 @@
 ---
 status: active
 domain: PaceNote
-last_updated: 2026-07-22
-version: v1.5
+last_updated: 2026-07-27
+version: v1.7
 target_files:
   - pacenote-api.mjs
   - pipeline/src/pacenote-composer.mjs
@@ -29,6 +29,8 @@ target_files:
 | v1.3 | 2026-06-29 | AI Agent | **Phase 3 구현 완료** — 다이제스트 개인화 렌즈(클라이언트측: 도메인 재정렬·'내 궤도' 배지·연결 배너). 소비 비콘은 이연 | TrackSignalFeed.jsx/css |
 | v1.4 | 2026-06-29 | AI Agent | **Phase 4 구현 완료 → 루프 닫힘(status active)** — 주간 루프 리포트(LoopReport) + 추천 사유 라벨(강점/스트레치) | LoopReport.jsx, PaceNoteDashboard.jsx |
 | v1.5 | 2026-07-22 | AI Agent | **리런 승계 반영** — 데이터 층(Phase 0~4)은 현행 유지, UI 표면(다이제스트 렌즈·LoopReport·추천 라벨)은 ReLearn(`/relearn`)으로 승계됨을 명시. 제품 목록·target_files 현행화 | frontmatter, §1 |
+| v1.6 | 2026-07-27 | AI Agent | **streak → practice 전환(일자축 통일 Phase 1)** — 일 기반 꾸준함 통계(누적·빈도·grace day) 권위 계산·노출·카피 개정. streak(주)는 deprecated 병기 | pacenote-composer.mjs, practice-stats.mjs, pacenote-api.mjs, LoopReport.jsx |
+| v1.7 | 2026-07-27 | AI Agent | **reconcile 입력원 이원화(일자축 Phase 3)** — days+weeks 합류·윈도우 70일, 회고 키 일자화. 레거시 주간 streak는 weeks에서만 산출(동결 예정) | pacenote-composer.mjs |
 
 ---
 
@@ -71,7 +73,8 @@ profile: {
     Mindset: 4, Learning: 9, Productivity: 3, /* … */
   },
   completion: { picked: 40, completed: 27, rate: 0.68 },
-  streak:     { current: 6, best: 14, lastActiveDate: '2026-06-29' },
+  streak:     { current: 6, best: 14, lastActiveDate: '2026-06-29' },  // DEPRECATED(주 단위) — practice가 대체, 일자축 Phase 4 제거 예정
+  practice:   { monthDays: 5, last7Days: 3, current: 4, best: 9, lastActive: '2026-07-27' },  // 일자축 Phase 1 — 일 기반 꾸준함(이번 달·최근 7일·grace 연속, 유예 2일·KST)
   level:      'senior',          // 트랙 수준(자가설정 또는 추론)
   recentReflections: [           // 최근 회고 N개 (텍스트 — Bet③ 입력 예약)
     { weekId: '2026-W26', text: '리팩토링 자동화에서 막힘', ts: /* … */ }
@@ -138,9 +141,10 @@ profile: {
 > 📌 구현 메모: affinity 키는 정규화 슬러그(`'AI/LLM'→'ai_llm'`)로 테크 도메인 키와 통일. 회고는 `reflections` 맵으로 저장하고 `GET /profile`이 `recentReflections` 배열(최신 5)로 변환.
 
 ### ✅ Phase 1 — 프로파일 집계·정합 — **완료(2026-06-29)**
-- [x] `pacenote-composer` 야간 `profile` 권위 재계산 1패스(weeks→profile, 증분 드리프트 보정·자가치유)
+- [x] `pacenote-composer` 야간 `profile` 권위 재계산 1패스(증분 드리프트 보정·자가치유) — **[2026-07-27 개정]** 입력원 weeks → **days(신규)+weeks(레거시 아카이브) 이원 합류**, 순회 윈도우 70일(일자축 Phase 3)
 - [x] `streak` = **연속 완료 주차 수**(current) + 최장 연속(best). affinity는 `완료=3·선택=1` 가중
-- [x] `GET /api/pacenote/profile` — `domainAffinity·completion.rate·streak·recentReflections` 반환
+  - **[2026-07-27 개정]** 일자축 통일 Phase 1: `practice`(일 기반 — 이번 달 실천 일수·최근 7일 빈도·grace 연속)가 streak를 대체. `completedAt`(KST 버킷팅) 기반, [practice-stats.mjs](../../pipeline/src/lib/practice-stats.mjs). streak(주)는 일자축 Phase 4에서 제거([daily_axis_unification_plan §5](../relearn/daily_axis_unification_plan.md))
+- [x] `GET /api/pacenote/profile` — `domainAffinity·completion.rate·streak(deprecated)·practice·recentReflections` 반환
 - **DoD ✅**: 구문 검증 통과, 야간 재계산이 최근 10주 기준 권위 값 산출.
 
 > 📌 reconcile는 기존 유저 스캔 루프(추천 풀 통계)에 1패스를 얹어 **추가 읽기 비용 ≈ 0**. Gemini 호출 증가 0.
@@ -166,7 +170,7 @@ profile: {
 > 📌 **소비 비콘 이연 사유**: 야간 reconcile(Phase 1)가 affinity를 *weeks(실행) 기준으로만* 권위 재계산하므로, 소비 +0.5 증분은 reconcile에 덮어쓰여 사라진다. 정상 지원하려면 `profile.consumption`을 **별도 필드**로 두고 reconcile가 보존+합산해야 함 → 별도 작업으로 분리. 핵심 DoD(궤도 도메인 상단 노출)는 본 렌즈로 충족.
 
 ### ✅ Phase 4 — 루프 가시화 UI — **완료(2026-06-29)**
-- [x] **주간 루프 리포트**([LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)): 실행 완료율 · 연속 주차(🔥) · 복기 수 · 집중 도메인(🧭) 한 장 요약. 당시 PaceNote ChronoRibbon 하단 배치 → 현재는 리런([ReLearn.jsx](../../src/pages/ReLearn.jsx)) 두 뷰 공통 상주로 승계, 콜드 스타트 시 숨김
+- [x] **주간 루프 리포트**([LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)): 실행 완료율 · 이번 달 실천 일수(🔥·최근 7일 빈도) · 복기 수 · 집중 도메인(🧭) 한 장 요약. 당시 PaceNote ChronoRibbon 하단 배치 → 현재는 리런([ReLearn.jsx](../../src/pages/ReLearn.jsx)) 두 뷰 공통 상주로 승계, 콜드 스타트 시 숨김
 - [x] **추천 사유 라벨**(구 `PaceNoteDashboard.jsx` 옴니바 → 현 리런 궤도 섹션 [OrbitSection.jsx](../../src/components/relearn/OrbitSection.jsx)): `강점 기반`(indigo) / `새 도전`(gold) — affinity 기반 클라이언트 판정
 - **DoD ✅**: 유저가 배움→실행→복기 루프를 한 장으로 인지. 추천이 *왜* 떴는지 가시화.
 

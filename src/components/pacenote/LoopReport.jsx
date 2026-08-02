@@ -1,5 +1,5 @@
 /**
- * LoopReport — 성장 루프 주간 리포트 (Growth Loop Phase 4)
+ * LoopReport — 성장 루프 리포트 (Growth Loop Phase 4 · 일자축 Phase 1로 일 기반 전환)
  *
  * 유저가 자신의 배움→실행→복기 루프를 한 장으로 인지하도록 요약.
  * GET /api/pacenote/profile (Phase 0·1에서 적재/정합된 성장 프로파일)을 사용.
@@ -40,7 +40,7 @@ export default function LoopReport({ profile: externalProfile }) {
   if (!user || !profile) return null;
 
   const completion = profile.completion || {};
-  const streak = profile.streak || {};
+  const practice = profile.practice || {};
   const reflections = profile.recentReflections || [];
   const affinity = profile.domainAffinity || {};
 
@@ -67,9 +67,9 @@ export default function LoopReport({ profile: externalProfile }) {
           <span className="loop-stat-sub">{completed}/{picked} 완료</span>
         </div>
         <div className="loop-stat">
-          <span className="loop-stat-label">연속</span>
-          <span className="loop-stat-value">🔥 {streak.current || 0}<span className="loop-stat-unit">주</span></span>
-          <span className="loop-stat-sub">최장 {streak.best || 0}주</span>
+          <span className="loop-stat-label">이번 달 실천</span>
+          <span className="loop-stat-value">🔥 {practice.monthDays || 0}<span className="loop-stat-unit">일</span></span>
+          <span className="loop-stat-sub">최근 7일 중 {practice.last7Days || 0}일</span>
         </div>
         <div className="loop-stat">
           <span className="loop-stat-label">복기</span>
