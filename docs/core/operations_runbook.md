@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-29
-version: v1.0
+last_updated: 2026-08-02
+version: v1.1
 target_files:
   - cloudbuild.yaml
   - pipeline/src/collector.mjs
@@ -21,6 +21,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-29 | AI Agent | 파이프라인 잡 운영·시나리오별 복구 절차 최초 정의 | Operations |
+| v1.1 | 2026-08-02 | AI Agent | **§4-b 비용 통제·결제 안전장치 신설**(min-instances 0·예산 가드레일·킬스위치·조직 정책 주의) + 중복 스케줄러 `prisignal-compose-weekly` 제거 반영 | Operations, Billing |
 
 ---
 
@@ -46,6 +47,8 @@ target_files:
 | `prisignal-monitor` | `src/monitor.mjs` | 120s | 1 | 주간 발송/파이프라인 모니터링 |
 
 > 타임아웃·재시도는 `cloudbuild.yaml` 실측값. **스케줄(KST)은 Cloud Scheduler에서 관리**(리포지토리에 없음) — 기준값은 [architecture_overview](architecture_overview.md) §4, 정확한 cron은 [Cloud Scheduler 콘솔](https://console.cloud.google.com/cloudscheduler?project=prisincera)에서 확인.
+>
+> **스케줄러 현황(2026-08-02 실측)**: collect 06:00 · tech 06:45 · study 07:30 · compose 08:00 · monitor 08:30(매일) · pacenote 00:00 — 총 6개. 과거 `prisignal-composer`를 08:00에 중복 트리거하던 `prisignal-compose-weekly`(오해 소지 명칭·실제 매일)는 **제거됨**(compose-daily가 정본).
 
 ## 2. 잡 수동 운영 (gcloud)
 
@@ -134,11 +137,40 @@ gcloud run jobs update tech-composer --region asia-northeast3 \
 - GCS `daily/*.json`은 멱등 재생성 가능(원본 RSS+AI) — 단, 과거 날짜 RSS는 사라질 수 있어 완전 동일 복원은 보장되지 않음.
 - 파괴적 작업(컬렉션 삭제, 버킷 prefix 삭제) 전 반드시 export.
 
+## 4-b. 비용 통제 · 결제 안전장치 (2026-08-02)
+
+> 저트래픽 대비 과도한 비용(상시 인스턴스)과 "결제 폭탄" 리스크를 3단으로 방어한다.
+
+### 1차 — 상시 비용 제거
+- `prisincera-web` **min-instances = 0** (유휴 시 scale-to-zero). 이전 `min=1`의 24시간 상시 과금이 비용 주범이었다. 저트래픽에선 무료 티어 내 **≈₩0**, 대가는 첫 요청 시 1~3초 콜드스타트.
+  - 조정: `gcloud run services update prisincera-web --region asia-northeast3 --min-instances=N`
+  - **`cloudbuild.yaml`도 `--min-instances 0`으로 정합**(2026-08-02) — 이게 없으면 다음 CI 배포가 min=1로 되돌린다.
+
+### 2차 — 예산 경보
+- 예산 **`prisincera-guardrail` ₩10,000**, 임계 **50/90/100%**(₩5,000·₩9,000·₩10,000) → **도메인 결제관리자** 이메일(외부 도메인 수신자는 조직 정책상 제외).
+- 상한 조정: `gcloud billing budgets update <BUDGET_ID> --billing-account=012289-11137B-EC71FD --budget-amount=NKRW`
+
+### 3차 — 무인 킬스위치 (예산 100% 도달 시 billing 자동 해제)
+- **체인**: 예산 → Pub/Sub `billing-alerts` → Cloud Function **`billing-killswitch`**(SA `killswitch-sa`, 역할 `billing.projectManager`) → 프로젝트 billing 해제.
+- `costAmount > budgetAmount`(100% 초과)일 때만 해제. 50/90% 임계는 무동작(경보만).
+- **⚠️ 차단 시 서비스 다운**(비용 대신 다운타임을 택하는 상한). 정상 운영이 임계 근처에 가면 **예산액을 올릴 것**.
+- 로그: `gcloud functions logs read billing-killswitch --region asia-northeast3` (또는 Cloud Logging `resource.labels.service_name="billing-killswitch"`).
+- **안전 테스트(차단 없이 체인 확인)**: `gcloud pubsub topics publish billing-alerts --message='{"budgetDisplayName":"prisincera-guardrail","costAmount":1,"budgetAmount":10000,"currencyCode":"KRW"}'` → 로그에 `예산 이내 — 조치 없음`, billing 유지.
+
+### ⚠️ 조직 정책 주의 (향후 인프라 작업 시 반드시 인지)
+프로젝트는 조직 `prisincera.com`(customer `C013pho0g`) 소속이며 아래 **의도적 보안 정책**이 걸려 있다:
+- **`iam.allowedPolicyMemberDomains`**(도메인 제한 공유) — Google 관리 SA·외부 아이덴티티에 IAM 부여 차단. 예산→Pub/Sub 연결도 이 벽에 막혀, **프로젝트 레벨 예외**(도메인 제한 일시 해제)를 걸어 연결 후 원복하는 방식으로 통과시켰다(기존 바인딩은 원복 후에도 생존).
+- **`iam.disableServiceAccountKeyCreation`** — SA 키 발급 차단. GitHub Actions 등 외부 인증(키/WIF)이 막히는 원인 → **파이프라인 잡의 GH Actions 이관은 이 정책들로 보류**([migration/cloudflare_supabase_migration_plan](../migration/cloudflare_supabase_migration_plan.md) 참조).
+- 완화가 필요하면 **조직관리자 권한으로 프로젝트 레벨 override → 작업 완료 즉시 원복**. 임시로 부여한 `orgpolicy.policyAdmin`도 회수할 것.
+
 ## 5. 웹 서비스 장애 / 롤백
 - 사이트 다운·502·DNS·SSL·잘못된 배포 롤백 → [development_guide](development_guide.md) §13(긴급 상황 대응) 참조.
+- **비용 급증·결제 폭탄 우려** → §4-b(킬스위치·예산). 수동 즉시 차단: `gcloud billing projects unlink prisincera`(서비스 중단됨, 데이터는 유예기간 보존).
 
 ## 6. 빠른 링크
 - [Cloud Run 잡 콘솔](https://console.cloud.google.com/run/jobs?project=prisincera)
 - [Cloud Scheduler 콘솔](https://console.cloud.google.com/cloudscheduler?project=prisincera)
 - [Cloud Logging](https://console.cloud.google.com/logs?project=prisincera)
 - [Secret Manager](https://console.cloud.google.com/security/secret-manager?project=prisincera)
+- [예산·알림 (Billing Budgets)](https://console.cloud.google.com/billing/012289-11137B-EC71FD/budgets)
+- [Cloud Functions — billing-killswitch](https://console.cloud.google.com/functions/list?project=prisincera)

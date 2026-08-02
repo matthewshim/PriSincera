@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-07-22
-version: v1.1
+last_updated: 2026-08-02
+version: v1.2
 target_files:
   - server.mjs
   - pacenote-api.mjs
@@ -21,6 +21,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-24 | AI Agent | 전체 스택·데이터 흐름·파이프라인 맵 최초 정의 | Architecture |
 | v1.1 | 2026-07-22 | AI Agent | **리런 통합·실측 정합** — SPA 라우트에서 구 `/daily`·`/pacenote`를 301 표기로 전환, 유령 `builderslog-api.mjs` 참조를 실제 구조(server.mjs 인라인 + admin-api)로 정정 | §1, §2 |
+| v1.2 | 2026-08-02 | AI Agent | **비용/인프라 실측 정합** — `prisincera-web` min-instances 0(scale-to-zero) + 결제 안전장치(예산·킬스위치) 반영, §4 스케줄 실측 정정(composer 08:00·monitor 매일 08:30·중복 제거) | §1, §4 |
 
 ---
 
@@ -61,6 +62,8 @@ target_files:
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
+> **비용/결제 안전장치 (2026-08-02)**: `prisincera-web`는 **min-instances 0**(유휴 시 scale-to-zero)로 저트래픽 상시비용을 제거했다. 여기에 **예산 가드레일 ₩10,000**(50/90/100% 경보)과 **무인 킬스위치**(예산 100% 초과 시 Cloud Function `billing-killswitch`가 billing 자동 해제)로 "결제 폭탄"을 차단한다. 운영 절차는 [operations_runbook §4-b](operations_runbook.md).
+
 ## 2. 핵심 구성요소
 
 | 레이어 | 구현 | 비고 |
@@ -85,11 +88,11 @@ target_files:
 | 잡 | 스크립트 | 스케줄(KST) | 역할 |
 | :--- | :--- | :--- | :--- |
 | collector | `collector.mjs` | 06:00 | RSS 수집 |
-| composer | `composer.mjs` | 07:00 | 스코어링·DM픽·이메일·GCS 배포 |
+| composer | `composer.mjs` | 08:00 | 스코어링·DM픽·이메일·GCS 배포 |
 | study-composer | `study-composer.mjs` | 07:30 | 어학 콘텐츠 생성 |
 | **tech-composer** | `tech-composer.mjs` | 06:45 | 수준별 트랙 하이브리드 피드 |
 | pacenote-composer | `pacenote-composer.mjs` | 00:00 | 추천 궤도 풀 갱신 |
-| monitor | `monitor.mjs` | 주간 | 파이프라인 모니터링 |
+| monitor | `monitor.mjs` | 08:30(매일) | 파이프라인 모니터링(명칭은 weekly이나 매일 실행) |
 
 ## 5. 디렉토리 맵 (요지)
 - `src/pages/`, `src/components/` — 화면·컴포넌트
