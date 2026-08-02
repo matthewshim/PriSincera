@@ -246,7 +246,7 @@
     gap: var(--space-lg);
     align-items: start;
   }
-  .rl-split-side { position: sticky; top: 52px; }  /* 책갈피 탭과 동일하게 GNB 바로 아래 정렬 */
+  .rl-split-side { position: sticky; top: 68px; }  /* 책갈피 탭과 동일 top (GNB 아래 여백) */
   /* 데스크톱: 도크가 오버레이에서 컬럼 내 카드로 전환 */
   .rl-dock {
     position: static;
@@ -255,7 +255,7 @@
     border-radius: 16px; overflow: hidden;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     display: flex; flex-direction: column;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 96px);
   }
   .rl-dock-head { cursor: default; }
   .rl-dock-chev { display: none; }
@@ -296,9 +296,9 @@
 /* 책갈피 탭은 전 화면 공통 상단 가로 배치 — 세로 레일은 2분할 컬럼 폭을 잠식해 폐지(오너 환류).
    긴 콘텐츠에서도 채널 전환이 닿도록 상단 sticky. */
 .rl-bm-tabs {
-  position: sticky; top: 52px; z-index: 20;  /* 고정 GNB(scrolled 53px) 바로 아래 고정 — 1px는 GNB가 덮어 틈 없음 */
-  padding-top: 10px;
-  background: linear-gradient(to bottom, var(--bg-void) 72%, transparent);
+  position: sticky; top: 53px; z-index: 20;  /* 박스는 GNB(53px)에 밀착해 틈/콘텐츠 비침 제거 */
+  padding-top: 15px;  /* 불투명 상단 여백 — pill 시각상단을 도크(68px)와 맞춤 */
+  background: linear-gradient(to bottom, var(--bg-void) 80%, transparent);
 }
 
 /* ── 책갈피 탭 — 일기장 (실행 | 복기 | 리포트) ── */
