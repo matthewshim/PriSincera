@@ -1351,12 +1351,12 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-section-header"><h2>⛵ 학습자 현황</h2></div>
             <div className="admin-table-wrap" style={{ marginBottom: '32px' }}>
               <table className="admin-table">
-                <thead><tr><th>이메일</th><th>최근 접속 주차</th><th>현재 미션(개)</th><th>완료(개)</th></tr></thead>
+                <thead><tr><th>이메일</th><th>최근 활동(일/주)</th><th>현재 미션(개)</th><th>완료(개)</th></tr></thead>
                 <tbody>
                   {pacers.map((l, i) => (
                     <tr key={i}>
                       <td className="admin-email-cell">{l.email}</td>
-                      <td><strong>{l.lastWeekId}</strong></td>
+                      <td><strong>{l.lastActivity}</strong></td>
                       <td>{l.currentTasks}</td>
                       <td>{l.completedTasks}</td>
                     </tr>
@@ -1372,11 +1372,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
             </p>
             <div className="admin-table-wrap">
               <table className="admin-table">
-                <thead><tr><th>주차 (Week)</th><th>등록된 목표 (Title)</th><th>달성 여부</th></tr></thead>
+                <thead><tr><th>기간 (일/주)</th><th>등록된 목표 (Title)</th><th>달성 여부</th></tr></thead>
                 <tbody>
                   {paceInsights.map((insight, i) => (
                     <tr key={i}>
-                      <td><span className="admin-date-chip">{insight.weekId}</span></td>
+                      <td><span className="admin-date-chip">{insight.period}</span></td>
                       <td style={{ color: '#E9D5FF' }}>{insight.title}</td>
                       <td>
                         {insight.completed

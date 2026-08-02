@@ -702,15 +702,17 @@ router.get('/pacenotes/users', async (req, res) => {
             const userData = docSnap.data() || {};
             const docRef = docSnap.ref;
             
-            const weeksSnap = await docRef.collection('weeks')
-              .orderBy('weekId', 'desc')
-              .limit(1)
-              .get();
-              
-            if (!weeksSnap.empty) {
-              const latestWeek = weeksSnap.docs[0].data();
-              const currentTasks = latestWeek.currentPace ? latestWeek.currentPace.length : 0;
-              const completedTasks = latestWeek.currentPace ? latestWeek.currentPace.filter(t => t.completed).length : 0;
+            // 일자축 이관: days(신규) 우선, 없으면 weeks(레거시). 최신 활동 1건.
+            const [daysSnap, weeksSnap] = await Promise.all([
+              docRef.collection('days').orderBy('date', 'desc').limit(1).get(),
+              docRef.collection('weeks').orderBy('weekId', 'desc').limit(1).get(),
+            ]);
+            const latest = !daysSnap.empty ? daysSnap.docs[0].data()
+                         : !weeksSnap.empty ? weeksSnap.docs[0].data() : null;
+            if (latest) {
+              const lastActivity = latest.date || latest.weekId;
+              const currentTasks = latest.currentPace ? latest.currentPace.length : 0;
+              const completedTasks = latest.currentPace ? latest.currentPace.filter(t => t.completed).length : 0;
               
               let email = userData.email;
               if (!email) {
@@ -725,7 +727,7 @@ router.get('/pacenotes/users', async (req, res) => {
               return {
                 uid,
                 email,
-                lastWeekId: latestWeek.weekId,
+                lastActivity,
                 currentTasks,
                 completedTasks
               };
@@ -746,8 +748,8 @@ router.get('/pacenotes/users', async (req, res) => {
     
     // 접속 주차 최신순 정렬, 주차가 같으면 이메일 오름차순
     pacers.sort((a, b) => {
-      if (b.lastWeekId !== a.lastWeekId) {
-        return b.lastWeekId.localeCompare(a.lastWeekId);
+      if (b.lastActivity !== a.lastActivity) {
+        return String(b.lastActivity).localeCompare(String(a.lastActivity));
       }
       return a.email.localeCompare(b.email);
     });
@@ -777,30 +779,28 @@ router.get('/pacenotes/insights', async (req, res) => {
           let userTasks = [];
           let poolPicks = [];
           try {
-            const weeksSnap = await docRef.collection('weeks')
-              .orderBy('weekId', 'desc')
-              .limit(10)
-              .get();
-              
-            weeksSnap.docs.forEach(doc => {
-              const data = doc.data();
-              if (data.currentPace) {
-                data.currentPace.forEach(task => {
-                  if (task.id.startsWith('custom-')) {
-                    userTasks.push({
-                      weekId: data.weekId,
-                      title: task.title,
-                      completed: task.completed,
-                      createdAt: data.createdAt || doc.createTime?.toDate()?.toISOString() || new Date().toISOString()
-                    });
-                  } else {
-                    poolPicks.push({
-                      id: task.id,
-                      completed: task.completed
-                    });
-                  }
-                });
-              }
+            // 일자축 이관: days(신규)+weeks(레거시) 병합 집계
+            const [daysSnap, weeksSnap] = await Promise.all([
+              docRef.collection('days').orderBy('date', 'desc').limit(10).get(),
+              docRef.collection('weeks').orderBy('weekId', 'desc').limit(10).get(),
+            ]);
+            const periodDocs = [
+              ...daysSnap.docs.map(d => ({ period: d.data().date, data: d.data(), createdAt: d.data().createdAt || d.createTime?.toDate()?.toISOString() })),
+              ...weeksSnap.docs.map(d => ({ period: d.data().weekId, data: d.data(), createdAt: d.data().createdAt || d.createTime?.toDate()?.toISOString() })),
+            ];
+            periodDocs.forEach(({ period, data, createdAt }) => {
+              (data.currentPace || []).forEach(task => {
+                if (task.id?.startsWith('custom-')) {
+                  userTasks.push({
+                    period,
+                    title: task.title,
+                    completed: task.completed,
+                    createdAt: createdAt || new Date().toISOString()
+                  });
+                } else {
+                  poolPicks.push({ id: task.id, completed: task.completed });
+                }
+              });
             });
           } catch (e) {
             console.error(`Error fetching insights for uid ${docRef.id}:`, e);

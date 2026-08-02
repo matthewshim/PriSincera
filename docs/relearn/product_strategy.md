@@ -16,6 +16,8 @@ target_files:
 
 # 🏃 리런 (ReLearn) — 통합 서비스 리뉴얼 추진 계획
 
+> ⚠️ **부분 승계 (2026-08-02)**: 본 문서의 `오늘 | 기록` 뷰·3-stage 흐름(§3, v1.2 결정)은 이후 **교재/일기장 분리 재편**(2026-07-27, 오너 환류)으로 승계됐다. 현행 UI·구조의 정본은 [ui_specification](ui_specification.md)·[daily_axis_unification_plan](daily_axis_unification_plan.md). 이 문서는 통합 전략의 결정 기록으로 보존한다.
+
 > **한 줄 요지**: 분리된 **Daily Digest(배움)** 와 **Pace Note(실행·복기)** 를 *하나의 여정*으로 묶는 신규 통합 서비스. 명칭 **리런(ReLearn)** 은 "**다시 배우다(Re-Learn) + 다시 달리다(Re-run·러너)**"의 이중 의미로, **"제로부터 다시 배우는 러너"** 뉘앙스를 이름 한 단어로 전달한다.
 >
 > 태그라인: **"매일 제로에서, 다시 배우고 다시 달린다 — Learn from zero, run again."**

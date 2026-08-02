@@ -24,7 +24,7 @@ target_files:
 2. **`schemaVersion` 명시**: 모든 정적 피드 JSON 최상위에 `schemaVersion`(정수)을 둔다. 클라이언트는 이 값으로 분기/폴백한다.
 3. **단일 형상(Single Shape)**: PaceNote 데이터는 웹 REST 응답과 데스크톱 IPC 반환이 **바이트 호환 형상**을 갖는다. 차이는 전송 계층(HTTP+토큰 vs IPC)과 다국어 평탄화 위치뿐.
 4. **어학(study)은 웹 전용**: 데스크톱은 `study`를 읽지 않는다. 트랙 피드(`junior_`/`senior_`)만 소비한다.
-5. **무인증 단일 사용자(데스크톱)**: 데스크톱은 `uid`/토큰 개념이 없다. 서버의 `pacenotes/{uid}/weeks/{weekId}` 구조는 로컬에서 **단일 사용자의 `weeks` 테이블**로 축약된다.
+5. **무인증 단일 사용자(데스크톱)**: 데스크톱은 `uid`/토큰 개념이 없다. 서버의 `pacenotes/{uid}/weeks/{weekId}` 구조는 로컬에서 **단일 사용자의 `weeks` 테이블**로 축약된다. *(웹은 일자축 통일 v2.5로 `days/{date}` 전환 — 이 데스크톱 `weeks` 축약은 **폐기된 데스크톱 앱 기준 레거시**.)*
 
 ---
 

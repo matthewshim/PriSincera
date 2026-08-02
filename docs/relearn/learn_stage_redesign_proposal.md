@@ -14,6 +14,8 @@ target_files:
 
 # 🗺️ 배움 스테이지 콘텐츠 리디자인 제안서 (Learn Stage Redesign)
 
+> ⚠️ **승계 (2026-08-02)**: 본 제안(compact-first·정독/펼치기 Progressive Disclosure)은 **상단 가로 책갈피 탭**(카테고리별 구분·각 탭 전부 펼침, 2026-07-27 재편)으로 승계됐다. 현행은 [ui_specification §2](ui_specification.md). 이 문서는 리디자인 제안 기록으로 보존한다.
+
 ## 📝 Revision History
 
 | Version | Date | Author | Description | Impact Area |

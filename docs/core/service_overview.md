@@ -4,8 +4,8 @@ domain: Core
 last_updated: 2026-07-22
 version: v1.2
 target_files:
-  - src/pages/ReLearn.jsx
-  - src/pages/ReLearnDaily.jsx
+  - src/pages/DailyView.jsx
+  - src/components/relearn/DiaryDock.jsx
   - src/pages/BuildersLog.jsx
   - src/pages/SylphioLanding.jsx
 ---
@@ -45,7 +45,7 @@ target_files:
 - **IT Tech Signal**: 실제 RSS 매체를 수집→AI 스코어링/큐레이션 (실제 출처·원문 링크 O).
 - **AI Prompt / Language Dojo(어학)**: AI 생성 학습 콘텐츠(일/영).
 - **테크 트랙(Tech Track)**: 수준별(주니어/시니어) **하이브리드** — 실제 RSS 근거 위에 `학습(개념) → 실전(액션) → 원문`. 출처 정책은 [content_sourcing_policy](../daily-digest/content_sourcing_policy.md) 참조.
-- 과거 날짜 열람은 리런 아카이브 상세(`/relearn/daily/:date`, 훑어보기 기본 — [relearn/ui_specification §8](../relearn/ui_specification.md)).
+- 과거 날짜 열람은 리런 날짜 뷰(`/relearn/daily/:date` — 오늘과 동일 교재, 일기장은 열람 모드 — [relearn/ui_specification §8](../relearn/ui_specification.md)).
 - 이메일 채널: 매일 발송 **"📬 ReLearn Daily"** 다이제스트(구독/해지는 리런 화면에서 관리).
 
 ### 2.2. 실행·복기(Run·Reflect) — 구 PaceNote

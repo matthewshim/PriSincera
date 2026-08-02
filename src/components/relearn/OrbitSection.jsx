@@ -1,5 +1,5 @@
 /**
- * OrbitSection — ReLearn Stage ② 실행: 이번 주 궤도 리스트 + AI 추천
+ * OrbitSection — 일기장(DiaryDock) 실행 탭: 오늘 궤도 리스트 + AI 추천
  *
  * Phase B-0 3/3: 프레젠테이션은 리런 시안(v4) 기준 신작, 데이터·뮤테이션은
  * usePaceNoteData(웹 REST ↔ 데스크톱 IPC 단일 계약)를 셸에서 받아 사용한다.

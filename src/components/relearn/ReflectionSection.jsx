@@ -1,5 +1,5 @@
 /**
- * ReflectionSection — ReLearn Stage ③ 복기: 한 줄 항해 일지 (디바운스 자동 저장)
+ * ReflectionSection — 일기장(DiaryDock) 복기 탭: 한 줄 항해 일지 (디바운스 자동 저장)
  *
  * Phase B-0 3/3: 프레젠테이션은 리런 시안(v4) 기준 신작, 저장은 usePaceNoteData의
  * saveDiary(기존 /diary API — 성장 루프 회고 신호 적재 포함)를 셸에서 받아 사용.

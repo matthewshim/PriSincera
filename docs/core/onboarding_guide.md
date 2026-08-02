@@ -37,7 +37,7 @@ target_files:
 | :--- | :--- | :--- |
 | 1 | [business_model](business_model.md) | 수익 모델·타깃·비용 철학 |
 | 2 | [relearn/product_strategy](../relearn/product_strategy.md) | **플래그십 리런** 통합 전략·승계 로드맵 |
-| 3 | [relearn/ui_specification](../relearn/ui_specification.md) | 리런 출하 화면 명세 (3-stage 루프) |
+| 3 | [relearn/ui_specification](../relearn/ui_specification.md) | 리런 화면 명세 (교재/일기장 2분할 구조) |
 | 4 | [daily-digest/content_sourcing_policy](../daily-digest/content_sourcing_policy.md) | 콘텐츠 출처·사실성 정책 |
 | 5 | [pacenote/product_strategy](../pacenote/product_strategy.md) · [growth_loop_plan](../pacenote/growth_loop_plan.md) | 실행·복기 도메인 근거 전략(리런에 승계) + 성장 루프 데이터층 |
 | 6 | [admin_console_specification](admin_console_specification.md) | 운영 콘솔 메뉴·기능 구조 |
