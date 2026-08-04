@@ -13,6 +13,7 @@ import OrbitSection from './OrbitSection';
 import ReflectionSection from './ReflectionSection';
 import LoopReport from '../pacenote/LoopReport';
 import { trackRelearn } from './funnel';
+import { useTranslation } from '../../contexts/LanguageContext';
 
 const tt = (v) => (typeof v === 'object' ? v.ko : v);
 
@@ -21,6 +22,7 @@ export default function DiaryDock({
   current, timeline, profile, affinity,
   onToggle, onAccept, onAddCustom, onExclude, onRestore, onReflectSave,
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false); // 모바일 시트 확장 (데스크톱은 CSS로 상시)
   const [tab, setTab] = useState('run');   // 책갈피: run | reflect | report(오늘)
   const [pastFetched, setPastFetched] = useState(null); // 과거 날짜 per-date 페치 결과
@@ -61,10 +63,10 @@ export default function DiaryDock({
   const hasReflect = !!(current?.statement || '').trim();
 
   const summary = isToday
-    ? `실행 ${doneCount}/${totalCount} · 복기 ${hasReflect ? '✓' : '—'}`
+    ? t('relearn.diary.summaryToday', { done: doneCount, total: totalCount, mark: hasReflect ? '✓' : '—' })
     : dayEntry
-      ? `완료 ${dayEntry.tasks.length}개 · 복기 ${(dayEntry.statement || '').trim() ? '✓' : '—'}`
-      : weekEntry ? '주 단위 기록' : '기록 없음';
+      ? t('relearn.diary.summaryDay', { n: dayEntry.tasks.length, mark: (dayEntry.statement || '').trim() ? '✓' : '—' })
+      : weekEntry ? t('relearn.diary.summaryWeek') : t('relearn.diary.summaryNone');
 
   // 도크 헤더 탭 — 모바일 오버레이에서만 시트 토글. 데스크톱(고정 패널)에선 no-op.
   const isOverlay = () => typeof window !== 'undefined'
@@ -82,20 +84,20 @@ export default function DiaryDock({
 
   // .md 내보내기 — 구 기록 뷰의 내보내기 승계 (오늘 + 타임라인 전체)
   const exportRecords = () => {
-    const lines = ['# ReLearn 항해 기록 (Voyage Log)', '', `내보낸 날짜: ${date}`, ''];
+    const lines = [`# ${t('relearn.diary.exportHeader')}`, '', t('relearn.diary.exportDate', { date }), ''];
     const rows = [];
     if (isToday && current?.date) {
-      rows.push({ label: `${current.date} · 진행 중`, tasks: (current.currentPace || []).filter(t => t.completed), statement: current.statement || '' });
+      rows.push({ label: t('relearn.diary.exportInProgress', { date: current.date }), tasks: (current.currentPace || []).filter(p => p.completed), statement: current.statement || '' });
     }
     (timeline || []).forEach(e => rows.push({
       label: e.kind === 'day' ? e.date : `${e.weekId} (${e.startDate} – ${e.endDate})`,
       tasks: e.tasks || [], statement: e.statement || '',
     }));
     rows.forEach(r => {
-      lines.push(`## ${r.label}`, `완료한 궤도 ${r.tasks.length}개`);
-      r.tasks.forEach(t => lines.push(`- [x] ${tt(t.title)}`));
-      if (r.tasks.length === 0) lines.push('- (완료된 궤도 없음)');
-      lines.push('', '### 복기', r.statement ? `> ${r.statement}` : '> (회고 없음)', '');
+      lines.push(`## ${r.label}`, t('relearn.diary.exportDoneCount', { n: r.tasks.length }));
+      r.tasks.forEach(task => lines.push(`- [x] ${tt(task.title)}`));
+      if (r.tasks.length === 0) lines.push(`- ${t('relearn.diary.exportNoTasks')}`);
+      lines.push('', `### ${t('relearn.diary.exportReflect')}`, r.statement ? `> ${r.statement}` : `> ${t('relearn.diary.exportNoReflect')}`, '');
     });
     const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -113,7 +115,7 @@ export default function DiaryDock({
         <span className="rl-dock-t">{tt(t.title)}</span>
         {t.category && <span className="rl-orbit-cat" style={{ color: t.color || 'var(--color-indigo)', background: 'rgba(255,255,255,0.05)' }}>{t.category}</span>}
       </div>
-    )) : <div className="rl-dock-none">완료된 궤도가 없어요.</div>
+    )) : <div className="rl-dock-none">{t('relearn.diary.noDoneTasks')}</div>
   );
 
   const ReadonlyReflect = ({ statement, emptyLabel }) => (
@@ -123,15 +125,15 @@ export default function DiaryDock({
   );
 
   const TABS = isToday
-    ? [['run', '🏃 실행'], ['reflect', '📝 복기'], ['report', '🔄 리포트']]
-    : [['run', '🏃 실행'], ['reflect', '📝 복기']];
+    ? [['run', t('relearn.diary.tabRun')], ['reflect', t('relearn.diary.tabReflect')], ['report', t('relearn.diary.tabReport')]]
+    : [['run', t('relearn.diary.tabRun')], ['reflect', t('relearn.diary.tabReflect')]];
 
   return (
-    <aside className={`rl-dock${open ? ' open' : ''}`} aria-label="일기장 — 실행과 복기">
+    <aside className={`rl-dock${open ? ' open' : ''}`} aria-label={t('relearn.diary.aria')}>
       {/* 헤더 — 모바일에선 도크 바(탭하면 시트), 데스크톱에선 패널 타이틀 */}
       <button className="rl-dock-head haptic-trigger" onClick={toggleOpen} aria-expanded={open}>
         <span className="rl-dock-icon">✍️</span>
-        <span className="rl-dock-title">{isToday ? '오늘의 일기장' : `${date}의 일기장`}</span>
+        <span className="rl-dock-title">{isToday ? t('relearn.diary.title') : t('relearn.diary.titleDate', { date })}</span>
         <span className="rl-dock-sum">{summary}</span>
         <span className="rl-dock-chev" aria-hidden="true">▴</span>
       </button>
@@ -139,23 +141,23 @@ export default function DiaryDock({
       <div className="rl-dock-body">
         {!user ? (
           <div className="rl-login-cta">
-            <p>일기장은 로그인 후 나만의 기록으로 관리됩니다.</p>
-            <button className="rl-login-btn haptic-trigger" onClick={loginWithGoogle}>나의 루프 시작하기</button>
+            <p>{t('relearn.diary.loginNote')}</p>
+            <button className="rl-login-btn haptic-trigger" onClick={loginWithGoogle}>{t('relearn.diary.loginBtn')}</button>
           </div>
         ) : paceLoading ? (
-          <div className="rl-status">기록 불러오는 중…</div>
+          <div className="rl-status">{t('relearn.diary.loading')}</div>
         ) : (!isToday && !pastEntry) ? (
-          <div className="rl-dock-none rl-dock-empty">이 날의 실행·복기 기록이 없어요.</div>
+          <div className="rl-dock-none rl-dock-empty">{t('relearn.diary.emptyDay')}</div>
         ) : (
           <>
             {weekEntry && (
               <div className="rl-dock-legacy-note">
-                이 날짜는 주 단위 기록 시기예요 — {weekEntry.weekId} 주({weekEntry.startDate} – {weekEntry.endDate})의 기록을 보여드려요.
+                {t('relearn.diary.weekLegacy', { weekId: weekEntry.weekId, start: weekEntry.startDate, end: weekEntry.endDate })}
               </div>
             )}
 
             {/* 책갈피 탭 — 실행 | 복기 | (오늘) 리포트 */}
-            <nav className="rl-dock-tabs" role="tablist" aria-label="일기장 책갈피">
+            <nav className="rl-dock-tabs" role="tablist" aria-label={t('relearn.diary.ariaTabs')}>
               {TABS.map(([k, label]) => (
                 <button key={k} role="tab" aria-selected={tab === k}
                   className={`rl-dock-tab${tab === k ? ' on' : ''} haptic-trigger`}
@@ -174,13 +176,13 @@ export default function DiaryDock({
               isToday
                 ? <ReflectionSection statement={current?.statement || ''} onSave={onReflectSave} />
                 : <ReadonlyReflect statement={pastEntry?.statement}
-                    emptyLabel={weekEntry ? '이 주는 회고가 남지 않았어요.' : '이 날은 회고가 남지 않았어요.'} />
+                    emptyLabel={weekEntry ? t('relearn.diary.emptyReflectWeek') : t('relearn.diary.emptyReflectDay')} />
             )}
             {tab === 'report' && isToday && (
               <>
                 <LoopReport profile={profile} />
                 <div className="rl-dock-tools">
-                  <button className="rl-expand-btn haptic-trigger" onClick={exportRecords}>📥 기록 내보내기 (.md)</button>
+                  <button className="rl-expand-btn haptic-trigger" onClick={exportRecords}>{t('relearn.diary.export')}</button>
                 </div>
               </>
             )}

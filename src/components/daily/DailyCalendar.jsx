@@ -120,7 +120,7 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
             </>
           ) : locale === 'ja' ? (
             <>
-              <span className="chrono-calendar-year">{year}년</span>
+              <span className="chrono-calendar-year">{year}年</span>
               <span className="chrono-calendar-month">{String(month + 1).padStart(2, '0')}月</span>
             </>
           ) : (

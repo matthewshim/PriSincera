@@ -8,6 +8,11 @@
  * 제외: 내부 어드민(AdminDashboard.css, ServiceDocs.css)·index.css의 16px 루트 정의.
  *
  * 근거: docs/core/design_system.md v5.1+ — "font-size는 --fs-* 토큰만, 임의 값 금지"
+ *
+ * i18n 게이트(2026-08-04): src JSX/JS 소스의 한국어 하드코딩 ERROR.
+ *   UI 문자열은 언어팩(src/locales/{ko,en,ja}.json) + t()만 허용 — 조용한 ko 폴백 탓에
+ *   누락이 화면에서 안 보이는 문제의 재발 방지책. 예외는 I18N_EXCLUDE(파일 단위) 또는
+ *   라인 마커 'i18n-ok'(사유 필수). console.* 개발 로그·주석은 검사하지 않음.
  */
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
@@ -61,13 +66,50 @@ for (const file of cssFiles(ROOT)) {
   }
 }
 
+// ── i18n 게이트: JSX/JS 한국어 하드코딩 검출 ──
+const I18N_EXCLUDE = [
+  'src/pages/AdminDashboard.jsx',          // 내부 어드민 — ko 단일 운영 결정(2026-08-04)
+  'src/components/admin/',                 // 상동
+  'src/pages/SylphioLanding.jsx',          // 페이지 내 자체 ko/en/ja 사전 패턴
+  'src/pages/SylphioApiKeyGuide.jsx',
+  'src/pages/SylphioPrivacy.jsx',
+  'src/components/layout/SylphioNav.jsx',
+  'src/components/daily/DailyIntro.jsx',   // 고아 컴포넌트 — 2027-01 재검토
+  'src/components/daily/DailyCalendar.jsx',// 로케일 삼항 내장(3개 언어 완비) 레거시 패턴
+  'src/components/daily/categoryStyles.js',// 데이터 카테고리 매칭 키워드(비 UI)
+  'src/contexts/LanguageContext.jsx',      // 언어 셀렉터 네이티브 라벨
+  'src/data/seoMeta.mjs',                  // SSR 메타 SSOT — i18n SSR 계획 Phase A 소관
+];
+
+function* srcFiles(dir) {
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    if (statSync(p).isDirectory()) yield* srcFiles(p);
+    else if (/\.(jsx|js|mjs)$/.test(p)) yield p;
+  }
+}
+
+for (const file of srcFiles(ROOT)) {
+  const rel = file.split('\\').join('/');
+  if (I18N_EXCLUDE.some(x => rel === x || rel.startsWith(x))) continue;
+  const src = readFileSync(file, 'utf-8');
+  // 블록 주석은 줄 수를 보존하며 공백화 → 라인 인덱스 정렬 유지
+  const noBlock = src.replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, ' '));
+  const rawLines = src.split('\n');
+  noBlock.split('\n').forEach((l, i) => {
+    const code = l.replace(/(^|[^:])\/\/.*$/, '$1'); // 라인 주석 제거(https:// 보호)
+    if (!/[가-힣]/.test(code)) return;
+    if (rawLines[i].includes('i18n-ok') || code.includes('console.')) return;
+    errors.push(`${rel}:${i + 1} 한국어 하드코딩 — 언어팩(t()) 사용 또는 'i18n-ok' 마커(사유 필수)`);
+  });
+}
+
 if (warns.length) {
   console.warn(`[design-check] WARN ${warns.length}건 (비차단 — §9-7 스케일 확장 백로그):`);
   for (const w of warns) console.warn('  -', w);
 }
 if (errors.length) {
-  console.error(`[design-check] ERROR ${errors.length}건 — 마이크로 밴드[0.66,1.0)의 비토큰 font-size는 금지입니다.`);
-  console.error('  design_system.md §4-2: --fs-* 토큰만 사용하십시오.');
+  console.error(`[design-check] ERROR ${errors.length}건 — 규범 위반(§4-2 타이포 / §3-3 폭 / i18n 언어팩).`);
   for (const e of errors) console.error('  -', e);
   process.exit(1);
 }

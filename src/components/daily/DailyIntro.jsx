@@ -1,3 +1,8 @@
+/**
+ * ⚠️ 고아 컴포넌트 (2026-08-04): /daily 통폐합 이후 사용처 없음 — 2027-01 재검토 대상.
+ * 참조하던 dailyDigest.* 언어팩 네임스페이스는 i18n 위생 작업에서 삭제됨.
+ * 부활시키려면 git 이력에서 dailyDigest 키를 복원하거나 relearn.* 로 재작성할 것.
+ */
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../contexts/LanguageContext';

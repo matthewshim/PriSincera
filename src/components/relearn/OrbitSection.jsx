@@ -13,6 +13,7 @@
  *   affinity  — profile.domainAffinity (nullable — 추천 사유 라벨용)
  */
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 import './ReLearnSections.css';
 
 const ADD_MAX = 100; // pacenote-api /add 제한과 동일
@@ -21,6 +22,7 @@ const ADD_MAX = 100; // pacenote-api /add 제한과 동일
 const affKey = (c) => String(c || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
 export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExclude, onRestore, affinity = null }) {
+  const { t } = useTranslation();
   const [busyId, setBusyId] = useState(null);
   const [newTitle, setNewTitle] = useState('');
   const [adding, setAdding] = useState(false);
@@ -90,7 +92,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
       <div className="rl-card">
         <div className="rl-progress-row">
           <div className="rl-progress-track"><div className="rl-progress-fill" style={{ width: `${pct}%` }} /></div>
-          <span className="rl-progress-num">{done}/{total} 완료 · {pct}%</span>
+          <span className="rl-progress-num">{t('relearn.orbit.progress', { done, total, pct })}</span>
         </div>
         <div className="rl-orbit-list">
           {pace.map(task => (
@@ -99,7 +101,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
                 className="rl-orbit-check haptic-trigger"
                 onClick={() => run(task.id, onToggle)}
                 disabled={busyId === task.id}
-                aria-label={task.completed ? '완료 해제' : '완료'}
+                aria-label={task.completed ? t('relearn.orbit.ariaUndone') : t('relearn.orbit.ariaDone')}
               >
                 {task.completed ? '✓' : ''}
               </button>
@@ -107,8 +109,8 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
               {!task.completed && onExclude && (
                 <button
                   className="rl-orbit-del haptic-trigger"
-                  title="목록에서 제외 (데이터는 보존되며 아래 '제외된 궤도'에서 복원 가능)"
-                  aria-label="목록에서 제외"
+                  title={t('relearn.orbit.excludeTitle')}
+                  aria-label={t('relearn.orbit.excludeAria')}
                   onClick={() => onExclude(task.id)}
                 >×</button>
               )}
@@ -120,7 +122,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
             </div>
           ))}
           {pace.length === 0 && (
-            <div className="rl-empty">아직 이번 주 궤도가 없어요 — 위 배움에서 “궤도로” 한 번이면 시작됩니다.</div>
+            <div className="rl-empty">{t('relearn.orbit.empty')}</div>
           )}
         </div>
 
@@ -132,14 +134,14 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
               value={newTitle}
               onChange={e => setNewTitle(e.target.value.slice(0, ADD_MAX))}
               onKeyDown={e => { if (e.key === 'Enter') handleAdd(); }}
-              placeholder="나만의 궤도 직접 추가 (예: 사이드 프로젝트 30분 진행하기)"
+              placeholder={t('relearn.orbit.addPlaceholder')}
               maxLength={ADD_MAX}
             />
             <button className="rl-add-btn haptic-trigger" onClick={handleAdd} disabled={adding || !newTitle.trim()}>
-              {adding ? '추가 중…' : '＋ 추가'}
+              {adding ? t('relearn.orbit.adding') : t('relearn.orbit.addBtn')}
             </button>
-            <button className="rl-osearch-btn haptic-trigger" onClick={() => setSearchOpen(true)} title="누적 추천 궤도 검색">
-              🔍 검색
+            <button className="rl-osearch-btn haptic-trigger" onClick={() => setSearchOpen(true)} title={t('relearn.orbit.searchTitle')}>
+              {t('relearn.orbit.searchBtn')}
             </button>
           </div>
         )}
@@ -147,14 +149,14 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
         {/* ── 제외된 궤도 (복원 가능 — 데이터 보존) ── */}
         {excludedPace.length > 0 && (
           <details className="rl-fold rl-excluded-fold">
-            <summary className="rl-fold-summary">제외된 궤도 {excludedPace.length}개 보기</summary>
+            <summary className="rl-fold-summary">{t('relearn.orbit.excludedFold', { n: excludedPace.length })}</summary>
             <div className="rl-excluded-list">
               {excludedPace.map(task => (
                 <div key={task.id} className="rl-excluded-item">
                   <span className="rl-excluded-t">{task.title}</span>
                   {onRestore && (
                     <button className="rl-excluded-restore haptic-trigger" onClick={() => onRestore(task.id)}>
-                      ↩ 복원
+                      {t('relearn.orbit.restore')}
                     </button>
                   )}
                 </div>
@@ -166,7 +168,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
         {/* ── 궤도 검색 모달 ── */}
         {searchOpen && (
           <div className="rl-osearch-backdrop" onClick={closeSearch}>
-            <div className="rl-osearch-modal" role="dialog" aria-label="궤도 검색" onClick={e => e.stopPropagation()}>
+            <div className="rl-osearch-modal" role="dialog" aria-label={t('relearn.orbit.searchAria')} onClick={e => e.stopPropagation()}>
               <div className="rl-osearch-inputrow">
                 <span className="rl-osearch-ic">✨</span>
                 <input
@@ -175,7 +177,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
                   value={query}
                   onChange={e => { setQuery(e.target.value.slice(0, ADD_MAX)); }}
                   onKeyDown={onSearchKey}
-                  placeholder="추천 궤도 검색 또는 새 궤도 입력 — ↑↓ 이동 · Enter 추가 · Esc 닫기"
+                  placeholder={t('relearn.orbit.searchPlaceholder')}
                 />
               </div>
               <div className="rl-osearch-list">
@@ -187,11 +189,11 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
                     onClick={() => pickItem(item)}
                   >
                     {item.isCustom
-                      ? <><span className="rl-osearch-tag custom">새 궤도</span><span className="rl-osearch-t">"{item.title}" 직접 추가</span></>
-                      : <><span className="rl-osearch-tag" style={{ color: item.color || 'var(--color-indigo)' }}>{item.category || '추천'}</span><span className="rl-osearch-t">{item.title}</span></>}
+                      ? <><span className="rl-osearch-tag custom">{t('relearn.orbit.searchNewTag')}</span><span className="rl-osearch-t">{t('relearn.orbit.searchAddCustom', { title: item.title })}</span></>
+                      : <><span className="rl-osearch-tag" style={{ color: item.color || 'var(--color-indigo)' }}>{item.category || t('relearn.orbit.searchRecTag')}</span><span className="rl-osearch-t">{item.title}</span></>}
                   </button>
                 ))}
-                {navigable.length === 0 && <div className="rl-osearch-empty">검색 결과가 없어요 — 입력한 문장은 Enter로 새 궤도가 됩니다.</div>}
+                {navigable.length === 0 && <div className="rl-osearch-empty">{t('relearn.orbit.searchEmpty')}</div>}
               </div>
             </div>
           </div>
@@ -200,7 +202,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
 
       {recs.length > 0 && (
         <div className="rl-recs">
-          <div className="rl-recs-head">✦ AI 추천 — 다음 궤도</div>
+          <div className="rl-recs-head">{t('relearn.orbit.recsHead')}</div>
           {recs.map(item => {
             const hasAffinity = affinity && Object.keys(affinity).length > 0;
             const reason = hasAffinity ? (affinity[affKey(item.category)] > 0 ? 'strong' : 'stretch') : null;
@@ -208,14 +210,14 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
               <div key={item.id} className="rl-rec-item">
                 <span className="rl-rec-star" style={{ color: item.color || 'var(--color-indigo)' }}>✦</span>
                 <span className="rl-rec-t">{item.title}</span>
-                {reason === 'strong' && <span className="rl-rec-reason strong">강점 기반</span>}
-                {reason === 'stretch' && <span className="rl-rec-reason stretch">새 도전</span>}
+                {reason === 'strong' && <span className="rl-rec-reason strong">{t('relearn.orbit.reasonStrong')}</span>}
+                {reason === 'stretch' && <span className="rl-rec-reason stretch">{t('relearn.orbit.reasonStretch')}</span>}
                 <button
                   className="rl-rec-add haptic-trigger"
                   onClick={() => run(item.id, onAccept)}
                   disabled={busyId === item.id}
                 >
-                  {busyId === item.id ? '…' : '＋ 추가'}
+                  {busyId === item.id ? '…' : t('relearn.orbit.addBtn')}
                 </button>
               </div>
             );

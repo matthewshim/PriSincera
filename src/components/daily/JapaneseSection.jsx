@@ -30,12 +30,12 @@ export default function JapaneseSection({ study, compact, headerAction }) {
     <div className="daily-section fade-in">
       <div className="daily-section-header">
         <span className="daily-section-icon">🇯🇵</span>
-        <h2 className="daily-section-title">{t('dailyDigest.businessJpOnePick')}</h2>
+        <h2 className="daily-section-title">{t('relearn.jpChannel.businessJpOnePick')}</h2>
         <button className="japanese-audio-play-main" onClick={() => playAudio(study.sentence_jp)}>
           <svg viewBox="0 0 24 24" width="14" height="14" style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }}>
             <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.45v2.06c2.89.86 5 3.54 5 6.49s-2.11 5.63-5 6.49v2.06c4.01-.91 7-4.49 7-8.55s-2.99-7.64-7-8.55z"/>
           </svg>
-          {t('dailyDigest.playFullAudio')}
+          {t('relearn.jpChannel.playFullAudio')}
         </button>
         {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>
@@ -47,7 +47,7 @@ export default function JapaneseSection({ study, compact, headerAction }) {
           </div>
           {study.sentence_pronunciation_kr && (
             <div className="study-pronunciation">
-              <span className="pronunciation-label">{t('dailyDigest.koreanPronunciation')}</span>
+              <span className="pronunciation-label">{t('relearn.jpChannel.koreanPronunciation')}</span>
               <span className="pronunciation-text">[{study.sentence_pronunciation_kr}]</span>
             </div>
           )}
@@ -58,14 +58,14 @@ export default function JapaneseSection({ study, compact, headerAction }) {
 
         {(!study.prompt_snippet && study.business_context) && (
           <div className="signal-insight jp-insight">
-            <div className="insight-badge">{t('dailyDigest.businessContextTip')}</div>
+            <div className="insight-badge">{t('relearn.jpChannel.businessContextTip')}</div>
             <p>{study.business_context}</p>
           </div>
         )}
 
         {study.vocabulary && study.vocabulary.length > 0 && (
           <div className="vocab-section">
-            <h3 className="vocab-title">{t('dailyDigest.keyVocab')}</h3>
+            <h3 className="vocab-title">{t('relearn.jpChannel.keyVocab')}</h3>
             <div className="study-vocab-grid">
               {(compact && !showAllVocab ? study.vocabulary.slice(0, 4) : study.vocabulary).map((v, i) => (
                 <div key={i} className="study-vocab-card">
@@ -77,7 +77,7 @@ export default function JapaneseSection({ study, compact, headerAction }) {
                     <button
                       className="vocab-audio-btn"
                       onClick={() => playAudio(v.word)}
-                      title={t('dailyDigest.listenPron')}
+                      title={t('relearn.jpChannel.listenPron')}
                     >
                       <svg className="play-svg" viewBox="0 0 24 24" width="12" height="12">
                         <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
@@ -96,7 +96,7 @@ export default function JapaneseSection({ study, compact, headerAction }) {
                 className="rl-expand-btn"
                 onClick={() => { setShowAllVocab(true); trackRelearn('relearn_learn_expand', { block: 'jp_vocab' }); }}
               >
-                어휘 {study.vocabulary.length - 4}개 더 보기 ▾
+                {t('relearn.jpChannel.moreVocab', { n: study.vocabulary.length - 4 })}
               </button>
             )}
           </div>

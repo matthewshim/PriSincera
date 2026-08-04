@@ -9,12 +9,14 @@
  *   onSave    — (text) => Promise  (saveDiary)
  */
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 import './ReLearnSections.css';
 
 const MAX_LEN = 1000;   // pacenote-api /diary 제한과 동일
 const DEBOUNCE_MS = 1200;
 
 export default function ReflectionSection({ statement = '', onSave }) {
+  const { t } = useTranslation();
   const [text, setText] = useState(statement);
   const [status, setStatus] = useState('idle'); // idle | saving | saved | error
   const timerRef = useRef(null);
@@ -52,16 +54,16 @@ export default function ReflectionSection({ statement = '', onSave }) {
         className="rl-reflect-area"
         value={text}
         onChange={handleChange}
-        placeholder="오늘의 실행을 한 줄로 — 이 기록이 내일의 배움과 추천을 바꿉니다."
+        placeholder={t('relearn.reflect.placeholder')}
         maxLength={MAX_LEN}
         spellCheck={false}
       />
       <div className="rl-reflect-foot">
         <span className={`rl-reflect-save ${status}`}>
-          {status === 'saving' && '● 저장 중…'}
-          {status === 'saved' && '● 자동 저장됨'}
-          {status === 'error' && '● 저장 실패 — 잠시 후 다시 시도됩니다'}
-          {status === 'idle' && (text ? '● 저장됨' : '')}
+          {status === 'saving' && t('relearn.reflect.saving')}
+          {status === 'saved' && t('relearn.reflect.saved')}
+          {status === 'error' && t('relearn.reflect.error')}
+          {status === 'idle' && (text ? t('relearn.reflect.idle') : '')}
         </span>
         <span className="rl-reflect-count">{text.length}/{MAX_LEN}</span>
       </div>

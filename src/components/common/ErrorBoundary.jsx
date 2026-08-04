@@ -1,4 +1,17 @@
 import React from 'react';
+import ko from '../../locales/ko.json';
+import en from '../../locales/en.json';
+import ja from '../../locales/ja.json';
+
+// 클래스 컴포넌트 + 크래시 화면 특성상 LanguageContext에 의존하지 않고
+// 저장된 로케일로 언어팩을 직접 조회한다 (컨텍스트 붕괴 시에도 동작 보장).
+const EB_DICTS = { ko, en, ja };
+const ebText = (key) => {
+  let locale = 'ko';
+  try { locale = localStorage.getItem('prs_locale') || 'ko'; } catch { /* 저장소 접근 불가 시 ko */ }
+  const dict = EB_DICTS[locale] || EB_DICTS.ko;
+  return dict.errorBoundary?.[key] || EB_DICTS.ko.errorBoundary[key];
+};
 
 /**
  * Premium PriSincera Error Boundary (Fault Tolerance Core v1.0)
@@ -101,7 +114,7 @@ export default class ErrorBoundary extends React.Component {
               marginBottom: '10px',
               lineHeight: 1.4
             }}>
-              {isChunk ? '네트워크 연결이 지연되고 있습니다' : '시스템 일시 장애 예방 조치 적용'}
+              {isChunk ? ebText('chunkTitle') : ebText('genericTitle')}
             </h1>
             
             <p style={{
@@ -111,9 +124,7 @@ export default class ErrorBoundary extends React.Component {
               marginBottom: '32px',
               wordBreak: 'keep-all'
             }}>
-              {isChunk 
-                ? '새로운 패치 배포가 진행 중이거나 네트워크 일시 끊김으로 인해 리소스를 가져오지 못했습니다. 아래 복원 버튼을 클릭하여 새로고침해 주십시오.' 
-                : '일부 컴포넌트의 런타임 오류로부터 앱 셧다운을 격리했습니다. 아래 복원 버튼을 누르시면 정상적으로 서비스를 계속 이용하실 수 있습니다.'}
+              {isChunk ? ebText('chunkDesc') : ebText('genericDesc')}
             </p>
 
             {/* Premium Interactive Action Button */}
@@ -149,7 +160,7 @@ export default class ErrorBoundary extends React.Component {
                 e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
               }}
             >
-              서비스 상태 정상 복원하기
+              {ebText('restore')}
             </button>
           </div>
 

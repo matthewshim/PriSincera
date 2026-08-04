@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-08-04
-version: v5.11
+version: v5.12
 target_files:
   - src/styles/index.css
   - ci/design-check.mjs
@@ -37,6 +37,7 @@ target_files:
 | v5.8 | 2026-07-22 | AI Agent | **§9-8 인접 인터랙티브 컨트롤 간격 규범 신설** — 독립 컨트롤 수직 적층 최소 `--space-md`(16px)·수평 나열 최소 `--space-sm`(8px), 음수 마진 근접 배치 금지 (아카이브 상세 존 도구줄 ↔ 어학 '전체 발음 듣기' 근접 적층 QA 환류) | 컨트롤 간격 규범, ReLearnDaily |
 | v5.9 | 2026-07-22 | AI Agent | **§9-1 적용 범위 명시** — 페이지 최상위 히어로는 콘텐츠 상세 페이지에도 동일 구성 적용(아카이브 상세 자체 축소 헤더가 유발한 일관성 이탈 QA 환류 — `.rl-hero` 재사용으로 정합) | 히어로 규범 적용 경계, ReLearnDaily |
 | v5.10 | 2026-07-22 | AI Agent | **§9-9 상세 페이지 상단 내비 브레드크럼 규범 신설** — `← {섹션명}` 뒤로가기(GNB 활성 섹션 내 동어반복) → 위치 경로 `{섹션} › {구역}`으로 통일. ReLearnDaily·BuildersLogDetail 일괄 적용 | 상세 내비 규범, ReLearnDaily·BuildersLogDetail |
+| v5.12 | 2026-08-04 | AI Agent | **i18n 언어팩 게이트 신설** — 리런 클러스터 전면 언어팩 이관(relearn 네임스페이스 126키×3언어)·빌더스로그 상세 삼항→t() 통일·ErrorBoundary 컨텍스트 비의존 로케일화·고아 dailyDigest/paceNote 네임스페이스 정리(107키 삭제, 실사용 12키 relearn 이관)와 함께, design-check에 한국어 하드코딩 ERROR 규칙 추가(§9-6-0 ③) | 언어팩 3종, 리런 클러스터 11파일, ci/ |
 | v5.11 | 2026-08-04 | AI Agent | **리런 4채널·페이지 색·틴트·radius 정합** — §1-4 시맨틱 색 토큰(success/danger/star) 신설, §9-10 신설(컨테이너 radius `--radius-lg` 통일·§9-4 적용 범위·카테고리 브랜드 4색 그룹·DM Pick gold·JSX 인라인 금지). 시그널 미디어형→리스트형 통일, 16px 비토큰 종식, 쨍한 tailwind 다색·에메랄드 DM 제거 (오너 4채널 일관성 QA 환류) | ReLearn 4채널·셸, index.css, §1·§9 |
 
 > **"Sincerity, Prioritized."**
@@ -506,7 +507,7 @@ PaceNote 서비스(`/pacenote`)의 주차별(Weekly) 타임라인 운용 방식�
 
 ### 9-6-0. 자동 집행 (Enforcement) — `ci/design-check.mjs`
 - `npm run build` 시 **prebuild 게이트**로 자동 실행됩니다(Cloud Run 배포 파이프라인 포함 — 위반 시 빌드 차단).
-- **ERROR(차단)**: ① 마이크로 밴드 `[0.66rem, 1.0rem)`의 비토큰 font-size 리터럴·동일 밴드 px ② **대역 `[880,2000]px`의 px `max-width` 리터럴**(§3-3 — `--container`/`--measure` 토큰만 허용).
+- **ERROR(차단)**: ① 마이크로 밴드 `[0.66rem, 1.0rem)`의 비토큰 font-size 리터럴·동일 밴드 px ② **대역 `[880,2000]px`의 px `max-width` 리터럴**(§3-3 — `--container`/`--measure` 토큰만 허용) ③ **src JSX/JS 소스의 한국어 하드코딩**(i18n 게이트 — UI 문자열은 언어팩 `src/locales/{ko,en,ja}.json` + `t()`만 허용. t()의 조용한 ko 폴백 탓에 누락이 화면에서 안 보이던 문제의 재발 방지. 제외: 어드민·Sylphio 자체 사전 페이지·`categoryStyles` 매칭 키워드·`seoMeta`(SSR 계획 A 소관)·고아 컴포넌트, 주석·`console.*`. 의도적 예외는 해당 라인에 `i18n-ok` 마커 + 사유 필수).
 - **WARN(비차단)**: 그 외 비토큰 리터럴(1.05·1.2·1.6·1.8rem 등 헤딩 계열, 0.55~0.65rem 장식 마이크로 라벨) — 아래 §9-7 백로그.
 - **적용 제외**: 내부 어드민(`AdminDashboard.css`, `ServiceDocs.css`) — px 기반 별도 관례, 공개 서비스 규범 대상 아님.
 - **한계**: 자동 체크는 font-size 리터럴만 검출합니다. **실효 패딩(중첩 합산)·표면 속성·그리드 gap은 정적 검출 불가** → §9-6 수동 Self-QA 필수 항목.
@@ -524,6 +525,7 @@ PaceNote 서비스(`/pacenote`)의 주차별(Weekly) 타임라인 운용 방식�
 - [ ] 세로 강조선이 1개 이하인가
 - [ ] 인접 독립 컨트롤 간격이 §9-8 하한(수직 16px·수평 8px) 이상이고 음수 마진 근접 배치가 없는가
 - [ ] 컨테이너 radius가 `--radius-lg`인가(16px 비토큰 없음)·카테고리/강조색이 브랜드 4색·§1-4 시맨틱 토큰인가·JSX 인라인으로 폰트/색을 하드코딩하지 않았는가 (§9-10)
+- [ ] 사용자 노출 문자열이 전부 언어팩(`t()`) 경유인가 — ko/en/ja 3종 키 동시 등재, 하드코딩 없음 (§9-6-0 ③)
 - [ ] 위 항목에서 새 형식이 필요했다면 → **본 문서를 먼저 개정**했는가
 
 ### 9-7. 스케일 확장 백로그 (결정 대기)

@@ -5,10 +5,12 @@
  * 카테고리 칩 색상은 공유 모듈 categoryStyles 사용.
  */
 import React from 'react';
+import { useTranslation } from '../../contexts/LanguageContext';
 import { getCategoryStyles } from './categoryStyles';
 import '../../pages/DailyDigest.css';
 
 const SignalArticleCard = ({ article, compact }) => {
+  const { t } = useTranslation();
   const cardRef = React.useRef(null);
   const [tiltStyle, setTiltStyle] = React.useState({});
 
@@ -82,7 +84,7 @@ const SignalArticleCard = ({ article, compact }) => {
         <h3>{article.title}</h3>
         {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
         {!compact && <p>{article.summary}</p>}
-        <span className="signal-link">원문 읽기 →</span>
+        <span className="signal-link">{t('relearn.signalCard.readSource')}</span>
       </div>
     </a>
   );

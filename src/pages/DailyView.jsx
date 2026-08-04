@@ -11,6 +11,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from '../contexts/LanguageContext';
 import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
 import usePaceNoteData from '../hooks/usePaceNoteData';
@@ -27,18 +28,10 @@ import './ReLearnDaily.css';
 const todayKST = () => new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
 // 배움 채널 → 궤도 연결 (트랙 외 3채널은 /add 커스텀 궤도 재사용, 오늘만 노출)
-const CHANNEL_ORBITS = {
-  signal: '오늘의 시그널 아티클 정독하고 메모 남기기',
-  prompt: '오늘의 AI 프롬프트 직접 실행해보기',
-  jp: '오늘의 비즈니스 일본어 문장 소리 내어 3번 읽기',
-};
+// 문구·라벨은 언어팩 relearn.channelOrbits / relearn.channels 에서 로케일별 해석
+const CHANNEL_KEYS = ['signal', 'prompt', 'jp'];
 
-const ZONE_META = {
-  track: { icon: '🛰️', label: '테크 트랙' },
-  signal: { icon: '📰', label: 'IT 시그널' },
-  prompt: { icon: '🤖', label: 'AI 프롬프트' },
-  jp: { icon: '🇯🇵', label: '일본어' },
-};
+const ZONE_ICONS = { track: '🛰️', signal: '📰', prompt: '🤖', jp: '🇯🇵' };
 
 export default function DailyView() {
   const { date: dateParam } = useParams();
@@ -50,6 +43,8 @@ export default function DailyView() {
   const active = validParam && !redirectToday;
 
   const { user, token, loginWithGoogle, logout } = useAuth();
+  const { t } = useTranslation();
+  const channelOrbits = Object.fromEntries(CHANNEL_KEYS.map(k => [k, t(`relearn.channelOrbits.${k}`)]));
   const { data, loading: paceLoading, toggleTask, acceptTask, saveDiary, addTask, excludeTask, restoreTask } = usePaceNoteData();
 
   useSEO(isToday ? {
@@ -59,8 +54,8 @@ export default function DailyView() {
     ogUrl: 'https://www.prisincera.com/relearn',
   } : {
     title: `${date} Daily Digest — ReLearn`,
-    description: `${date} 데일리 다이제스트 아카이브 — IT 시그널·테크 트랙·AI 프롬프트·비즈니스 일본어 전체 기록.`,
-    keywords: 'PriSincera, ReLearn, 데일리 다이제스트, 아카이브',
+    description: `${date} 데일리 다이제스트 아카이브 — IT 시그널·테크 트랙·AI 프롬프트·비즈니스 일본어 전체 기록.`, // i18n-ok — SSR 메타 로케일화는 i18n SSR 계획 Phase A 소관
+    keywords: 'PriSincera, ReLearn, 데일리 다이제스트, 아카이브', // i18n-ok — 상동
     ogUrl: `https://www.prisincera.com/relearn/daily/${date}`,
   });
 
@@ -89,8 +84,8 @@ export default function DailyView() {
     fetch(`/api/daily/${date}`)
       .then(r => r.ok ? r.json() : Promise.reject(new Error(
         r.status === 404
-          ? (isToday ? '오늘의 다이제스트가 아직 준비 중입니다.' : '해당 날짜의 다이제스트가 없습니다.')
-          : `불러오기 실패 (${r.status})`)))
+          ? (isToday ? t('relearn.status.todayPreparing') : t('relearn.status.noDigest'))
+          : t('relearn.status.fetchFail', { status: r.status }))))
       .then(d => { if (!cancelled) setDaily(d); })
       .catch(e => { if (!cancelled) setDailyError(e.message); });
     return () => { cancelled = true; };
@@ -138,7 +133,7 @@ export default function DailyView() {
 
   const handleUnsubscribe = async () => {
     if (!user?.email || subState === 'loading') return;
-    if (!window.confirm('데일리 메일 구독을 해지할까요?')) return;
+    if (!window.confirm(t('relearn.sub.confirmUnsub'))) return;
     setSubState('loading');
     try {
       const res = await fetch('/api/unsubscribe', {
@@ -174,13 +169,13 @@ export default function DailyView() {
     () => new Set((data?.current?.currentPace || []).map(t => (typeof t.title === 'object' ? t.title.ko : t.title))),
     [data]
   );
-  const chState = (key) => (addedCh[key] || paceTitles.has(CHANNEL_ORBITS[key]) ? 'added' : addedCh[key] === 'adding' ? 'adding' : 'idle');
+  const chState = (key) => (addedCh[key] || paceTitles.has(channelOrbits[key]) ? 'added' : addedCh[key] === 'adding' ? 'adding' : 'idle');
   const addChannelOrbit = async (key) => {
-    if (!user) { alert('일기장 궤도에 추가하려면 로그인이 필요합니다.'); return; }
+    if (!user) { alert(t('relearn.orbitBtn.loginRequired')); return; }
     if (chState(key) !== 'idle') return;
     setAddedCh(s => ({ ...s, [key]: 'adding' }));
     try {
-      await addTask(CHANNEL_ORBITS[key]);
+      await addTask(channelOrbits[key]);
       trackRelearn('relearn_orbit_add', { source: key });
       setAddedCh(s => ({ ...s, [key]: 'added' }));
     } catch (e) {
@@ -196,9 +191,9 @@ export default function DailyView() {
         className={`rl-mini-orbit haptic-trigger ${st === 'added' ? 'added' : ''}`}
         onClick={() => addChannelOrbit(ch)}
         disabled={st !== 'idle'}
-        title={CHANNEL_ORBITS[ch]}
+        title={channelOrbits[ch]}
       >
-        {st === 'added' ? '✓ 일기장 궤도에 추가됨' : st === 'adding' ? '추가 중…' : '＋ 일기장 궤도에 추가'}
+        {st === 'added' ? t('relearn.orbitBtn.added') : st === 'adding' ? t('relearn.orbitBtn.adding') : t('relearn.orbitBtn.add')}
       </button>
     );
   };
@@ -260,10 +255,10 @@ export default function DailyView() {
       {/* ── 헤더: 오늘=브랜드 히어로 / 과거=날짜 히어로 (+브레드크럼) ── */}
       <header className="rl-daily-head">
         {!isToday && (
-          <nav className="rl-daily-crumb" aria-label="위치 경로">
+          <nav className="rl-daily-crumb" aria-label={t('relearn.crumb.ariaPath')}>
             <Link className="rl-daily-crumb-link" to="/relearn">ReLearn</Link>
             <span className="rl-daily-crumb-sep" aria-hidden="true">›</span>
-            <span className="rl-daily-crumb-cur" aria-current="page">아카이브</span>
+            <span className="rl-daily-crumb-cur" aria-current="page">{t('relearn.crumb.archive')}</span>
           </nav>
         )}
         {isToday ? (
@@ -271,13 +266,13 @@ export default function DailyView() {
             <div className="rl-hero-icon">🪐</div>
             <h1 className="rl-hero-title">ReLearn</h1>
             <p className="rl-hero-tagline">
-              매일 제로에서, 다시 배우고 다시 달린다
+              {t('relearn.hero.tagline')}
               <br />
               Learn from zero, run again.
             </p>
             {!user && (
               <button className="rl-hero-cta haptic-trigger" onClick={() => { trackRelearn('relearn_login_cta'); loginWithGoogle(); }}>
-                나의 루프 시작하기 — Google로 로그인
+                {t('relearn.hero.loginCta')}
               </button>
             )}
           </div>
@@ -285,7 +280,7 @@ export default function DailyView() {
           <div className="rl-hero rl-daily-hero">
             <div className="rl-hero-icon">📅</div>
             <h1 className="rl-hero-title rl-daily-htitle">{date} Daily Digest</h1>
-            <p className="rl-hero-tagline">그날의 교재와 일기장 — 배움은 본문에서, 실행·복기는 일기장에서</p>
+            <p className="rl-hero-tagline">{t('relearn.pastHero.tagline')}</p>
           </div>
         )}
         {/* 시간 네비 — 유일한 날짜 탐색 축 */}
@@ -296,13 +291,13 @@ export default function DailyView() {
       <div className="rl-split">
       <div className="rl-split-main">
       {dailyError && <div className="rl-status">{dailyError}</div>}
-      {!daily && !dailyError && <div className="rl-status">불러오는 중…</div>}
+      {!daily && !dailyError && <div className="rl-status">{t('relearn.status.loading')}</div>}
 
       {daily && (
         <>
           {/* 책갈피 탭 — 카테고리별 구분, 전부 펼침 */}
           <div className="rl-learn">
-            <nav className="rl-bm-tabs" aria-label="배움 채널 책갈피">
+            <nav className="rl-bm-tabs" aria-label={t('relearn.channels.ariaBookmarks')}>
               {zoneKeys.map(z => (
                 <button
                   key={z}
@@ -310,8 +305,8 @@ export default function DailyView() {
                   onClick={() => selectCh(z)}
                   aria-current={curCh === z}
                 >
-                  <span className="rl-bm-ic">{ZONE_META[z].icon}</span>
-                  <span className="rl-bm-label">{ZONE_META[z].label}</span>
+                  <span className="rl-bm-ic">{ZONE_ICONS[z]}</span>
+                  <span className="rl-bm-label">{t(`relearn.channels.${z}`)}</span>
                 </button>
               ))}
             </nav>
@@ -345,34 +340,34 @@ export default function DailyView() {
         <footer className="rl-loop-close">
           {user ? (
             <>
-              <div className="rl-loop-close-t">🔄 배움 → 실행 → 복기</div>
-              <div className="rl-loop-close-s">내일의 배움은 오늘의 실행을 기억합니다.</div>
+              <div className="rl-loop-close-t">{t('relearn.footer.loopTitle')}</div>
+              <div className="rl-loop-close-s">{t('relearn.footer.loopSub')}</div>
               {/* 계정·구독 — 박스 없이 헤어라인 아래 조용한 한 줄 */}
-              <div className="rl-account-footer" aria-label="계정 및 구독 관리">
+              <div className="rl-account-footer" aria-label={t('relearn.footer.ariaAccount')}>
                 <span className="rl-account-user" title={user.email}>👤 {user.email}</span>
                 <span className="rl-af-sep" aria-hidden="true">·</span>
-                {subState === 'unknown' && <span className="rl-account-sub muted">구독 상태 확인 중…</span>}
-                {subState === 'loading' && <span className="rl-account-sub muted">구독 처리 중…</span>}
+                {subState === 'unknown' && <span className="rl-account-sub muted">{t('relearn.sub.checking')}</span>}
+                {subState === 'loading' && <span className="rl-account-sub muted">{t('relearn.sub.processing')}</span>}
                 {subState === 'unsubscribed' && (
-                  <button className="rl-af-btn sub haptic-trigger" onClick={handleSubscribe}>📬 데일리 메일 구독</button>
+                  <button className="rl-af-btn sub haptic-trigger" onClick={handleSubscribe}>{t('relearn.sub.subscribe')}</button>
                 )}
                 {(subState === 'subscribed' || subState === 'done') && (
                   <>
-                    <span className="rl-account-sub ok">📬 구독 중</span>
-                    <button className="rl-af-btn haptic-trigger" onClick={handleUnsubscribe}>해지</button>
+                    <span className="rl-account-sub ok">{t('relearn.sub.subscribed')}</span>
+                    <button className="rl-af-btn haptic-trigger" onClick={handleUnsubscribe}>{t('relearn.sub.unsubscribe')}</button>
                   </>
                 )}
                 {subState === 'error' && (
-                  <button className="rl-af-btn err haptic-trigger" onClick={handleSubscribe}>구독 실패 — 재시도</button>
+                  <button className="rl-af-btn err haptic-trigger" onClick={handleSubscribe}>{t('relearn.sub.retry')}</button>
                 )}
                 <span className="rl-af-sep" aria-hidden="true">·</span>
-                <button className="rl-af-btn haptic-trigger" onClick={logout}>로그아웃</button>
+                <button className="rl-af-btn haptic-trigger" onClick={logout}>{t('relearn.sub.logout')}</button>
               </div>
             </>
           ) : (
             <>
-              <div className="rl-loop-close-t">매일 제로에서 다시 시작하는 러너를 위해</div>
-              <div className="rl-loop-close-s">로그인하면 배움이 실행이 되고, 실행이 다시 배움이 됩니다.</div>
+              <div className="rl-loop-close-t">{t('relearn.footer.guestTitle')}</div>
+              <div className="rl-loop-close-s">{t('relearn.footer.guestSub')}</div>
             </>
           )}
         </footer>

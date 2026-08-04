@@ -31,7 +31,7 @@ export default function PromptSection({ study, compact, headerAction }) {
     <div className="daily-section fade-in">
       <div className="daily-section-header">
         <span className="daily-section-icon">🤖</span>
-        <h2 className="daily-section-title">{t('dailyDigest.aiPromptOnePick')}</h2>
+        <h2 className="daily-section-title">{t('relearn.prompt.aiPromptOnePick')}</h2>
         {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>
       <div className="ai-prompt-card">
@@ -43,7 +43,7 @@ export default function PromptSection({ study, compact, headerAction }) {
           </div>
           <div className="terminal-title">SYSTEM PROMPT // terminal</div>
           <button className={`terminal-copy-btn ${copied ? 'copied' : ''}`} onClick={() => copyToClipboard(study.prompt_snippet)}>
-            {copied ? t('dailyDigest.copied') : t('dailyDigest.copy')}
+            {copied ? t('relearn.prompt.copied') : t('relearn.prompt.copy')}
           </button>
         </div>
         <div className="terminal-body">
@@ -55,13 +55,13 @@ export default function PromptSection({ study, compact, headerAction }) {
               className="rl-expand-btn"
               onClick={() => { setExpanded(true); trackRelearn('relearn_learn_expand', { block: 'prompt_snippet' }); }}
             >
-              프롬프트 전체 보기 ▾
+              {t('relearn.prompt.expand')}
             </button>
           )}
           {study.explanation && <div className="study-kr">{study.explanation}</div>}
           {study.business_context && (
             <div className="signal-insight ai-insight">
-              <div className="insight-badge">{t('dailyDigest.practicalTip')}</div>
+              <div className="insight-badge">{t('relearn.prompt.practicalTip')}</div>
               <p>{study.business_context}</p>
             </div>
           )}
@@ -69,8 +69,8 @@ export default function PromptSection({ study, compact, headerAction }) {
             const paramsTable = (
               <div className="params-table">
                 <div className="params-table-header">
-                  <span className="col-name">{t('dailyDigest.paramNameCol')}</span>
-                  <span className="col-desc">{t('dailyDigest.paramDescCol')}</span>
+                  <span className="col-name">{t('relearn.prompt.paramNameCol')}</span>
+                  <span className="col-desc">{t('relearn.prompt.paramDescCol')}</span>
                 </div>
                 <div className="params-list">
                   {study.parameters.map((p, i) => (
@@ -89,12 +89,12 @@ export default function PromptSection({ study, compact, headerAction }) {
                     className="rl-fold"
                     onToggle={(e) => e.currentTarget.open && trackRelearn('relearn_learn_expand', { block: 'prompt_params' })}
                   >
-                    <summary className="rl-fold-summary">{t('dailyDigest.promptParams')} 보기</summary>
+                    <summary className="rl-fold-summary">{t('relearn.prompt.paramsFold', { label: t('relearn.prompt.promptParams') })}</summary>
                     {paramsTable}
                   </details>
                 ) : (
                   <>
-                    <div className="params-header">{t('dailyDigest.promptParams')}</div>
+                    <div className="params-header">{t('relearn.prompt.promptParams')}</div>
                     {paramsTable}
                   </>
                 )}

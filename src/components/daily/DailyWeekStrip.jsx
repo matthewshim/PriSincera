@@ -8,8 +8,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { trackRelearn } from '../relearn/funnel';
-
-const DOW_LABELS = ['월', '화', '수', '목', '금', '토', '일'];
+import { useTranslation } from '../../contexts/LanguageContext';
 
 const parse = (iso) => {
   const [y, m, d] = iso.split('-').map(Number);
@@ -26,6 +25,9 @@ const addDays = (dt, n) => {
 const mondayOf = (dt) => addDays(dt, -((dt.getDay() + 6) % 7));
 
 export default function DailyWeekStrip({ date, dates }) {
+  const { t } = useTranslation();
+  const DOW_LABELS = t('relearn.week.dow');   // 로케일별 7요소 배열 (월요일 시작)
+  const MONTHS = t('relearn.week.months');
   const [weekOffset, setWeekOffset] = useState(0); // 0 = 현재 날짜가 속한 주
   useEffect(() => { setWeekOffset(0); }, [date]);  // 날짜 이동 시 그 날짜의 주로 복귀
 
@@ -43,27 +45,27 @@ export default function DailyWeekStrip({ date, dates }) {
   const canPrev = !!oldest && oldest < days[0].iso;
   const canNext = !!newest && newest > days[6].iso;
 
-  // 주 범위 라벨: "7월 21일 – 27일" (월이 걸치면 각각 표기)
+  // 주 범위 라벨: "7월 21일 – 27일" (월이 걸치면 각각 표기) — 포맷은 언어팩 템플릿
   const first = parse(days[0].iso), last = parse(days[6].iso);
   const label = first.getMonth() === last.getMonth()
-    ? `${first.getMonth() + 1}월 ${first.getDate()}일 – ${last.getDate()}일`
-    : `${first.getMonth() + 1}월 ${first.getDate()}일 – ${last.getMonth() + 1}월 ${last.getDate()}일`;
+    ? t('relearn.week.rangeSame', { m1: MONTHS[first.getMonth()], d1: first.getDate(), d2: last.getDate() })
+    : t('relearn.week.rangeCross', { m1: MONTHS[first.getMonth()], d1: first.getDate(), m2: MONTHS[last.getMonth()], d2: last.getDate() });
 
   return (
-    <nav className="rl-week" aria-label="주간 아카이브 달력">
+    <nav className="rl-week" aria-label={t('relearn.week.aria')}>
       <div className="rl-week-head">
         <button
           className="rl-week-arrow haptic-trigger"
           onClick={() => setWeekOffset(o => o - 1)}
           disabled={!canPrev}
-          aria-label="이전 주"
+          aria-label={t('relearn.week.prev')}
         >←</button>
         <span className="rl-week-label">{label}</span>
         <button
           className="rl-week-arrow haptic-trigger"
           onClick={() => setWeekOffset(o => o + 1)}
           disabled={!canNext}
-          aria-label="다음 주"
+          aria-label={t('relearn.week.next')}
         >→</button>
       </div>
       <div className="rl-week-days">

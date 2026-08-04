@@ -354,7 +354,7 @@ export default function WorkSection() {
                   <span className="sym-caption-status">ON AIR</span>
                 </div>
                 <div className="sym-line src">"Let's align on the Q3 roadmap."</div>
-                <div className="sym-line dst">Q3 로드맵을 함께 맞춰보시죠.<span className="sym-caret"></span></div>
+                <div className="sym-line dst">Q3 로드맵을 함께 맞춰보시죠.<span className="sym-caret"></span></div>{/* i18n-ok — Sylphio 통역 데모 콘텐츠(원문→번역 시연) */}
               </div>
             </div>
             <div className="visual-blur-orb blue"></div>

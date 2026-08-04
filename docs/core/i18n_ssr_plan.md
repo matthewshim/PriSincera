@@ -1,8 +1,8 @@
 ---
 status: draft
 domain: Core
-last_updated: 2026-07-21
-version: v1.0
+last_updated: 2026-08-04
+version: v1.1
 target_files:
   - server.mjs
   - src/data/seoMeta.mjs
@@ -61,6 +61,8 @@ target_files:
 - 서버: 경로 로케일 파싱 → SSR 메타·`og:locale`, **hreflang을 경로 기반으로 재작성**(`/en/relearn` 등 + x-default=ko 루트), **canonical = 자기 로케일 경로**(자기참조)
 - 사이트맵: 정적 페이지 ×3 로케일 확장(hreflang 어노테이션 포함). **콘텐츠가 ko뿐인 경로(daily 아카이브 상세)는 en/ja 경로 미생성** — soft 404 예방
 - 마이그레이션: `?lang=en` → `/en/...` 301, 기존 `?lang` 파라미터는 당분간 수용
+
+> **선행 완료(2026-08-04)**: 본 계획과 별도로 **클라이언트 UI 언어팩 전면 정비**가 완료됨 — 리런 클러스터 `relearn` 네임스페이스 신설(126키×3언어)·빌더스로그 상세 t() 통일·고아 네임스페이스 정리·design-check 한국어 하드코딩 ERROR 게이트(design_system v5.12 §9-6-0 ③). 이로써 Phase B/C 착수 시 en/ja 화면의 UI 문자열은 이미 완결 상태다.
 
 ### Phase C — 셸 SSR-lite (0.5일)
 - 서버가 초기 로케일 사전을 `window.__INITIAL_LOCALE__`로 프리로드 — 하이드레이션 언어 깜빡임 제거, `<html lang>`·클라이언트 상태 정합

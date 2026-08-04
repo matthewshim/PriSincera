@@ -209,7 +209,9 @@
 
 /* ── 오빗 추가 버튼 (Semantic Primary 차용) ── */
 .track-orbit-btn {
-  display: inline-flex;
+  display: flex;          /* 자체 라인(블록) — 참조(원문 링크) 아래 '실행' 버튼으로 배치 */
+  width: fit-content;
+  margin-top: 14px;       /* 원문 링크와의 여백 (참조 → 실행 흐름 구분) */
   align-items: center;
   gap: 6px;
   padding: 8px 16px;

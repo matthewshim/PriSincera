@@ -32,12 +32,12 @@ export default function BuildersLogDetail() {
   const { slug } = useParams();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
-  const { locale, localize } = useTranslation();
+  const { t, locale, localize } = useTranslation();
   
   const articleMeta = logMeta.find(m => m.slug === slug);
   const localizedTitle = articleMeta ? localize(articleMeta.title) : "Builder's Log";
   const localizedSubtitle = articleMeta ? localize(articleMeta.subtitle) : '';
-  const localizedDescription = articleMeta ? localize(articleMeta.description) : 'PriSincera 기술 블로그 아티클입니다.';
+  const localizedDescription = articleMeta ? localize(articleMeta.description) : t('buildersLog.detail.fallbackDesc');
 
   useSEO({
     title: `${localizedTitle} — Builder's Log`,
@@ -87,7 +87,7 @@ export default function BuildersLogDetail() {
       })
       .catch(err => {
         console.error(err);
-        setContent(locale === 'ko' ? '아티클을 불러오는데 실패했습니다.' : 'Failed to load article.');
+        setContent(t('buildersLog.detail.loadFail'));
         setLoading(false);
       });
 
@@ -109,10 +109,10 @@ export default function BuildersLogDetail() {
       <div className="detail-container">
         <div className="detail-header" style={{ '--accent-color': articleMeta.accent }}>
           {/* 위치 경로 브레드크럼 — GNB에 Builder's Log 활성인 상세 화면의 뒤로가기 동어반복 해소 (design_system §9-9) */}
-          <nav className="detail-crumb" aria-label={locale === 'ko' ? '위치 경로' : 'Breadcrumb'}>
+          <nav className="detail-crumb" aria-label={t('buildersLog.detail.ariaPath')}>
             <Link to="/builders-log" className="detail-crumb-link">Builder's Log</Link>
             <span className="detail-crumb-sep" aria-hidden="true">›</span>
-            <span className="detail-crumb-cur" aria-current="page">{locale === 'ko' ? '아티클' : 'Article'}</span>
+            <span className="detail-crumb-cur" aria-current="page">{t('buildersLog.detail.crumbCurrent')}</span>
           </nav>
           <div className="detail-meta">
             <span className="chapter-badge">Chapter {articleMeta.chapterNo}</span>
@@ -130,7 +130,7 @@ export default function BuildersLogDetail() {
 
         {loading ? (
           <div className="markdown-loading">
-            <div className="admin-spinner"></div> {locale === 'ko' ? '아티클을 불러오는 중...' : 'Loading article...'}
+            <div className="admin-spinner"></div> {t('buildersLog.detail.loading')}
           </div>
         ) : (
           <article className="markdown-body">
@@ -145,7 +145,7 @@ export default function BuildersLogDetail() {
         
         <div className="detail-footer">
           <Link to="/builders-log" className="back-btn-large">
-            {locale === 'ko' ? '다른 여정 살펴보기' : 'Explore other journeys'}
+            {t('buildersLog.detail.explore')}
           </Link>
         </div>
       </div>

@@ -47,7 +47,7 @@ function normalizeState(raw) {
 
 export function usePaceNoteData() {
   const { user, token: userToken } = useAuth();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   const desktop = isTauri();
 
   const [data, setData] = useState(null);
@@ -82,7 +82,7 @@ export function usePaceNoteData() {
     const res = await fetchWithAuth(url, restInit);
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.error || `요청 실패 (${res.status})`);
+      throw new Error(body.error || t('relearn.status.requestFail', { status: res.status }));
     }
     return res.json();
   }, [desktop, locale, fetchWithAuth]);
@@ -97,7 +97,7 @@ export function usePaceNoteData() {
       setData(normalizeState(raw));
     } catch (e) {
       console.error('[usePaceNoteData] reload 실패:', e);
-      setError(e.message || '불러오기 실패');
+      setError(e.message || t('relearn.status.loadFail'));
     } finally {
       setLoading(false);
     }

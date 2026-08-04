@@ -9,16 +9,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTranslation } from '../../contexts/LanguageContext';
 import { trackRelearn } from '../relearn/funnel';
 import './TrackSignalFeed.css';
 
 const TRACKS = [
-  { key: 'junior', label: '주니어-미드', icon: '🚀' },
-  { key: 'senior', label: '시니어-리더', icon: '🧭' },
+  { key: 'junior', icon: '🚀' },
+  { key: 'senior', icon: '🧭' },
 ];
 
 const DOMAINS = [
-  { key: 'all', label: '전체' },
+  { key: 'all' },
   { key: 'ai_llm', label: 'AI/LLM' },
   { key: 'system_design', label: 'System Design' },
   { key: 'devops', label: 'DevOps' },
@@ -30,6 +31,7 @@ const DOMAIN_LABEL = Object.fromEntries(DOMAINS.map(d => [d.key, d.label]));
 // onOrbitAdded(옵션): 궤도 추가 성공 시 콜백 — ReLearn 퍼널 계측용(/daily에선 미전달)
 export default function TrackSignalFeed({ date, affinity: externalAffinity, onOrbitAdded, compact }) {
   const { user, token } = useAuth();
+  const { t } = useTranslation();
   const [track, setTrack] = useState('junior');
   const [feed, setFeed] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
     fetch(`/api/daily/${date}/track/${track}`)
       .then(r => {
         if (r.ok) return r.json();
-        return Promise.reject(new Error(r.status === 404 ? '아직 생성된 트랙 피드가 없습니다.' : `불러오기 실패 (${r.status})`));
+        return Promise.reject(new Error(r.status === 404 ? t('relearn.track.noFeed') : t('relearn.status.fetchFail', { status: r.status })));
       })
       .then(d => { if (!cancelled) setFeed(d); })
       .catch(e => { if (!cancelled) { setError(e.message); setFeed(null); } })
@@ -92,7 +94,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
 
   const addOrbit = useCallback(async (card) => {
     if (!user) {
-      alert('일기장 궤도에 추가하려면 로그인이 필요합니다.');
+      alert(t('relearn.orbitBtn.loginRequired'));
       return;
     }
     const baseId = card.action_challenge?.id ? `orbit-${card.action_challenge.id}` : null;
@@ -157,7 +159,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
               className={`track-toggle-btn haptic-trigger ${track === tk.key ? 'active' : ''}`}
               onClick={() => setTrack(tk.key)}
             >
-              <span className="track-toggle-icon">{tk.icon}</span>{tk.label}
+              <span className="track-toggle-icon">{tk.icon}</span>{t(`relearn.track.${tk.key}`)}
             </button>
           ))}
         </div>
@@ -171,7 +173,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                 className={`track-chip haptic-trigger ${activeDomain === d.key ? 'active' : ''}`}
                 onClick={() => setActiveDomain(d.key)}
               >
-                {d.label}
+                {d.key === 'all' ? t('relearn.track.domainAll') : DOMAIN_LABEL[d.key]}
               </button>
             ))}
           </div>
@@ -179,7 +181,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
       </div>
 
       {/* 상태 */}
-      {loading && <div className="track-status">트랙 피드 불러오는 중…</div>}
+      {loading && <div className="track-status">{t('relearn.track.loading')}</div>}
       {!loading && error && <div className="track-status">{error}</div>}
 
       {/* 🧭 실행→배움 연결 배너 (Phase 3): 내 궤도와 연결된 오늘의 도메인 */}
@@ -187,9 +189,9 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
         <button className="track-loop-banner haptic-trigger" onClick={() => setActiveDomain(topDomain)}>
           <span className="track-loop-banner-icon">🧭</span>
           <span className="track-loop-banner-text">
-            당신의 궤도와 연결된 오늘의 배움 · <strong>{DOMAIN_LABEL[topDomain] || topDomain}</strong>
+            {t('relearn.track.loopBannerText')} · <strong>{DOMAIN_LABEL[topDomain] || topDomain}</strong>
           </span>
-          <span className="track-loop-banner-cta">바로 보기 →</span>
+          <span className="track-loop-banner-cta">{t('relearn.track.loopBannerCta')}</span>
         </button>
       )}
 
@@ -203,7 +205,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
           <div key={card.id} className="track-card">
             <div className="track-card-meta">
               <span className="track-card-domain">{DOMAIN_LABEL[card.domain] || card.domain}</span>
-              {myDomains.has(card.domain) && <span className="track-card-mine">🧭 내 궤도</span>}
+              {myDomains.has(card.domain) && <span className="track-card-mine">{t('relearn.track.mine')}</span>}
               {(card.tags || []).slice(0, compact ? 2 : 5).map(tag => (
                 <span key={tag} className="track-card-tag">#{tag}</span>
               ))}
@@ -219,7 +221,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                   className="track-learning rl-fold"
                   onToggle={(e) => e.currentTarget.open && trackRelearn('relearn_learn_expand', { block: 'track_learning' })}
                 >
-                  <summary className="rl-fold-summary">📚 학습 포인트 보기</summary>
+                  <summary className="rl-fold-summary">{t('relearn.track.learningFold')}</summary>
                   {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
                   {(card.learning.key_points || []).length > 0 && (
                     <ul className="track-learning-points">
@@ -229,7 +231,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                 </details>
               ) : (
                 <div className="track-learning">
-                  <div className="track-learning-label">📚 학습</div>
+                  <div className="track-learning-label">{t('relearn.track.learningLabel')}</div>
                   {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
                   {(card.learning.key_points || []).length > 0 && (
                     <ul className="track-learning-points">
@@ -240,7 +242,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
               )
             )}
 
-            {/* 🎯 action_challenge 미리보기 + 오빗 추가 (C4) */}
+            {/* 🎯 action_challenge (할 일 미리보기) — C4 */}
             {card.action_challenge && (
               <div className="track-challenge">
                 <div className="track-challenge-title">🎯 {card.action_challenge.title}</div>
@@ -249,7 +251,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                     className="rl-fold"
                     onToggle={(e) => e.currentTarget.open && trackRelearn('relearn_learn_expand', { block: 'track_tasks' })}
                   >
-                    <summary className="rl-fold-summary">할 일 {(card.action_challenge.tasks || []).length}개 보기</summary>
+                    <summary className="rl-fold-summary">{t('relearn.track.tasksFold', { n: (card.action_challenge.tasks || []).length })}</summary>
                     <ol className="track-challenge-tasks">
                       {(card.action_challenge.tasks || []).map(tk => (
                         <li key={tk.seq}>{tk.text}</li>
@@ -263,21 +265,25 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                     ))}
                   </ol>
                 )}
-                <button
-                  className={`track-orbit-btn haptic-trigger ${st || ''}`}
-                  onClick={() => addOrbit(card)}
-                  disabled={st === 'adding' || st === 'added'}
-                >
-                  {st === 'added' ? '✓ 일기장 궤도에 추가됨' : st === 'adding' ? '추가 중…' : st === 'error' ? '실패 — 다시 시도' : '＋ 일기장 궤도에 추가'}
-                </button>
               </div>
             )}
 
-            {/* 🔗 실제 출처 원문 링크 (하이브리드 — 근거 있는 경우만) */}
+            {/* 🔗 참조: 실제 출처 원문 링크 (근거 있는 경우만) — 실행 전 확인 */}
             {card.sourceUrl && (
               <a className="track-source-link" href={card.sourceUrl} target="_blank" rel="noopener noreferrer">
-                🔗 {card.sourceName || '원문'} 읽기 →
+                {t('relearn.track.sourceRead', { name: card.sourceName || t('relearn.track.sourceDefault') })}
               </a>
+            )}
+
+            {/* ＋ 실행: 일기장 궤도에 추가 (참조 확인 후 실행 — 맨 아래) */}
+            {card.action_challenge && (
+              <button
+                className={`track-orbit-btn haptic-trigger ${st || ''}`}
+                onClick={() => addOrbit(card)}
+                disabled={st === 'adding' || st === 'added'}
+              >
+                {st === 'added' ? t('relearn.orbitBtn.added') : st === 'adding' ? t('relearn.orbitBtn.adding') : st === 'error' ? t('relearn.orbitBtn.error') : t('relearn.orbitBtn.add')}
+              </button>
             )}
           </div>
         );
@@ -285,7 +291,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
       </div>
 
       {!loading && !error && cards.length === 0 && (
-        <div className="track-status">해당 도메인의 카드가 없습니다.</div>
+        <div className="track-status">{t('relearn.track.emptyDomain')}</div>
       )}
 
       {compact && !loading && !error && cards.length > 4 && (
@@ -294,7 +300,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
           to={`/relearn/daily/${date}`}
           onClick={() => trackRelearn('relearn_learn_more', { channel: 'track' })}
         >
-          트랙 시그널 전체 보기 →
+          {t('relearn.track.viewAll')}
         </Link>
       )}
     </div>
