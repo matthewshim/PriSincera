@@ -5,12 +5,11 @@
  * 동작·마크업 동일하게 컴포넌트화. /daily 와 /relearn(배움 채널)이 공용.
  */
 import SignalArticleCard from './SignalArticleCard';
-import { getCategoryStyles } from './categoryStyles';
 import '../../pages/DailyDigest.css';
 
-// limit(옵션): 표시할 아티클 상한 — ReLearn 배움 채널의 스크롤 피로 축소용. 미지정 시 전체(/daily 기존 동작).
-// splitHeadlines(옵션): 아카이브 훑어보기 모드 — DM Pick만 카드형 유지, 나머지는 1줄 헤드라인 리스트로 강등.
-export default function SignalSection({ signal, limit, compact, splitHeadlines, headerAction }) {
+// limit(옵션): 표시할 아티클 상한 — 미지정 시 전체.
+// headerAction(옵션): 섹션 헤더 우측 액션(궤도 추가 버튼 등).
+export default function SignalSection({ signal, limit, compact, headerAction }) {
   if (!signal) return null;
 
   const sorted = [...(signal.articles || [])].sort((a, b) => {
@@ -19,9 +18,6 @@ export default function SignalSection({ signal, limit, compact, splitHeadlines, 
     return b.weightedScore - a.weightedScore;
   });
   const shown = typeof limit === 'number' ? sorted.slice(0, limit) : sorted;
-  // 헤드라인 분리 모드(splitHeadlines)용 — DM Pick 카드 / 나머지 헤드라인 구분
-  const picks = sorted.filter(a => a.isDmPick);
-  const rest = sorted.filter(a => !a.isDmPick);
 
   return (
     <div className="daily-section fade-in">
@@ -30,49 +26,11 @@ export default function SignalSection({ signal, limit, compact, splitHeadlines, 
         <h2 className="daily-section-title">IT Tech Signal</h2>
         {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>
-      {!splitHeadlines && (
-        <div className="signal-articles-grid">
-          {shown.map((article, idx) => (
-            <SignalArticleCard
-              key={idx}
-              article={article}
-              compact={compact}
-            />
-          ))}
-        </div>
-      )}
-      {splitHeadlines && (
-        <>
-          <div className="signal-articles-grid">
-            {picks.map((article, idx) => (
-              <SignalArticleCard key={idx} article={article} />
-            ))}
-          </div>
-          {rest.length > 0 && (
-            <div className="signal-headline-block">
-              <div className="signal-headline-label">전체 헤드라인 <span>{rest.length}</span></div>
-              <div className="signal-headline-list">
-                {rest.map((a, i) => (
-                  <a
-                    key={i}
-                    className="signal-headline-row haptic-trigger"
-                    href={a.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {a.category && <span className="signal-headline-cat" style={getCategoryStyles(a.category)}>{a.category}</span>}
-                    <span className="signal-headline-title">{a.title}</span>
-                    <span className="signal-headline-meta">
-                      {a.source && <span className="signal-headline-src">{a.source}</span>}
-                      {a.weightedScore != null && <span className="signal-headline-score">★ {Number(a.weightedScore).toFixed(1)}</span>}
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
+      <div className="signal-articles-grid">
+        {shown.map((article, idx) => (
+          <SignalArticleCard key={idx} article={article} compact={compact} />
+        ))}
+      </div>
     </div>
   );
 }

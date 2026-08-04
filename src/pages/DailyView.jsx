@@ -318,7 +318,7 @@ export default function DailyView() {
             <div className="rl-bm-panel rl-ch-sec">
               {/* 궤도 버튼은 각 섹션 헤더 우측에 고정(타이틀 행) — 별도 행이 유발하던 타이틀 위치 변동 제거 */}
               {curCh === 'track' && <TrackSignalFeed date={date} compact={false} />}
-              {curCh === 'signal' && daily.signal && <SignalSection signal={daily.signal} compact splitHeadlines={false} headerAction={isToday ? <ChannelOrbitBtn ch="signal" /> : null} />}
+              {curCh === 'signal' && daily.signal && <SignalSection signal={daily.signal} compact headerAction={isToday ? <ChannelOrbitBtn ch="signal" /> : null} />}
               {curCh === 'prompt' && study?.prompt_snippet && <PromptSection study={study} compact={false} headerAction={isToday ? <ChannelOrbitBtn ch="prompt" /> : null} />}
               {curCh === 'jp' && study?.sentence_jp && <JapaneseSection study={study} compact={false} headerAction={isToday ? <ChannelOrbitBtn ch="jp" /> : null} />}
             </div>
