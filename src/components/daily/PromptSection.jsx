@@ -10,7 +10,7 @@ import { useTranslation } from '../../contexts/LanguageContext';
 import { trackRelearn } from '../relearn/funnel';
 import '../../pages/DailyDigest.css';
 
-export default function PromptSection({ study, compact }) {
+export default function PromptSection({ study, compact, headerAction }) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(!compact); // compact = 스니펫 프리뷰 접힘
@@ -32,6 +32,7 @@ export default function PromptSection({ study, compact }) {
       <div className="daily-section-header">
         <span className="daily-section-icon">🤖</span>
         <h2 className="daily-section-title">{t('dailyDigest.aiPromptOnePick')}</h2>
+        {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>
       <div className="ai-prompt-card">
         <div className="terminal-header">

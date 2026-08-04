@@ -32,6 +32,12 @@
     --orbit-cyan: var(--color-cyan);
     --orbit-cyan-light: #67E8F9;
 
+    /* Semantic Status Colors (기능색 — design_system §1-4) — 브랜드 4색 절제의 명시적 예외.
+       성공/위험/별점은 보편 관례색을 시맨틱 토큰으로 단일화(애드혹 hex 산개 종식). */
+    --color-success: #34D399;   /* 완료·저장 성공 */
+    --color-danger: #F87171;    /* 오류·삭제·경고 */
+    --color-star: #FCD34D;      /* 별점·스코어 강조 */
+
     /* Glassmorphism 3.0 (Precision & Soft Depth) */
     --glass-bg: rgba(14, 14, 26, 0.75);
     --glass-border: rgba(255, 255, 255, 0.05);

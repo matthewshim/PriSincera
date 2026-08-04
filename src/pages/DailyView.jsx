@@ -324,18 +324,15 @@ export default function DailyView() {
                 >
                   <span className="rl-bm-ic">{ZONE_META[z].icon}</span>
                   <span className="rl-bm-label">{ZONE_META[z].label}</span>
-                  {z === 'signal' && <span className="rl-bm-n">{daily.signal?.articles?.length || 0}</span>}
                 </button>
               ))}
             </nav>
             <div className="rl-bm-panel rl-ch-sec">
-              {isToday && CHANNEL_ORBITS[curCh] && (
-                <div className="rl-zone-tools"><ChannelOrbitBtn ch={curCh} /></div>
-              )}
+              {/* 궤도 버튼은 각 섹션 헤더 우측에 고정(타이틀 행) — 별도 행이 유발하던 타이틀 위치 변동 제거 */}
               {curCh === 'track' && <TrackSignalFeed date={date} compact={false} />}
-              {curCh === 'signal' && daily.signal && <SignalSection signal={daily.signal} splitHeadlines={false} />}
-              {curCh === 'prompt' && study?.prompt_snippet && <PromptSection study={study} compact={false} />}
-              {curCh === 'jp' && study?.sentence_jp && <JapaneseSection study={study} compact={false} />}
+              {curCh === 'signal' && daily.signal && <SignalSection signal={daily.signal} compact splitHeadlines={false} headerAction={isToday ? <ChannelOrbitBtn ch="signal" /> : null} />}
+              {curCh === 'prompt' && study?.prompt_snippet && <PromptSection study={study} compact={false} headerAction={isToday ? <ChannelOrbitBtn ch="prompt" /> : null} />}
+              {curCh === 'jp' && study?.sentence_jp && <JapaneseSection study={study} compact={false} headerAction={isToday ? <ChannelOrbitBtn ch="jp" /> : null} />}
             </div>
           </div>
         </>

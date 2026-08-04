@@ -10,7 +10,7 @@ import '../../pages/DailyDigest.css';
 
 // limit(옵션): 표시할 아티클 상한 — ReLearn 배움 채널의 스크롤 피로 축소용. 미지정 시 전체(/daily 기존 동작).
 // splitHeadlines(옵션): 아카이브 훑어보기 모드 — DM Pick만 카드형 유지, 나머지는 1줄 헤드라인 리스트로 강등.
-export default function SignalSection({ signal, limit, compact, splitHeadlines }) {
+export default function SignalSection({ signal, limit, compact, splitHeadlines, headerAction }) {
   if (!signal) return null;
 
   const sorted = [...(signal.articles || [])].sort((a, b) => {
@@ -28,6 +28,7 @@ export default function SignalSection({ signal, limit, compact, splitHeadlines }
       <div className="daily-section-header">
         <span className="daily-section-icon">📰</span>
         <h2 className="daily-section-title">IT Tech Signal</h2>
+        {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>
       {!splitHeadlines && (
         <div className="signal-articles-grid">

@@ -60,7 +60,7 @@
   margin: 0 0 22px; padding: 18px 20px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(165, 180, 252, 0.18);
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.045), rgba(165, 180, 252, 0.05), rgba(229, 178, 93, 0.04));
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.045), rgba(165, 180, 252, 0.045), rgba(229, 178, 93, 0.045)); /* 존 배경 §9-4 0.045 통일 */
 }
 .rl-brief-head { display: flex; align-items: baseline; gap: 10px; }
 .rl-brief-badge {
@@ -90,7 +90,7 @@
 .rl-brief-pick:hover { background: rgba(255, 255, 255, 0.04); }
 .rl-brief-pick-no {
   flex-shrink: 0; font-family: var(--font-mono); font-size: var(--fs-070);
-  font-weight: 700; color: #10B981; /* dm-pick-badge 컬러 계열 */
+  font-weight: 700; color: var(--color-gold); /* DM Pick 강조 = 브랜드 골드 */
   font-variant-numeric: tabular-nums;
 }
 .rl-brief-pick-title { font-size: var(--fs-090); font-weight: 600; color: var(--text-secondary); line-height: 1.5; }

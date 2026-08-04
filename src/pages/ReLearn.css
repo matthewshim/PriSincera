@@ -51,15 +51,19 @@
 .rl-hero-cta:hover { background: rgba(229, 178, 93, 0.2); box-shadow: 0 4px 24px rgba(229, 178, 93, 0.15); }
 /* ── 채널 존(Zoning) — 채널 식별은 배경 틴트 + 헤더 언더라인 + 책갈피 동기화로.
      (좌측 컬러바는 스테이지 레일 라인과 시각 충돌하므로 사용하지 않는다) ── */
+/* 교재 패널의 컨테이너 표면(배경·보더·radius·패딩)은 .rl-bm-panel이 단독 소유한다.
+   .rl-ch-sec는 자식 카드 §9-3 통일 규칙의 스코프 역할만 — 이전엔 두 클래스가 padding/radius를
+   이중 선언해 .rl-ch-sec 값이 캐스케이드로 사멸하는 죽은 코드였다(오너 QA 환류). */
 .rl-ch-sec {
-  margin-bottom: 0; /* 교재 패널 전용 — 하단 여백은 .rl-loop-close(§푸터)가 소유 */
-  padding: 20px 22px 18px;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
+  margin-bottom: 0; /* 하단 여백은 .rl-loop-close(§푸터)가 소유 */
 }
 .rl-ch-sec .daily-section { margin-bottom: 0; }
 /* 채널 헤더 언더라인 = 채널 컬러 (존 아이덴티티 이중 보강) */
-.rl-ch-sec .daily-section-header { padding-bottom: 10px; margin-bottom: 16px; border-bottom: 1px solid transparent; }
+.rl-ch-sec .daily-section-header { padding-bottom: 10px; margin-bottom: 16px; border-bottom: 1px solid transparent; flex-wrap: wrap; }
+/* 궤도·오디오 액션은 헤더 우측에 고정 — 타이틀은 좌측 불변(버튼 유무로 인한 정보 위치 변동 제거) */
+.rl-ch-sec .daily-section-header .daily-section-title { margin-right: auto; }
+.rl-ch-sec .daily-section-header .daily-section-action { flex-shrink: 0; }
+.rl-ch-sec .daily-section-header .daily-section-action .rl-mini-orbit { margin-top: 0; }
 
 /* ── 시그널 콤팩트(이미지 제거·2열 그리드 — 가로 폭 활용) ── */
 .rl-ch-sec .signal-articles-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } /* 카드 그리드 gap 14px 통일(§9-3) */
@@ -99,6 +103,20 @@
   border-color: var(--glass-border-hover);
 }
 
+/* 배움 존에서는 DM Pick도 리스트형으로 균일화 — /daily 시절 미디어형 강조(전폭 그리드·
+   에메랄드 !important 표면)를 해제해 4채널 카드 표면을 통일한다. DM 식별은 배지로 충분. */
+.rl-ch-sec .signal-article-card.compact.dm-featured-card {
+  grid-column: auto;
+  display: flex;
+  background: rgba(255, 255, 255, 0.015) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25) !important;
+}
+.rl-ch-sec .signal-article-card.compact.dm-featured-card:hover {
+  border-color: var(--glass-border-hover) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
 /* ── 접기(Progressive Disclosure) 공통 ── */
 .rl-fold-summary {
   cursor: pointer; list-style: none;
@@ -136,7 +154,7 @@
 }
 .rl-mini-orbit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(165, 180, 252, 0.28); }
 .rl-mini-orbit.added {
-  background: rgba(229, 178, 93, 0.12); border-color: rgba(229, 178, 93, 0.40);
+  background: rgba(229, 178, 93, 0.06); border-color: rgba(229, 178, 93, 0.16);
   color: var(--color-gold); box-shadow: none;
 }
 .rl-mini-orbit:disabled { cursor: default; }
@@ -151,13 +169,13 @@
 }
 .rl-account-sub { font-size: var(--fs-075); }
 .rl-account-sub.muted { color: var(--text-muted); }
-.rl-account-sub.ok { color: #6EE7B7; font-weight: 600; }
+.rl-account-sub.ok { color: var(--color-success); font-weight: 600; }
 
 /* ── 상태·CTA ── */
 .rl-status { text-align: center; color: var(--text-muted); padding: 26px 0; font-size: var(--fs-090); }
 .rl-login-cta {
   text-align: center; padding: 30px 20px;
-  border: 1px dashed rgba(165, 180, 252, 0.3); border-radius: 16px;
+  border: 1px dashed rgba(165, 180, 252, 0.3); border-radius: var(--radius-lg);
 }
 .rl-login-cta p { font-size: var(--fs-090); color: var(--text-muted); margin: 0 0 14px; }
 .rl-login-btn {
@@ -172,7 +190,7 @@
 /* ── 루프 닫힘 푸터 ── */
 .rl-loop-close {
   margin-top: var(--space-xl); padding: 20px 24px; text-align: center; /* 2분할 본문과의 호흡 확보 */
-  border-radius: 16px; border: 1px solid rgba(165, 180, 252, 0.18);
+  border-radius: var(--radius-lg); border: 1px solid rgba(165, 180, 252, 0.18);
   background: linear-gradient(135deg, rgba(34, 211, 238, 0.05), rgba(165, 180, 252, 0.06), rgba(229, 178, 93, 0.05));
 }
 .rl-loop-close-t { font-size: var(--fs-095); font-weight: 700; color: var(--text-primary); }
@@ -203,7 +221,7 @@
 }
 .rl-dock-head {
   display: flex; align-items: center; gap: 8px; width: 100%;
-  padding: 13px 16px; background: rgba(165, 180, 252, 0.05); border: none;
+  padding: 13px 16px; background: rgba(165, 180, 252, 0.045); border: none;
   color: var(--text-primary); font-family: inherit;
   font-size: var(--fs-090); font-weight: 700; cursor: pointer; text-align: left;
 }
@@ -220,7 +238,7 @@
   display: flex; align-items: center; gap: 8px; padding: 7px 0;
   border-bottom: 1px dashed var(--glass-border); font-size: var(--fs-085);
 }
-.rl-dock-mk { color: #34d399; font-weight: 800; }
+.rl-dock-mk { color: var(--color-success); font-weight: 800; }
 .rl-dock-t { color: var(--text-secondary); flex: 1; }
 .rl-dock-none { color: var(--text-muted); font-size: var(--fs-085); padding: 6px 0; }
 .rl-dock-empty { text-align: center; padding: 20px 0; }
@@ -231,7 +249,7 @@
 .rl-dock-legacy-note {
   font-size: var(--fs-080); color: var(--text-muted);
   background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border);
-  border-radius: 10px; padding: 8px 12px; margin: 4px 0 14px;
+  border-radius: var(--radius-md); padding: 8px 12px; margin: 4px 0 14px;
 }
 .rl-dock-tools { display: flex; justify-content: flex-end; margin-top: 12px; }
 
@@ -252,7 +270,7 @@
     position: static;
     background: var(--bg-surface);
     border: 1px solid var(--glass-border-hover);
-    border-radius: 16px; overflow: hidden;
+    border-radius: var(--radius-lg); overflow: hidden;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     display: flex; flex-direction: column;
     max-height: calc(100vh - 96px);
@@ -272,7 +290,7 @@
   font-family: inherit; font-size: var(--fs-085); font-weight: 700;
   background: rgba(255, 255, 255, 0.03); color: var(--text-muted);
   border: 1px solid var(--glass-border); border-bottom: none;
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   cursor: pointer; transition: all 0.15s; white-space: nowrap;
 }
 .rl-bm-tab:hover { color: var(--text-secondary); border-color: var(--glass-border-hover); }
@@ -280,15 +298,10 @@
   background: linear-gradient(135deg, rgba(165, 180, 252, 0.14), rgba(34, 211, 238, 0.10));
   color: var(--text-primary); border-color: rgba(165, 180, 252, 0.35);
 }
-.rl-bm-n {
-  font-size: var(--fs-070); font-weight: 700;
-  background: rgba(255, 255, 255, 0.08); border-radius: var(--radius-pill);
-  padding: 2px 7px; color: inherit;
-}
 .rl-bm-panel {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--glass-border);
-  border-radius: 0 16px 16px 16px;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg); /* 좌상단은 책갈피 탭과 물림 */
   padding: var(--space-lg);
   min-height: 280px;
 }
@@ -307,7 +320,7 @@
   flex: 1; padding: 8px 6px; text-align: center;
   font-family: inherit; font-size: var(--fs-080); font-weight: 700;
   color: var(--text-muted); background: transparent;
-  border: 1px solid var(--glass-border); border-radius: 10px;
+  border: 1px solid var(--glass-border); border-radius: var(--radius-md);
   cursor: pointer; transition: all 0.15s; white-space: nowrap;
 }
 .rl-dock-tab:hover { color: var(--text-secondary); border-color: var(--glass-border-hover); }
@@ -338,4 +351,4 @@
 .rl-af-btn:hover { color: var(--text-primary); }
 .rl-af-btn.sub { color: var(--color-cyan); font-weight: 700; }
 .rl-af-btn.sub:hover { filter: brightness(1.25); }
-.rl-af-btn.err { color: #FCA5A5; }
+.rl-af-btn.err { color: var(--color-danger); }

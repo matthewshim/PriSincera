@@ -63,7 +63,7 @@ const SignalArticleCard = ({ article, compact, domId }) => {
         </div>
       )}
       <div className="signal-article-body">
-        <div className="signal-article-meta-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
+        <div className="signal-article-meta-row">
           {article.isDmPick && (
             <span className="dm-pick-badge">
               ✦ DM Pick
@@ -71,13 +71,13 @@ const SignalArticleCard = ({ article, compact, domId }) => {
           )}
           {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
 
-          <div className="signal-article-meta-info" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+          <div className="signal-article-meta-info">
             {article.weightedScore && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <span style={{ color: '#FCD34D' }}>★</span> {Number(article.weightedScore).toFixed(1)} {article.tier === 1 && '🌟'}
+              <span className="signal-article-score">
+                <span className="signal-article-star">★</span> {Number(article.weightedScore).toFixed(1)} {article.tier === 1 && '🌟'}
               </span>
             )}
-            {article.weightedScore && article.source && <span style={{ opacity: 0.3 }}>|</span>}
+            {article.weightedScore && article.source && <span className="signal-article-div">|</span>}
             {article.source && <span className="article-source-name">{article.source}</span>}
           </div>
         </div>

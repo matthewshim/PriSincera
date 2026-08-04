@@ -92,7 +92,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
 
   const addOrbit = useCallback(async (card) => {
     if (!user) {
-      alert('실행의 궤도에 추가하려면 로그인이 필요합니다.');
+      alert('일기장 궤도에 추가하려면 로그인이 필요합니다.');
       return;
     }
     const baseId = card.action_challenge?.id ? `orbit-${card.action_challenge.id}` : null;
@@ -268,7 +268,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                   onClick={() => addOrbit(card)}
                   disabled={st === 'adding' || st === 'added'}
                 >
-                  {st === 'added' ? '✓ 실행의 궤도에 추가됨' : st === 'adding' ? '추가 중…' : st === 'error' ? '실패 — 다시 시도' : '＋ 실행의 궤도에 추가'}
+                  {st === 'added' ? '✓ 일기장 궤도에 추가됨' : st === 'adding' ? '추가 중…' : st === 'error' ? '실패 — 다시 시도' : '＋ 일기장 궤도에 추가'}
                 </button>
               </div>
             )}

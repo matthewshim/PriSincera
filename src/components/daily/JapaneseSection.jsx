@@ -10,7 +10,7 @@ import { useTranslation } from '../../contexts/LanguageContext';
 import { trackRelearn } from '../relearn/funnel';
 import '../../pages/DailyDigest.css';
 
-export default function JapaneseSection({ study, compact }) {
+export default function JapaneseSection({ study, compact, headerAction }) {
   const { t } = useTranslation();
   const [showAllVocab, setShowAllVocab] = useState(false); // compact = 어휘 4개 상한
 
@@ -37,6 +37,7 @@ export default function JapaneseSection({ study, compact }) {
           </svg>
           {t('dailyDigest.playFullAudio')}
         </button>
+        {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>
       <div className="japanese-study-card">
         <div className="japanese-hero-block">
