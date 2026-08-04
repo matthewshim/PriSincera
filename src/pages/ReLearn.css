@@ -264,7 +264,9 @@
     gap: var(--space-lg);
     align-items: start;
   }
-  .rl-split-side { position: sticky; top: 68px; }  /* 책갈피 탭과 동일 top (GNB 아래 여백) */
+  /* 디폴트(스크롤 0)에서 좌측 pill 시각 상단(.rl-learn 16px + .rl-bm-tabs padding 15px = 31px)과
+     정렬. 스크롤 시엔 sticky top 68px이 좌측 탭(53+15=68)과 자동 정렬. */
+  .rl-split-side { position: sticky; top: 68px; margin-top: 31px; }
   /* 데스크톱: 도크가 오버레이에서 컬럼 내 카드로 전환 */
   .rl-dock {
     position: static;
