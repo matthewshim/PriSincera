@@ -16,7 +16,6 @@ import { PAGE_META } from '../data/seoMeta.mjs';
 import usePaceNoteData from '../hooks/usePaceNoteData';
 import { trackRelearn } from '../components/relearn/funnel';
 import DiaryDock from '../components/relearn/DiaryDock';
-import DailyBriefing from '../components/daily/DailyBriefing';
 import DailyWeekStrip from '../components/daily/DailyWeekStrip';
 import SignalSection from '../components/daily/SignalSection';
 import PromptSection from '../components/daily/PromptSection';
@@ -220,15 +219,6 @@ export default function DailyView() {
     trackRelearn('relearn_channel_select', { channel: k });
   }, []);
 
-  // 브리핑의 DM Pick → 시그널 책갈피로 전환 후 해당 카드로 스크롤
-  const jumpToPick = useCallback((i) => {
-    setActiveCh('signal');
-    requestAnimationFrame(() => {
-      document.getElementById(`sig-pick-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    trackRelearn('relearn_daily_jump', { zone: 'signal_pick' });
-  }, []);
-
   // ── GA4 퍼널: learn_view → orbit_add → complete_toggle → reflect_save ──
   useEffect(() => { if (isToday) trackRelearn('relearn_learn_view'); }, [isToday]);
   const handleExclude = async (taskId) => {
@@ -310,8 +300,6 @@ export default function DailyView() {
 
       {daily && (
         <>
-          <DailyBriefing daily={daily} onJumpPick={jumpToPick} />
-
           {/* 책갈피 탭 — 카테고리별 구분, 전부 펼침 */}
           <div className="rl-learn">
             <nav className="rl-bm-tabs" aria-label="배움 채널 책갈피">

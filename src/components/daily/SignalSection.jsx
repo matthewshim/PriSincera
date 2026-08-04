@@ -19,7 +19,7 @@ export default function SignalSection({ signal, limit, compact, splitHeadlines, 
     return b.weightedScore - a.weightedScore;
   });
   const shown = typeof limit === 'number' ? sorted.slice(0, limit) : sorted;
-  // sorted는 DM Pick 선두 정렬이므로 앞쪽 인덱스 = DM Pick 순번 — 브리핑의 sig-pick-N 앵커와 일치
+  // 헤드라인 분리 모드(splitHeadlines)용 — DM Pick 카드 / 나머지 헤드라인 구분
   const picks = sorted.filter(a => a.isDmPick);
   const rest = sorted.filter(a => !a.isDmPick);
 
@@ -37,7 +37,6 @@ export default function SignalSection({ signal, limit, compact, splitHeadlines, 
               key={idx}
               article={article}
               compact={compact}
-              domId={article.isDmPick ? `sig-pick-${idx}` : undefined}
             />
           ))}
         </div>
@@ -46,7 +45,7 @@ export default function SignalSection({ signal, limit, compact, splitHeadlines, 
         <>
           <div className="signal-articles-grid">
             {picks.map((article, idx) => (
-              <SignalArticleCard key={idx} article={article} domId={`sig-pick-${idx}`} />
+              <SignalArticleCard key={idx} article={article} />
             ))}
           </div>
           {rest.length > 0 && (

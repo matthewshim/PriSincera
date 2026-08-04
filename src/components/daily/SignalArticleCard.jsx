@@ -8,8 +8,7 @@ import React from 'react';
 import { getCategoryStyles } from './categoryStyles';
 import '../../pages/DailyDigest.css';
 
-// domId(옵션): 브리핑 헤드라인 → 카드 스크롤 점프용 앵커 id (아카이브 상세 전용)
-const SignalArticleCard = ({ article, compact, domId }) => {
+const SignalArticleCard = ({ article, compact }) => {
   const cardRef = React.useRef(null);
   const [tiltStyle, setTiltStyle] = React.useState({});
 
@@ -46,7 +45,6 @@ const SignalArticleCard = ({ article, compact, domId }) => {
 
   return (
     <a
-      id={domId}
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
