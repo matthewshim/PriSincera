@@ -18,7 +18,11 @@
       "ariaPath": "Breadcrumb",
       "crumbCurrent": "Article",
       "loading": "Loading article...",
-      "explore": "Explore other journeys"
+      "explore": "Explore other journeys",
+      "onThisPage": "On this page",
+      "otherChapters": "Other chapters",
+      "tocAria": "Table of contents",
+      "otherChaptersAria": "Other chapters"
     },
     "heroParagraph": "A record of every moment an idea becomes a product.\nFrom first commit to launch.",
     "seoDescription": "A tech blog recording PriSincera's product making and business building journey.",

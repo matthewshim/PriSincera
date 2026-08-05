@@ -64,6 +64,22 @@ for (const file of cssFiles(ROOT)) {
     const line = css.slice(0, m.index).split('\n').length;
     errors.push(`${rel}:${line} font-size: ${m[1]}${unit} (§4-2 v5.6 — --fs-* 등재 토큰만 허용)`);
   }
+  // v5.13 §9-1 가변 콘텐츠 타이틀 예외: font-size clamp()의 상·하한은 --fs-* 토큰만 허용.
+  // 기존 정규식이 'font-size: clamp(' 뒤를 읽지 못하던 사각을 가시화. 유동 중간값(vw/vh/%)은 허용.
+  // WARN(비차단): 선재 raw 리터럴 clamp 18곳(전 랜딩 히어로)은 §9-7 백로그 — 사이트 전수 정비 후 ERROR 승격(v5.6 폰트 리터럴 선례).
+  const clampRe = /font-size:\s*clamp\(([^)]*)\)/g;
+  let cm;
+  while ((cm = clampRe.exec(css)) !== null) {
+    const litRe = /([0-9.]+)(rem|px)/g;
+    let lm;
+    while ((lm = litRe.exec(cm[1])) !== null) {
+      const num = parseFloat(lm[1]);
+      const unit = lm[2];
+      if (unit === 'rem' && TOKENS.has(String(num))) continue; // 토큰 endpoint 허용
+      const line = css.slice(0, cm.index).split('\n').length;
+      warns.push(`${rel}:${line} font-size: clamp(...${lm[1]}${unit}...) (§9-1 v5.13 — clamp endpoint는 var(--fs-*) 토큰 권장, §9-7 백로그)`);
+    }
+  }
 }
 
 // ── i18n 게이트: JSX/JS 한국어 하드코딩 검출 ──

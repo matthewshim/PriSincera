@@ -6,7 +6,9 @@
   display: flex;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  /* overflow-x: clip — 장식 글로우·와이드 콘텐츠 가로 클리핑은 유지하되, 세로는 visible로 둬
+     사이드바 position:sticky가 살아나게 함(overflow:hidden 조상은 sticky를 무력화). §ui_spec 6 */
+  overflow-x: clip;
 }
 
 .builders-log-detail-wrapper::after {
@@ -26,13 +28,84 @@
   z-index: 1;
 }
 
-/* 장문 프로스 스택(헤더·본문·푸터)만 내부에서 가독 단(--measure)으로 중앙 제한 (§3-3 규칙 2) */
-.detail-container .detail-header,
-.detail-container .markdown-body,
-.detail-container .detail-footer {
-  max-width: var(--measure);
-  margin-left: auto;
-  margin-right: auto;
+/* 본문(860 프로스 단, 좌측) + 사이드바(남는 폭, 우측) 2단 레이아웃.
+   브레드크럼은 셸 전폭(1200), 프로스만 가독 단으로 제한 (§3-3 규칙 2 / ui_spec §9) */
+.detail-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.detail-main {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: var(--measure); /* 860 가독 단 — 셸(1200)-사이드(300)-갭(40) */
+}
+
+.detail-aside {
+  flex: 0 0 300px;
+  position: sticky;
+  top: 68px; /* GNB(53px) + 15 갭 — 리런 일기장(.rl-split-side)과 동일 오프셋 */
+  align-self: flex-start;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* TOC 앵커 점프 시 헤딩이 GNB에 가리지 않도록 오프셋 */
+.markdown-body h2,
+.markdown-body h3 {
+  scroll-margin-top: 100px;
+}
+
+/* --- Sidebar: 목차(主) + 다른 챕터(副) --- */
+.detail-aside-label {
+  font-size: var(--fs-075);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.detail-toc { margin-bottom: var(--space-xl); }
+.detail-toc ul,
+.detail-other ul { list-style: none; margin: 0; padding: 0; }
+
+.toc-item a {
+  display: block;
+  padding: 4px 0 4px 12px;
+  font-size: var(--fs-085);
+  line-height: 1.4;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+.toc-item.toc-l3 a { padding-left: 24px; font-size: var(--fs-080); }
+.toc-item a:hover { color: var(--text-secondary); }
+.toc-item.active a {
+  color: var(--accent-color);
+  border-left-color: var(--accent-color);
+}
+
+.detail-other li a {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: var(--fs-080);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+.detail-other li a:hover { color: var(--accent-color); }
+.other-ch-no { color: var(--text-muted); font-family: var(--font-mono); flex-shrink: 0; }
+.other-ch-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 사이드바가 안 들어가는 폭: 사이드바 숨기고 본문 중앙 복귀 */
+@media (max-width: 1100px) {
+  .detail-aside { display: none; }
+  .detail-main { max-width: var(--measure); margin-left: auto; margin-right: auto; }
 }
 
 .detail-header {
@@ -112,7 +185,7 @@
   background: color-mix(in srgb, var(--accent-color) 15%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   backdrop-filter: blur(4px);
@@ -124,7 +197,8 @@
 }
 
 .detail-title {
-  font-size: clamp(2rem, 4vw, 3rem); /* 최적화된 한글 타이틀 크기 (최대 48px) */
+  /* 가변 콘텐츠 타이틀 예외(§9-1 v5.13): 토큰 endpoint clamp — 하한 --fs-160(25.6px)/상한 --fs-240(38.4px). 긴 편집형 제목이라 고정 히어로(--fs-300)보다 상한을 낮춰 과대 방지. clamp가 전 뷰포트 담당 → 모바일 오버라이드 없음 */
+  font-size: clamp(var(--fs-160), 3vw, var(--fs-240));
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.02em;
@@ -148,7 +222,8 @@
 }
 
 .detail-subtitle {
-  font-size: clamp(1.125rem, 2vw, 1.35rem);
+  /* 가변 콘텐츠 서브타이틀 예외(§9-1 v5.13): 토큰 endpoint clamp — 하한 --fs-105/상한 --fs-135. 모바일 오버라이드 없음 */
+  font-size: clamp(var(--fs-105), 2vw, var(--fs-135));
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -0.01em;
@@ -168,7 +243,7 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-pill);
   font-size: var(--fs-080);
   color: var(--text-muted);
 }
@@ -253,7 +328,7 @@
   font-size: var(--fs-090);
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .markdown-body pre code {
@@ -271,7 +346,7 @@
   font-size: var(--fs-095);
   line-height: 1.5;
   border-spacing: 0;
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.02);
   overflow: hidden;
@@ -349,12 +424,7 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .detail-title {
-    font-size: var(--fs-175);
-  }
-  .detail-subtitle {
-    font-size: var(--fs-105);
-  }
+  /* .detail-title/.detail-subtitle 모바일 폰트 오버라이드 제거 — 토큰 endpoint clamp가 전 뷰포트 담당(§9-1 v5.13, 이중 반응형 부채 해소) */
   .builders-log-detail-wrapper {
     padding-top: 96px;
     padding-left: var(--space-md);

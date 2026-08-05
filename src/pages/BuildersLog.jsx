@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
@@ -10,46 +10,10 @@ import './BuildersLog.css';
 const ChapterCard = ({ chapter, index }) => {
   const { locale, localize, t } = useTranslation();
   const [revealRef, revealed] = useScrollReveal({ threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
-  const cardRef = useRef(null);
   const commits = chapter.commits || [];
   const isFeatured = index === 0;
+  // 3D 틸트 제거 — 홈 플래그십(Chapter 11)과 동일 절제 철학. 호버 부유는 CSS로 처리(§6-3 v5.14).
 
-  const [tiltStyle, setTiltStyle] = useState({});
-
-  const handleMouseMove = (e) => {
-    // 터치 기기·모션 민감(reduced-motion) 환경에서는 JS 틸트 전면 비활성 (디자인 시스템 §6-3)
-    // 전역 CSS reduced-motion 킬 스위치는 인라인 transform을 차단하지 못하므로 JS 가드 필수
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isTouchDevice || prefersReducedMotion) return;
-
-    const card = cardRef.current;
-    if (!card) return;
-
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const xc = rect.width / 2;
-    const yc = rect.height / 2;
-    const dx = (x - xc) / xc;
-    const dy = (y - yc) / yc;
-
-    // 최대 5~6도 수준으로 묵직하게 3D Tilt + 공중부유(-4px) + scale3d(1.015) (디자인 시스템 4.5 규격 준수)
-    const tiltX = (dy * -5).toFixed(2);
-    const tiltY = (dx * 5).toFixed(2);
-
-    setTiltStyle({
-      transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px) scale3d(1.015, 1.015, 1.015)`
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTiltStyle({
-      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale3d(1, 1, 1)'
-    });
-  };
-  
   // 한국어 정독 기준 (분당 150자 내외)으로 읽는 시간(Read Time) 산정
   // 영문은 단어 및 공백으로 인한 문자수 팽창을 고려하여 기준값(Divisor)을 240으로 보정
   const calculateReadTime = (desc, commitsList) => {
@@ -67,15 +31,9 @@ const ChapterCard = ({ chapter, index }) => {
       ref={revealRef}
     >
       <Link to={`/builders-log/${chapter.slug}`} className="builder-card-link-wrapper">
-        <div 
-          className="builder-card-glass premium-3d-card haptic-trigger" 
-          ref={cardRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{
-            ...tiltStyle,
-            '--accent-color': chapter.accent
-          }}
+        <div
+          className="builder-card-glass haptic-trigger"
+          style={{ '--accent-color': chapter.accent }}
           data-hover-text="READ"
         >
           <div className="card-glow-bg"></div>
@@ -151,7 +109,6 @@ const ChapterCard = ({ chapter, index }) => {
  
             {isFeatured && (
               <div className="card-visual-content">
-                <div className="visual-glow-sphere" style={{ background: `radial-gradient(circle, ${chapter.accent} 0%, transparent 70%)` }}></div>
                 <div className="visual-meta-card">
                   <div className="visual-meta-title">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -215,14 +172,14 @@ export default function BuildersLog() {
         <div className="log-hero-content">
           <div className="log-hero-icon">🛠️</div>
           <h1 className="hero-heading">Builder's Log</h1>
-          <p className="hero-paragraph" style={{ whiteSpace: 'pre-line' }}>
+          <p className="hero-paragraph">
             {t('buildersLog.heroParagraph')}
           </p>
         </div>
       </section>
 
       <div className="log-container">
-        <section className="chapters-section" style={{ marginTop: '20px' }}>
+        <section className="chapters-section">
           {logMeta.length > 0 && (
             <div className="featured-chapter-container">
               <ChapterCard chapter={logMeta[0]} index={0} />

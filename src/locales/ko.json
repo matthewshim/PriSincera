@@ -18,7 +18,11 @@
       "ariaPath": "위치 경로",
       "crumbCurrent": "아티클",
       "loading": "아티클을 불러오는 중...",
-      "explore": "다른 여정 살펴보기"
+      "explore": "다른 여정 살펴보기",
+      "onThisPage": "이 글의 목차",
+      "otherChapters": "다른 챕터",
+      "tocAria": "목차",
+      "otherChaptersAria": "다른 챕터"
     },
     "heroParagraph": "아이디어가 프로덕트로 완성되는 모든 순간의 기록.\nFrom first commit to launch.",
     "seoDescription": "PriSincera의 프로덕트 메이킹과 비즈니스 구축 여정을 기록한 기술 블로그입니다.",

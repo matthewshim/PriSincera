@@ -1,8 +1,8 @@
 ---
 status: active
 domain: BuildersLog
-last_updated: 2026-07-22
-version: v1.2
+last_updated: 2026-08-05
+version: v1.3
 target_files:
   - src/pages/BuildersLog.jsx
   - src/pages/BuildersLog.css
@@ -23,6 +23,7 @@ target_files:
 | v1.0 | 2026-05-21 | AI Agent | Builder's Log 목록 카드 UI/UX 및 반응형 그리드 명세 정의 | BuildersLog.jsx, BuildersLog.css |
 | v1.1 | 2026-07-22 | AI Agent | §5 인터랙션 현행화 — v4.5 JS 3D Tilt 이관 반영, `prefers-reduced-motion` 가드·`:focus-visible` 키보드 패리티 규정, 폐기된 호버 커밋 패널 잔재 CSS 정리 | BuildersLog.jsx, BuildersLog.css |
 | v1.2 | 2026-07-22 | AI Agent | 상세 헤더 뒤로가기 `← Builder's Log` → 위치 경로 브레드크럼 `Builder's Log › 아티클`(로케일 대응, [design_system §9-9](../core/design_system.md)) — 리런 아카이브와 상세 내비 문법 통일 | BuildersLogDetail.jsx, BuildersLogDetail.css |
+| v1.3 | 2026-08-05 | AI Agent | **§6 상세 페이지 2단 레이아웃 신설** — 브레드크럼 전폭(1200)·본문 860 좌측·사이드바 300(TOC 스크롤스파이 主 + 다른 챕터 副, sticky)·1100px 이하 붕괴. §5 호버 물리 v5.14 절제(3D 틸트 제거·CSS 부유) 현행화 (오너 "상세 뷰 좁음" QA 환류) | BuildersLogDetail.jsx, BuildersLogDetail.css, 언어팩 3종 |
 
 ---
 
@@ -105,8 +106,25 @@ target_files:
 
 *   **Glassmorphism 2.0**: 불필요한 백그라운드 명도를 걷어내고, 초저명도 백그라운드(`rgba(255, 255, 255, 0.01)`)와 하이 블러(`backdrop-filter: blur(32px)`)를 조합하여 미니멀하고 단정한 유리 질감을 연출합니다.
 *   **Radial Glow Border**: 마우스를 카드 위에 올렸을 때(Hover), 액센트 컬러(`chapter.accent`)가 테두리를 따라 부드럽게 감싸는 그라데이션 보더 효과를 적용하여 생동감을 불어넣습니다.
-*   **3D Tilt Hover Physics (v4.5 이관)**: 마우스 오버 물리 효과는 CSS 호버가 아닌 **JS 마우스 추적 3D 틸트**(디자인 시스템 §6-3)로 제공합니다 — 최대 `5도` 기울기 + `translateY(-4px)` 공중부유 + `scale3d(1.015)`를 인라인 transform으로 주입하며, "Read Article →" 화살표는 `x: 4px` 밀림 트랜지션을 동반합니다.
+*   **Hover 물리 (v5.14 절제 — 3D 틸트 제거)**: 마우스 추적 3D 틸트·scale는 **제거**했습니다(홈 플래그십 Chapter 11과 동일 절제 철학, [design_system §6-3](../core/design_system.md)). 호버는 **CSS `translateY(-2px)` 부유 + 액센트 보더 + 은은한 글로우(opacity 0.08)** 로만 구성하고, "Read Article →" 화살표는 `x: 4px` 밀림을 유지합니다.
 *   **접근성 가드 (필수)**:
-    *   **모션 민감**: `prefers-reduced-motion: reduce` 시 JS 틸트 연산을 전면 비활성화합니다 (터치 가드와 동일한 `matchMedia` JS 레이어 — 전역 CSS 킬 스위치는 인라인 transform을 차단하지 못함). 액센트 보더·글로우 등 정적 호버 피드백은 유지합니다.
-    *   **키보드 패리티**: 카드 전체가 단일 `<Link>`이므로, 호버 표면 피드백(액센트 보더·배경·그림자)을 `:focus-visible`에 미러링하고 가시 포커스 링을 병행합니다 (디자인 시스템 §9-3).
-*   **폐기 이력**: 카드 하단 확장형 호버 커밋 패널(`.card-hover-commits-panel`)은 정적 인라인 Shipments 패널로 대체되어 폐기되었습니다. 관련 잔재 CSS는 2026-07-22 정리 완료.
+    *   **모션 민감**: 호버가 CSS 전용이므로 전역 `prefers-reduced-motion` 킬 스위치가 자동 처리합니다(JS 인라인 transform 없음 → 별도 JS 가드 불필요, §6-3).
+    *   **키보드 패리티**: 카드 전체가 단일 `<Link>`이므로, 호버 표면 피드백(부유·액센트 보더·배경·그림자)을 `:focus-visible`에 미러링하고 가시 포커스 링을 병행합니다 (디자인 시스템 §9-3).
+*   **폐기 이력**: 카드 하단 확장형 호버 커밋 패널(`.card-hover-commits-panel`)은 정적 인라인 Shipments 패널로 대체되어 폐기되었습니다. 관련 잔재 CSS는 2026-07-22 정리 완료. featured 카드 배포 패널 뒤 글로우 스피어(`.visual-glow-sphere`)는 유리 패널 배경을 얼룩지게 해 2026-08-05 제거(패널은 `--glass-bg` 균일 재질).
+
+---
+
+## 6. 상세 페이지 레이아웃 (Article Detail — `/builders-log/:slug`)
+
+장문 아티클의 **가독성(860 프로스 단)** 과 **넓은 지면 활용(1200 셸)** 을 동시에 달성하기 위한 2단 레이아웃입니다. (오너 QA 환류 2026-08-05 — "상세 뷰가 상대적으로 좁다": 셸 1200인데 헤더·본문·푸터를 모두 860으로 묶어 지면이 답답했음)
+
+*   **폭 구조** ([design_system §3-3](../core/design_system.md) 규칙 2 정합):
+    *   **브레드크럼**: 셸 **전폭(1200)** — 프로스가 아니므로 가독 단 제한 없음.
+    *   **본문 `.detail-main`(헤더·마크다운·푸터)**: **860(`--measure`) 좌측 정렬** — 장문 프로스 가독 폭 유지.
+    *   **사이드바 `.detail-aside`**: 남는 **300px**(셸 1200 − 본문 860 − 갭 40) 우측 배치.
+*   **사이드바 구성 (목차 主 · 다른 챕터 副)**:
+    *   **목차(TOC)**: 본문 마크다운 H2/H3를 파싱(코드펜스 제외)해 앵커 리스트 생성. 렌더 시 헤딩에 `id` 주입(무의존 slugify — 한글·CJK 보존), `IntersectionObserver` 스크롤스파이로 현재 섹션 액센트 활성화. 클릭 시 `scroll-margin-top: 100px`로 GNB 가림 방지.
+    *   **다른 챕터**: `buildersLogMeta.json`에서 현재 글 제외 최근 6개(신규 API 0). 교차 탐색은 본문 하단 "다른 여정 살펴보기"와 역할 분리(사이드바=상시 점프, 하단=완독 후 제안).
+    *   **sticky**: `position: sticky; top: 100px`로 스크롤 내내 고정(짧은 사이드바가 밀려 여백이 비는 것 방지). `max-height: calc(100vh - 120px)` 내부 스크롤.
+*   **반응형 붕괴**: `max-width: 1100px` 이하에서 사이드바 **숨김**, 본문은 860 **중앙 복귀**. (860+40+300이 안 들어가는 폭)
+*   **설계 근거**: 다른 *글* 카드를 상시 노출하면 몰입 독서를 흩뜨리므로, 사이드바 주력은 *이 글*의 목차로 두어 넓이 문제 해소와 읽기 보조를 동시 달성.

@@ -18,7 +18,11 @@
       "ariaPath": "パンくずリスト",
       "crumbCurrent": "記事",
       "loading": "記事を読み込み中...",
-      "explore": "ほかの旅路を見る"
+      "explore": "ほかの旅路を見る",
+      "onThisPage": "目次",
+      "otherChapters": "ほかのチャプター",
+      "tocAria": "目次",
+      "otherChaptersAria": "ほかのチャプター"
     },
     "heroParagraph": "アイデアがプロダクトとして完成する、すべての瞬間の記録。\nFrom first commit to launch.",
     "seoDescription": "PriSinceraのプロダクトメイキングとビジネス構築の旅を記録した技術ブログです。",
