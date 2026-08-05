@@ -42,7 +42,7 @@ const warns = [];
 for (const file of cssFiles(ROOT)) {
   const rel = file.split('\\').join('/');
   if (EXCLUDE.has(rel)) continue;
-  const css = readFileSync(file, 'utf-8');
+  const css = readFileSync(file, 'utf-8').replace(/\r\n/g, '\n'); // CRLF 정규화(Windows 로컬 오탐 방지)
   // §3-3 v5.5: 대역[880,2000]px의 px max-width 리터럴 금지 (--container/--measure 토큰만)
   const wre = /(?<!\()max-width:\s*([0-9]+)px/g;
   let wm;
@@ -108,7 +108,7 @@ function* srcFiles(dir) {
 for (const file of srcFiles(ROOT)) {
   const rel = file.split('\\').join('/');
   if (I18N_EXCLUDE.some(x => rel === x || rel.startsWith(x))) continue;
-  const src = readFileSync(file, 'utf-8');
+  const src = readFileSync(file, 'utf-8').replace(/\r\n/g, '\n'); // CRLF 정규화 — `.`가 \r를 못 매칭해 주석 스트립이 실패하던 Windows 로컬 오탐 방지
   // 블록 주석은 줄 수를 보존하며 공백화 → 라인 인덱스 정렬 유지
   const noBlock = src.replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, ' '));
   const rawLines = src.split('\n');
