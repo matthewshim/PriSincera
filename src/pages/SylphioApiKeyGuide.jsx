@@ -10,7 +10,7 @@ import { PAGE_META } from '../data/seoMeta.mjs';
 const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
-    heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\n회의 요약과 정밀 회의록을 Gemini·GPT 등 최상위 AI 엔진으로 강화하세요 (BYOK). 실시간 자막은 무료·온디바이스로 동작합니다.",
+    heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
     title: "Sylphio API Key 연동 가이드",
@@ -58,7 +58,7 @@ const TRANSLATIONS = {
   },
   en: {
     heroTitle: "Sylphio",
-    heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nSupercharge your summaries and precise minutes with top-tier AI engines like Gemini and GPT (BYOK). Real-time subtitles run free, on-device.",
+    heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
     title: "Sylphio API Key Integration Guide",
@@ -106,7 +106,7 @@ const TRANSLATIONS = {
   },
   ja: {
     heroTitle: "Sylphio",
-    heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio。\n画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\n会議要約と精密議事録を、Gemini・GPTなど最上位のAIエンジンで強化（BYOK）。リアルタイム字幕は無料・オンデバイスで動作します。",
+    heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
     title: "Sylphio APIキー連携ガイド",
@@ -164,8 +164,14 @@ export default function SylphioApiKeyGuide() {
     ogUrl: 'https://www.prisincera.com/sylphio/guide'
   });
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
-  
-
+  const [activeId, setActiveId] = useState('');
+  const tocLabel = locale === 'ja' ? '目次' : locale === 'en' ? 'On this page' : '이 문서의 목차';
+  const toc = [
+    { id: 'section-gemini', label: d.geminiTitle },
+    { id: 'section-openai', label: d.openaiTitle },
+    { id: 'section-app', label: d.appSetupTitle },
+    { id: 'section-faq', label: d.faqHeader },
+  ];
 
   // Alert handler for preparing app Store / downloads
   const handleAlert = (e) => {
@@ -180,6 +186,23 @@ export default function SylphioApiKeyGuide() {
       document.body.classList.remove('hero-ready');
     };
   }, []);
+
+  // 목차 스크롤스파이 — 현재 뷰포트 상단 섹션 활성 표시
+  useEffect(() => {
+    const els = toc.map(item => document.getElementById(item.id)).filter(Boolean);
+    if (els.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: '-15% 0px -75% 0px', threshold: 0 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [locale]);
   
   return (
     <div className="sylphio-guide">
@@ -210,7 +233,8 @@ export default function SylphioApiKeyGuide() {
 
       <SylphioNav />
 
-      <div className="sylphio-guide-container">
+      <div className="sylphio-doc-layout">
+        <div className="sylphio-guide-main">
 
         <div className="sylphio-guide-byok-note">
           <div className="sylphio-guide-byok-icon">🛡️</div>
@@ -221,7 +245,7 @@ export default function SylphioApiKeyGuide() {
         </div>
 
         {/* --- PART 1: Google Gemini --- */}
-        <section className="sylphio-guide-section">
+        <section className="sylphio-guide-section" id="section-gemini">
           <div className="sylphio-guide-section-title">
             <span className="sylphio-guide-section-badge gemini-badge">Highly Recommended</span>
             <h2>{d.geminiTitle}</h2>
@@ -279,7 +303,7 @@ export default function SylphioApiKeyGuide() {
         </section>
 
         {/* --- PART 2: OpenAI --- */}
-        <section className="sylphio-guide-section">
+        <section className="sylphio-guide-section" id="section-openai">
           <div className="sylphio-guide-section-title">
             <span className="sylphio-guide-section-badge openai-badge">Pro Specialist</span>
             <h2>{d.openaiTitle}</h2>
@@ -335,14 +359,14 @@ export default function SylphioApiKeyGuide() {
 
           <div className="sylphio-guide-pricing-card">
             <div className="sylphio-guide-pricing-header">{d.openaiPriceHeader}</div>
-            <div className="sylphio-guide-pricing-item" style={{ background: 'none', border: 'none', padding: 0 }}>
+            <div className="sylphio-guide-pricing-item">
               <p style={{ whiteSpace: 'pre-line' }}>{d.openaiPriceDesc}</p>
             </div>
           </div>
         </section>
 
         {/* --- PART 3: App Integration --- */}
-        <section className="sylphio-guide-section">
+        <section className="sylphio-guide-section" id="section-app">
           <div className="sylphio-guide-section-title">
             <span className="sylphio-guide-section-badge app-badge">App Setup</span>
             <h2>{d.appSetupTitle}</h2>
@@ -381,7 +405,7 @@ export default function SylphioApiKeyGuide() {
         </section>
 
         {/* --- FAQ & Troubleshooting --- */}
-        <section className="sylphio-guide-faq">
+        <section className="sylphio-guide-faq" id="section-faq">
           <h3>{d.faqHeader}</h3>
           
           <div className="sylphio-guide-faq-item">
@@ -395,7 +419,22 @@ export default function SylphioApiKeyGuide() {
           </div>
         </section>
 
-      </div>
+        </div>{/* .sylphio-guide-main */}
+
+        {/* 목차 사이드바 — 1200 셸의 남는 폭 활용(sticky), 섹션 점프 */}
+        <aside className="sylphio-doc-aside">
+          <nav className="sylphio-doc-toc" aria-label={tocLabel}>
+            <div className="sylphio-doc-toc-label">{tocLabel}</div>
+            <ul>
+              {toc.map(item => (
+                <li key={item.id} className={`sylphio-toc-item${activeId === item.id ? ' active' : ''}`}>
+                  <a href={`#${item.id}`}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      </div>{/* .sylphio-doc-layout */}
     </div>
   );
 }

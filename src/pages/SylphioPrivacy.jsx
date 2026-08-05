@@ -10,7 +10,7 @@ import { PAGE_META } from '../data/seoMeta.mjs';
 const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
-    heroTagline: "소리 없이 흐르는 지적인 통역 정령, Sylphio.\n화면의 모든 소리와 마이크를 실시간 캡처하여, 온디바이스에서 지체 없이 자막으로 구현합니다.\n회의 요약과 정밀 회의록을 Gemini·GPT 등 최상위 AI 엔진으로 강화하세요 (BYOK). 실시간 자막은 무료·온디바이스로 동작합니다.",
+    heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
     badge: "데이터 무수집 원칙",
@@ -47,7 +47,7 @@ const TRANSLATIONS = {
   },
   en: {
     heroTitle: "Sylphio",
-    heroTagline: "Sylphio, the intelligent translation spirit in silence.\nCaptures screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nSupercharge your summaries and precise minutes with top-tier AI engines like Gemini and GPT (BYOK). Real-time subtitles run free, on-device.",
+    heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
     badge: "Zero Data Collection",
@@ -84,7 +84,7 @@ const TRANSLATIONS = {
   },
   ja: {
     heroTitle: "Sylphio",
-    heroTagline: "静かに囁く知的な翻訳の精霊、Sylphio。\n画面のすべての音声とマイク入力をリアルタイムにキャプチャし、オンデバイスで遅延なく字幕としてレンダリングします。\n会議要約と精密議事録を、Gemini・GPTなど最上位のAIエンジンで強化（BYOK）。リアルタイム字幕は無料・オンデバイスで動作します。",
+    heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
     badge: "データ無収集",
@@ -131,8 +131,8 @@ export default function SylphioPrivacy() {
     ogUrl: 'https://www.prisincera.com/sylphio/privacy'
   });
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
-  
-
+  const [activeId, setActiveId] = useState('');
+  const tocLabel = locale === 'ja' ? '目次' : locale === 'en' ? 'On this page' : '이 문서의 목차';
 
   // Alert handler for preparing app Store / downloads
   const handleAlert = (e) => {
@@ -147,6 +147,23 @@ export default function SylphioPrivacy() {
       document.body.classList.remove('hero-ready');
     };
   }, []);
+
+  // 목차 스크롤스파이 — 현재 뷰포트 상단 섹션 활성 표시
+  useEffect(() => {
+    const els = d.sections.map((_, idx) => document.getElementById(`section-${idx}`)).filter(Boolean);
+    if (els.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: '-15% 0px -75% 0px', threshold: 0 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [d]);
 
   return (
     <div className="sylphio-privacy">
@@ -177,29 +194,43 @@ export default function SylphioPrivacy() {
 
       <SylphioNav />
 
-      <div className="sylphio-privacy-container">
+      <div className="sylphio-doc-layout">
+        <div className="sylphio-privacy-main">
+          <div className="sylphio-privacy-intro">
+            {d.intro}
+          </div>
 
-        <div className="sylphio-privacy-intro">
-          {d.intro}
+          {d.sections.map((section, idx) => (
+            <section className="sylphio-privacy-section" id={`section-${idx}`} key={idx}>
+              <h2>{section.title}</h2>
+              {section.content && (
+                <p style={{ whiteSpace: 'pre-line' }}>{section.content}</p>
+              )}
+              {section.bullets && (
+                <ul>
+                  {section.bullets.map((bullet, bIdx) => (
+                    <li key={bIdx} style={{ whiteSpace: 'pre-line' }}>{bullet}</li>
+                  ))}
+                </ul>
+              )}
+              {idx < d.sections.length - 1 && <hr className="sylphio-privacy-divider" />}
+            </section>
+          ))}
         </div>
 
-        {d.sections.map((section, idx) => (
-          <section className="sylphio-privacy-section" key={idx}>
-            <h2>{section.title}</h2>
-            {section.content && (
-              <p style={{ whiteSpace: 'pre-line' }}>{section.content}</p>
-            )}
-            {section.bullets && (
-              <ul>
-                {section.bullets.map((bullet, bIdx) => (
-                  <li key={bIdx} style={{ whiteSpace: 'pre-line' }}>{bullet}</li>
-                ))}
-              </ul>
-            )}
-            {idx < d.sections.length - 1 && <hr className="sylphio-privacy-divider" />}
-          </section>
-        ))}
-
+        {/* 목차 사이드바 — 1200 셸의 남는 폭 활용(sticky), 섹션 점프 */}
+        <aside className="sylphio-doc-aside">
+          <nav className="sylphio-doc-toc" aria-label={tocLabel}>
+            <div className="sylphio-doc-toc-label">{tocLabel}</div>
+            <ul>
+              {d.sections.map((section, idx) => (
+                <li key={idx} className={`sylphio-toc-item${activeId === `section-${idx}` ? ' active' : ''}`}>
+                  <a href={`#section-${idx}`}>{section.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
       </div>
     </div>
   );

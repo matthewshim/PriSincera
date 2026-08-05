@@ -135,20 +135,60 @@
   100% { transform: rotate(360deg); }
 }
 
-.sylphio-guide-container {
-  max-width: var(--measure); /* §3-3 가독 단 */
-  width: calc(100% - 48px); /* 모바일/태블릿 반응형 여백 사수 */
-  margin-top: 40px; /* LNB와의 여백을 시원하게 확보 */
-  background: var(--glass-bg); /* 디자인 시스템 표준 Glassmorphism 배경 */
-  border: 1px solid var(--glass-border);
-  border-top: 1px solid rgba(255, 255, 255, 0.08); /* 프리미엄 상단 테두리 미세 반사 */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: var(--radius-lg, 24px);
-  padding: var(--space-xl, 40px); /* Spacing Density Optimization */
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 30px 60px rgba(0, 0, 0, 0.6);
+/* 1200 셸 = 본문 860 프로스(좌) + 목차 사이드바 300(우).
+   외곽 글래스 박스 제거 — 플랫 프로스로 단순화(중첩 박스 답답함 해소, 개인정보·Builder's Log 상세와 정합) */
+.sylphio-doc-layout {
+  max-width: var(--container);
+  width: calc(100% - 48px);
+  margin: 40px auto 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.sylphio-guide-main {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: var(--measure); /* 860 가독 단 */
+}
+
+/* 목차 사이드바 (sticky) — 메인 GNB(52) + SylphioNav 아래 고정 */
+.sylphio-doc-aside {
+  flex: 0 0 300px;
+  position: sticky;
+  top: 108px;
+  align-self: flex-start;
+  max-height: calc(100vh - 128px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sylphio-doc-toc-label {
+  font-size: var(--fs-075);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+.sylphio-doc-toc ul { list-style: none; margin: 0; padding: 0; }
+.sylphio-toc-item a {
+  display: block;
+  padding: 5px 0 5px 12px;
+  font-size: var(--fs-080);
+  line-height: 1.45;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+.sylphio-toc-item a:hover { color: var(--text-secondary); }
+.sylphio-toc-item.active a { color: #87A9EC; border-left-color: #87A9EC; }
+
+@media (max-width: 1100px) {
+  .sylphio-doc-aside { display: none; }
+  .sylphio-doc-layout { display: block; }
+  .sylphio-guide-main { max-width: var(--measure); margin: 0 auto; }
 }
 
 .sylphio-guide-header {
@@ -208,22 +248,19 @@
   margin: 0;
 }
 
-/* Glassmorphism Section */
+/* 섹션 박스 제거 — 플랫 프로스. 섹션 구분은 상단 디바이더 + 여백으로(중첩 박스 답답함 해소) */
 .sylphio-guide-section {
-  background: rgba(255, 255, 255, 0.015); /* 약간의 면 대비감 선사 */
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md, 20px);
-  padding: 24px var(--space-lg, 24px); /* Density optimization */
-  margin-bottom: var(--space-xl, 32px);
-  transition: all var(--duration-fast, 200ms) ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin-top: var(--space-2xl, 48px);
+  padding-top: var(--space-xl, 40px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
-
-.sylphio-guide-section:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(135, 169, 236, 0.35);
+.sylphio-guide-section:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
+.sylphio-guide-section,
+.sylphio-guide-faq { scroll-margin-top: 108px; } /* TOC 앵커 점프 시 GNB+Nav 가림 방지 */
 
 .sylphio-guide-section-title {
   display: flex;
@@ -348,11 +385,9 @@
   }
 }
 
+/* 내부 박스 제거 — pricing-card(단일 콜아웃) 안의 free/pay는 텍스트 블록으로(2중 박스 해소) */
 .sylphio-guide-pricing-item {
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  padding: 16px;
-  border-radius: 12px;
+  padding: 0;
 }
 
 .sylphio-guide-pricing-item h5 {
@@ -421,12 +456,10 @@
   font-weight: 800;
 }
 
+/* FAQ 박스 제거 — Q(볼드) + A(텍스트) 플랫 구조 */
 .sylphio-guide-faq-item {
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  padding: 16px 20px;
-  border-radius: var(--radius-md, 16px);
-  margin-bottom: 16px;
+  padding: 0;
+  margin-bottom: 24px;
   text-align: left;
 }
 
@@ -446,13 +479,8 @@
 }
 
 @media (max-width: 640px) {
-  .sylphio-guide-container {
+  .sylphio-doc-layout {
     width: calc(100% - 32px); /* 모바일 초밀착 여백 최적화 */
-    padding: 20px;
-    border-radius: 16px;
-  }
-  .sylphio-guide-header h1 {
-    font-size: var(--fs-180);
   }
 }
 
