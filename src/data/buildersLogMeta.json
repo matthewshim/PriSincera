@@ -30,22 +30,38 @@
       {
         "hash": "a35a551",
         "type": "feat",
-        "msg": "리런 독립 운영 Phase 1 — 자체 아카이브 상세·내부 링크 전환·기록 내보내기"
+        "msg": {
+          "ko": "리런 독립 운영 Phase 1 — 자체 아카이브 상세·내부 링크 전환·기록 내보내기",
+          "en": "ReLearn standalone Phase 1 — own archive detail, internal link migration, records export",
+          "ja": "ReLearn独立運用 Phase 1 — 独自アーカイブ詳細・内部リンク移行・記録エクスポート"
+        }
       },
       {
         "hash": "d369cd5",
         "type": "feat",
-        "msg": "리런 독립 운영 Phase 2 — 진입점 리런 전환·구경로 301·SEO 이관"
+        "msg": {
+          "ko": "리런 독립 운영 Phase 2 — 진입점 리런 전환·구경로 301·SEO 이관",
+          "en": "ReLearn standalone Phase 2 — entry points switched to ReLearn, old paths 301, SEO migration",
+          "ja": "ReLearn独立運用 Phase 2 — 入口をReLearnへ切替・旧経路301・SEO移行"
+        }
       },
       {
         "hash": "56429c8",
         "type": "feat",
-        "msg": "리런 독립 운영 Phase 3 — 구 페이지 코드·라우트·메타·문서 위상 정리"
+        "msg": {
+          "ko": "리런 독립 운영 Phase 3 — 구 페이지 코드·라우트·메타·문서 위상 정리",
+          "en": "ReLearn standalone Phase 3 — retired old page code, routes, meta, and doc status",
+          "ja": "ReLearn独立運用 Phase 3 — 旧ページのコード・ルート・メタ・ドキュメント整理"
+        }
       },
       {
         "hash": "dba4af5",
         "type": "feat",
-        "msg": "리런 정합 Admin 메뉴 재편 — 그룹 4→3·탭 10→8"
+        "msg": {
+          "ko": "리런 정합 Admin 메뉴 재편 — 그룹 4→3·탭 10→8",
+          "en": "Admin menu reorg for ReLearn — groups 4→3, tabs 10→8",
+          "ja": "ReLearn整合のAdminメニュー再編 — グループ4→3・タブ10→8"
+        }
       }
     ]
   },
