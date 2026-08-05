@@ -8,9 +8,7 @@
   top: 52px; /* Placed exactly under the scrolled desktop GNB */
   z-index: 100;
   width: 100%; /* LNB 가로 100% 가득 채우기 수립 */
-  background: rgba(0, 0, 0, 0.85); /* 데일리 다이제스트와 100% 동일하게 일치 */
-  backdrop-filter: blur(12px); /* 데일리 다이제스트와 100% 동일하게 일치 */
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg-void, #020205); /* 페이지 배경(--bg-void)과 동일한 불투명 무채색 — 분리된 글래스 바 대신 배경에 자연 융화 */
   display: flex;
   justify-content: center;
   padding: 0 var(--space-md, 16px);

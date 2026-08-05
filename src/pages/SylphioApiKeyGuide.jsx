@@ -13,6 +13,7 @@ const TRANSLATIONS = {
     heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
+    heroSysReq: "시스템 요구사항: macOS 13.0 (Ventura) 이상",
     title: "Sylphio API Key 연동 가이드",
     subtitle: "개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고 품질의 AI 회의록 요약 및 Action Items(AI Executive Summary) 기능을 한계 없이 누려보세요.",
     byokTitle: "BYOK (Bring Your Own Key) 아키텍처의 장점",
@@ -61,6 +62,7 @@ const TRANSLATIONS = {
     heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
+    heroSysReq: "Requires macOS 13.0 (Ventura) or later",
     title: "Sylphio API Key Integration Guide",
     subtitle: "Integrate your personal AI API Key with Sylphio to enjoy the ultimate AI minutes summary and Action Items (AI Executive Summary) features without limits and without monthly subscription fees.",
     byokTitle: "Advantages of BYOK (Bring Your Own Key) Architecture",
@@ -109,6 +111,7 @@ const TRANSLATIONS = {
     heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
+    heroSysReq: "動作環境: macOS 13.0 (Ventura) 以降",
     title: "Sylphio APIキー連携ガイド",
     subtitle: "個人用のAI APIキーをSylphioに連携し、月々の定額サブスク料金なしで、最高精度の議事録要約とアクションアイテム生成（AI Executive Summary）を制限なく体験してください。",
     byokTitle: "BYOK (Bring Your Own Key) アーキテクチャのメリット",
@@ -229,6 +232,7 @@ export default function SylphioApiKeyGuide() {
             <span>{d.heroCtaDownload}</span>
           </a>
         </div>
+        <p style={{ marginTop: '16px', fontSize: '0.82rem', opacity: 0.55, letterSpacing: '0.02em' }}>{d.heroSysReq}</p>
       </section>
 
       <SylphioNav />

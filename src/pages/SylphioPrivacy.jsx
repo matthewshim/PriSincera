@@ -13,6 +13,7 @@ const TRANSLATIONS = {
     heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
     heroCtaGuide: "💡 API Key 발급 가이드 보기",
+    heroSysReq: "시스템 요구사항: macOS 13.0 (Ventura) 이상",
     badge: "데이터 무수집 원칙",
     title: "실피오 개인정보 처리방침",
     meta: "시행 일자: 2026-07-05 (개정)",
@@ -50,6 +51,7 @@ const TRANSLATIONS = {
     heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Free Download on Mac App Store",
     heroCtaGuide: "💡 View API Key Integration Guide",
+    heroSysReq: "Requires macOS 13.0 (Ventura) or later",
     badge: "Zero Data Collection",
     title: "Sylphio Privacy Policy",
     meta: "Effective Date: 2026-07-05 (Revised)",
@@ -87,6 +89,7 @@ const TRANSLATIONS = {
     heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
     heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
     heroCtaGuide: "💡 APIキー連携ガイドを見る",
+    heroSysReq: "動作環境: macOS 13.0 (Ventura) 以降",
     badge: "データ無収集",
     title: "Sylphio 個人情報保護方針",
     meta: "施行日：2026-07-05 (改定)",
@@ -190,6 +193,7 @@ export default function SylphioPrivacy() {
             <span>{d.heroCtaDownload}</span>
           </a>
         </div>
+        <p style={{ marginTop: '16px', fontSize: '0.82rem', opacity: 0.55, letterSpacing: '0.02em' }}>{d.heroSysReq}</p>
       </section>
 
       <SylphioNav />
