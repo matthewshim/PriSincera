@@ -32,7 +32,7 @@ const renderTitle = (title) => {
 const slugify = (str) =>
   String(str).trim().toLowerCase()
     .replace(/[#*`]/g, '')
-    .replace(/[^\w가-힣぀-ヿ一-鿿]+/g, '-')
+    .replace(/[^\w가-힣぀-ヿ一-鿿]+/g, '-') /* i18n-ok: 정규식 유니코드 범위(한글·가나·CJK 보존), UI 텍스트 아님 */
     .replace(/^-+|-+$/g, '');
 
 // react-markdown children(문자열·배열·엘리먼트)에서 순수 텍스트 추출 (헤딩 id 계산용)
