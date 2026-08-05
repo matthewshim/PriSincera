@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Sylphio
-last_updated: 2026-07-13
-version: v1.2
+last_updated: 2026-08-05
+version: v1.3
 target_files:
   - src/pages/SylphioLanding.jsx
   - server.mjs
@@ -17,6 +17,7 @@ target_files:
 | v1.0 | 2026-06-02 | Maker | 실피오 통합 랜딩 페이지(Web Landing Plan) 표준 기획 최초 정의 | docs/sylphio/ |
 | v1.1 | 2026-06-16 | Maker | 영어/한국어 무료 지원 및 타 다국어 Pro 라이선스 잠금 정책 반영 | docs/sylphio/ |
 | v1.2 | 2026-07-13 | AI Agent | 7대 무기(정밀 회의록 추가)·하이브리드 STT·3소스·Gemini 2.5·SEO 메타 최신화(라이브 정합) | src/pages/SylphioLanding.jsx, server.mjs |
+| v1.3 | 2026-08-05 | AI Agent | §4 히어로 헤드카피를 라이브 정본("듣는 순간 자막이 되는…")으로 현행화 — 구 기획 카피 폐기(랜딩·가이드·개인정보 전 페이지 정합) | 문서 정합 |
 
 ---
 
@@ -78,7 +79,7 @@ graph TD
 ## 📝 4. 랜딩 페이지 핵심 섹션별 세부 기획 (Section by Section)
 
 ### ❖ Section 1: Hero (시네마틱 첫인상 & 스토어 CTA)
-* **헤드카피**: *"소리 없이 흐르는 지적인 통역 정령, Sylphio"*
+* **헤드카피**(라이브 정본, 2026-08-05 현행화): *"듣는 순간 자막이 되는, 온디바이스 통역 정령. / Hear it once, read it instantly."* (구 기획안 *"소리 없이 흐르는 지적인 통역 정령"* 은 폐기 — 랜딩·가이드·개인정보 전 페이지 정합)
 * **시각 연출**: 
   - 화면 중앙에 실시간으로 회전하는 3D **오로라 에너지 코어(Energy Core)**를 렌더링하고, 마우스 호버 시 오로라 입자가 화려하게 흩어지는 비주얼 효과 적용.
   - 뒤이어 Zoom, 유튜브, 디스코드 화면 위에 Sylphio의 투명 글래스 자막바가 무결하게 동작하며 번역 자막을 뿌려주는 **고화질 루프 재생 비디오(Autoplay Loop Video)** 오버레이.

@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Sylphio
-last_updated: 2026-07-13
-version: v1.2
+last_updated: 2026-08-05
+version: v1.3
 target_files:
   - src/pages/SylphioApiKeyGuide.jsx
 ---
@@ -16,6 +16,7 @@ target_files:
 | v1.0 | 2026-06-02 | Maker | 실피오 Pro 버전 API 키 가이드 매뉴얼 최초 정의 | docs/sylphio/ |
 | v1.1 | 2026-06-16 | Maker | 영어/한국어 무료 지원 범위 현행화 및 API 호출 구조(요약 시 1회 호출) 최신화 | docs/sylphio/ |
 | v1.2 | 2026-07-13 | AI Agent | 무료 일일 쿼터 현실화·정밀 회의록(오디오 업로드) 고지·Gemini 2.5/OpenAI 역할 구분 반영(라이브 정합) | src/pages/SylphioApiKeyGuide.jsx |
+| v1.3 | 2026-08-05 | AI Agent | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·본문 4단 중첩 박스 제거(플랫화). 히어로 태그라인을 랜딩 정본("듣는 순간 자막이 되는…")으로 정본화 | src/pages/SylphioApiKeyGuide.jsx, .css |
 
 ---
 

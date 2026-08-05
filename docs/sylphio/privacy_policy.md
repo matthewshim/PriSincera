@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Sylphio
-last_updated: 2026-07-13
-version: v1.1
+last_updated: 2026-08-05
+version: v1.2
 target_files:
   - src/pages/SylphioPrivacy.jsx
 ---
@@ -15,6 +15,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-02 | Maker | 실피오 App Store 심사 및 신뢰 보장을 위한 Zero-Data 개인정보 처리방침 정의 | docs/sylphio/ |
 | v1.1 | 2026-07-13 | AI Agent | 하이브리드 STT·정밀 회의록 오디오 업로드·로컬 녹음(.m4a) 저장/동의/삭제·화면 녹화 권한 고지 반영(라이브 정합) | src/pages/SylphioPrivacy.jsx |
+| v1.2 | 2026-08-05 | AI Agent | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·외곽 글래스 박스 제거(플랫 프로스). 히어로 태그라인을 랜딩 정본으로 정본화 | src/pages/SylphioPrivacy.jsx, .css |
 
 ---
 
