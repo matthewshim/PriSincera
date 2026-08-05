@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-08-05
-version: v5.15
+version: v5.16
 target_files:
   - src/styles/index.css
   - ci/design-check.mjs
@@ -40,6 +40,7 @@ target_files:
 | v5.12 | 2026-08-04 | AI Agent | **i18n 언어팩 게이트 신설** — 리런 클러스터 전면 언어팩 이관(relearn 네임스페이스 126키×3언어)·빌더스로그 상세 삼항→t() 통일·ErrorBoundary 컨텍스트 비의존 로케일화·고아 dailyDigest/paceNote 네임스페이스 정리(107키 삭제, 실사용 12키 relearn 이관)와 함께, design-check에 한국어 하드코딩 ERROR 규칙 추가(§9-6-0 ③) | 언어팩 3종, 리런 클러스터 11파일, ci/ |
 | v5.13 | 2026-08-05 | AI Agent | **§9-1 가변 콘텐츠 타이틀 토큰 endpoint clamp 예외 + design-check clamp 사각 가시화** — 고정 라벨(목록 히어로)은 고정 토큰, 가변 길이 콘텐츠 타이틀(상세 아티클 제목 등)은 `clamp(var(--fs-*), Nvw, var(--fs-*))` 토큰 endpoint clamp 허용. design-check에 clamp 내부 비토큰 rem/px 리터럴 검출 규칙 신설(기존 정규식이 `clamp(` 뒤를 못 읽던 사각) — 선재 18곳은 WARN(§9-7 백로그), 전수 정비 후 ERROR 승격. Builder's Log 목록·상세 정합: §9-1(타이틀 clamp 토큰화·히어로 모바일 --fs-220 추가), §9-2(카드 헤더 상한 초과 시정 — featured --fs-240→--fs-150·그리드 --fs-180→--fs-135, 리런 카드 스케일 정합), §9-10(radius 999px·오폴백·미정의 토큰·인라인 3건·배지색 전량 토큰화) | §9-1·§9-2 규범, ci/, BuildersLog |
 | v5.14 | 2026-08-05 | AI Agent | **§6-3 절제 예외 — Builder's Log 카드 3D 틸트 미적용** — 홈 플래그십(Chapter 11)과 동일 절제 철학으로 마우스 추적 3D 틸트·scale 제거, 호버를 CSS `translateY(-2px)` 부유+은은한 글로우로 정제(오너 "호버 과함" QA). featured 배포 패널을 검정 틴트→`--glass-bg` 정규 유리 재질로 정합하고 뒤 glow-sphere 제거(불균일 얼룩 해소). 틸트 제거로 해당 카드는 reduced-motion JS 가드 대상에서 이탈(CSS 호버는 전역 킬 스위치가 처리) | §6-3 인터랙션 규범, BuildersLog |
+| v5.16 | 2026-08-05 | AI Agent | **§9-12 커스텀 스크롤바 규범 신설** — 전역 얇은 다크 테마 스크롤바(`index.css` `*`)로 전 스크롤 컨테이너 일괄 통일(리런 일기장 도크·빌더스로그 상세 목차·실피오 가이드/개인정보). 트랙 궤도 추가 즉시 반영(`onOrbitAdded`→`reload`) 동반 | §9-12, index.css, DailyView |
 | v5.15 | 2026-08-05 | AI Agent | **§9-11 문서형 페이지 레이아웃 규범 신설** — 장문 프로스 페이지(아티클 상세·정책·가이드)의 단일 패턴 명문화: 전폭 셸(1200) + 프로스 단(860 좌) + sticky TOC 사이드바(300 우) + 반응형 붕괴 + 플랫 프로스(중첩 라운드 박스 지양, 콜아웃만 단일 박스). BuildersLogDetail·Sylphio 가이드/개인정보 3개 페이지 정합 (오너 "상세 뷰 좁음·중첩 박스 답답함" QA 환류) | §9-11 레이아웃 규범, BuildersLogDetail·Sylphio |
 | v5.11 | 2026-08-04 | AI Agent | **리런 4채널·페이지 색·틴트·radius 정합** — §1-4 시맨틱 색 토큰(success/danger/star) 신설, §9-10 신설(컨테이너 radius `--radius-lg` 통일·§9-4 적용 범위·카테고리 브랜드 4색 그룹·DM Pick gold·JSX 인라인 금지). 시그널 미디어형→리스트형 통일, 16px 비토큰 종식, 쨍한 tailwind 다색·에메랄드 DM 제거 (오너 4채널 일관성 QA 환류) | ReLearn 4채널·셸, index.css, §1·§9 |
 
@@ -589,6 +590,14 @@ PaceNote 서비스(`/pacenote`)의 주차별(Weekly) 타임라인 운용 방식�
 
 > **근거(QA 환류 2026-08-05)**: 문서형 페이지들이 셸 1200인데 헤더·본문·푸터를 모두 860으로 묶어 지면이 좁아 보였고(오너 지적), 가이드는 container→section→pricing-card→pricing-item 4단 중첩 박스로 시각적 답답함이 있었다. 본 패턴으로 3개 페이지를 정합.
 
+### 9-12. 커스텀 스크롤바 (Scrollbar) — v5.16
+
+내부 스크롤 컨테이너·페이지 전반의 스크롤바는 브라우저 기본(두꺼운 회색)이 아니라 **얇고 세련된 다크 테마 스크롤바**로 전역 통일합니다(`index.css` 전역 `*` 규칙).
+
+- **규격**: `width/height 8px`, thumb `rgba(255,255,255,0.12)`(hover 0.22) · `--radius-pill` · `border: 2px solid transparent` + `background-clip: padding-box`(실 두께 ≈4px + 좌우 여백으로 슬림) · track 투명. Firefox는 `scrollbar-width: thin` + `scrollbar-color`.
+- **전역 적용**: `*` 셀렉터로 전 스크롤 컨테이너 일괄 — 리런 일기장 도크·빌더스로그 상세 목차(§9-11)·실피오 가이드/개인정보 등. 특수 목적 개별 커스텀(가로 탭 스크롤 숨김 `::-webkit-scrollbar { display: none }` 등)은 더 구체적 셀렉터로 override 유지.
+- **근거(QA 환류 2026-08-05)**: 스크롤 컨테이너마다 스크롤바가 제각각(일부 커스텀·일부 브라우저 기본)이라 룩이 어긋났다. 전역 규칙으로 일괄 통일.
+
 ---
 
-*최종 업데이트: 2026-08-05 (v5.15 §9-11 문서형 페이지 레이아웃 규범 신설 — 전폭 셸·프로스 단·TOC 사이드바·플랫 프로스)*
+*최종 업데이트: 2026-08-05 (v5.16 §9-12 커스텀 스크롤바 규범 신설 — 전역 얇은 다크 테마 스크롤바 일괄 통일)*

@@ -137,6 +137,26 @@ body {
     overflow-x: hidden;
 }
 
+/* ── 전역 커스텀 스크롤바 (얇고 세련된 다크 테마 — design_system §9-12) ──
+   전 스크롤 컨테이너 일괄 통일(리런 일기장·빌더스로그 목차·실피오 가이드/개인정보 등).
+   특수 목적 개별 커스텀(가로 탭 스크롤 숨김 등)은 더 구체적 셀렉터로 override 유지. */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-pill);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.22);
+    background-clip: padding-box;
+}
+
 a { color: inherit; text-decoration: none; }
 img, svg { max-width: 100%; display: block; }
 button { background: none; border: none; font: inherit; color: inherit; }

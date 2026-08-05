@@ -45,7 +45,7 @@ export default function DailyView() {
   const { user, token, loginWithGoogle, logout } = useAuth();
   const { t } = useTranslation();
   const channelOrbits = Object.fromEntries(CHANNEL_KEYS.map(k => [k, t(`relearn.channelOrbits.${k}`)]));
-  const { data, loading: paceLoading, toggleTask, acceptTask, saveDiary, addTask, excludeTask, restoreTask } = usePaceNoteData();
+  const { data, loading: paceLoading, reload: reloadPace, toggleTask, acceptTask, saveDiary, addTask, excludeTask, restoreTask } = usePaceNoteData();
 
   useSEO(isToday ? {
     title: PAGE_META['/relearn'].pageTitle,
@@ -312,7 +312,7 @@ export default function DailyView() {
             </nav>
             <div className="rl-bm-panel rl-ch-sec">
               {/* 궤도 버튼은 각 섹션 헤더 우측에 고정(타이틀 행) — 별도 행이 유발하던 타이틀 위치 변동 제거 */}
-              {curCh === 'track' && <TrackSignalFeed date={date} compact={false} />}
+              {curCh === 'track' && <TrackSignalFeed date={date} compact={false} affinity={affinity} onOrbitAdded={reloadPace} />}
               {curCh === 'signal' && daily.signal && <SignalSection signal={daily.signal} compact headerAction={isToday ? <ChannelOrbitBtn ch="signal" /> : null} />}
               {curCh === 'prompt' && study?.prompt_snippet && <PromptSection study={study} compact={false} headerAction={isToday ? <ChannelOrbitBtn ch="prompt" /> : null} />}
               {curCh === 'jp' && study?.sentence_jp && <JapaneseSection study={study} compact={false} headerAction={isToday ? <ChannelOrbitBtn ch="jp" /> : null} />}
