@@ -206,8 +206,8 @@ function Header() {
         <div className="nav-links">
           <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">{t('header.buildersLog')}</Link>
           {/* ReLearn — 승계 위상 반영: 루프 서비스군 선두(공존형 A안). 전 언어 공통 영문 표기 */}
-          <Link to="/relearn" className={`nav-link nav-link-relearn${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
-            ReLearn<span className="nav-new-dot" title="NEW" aria-label="NEW"></span>
+          <Link to="/relearn" className={`nav-link${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
+            ReLearn
           </Link>
           <Link to="/sylphio" className={`nav-link${location.pathname.startsWith('/sylphio') ? ' active' : ''}`} id="navSylphio">{t('header.sylphio')}</Link>
         </div>
@@ -358,7 +358,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label" style={{ color: 'var(--color-indigo)' }}>Unified Growth Loop</div>
-              <h3 className="bento-card-title">ReLearn<span className="bento-new-dot" title="NEW" aria-label="NEW"></span></h3>
+              <h3 className="bento-card-title">ReLearn</h3>
               <div className="bento-card-arrow">🔄 Learn · Run · Reflect →</div>
             </div>
             <div className="bento-card-visual">

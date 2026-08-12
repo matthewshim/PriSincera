@@ -196,33 +196,7 @@
     background: var(--color-cyan); /* Aether Cyan — ReLearn (배움+러닝) */
 }
 
-/* ── ReLearn GNB — NEW 칩 (데스크톱 nav-link) ── */
-.nav-link-relearn { position: relative; }
-/* NEW 인디케이터 — 닷 형식, PriSincera 메인 포인트 컬러(Starlight Gold) */
-.nav-new-dot {
-    position: absolute; top: -3px; left: 50%;
-    transform: translateX(-50%);
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--color-gold);
-    box-shadow: 0 0 6px rgba(229, 178, 93, 0.8);
-    animation: newDotPulse 2.4s ease-in-out infinite;
-}
-@keyframes newDotPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.45; }
-}
-@media (prefers-reduced-motion: reduce) {
-    .nav-new-dot, .bento-new-dot { animation: none; }
-}
-
 /* ── ReLearn 모바일 Bento — 루프(배움→실행→복기) 미니 비주얼 ── */
-.bento-new-dot {
-    display: inline-block; margin-left: 8px; vertical-align: 8px;
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--color-gold);
-    box-shadow: 0 0 6px rgba(229, 178, 93, 0.8);
-    animation: newDotPulse 2.4s ease-in-out infinite;
-}
 /* 모바일 벤토 전용 미니 비주얼 — 반드시 .mobile-bento-nav-item 스코프 유지
    (전역 정의 시 홈 플래그십 .relearn-mockup을 width/height 100%로 오염 — 세로 과대 버그) */
 .mobile-bento-nav-item .relearn-mockup {
