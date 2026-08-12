@@ -33,7 +33,7 @@
     "journeyContinues": "여정은 계속됩니다."
   },
   "home": {
-    "heroLabel": "✦ Star Prism Identity",
+    "heroLabel": "✦ Matthew Shim · PriSincera",
     "heroTitle": "Sincerity, Prioritized.",
     "heroSubStrong": "\"발 아래 꽃, 먼 곳의 별\"",
     "heroSubText": "멀리 빛나는 목표를 향해 나아가면서도,\n지금 내 앞의 피어난 본질에 충실하는 태도.\n그것이 가장 올바른 길이라 확신합니다.",
@@ -42,7 +42,7 @@
     "philosophyLead1": "먼 곳의 별을 좇느라,\n지금 내 발 아래 피어난 아름다운 꽃을 놓치지 않기를.",
     "philosophyLead2": "수많은 과제와 도구의 변화 속에서도,\n현재의 문제에 몰입하는 단단한 태도가\n결국 올바른 미래의 방향을 완성합니다.",
     "philosophyLead3": "20년의 여정에서 발견한 변하지 않는 본질,",
-    "philosophyDeclaration": "진심을 가장 우선순위에 둔다 —\n이것이 PriSincera입니다.",
+    "philosophyDeclaration": "진심을 가장 우선순위에 둔다 —\n제가 PriSincera라는 이름으로 일하는 방식입니다.",
     "conceptCard1": {
       "title": "태도",
       "subtitle": "Attitude",
@@ -76,10 +76,9 @@
       "headline": "성장을 돕는 도구로",
       "desc": "20년의 경험과 AI 기술이 결합되어, 이제는 당신의 일상과 성장을 직접적으로 돕는 실질적인 웹 서비스로 탄생했습니다."
     },
-    "servicesTitle": "단순한 포트폴리오를 넘어",
-    "servicesTitleAccent": "성장을 돕는 도구로",
-    "servicesSubtitle": "기획에서 개발까지, 유저의 실질적인 성장을 돕기 위해 만든 서비스들입니다.",
-    "serviceBaseDesc": "기획자의 온전한 오너십과 AI 페어 프로그래밍(Vibe Coding)의 시너지를 증명하는 초경량 엔지니어링 코어입니다.\nReact/Vite 클라이언트 아키텍처와 무중단 서버리스 GCP Cloud Run 컨테이너, 다중 Firebase 보안 인프라가 유기적으로 결합된 고성능 아키텍처의 결정체입니다.",
+    "servicesTitle": "태도가 낳은 것들 —",
+    "servicesTitleAccent": "직접 만든 세 가지 증거.",
+    "servicesSubtitle": "기획으로 쌓은 20년이 AI를 만나, 세 개의 제품이 되었습니다.\n만드는 과정부터 실무의 해결까지 — 태도의 결과물입니다.",
     "serviceBaseCta": "⚡ 오픈 소스 및 시스템 아키텍처 살펴보기",
     "serviceBuildersDesc": "Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.\n어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.",
     "serviceBuildersCta": "🚀 개발 여정 및 엔지니어링 성장기 읽기",
@@ -90,7 +89,12 @@
     "connectSubtitle": "비즈니스든, 커리어든, 태도에 대한 것이든 —\n편하게 연결해 주세요.",
     "seoDescription": "PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.",
     "seoKeywords": "PriSincera, 비즈니스, 전략, 우선순위, 진정성, IT 트렌드",
-    "serviceReLearnDesc": "매일의 배움(Daily Digest)과 주간 실행·복기(Pace Note)를\n하나의 성장 루프로 통합했습니다.\n배우고, 실행하고, 복기하는 하루가 내일의 추천을 바꿉니다."
+    "serviceReLearnDesc": "매일의 배움(Daily Digest)과 주간 실행·복기(Pace Note)를\n하나의 성장 루프로 통합했습니다.\n배우고, 실행하고, 복기하는 하루가 내일의 추천을 바꿉니다.",
+    "heroRole": "20년의 기획 감각에 AI를 더해, 매일 새로 만듭니다.",
+    "serviceBuildersTag": "만드는 과정의 기록",
+    "serviceReLearnTag": "20년 경력의 제품화",
+    "serviceSylphioTag": "실무 니즈의 해결",
+    "makerNote": "이 사이트의 전체 소스와 아키텍처는 오픈소스로 공개되어 있습니다."
   },
   "relearn": {
     "status": {

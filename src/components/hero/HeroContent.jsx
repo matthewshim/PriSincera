@@ -17,6 +17,7 @@ export default function HeroContent({ visible, onIntroComplete }) {
 
     const label = el.querySelector('.hero-label');
     const words = el.querySelectorAll('.word');
+    const role = el.querySelector('.hero-role');
     const sub = el.querySelector('.hero-sub');
     const scroll = document.getElementById('scrollIndicator');
 
@@ -30,7 +31,8 @@ export default function HeroContent({ visible, onIntroComplete }) {
         timers.push(setTimeout(() => w.classList.add('visible'), delay * 150));
       });
     }, 600));
-    timers.push(setTimeout(() => sub?.classList.add('visible'), 1600));
+    timers.push(setTimeout(() => role?.classList.add('visible'), 1300));
+    timers.push(setTimeout(() => sub?.classList.add('visible'), 1750));
     timers.push(setTimeout(() => {
       scroll?.classList.add('visible');
       // All hero content is now visible — unlock scrolling
@@ -47,6 +49,7 @@ export default function HeroContent({ visible, onIntroComplete }) {
         <span className="word" data-delay="0">Sincerity,</span>
         <span className="word accent" data-delay="1">Prioritized.</span>
       </h1>
+      <p className="hero-role">{t('home.heroRole')}</p>
       <p className="hero-sub">
         <strong>{t('home.heroSubStrong')}</strong>
         <br/><br/>

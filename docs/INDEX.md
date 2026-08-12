@@ -29,6 +29,7 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 *   **🆕 [Admin 콘솔 메뉴·기능 명세서 (Admin Console Spec)](core/admin_console_specification.md)** (`admin_console_specification.md`): 리런 통합 반영 Admin 사이드바 재편(그룹 4→3·탭 10→8) 정본 — Common·Builder's Log·ReLearn 그룹 구조, 탭별 기능·API 매핑, 파이프라인 탭 흡수·학습자 현황 통합 및 부채 정리 내역. **active(구현 완료).**
 *   **[다국어 지원(i18n) 확장 계획서](core/internationalization_plan.md)** (`internationalization_plan.md`): 프론트엔드 다국어 바인딩, Firestore 스키마 다국어화, 글로벌 SEO 전략 및 점진적 3단계 로드맵 계획서.
 *   **🆕 [언어별 SSR 확장 계획서 (i18n SSR Plan)](core/i18n_ssr_plan.md)** (`i18n_ssr_plan.md`): 백로그 4-2 상세 계획 — URL 전략(경로 프리픽스 권장)·5단계 로드맵(메타 로케일화→로케일 경로→셸 정합→프리렌더→번역 파이프라인)·리스크·결정 요청. **draft(승인 대기).**
+*   **🆕 [메인 정체성 리뉴얼 설계안 (Home Identity Renewal)](core/home_identity_renewal_plan.md)** (`home_identity_renewal_plan.md`): 메인 페이지가 퍼스널 브랜딩→제품군 확장으로 모호해진 정체성을 진단하고, 'PriSincera = Matthew Shim의 퍼스널 브랜드'로 주어를 통일 — 서비스 3종을 태도가 낳은 산출물로 종속·Base 강등·히어로 개인 정체성 명시. **draft(카피 확인 2건 후 구현).**
 *   **[모바일 최적화 제안서 (Mobile Optimization)](core/mobile_optimization_proposal.md)** (`mobile_optimization_proposal.md`): 모바일 퍼스트 시대 사용성 극대화를 위한 터치 타겟 접근성, iOS 화면 줌 배제, 마우스 추적 생략 및 콘텐츠 가로 넘침 방지 전면 개선안.
 
 ---

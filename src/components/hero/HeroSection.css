@@ -136,6 +136,25 @@
     text-shadow: 0 0 30px rgba(229, 178, 93, 0.15);
 }
 
+.hero-role {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-115), 2vw, var(--fs-140));
+    font-weight: 600;
+    color: var(--crystal-light);
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto var(--space-md);
+    letter-spacing: -0.01em;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.8s var(--ease-out);
+}
+
+.hero-role.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .hero-sub {
     font-size: clamp(0.9rem, 1.5vw, 1.05rem);
     color: var(--text-muted);

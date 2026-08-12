@@ -410,3 +410,34 @@
     }
 }
 
+/* --- Base 강등 착지: 메이커십 각주 (오픈소스 증거) --- */
+.journey-maker-note {
+    max-width: var(--measure);
+    margin: var(--space-2xl) auto 0;
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+.maker-note-text {
+    font-size: var(--fs-095);
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+.maker-note-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--fs-080);
+    letter-spacing: 0.04em;
+    color: var(--color-gold);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    box-shadow: inset 0 0 0 1px rgba(229, 178, 93, 0.24);
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+.maker-note-link:hover,
+.maker-note-link:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: inset 0 0 0 1px rgba(229, 178, 93, 0.5);
+}

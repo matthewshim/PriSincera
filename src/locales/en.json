@@ -33,7 +33,7 @@
     "journeyContinues": "The journey continues."
   },
   "home": {
-    "heroLabel": "✦ Star Prism Identity",
+    "heroLabel": "✦ Matthew Shim · PriSincera",
     "heroTitle": "Sincerity, Prioritized.",
     "heroSubStrong": "\"Flowers at your feet, Stars in the distance\"",
     "heroSubText": "Moving toward a shining goal in the distance,\nwhile remaining faithful to the essence blooming right before us.\nWe are certain that this is the most rightful path.",
@@ -42,7 +42,7 @@
     "philosophyLead1": "Chasing a star in the distance,\nwe hope you do not miss the beautiful flower blooming at your feet.",
     "philosophyLead2": "In a world of constant shifts in tasks and tools,\na solid attitude of immersing oneself in the present problem\nultimately completes the correct direction for the future.",
     "philosophyLead3": "The unchanging essence discovered in a 20-year journey,",
-    "philosophyDeclaration": "Prioritizing sincerity above all —\nThis is PriSincera.",
+    "philosophyDeclaration": "Sincerity, as the top priority —\nthis is how I work under the name PriSincera.",
     "conceptCard1": {
       "title": "Attitude",
       "subtitle": "Attitude",
@@ -76,10 +76,9 @@
       "headline": "A Tool Supporting Growth",
       "desc": "Combining 20 years of experience with AI technology, now born as a practical web service that directly assists your daily life and growth."
     },
-    "servicesTitle": "Beyond a simple portfolio,",
-    "servicesTitleAccent": "into tools that empower growth",
-    "servicesSubtitle": "From planning to development, these are services built to assist users' real growth.",
-    "serviceBaseDesc": "A ultra-lightweight engineering core demonstrating the synergy between a planner's complete ownership and AI pair programming (Vibe Coding).\nAn integration of high-performance architecture combining a React/Vite client, zero-downtime serverless GCP Cloud Run containers, and multi-layered Firebase security infrastructure.",
+    "servicesTitle": "What that attitude built —",
+    "servicesTitleAccent": "three things I made myself.",
+    "servicesSubtitle": "Twenty years of planning met AI and became three products.\nFrom the making to solving real work — the results of an attitude.",
     "serviceBaseCta": "⚡ Explore Open Source & System Architecture",
     "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
     "serviceBuildersCta": "🚀 Read Development Journey & Engineering Growth Stories",
@@ -90,7 +89,12 @@
     "connectSubtitle": "Whether it's business, career, or about attitude —\nfeel free to connect.",
     "seoDescription": "PriSincera Official Website. Designing priorities with sincerity for complex business.",
     "seoKeywords": "PriSincera, Business, Strategy, Priority, Sincerity, IT Trends",
-    "serviceReLearnDesc": "Daily learning (Daily Digest) and weekly action & reflection (Pace Note),\nunified into one growth loop.\nLearn, run, reflect — each day tunes tomorrow's recommendations."
+    "serviceReLearnDesc": "Daily learning (Daily Digest) and weekly action & reflection (Pace Note),\nunified into one growth loop.\nLearn, run, reflect — each day tunes tomorrow's recommendations.",
+    "heroRole": "Twenty years of product instinct, now building anew every day with AI.",
+    "serviceBuildersTag": "The record of making",
+    "serviceReLearnTag": "Two decades, productized",
+    "serviceSylphioTag": "Solving a real need",
+    "makerNote": "This site's full source and architecture are open source."
   },
   "relearn": {
     "status": {

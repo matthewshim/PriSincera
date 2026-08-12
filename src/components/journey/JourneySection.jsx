@@ -206,6 +206,19 @@ export default function JourneySection() {
             );
           })}
         </div>
+
+        {/* Base 강등 착지 — 메이커십 각주(오픈소스 증거): 이 사이트조차 기획자가 AI로 직접 빌드 */}
+        <div className="journey-maker-note">
+          <p className="maker-note-text">{t('home.makerNote')}</p>
+          <a
+            href="https://github.com/matthewshim/PriSincera"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="maker-note-link"
+          >
+            {t('home.serviceBaseCta')}
+          </a>
+        </div>
       </div>
     </section>
   );

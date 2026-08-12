@@ -111,7 +111,7 @@ export default function WorkSection() {
   return (
     <section className={`work reveal-section${revealed ? ' revealed' : ''}`} id="work" ref={sectionRef}>
       <div className="work-container">
-        <div className="section-label">Services</div>
+        <div className="section-label">Proof of Work</div>
 
         <div className="work-header reveal-item" style={{ '--reveal-delay': '0.1s' }}>
           <h2 className="work-title">
@@ -129,73 +129,14 @@ export default function WorkSection() {
         </div>
 
         <div className={`work-grid${activeCardIndex !== -1 ? ' has-active-focus' : ''}`}>
-        {/* 1. PriSincera Base Flagship (Core Foundation) */}
+        {/* 1. Builder's Log — 만드는 과정의 기록 */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 0 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(245, 158, 11, 0.4)' }}
-          data-accent-color="245,158,11"
-        >
-          <div className="flagship-content">
-            <div className="flagship-label" style={{ color: '#F59E0B' }}>Platform Foundation & Core Infrastructure</div>
-            <h3 className="flagship-title">PriSincera Base</h3>
-            <p className="flagship-desc">
-              {t('home.serviceBaseDesc').split('\n').map((line, idx) => (
-                <React.Fragment key={idx}>
-                  {line}
-                  <br />
-                </React.Fragment>
-              ))}
-            </p>
-            <div className="work-card-tags">
-              <span className="work-tag">React / Vite</span>
-              <span className="work-tag">GCP Cloud Run</span>
-              <span className="work-tag">Firebase Core</span>
-              <span className="work-tag">AI Pair Programmed</span>
-            </div>
-            <div className="flagship-cta-wrap">
-              <a href="https://github.com/matthewshim/PriSincera" target="_blank" rel="noopener noreferrer" className="btn-primary flagship-cta-btn amber">
-                {t('home.serviceBaseCta')}
-              </a>
-            </div>
-          </div>
-          <div className="flagship-visual">
-            <div className="dynamic-mockup base-mockup">
-              <div className="base-engine-container">
-                <div className="prism-core">
-                  <div className="prism-face front"></div>
-                  <div className="prism-face back"></div>
-                  <div className="prism-face left"></div>
-                  <div className="prism-face right"></div>
-                  <div className="prism-face top"></div>
-                  <div className="prism-face bottom"></div>
-                </div>
-                <div className="engine-ring ring-x"></div>
-                <div className="engine-ring ring-y"></div>
-                <div className="engine-ring ring-z"></div>
-              </div>
-              <div className="base-terminal">
-                <div className="terminal-header">
-                  <span className="terminal-title">core-engine.log</span>
-                  <span className="terminal-status active">RUNNING</span>
-                </div>
-                <div className="terminal-lines">
-                  <div className="terminal-line">&gt; Client: React 18 + Vite Success</div>
-                  <div className="terminal-line">&gt; Cloud Run: Container Active [100%]</div>
-                  <div className="terminal-line">&gt; Auth &amp; DB: Firebase Isolated Secure</div>
-                </div>
-              </div>
-            </div>
-            <div className="visual-blur-orb amber"></div>
-          </div>
-        </div>
-
-        {/* 2. Builder's Log Flagship */}
-        <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 1 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}
+          style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}
           data-accent-color="124,58,237"
         >
           <div className="flagship-content">
+            <div className="flagship-narrative">{t('home.serviceBuildersTag')}</div>
             <div className="flagship-label" style={{ color: '#8B5CF6' }}>Engineering & Growth Logs</div>
             <h3 className="flagship-title">Builder's Log</h3>
             <p className="flagship-desc">
@@ -248,13 +189,14 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 3. ReLearn Flagship (Daily Digest + Pace Note 통합 성장 루프) */}
+        {/* 2. ReLearn — 20년 경력의 제품화 (Daily Digest + Pace Note 통합 성장 루프) */}
         <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 1 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
           data-accent-color="34,211,238"
         >
           <div className="flagship-content">
+            <div className="flagship-narrative">{t('home.serviceReLearnTag')}</div>
             <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>Unified Growth Loop — Learn · Run · Reflect</div>
             <h3 className="flagship-title">ReLearn</h3>
             <p className="flagship-desc">
@@ -305,13 +247,14 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 4. Sylphio Flagship */}
+        {/* 3. Sylphio — 실무 니즈의 해결 */}
         <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
           data-accent-color="0,242,254"
         >
           <div className="flagship-content">
+            <div className="flagship-narrative">{t('home.serviceSylphioTag')}</div>
             <div className="flagship-label" style={{ color: '#00F2FE' }}>On-Device AI Translation</div>
             <h3 className="flagship-title">Sylphio</h3>
             <p className="flagship-desc">

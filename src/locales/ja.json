@@ -33,7 +33,7 @@
     "journeyContinues": "旅は続きます。"
   },
   "home": {
-    "heroLabel": "✦ Star Prism Identity",
+    "heroLabel": "✦ Matthew Shim · PriSincera",
     "heroTitle": "Sincerity, Prioritized.",
     "heroSubStrong": "「足元の花、遠くの星」",
     "heroSubText": "遠くで輝く星（目標）を目指しながらも、\n今自分の前に咲いた本質（花）に充実する態度。\nそれこそが最も正しい道であると確信しています。",
@@ -42,7 +42,7 @@
     "philosophyLead1": "遠くの星を追い求めるあまり、\n今自分の足元に咲いた美しい花を見逃さないように。",
     "philosophyLead2": "数々の課題やツールの変化の中でも、\n現在の問題に没頭する堅実な態度が\n結局のところ、正しい未来の方向性を完成させます。",
     "philosophyLead3": "20年の歩みの中で見出した、変わらない本質。",
-    "philosophyDeclaration": "真心を最優先にする —\nこれが PriSincera です。",
+    "philosophyDeclaration": "真心を最優先に —\n私がPriSinceraという名で働く流儀です。",
     "conceptCard1": {
       "title": "態度",
       "subtitle": "Attitude",
@@ -76,10 +76,9 @@
       "headline": "成長を支えるツールへ",
       "desc": "20年の経験とAI技術が融合し、あなたの日常と成長を直接的にサポートする実用的なWebサービスとして生まれ変わりました。"
     },
-    "servicesTitle": "単なるポートフォリオを超えて",
-    "servicesTitleAccent": "成長を支えるツールへ",
-    "servicesSubtitle": "企画から開発まで、ユーザーの実質的な成長を支援するために作られたサービスです。",
-    "serviceBaseDesc": "企画者の完全なオーナーシップとAIペアプログラミング（Vibe Coding）の相乗効果を証明する超軽量なエンジニアリングコアです。\nReact/Viteクライアントアーキテクチャ、無停止サーバーレスGCP Cloud Runコンテナ、多層Firebaseセキュリティインフラが有機的に結合された高性能アーキテクチャの結晶です。",
+    "servicesTitle": "その姿勢が生んだもの —",
+    "servicesTitleAccent": "自ら創った三つの証。",
+    "servicesSubtitle": "企画で積んだ20年がAIと出会い、三つのプロダクトになりました。\n作る過程から実務の解決まで — 姿勢の結果です。",
     "serviceBaseCta": "⚡ オープンソースとシステムアーキテクチャを見る",
     "serviceBuildersDesc": "Vibe codingとGCPサーバーレスを基盤に設計を進めるPriSinceraの執拗な開発旅路です。\n難易度の高いバックエンドのトラブルシューティング、AIパイプライン拡張記、セキュリティ監査など、生々しい成長の記録をリアルタイムで共有します。",
     "serviceBuildersCta": "🚀 開発プロセスとエンジニアリング成長記を読む",
@@ -90,7 +89,12 @@
     "connectSubtitle": "ビジネス、キャリア、あるいは仕事への態度についてでも —\nお気軽にご連絡ください。",
     "seoDescription": "PriSincera公式ホームページ。複雑なビジネスに真心を込めて優先順位を設計します。",
     "seoKeywords": "PriSincera, ビジネス, 戦略, 優先順位, 誠実さ, ITトレンド",
-    "serviceReLearnDesc": "毎日の学び(Daily Digest)と週間の実行・振り返り(Pace Note)を\n一つの成長ループに統合。\n学び、実行し、振り返る一日が明日のレコメンドを変えます。"
+    "serviceReLearnDesc": "毎日の学び(Daily Digest)と週間の実行・振り返り(Pace Note)を\n一つの成長ループに統合。\n学び、実行し、振り返る一日が明日のレコメンドを変えます。",
+    "heroRole": "20年の企画センスにAIを掛け合わせ、毎日新しく創ります。",
+    "serviceBuildersTag": "作る過程の記録",
+    "serviceReLearnTag": "20年のキャリアの製品化",
+    "serviceSylphioTag": "実務ニーズの解決",
+    "makerNote": "このサイトの全ソースとアーキテクチャは、オープンソースで公開されています。"
   },
   "relearn": {
     "status": {

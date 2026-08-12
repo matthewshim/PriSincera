@@ -186,6 +186,26 @@
     z-index: 1;
 }
 
+.flagship-narrative {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-body);
+    font-size: var(--fs-080);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--color-gold);
+    margin-bottom: 14px;
+}
+.flagship-narrative::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-gold);
+    flex-shrink: 0;
+}
+
 .flagship-label {
     font-family: var(--font-mono);
     font-size: var(--fs-075);
