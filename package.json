@@ -4,11 +4,14 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "prepare": "node ci/install-hooks.mjs",
     "dev": "vite",
     "prebuild": "node ci/design-check.mjs",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "test:secrets": "node --test ci/secretPatterns.test.mjs",
+    "scan:staged": "node ci/secret-scan.mjs --staged"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.14.0",

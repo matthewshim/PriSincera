@@ -50,6 +50,12 @@ try {
   console.warn('[Server] @google-cloud/storage not available, GCS proxy disabled');
 }
 
+// --- Proxy trust (Cloud Run) ---
+// Cloud Run은 모든 요청이 프런트엔드 프록시를 거치므로 trust proxy 없이는
+// req.ip가 전부 프록시 IP로 잡혀 rate limit이 IP별이 아닌 전역 단일 버킷으로 동작한다.
+// 홉 수를 1로 고정한다(true 대신) — X-Forwarded-For 위조로 제한을 우회하는 것을 막는다.
+app.set('trust proxy', 1);
+
 // --- Compression ---
 import compression from 'compression';
 app.use(compression());

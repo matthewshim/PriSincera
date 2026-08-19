@@ -1,0 +1,157 @@
+---
+status: draft
+domain: Candela
+last_updated: 2026-08-19
+version: v1.0
+target_files:
+  - admin-api.mjs
+  - server.mjs
+  - firestore.rules
+  - (미구현) candela-worker/ (별도 private 저장소)
+---
+
+# 🏗️ 캔델라 시스템 아키텍처 (System Architecture)
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-08-19 | AI Agent | 최초 정의 — 3계층 분리·명령 큐·GCS 실적 발행·해시 체인·저장소 이원화 확정 | Candela, Admin, Firestore |
+
+---
+
+## 1. 설계 원칙
+
+> **잘 지키는 구조보다, 잃을 것이 없는 구조가 낫다.**
+
+본 저장소는 **public**이고, Admin 콘솔은 **인터넷에 노출된 웹 앱**이다. 이 두 전제 위에서 다음을 설계 불변식으로 삼는다.
+
+1.  퍼블릭 웹에서 Trading Core로 향하는 요청 경로는 **존재하지 않는다**.
+2.  Admin 콘솔은 증권사 API 키를 **보유하지 않는다**.
+3.  public 저장소에는 전략 로직도 키도 **존재하지 않는다**.
+
+## 2. 3계층 구조
+
+```
+┌─ Tier 1 ─ Public Web ────────────────┐
+│  /candela  (읽기 전용, 정적)          │ ◄── GCS 실적 스냅샷
+│  키 없음 · 전략 없음 · 쓰기 없음       │
+└──────────────────────────────────────┘
+
+┌─ Tier 2 ─ Admin Console ─────────────┐
+│  /admin → Candela 탭                  │
+│  super_admin + step-up 재인증          │
+│  키 없음 · 전략 없음                   │
+│  하는 일: 명령(intent)을 큐에 기록     │
+└───────────────┬──────────────────────┘
+                │ Firestore candela_commands (write only)
+                ▼
+┌─ Tier 3 ─ Executor Worker ───────────┐
+│  candela-worker (private 저장소)      │
+│  인바운드 포트 없음 · 폴링 전용        │
+│  키는 Secret Manager에서만 로드        │
+│  전략 로직 · 주문 집행 · 백테스트      │
+└───────────────┬──────────────────────┘
+                │
+                ▼  증권사 OpenAPI (한국투자증권)
+```
+
+**Admin이 뚫려도 공격자가 얻는 것**: 사전 정의된 명령 enum을 발행할 권한. 키도, 전략도, 임의 주문 능력도 아니다.
+
+## 3. 경로 배치 근거
+
+Candela 퍼블릭 페이지는 **`prisincera.com/candela` 하위 경로**에 둔다. 서브도메인·독립 도메인이 아니다.
+
+*   [service_overview](../core/service_overview.md)의 포트폴리오가 이미 경로 기반 단일 체계다 — ReLearn `/relearn`, Builder's Log `/builderslog`, Sylphio `/sylphio`. Sylphio는 별도 데스크톱 제품이면서도 웹 랜딩은 하위 경로에 있다.
+*   분리 시 GNB·i18n·배포·SEO가 모두 갈라진다.
+*   **보안상 이득이 없다.** 위험은 저장소 분리와 키 격리로 막지, URL 위치로 막지 않는다.
+
+## 4. 명령 큐 (Command Queue)
+
+Admin은 자유 형식 페이로드를 보낼 수 없다. Worker는 아래 enum만 수용한다.
+
+| 명령 | 설명 | step-up 재인증 |
+| :--- | :--- | :--- |
+| `STRATEGY_ON` / `STRATEGY_OFF` | 전략 활성/비활성 | 필요 |
+| `SET_RISK_LIMIT` | 일일 손실 한도·종목당 상한 변경 | 필요 |
+| `LIQUIDATE_ALL` | 전량 청산 | 필요 |
+| `HALT` | 킬스위치 — 즉시 전면 정지 | **불필요** |
+
+`HALT`만 재인증을 면제한다. "정지"는 안전한 방향이므로 급할 때 마찰이 있으면 안 된다.
+
+**주문 수량·종목 산정은 전적으로 Worker의 전략 로직 소관이다.** Admin은 종목이나 수량을 지정할 수 없다.
+
+## 5. 실적 발행 경로
+
+```
+Worker ──일 1회──► GCS (prisincera-prisignal-data/candela/)
+                     │
+                     ▼
+              Public Web (읽기)
+```
+
+**git 커밋 방식을 쓰지 않는다.** public 저장소에 실적을 커밋하면 보유 종목·평단이 영구 공개되고, 서버가 `GITHUB_TOKEN` push 권한을 상시 보유해야 한다. 이미 daily 콘텐츠가 동일한 GCS 패턴으로 서빙 중이므로 신규 구조도 아니다.
+
+### 5-1. 해시 체인 (위변조 방지)
+
+git 이력을 쓰지 않는 대신, 실적 레코드에 전날 레코드의 해시를 포함시킨다.
+
+```
+record[n] = { date, metrics..., prevHash: sha256(record[n-1]) }
+```
+
+과거 레코드를 소급 수정하면 이후 모든 해시가 깨진다. 검증 스크립트를 퍼블릭에 공개하면 제3자가 직접 무결성을 확인할 수 있다 — git 커밋보다 오히려 강한 증명이다.
+
+## 6. 저장소 이원화
+
+| 저장소 | 공개 | 내용 |
+| :--- | :--- | :--- |
+| `PriSincera` | **public** | 퍼블릭 페이지, Admin UI, 본 문서군 |
+| `candela-worker` | **private** | 전략 로직, 백테스트, 주문 집행, 증권사 연동, 계좌 관련 문서 |
+
+전략 로직이 public 저장소에 있으면 알파가 공개된다. 개인용 시스템에서 알파 공개는 곧 수익 소멸이며, public 저장소는 push된 순간 포크·캐시·아카이브에 남아 되돌릴 수 없다.
+
+**`strategy_backtest.md`는 본 폴더에 두지 않는다** — `candela-worker` 저장소에서 관리한다.
+
+## 7. 데이터 모델 (Firestore)
+
+| 컬렉션 | 접근 | 용도 |
+| :--- | :--- | :--- |
+| `candela_commands` | 서버 전용 | Admin → Worker 명령 큐 |
+| `candela_state` | 서버 전용 | 포지션·전략 상태·리스크 한도 |
+| `candela_audit` | 서버 전용, **append-only** | 모든 명령·체결 불변 로그 |
+
+[firestore.rules](../../firestore.rules)는 기본 deny이므로 신규 컬렉션은 자동 차단되지만, 향후 규칙 추가 시의 실수를 막기 위해 `candela_*`를 **명시적 deny로 등재**한다.
+
+## 8. 운영 형태 — 배치, 상시 프로세스 아님
+
+전략 성격을 **일봉 스윙**으로 확정했으므로 상시 워커가 필요 없다. 하루 2~3회 스케줄 실행이면 충분하다.
+
+```
+08:50  장전 — 시그널 산출·주문 큐 생성
+09:05  장초 — 주문 집행
+15:40  장후 — 정산·실적 스냅샷·GCS 적재
+```
+
+이는 [service_overview](../core/service_overview.md)에 명시된 **"중앙 서버/DB 의존 최소화 + 무료 티어 최대 활용, 가변비용 0 수렴"** 운영 철학과 일치한다. 분봉 단타를 택했다면 상시 웹소켓이 필요해 이 원칙이 깨졌을 것이다.
+
+> **기존 Cloud Run·cloudbuild·빌드 트리거의 비용 최적화 설정은 건드리지 않는다.** Candela는 독립 잡/서비스로 추가한다.
+
+## 9. 안전장치
+
+기능보다 먼저 구현한다.
+
+*   **주문 멱등키** — 재시도로 인한 중복 매수 차단
+*   **한도**: 일일 최대 주문 수, 일일 최대 손실액, 종목당 비중 상한
+*   **자동 정지 트리거**: 5분 내 주문 N건 초과, 시세 피드 단절, 예외 연속 발생
+*   **킬스위치**: DB 플래그 1개로 즉시 전면 정지. 모바일에서 접근 가능해야 함
+*   **체결 즉시 푸시 알림** — 무단 접근을 인지하는 가장 확실한 수단
+*   **단계별 승격**: 백테스트 → 모의투자(최소 1~2개월) → 실계좌 소액 → 증액
+
+---
+
+## 관련 문서
+*   [🗺️ 제품 전략서](product_strategy.md)
+*   [📜 보안 규범](security_spec.md)
+*   [📘 사고 대응 런북](incident_response.md)
+*   [🏗️ 인증·권한 아키텍처](../core/authentication_architecture.md) — Admin 인증 기반 구조

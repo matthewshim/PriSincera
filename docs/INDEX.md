@@ -71,6 +71,16 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 
 ---
 
+## 📁 candela/ (Candela — 초개인 자동매매 & 공개 사례 연구)
+제작자 본인만을 위한 **개인 자동매매 시스템**과, 그 시스템이 실제로 작동한다는 것을 공개 증명하는 **퍼블릭 사례 연구**의 이원 구조 명세서입니다. 전략 로직·백테스트·주문 집행은 **별도 private 저장소(`candela-worker`)** 에서 관리하며, 본 폴더에는 public 저장소에 존재해도 안전한 문서만 둡니다.
+*   **🆕 [캔델라 제품 전략서 (Product Strategy)](candela/product_strategy.md)** (`product_strategy.md`): "투자 서비스가 아니라 제작 역량의 증거" — 명칭·이원 구조·포지셔닝(수익률이 아닌 아키텍처를 헤드라인으로)·공개 원칙 7조(무료·금액 비공개·T+1 사후·주간 집계·손실 은폐 금지)·성공 기준. **draft.**
+*   **🆕 [캔델라 시스템 아키텍처 (System Architecture)](candela/system_architecture.md)** (`system_architecture.md`): 3계층 분리(Public Web / Admin 조종석 / Executor Worker) — Admin은 키를 갖지 않고 명령 enum만 큐에 기록, 실적은 git이 아닌 **GCS 적재 + 해시 체인**으로 발행, 일봉 스윙 기반 배치 운영. **draft.**
+*   **🆕 [캔델라 보안 규범 (Security Spec)](candela/security_spec.md)** (`security_spec.md`): **public 저장소 전제**의 절대 금지 규칙 6조(`VITE_` 접두어·프록시 키 주입·전략 커밋 등)와 즉시 조치 4건 반영 내역(.claude gitignore·에이전트 push 권한 회수·trust proxy·시크릿 스캐너 보강), 계좌 분리라는 비기술적 상한선. **active(조치 완료).**
+*   **🆕 [캔델라 사고 대응 런북 (Incident Response)](candela/incident_response.md)** (`incident_response.md`): 키 유출·시크릿 커밋·세션 탈취·오작동·외부 장애 5종 시나리오별 절차 — **출혈 차단 → 접근 차단 → 원인 규명 → 복구** 순서 원칙과 연 1회 훈련 수칙. **draft.**
+*   **🆕 [캔델라 로드맵 (Roadmap)](candela/roadmap.md)** (`roadmap.md`): M0~M5 단계와 승격 게이트(백테스트→모의투자→실계좌 소액→증액), 확정 사항 8건·미결 5건·**하지 않기로 한 것 5건**. **draft.**
+
+---
+
 ## 📁 sylphio/ (Sylphio 서비스 도메인)
 실시간 온디바이스 AI 동시통역 비서 에이전트 **Sylphio** 관련 명세서입니다.
 *   **[Sylphio 웹 랜딩 기획 명세서](sylphio/web_landing_plan.md)** (`web_landing_plan.md`): 오로라 에너지 코어 및 실시간 타이핑 번역 시뮬레이터가 결합된 통합 랜딩 페이지 UI/UX 기술 기획서.
@@ -145,7 +155,7 @@ admin **「서비스 문서」 사이드바 라벨은 각 문서의 첫 H1(`# �
 ```yaml
 ---
 status: active | draft | archived  # active: 현재 가동 스펙, draft: 기획 중, archived: 레거시 아카이브
-domain: Core | ReLearn | PaceNote | BuildersLog | DailyDigest | Sylphio  # 서비스 도메인
+domain: Core | ReLearn | PaceNote | BuildersLog | DailyDigest | Sylphio | Candela  # 서비스 도메인
 nav_title: ✍️ 짧은 사이드바 라벨  # (선택) 편집형 개발기 등 본문 H1과 사이드바 라벨을 분리할 때만
 last_updated: YYYY-MM-DD  # 최신 업데이트 날짜
 version: vX.Y  # 문서 버전 정보

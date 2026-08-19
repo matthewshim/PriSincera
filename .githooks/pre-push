@@ -1,0 +1,10 @@
+#!/bin/sh
+# push 직전 재검사 — pre-commit을 우회한 커밋을 여기서 잡는다.
+#
+# 존재 이유: `git commit -m "x" --no-verify` 처럼 옵션이 뒤에 붙으면
+# 접두어 매칭 기반 deny 규칙을 빠져나간다. 그런 커밋도 push는 해야 하므로,
+# 이 지점이 로컬에서 마지막으로 남은 차단 기회다.
+#
+# push 대상 범위만 검사하므로 저장소 전체를 훑지 않는다.
+
+exec node "$(dirname "$0")/../ci/secret-scan.mjs" --push

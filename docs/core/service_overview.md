@@ -37,6 +37,7 @@ target_files:
 | **ReLearn** | `/relearn` | **배움→실행→복기 통합 성장 루프** — 다이제스트 4채널 + 궤도 + 회고 + 기록을 한 여정으로. "매일 제로에서, 다시 배우고 다시 달린다" | **플래그십(Loop)** |
 | **Builder's Log** | `/builderslog` | 제작 과정을 투명 공개하는 정적 CMS 블로그 | 브랜딩 |
 | **Sylphio** | `/sylphio` | 온디바이스 AI 동시통역 비서(별도 데스크톱 제품) | 확장 제품 |
+| **Candela** | `/candela` | 제작자 본인만을 위한 개인 자동매매 시스템과, 그것이 작동한다는 **공개 증거** — 투자 서비스가 아닌 제작 역량 사례 연구. 전략·실행은 별도 private 저장소([candela/system_architecture](../candela/system_architecture.md)) | **기획 중(draft)** |
 | **Admin** | `/admin` | 콘텐츠/파이프라인/구독/문서 관리 대시보드 — 메뉴 구조는 [admin_console_specification](admin_console_specification.md) | 내부 운영 |
 
 > **구 서비스 위상**: Daily Digest(`/daily`)와 PaceNote(`/pacenote`)의 독립 웹 UI는 **2026-07-20 리런으로 승계 완료**되어 비공개다(구 경로는 서버 301, 아카이브 상세는 `/relearn/daily/:date`). 백엔드 API·콘텐츠 파이프라인·데이터는 그대로 가동 중이며, 리런이 이를 소비한다. 두 도메인의 명세는 `daily-digest/`·`pacenote/` 폴더에 유지된다.

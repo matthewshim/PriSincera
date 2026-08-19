@@ -1,0 +1,5 @@
+#!/bin/sh
+# 커밋 메시지 시크릿 검사.
+# 파일 내용만 검사하면 메시지 경유 유출 경로가 열린 채로 남는다.
+
+exec node "$(dirname "$0")/../ci/secret-scan.mjs" --message "$1"

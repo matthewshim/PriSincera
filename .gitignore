@@ -8,14 +8,27 @@ dist/
 .firebase/
 .firebaserc
 
-# Environment
+# Environment / secrets
+# 접두어 와일드카드 — .env.candela 같은 파생 파일명까지 일괄 차단
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*secret*.json
+*credential*.json
+serviceAccount*.json
 
-# Editor
+# Editor / AI agent
 .vscode/
 .idea/
+
+# .claude — 공유 정책(settings.json)만 커밋하고 나머지는 제외.
+# 두 머신(Windows·macOS)이 git으로만 동기화되므로, deny 규칙과 경로 제한이
+# 저장소를 통해 이동해야 새 환경에서도 동일 정책이 적용된다.
+.claude/*
+!.claude/settings.json
 *.swp
 *.swo
 *~

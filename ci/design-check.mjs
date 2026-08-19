@@ -16,6 +16,37 @@
  */
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
+import { execFileSync } from 'child_process';
+
+// ── 시크릿 훅 설치 검증 (fail-closed) ─────────────────────────────────────
+// `.git/hooks`는 clone되지 않는다. 즉 새 환경에서 훅의 기본값은 '부재'이고,
+// 부재한 훅은 아무 소리 없이 통과한다(fail-open) — 환경을 오가며 작업할 때
+// 가장 위험한 성질이다. 저장소를 통해 이동하는 이 게이트가 그 구멍을 막는다:
+// 훅이 활성화되지 않은 환경에서는 빌드가 실패하므로 배포도 불가능하다.
+// Docker 빌드 컨텍스트는 .dockerignore로 .git이 빠지므로 자동으로 건너뛴다.
+(function assertHooksInstalled() {
+  let inWorkTree = false;
+  try {
+    inWorkTree = execFileSync('git', ['rev-parse', '--is-inside-work-tree'], {
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).toString().trim() === 'true';
+  } catch { /* git 없음 = 컨테이너/CI */ }
+  if (!inWorkTree || process.env.CI) return;
+
+  let hooksPath = '';
+  try {
+    hooksPath = execFileSync('git', ['config', '--get', 'core.hooksPath'], {
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).toString().trim();
+  } catch { /* 미설정 */ }
+
+  if (hooksPath !== '.githooks') {
+    console.error('[design-check] ERROR — 시크릿 스캐너 훅이 활성화되지 않았습니다.');
+    console.error('  이 저장소는 public이며, push된 시크릿은 회수할 수 없습니다.');
+    console.error('  활성화: npm install   (또는 git config core.hooksPath .githooks)');
+    process.exit(1);
+  }
+})();
 
 const ROOT = 'src';
 const EXCLUDE = new Set([

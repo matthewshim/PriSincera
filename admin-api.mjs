@@ -23,6 +23,7 @@
  * 역할: super_admin (모든 권한) / admin (대시보드 조회만)
  */
 import { Router } from 'express';
+import { SECRET_PATTERNS } from './src/data/secretPatterns.mjs';
 
 const router = Router();
 
@@ -1278,13 +1279,9 @@ router.post('/builderslog/publish', async (req, res) => {
 
     // 1. AI 윤문 및 문맥 필터링을 생략하고 원본 마크다운 품질 그대로 유지하여 발행 (불필요한 인젝션 제거)
 
-    // 2. 정규식 기반 시크릿 스캐너
-    const secretPatterns = [
-      /AIza[0-9A-Za-z-_]{35}/, // Firebase API Key (Though sometimes public, best to warn, but let's just use strict regex for other things if needed)
-      /ghp_[a-zA-Z0-9]{36}/, // GitHub PAT
-      /xox[baprs]-[a-zA-Z0-9]{10,48}/ // Slack Token
-    ];
-    for (const pattern of secretPatterns) {
+    // 2. 정규식 기반 시크릿 스캐너 — docs/save와 동일한 패턴 집합을 공유한다(§DOC_SECRET_PATTERNS).
+    //    두 경로 모두 public 저장소 main에 직접 커밋하므로 탐지 강도가 갈리면 안 된다.
+    for (const pattern of DOC_SECRET_PATTERNS) {
       if (pattern.test(finalMarkdown)) {
         return res.status(400).json({ error: '보안 위반: 민감 정보(Secret) 패턴이 발견되어 퍼블리싱이 차단되었습니다.' });
       }
@@ -1351,11 +1348,15 @@ router.post('/builderslog/publish', async (req, res) => {
 // 저장 = docs/**.md 1파일을 GitHub main에 커밋. 매 수정이 곧 커밋 1건이라
 // 별도 히스토리 저장소 없이 listCommits({path})로 콘텐츠별 이력을 제공한다.
 
-const DOC_SECRET_PATTERNS = [
-  /AIza[0-9A-Za-z\-_]{35}/,            // Google/Firebase API Key
-  /ghp_[a-zA-Z0-9]{36}/,               // GitHub PAT
-  /xox[baprs]-[a-zA-Z0-9]{10,48}/,     // Slack Token
-  /-----BEGIN (?:RSA |EC |OPENSSH |PGP )?PRIVATE KEY-----/, // Private Key
+// 시크릿 패턴은 src/data/secretPatterns.mjs가 단일 소스(SSOT)다.
+// 로컬 git 훅(ci/secret-scan.mjs)과 동일 집합을 공유해야 탐지 강도가 갈리지 않는다.
+// 배치 근거: src/data/ 는 Dockerfile이 컨테이너로 복사하는 경로다(ci/ 는 아니다).
+const DOC_SECRET_PATTERNS = SECRET_PATTERNS.map((p) => p.re);
+
+// public 저장소에 존재해서는 안 되는 문서 경로.
+// Candela 전략·백테스트·계좌 관련 문서는 candela-worker(private)에서만 관리한다.
+const DOC_PATH_DENYLIST = [
+  'docs/candela/private/',
 ];
 
 function isDocPathSafe(p) {
@@ -1364,7 +1365,8 @@ function isDocPathSafe(p) {
     && p.endsWith('.md')
     && !p.includes('..')
     && !p.includes('\\')
-    && !p.includes('\0');
+    && !p.includes('\0')
+    && !DOC_PATH_DENYLIST.some((deny) => p.startsWith(deny));
 }
 
 router.post('/docs/save', async (req, res) => {

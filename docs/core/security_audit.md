@@ -1,11 +1,14 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-05-21
-version: v1.0
+last_updated: 2026-08-19
+version: v1.1
 target_files:
   - server.mjs
+  - admin-api.mjs
   - pacenote-api.mjs
+  - .gitignore
+  - .claude/settings.json
   - pipeline/src/lib/mailer.mjs
   - pipeline/src/collector.mjs
   - src/pages/ReLearn.jsx
@@ -308,3 +311,31 @@ Pace Note 내 **'사색의 기록(Captain's Log, 주간 회고)'** 텍스트 박
     ```
   - 1000자가 초과되는 즉시 Firestore DB 쓰기나 무거운 연산을 거치지 않고 HTTP 응답 코드로 바로 거부 처리(Early Return)하므로, 불필요한 자원 낭비 및 메모리 고갈 공격이 완벽하게 방지되고 있습니다.
 
+
+---
+
+## 11. 2026-08-19 추가 점검 — 공개 저장소 전제 재검토 (v1.1)
+
+Candela([candela/security_spec](../candela/security_spec.md)) 도입 검토 과정에서, **저장소가 public이라는 전제**로 기존 구조를 재점검했다. 콘텐츠 사이트로서는 감수 가능하던 항목들이 브로커 자격증명이 로컬에 놓이는 순간 위험 등급이 달라지므로, Candela 착수 **이전에** 4건을 선반영했다.
+
+> `github.com/matthewshim/PriSincera` — 비인증 GitHub API 200 응답으로 public 확인. **public 저장소는 push된 순간 캐시·포크·아카이브에 남아 force push로도 회수되지 않는다. "커밋 전 차단"만이 유효한 방어다.**
+
+### 11-1. 적용 완료
+
+| # | 항목 | 조치 | 대상 |
+| :--- | :--- | :--- | :--- |
+| 1 | AI 에이전트 무인 push | 자동 허용에서 `git commit`·`git push` 규칙 전량 제거, `permissions.deny`에 `git push *`·`git remote set-url *` 등재 | `.claude/settings.json` |
+| 2 | 시크릿 스캐너 사각 | `/docs/save`·`/builderslog/publish`가 `DOC_SECRET_PATTERNS` **단일 집합 공유**. fine-grained PAT·AWS AKIA·**증권 종합계좌번호(8-2)** 추가. 고유 접두어가 없는 브로커 키는 "키 이름 = 긴 문자열" 대입 패턴으로 탐지. `DOC_PATH_DENYLIST` 신설 | `admin-api.mjs` |
+| 3 | `.claude/` 미차단 | `.gitignore` 등재(내부 경로·GCP 빌드 ID·트리거 UUID 노출 차단). `.env` → `.env.*` 와일드카드 확장, `*.key`·`*.pem`·`*secret*.json`·`serviceAccount*.json` 추가 | `.gitignore` |
+| 4 | rate limit 무력화 | Cloud Run 프록시로 인해 `req.ip`가 전부 프록시 IP로 잡혀 **IP별이 아닌 전역 단일 버킷**으로 동작하던 문제 → `app.set('trust proxy', 1)` (홉 수 고정으로 `X-Forwarded-For` 위조 우회 차단) | `server.mjs` |
+
+### 11-2. 잔여 항목 (Candela M4 시점 재검토)
+
+*   `.claude/settings.json`의 `Bash(node -e ' *)`·`Bash(npm i *)` — 임의 코드 실행·패키지 설치 허용. git 경로는 닫혔으나 네트워크 경유 유출 경로는 열려 있다. 브로커 키가 로컬에 놓이는 시점에 판단한다.
+*   [nginx.conf](../../nginx.conf) — Dockerfile이 `node server.mjs`를 실행하므로 **현재 미사용 파일**이다. 그런데 CSP가 없고, `/api/subscribe`의 "인증 없는 프록시 + API 키 주입" 패턴을 담고 있어 되살아나면 보안 등급이 내려간다. `docs/archive` 이동 또는 삭제 권장.
+
+### 11-3. 재확인된 양호 항목
+
+helmet CSP + HSTS preload · CORS origin 고정 · `router.use(requireAdmin)` 전역 적용 · Firebase ID 토큰 + Firestore 화이트리스트 + `super_admin` 역할 분리 · `adminApp` 세션 물리 격리 · Firestore **기본 deny**(신규 컬렉션 자동 차단) · `isDocPathSafe` 경로 화이트리스트 · 컨테이너 non-root 실행 · 소스 내 하드코딩 시크릿 0건.
+
+> `VITE_FIREBASE_API_KEY`는 클라이언트 번들에 실리지만 Firebase 웹 apiKey는 설계상 공개 식별자이므로 유출이 아니다. 실제 보호는 Firestore rules와 서버 화이트리스트가 담당한다 — **현행 유지.**

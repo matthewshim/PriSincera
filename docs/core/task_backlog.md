@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-07-22
-version: v2.4
+last_updated: 2026-08-19
+version: v2.5
 target_files: []  # 작업 백로그 — 특정 코드 미지배
 ---
 
@@ -20,6 +20,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | v2.2 | 2026-07-22 | AI Agent | 8구간(아카이브 상세 UI 재편) 신설·P1/P2 완료 — 훑어보기 기본 + 브리핑 히어로 + 스티키 채널 내비, 기본 상태 페이지 높이 9,753→6,099px(-37%, 첫 스크린 오버뷰 완결) | ReLearnDaily, SignalSection, DailyBriefing |
 | v2.3 | 2026-07-22 | AI Agent | 9구간(docs 최신화 전수 감사·정합화) 신설·완료 — 사실 오류 3건(개요·인증·INDEX)·target_files 삭제파일 잔존·archived 2종 이동 등 일괄 해소 | docs 전반 |
 | v2.4 | 2026-07-22 | AI Agent | 8-7 완료 — 아카이브 상세 헤더 §9-1 히어로 정합 + 주간 달력 스트립(DailyWeekStrip) 교체 (design_system v5.9 동반) | ReLearnDaily, DailyWeekStrip |
+| v2.5 | 2026-08-19 | AI Agent | 10구간(자동 커밋 전제 조건) 신설 — public 저장소 전제 재점검에서 파생. 11구간(Candela) 포인터 등재 | .gitignore, server.mjs, admin-api.mjs, git hooks |
 
 > **운영 규칙**: 본 문서가 잔여 작업의 단일 정본(SSOT)입니다. 작업 착수·완료 시 상태를 갱신하고, 완료 항목은 ~~취소선~~ + 완료일을 남깁니다. 새 작업은 우선순위 표에 추가하십시오.
 
@@ -108,3 +109,56 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | ~~9-2~~ | ~~기계 정리 — active 문서 frontmatter의 삭제파일(target_files) 잔존 제거 7종, sylphio 3종 domain 오기, last_updated 드리프트, admin-api 헤더 주석 잔재~~ | ✅ 2026-07-22 |
 | ~~9-3~~ | ~~archived 처리 — scaling_plan(제안 전부 구현 완료)·og_image_strategy(삭제된 PriSignal 화면 기준)를 docs/archive/ 이동+경위 배너. **구현 완료 제안서(scroll·mobile·learn_stage·sylphio landing 2종)는 보존 결정**~~ | ✅ 2026-07-22 |
 | ~~9-4~~ | ~~내용 개정 — business_model §6 제품 수익모델 신설, onboarding 기획자 경로 리런 편입, seo_meta_standard 현행 라우트 표, development_guide·architecture_overview 유령 builderslog-api/Nginx/helmet 정정, relearn/product_strategy §3·§4-3 자기모순 해소, pacenote 전략 2종 승계 배너, daily_digest_overhaul 리브랜딩 추기, i18n 2종 상호링크~~ | ✅ 2026-07-22 |
+
+## 10. 🔐 자동 커밋 전제 조건 (2026-08-19 신설)
+
+정본: [candela/security_spec.md](../candela/security_spec.md) · 배경: [security_audit.md §11](security_audit.md)
+
+**이 저장소는 public이고, push된 시크릿은 force push로도 회수되지 않는다.** 자동 커밋이 필요한 이유는 편의가 아니라 **git이 Windows 데스크톱 ↔ macOS 노트북의 동기화 수단**이기 때문이다. 동기화 빈도에서 사람 승인은 고무도장이 되고, 그건 검증된 스캐너보다 나쁘다.
+
+> **순서 주의**: 10-1(패턴 테스트)이 10-2(훅 설치)보다 먼저다. 검증 안 된 스캐너를 훅에 걸면 "검사하고 있다"는 잘못된 안심만 생기며, 이는 검사가 아예 없는 것보다 나쁘다.
+
+### P0 — 전량 완료 (2026-08-19)
+
+| # | 작업 | 결과 |
+| :--- | :--- | :--- |
+| ~~10-12~~ | ~~`.gitattributes` 도입~~ | ✅ `.githooks/** text eol=lf`. 없으면 Windows 워킹트리에서 CRLF가 되어 shebang이 `node\r`로 깨지고 **훅이 조용히 죽는다**. 기존 파일 정규화 churn 0건 확인 |
+| ~~10-1~~ | ~~시크릿 패턴 유닛 테스트~~ | ✅ [src/data/secretPatterns.mjs](../../src/data/secretPatterns.mjs) 단일 소스화(admin-api·훅 공유, Docker 복사 경로). positive 15·negative 9, **7/7 통과** |
+| ~~10-2~~ | ~~pre-commit 훅~~ | ✅ 가짜 키 커밋 **exit 1 차단 실증**, 정상 변경분 exit 0 통과 확인 |
+| ~~10-3~~ | ~~인코딩 처리~~ | ✅ `.env` 실측 — 187바이트 중 **NUL 25바이트**(혼합 인코딩). `scanBuffer()`가 UTF-8·UTF-16 양쪽 해석. UTF-16 시크릿 차단 실증 |
+| ~~10-4~~ | ~~`commit-msg` 훅~~ | ✅ 메시지 내 PAT 차단 실증(exit 1), 정상 메시지 통과(exit 0) |
+| ~~10-5~~ | ~~GitHub Secret Scanning + Push Protection~~ | ⚠️ **부분 완료** — public 저장소는 secret scanning 자동, "push protection for users"도 계정 단위 기본 활성이라 서버 백스톱은 이미 존재. **저장소 단위 push protection만 미설정**(관리자 UI 필요, 아래 10-D5) |
+| ~~10-6~~ | ~~경로 제한~~ | ✅ `git add -A`·`.`·`-u`·`commit -a` **deny**, 경로 지정 add만 허용. 루트 직하 신규 파일은 훅이 경고 |
+
+### P1 — 전량 완료 (2026-08-19)
+
+| # | 작업 | 결과 |
+| :--- | :--- | :--- |
+| ~~10-7~~ | ~~자동 커밋 식별 trailer~~ | ✅ **별도 조치 불필요** — Claude 커밋에는 `Co-Authored-By` trailer가 자동으로 붙고 사람 커밋에는 없다. 기존 커밋 5건에서 확인 |
+| ~~10-8~~ | ~~회수 리허설~~ | ✅ plumbing(`commit-tree`)으로 훅 우회 커밋을 임시 브랜치에 생성 → `pre-push`가 포착하는 것 확인 → `reset --soft` 회수 절차 실연 → 브랜치 삭제. main 무영향 |
+| ~~10-9~~ | ~~미조치 항목 기술 원칙~~ | ✅ [security_spec §2 N-7](../candela/security_spec.md) 등재 |
+| ~~10-10~~ | ~~훅 이동성 (fail-closed)~~ | ✅ `.githooks/` + `prepare` + **prebuild 게이트가 hooksPath 미설정 시 빌드 실패**. Docker는 `.git` 부재로 자동 skip |
+| ~~10-11~~ | ~~`.claude/` 분할~~ | ✅ `settings.json`(OS 중립 정책) 커밋 / `settings.local.json`(머신별 162건) 제외 |
+| ~~10-13~~ | ~~`pre-push` 훅 (신설)~~ | ✅ 검증 중 발견한 구멍 대응 — `git commit -m "x" --no-verify`는 접두어 매칭 deny를 빠져나간다. push 직전 범위 재검사로 포착 |
+
+### 정책 결정
+
+| # | 항목 | 상태 |
+| :--- | :--- | :--- |
+| ~~10-D1~~ | ~~자동 커밋 범위~~ | ✅ **경로 지정 add만** (`docs/` `src/` `ci/` `.githooks/` `pipeline/` `public/`). 전체 스테이징은 deny |
+| ~~10-D2~~ | ~~자동 푸시~~ | ✅ **허용으로 전환.** 초기 권고(영구 금지)는 git이 동기화 수단이라는 전제에서 틀렸다 — 고빈도 승인은 고무도장이 된다. 대신 최후 방어선을 사람이 아니라 `pre-push` + GitHub 서버 측에 둔다. `--force`·`--no-verify`는 계속 deny |
+| 10-D3 | `Bash(node -e ' *)`·`Bash(npm i *)` 권한 존치 여부 | ⏳ Candela M4에 재검토. 단 로컬 `.env`에는 `VITE_FIREBASE_API_KEY`(공개 식별자)뿐이고 실 시크릿은 Secret Manager에만 있어 현 위험은 낮음 |
+| 10-D4 | [nginx.conf](../../nginx.conf) 처분 — 현재 미사용(Dockerfile은 `node server.mjs` 실행)이나 CSP 부재 + "인증 없는 프록시 + 키 주입" 패턴 보유 | ⏳ archive 이동 또는 삭제 |
+| 10-D5 | 저장소 단위 push protection 활성화 | ⏳ **사용자 액션** — GitHub → Settings → Code security. admin 권한 토큰이 없어 자동화 불가 |
+
+## 11. 🕯️ Candela (2026-08-19 신설)
+
+M0~M5 로드맵·승격 게이트·미결 항목은 **[candela/roadmap.md](../candela/roadmap.md)가 정본**이다. 본 문서에는 중복 등재하지 않으며, 도메인 외 파급이 있는 항목만 여기로 승격한다.
+
+| # | 작업 | 상태 |
+| :--- | :--- | :--- |
+| ~~11-1~~ | ~~public 저장소 전제 보안 개선 4건 — `.claude/` gitignore·에이전트 push 권한 회수·`trust proxy`·시크릿 스캐너 보강~~ | ✅ 2026-08-19 — [security_audit.md §11](security_audit.md) |
+| 11-2 | `firestore.rules`에 `candela_*` 명시적 deny 등재 (기본 deny로 이미 차단되나 향후 규칙 추가 실수 방지) | Candela M2 |
+| 11-3 | Candela 관리 화면 `React.lazy` 코드 스플리팅 — 퍼블릭 방문자 번들에 매매 로직·엔드포인트 미포함 | Candela M2 |
+| 11-4 | **브로커 키를 로컬 머신에 두지 않는다** — Worker는 클라우드 실행, 실계좌 키는 Secret Manager 전용. 로컬 개발은 모의투자 키로만. (Windows·macOS 2대를 오가는 환경 전제) | 원칙 등재 완료 — [security_spec §2 N-8](../candela/security_spec.md) |
+| 11-5 | 시크릿 패턴에 한투 실제 키 형식 추가 — 발급 후 실측 기준으로 `secretPatterns.mjs` 보강 | Candela M0 |

@@ -1,0 +1,9 @@
+#!/bin/sh
+# 시크릿 스캐너 — 스테이징된 내용을 커밋 전에 검사한다.
+# 실체는 Node 스크립트다 (Windows ↔ macOS 병행 작업 전제, 셸 의존 최소화).
+#
+# 이 파일은 .githooks/ 에 있고 core.hooksPath 로 활성화된다.
+# .git/hooks/ 는 clone 되지 않으므로 저장소에 훅을 두는 유일한 방법이다.
+# 활성화: npm install (prepare 스크립트) 또는 git config core.hooksPath .githooks
+
+exec node "$(dirname "$0")/../ci/secret-scan.mjs" --staged
