@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-07-22
-version: v2.1
+last_updated: 2026-08-19
+version: v2.2
 target_files:
   - server.mjs
   - Dockerfile
@@ -318,6 +318,35 @@ firebase use prisincera
 # 5. 개발 서버 실행으로 정상 동작 확인
 npm run dev
 ```
+
+### 4-7. ⚠️ 머신을 옮길 때 — 시크릿 훅 활성화 (필수·1회)
+
+Windows 데스크톱 ↔ macOS 노트북을 git으로 동기화하는 구조에서 **가장 중요한 수동 단계**다.
+
+> **`git pull`만으로는 시크릿 스캐너가 켜지지 않는다.**
+> `.githooks/` 파일은 따라오지만, 이를 가리키는 `core.hooksPath`는 **git config라서 클론마다 로컬**이다.
+> 실측 확인: 갓 클론한 저장소에서 시크릿이 담긴 커밋이 **차단 없이 생성됐다.**
+
+```bash
+npm install        # prepare 스크립트가 core.hooksPath를 설정한다
+# 또는
+npm run prepare
+```
+
+*   **머신당 1회면 된다.** `.git/config`에 기록되므로 이후 pull에는 재실행이 필요 없다.
+*   확인: `git config --get core.hooksPath` → `.githooks`
+*   깜빡해도 **빌드가 막힌다** — `npm run build`의 prebuild 게이트(`ci/design-check.mjs`)가 hooksPath 미설정을 ERROR로 처리한다. 다만 빌드 전에 커밋부터 하면 그 커밋은 검사를 받지 않으므로, **pull 직후 먼저 실행하는 것**을 습관으로 둔다.
+
+`git pull`로 따라오지 않는 것들:
+
+| 항목 | 조치 |
+| :--- | :--- |
+| `core.hooksPath` (훅 활성화) | `npm install` — 위 참조 |
+| `node_modules/` | `npm install` |
+| `.env` | 수동 생성 (현재 `VITE_FIREBASE_API_KEY` 1건) |
+| `.firebaserc` | §4-6 3단계 |
+| `.claude/settings.local.json` | 머신별 누적 규칙 — 재생성됨(초기엔 권한 프롬프트가 늘어난다). 공유 정책은 `.claude/settings.json`이 담당하므로 deny 규칙·경로 제한은 따라온다 |
+| 커밋하지 않은 작업 | git이 동기화 수단이므로 **커밋해야 넘어간다** |
 
 ---
 
