@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-08-19
-version: v2.5
+version: v2.6
 target_files: []  # 작업 백로그 — 특정 코드 미지배
 ---
 
@@ -149,7 +149,27 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | ~~10-D2~~ | ~~자동 푸시~~ | ✅ **허용으로 전환.** 초기 권고(영구 금지)는 git이 동기화 수단이라는 전제에서 틀렸다 — 고빈도 승인은 고무도장이 된다. 대신 최후 방어선을 사람이 아니라 `pre-push` + GitHub 서버 측에 둔다. `--force`·`--no-verify`는 계속 deny |
 | 10-D3 | `Bash(node -e ' *)`·`Bash(npm i *)` 권한 존치 여부 | ⏳ Candela M4에 재검토. 단 로컬 `.env`에는 `VITE_FIREBASE_API_KEY`(공개 식별자)뿐이고 실 시크릿은 Secret Manager에만 있어 현 위험은 낮음 |
 | 10-D4 | [nginx.conf](../../nginx.conf) 처분 — 현재 미사용(Dockerfile은 `node server.mjs` 실행)이나 CSP 부재 + "인증 없는 프록시 + 키 주입" 패턴 보유 | ⏳ archive 이동 또는 삭제 |
-| 10-D5 | 저장소 단위 push protection 활성화 | ⏳ **사용자 액션** — GitHub → Settings → Code security. admin 권한 토큰이 없어 자동화 불가 |
+| 10-D5 | 저장소 단위 push protection 활성화 | ⏳ **사용자 액션 (30초)** — 아래 §10-D5 참조 |
+
+#### 10-D5 상세 — 저장소 단위 push protection
+
+**왜 자동화 불가**: 활성화에는 저장소 `Administration: write` 권한이 필요하다. 로컬에 그런 토큰이 없고(`.env`에는 `VITE_FIREBASE_API_KEY` 1건뿐), Secret Manager의 `GITHUB_TOKEN`은 콘텐츠 커밋용이라 권한이 부족할뿐더러 **프로덕션 시크릿을 개발 머신으로 내리는 것 자체가 [N-8 원칙](../candela/security_spec.md) 위반**이다. `gh` CLI도 미설치이며 설치해도 인증이 대화형이다.
+
+**절차**
+
+1. https://github.com/matthewshim/PriSincera/settings/security_analysis
+2. **Secret Protection** → *Push protection* → **Enable**
+
+**현재 상태 (2026-08-19 실측)**
+
+| 항목 | 상태 |
+| :--- | :--- |
+| Secret scanning | ✅ public 저장소 자동 (무료) |
+| Push protection **for users** | ✅ 계정 단위 기본 활성 — **실전 동작 확인**: `xox`-형식 테스트 픽스처로 실제 push가 거부됨 |
+| Push protection **for repositories** | ⏳ 미설정 (이 항목) |
+| Repository rulesets | 없음 (`GET /rulesets` → `[]`) |
+
+**우선순위가 낮은 이유와, 그럼에도 켜는 이유**: 1인 소유 public 저장소에서는 계정 단위 protection이 이미 같은 detector로 동작하므로 당장의 델타는 작다. 다만 계정 단위 protection은 **public 저장소에만** 적용되므로, ① 협업자를 추가하거나 ② 저장소를 private로 전환하면 보호가 사라진다. 저장소 단위로 켜 두면 그 두 경우에도 유지된다.
 
 ## 11. 🕯️ Candela (2026-08-19 신설)
 
