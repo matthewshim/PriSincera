@@ -2,7 +2,7 @@
 status: draft
 domain: Candela
 last_updated: 2026-08-19
-version: v1.0
+version: v1.1
 target_files:
   - (미구현) src/pages/CandelaLanding.jsx
   - (미구현) src/pages/CandelaPerformance.jsx
@@ -15,6 +15,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — 초개인 자동매매 + 퍼블릭 사례 연구 이원 구조, 포지셔닝·공개 원칙·규제 경계 확정 | Candela 전반 |
+| v1.1 | 2026-08-19 | AI Agent | §7 i18n 정책 개정 — ko 우선 → **ko·en·ja 3종 동시 반영**(웹서비스 규격 정합). Admin은 ko 단일 유지 | locales, Candela 퍼블릭 |
 
 ---
 
@@ -78,7 +79,12 @@ Candela가 수익률을 전면에 세우면 브랜드에 "돈 버는 법" 색이
 
 ## 7. i18n 정책
 
-본 저장소는 ko/en/ja 3로케일 체계다. Candela는 **ko 우선**으로 출시하고, 실적 3개월 축적 후 en·ja를 확장한다. 초기 번역 부채를 지지 않는다.
+본 저장소는 ko/en/ja 3로케일 체계다. Candela 퍼블릭 페이지는 **3종 전량을 처음부터 반영**한다(2026-08-19 결정) — 기존 웹서비스 규격에 맞춘다.
+
+*   `candela` 네임스페이스를 `ko.json`·`en.json`·`ja.json`에 동시 신설한다.
+*   Admin UI는 `src/components/admin/`이 i18n 게이트 제외 구역이므로 **ko 단일**로 둔다([ui_specification §3](ui_specification.md)).
+
+> 초판에서는 "ko 우선, 실적 축적 후 확장"으로 적었으나, 나중에 붙이는 번역은 키 구조를 두 번 만들게 되고 퍼블릭 페이지만 3종 규격에서 이탈한다. 처음부터 3종으로 간다.
 
 ## 8. 성공 기준
 
@@ -93,6 +99,8 @@ Candela가 수익률을 전면에 세우면 브랜드에 "돈 버는 법" 색이
 ---
 
 ## 관련 문서
+*   [🏗️ 데이터 계약](data_contract.md) — 공개 원칙 §5를 스키마로 강제
+*   [📐 UI 구현 명세서](ui_specification.md) — 화면·샘플 노출 차단 게이트
 *   [🏗️ 시스템 아키텍처](system_architecture.md) — 3계층 구조·명령 큐·실적 발행 경로
 *   [📜 보안 규범](security_spec.md) — 키 격리·저장소 분리·금지 규칙
 *   [📘 사고 대응 런북](incident_response.md)

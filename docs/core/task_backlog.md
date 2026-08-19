@@ -173,7 +173,9 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 
 ## 11. 🕯️ Candela (2026-08-19 신설)
 
-M0~M5 로드맵·승격 게이트·미결 항목은 **[candela/roadmap.md](../candela/roadmap.md)가 정본**이다. 본 문서에는 중복 등재하지 않으며, 도메인 외 파급이 있는 항목만 여기로 승격한다.
+P0~P5 로드맵·승격 게이트·미결 항목은 **[candela/roadmap.md](../candela/roadmap.md)가 정본**이다. 본 문서에는 중복 등재하지 않으며, 도메인 외 파급이 있는 항목만 여기로 승격한다.
+
+> **2026-08-19 방식 개정**: 실행 계층을 먼저 만드는 M0~M5에서 **UI 선행(P0~P5)**으로 전환했다 — 계약 → 픽스처 → Admin UI → Public UI → Worker → 공개. 근거와 위험 대응은 [ui_specification](../candela/ui_specification.md)·[data_contract](../candela/data_contract.md).
 
 | # | 작업 | 상태 |
 | :--- | :--- | :--- |
@@ -181,4 +183,6 @@ M0~M5 로드맵·승격 게이트·미결 항목은 **[candela/roadmap.md](../ca
 | 11-2 | `firestore.rules`에 `candela_*` 명시적 deny 등재 (기본 deny로 이미 차단되나 향후 규칙 추가 실수 방지) | Candela M2 |
 | 11-3 | Candela 관리 화면 `React.lazy` 코드 스플리팅 — 퍼블릭 방문자 번들에 매매 로직·엔드포인트 미포함 | Candela M2 |
 | 11-4 | **브로커 키를 로컬 머신에 두지 않는다** — Worker는 클라우드 실행, 실계좌 키는 Secret Manager 전용. 로컬 개발은 모의투자 키로만. (Windows·macOS 2대를 오가는 환경 전제) | 원칙 등재 완료 — [security_spec §2 N-8](../candela/security_spec.md) |
-| 11-5 | 시크릿 패턴에 한투 실제 키 형식 추가 — 발급 후 실측 기준으로 `secretPatterns.mjs` 보강 | Candela M0 |
+| 11-5 | 시크릿 패턴에 한투 실제 키 형식 추가 — 발급 후 실측 기준으로 `secretPatterns.mjs` 보강 | Candela P4 |
+| 11-6 | **`design-check` 확장 — 샘플 데이터 노출 차단(G-2)**: `CANDELA_DATA_SOURCE === 'fixture'`인데 퍼블릭 `/candela` 라우트가 등록돼 있으면 빌드 ERROR | Candela P3 |
+| 11-7 | `candela` 로케일 네임스페이스 신설 — ko·en·ja **3종 동시**(D-2 결정). Admin은 i18n 게이트 제외 구역이라 ko 단일 | Candela P3 |
