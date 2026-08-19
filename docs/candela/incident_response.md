@@ -2,7 +2,7 @@
 status: draft
 domain: Candela
 last_updated: 2026-08-19
-version: v1.0
+version: v1.1
 target_files:
   - (미구현) candela-worker/ (별도 private 저장소)
   - admin-api.mjs
@@ -15,6 +15,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — 시나리오 5종 대응 절차·순서 원칙·연 1회 훈련 수칙 | Candela 운영 |
+| v1.1 | 2026-08-19 | AI Agent | §7 보완 — 최초 훈련을 실계좌 진입(P5) 전 승격 게이트로 명시. 결정 변경 없음 | Candela 운영 |
 
 ---
 
@@ -107,6 +108,8 @@ target_files:
 *   모의투자 계좌에서 **킬스위치 실제 발동** → 정지까지 걸린 시간 측정
 *   API 키 재발급을 실제로 1회 수행 → 소요 시간과 막히는 지점 기록
 *   결과를 본 문서에 반영하고 version을 올린다
+
+> **최초 훈련은 실계좌 전에**: 위 훈련의 첫 1회는 **실계좌 소액 진입(P5) 전에 반드시 완료**한다. 킬스위치는 P4에서 실배선되므로([ui_specification §2](ui_specification.md)), 배선 직후 모의투자에서 실발동 훈련을 1회 마친 것을 실계좌 승격 게이트로 삼는다([roadmap §2](roadmap.md)). 검증 안 된 정지 버튼으로 실자산을 운용하지 않는다.
 
 ---
 

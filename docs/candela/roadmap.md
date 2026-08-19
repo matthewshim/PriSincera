@@ -2,7 +2,7 @@
 status: draft
 domain: Candela
 last_updated: 2026-08-19
-version: v1.2
+version: v1.3
 target_files:
   - (미구현) candela-worker/ (별도 private 저장소)
   - (미구현) src/pages/CandelaLanding.jsx
@@ -17,6 +17,7 @@ target_files:
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — M0~M5 단계·승격 게이트·확정 사항·미결 항목 | Candela 전반 |
 | v1.1 | 2026-08-19 | AI Agent | **UI 선행 방식으로 개정** — M0~M5를 P0~P5로 재편(계약→픽스처→Admin UI→Public UI→Worker→공개). UI 선행 위험 5종·대응 표 신설, 결정 3건(CSS 토큰 준수·i18n 3종·픽스처 lazy 분리) 확정 | Candela 전반 |
 | v1.2 | 2026-08-19 | AI Agent | Q-1·Q-3 결정 확정 → D-4(국내+미국)·D-5(주간 집계 고정). 미장 편입에 따른 신규 미결 Q-6(DST)·Q-7(환율 소스) 등재 | data_contract, system_architecture |
+| v1.3 | 2026-08-19 | AI Agent | 보완 — §1 누적 기간감·§2 실계좌 진입 전 킬스위치 훈련 게이트·§4-1 실행 대기(E-1~E-3) 추가. 결정 변경 없음 | Candela 전반 |
 
 ---
 
@@ -48,6 +49,8 @@ target_files:
 | **P4** | Worker·백테스트 (private 저장소) + 킬스위치 실배선 | 3~4주 | 수수료·거래세·슬리피지 반영, look-ahead·상폐 누락 점검 통과 |
 | **P5** | 모의투자 → 관망 → 실계좌 소액 → 퍼블릭 공개 | 3개월+ | 아래 §2·§3 |
 
+> **누적 기간감**: P0~P3(계약·픽스처·Admin·Public UI)까지 대략 5~7주, P4(Worker·백테스트·킬스위치 실배선) 3~4주를 더하면 실집행 준비까지 약 2~3개월이다. 이후 P5(모의 → 관망 → 실계좌)가 3개월+이므로 **퍼블릭 실공개는 착수로부터 6개월+ 뒤**다. 이 롤업은 목표가 아니라 기대치 정렬용이며, §3(공개를 앞당기지 않는다)의 정량 근거다.
+
 **P0을 픽셀보다 먼저 두는 이유**: UI 선행의 최대 위험은 더미 데이터가 스키마를 결정해버리는 것이다. 보기 좋은 지표로 목업을 만들면 실제 체결에서 계산 불가능한 값이 화면에 박히고, UI와 Worker를 둘 다 다시 만들게 된다.
 
 **P2가 P3보다 먼저인 이유**: 실측 결과 `src/components/admin/`은 i18n 게이트 제외 구역이라 **한국어 하드코딩이 허용**된다. 디자인 반복을 마찰 없는 쪽에서 먼저 돌리고, 확정된 패턴을 언어팩이 필요한 퍼블릭으로 옮긴다.
@@ -59,6 +62,8 @@ target_files:
 ```
 
 이 순서를 건너뛰면 높은 확률로 돈을 잃는다. **관망 구간의 유혹이 가장 크다** — 결과가 나쁘면 고치고 싶고, 좋으면 키우고 싶어진다. 둘 다 하지 않는 것이 관망의 목적이다.
+
+> **실계좌 진입 전 필수 게이트**: 킬스위치 실발동 훈련 1회 완료([incident_response §7](incident_response.md)). 킬스위치는 P4에서 실배선되므로, 배선 직후 모의투자에서 한 번 눌러 정지까지의 시간을 측정한 뒤에야 실계좌로 승격한다. 검증 안 된 정지 장치로 실자산을 다루지 않는다.
 
 ## 3. 퍼블릭 공개를 앞당기지 않는다
 
@@ -95,6 +100,16 @@ UI가 P3에서 완성돼도 **실데이터 3개월 전에는 공개하지 않는
 | D-3 | 픽스처 번들 | **lazy 청크 분리** — 프로덕션 번들에 더미 실적 미포함 |
 | D-4 | 대상 시장 | **국내(KRX) + 미국** — 계약에 `markets`·`asOfByMarket`·`allocationPct`·`benchmarks[]`·`fxContributionPct` 반영. 운영 부담은 [system_architecture §8-1](system_architecture.md) |
 | D-5 | 실적 공개 집계 단위 | **주간 고정** — `aggregation`을 선택지가 아닌 고정값으로 둔다. 선택지로 두면 언젠가 일별로 바꾸게 되고, 그 순간 포지션이 역산된다 |
+
+## 4-1. 실행 대기 — 결정은 끝났고 착수만 남은 항목
+
+미결(§4)이 '무엇을 정할까'라면, 여기는 '이미 정해졌으니 하기만 하면 되는' 것이다. 문서에 흩어져 있어 누락되기 쉬우므로 한데 모은다.
+
+| # | 항목 | 근거 | 착수 시점 |
+| :--- | :--- | :--- | :--- |
+| E-1 | `firestore.rules`에 `candela_*` 명시 deny 등재 | [system_architecture §7](system_architecture.md) | 컬렉션 신설 시 (그 전까지 기본 deny가 커버) |
+| E-2 | 상표·도메인 가용성 확인 (= Q-5) | [product_strategy §2](product_strategy.md) | P3 이전 |
+| E-3 | GitHub Secret Scanning + Push Protection 활성화 | [security_spec S-2](security_spec.md) | 착수 즉시 |
 
 ## 5. 하지 않기로 한 것
 

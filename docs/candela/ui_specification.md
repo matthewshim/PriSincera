@@ -2,7 +2,7 @@
 status: draft
 domain: Candela
 last_updated: 2026-08-19
-version: v1.1
+version: v1.2
 target_files:
   - (미구현) src/pages/CandelaLanding.jsx
   - (미구현) src/pages/CandelaPerformance.jsx
@@ -21,6 +21,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — UI 선행(픽스처 기반) 개발 전제. 샘플 데이터 노출 차단 3중 게이트, 우선 설계 화면 2종, 실측 제약(i18n·토큰 규범) 반영 | App.jsx, design-check, locales |
 | v1.1 | 2026-08-19 | AI Agent | 다중 시장(D-4) 반영 — 실적 대시보드에 시장 배분·환율 기여분·시장별 벤치마크 행 추가, 시장별 기준일 표기 규범 | Candela 퍼블릭 UI |
+| v1.2 | 2026-08-19 | AI Agent | G-4(live 전환 검증) 게이트 추가 — G-2의 'fixture 오공개'와 대칭으로 '빈 live 공개' 차단. 결정 변경 없음 | design-check, App.jsx |
 
 ---
 
@@ -38,13 +39,14 @@ target_files:
 
 가짜 수익률이 실제 실적처럼 보이는 페이지가 공개되면 **날조된 기록을 게시하는 것**이다. 브랜드 신뢰가 곧 자산인 프로젝트에서 회복 불가하며, 라우터 한 줄 실수로 일어날 수 있다.
 
-### 게이트 3중
+### 게이트 3중 + 전환 검증(G-4)
 
 | # | 게이트 | 동작 |
 | :--- | :--- | :--- |
 | G-1 | **데이터 소스 선언** | `src/data/candela/dataSource.js`가 `CANDELA_DATA_SOURCE`를 `'fixture' \| 'live'`로 export. 단일 진실 원천 |
 | G-2 | **빌드 차단** | `ci/design-check.mjs` 확장 — `CANDELA_DATA_SOURCE === 'fixture'`인데 `App.jsx`에 퍼블릭 `/candela` 라우트가 등록돼 있으면 **ERROR로 빌드 실패** |
 | G-3 | **워터마크** | 렌더 데이터의 `dataSource`가 `fixture`면 **해제 불가능한 배너**를 상시 노출. 닫기 버튼 없음, `dismiss` 상태 없음 |
+| G-4 | **live 전환 검증** | `dataSource`를 `live`로 바꾸고 `/candela` 라우트를 등록하는 시점에, GCS 실적 스냅샷의 **존재와 최신성**(`asOf`가 기대 범위 내인지)을 배포 게이트가 확인한다. G-2가 'fixture의 오공개'를 막는다면 G-4는 '빈 live의 공개'를 막는다 — 두 방향이 대칭을 이룬다 |
 
 > **G-3이 환경변수가 아니라 데이터의 `dataSource` 필드를 보는 이유**: 데이터와 표시가 서로 다른 출처를 참조하면 언젠가 어긋난다. 화면에 그려지는 수치와 "샘플입니다"라는 표시는 **같은 객체에서 나와야** 한다.
 
@@ -53,7 +55,7 @@ target_files:
 ```
 P2 Admin UI    →  /admin 인증 뒤. 퍼블릭 노출 0
 P3 Public UI   →  퍼블릭 라우트 미등록 상태로 개발 (G-2가 강제)
-P5 공개        →  실데이터 확보 후 라우트 등록 + G-2 통과
+P5 공개        →  실데이터 확보 후 라우트 등록 + G-2·G-4 통과
 ```
 
 ### 킬스위치는 목업하지 않는다
