@@ -2,7 +2,7 @@
 status: draft
 domain: Candela
 last_updated: 2026-08-19
-version: v1.0
+version: v1.1
 target_files:
   - (미구현) src/pages/CandelaLanding.jsx
   - (미구현) src/pages/CandelaPerformance.jsx
@@ -20,6 +20,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — UI 선행(픽스처 기반) 개발 전제. 샘플 데이터 노출 차단 3중 게이트, 우선 설계 화면 2종, 실측 제약(i18n·토큰 규범) 반영 | App.jsx, design-check, locales |
+| v1.1 | 2026-08-19 | AI Agent | 다중 시장(D-4) 반영 — 실적 대시보드에 시장 배분·환율 기여분·시장별 벤치마크 행 추가, 시장별 기준일 표기 규범 | Candela 퍼블릭 UI |
 
 ---
 
@@ -93,10 +94,17 @@ P5 공개        →  실데이터 확보 후 라우트 등록 + G-2 통과
 | 영역 | 내용 | 규범 |
 | :--- | :--- | :--- |
 | 히어로 | 시스템 한 줄 정의 + 가동 기간 + 데이터 기준일 | 수익률을 큰 폰트로 띄우지 않는다 |
-| 자산곡선 | `navIndex` vs `benchmarkIndex` 라인 | **벤치마크 병기 필수** |
+| 자산곡선 | `navIndex` vs `benchmarkIndex` 라인 | **벤치마크 병기 필수.** `benchmarkRef`(기본 `BLENDED`)를 범례에 표기 |
 | 드로다운 밴드 | 곡선 하단에 `drawdownPct` 영역 | MDD를 접거나 숨기지 않는다 |
 | 지표 카드 | 누적수익률·MDD·샤프·승률·거래수·평균보유일 | **MDD를 수익률 옆 동급으로 배치** |
+| **시장 배분** | `allocationPct` — KRX/US 비중 | 어느 시장에서 난 성과인지 밝힌다 |
+| **환율 기여분** | `fxContributionPct` | **누적수익률 바로 옆에 배치.** "전략이 번 것"과 "환율이 도운 것"을 분리해 보여준다 |
+| 시장별 벤치마크 | `benchmarks[]` — KOSPI·S&P 500 각각 | 배분 가중만으로는 시장별 상대 성과가 안 보인다 |
 | 최악 구간 | 최대 낙폭 기간과 그때 무슨 일이 있었는지 | 첫 스크린에서 도달 가능해야 한다 |
+
+> **`fxContributionPct`를 눈에 띄게 두는 이유**: 미장을 포함하면 원화 기준 수익률에 환차손익이 섞인다. 이걸 묻어두면 환율 덕에 좋아 보이는 실적을 전략 성과로 오인하게 만드는 셈이고, 그건 공개 원칙 6(손실 은폐 금지)의 정신에 어긋난다.
+
+> **기준일 표기**: `asOfByMarket`으로 시장별 기준일이 다를 수 있다. 한쪽만 갱신된 날 "업데이트가 멈췄나?"로 읽히지 않도록 시장별 기준일을 명시한다.
 
 > **금액·수량은 계약에 필드가 없다**([data_contract §1](data_contract.md)). UI에서 거를 필요조차 없다 — 애초에 오지 않는다.
 

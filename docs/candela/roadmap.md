@@ -2,7 +2,7 @@
 status: draft
 domain: Candela
 last_updated: 2026-08-19
-version: v1.1
+version: v1.2
 target_files:
   - (미구현) candela-worker/ (별도 private 저장소)
   - (미구현) src/pages/CandelaLanding.jsx
@@ -16,6 +16,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — M0~M5 단계·승격 게이트·확정 사항·미결 항목 | Candela 전반 |
 | v1.1 | 2026-08-19 | AI Agent | **UI 선행 방식으로 개정** — M0~M5를 P0~P5로 재편(계약→픽스처→Admin UI→Public UI→Worker→공개). UI 선행 위험 5종·대응 표 신설, 결정 3건(CSS 토큰 준수·i18n 3종·픽스처 lazy 분리) 확정 | Candela 전반 |
+| v1.2 | 2026-08-19 | AI Agent | Q-1·Q-3 결정 확정 → D-4(국내+미국)·D-5(주간 집계 고정). 미장 편입에 따른 신규 미결 Q-6(DST)·Q-7(환율 소스) 등재 | data_contract, system_architecture |
 
 ---
 
@@ -29,7 +30,9 @@ target_files:
 | Worker 저장소 | **별도 private 저장소** (`candela-worker`) |
 | 실적 발행 | GCS 적재 + 해시 체인 (git 커밋 아님) |
 | 전략 성격 | **일봉 스윙** |
-| 증권사 | 한국투자증권 오픈API (모의투자 지원이 결정적) |
+| **대상 시장** | **국내(KRX) + 미국** — 기준 통화 KRW, 환차손익 분리 표기 |
+| **실적 집계** | **주간 고정** (일별 배제 — 포지션 역산 방지) |
+| 증권사 | 한국투자증권 오픈API (모의투자 지원이 결정적, 해외주식도 지원) |
 | 기존 보안 개선 4건 | **적용 완료** — [security_spec §3](security_spec.md) |
 
 ## 1. 단계 — UI 선행 (2026-08-19 개정)
@@ -77,11 +80,11 @@ UI가 P3에서 완성돼도 **실데이터 3개월 전에는 공개하지 않는
 
 | # | 항목 | 결정 시점 |
 | :--- | :--- | :--- |
-| Q-1 | 대상 시장 — 국내만 vs 미장 포함 | **P0** (계약의 통화·거래시간 필드에 영향) |
 | Q-2 | Worker 구현 언어 — Python(pandas·vectorbt)이 백테스트에 압도적으로 유리. 웹과 언어를 나눌지 | P4 |
-| Q-3 | 실적 공개 집계 단위 — 주간 vs 월간 (포지션 역산 방지) | **P0** (`journal.aggregation` 필드) |
 | Q-4 | 종목명 공개 여부 — 계약에는 선택 필드(`symbol`)로 두되 정책 미확정 | P5 |
 | Q-5 | 상표·도메인 가용성 확인 (Candela) | P3 이전 |
+| Q-6 | 미국 세션 DST 대응 방식 — 현지시각 기준 계산 vs 전환일 알림 | P4 |
+| Q-7 | 환율 데이터 소스 — 한투 API 제공분 vs 별도 | P4 |
 
 **결정 완료 (2026-08-19)**
 
@@ -90,6 +93,8 @@ UI가 P3에서 완성돼도 **실데이터 3개월 전에는 공개하지 않는
 | D-1 | Candela CSS 토큰 규범 | **준수** — 6-4 선례는 기존 자산 대상. 신규 코드까지 예외로 두면 규범이 침식된다 |
 | D-2 | 퍼블릭 페이지 i18n | **ko·en·ja 3종 전량 반영** — 웹서비스 규격에 맞춘다 |
 | D-3 | 픽스처 번들 | **lazy 청크 분리** — 프로덕션 번들에 더미 실적 미포함 |
+| D-4 | 대상 시장 | **국내(KRX) + 미국** — 계약에 `markets`·`asOfByMarket`·`allocationPct`·`benchmarks[]`·`fxContributionPct` 반영. 운영 부담은 [system_architecture §8-1](system_architecture.md) |
+| D-5 | 실적 공개 집계 단위 | **주간 고정** — `aggregation`을 선택지가 아닌 고정값으로 둔다. 선택지로 두면 언젠가 일별로 바꾸게 되고, 그 순간 포지션이 역산된다 |
 
 ## 5. 하지 않기로 한 것
 

@@ -2,7 +2,7 @@
 status: draft
 domain: Candela
 last_updated: 2026-08-19
-version: v1.0
+version: v1.1
 target_files:
   - (미구현) src/data/candela/schema.mjs
   - (미구현) src/data/candela/fixtures/
@@ -16,6 +16,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — UI 선행 개발 전제. 퍼블릭 계약에서 금액·수량 필드를 스키마 레벨로 배제, `dataSource` 판별 필드·해시 체인 규정 | Candela UI, Worker |
+| v1.1 | 2026-08-19 | AI Agent | 다중 시장 반영 — asOfByMarket·baseCurrency·allocationPct·benchmarks[] 배열화·fxContributionPct(환차손익 분리)·journal.market 추가. aggregation을 주간 **고정값**으로 확정 | Candela UI, Worker |
 
 ---
 
@@ -52,8 +53,14 @@ UI를 먼저 만드는 방식의 최대 위험은 **더미 데이터가 스키�
 {
   "schemaVersion": 1,
   "dataSource": "live",        // "live" | "fixture"  ← UI 워터마크 판별의 유일한 근거
-  "generatedAt": "2026-11-21T06:40:00+09:00",
-  "asOf": "2026-11-20",        // 공개 기준일 (T+1 이상 지연)
+  "generatedAt": "2026-11-21T07:00:00+09:00",
+  "asOf": "2026-11-20",        // 통합 공개 기준일 (T+1 이상 지연)
+  "baseCurrency": "KRW",       // 모든 비율의 기준 통화
+  "markets": ["KRX", "US"],
+  "asOfByMarket": {            // 휴장일이 서로 다르므로 시장별 기준일을 함께 싣는다
+    "KRX": "2026-11-20",
+    "US":  "2026-11-19"
+  },
   "integrity": {
     "prevHash": "sha256:…",    // 전일 레코드 해시 — 소급 조작 시 체인이 깨진다
     "hash": "sha256:…"
@@ -63,6 +70,8 @@ UI를 먼저 만드는 방식의 최대 위험은 **더미 데이터가 스키�
 
 **`dataSource`가 계약에 있는 것이 핵심이다.** UI는 환경변수나 빌드 플래그가 아니라 **데이터 자체**를 보고 샘플 여부를 판단한다. 데이터와 표시가 분리되면 언젠가 어긋난다.
 
+**`asOfByMarket`이 필요한 이유**: 대상 시장이 국내+미국(2026-08-19 결정)이라 휴장일이 어긋난다. 한쪽만 열린 날 통합 `asOf`만 싣으면 "어제 데이터가 왜 안 바뀌었지"를 UI가 설명할 수 없다.
+
 ### 2-2. `performance/summary.json`
 
 ```jsonc
@@ -70,62 +79,74 @@ UI를 먼저 만드는 방식의 최대 위험은 **더미 데이터가 스키�
   // …envelope…
   "inception": "2026-11-01",
   "metrics": {
-    "cumulativeReturnPct": 12.4,
+    "cumulativeReturnPct": 12.4,   // baseCurrency(KRW) 기준 — 환차손익 포함
     "cagrPct": 18.1,
-    "maxDrawdownPct": -8.7,      // 항상 음수 또는 0
+    "maxDrawdownPct": -8.7,        // 항상 음수 또는 0
     "sharpe": 1.02,
     "winRatePct": 54.5,
     "tradeCount": 88,
     "avgHoldingDays": 6.2,
-    "exposurePct": 62.0          // 평균 투자 비중
+    "exposurePct": 62.0,           // 평균 투자 비중
+    "fxContributionPct": 1.8       // 위 수익률 중 환율이 기여한 몫 (전략 성과와 분리)
   },
-  "benchmark": {
-    "name": "KOSPI",
-    "cumulativeReturnPct": 4.1,
-    "maxDrawdownPct": -11.2
-  }
+  "allocationPct": { "KRX": 55.0, "US": 45.0 },
+  "benchmarks": [
+    { "market": "KRX", "name": "KOSPI",   "cumulativeReturnPct":  4.1, "maxDrawdownPct": -11.2 },
+    { "market": "US",  "name": "S&P 500", "cumulativeReturnPct":  9.6, "maxDrawdownPct":  -7.4 },
+    { "market": "BLENDED", "name": "배분 가중", "cumulativeReturnPct": 6.6, "maxDrawdownPct": -9.5 }
+  ]
 }
 ```
 
-**벤치마크는 선택이 아니라 필수다.** 절대 수익률만 보여주는 실적 페이지는 아무것도 증명하지 못한다.
+**벤치마크는 선택이 아니라 필수다.** 절대 수익률만 보여주는 실적 페이지는 아무것도 증명하지 못한다. 시장이 둘이므로 **배열**로 싣고, 배분 가중 벤치마크(`BLENDED`)를 대표값으로 쓴다 — KOSPI 하나와 비교하면 미장 비중만큼 왜곡된다.
+
+**`fxContributionPct`를 분리하는 이유**: 기준 통화가 KRW라 미국 포지션의 성과에 환차손익이 섞인다. 이를 합산해 제시하면 **전략이 잘한 것인지 환율이 도운 것인지 구분할 수 없다.** 정직성 원칙([product_strategy §5](product_strategy.md))상 분리 표기한다.
 
 ### 2-3. `performance/equity_curve.json`
 
 ```jsonc
 {
   // …envelope…
-  "baseIndex": 100,              // 시작 시점을 100으로 정규화 — 금액이 아니다
+  "baseIndex": 100,                    // 시작 시점을 100으로 정규화 — 금액이 아니다
+  "benchmarkRef": "BLENDED",           // 아래 benchmarkIndex가 어느 벤치마크인지 명시
   "points": [
     { "date": "2026-11-01", "navIndex": 100.0, "benchmarkIndex": 100.0, "drawdownPct": 0 },
-    { "date": "2026-11-04", "navIndex": 101.2, "benchmarkIndex":  99.4, "drawdownPct": 0 }
+    { "date": "2026-11-04", "navIndex": 101.2, "benchmarkIndex":  99.4, "drawdownPct": -0.3 }
   ]
 }
 ```
 
 `navIndex`는 지수이므로 **자산 규모를 역산할 수 없다.**
 
+곡선의 `benchmarkIndex`는 **하나만** 싣고 `benchmarkRef`로 무엇인지 밝힌다. 기본값은 배분 가중(`BLENDED`)이다 — 시장이 둘인데 라인을 셋 겹치면 읽히지 않고, KOSPI 하나만 그리면 미장 비중만큼 왜곡된다. 시장별 상세 비교는 요약의 `benchmarks[]` 수치로 충분하다.
+
+> `date`는 통합 영업일 기준이다. 한쪽 시장만 열린 날은 닫힌 쪽 포지션을 전일 종가로 평가해 이어붙인다(구멍을 만들지 않는다).
+
 ### 2-4. `journal/YYYY-MM.json`
 
 ```jsonc
 {
   // …envelope…
-  "aggregation": "weekly",       // "daily" | "weekly" — 포지션 역산 방지 정책에 따름
+  "aggregation": "weekly",       // **고정값** — 2026-08-19 결정. daily는 허용하지 않는다
   "entries": [
     {
       "period": "2026-11-16/2026-11-20",
+      "market": "KRX",           // KRX | US
       "action": "BUY",           // BUY | SELL | HOLD
       "sector": "반도체",
-      "symbol": null,            // 종목 공개 정책 확정 전까지 null
+      "symbol": null,            // 종목 공개 정책 확정 전까지 null (Q-4)
       "weightPct": 8.0,          // 포트폴리오 내 비중
       "holdingDays": 5,
-      "returnPct": 2.1,          // SELL일 때만
+      "returnPct": 2.1,          // SELL일 때만. 현지 통화 기준
       "reason": "20일선 상향 돌파 + 거래량 급증"
     }
   ]
 }
 ```
 
-> **일별 공개 금지 이유**: 보유 종목 수가 적을 때 일별 수익률 시계열로 종목·비중이 역산된다. "종목 비공개" 정책이 수익률 공개로 무력화되므로 `aggregation`은 기본 `weekly`다.
+> **일별 공개를 스키마에서 배제한 이유**: 보유 종목 수가 적을 때 일별 수익률 시계열로 종목·비중이 역산된다. "종목 비공개" 정책이 수익률 공개로 무력화되므로 `aggregation`은 **주간 고정**이다. 선택지로 두면 언젠가 바꾸게 된다.
+
+> `returnPct`는 **현지 통화 기준**이다. 개별 매매의 성패에 환율을 섞지 않는다 — 환율 영향은 요약의 `fxContributionPct`가 담당한다.
 
 ## 3. Admin 계약 (Firestore — 비공개)
 
