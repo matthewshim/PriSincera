@@ -18,7 +18,7 @@ import { scanBuffer, scanText } from '../src/data/secretPatterns.mjs';
 const BINARY_EXT = /\.(png|jpe?g|gif|webp|ico|mp3|wav|woff2?|ttf|eot|pdf|zip|gz|mp4)$/i;
 
 /** 루트 직하 신규 파일은 시크릿 파일이 유입되는 가장 흔한 경로다. */
-const ROOT_ALLOW = /^(package(-lock)?\.json|README\.md|\.gitignore|\.gitattributes|Dockerfile|nginx\.conf|cloudbuild\.yaml|vite\.config\.js|firestore\.rules|[a-z-]+\.mjs)$/;
+const ROOT_ALLOW = /^(package(-lock)?\.json|README\.md|\.gitignore|\.gitattributes|Dockerfile|cloudbuild\.yaml|vite\.config\.js|firestore\.rules|[a-z-]+\.mjs)$/;
 
 function git(args) {
   return execFileSync('git', args, { maxBuffer: 64 * 1024 * 1024 });

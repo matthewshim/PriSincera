@@ -148,7 +148,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | ~~10-D1~~ | ~~자동 커밋 범위~~ | ✅ **경로 지정 add만** (`docs/` `src/` `ci/` `.githooks/` `pipeline/` `public/`). 전체 스테이징은 deny |
 | ~~10-D2~~ | ~~자동 푸시~~ | ✅ **허용으로 전환.** 초기 권고(영구 금지)는 git이 동기화 수단이라는 전제에서 틀렸다 — 고빈도 승인은 고무도장이 된다. 대신 최후 방어선을 사람이 아니라 `pre-push` + GitHub 서버 측에 둔다. `--force`·`--no-verify`는 계속 deny |
 | 10-D3 | `Bash(node -e ' *)`·`Bash(npm i *)` 권한 존치 여부 | ⏳ Candela M4에 재검토. 단 로컬 `.env`에는 `VITE_FIREBASE_API_KEY`(공개 식별자)뿐이고 실 시크릿은 Secret Manager에만 있어 현 위험은 낮음 |
-| 10-D4 | [nginx.conf](../../nginx.conf) 처분 — 현재 미사용(Dockerfile은 `node server.mjs` 실행)이나 CSP 부재 + "인증 없는 프록시 + 키 주입" 패턴 보유 | ⏳ archive 이동 또는 삭제 |
+| ~~10-D4~~ | ~~`nginx.conf` 처분~~ | ✅ 2026-08-19 **삭제** — 코드·빌드 참조 0건 전수 확인 후 제거(git 히스토리가 아카이브 역할). 문서 참조 5곳 정리, `ROOT_ALLOW`에서도 제외. 패턴 금지는 [security_spec N-2](../candela/security_spec.md)로 존치 |
 | 10-D5 | 저장소 단위 push protection 활성화 | ⏳ **사용자 액션 (30초)** — 아래 §10-D5 참조 |
 
 #### 10-D5 상세 — 저장소 단위 push protection

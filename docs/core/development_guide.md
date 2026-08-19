@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-08-19
-version: v2.2
+version: v2.3
 target_files:
   - server.mjs
   - Dockerfile
@@ -22,8 +22,10 @@ target_files:
 | v1.3 | 2026-06-10 | Antigravity | PriStudy Composer 스케줄 시간 변경(04:00 -> 07:30 KST) 및 재시도 옵션 반영 | Infrastructure, scheduler |
 | **v2.0** | **2026-06-29** | **AI Agent** | **아키텍처 현행화: Nginx 정적 서빙 → Node(Express) `server.mjs` 컨테이너 전환 반영. 디렉토리맵·Dockerfile·API 라우트·Cloud Build 11스텝·잡 6종(tech-composer 포함) 전면 갱신. 운영 런북/환경변수 레퍼런스 분리** | server.mjs, Dockerfile, cloudbuild.yaml |
 | v2.1 | 2026-07-22 | AI Agent | **리런 통합·실측 정합** — 디렉토리맵을 ReLearn 페이지 체제로 갱신, 유령 `builderslog-api.mjs` 참조 제거(server.mjs 인라인+admin-api로 정정), §7-4/7-5를 nginx.conf → server.mjs(express.static·helmet) 실값으로 교체, 잔여 Nginx 표기 정리 | §2, §3, §7 |
+| v2.2 | 2026-08-19 | AI Agent | §4-7 신설 — 머신 이동 시 시크릿 훅 활성화(진입점 4중화: SessionStart·PreToolUse·prepare·post-merge) + `git pull`로 따라오지 않는 항목 표 | package.json, .githooks, .claude/settings.json |
+| v2.3 | 2026-08-19 | AI Agent | 레거시 `nginx.conf` 삭제 반영 — 디렉토리맵을 `.githooks`·`ci`·`.gitattributes` 체제로 갱신, §7-3 표기 정리 | §3, §7 |
 
-> ⚠️ **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리의 `nginx.conf`는 **레거시(미사용)** 이며 Dockerfile이 COPY하지 않습니다.
+> ⚠️ **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리에 남아 있던 레거시 `nginx.conf`는 **2026-08-19 삭제**되었습니다(미사용 + CSP 부재 + 인증 없는 프록시 키 주입 패턴 보유 — [security_spec §3-10](../candela/security_spec.md)).
 
 > **최종 업데이트**: 2026-06-29  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
@@ -150,7 +152,9 @@ d:\prisincera\www\
 ├── 📄 vite.config.js           # Vite 설정
 ├── 📄 package.json             # 의존성 + scripts(dev/build/preview/start)
 ├── 📄 Dockerfile               # 멀티스테이지 빌드 (Node 빌드 → Node 서버 `server.mjs`)
-├── 📄 nginx.conf               # ⚠️ 레거시(미사용) — Dockerfile이 COPY하지 않음
+├── 📁 .githooks/               # git 훅 (pre-commit·commit-msg·pre-push·post-merge) — core.hooksPath로 활성
+├── 📁 ci/                      # 빌드 게이트·시크릿 스캐너·훅 설치 스크립트
+├── 📄 .gitattributes           # 라인 엔딩 정규화 (훅은 eol=lf 강제)
 ├── 📄 cloudbuild.yaml          # Cloud Build CI/CD (web + 파이프라인 잡 11스텝)
 └── 📄 .dockerignore            # Docker 빌드 컨텍스트 제외 (docs/*.md는 예외 포함)
 ```
@@ -490,9 +494,9 @@ CMD ["node", "server.mjs"]      # ← Nginx 아님: Express 서버가 dist 서�
 
 > Stage 2가 `server.mjs`와 API 모듈, `pipeline/`(서버에서 일부 lib 재사용), 번들 데이터(`src/data/`)·블로그 마크다운(`public/content/`)을 함께 복사한다는 점에 유의. `VITE_FIREBASE_API_KEY`는 빌드 인자로 주입됩니다.
 
-### 7-3. SPA 서빙 (server.mjs — nginx.conf는 레거시)
+### 7-3. SPA 서빙 (server.mjs)
 
-> ⚠️ 과거에는 Nginx가 정적 서빙을 담당했으나, **현재는 `server.mjs`(Express)가 SPA 폴백·압축·API를 모두 처리**합니다. 리포지토리의 `nginx.conf`는 빌드/배포에 쓰이지 않는 **레거시 파일**입니다.
+> ⚠️ 과거에는 Nginx가 정적 서빙을 담당했으나, **현재는 `server.mjs`(Express)가 SPA 폴백·압축·API를 모두 처리**합니다. 레거시 `nginx.conf`는 2026-08-19 삭제되었습니다(git 히스토리에 보존).
 
 | 책임 | 구현 (server.mjs) | 설명 |
 |------|------|------|

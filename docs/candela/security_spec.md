@@ -2,10 +2,16 @@
 status: active
 domain: Candela
 last_updated: 2026-08-19
-version: v1.0
+version: v1.1
 target_files:
   - .gitignore
+  - .gitattributes
   - .claude/settings.json
+  - .githooks/
+  - ci/secret-scan.mjs
+  - ci/install-hooks.mjs
+  - ci/design-check.mjs
+  - src/data/secretPatterns.mjs
   - server.mjs
   - admin-api.mjs
   - firestore.rules
@@ -18,6 +24,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — 공개 저장소 전제 위험 분석 9건, 즉시 조치 4건 반영, 절대 금지 규칙·계좌 분리 원칙 확정 | .gitignore, settings.json, server.mjs, admin-api.mjs |
+| v1.1 | 2026-08-19 | AI Agent | §3-5~3-10 추가 — 스캐너 단일 소스화·3중 훅·훅 이동성(fail-closed)·라인엔딩·권한 정책 이동·알려진 한계·nginx.conf 삭제. N-7·N-8 금지 규칙 신설 | .githooks, ci/, .claude/settings.json, package.json |
 
 ---
 
@@ -33,7 +40,7 @@ target_files:
 | # | 금지 | 이유 |
 | :--- | :--- | :--- |
 | N-1 | Candela 관련 값에 **`VITE_` 접두어 사용** | Vite는 `VITE_*` 환경변수를 클라이언트 번들에 문자열로 그대로 박아넣는다. `VITE_KIS_APP_KEY`는 전 세계 공개와 동의어다 |
-| N-2 | nginx·프록시에 **브로커 토큰 주입** | [nginx.conf](../../nginx.conf)의 `/api/subscribe` 패턴(인증 없는 프록시 + 키 주입)을 Candela에 복제하면 즉시 계좌가 열린다 |
+| N-2 | 프록시 설정에 **브로커 토큰 주입** | 구 `nginx.conf`의 `/api/subscribe` 패턴(인증 없는 프록시 + 키 주입)을 Candela에 복제하면 즉시 계좌가 열린다. 해당 파일은 2026-08-19 삭제됐지만(§3-10) **패턴 자체를 금지**한다 — 되살아날 수 있는 것은 파일이 아니라 발상이다 |
 | N-3 | 전략 로직·백테스트 코드를 **public 저장소에 커밋** | 알파 소실 = 수익 소멸. `candela-worker`(private)에서만 관리 |
 | N-4 | 실적을 **git 커밋으로 발행** | 보유 종목·평단 영구 공개 + 서버가 push 권한 상시 보유 |
 | N-5 | Admin 콘솔에 **증권사 API 키 보유** | Admin은 조종석이지 엔진이 아니다. 키는 Worker + Secret Manager |
@@ -46,10 +53,10 @@ target_files:
 Candela 착수 전, 기존 저장소에 이미 존재하던 4건을 선반영했다.
 
 ### 3-1. `.claude/` gitignore 등재 + 시크릿 패턴 확장
-`.claude/`는 untracked였을 뿐 차단되지 않아 `git add -A` 한 번이면 커밋될 수 있었다(내부 경로·GCP 빌드 ID·트리거 UUID 노출). [.gitignore](../../.gitignore)에 등재하고, `.env` 단일 항목을 `.env.*` 와일드카드로 확장해 `.env.candela` 같은 파생 파일명까지 차단했다. `*.key`·`*.pem`·`*secret*.json`·`serviceAccount*.json`도 추가했다.
+`.claude/`는 untracked였을 뿐 차단되지 않아 `git add -A` 한 번이면 커밋될 수 있었다(내부 경로·GCP 빌드 ID·트리거 UUID 노출). [.gitignore](../../.gitignore)에 등재하고(→ §3-8에서 `.claude/*` + `!settings.json` 분할로 재조정), `.env` 단일 항목을 `.env.*` 와일드카드로 확장해 `.env.candela` 같은 파생 파일명까지 차단했다. `*.key`·`*.pem`·`*secret*.json`·`serviceAccount*.json`도 추가했다.
 
 ### 3-2. AI 에이전트 자동 push 권한 회수
-`.claude/settings.json`(§3-1 조치로 이제 gitignore 대상이라 저장소에는 없다)에 `PowerShell(git push origin main)`과 포괄적 `Bash(git commit *)`이 사전 허용되어 있었다. 로컬에 브로커 키가 존재하는 상태에서는 에이전트가 시크릿을 커밋·푸시하는 경로에 **사람 게이트가 없다**는 뜻이다.
+`.claude/settings.json`에 `PowerShell(git push origin main)`과 포괄적 `Bash(git commit *)`이 사전 허용되어 있었다. 로컬에 브로커 키가 존재하는 상태에서는 에이전트가 시크릿을 커밋·푸시하는 경로에 **사람 게이트가 없다**는 뜻이다.
 
 *   자동 허용에서 `git commit`·`git push` 규칙 전량 제거 → 이제 사람 확인을 거친다
 *   `permissions.deny`에 `git push *`·`git remote set-url *` 등재 — deny는 allow보다 우선하므로 광범위 규칙으로 되살아나지 않는다
@@ -121,6 +128,17 @@ prebuild 게이트는 최후 백스톱이다. 저장소를 통해 이동하고 �
 | `git -c core.hooksPath=... commit` 형태의 우회 | 훅 전체 무력화 | `pre-push`도 함께 우회되면 남는 건 GitHub 측 탐지뿐 |
 | GitHub Secret Scanning은 **알려진 제공자 형식만** 탐지 | `SMTP_PASS`·한투 키는 못 잡음 | 로컬 훅이 1차 방어선 |
 
+### 3-10. `nginx.conf` 삭제 (2026-08-19)
+
+프로덕션 컨테이너는 `node server.mjs`를 실행하며 Dockerfile이 `nginx.conf`를 COPY하지 않는다 — 즉 **가동에 관여하지 않는 죽은 파일**이었다. 그런데 내용은 위험했다.
+
+*   CSP 헤더가 없다 (현행 `server.mjs`는 helmet으로 CSP·HSTS를 설정한다)
+*   `/api/subscribe`·`/api/archive`가 **인증 없이** `proxy_set_header Authorization "Token $BUTTONDOWN_API_KEY"`로 키를 주입한다
+
+되살아나면 보안 등급이 내려가고, 무엇보다 Candela 작업 중 "프록시에서 키 주입" 발상의 참조 구현으로 재사용될 위험이 있었다. 코드·빌드 참조 0건을 전수 확인한 뒤 삭제했다(git 히스토리가 아카이브 역할을 하므로 별도 보관 불필요).
+
+> 금지 규칙 **N-2는 유지된다.** 파일은 사라져도 발상은 사라지지 않는다.
+
 ## 4. 착수 시 적용 (M0~M2)
 
 | # | 항목 | 내용 |
@@ -133,7 +151,7 @@ prebuild 게이트는 최후 백스톱이다. 저장소를 통해 이동하고 �
 | S-6 | **번들 분리** | Candela 관리 화면은 `React.lazy` 코드 스플리팅. 퍼블릭 방문자 번들에 매매 로직·엔드포인트가 실리지 않게 한다 |
 | S-7 | **공급망 차단** | Worker는 의존성 최소화 + `npm ci --ignore-scripts` + lockfile 고정 + Dependabot. postinstall 스크립트 하나로 `.env`가 유출된다 |
 | S-8 | **감사 로그** | `candela_audit` append-only. Firestore rules에서 클라이언트 write/delete 전면 차단 |
-| S-9 | **`nginx.conf` 정리** | 현재 Dockerfile은 `node server.mjs`를 실행하므로 미사용 파일이다. 그런데 CSP가 없고 N-2의 위험 패턴을 담고 있다 → `docs/archive` 이동 또는 삭제 |
+| ~~S-9~~ | ~~`nginx.conf` 정리~~ | ✅ 2026-08-19 삭제 완료 — §3-10 |
 
 ## 5. 가장 효과적인 통제 — 기술이 아닌 것
 

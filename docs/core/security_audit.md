@@ -332,7 +332,7 @@ Candela([candela/security_spec](../candela/security_spec.md)) 도입 검토 과�
 ### 11-2. 잔여 항목 (Candela M4 시점 재검토)
 
 *   `.claude/settings.json`의 `Bash(node -e ' *)`·`Bash(npm i *)` — 임의 코드 실행·패키지 설치 허용. git 경로는 닫혔으나 네트워크 경유 유출 경로는 열려 있다. 브로커 키가 로컬에 놓이는 시점에 판단한다.
-*   [nginx.conf](../../nginx.conf) — Dockerfile이 `node server.mjs`를 실행하므로 **현재 미사용 파일**이다. 그런데 CSP가 없고, `/api/subscribe`의 "인증 없는 프록시 + API 키 주입" 패턴을 담고 있어 되살아나면 보안 등급이 내려간다. `docs/archive` 이동 또는 삭제 권장.
+*   ~~`nginx.conf`~~ — ✅ **2026-08-19 삭제 완료.** Dockerfile이 COPY하지 않는 미사용 파일이었으나 CSP가 없고 `/api/subscribe`의 "인증 없는 프록시 + API 키 주입" 패턴을 담고 있었다. 코드·빌드 참조 0건 확인 후 제거(git 히스토리에 보존). 해당 **패턴 자체의 금지**는 [security_spec N-2](../candela/security_spec.md)로 존치한다.
 
 ### 11-3. 재확인된 양호 항목
 
