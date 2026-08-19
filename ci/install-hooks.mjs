@@ -8,6 +8,8 @@
  *
  * 이 스크립트를 부르는 곳 (여러 진입점으로 망을 겹친다):
  *   1. package.json "prepare"        — npm install 시
+ *      ⚠️ Dockerfile은 `COPY . .` 이전에 `npm ci`를 실행하므로 그 시점엔 이 파일이 없다.
+ *         따라서 prepare는 반드시 `|| exit 0`으로 감싼다(2026-08-19 프로덕션 빌드 실패 원인).
  *   2. .claude/settings.json SessionStart — Claude Code 세션 시작 시 (settings.json은 git으로 이동)
  *   3. .claude/settings.json PreToolUse   — git commit/push 직전 (--assert)
  *   4. .githooks/post-merge          — git pull 이후 (이미 활성인 경우의 자가 치유)

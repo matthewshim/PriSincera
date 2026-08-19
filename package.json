@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "prepare": "node ci/install-hooks.mjs",
+    "prepare": "node ci/install-hooks.mjs || exit 0",
     "dev": "vite",
     "prebuild": "node ci/design-check.mjs",
     "build": "vite build",
