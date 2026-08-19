@@ -29,6 +29,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DOMAINS = ['ai_llm', 'system_design', 'devops', 'tech_lead'];
 const TRACKS = ['junior', 'senior'];
 
+// Gemini 503(구글 측 과부하) 장기 재시도의 트랙당 시간 상한.
+// 2트랙 최악 1400초 + seed 수집 ≈ 1410초 < 잡 타임아웃 1800초(cloudbuild.yaml).
+const OVERLOAD_MAX_MS = 700_000;
+
 const DOMAIN_DESC = {
   ai_llm: 'AI/LLM 엔지니어링',
   system_design: '시스템 설계/아키텍처',
@@ -158,7 +162,7 @@ async function generateTrackFeed(track, dateStr, systemPrompt, seeds) {
   const prompt = `${systemPrompt}\n\nUser Task:\n${buildUserTask(track, dateStr, seeds)}`;
   console.log(`🤖 [Tech Composer] '${track}' 트랙 카드 생성 요청 중...`);
   // 학습 레이어 추가로 출력량 증가 → maxOutputTokens 상향
-  const result = await callGemini(prompt, 5, { maxOutputTokens: 8192 });
+  const result = await callGemini(prompt, 5, { maxOutputTokens: 8192 }, { overloadMaxMs: OVERLOAD_MAX_MS });
 
   const rawCards = Array.isArray(result?.cards) ? result.cards : [];
   if (rawCards.length === 0) {
@@ -202,19 +206,34 @@ async function main() {
   console.log('📡 도메인별 근거 기사 수집 중...');
   const seeds = await collectSeeds();
 
+  // 트랙은 서로 독립이다. 한쪽이 죽어도 다른 쪽은 끝까지 시도해서, 최소한 절반은 건진다.
+  const succeeded = [];
+  const failed = [];
   for (const track of TRACKS) {
     try {
       const feed = await generateTrackFeed(track, dateStr, systemPrompt, seeds);
       await writeJSON(`daily/${track}_${dateStr}.json`, feed);
+      succeeded.push(track);
       console.log(`✅ '${track}' 트랙 배포 완료 — 카드 ${feed.cards.length}개`);
     } catch (err) {
-      console.error(`❌ '${track}' 트랙 생성 실패:`, err.message);
-      throw err;
+      failed.push({ track, message: err.message });
+      console.error(`❌ '${track}' 트랙 생성 실패(다음 트랙 계속):`, err.message);
     }
+  }
+
+  if (succeeded.length === 0) {
+    // 산출물이 하나도 없으면 index를 건드리지 않는다(없는 날짜를 있는 것처럼 등재 방지).
+    throw new Error(`전 트랙 생성 실패 — ${failed.map(f => `${f.track}: ${f.message}`).join(' / ')}`);
   }
 
   await updateIndex(dateStr);
   console.log('═══════════════════════════════════════');
+  if (failed.length > 0) {
+    // 부분 성공: 산출물은 이미 배포됐지만, 운영자가 알아채도록 실행 자체는 실패로 표면화한다.
+    console.error(`⚠️ Tech Composer 부분 성공 — ${dateStr} · 성공: ${succeeded.join('/')} · 실패: ${failed.map(f => f.track).join('/')}`);
+    process.exitCode = 1;
+    return;
+  }
   console.log(`✅ Tech Composer 완료 — ${dateStr}`);
 }
 

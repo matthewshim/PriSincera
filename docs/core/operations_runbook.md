@@ -1,14 +1,15 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-08-02
-version: v1.1
+last_updated: 2026-08-19
+version: v1.2
 target_files:
   - cloudbuild.yaml
   - pipeline/src/collector.mjs
   - pipeline/src/composer.mjs
   - pipeline/src/tech-composer.mjs
   - pipeline/src/monitor.mjs
+  - pipeline/src/lib/gemini.mjs
   - admin-api.mjs
 ---
 
@@ -22,6 +23,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-29 | AI Agent | 파이프라인 잡 운영·시나리오별 복구 절차 최초 정의 | Operations |
 | v1.1 | 2026-08-02 | AI Agent | **§4-b 비용 통제·결제 안전장치 신설**(min-instances 0·예산 가드레일·킬스위치·조직 정책 주의) + 중복 스케줄러 `prisignal-compose-weekly` 제거 반영 | Operations, Billing |
+| v1.2 | 2026-08-19 | AI Agent | **§3 Gemini 503(모델 과부하) 시나리오 신설** — 429(할당량)와 분리. 2026-08-19 트랙 피드 전량 누락 사고 반영: `callGemini` 503 전용 장기 재시도 예산(`overloadMaxMs`) + `tech-composer` 트랙 독립 실패 처리 도입 | Operations, Pipeline |
 
 ---
 
@@ -95,6 +97,17 @@ gcloud run jobs update tech-composer --region asia-northeast3 \
 ### 🔴 테크 트랙(주니어/시니어) 피드 누락
 - `daily/junior_${date}.json` / `senior_${date}.json` 부재 → `tech-composer` 단독 재실행(§2a).
 - Admin **콘텐츠 관리 > 테크 트랙 "지금 생성"**으로도 트리거 가능(아래 §3 Admin 항목).
+- **한쪽 트랙만 있는 경우**(junior 200 / senior 404 등)는 정상 동작입니다. `tech-composer`는 트랙별로 독립 실패 처리하여 **성공한 트랙은 먼저 배포**하고, 부분 성공 시 실행을 `Failed`로 표면화합니다(가시성 목적). 재실행하면 두 트랙 모두 새로 생성됩니다.
+- ⚠️ `gcloud run jobs execute`에 `--args`를 넘길 때 **스크립트 경로까지 함께** 지정해야 합니다(`--args`는 기본 인자를 통째로 대체). PowerShell에서는 따옴표 없는 쉼표 인자가 배열로 파싱되어 공백으로 합쳐지므로(`MODULE_NOT_FOUND`), 날짜 지정은 `--args` 대신 **§2-1 `TARGET_DATE` env 방식**을 쓰세요.
+
+### 🟠 Gemini 503 — 모델 과부하 (`high demand` / `Service Unavailable`)
+- **429(할당량)와 다릅니다.** 429는 우리 쪽 사용량 문제, 503은 **구글 측 모델 용량 부족**이라 키를 바꿔도 소용없고 시간이 지나야 회복됩니다.
+- 증상: 잡 로그에 `[503 Service Unavailable] This model is currently experiencing high demand.` 반복 후 `Container called exit(1)`.
+- **재시도 정책**: `callGemini`는 짧은 지수 백오프(2^n초, 총 ~32초)로 모델 후보군을 순환합니다. 이 창은 수 분짜리 과부하 스파이크를 못 넘기므로, 호출부가 `opts.overloadMaxMs`(총 소요 시간 상한)를 주면 **전 모델 503일 때 30초→60초→120초→180초→300초 장기 대기 후 사이클을 재시도**합니다.
+  - `tech-composer`는 트랙당 `overloadMaxMs = 700초`. 2트랙 최악 1400초 < 잡 타임아웃 1800초.
+  - 기본값은 0(장기 재시도 없음)이라 다른 잡의 기존 동작은 변하지 않습니다. 필요 시 호출부에서 개별 opt-in.
+- 대처: 위 정책으로도 실패하면 **30분~수 시간 뒤 수동 재실행**(§2a). 할당량 소진이 아니므로 재실행 자체는 안전합니다.
+- 판별 팁: 같은 날 다른 잡(`composer` 스코어링 등)이 성공했다면 429가 아니라 503일 가능성이 높습니다.
 
 ### 🟠 Gemini 할당량 소진 (429 / 생성 일부 누락)
 - 무료 티어 = **모델당 20 requests/day**. 하루에 여러 잡(composer·study·tech·pacenote)이 호출하므로 재실행을 반복하면 소진됩니다.
@@ -109,7 +122,7 @@ gcloud run jobs update tech-composer --region asia-northeast3 \
 ### 🟠 Admin "지금 생성"이 "실행 중…"에서 멈춤
 - Admin은 Job을 트리거하고 폴링합니다. **하이브리드 생성은 수십 초~수 분** 걸릴 수 있어 폴링이 먼저 끝난 것처럼 보일 수 있음.
 - 실제 상태는 `gcloud run jobs executions list --job tech-composer ...`로 확인. `Succeeded`면 정상 — 화면 새로고침.
-- `Failed`면 해당 실행 로그에서 원인(대개 Gemini 429 또는 RSS 타임아웃) 확인.
+- `Failed`면 해당 실행 로그에서 원인(대개 Gemini 429·503 또는 RSS 타임아웃) 확인. 503 장기 재시도가 걸리면 **트랙당 최대 ~12분**까지 늘어날 수 있으므로, 폴링이 끝나도 실행 중일 수 있습니다.
 
 ### 🟢 주간 monitor 경보
 - `prisignal-monitor`(월요일)가 발송/파이프라인 이상을 리포트. 경보 시 직전 주 `composer` 실행 이력과 `email_logs`(Firestore)를 확인.

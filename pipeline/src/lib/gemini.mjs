@@ -26,10 +26,18 @@ function loadTemplate(name) {
   return readFileSync(join(TEMPLATES_DIR, name), 'utf-8');
 }
 
+// 503(구글 측 모델 용량 부족) 발생 시 사이클 재시도 전 대기 시간. 수요 스파이크는
+// 수 분~수십 분 단위라 지수 백오프(총 ~32초)로는 절대 못 넘긴다.
+const OVERLOAD_WAITS_MS = [30_000, 60_000, 120_000, 180_000, 300_000];
+
 /**
  * Gemini 호출 + JSON 파싱 (재시도 포함)
+ *
+ * @param {object} opts
+ * @param {number} [opts.overloadMaxMs=0] 503 장기 재시도를 포함한 총 소요 시간 상한(ms).
+ *   0이면 장기 재시도 없음(기존 동작). 호출부가 잡 타임아웃을 고려해 opt-in한다.
  */
-export async function callGemini(prompt, maxRetries = 5, genOverrides = {}) {
+export async function callGemini(prompt, maxRetries = 5, genOverrides = {}, opts = {}) {
   // 최신 고효율/저비용 Flash 모델군만 배치하여 요금 폭탄 차단
   const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash'];
   const generationConfig = {
@@ -39,11 +47,16 @@ export async function callGemini(prompt, maxRetries = 5, genOverrides = {}) {
     responseMimeType: 'application/json',
     ...genOverrides,   // 호출부 오버라이드(예: 학습 레이어 추가 시 maxOutputTokens 상향)
   };
+  const overloadMaxMs = Number(opts.overloadMaxMs) || 0;
+  const startedAt = Date.now();
 
   let lastError;
+  let overloadRound = 0;   // 503 장기 대기 라운드(대기 시간 계단 인덱스)
 
   // 매 재시도마다 모델 후보군 전체를 난사하지 않고, 순차적으로 1개 모델만 시도
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    attempt++;
     const modelName = modelsToTry[(attempt - 1) % modelsToTry.length];
     try {
       const model = getGenAI().getGenerativeModel({ model: modelName, generationConfig });
@@ -67,6 +80,23 @@ export async function callGemini(prompt, maxRetries = 5, genOverrides = {}) {
         }
         console.warn(`[Gemini] 무료 일일 할당량 소진(${modelName}) — 대기 없이 다른 모델로 1회 시도.`);
         continue; // 백오프 없이 다음 모델로
+      }
+      // 503은 우리 할당량이 아니라 구글 측 용량 부족 → 키 교체·모델 교체로 못 푼다. 시간만이 해법.
+      // 모델 후보군을 한 사이클 다 돌고도 전부 503이면 일시 스파이크가 아닌 광역 과부하로 보고,
+      // 시간 예산이 남아 있는 한 길게 쉬었다가 사이클을 통째로 재시도한다.
+      const isOverload = err?.status === 503
+        || /\b503\b|Service Unavailable|UNAVAILABLE|overloaded|high demand/i.test(msg);
+      if (isOverload && attempt >= maxRetries && overloadMaxMs > 0) {
+        const wait = OVERLOAD_WAITS_MS[Math.min(overloadRound, OVERLOAD_WAITS_MS.length - 1)];
+        const elapsed = Date.now() - startedAt;
+        if (elapsed + wait < overloadMaxMs) {
+          overloadRound++;
+          console.warn(`[Gemini] 전 모델 503(과부하) — ${Math.round(wait / 1000)}초 대기 후 사이클 재시도 (라운드 ${overloadRound}, 경과 ${Math.round(elapsed / 1000)}초 / 상한 ${Math.round(overloadMaxMs / 1000)}초)`);
+          await new Promise(r => setTimeout(r, wait));
+          attempt = 0;   // 모델 후보군 처음부터 다시
+          continue;
+        }
+        console.warn(`[Gemini] 503 장기 재시도 시간 상한(${Math.round(overloadMaxMs / 1000)}초) 도달 — 중단.`);
       }
       if (attempt < maxRetries) {
         // 일시적 오류/분당 rate-limit: 지수 백오프(Exponential Backoff) + 지터(Jitter) 후 다음 모델 재시도
