@@ -1,4 +1,45 @@
 {
+  "$comment_hooks": "이 파일은 git으로 두 머신에 이동한다. core.hooksPath는 클론마다 로컬이라 git pull만으로는 시크릿 스캐너가 켜지지 않는다(실측: 갓 클론한 저장소에서 시크릿 커밋이 차단 없이 통과). 아래 훅이 그 최초 활성화를 사람 기억에 의존하지 않게 만든다 — SessionStart로 자동 활성, PreToolUse로 커밋·푸시 직전 최종 확인(실패 시 차단).",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node ci/install-hooks.mjs", "timeout": 15 }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit *)",
+            "command": "node ci/install-hooks.mjs --assert",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "if": "Bash(git push*)",
+            "command": "node ci/install-hooks.mjs --assert",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git commit *)",
+            "command": "node ci/install-hooks.mjs --assert",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git push*)",
+            "command": "node ci/install-hooks.mjs --assert",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Bash(git status*)",

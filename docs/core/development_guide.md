@@ -319,23 +319,31 @@ firebase use prisincera
 npm run dev
 ```
 
-### 4-7. ⚠️ 머신을 옮길 때 — 시크릿 훅 활성화 (필수·1회)
+### 4-7. 머신을 옮길 때 — 시크릿 훅 활성화 (자동)
 
-Windows 데스크톱 ↔ macOS 노트북을 git으로 동기화하는 구조에서 **가장 중요한 수동 단계**다.
+Windows 데스크톱 ↔ macOS 노트북을 git으로 동기화하는 구조의 핵심 함정과 그 대응이다.
 
 > **`git pull`만으로는 시크릿 스캐너가 켜지지 않는다.**
 > `.githooks/` 파일은 따라오지만, 이를 가리키는 `core.hooksPath`는 **git config라서 클론마다 로컬**이다.
 > 실측 확인: 갓 클론한 저장소에서 시크릿이 담긴 커밋이 **차단 없이 생성됐다.**
 
-```bash
-npm install        # prepare 스크립트가 core.hooksPath를 설정한다
-# 또는
-npm run prepare
-```
+이 최초 활성화를 사람 기억에 맡기지 않도록 진입점을 넷으로 겹쳐 두었다. 전부 `ci/install-hooks.mjs`를 호출하며, 이미 활성이면 아무 출력 없이 통과한다(멱등).
 
-*   **머신당 1회면 된다.** `.git/config`에 기록되므로 이후 pull에는 재실행이 필요 없다.
-*   확인: `git config --get core.hooksPath` → `.githooks`
-*   깜빡해도 **빌드가 막힌다** — `npm run build`의 prebuild 게이트(`ci/design-check.mjs`)가 hooksPath 미설정을 ERROR로 처리한다. 다만 빌드 전에 커밋부터 하면 그 커밋은 검사를 받지 않으므로, **pull 직후 먼저 실행하는 것**을 습관으로 둔다.
+| 진입점 | 시점 | 설정 위치 |
+| :--- | :--- | :--- |
+| **Claude Code SessionStart** | 세션 시작 시마다 | `.claude/settings.json` — **git으로 이동** |
+| **Claude Code PreToolUse** | `git commit`·`git push` 직전. 활성화 실패 시 **툴 호출을 차단** | `.claude/settings.json` |
+| `npm install` (`prepare`) | 의존성 설치 시 | `package.json` |
+| `.githooks/post-merge` | `git pull` 이후 (이미 활성인 경우의 자가 치유·신규 훅 chmod) | 저장소 |
+
+`.claude/settings.json`이 git으로 따라온다는 점이 핵심이다. 맥에서 `git pull` 후 Claude Code 세션만 열면 훅이 알아서 켜진다.
+
+**남은 구멍 하나**: Claude Code를 쓰지 않고 **순수 터미널에서 `npm` 명령 없이 바로 `git commit`** 하는 경우. 이때는 훅이 비활성일 수 있다. 백스톱은 `npm run build`의 prebuild 게이트(hooksPath 미설정 시 ERROR)이지만, 빌드 전에 이미 커밋된 것은 검사를 받지 않는다. 터미널 작업을 시작할 때는 `npm run prepare` 한 번을 습관으로 둔다.
+
+```bash
+git config --get core.hooksPath   # .githooks 이면 정상
+npm run prepare                    # 수동 활성화
+```
 
 `git pull`로 따라오지 않는 것들:
 

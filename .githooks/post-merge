@@ -1,0 +1,9 @@
+#!/bin/sh
+# git pull 이후 훅 설정을 재확인한다 (자가 치유).
+#
+# 한계: 이 훅 자체가 core.hooksPath가 이미 설정돼야 실행된다.
+# 즉 '최초 활성화'는 이걸로 못 한다(닭-달걀). 최초 활성화는
+# npm install / Claude Code SessionStart 훅이 담당한다.
+# 여기서는 새로 추가된 훅 파일의 실행 권한 부여와 설정 유실 복구를 맡는다.
+
+exec node "$(dirname "$0")/../ci/install-hooks.mjs"

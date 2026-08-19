@@ -82,12 +82,20 @@ Cloud Run은 모든 요청이 프런트엔드 프록시를 거치므로, `trust 
 `.git/hooks`는 clone되지 않는다. **새 환경에서 훅의 기본값은 '부재'이고, 부재한 훅은 아무 소리 없이 통과한다.** Windows 데스크톱 ↔ macOS 노트북을 오가는 환경에서는 이게 예외가 아니라 기본 상태다.
 
 ```
-.githooks/            훅 스크립트 — 저장소로 이동
-package.json prepare  npm install 시 core.hooksPath 자동 설정
-ci/design-check.mjs   hooksPath 미설정이면 빌드 실패 (fail-closed)
+.githooks/                      훅 스크립트 — 저장소로 이동
+package.json prepare            npm install 시 core.hooksPath 설정
+.claude/settings.json           SessionStart · PreToolUse — settings.json도 git으로 이동
+.githooks/post-merge            pull 이후 자가 치유
+ci/design-check.mjs             hooksPath 미설정이면 빌드 실패 (fail-closed)
 ```
 
-세 번째가 핵심이다. 앞의 둘만으로는 `npm install`을 건너뛴 환경에서 여전히 fail-open이다. prebuild 게이트는 저장소를 통해 이동하고 실패 시 배포가 막히므로 **"훅 없는 환경에서는 배포가 불가능하다"**가 성립한다. Docker 빌드 컨텍스트는 `.dockerignore`가 `.git`을 빼므로 자동으로 건너뛴다.
+핵심은 **`.claude/settings.json`이 git으로 따라온다**는 점이다. `SessionStart` 훅이 세션마다 활성화를 시도하고, `PreToolUse` 훅이 `git commit`·`git push` 직전에 한 번 더 확인해 활성화에 실패하면 툴 호출 자체를 차단한다. 진입점은 모두 `ci/install-hooks.mjs`를 부르며 이미 활성이면 무출력으로 통과한다(멱등).
+
+`post-merge`만으로는 부족한 이유는 **닭-달걀**이다 — 그 훅 자체가 `core.hooksPath`가 이미 설정돼야 실행된다. 최초 활성화는 반드시 git 바깥의 진입점이 맡아야 한다.
+
+prebuild 게이트는 최후 백스톱이다. 저장소를 통해 이동하고 실패 시 배포가 막히므로 **"훅 없는 환경에서는 배포가 불가능하다"**가 성립한다. Docker 빌드 컨텍스트는 `.dockerignore`가 `.git`을 빼므로 자동으로 건너뛴다.
+
+> **잔여 구멍**: Claude Code를 쓰지 않고 순수 터미널에서 `npm` 명령 없이 바로 커밋하는 경로. 빌드 전 커밋은 검사를 받지 않는다.
 
 ### 3-7. 라인 엔딩 정규화 (2026-08-19)
 
