@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "start": "node server.mjs",
     "test:secrets": "node --test ci/secretPatterns.test.mjs",
+    "test:candela": "node --test ci/candelaSchema.test.mjs",
     "scan:staged": "node ci/secret-scan.mjs --staged"
   },
   "dependencies": {
