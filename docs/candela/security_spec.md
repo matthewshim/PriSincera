@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Candela
-last_updated: 2026-08-19
-version: v1.1
+last_updated: 2026-08-20
+version: v1.2
 target_files:
   - .gitignore
   - .gitattributes
@@ -25,6 +25,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — 공개 저장소 전제 위험 분석 9건, 즉시 조치 4건 반영, 절대 금지 규칙·계좌 분리 원칙 확정 | .gitignore, settings.json, server.mjs, admin-api.mjs |
 | v1.1 | 2026-08-19 | AI Agent | §3-5~3-10 추가 — 스캐너 단일 소스화·3중 훅·훅 이동성(fail-closed)·라인엔딩·권한 정책 이동·알려진 한계·nginx.conf 삭제. N-7·N-8 금지 규칙 신설 | .githooks, ci/, .claude/settings.json, package.json |
+| v1.2 | 2026-08-20 | AI Agent | N-9 신설 — 퍼블릭 UI에 운영 세부(경로·컬렉션·명령 enum·인프라·임계값) 노출 금지. ui_specification 퍼블릭 노출 최소 원칙의 하드 룰(N-7 UI 확장) | 퍼블릭 UI 규범 |
 
 ---
 
@@ -47,6 +48,7 @@ target_files:
 | N-6 | 주문 응답 raw dump를 **로그·회고 글에 붙여넣기** | 계좌번호 노출. 로깅 시점에 마스킹 필수 |
 | N-7 | **원격 악용이 가능한 미조치 항목**을 public 문서에 기술 | 공개 저장소에 "우리 약점 목록"을 올리는 셈. 로컬 접근이 이미 필요한 항목(에이전트 권한 등)은 공개해도 무방하나, 원격에서 찌를 수 있는 미조치 항목은 `candela-worker`(private)에만 적는다 |
 | N-8 | 브로커 API 키를 **로컬 머신에 배치** | Windows 데스크톱·macOS 노트북 2대를 오가는 환경이다. 실계좌 키는 Secret Manager에만 두고 Worker를 클라우드에서 실행한다. 로컬 개발은 **모의투자 키로만** 한다 |
+| N-9 | **퍼블릭 UI에 운영 세부 노출** (Admin 경로·인증 방식·컬렉션/큐 이름·명령 enum·엔드포인트·인프라/저장소명·브로커명·탐지 임계값) | 홍보 가치 0, 정찰 가치만 제공한다. 퍼블릭은 시스템이 *작동함*을 보이되(3계층·신뢰 경계·인바운드 없음 등 **속성 서술**은 허용) 공격 표면이 되는 세부는 비노출. N-7의 UI 확장판이며 상세 목록은 [ui_specification 퍼블릭 노출 최소 원칙](ui_specification.md) |
 
 ## 3. 적용 완료 조치 (2026-08-19)
 

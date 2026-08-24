@@ -1,8 +1,8 @@
 ---
 status: draft
 domain: Candela
-last_updated: 2026-08-19
-version: v1.2
+last_updated: 2026-08-20
+version: v1.3
 target_files:
   - (미구현) src/data/candela/schema.mjs
   - (미구현) src/data/candela/fixtures/
@@ -18,6 +18,7 @@ target_files:
 | v1.0 | 2026-08-19 | AI Agent | 최초 정의 — UI 선행 개발 전제. 퍼블릭 계약에서 금액·수량 필드를 스키마 레벨로 배제, `dataSource` 판별 필드·해시 체인 규정 | Candela UI, Worker |
 | v1.1 | 2026-08-19 | AI Agent | 다중 시장 반영 — asOfByMarket·baseCurrency·allocationPct·benchmarks[] 배열화·fxContributionPct(환차손익 분리)·journal.market 추가. aggregation을 주간 **고정값**으로 확정 | Candela UI, Worker |
 | v1.2 | 2026-08-19 | AI Agent | 명세 공백 보완 — §2-2 벤치마크 지수 출처·fxContributionPct 산출식 명문화. 결정 변경 없음 | Candela UI, Worker |
+| v1.3 | 2026-08-20 | AI Agent | journal `reason` 사후·추상 표현 제한 규범 추가(전략 알파 역설계 방지)·예시 정합. 결정 변경 없음 | Candela UI, Worker |
 
 ---
 
@@ -143,7 +144,7 @@ UI를 먼저 만드는 방식의 최대 위험은 **더미 데이터가 스키�
       "weightPct": 8.0,          // 포트폴리오 내 비중
       "holdingDays": 5,
       "returnPct": 2.1,          // SELL일 때만. 현지 통화 기준
-      "reason": "20일선 상향 돌파 + 거래량 급증"
+      "reason": "추세 전환 포착 (모멘텀)"
     }
   ]
 }
@@ -152,6 +153,8 @@ UI를 먼저 만드는 방식의 최대 위험은 **더미 데이터가 스키�
 > **일별 공개를 스키마에서 배제한 이유**: 보유 종목 수가 적을 때 일별 수익률 시계열로 종목·비중이 역산된다. "종목 비공개" 정책이 수익률 공개로 무력화되므로 `aggregation`은 **주간 고정**이다. 선택지로 두면 언젠가 바꾸게 된다.
 
 > `returnPct`는 **현지 통화 기준**이다. 개별 매매의 성패에 환율을 섞지 않는다 — 환율 영향은 요약의 `fxContributionPct`가 담당한다.
+
+> **`reason`은 사후·추상 표현으로 제한한다**: 진입/청산 근거를 지표 파라미터 수준으로 구체화하면(이동평균 일수·임계 거래량 등) 전략 알파가 역설계될 수 있다. "추세 전환 포착·목표가 도달·손절 규칙" 수준의 **결과 서술**로 쓰고 재현 가능한 규칙 파라미터는 싣지 않는다([ui_specification 퍼블릭 노출 최소 원칙](ui_specification.md) · [security_spec N-3](security_spec.md) 알파 보호).
 
 ## 3. Admin 계약 (Firestore — 비공개)
 
