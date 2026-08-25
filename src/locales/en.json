@@ -126,8 +126,8 @@
       "desc": "Combining 20 years of experience with AI technology, now born as a practical web service that directly assists your daily life and growth."
     },
     "servicesTitle": "What that attitude built —",
-    "servicesTitleAccent": "three things I made myself.",
-    "servicesSubtitle": "Twenty years of planning met AI and became three products.\nFrom the making to solving real work — the results of an attitude.",
+    "servicesTitleAccent": "four things I made myself.",
+    "servicesSubtitle": "Twenty years of planning met AI and became four products.\nFrom the making to solving real work — the results of an attitude.",
     "serviceBaseCta": "⚡ Explore Open Source & System Architecture",
     "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
     "serviceBuildersCta": "🚀 Read Development Journey & Engineering Growth Stories",
@@ -143,7 +143,9 @@
     "serviceBuildersTag": "The record of making",
     "serviceReLearnTag": "Two decades, productized",
     "serviceSylphioTag": "Solving a real need",
-    "makerNote": "This site's full source and architecture are open source."
+    "makerNote": "This site's full source and architecture are open source.",
+    "serviceCandelaTag": "Not returns — proof that it works",
+    "serviceCandelaDesc": "A personal automated trading system built with AI.\nNot returns but architecture — public evidence that the system actually works."
   },
   "relearn": {
     "status": {

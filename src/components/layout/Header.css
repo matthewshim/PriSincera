@@ -1000,3 +1000,33 @@
         box-shadow: 0 0 15px rgba(6, 182, 212, 0.08);
     }
 }
+
+
+/* ── Candela 모바일 벤토 (촛불 미니) — 2026-08-25 ── */
+@media (max-width: 768px) {
+    .mobile-bento-nav-item.candela-gold-theme {
+        --point-color: #E5B25D;
+        --glow-color: rgba(229, 178, 93, 0.14);
+        --aura-pulse: rgba(229, 178, 93, 0.25);
+        border: 1px solid rgba(229, 178, 93, 0.22);
+    }
+    .mobile-bento-nav-item .candela-mockup {
+        width: 240px !important; height: 240px !important;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .mobile-bento-nav-item .cdlm-candle {
+        display: flex; align-items: flex-start; justify-content: center;
+    }
+    .mobile-bento-nav-item .cdlm-flame {
+        display: block; width: 40px; height: 66px;
+        background: radial-gradient(ellipse at 50% 78%, #FFF6E0 0%, var(--color-gold-light) 38%, var(--color-gold) 68%, rgba(229, 178, 93, 0.15) 100%);
+        border-radius: 50% 50% 50% 50% / 65% 65% 40% 40%;
+        box-shadow: 0 0 44px 12px rgba(229, 178, 93, 0.5);
+        transform-origin: 50% 90%;
+        animation: cdlmFlicker 2.4s ease-in-out infinite;
+    }
+    @keyframes cdlmFlicker {
+        0%, 100% { transform: scaleY(1); opacity: 0.95; }
+        50% { transform: scaleY(1.1); opacity: 1; }
+    }
+}

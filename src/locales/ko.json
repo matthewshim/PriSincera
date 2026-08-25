@@ -126,8 +126,8 @@
       "desc": "20년의 경험과 AI 기술이 결합되어, 이제는 당신의 일상과 성장을 직접적으로 돕는 실질적인 웹 서비스로 탄생했습니다."
     },
     "servicesTitle": "태도가 낳은 것들 —",
-    "servicesTitleAccent": "직접 만든 세 가지 증거.",
-    "servicesSubtitle": "기획으로 쌓은 20년이 AI를 만나, 세 개의 제품이 되었습니다.\n만드는 과정부터 실무의 해결까지 — 태도의 결과물입니다.",
+    "servicesTitleAccent": "직접 만든 네 가지 증거.",
+    "servicesSubtitle": "기획으로 쌓은 20년이 AI를 만나, 네 개의 제품이 되었습니다.\n만드는 과정부터 실무의 해결까지 — 태도의 결과물입니다.",
     "serviceBaseCta": "⚡ 오픈 소스 및 시스템 아키텍처 살펴보기",
     "serviceBuildersDesc": "Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.\n어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.",
     "serviceBuildersCta": "🚀 개발 여정 및 엔지니어링 성장기 읽기",
@@ -143,7 +143,9 @@
     "serviceBuildersTag": "만드는 과정의 기록",
     "serviceReLearnTag": "20년 경력의 제품화",
     "serviceSylphioTag": "실무 니즈의 해결",
-    "makerNote": "이 사이트의 전체 소스와 아키텍처는 오픈소스로 공개되어 있습니다."
+    "makerNote": "이 사이트의 전체 소스와 아키텍처는 오픈소스로 공개되어 있습니다.",
+    "serviceCandelaTag": "실적이 아니라, 작동한다는 증거로",
+    "serviceCandelaDesc": "AI로 만드는 개인 자동매매 시스템.\n수익률이 아니라 아키텍처로, 시스템이 실제로 작동함을 공개 증거로 남깁니다."
   },
   "relearn": {
     "status": {

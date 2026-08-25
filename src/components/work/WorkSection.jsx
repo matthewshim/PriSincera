@@ -247,10 +247,51 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 3. Sylphio — 실무 니즈의 해결 */}
+        {/* 3. Candela — 작동을 증명하는 사례 연구 (ReLearn 다음 위상) */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
+          style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(229, 178, 93, 0.4)' }}
+          data-accent-color="229,178,93"
+        >
+          <div className="flagship-content">
+            <div className="flagship-narrative">{t('home.serviceCandelaTag')}</div>
+            <div className="flagship-label" style={{ color: 'var(--color-gold)' }}>Automated Trading · Case Study</div>
+            <h3 className="flagship-title">Candela</h3>
+            <p className="flagship-desc">
+              {t('home.serviceCandelaDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">Case Study</span>
+              <span className="work-tag">Architecture-First</span>
+              <span className="work-tag">Radical Transparency</span>
+            </div>
+            <div className="flagship-cta-wrap">
+              <Link to="/candela" className="btn-primary flagship-cta-btn gold">
+                Discover Candela →
+              </Link>
+            </div>
+          </div>
+          <div className="flagship-visual">
+            <div className="dynamic-mockup candela-mockup">
+              <div className="cdm-candle">
+                <span className="cdm-flame"></span>
+                <span className="cdm-body"></span>
+              </div>
+              <div className="cdm-status">🚧 BUILDING</div>
+            </div>
+            <div className="visual-blur-orb amber"></div>
+          </div>
+        </div>
+
+        {/* 4. Sylphio — 실무 니즈의 해결 */}
+        <div
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
           data-accent-color="0,242,254"
         >
           <div className="flagship-content">

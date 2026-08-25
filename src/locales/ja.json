@@ -126,8 +126,8 @@
       "desc": "20年の経験とAI技術が融合し、あなたの日常と成長を直接的にサポートする実用的なWebサービスとして生まれ変わりました。"
     },
     "servicesTitle": "その姿勢が生んだもの —",
-    "servicesTitleAccent": "自ら創った三つの証。",
-    "servicesSubtitle": "企画で積んだ20年がAIと出会い、三つのプロダクトになりました。\n作る過程から実務の解決まで — 姿勢の結果です。",
+    "servicesTitleAccent": "自ら創った四つの証。",
+    "servicesSubtitle": "企画で積んだ20年がAIと出会い、四つのプロダクトになりました。\n作る過程から実務の解決まで — 姿勢の結果です。",
     "serviceBaseCta": "⚡ オープンソースとシステムアーキテクチャを見る",
     "serviceBuildersDesc": "Vibe codingとGCPサーバーレスを基盤に設計を進めるPriSinceraの執拗な開発旅路です。\n難易度の高いバックエンドのトラブルシューティング、AIパイプライン拡張記、セキュリティ監査など、生々しい成長の記録をリアルタイムで共有します。",
     "serviceBuildersCta": "🚀 開発プロセスとエンジニアリング成長記を読む",
@@ -143,7 +143,9 @@
     "serviceBuildersTag": "作る過程の記録",
     "serviceReLearnTag": "20年のキャリアの製品化",
     "serviceSylphioTag": "実務ニーズの解決",
-    "makerNote": "このサイトの全ソースとアーキテクチャは、オープンソースで公開されています。"
+    "makerNote": "このサイトの全ソースとアーキテクチャは、オープンソースで公開されています。",
+    "serviceCandelaTag": "利回りではなく、動く証拠として",
+    "serviceCandelaDesc": "AIで作る個人向け自動売買システム。\n利回りではなくアーキテクチャで、システムが実際に動くことを公開された証拠として残します。"
   },
   "relearn": {
     "status": {

@@ -1278,3 +1278,44 @@
     .sym-stage { height: 120px; }
     .sym-line.src { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
+
+
+/* ── Candela flagship 비주얼 (촛불) — 2026-08-25 ── */
+.flagship-cta-btn.gold {
+    background: linear-gradient(135deg, rgba(229, 178, 93, 0.15), rgba(247, 208, 112, 0.1));
+    border-color: rgba(229, 178, 93, 0.4);
+}
+.flagship-cta-btn.gold:hover {
+    background: linear-gradient(135deg, rgba(229, 178, 93, 0.25), rgba(247, 208, 112, 0.2));
+    border-color: rgba(229, 178, 93, 0.6);
+    box-shadow: 0 8px 30px rgba(229, 178, 93, 0.3);
+}
+.visual-blur-orb.gold { background: #E5B25D; top: 15%; right: 15%; }
+.flagship-visual .candela-mockup {
+    width: 280px; height: 300px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
+}
+.flagship-visual .cdm-candle { position: relative; display: flex; flex-direction: column; align-items: center; }
+.flagship-visual .cdm-flame {
+    width: 22px; height: 36px;
+    background: radial-gradient(ellipse at 50% 78%, #FFF6E0 0%, var(--color-gold-light) 38%, var(--color-gold) 68%, rgba(229, 178, 93, 0.15) 100%);
+    border-radius: 50% 50% 50% 50% / 65% 65% 40% 40%;
+    box-shadow: 0 0 28px 7px rgba(229, 178, 93, 0.5), 0 0 64px 18px rgba(229, 178, 93, 0.22);
+    transform-origin: 50% 90%;
+    animation: cdmFlicker 2.4s ease-in-out infinite;
+}
+.flagship-visual .cdm-body {
+    width: 36px; height: 96px; margin-top: 8px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px 8px 4px 4px;
+}
+.flagship-visual .cdm-status {
+    font-family: var(--font-mono); font-size: var(--fs-070); letter-spacing: 0.08em;
+    color: var(--color-gold-light); padding: 6px 13px; border-radius: var(--radius-pill);
+    border: 1px solid rgba(229, 178, 93, 0.24); background: rgba(229, 178, 93, 0.06);
+}
+@keyframes cdmFlicker {
+    0%, 100% { transform: scaleY(1) scaleX(1); opacity: 0.95; }
+    50% { transform: scaleY(1.08) scaleX(0.94); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .flagship-visual .cdm-flame { animation: none; } }
