@@ -1,8 +1,8 @@
 ---
 status: draft
 domain: Candela
-last_updated: 2026-08-20
-version: v1.3
+last_updated: 2026-08-25
+version: v1.4
 target_files:
   - (미구현) src/pages/CandelaLanding.jsx
   - (미구현) src/pages/CandelaPerformance.jsx
@@ -23,6 +23,7 @@ target_files:
 | v1.1 | 2026-08-19 | AI Agent | 다중 시장(D-4) 반영 — 실적 대시보드에 시장 배분·환율 기여분·시장별 벤치마크 행 추가, 시장별 기준일 표기 규범 | Candela 퍼블릭 UI |
 | v1.2 | 2026-08-19 | AI Agent | G-4(live 전환 검증) 게이트 추가 — G-2의 'fixture 오공개'와 대칭으로 '빈 live 공개' 차단. 결정 변경 없음 | design-check, App.jsx |
 | v1.3 | 2026-08-20 | AI Agent | §2 🔒 퍼블릭 노출 최소 원칙(운영 세부 비공개) 신설 — Admin 경로·컬렉션·명령 enum·인프라·임계값 비노출. security_spec N-7의 UI 판. 결정 변경 없음 | Candela 퍼블릭 UI |
+| v1.4 | 2026-08-25 | AI Agent | G-2 라우트별 정밀화(소개 랜딩은 fixture 모드 선공개 허용, 데이터 라우트만 차단) + 소개 랜딩 선공개 규범(상태 정직 표현 의무) 신설 | design-check, App.jsx, CandelaLanding |
 
 ---
 
@@ -45,7 +46,7 @@ target_files:
 | # | 게이트 | 동작 |
 | :--- | :--- | :--- |
 | G-1 | **데이터 소스 선언** | `src/data/candela/dataSource.js`가 `CANDELA_DATA_SOURCE`를 `'fixture' \| 'live'`로 export. 단일 진실 원천 |
-| G-2 | **빌드 차단** | `ci/design-check.mjs` 확장 — `CANDELA_DATA_SOURCE === 'fixture'`인데 `App.jsx`에 퍼블릭 `/candela` 라우트가 등록돼 있으면 **ERROR로 빌드 실패** |
+| G-2 | **빌드 차단 (라우트별)** | `ci/design-check.mjs` 확장 — `CANDELA_DATA_SOURCE === 'fixture'`인데 `App.jsx`에 **데이터 라우트**(`/candela/performance`·`/candela/journal`)가 등록되면 **ERROR로 빌드 실패**. 수치 없는 **소개 랜딩(`/candela`)은 fixture 모드에서도 등록 허용** |
 | G-3 | **워터마크** | 렌더 데이터의 `dataSource`가 `fixture`면 **해제 불가능한 배너**를 상시 노출. 닫기 버튼 없음, `dismiss` 상태 없음 |
 | G-4 | **live 전환 검증** | `dataSource`를 `live`로 바꾸고 `/candela` 라우트를 등록하는 시점에, GCS 실적 스냅샷의 **존재와 최신성**(`asOf`가 기대 범위 내인지)을 배포 게이트가 확인한다. G-2가 'fixture의 오공개'를 막는다면 G-4는 '빈 live의 공개'를 막는다 — 두 방향이 대칭을 이룬다 |
 
@@ -58,6 +59,17 @@ P2 Admin UI    →  /admin 인증 뒤. 퍼블릭 노출 0
 P3 Public UI   →  퍼블릭 라우트 미등록 상태로 개발 (G-2가 강제)
 P5 공개        →  실데이터 확보 후 라우트 등록 + G-2·G-4 통과
 ```
+
+### 소개 랜딩 선공개 (fixture 모드에서도 허용)
+
+실서비스(실적) 구현 전에 **서비스 소개 랜딩(`/candela`)을 먼저 공개**할 수 있다. 게이트가 막는 것은 "프로토타입"이 아니라 **날조된 실적**이다([product_strategy §5](product_strategy.md)) — 랜딩은 수익률·MDD 같은 수치가 **없으므로** 날조할 데이터 자체가 없다. 오히려 [product_strategy §4](product_strategy.md)의 "Builder's Log 연장선" 전략과 맞는다.
+
+**선공개 조건 (MUST)**
+1.  **상태를 정직하게 표현** — 아직 실운용 전이면 "만들고 있는 시스템 / 준비 중"으로 쓴다. **"이미 작동 중"을 함의하는 카피 금지**(수치가 없어도 허위 주장이다). 실적 CTA는 "실운용 후 공개 예정" 안내로 둔다.
+2.  **데이터 라우트는 계속 차단** — `/candela/performance`·`/candela/journal`은 실데이터 3개월 확보(P5) 전까지 등록하지 않는다(G-2가 강제).
+3.  **N-9 준수** — 운영 세부(경로·명령·인프라) 비노출.
+
+> 왜 워터마크가 아니라 "라우트 차단"인가: 픽스처 실적은 배너를 붙여도 스크린샷이 맥락을 잃고 실제 주장한 실적처럼 유통된다. 랜딩은 데이터가 없어 이 위험이 없다. 그래서 랜딩은 열고, 데이터 화면은 닫는다.
 
 ### 킬스위치는 목업하지 않는다
 

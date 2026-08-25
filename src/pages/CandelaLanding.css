@@ -1,0 +1,116 @@
+/* Candela 소개 랜딩 — 전역 토큰(index.css) 사용, 재정의 금지.
+   규범: design_system §9-1 히어로 · §9-2 섹션 · §9-3 글래스 카드 · §4-2 --fs-* 토큰 */
+
+.cdl-page {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--space-lg) var(--space-3xl);
+}
+
+/* §9-1 히어로 (아이콘 → 타이틀 → 서브카피 · 상단 140px = GNB 포함) */
+.cdl-hero { text-align: center; padding: 140px 0 44px; }
+.cdl-hero-icon {
+  font-size: var(--fs-300); line-height: 1; margin-bottom: var(--space-md);
+  animation: cdlFloat 6s ease-in-out infinite;
+}
+@keyframes cdlFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.cdl-hero-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-300); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+  margin: 0 auto var(--space-md);
+  background: var(--gradient-brand);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  text-wrap: balance;
+}
+.cdl-hero-sub {
+  max-width: var(--measure); margin: 0 auto;
+  font-size: var(--fs-115); line-height: 1.6; color: var(--crystal-light); opacity: 0.9;
+}
+.cdl-status {
+  margin-top: var(--space-xl); display: inline-block;
+  padding: 9px 18px; border-radius: var(--radius-pill);
+  border: 1px solid rgba(229, 178, 93, 0.16); background: rgba(229, 178, 93, 0.06);
+  color: var(--color-gold-light); font-family: var(--font-mono);
+  font-size: var(--fs-080); letter-spacing: 0.02em;
+}
+
+/* §9-2 섹션 */
+.cdl-section { margin-top: var(--space-2xl); }
+.cdl-sec-title {
+  font-family: var(--font-display); font-size: var(--fs-140); font-weight: 600;
+  color: var(--text-primary); letter-spacing: -0.01em; margin: 0 0 var(--space-sm);
+}
+.cdl-sec-desc { font-size: var(--fs-085); color: var(--text-muted); margin: 0 0 var(--space-md); }
+
+/* §9-3 글래스 카드 */
+.cdl-card {
+  padding: var(--space-lg); border-radius: var(--radius-lg);
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 24px 40px -8px rgba(0, 0, 0, 0.3);
+  transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
+}
+.cdl-card:hover { transform: translateY(-2px); border-color: var(--glass-border-hover); }
+
+.cdl-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cdl-tag {
+  display: inline-block; font-family: var(--font-mono); font-size: var(--fs-070);
+  letter-spacing: 0.06em; padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: var(--space-md);
+}
+.cdl-tag-core { background: rgba(229, 178, 93, 0.16); color: var(--color-gold); }
+.cdl-tag-web { background: rgba(165, 180, 252, 0.16); color: var(--color-indigo); }
+.cdl-card-title {
+  font-family: var(--font-display); font-size: var(--fs-150); font-weight: 600;
+  color: var(--text-primary); margin: 0 0 var(--space-sm);
+}
+.cdl-card-body { font-size: var(--fs-090); color: var(--text-secondary); margin: 0; }
+
+/* 아키텍처 계층 스택 */
+.cdl-arch {
+  display: flex; flex-direction: column; gap: var(--space-sm);
+  max-width: var(--measure); margin: 0 auto;
+}
+.cdl-tier {
+  display: flex; flex-direction: column; gap: var(--space-xs);
+  padding: var(--space-md) var(--space-lg); border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+}
+.cdl-tier-worker { border-color: rgba(229, 178, 93, 0.28); background: rgba(229, 178, 93, 0.06); }
+.cdl-tier-name { font-size: var(--fs-100); font-weight: 600; color: var(--text-primary); }
+.cdl-tier-note { font-family: var(--font-mono); font-size: var(--fs-080); color: var(--text-muted); }
+.cdl-boundary {
+  text-align: center; font-family: var(--font-mono); font-size: var(--fs-075);
+  color: var(--color-gold); padding: var(--space-xs) 0; opacity: 0.9;
+}
+.cdl-caption {
+  max-width: var(--measure); margin: var(--space-md) auto 0;
+  font-size: var(--fs-085); line-height: 1.6; color: var(--text-secondary);
+}
+
+/* 제어 범위 */
+.cdl-control-body { font-size: var(--fs-095); color: var(--text-secondary); margin: 0; }
+.cdl-control-note { font-size: var(--fs-080); color: var(--text-muted); margin: var(--space-md) 0 0; }
+
+/* 공개 원칙 */
+.cdl-principles { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+.cdl-principle {
+  font-family: var(--font-mono); font-size: var(--fs-070); color: var(--text-muted);
+  padding: 6px 12px; border: 1px solid var(--glass-border); border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cdl-foot {
+  margin-top: var(--space-2xl); padding-top: var(--space-lg);
+  border-top: 1px solid var(--glass-border); text-align: center;
+  font-size: var(--fs-080); color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .cdl-hero { padding-top: 120px; }
+  .cdl-hero-title { font-size: var(--fs-220); }
+  .cdl-duo { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cdl-hero-icon { animation: none; }
+  .cdl-card { transition: none; }
+}

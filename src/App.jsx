@@ -16,6 +16,9 @@ const SylphioLanding = lazy(() => import('./pages/SylphioLanding'));
 const SylphioApiKeyGuide = lazy(() => import('./pages/SylphioApiKeyGuide'));
 const SylphioPrivacy = lazy(() => import('./pages/SylphioPrivacy'));
 
+/* ── Candela ── */
+const CandelaLanding = lazy(() => import('./pages/CandelaLanding'));
+
 /** Minimal loading fallback — invisible, prevents layout shift */
 const PageFallback = (
   <div style={{ minHeight: '100vh', background: 'var(--bg-void, var(--bg-void))' }} />
@@ -56,6 +59,9 @@ function App() {
             <Route path="sylphio" element={<SylphioLanding />} />
             <Route path="sylphio/guide" element={<SylphioApiKeyGuide />} />
             <Route path="sylphio/privacy" element={<SylphioPrivacy />} />
+
+            {/* Candela — 소개 랜딩만 공개(수치 없음). 데이터 라우트는 P5·G-2 이후 */}
+            <Route path="candela" element={<CandelaLanding />} />
             
             {/* Legacy Redirects */}
             <Route path="signal/*" element={<Navigate to="/relearn" replace />} />

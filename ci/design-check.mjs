@@ -151,6 +151,32 @@ for (const file of srcFiles(ROOT)) {
   });
 }
 
+// ── G-2 게이트: Candela 데이터 라우트 fixture-공개 차단 (라우트별) ──
+// 근거: docs/candela/ui_specification.md §2 (게이트 3중, v1.4 라우트별 정밀화)
+// CANDELA_DATA_SOURCE === 'fixture' 인데 App.jsx 에 데이터 라우트(/candela/performance·/candela/journal)가
+// 등록되면 ERROR. 날조 실적의 실수 공개를 빌드에서 막는다.
+// 소개 랜딩(/candela)은 수치가 없으므로 fixture 모드에서도 허용 — 여기서 막지 않는다.
+(function candelaDisclosureGate() {
+  let dataSource = null;
+  try {
+    const ds = readFileSync('src/data/candela/dataSource.js', 'utf-8');
+    const m = ds.match(/CANDELA_DATA_SOURCE\s*=\s*['"](fixture|live)['"]/);
+    if (m) dataSource = m[1];
+  } catch { return; } // 선언 파일 없으면 스킵(아직 미착수)
+  if (dataSource !== 'fixture') return;
+  let app = '';
+  try { app = readFileSync('src/App.jsx', 'utf-8'); } catch { return; }
+  const DATA_ROUTES = [
+    { re: /path=["'`]candela\/performance/, name: '/candela/performance' },
+    { re: /path=["'`]candela\/journal/, name: '/candela/journal' },
+  ];
+  for (const r of DATA_ROUTES) {
+    if (r.re.test(app)) {
+      errors.push(`App.jsx: ${r.name} 라우트가 CANDELA_DATA_SOURCE='fixture' 상태로 등록됨 (G-2 — 실데이터/'live' 전까지 데이터 라우트 금지. 소개 랜딩 /candela 는 허용)`);
+    }
+  }
+})();
+
 if (warns.length) {
   console.warn(`[design-check] WARN ${warns.length}건 (비차단 — §9-7 스케일 확장 백로그):`);
   for (const w of warns) console.warn('  -', w);

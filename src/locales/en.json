@@ -1,4 +1,53 @@
 {
+  "candela": {
+    "seo": {
+      "title": "Candela — A Case Study Proving an Automated Trading System Works",
+      "description": "Candela, a personal automated trading system built with AI. Not returns, but architecture — public evidence that the system actually works."
+    },
+    "hero": {
+      "status": "In progress · Under construction — the performance dashboard opens after live operation",
+      "sub": "We are building a personal automated trading system with AI. Once it is running, this is where we publish the evidence that it actually works. Not an investment service, but a case study proving PriSincera's building capability."
+    },
+    "duo": {
+      "heading": "One name, two systems",
+      "coreTag": "TRADING CORE",
+      "coreTitle": "The engine that will run real assets",
+      "coreBody": "An automated trading engine for the maker alone. Strategy, orders, and keys all live here, and it stays fully private.",
+      "webTag": "PUBLIC WEB",
+      "webTitle": "A window that proves it works",
+      "webBody": "A page open to everyone. With no keys and no strategy, it only reads and shows the derived results the system leaves behind. Performance is published after live operation."
+    },
+    "arch": {
+      "heading": "Three-tier architecture",
+      "desc": "Better a structure with nothing to lose than one merely well guarded",
+      "t1name": "Tier 1 · Public Web",
+      "t1note": "Read-only · no keys · no strategy",
+      "t2name": "Tier 2 · Operations Console",
+      "t2note": "Private · predefined commands only · no keys",
+      "t3name": "Tier 3 · Execution Worker (private)",
+      "t3note": "No inbound port · polling only · isolated keys",
+      "boundary": "Trust boundary — keys, strategy, and order execution live only below this line",
+      "caption": "No request path leads into the execution worker. Polling, publishing, and orders all flow outward from the worker, so there is no inbound port, and no path runs from the public web into the execution layer."
+    },
+    "control": {
+      "heading": "The control surface is designed narrow",
+      "body": "All the operations console can send to the execution worker is a small set of predefined commands. Arbitrary orders naming a symbol, quantity, or price cannot even be expressed; that sizing belongs entirely to the worker's strategy logic.",
+      "note": "The concrete command list, auth policy, and paths are not disclosed — we show that it works, without exposing the operational detail that would become an attack surface."
+    },
+    "principles": {
+      "heading": "Disclosure principles",
+      "desc": "Once performance is published, these always hold",
+      "items": [
+        "Free · no signal sales",
+        "Amounts and quantities withheld · ratios only",
+        "Delayed disclosure (T+1)",
+        "Weekly aggregation",
+        "No hiding losses · MDD shown",
+        "Backtest vs. live clearly marked"
+      ]
+    },
+    "footer": "This page is a service introduction. The performance dashboard opens once live-operation data is in hand."
+  },
   "header": {
     "buildersLog": "Builder's Log",
     "sylphio": "Sylphio",
