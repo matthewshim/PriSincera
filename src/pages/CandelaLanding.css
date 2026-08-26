@@ -10,21 +10,22 @@
 /* §9-1 히어로 (아이콘 → 타이틀 → 서브카피 · .cdl-page 110px + 30px = 표준 140px 보정) */
 .cdl-hero { text-align: center; padding: 30px 0 40px; }
 .cdl-hero-icon {
-  font-size: var(--fs-300); line-height: 1; margin-bottom: var(--space-md);
+  font-size: var(--fs-300); margin-bottom: var(--space-md);
   animation: cdlFloat 6s ease-in-out infinite;
 }
 @keyframes cdlFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .cdl-hero-title {
+  display: inline-block; /* 핵심: 그라디언트가 글자 폭에 맞춰 클립됨. block이면 full-width 박스의 중간(lavender)만 샘플되어 gold가 안 보인다 (BuildersLog .hero-heading 정합) */
   font-family: var(--font-display);
-  font-size: var(--fs-300); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
-  margin: 0 auto var(--space-sm);
+  font-size: var(--fs-300); font-weight: 700;
+  margin: 0 0 var(--space-sm);
   background: var(--gradient-brand);
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  text-wrap: balance;
 }
 .cdl-hero-sub {
   max-width: var(--measure); margin: 0 auto;
   font-size: var(--fs-115); line-height: 1.6; color: var(--crystal-light); opacity: 0.9;
+  word-break: keep-all; overflow-wrap: break-word;
 }
 .cdl-status {
   margin-top: var(--space-lg); display: inline-block;
