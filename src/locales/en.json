@@ -27,7 +27,15 @@
       "t3name": "Tier 3 · Execution Worker (private)",
       "t3note": "No inbound port · polling only · isolated keys",
       "boundary": "Trust boundary — keys, strategy, and order execution live only below this line",
-      "caption": "No request path leads into the execution worker. Polling, publishing, and orders all flow outward from the worker, so there is no inbound port, and no path runs from the public web into the execution layer."
+      "caption": "No request path leads into the execution worker. Polling, publishing, and orders all flow outward from the worker, so there is no inbound port, and no path runs from the public web into the execution layer.",
+      "store": "Results store",
+      "broker": "Brokerage API",
+      "queue": "Command queue",
+      "arrCmd": "command",
+      "arrPoll": "polling",
+      "arrSnap": "results snapshot",
+      "arrRead": "read",
+      "arrOrder": "orders · quotes"
     },
     "control": {
       "heading": "The control surface is designed narrow",
