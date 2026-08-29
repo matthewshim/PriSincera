@@ -54,7 +54,108 @@
         "Backtest vs. live clearly marked"
       ]
     },
-    "footer": "This page is a service introduction. The performance dashboard opens once live-operation data is in hand."
+    "footer": "This page is a service introduction. The performance dashboard opens once live-operation data is in hand.",
+    "features": {
+      "heading": "What makes it different",
+      "desc": "Not a service that sells performance — one that proves it, honestly.",
+      "items": [
+        {
+          "t": "Honest track record",
+          "d": "MDD and the worst month are shown up front. Returns are never the only headline."
+        },
+        {
+          "t": "Benchmarked",
+          "d": "Validated against KOSPI and the S&P 500, not just an absolute return."
+        },
+        {
+          "t": "Integrity hash chain",
+          "d": "Records can't be altered retroactively; the verification script is public for anyone to check."
+        },
+        {
+          "t": "Free · non-commercial",
+          "d": "No subscriptions, no signal sales. We don't sell picks or trade calls."
+        },
+        {
+          "t": "Delayed · weekly",
+          "d": "Trades are disclosed only on a T+1 delay, weekly — never a live feed."
+        },
+        {
+          "t": "Backtest vs. live, marked",
+          "d": "Never mixed. Fees, taxes, and slippage are all accounted for."
+        }
+      ]
+    },
+    "preview": {
+      "heading": "What we'll publish",
+      "desc": "Once live, these are the metrics we'll disclose — honestly.",
+      "badge": "Coming soon · example layout",
+      "curveLabel": "Equity curve vs. blended benchmark",
+      "note": "Real figures publish once live-operation data is in hand. Above is a layout example, not a result.",
+      "metrics": [
+        "Cumulative return",
+        "Max drawdown",
+        "Sharpe",
+        "Win rate",
+        "Avg. holding"
+      ]
+    },
+    "roadmap": {
+      "heading": "The journey",
+      "desc": "No stage is skipped. We publish only after enough real data.",
+      "now": "You are here",
+      "steps": [
+        {
+          "t": "Design · architecture",
+          "d": "Data contract and three-tier structure locked"
+        },
+        {
+          "t": "Backtest",
+          "d": "Validated with fees and slippage"
+        },
+        {
+          "t": "Paper trading",
+          "d": "1–2 months of observation before real money"
+        },
+        {
+          "t": "Small live account",
+          "d": "Start with money we can afford to lose"
+        },
+        {
+          "t": "Go public",
+          "d": "Dashboard opens after 3 months of real results"
+        }
+      ]
+    },
+    "faq": {
+      "heading": "FAQ",
+      "items": [
+        {
+          "q": "Is this an investment service?",
+          "a": "No. It's a case study that provides no picks or trade calls. It's free and sells no signals."
+        },
+        {
+          "q": "Can I copy the trades or get recommendations?",
+          "a": "No. Trades are disclosed only afterward, as ratios; symbols and amounts stay private. It's not a live feed."
+        },
+        {
+          "q": "Will the published results be real?",
+          "a": "Yes. An integrity hash chain makes retroactive edits impossible, and the verification script is public for anyone to check. Drawdowns and losses are never hidden."
+        },
+        {
+          "q": "When does it go public?",
+          "a": "After at least three months of live-operation data. Until then, the making is logged on Builder's Log."
+        },
+        {
+          "q": "Is it paid?",
+          "a": "No. We never charge for picks or trade calls."
+        }
+      ]
+    },
+    "cta": {
+      "heading": "See it being built",
+      "desc": "The design and experiments behind Candela are logged on Builder's Log.",
+      "button": "Read the making on Builder's Log"
+    }
   },
   "header": {
     "buildersLog": "Builder's Log",

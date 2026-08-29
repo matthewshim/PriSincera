@@ -111,3 +111,65 @@
   .cdl-hero-icon { animation: none; }
   .cdl-card { transition: none; }
 }
+
+
+/* ── 핵심 특징 그리드 ── */
+.cdl-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.cdl-feature {
+  padding: 18px; border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  transition: transform var(--duration-fast) var(--ease-spring), border-color var(--duration-fast);
+}
+.cdl-feature:hover { transform: translateY(-2px); border-color: var(--glass-border-hover); }
+.cdl-feature-title { font-family: var(--font-display); font-size: var(--fs-110); font-weight: 600; color: var(--text-primary); margin: 0 0 var(--space-sm); }
+.cdl-feature-desc { font-size: var(--fs-085); line-height: 1.55; color: var(--text-muted); margin: 0; word-break: keep-all; }
+
+/* ── 섹션 헤더 + 배지 ── */
+.cdl-sec-headrow { display: flex; align-items: center; gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-xs); }
+.cdl-badge { font-family: var(--font-mono); font-size: var(--fs-070); letter-spacing: 0.04em; color: var(--color-gold-light); padding: 4px 11px; border-radius: var(--radius-pill); border: 1px solid rgba(229, 178, 93, 0.24); background: rgba(229, 178, 93, 0.06); }
+
+/* ── 실적 대시보드 미리보기 ── */
+.cdl-preview { display: flex; flex-direction: column; gap: var(--space-lg); }
+.cdl-preview-svg { display: block; width: 100%; height: auto; color: var(--text-secondary); }
+.cdl-preview-chart-label { display: block; margin-top: var(--space-sm); font-family: var(--font-mono); font-size: var(--fs-075); color: var(--text-muted); }
+.cdl-preview-metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-sm); }
+.cdl-preview-metric { display: flex; flex-direction: column; gap: var(--space-xs); padding: 12px 14px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); }
+.cdl-preview-metric-k { font-family: var(--font-mono); font-size: var(--fs-070); letter-spacing: 0.04em; color: var(--text-muted); }
+.cdl-preview-metric-v { font-family: var(--font-mono); font-size: var(--fs-180); font-weight: 600; color: var(--text-secondary); opacity: 0.45; }
+.cdl-preview-note { font-size: var(--fs-080); color: var(--text-muted); margin: 0; word-break: keep-all; }
+
+/* ── 진행 로드맵 ── */
+.cdl-roadmap { list-style: none; margin: 0; padding: 0; position: relative; }
+.cdl-roadmap::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--glass-border); }
+.cdl-step { position: relative; display: flex; gap: var(--space-md); padding: 0 0 var(--space-lg) var(--space-xl); }
+.cdl-step:last-child { padding-bottom: 0; }
+.cdl-step-dot { position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-surface); border: 2px solid var(--text-muted); }
+.cdl-step-now .cdl-step-dot { border-color: var(--color-gold); background: rgba(229, 178, 93, 0.2); box-shadow: 0 0 12px rgba(229, 178, 93, 0.5); }
+.cdl-step-body { flex: 1; }
+.cdl-step-titlerow { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
+.cdl-step-title { font-family: var(--font-display); font-size: var(--fs-115); font-weight: 600; color: var(--text-secondary); margin: 0; }
+.cdl-step-now .cdl-step-title { color: var(--text-primary); }
+.cdl-step-nowtag { font-family: var(--font-mono); font-size: var(--fs-070); color: var(--color-gold); padding: 2px 9px; border-radius: var(--radius-pill); border: 1px solid rgba(229, 178, 93, 0.3); background: rgba(229, 178, 93, 0.08); }
+.cdl-step-desc { font-size: var(--fs-085); color: var(--text-muted); margin: 4px 0 0; word-break: keep-all; }
+
+/* ── FAQ ── */
+.cdl-faq { display: flex; flex-direction: column; gap: var(--space-sm); }
+.cdl-faq-item { border: 1px solid var(--glass-border); border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.02); padding: 2px var(--space-lg); }
+.cdl-faq-q { font-family: var(--font-display); font-size: var(--fs-100); font-weight: 600; color: var(--text-primary); cursor: pointer; padding: 16px 0; list-style: none; position: relative; padding-right: 28px; }
+.cdl-faq-q::-webkit-details-marker { display: none; }
+.cdl-faq-q::after { content: "+"; position: absolute; right: 2px; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: var(--fs-130); color: var(--text-muted); }
+.cdl-faq-item[open] .cdl-faq-q::after { content: "\2212"; }
+.cdl-faq-a { font-size: var(--fs-090); line-height: 1.6; color: var(--text-secondary); margin: 0 0 16px; word-break: keep-all; }
+
+/* ── CTA ── */
+.cdl-cta { text-align: center; padding: var(--space-2xl) var(--space-lg); border-radius: var(--radius-lg); background: linear-gradient(180deg, rgba(229, 178, 93, 0.06), rgba(255, 255, 255, 0.015)); border: 1px solid rgba(229, 178, 93, 0.16); }
+.cdl-cta-title { font-family: var(--font-display); font-size: var(--fs-180); font-weight: 600; color: var(--text-primary); margin: 0 0 var(--space-sm); }
+.cdl-cta-desc { font-size: var(--fs-095); color: var(--text-secondary); max-width: var(--measure); margin: 0 auto var(--space-lg); word-break: keep-all; }
+.cdl-cta-btn { display: inline-block; padding: 13px 28px; border-radius: var(--radius-pill); border: 1px solid rgba(229, 178, 93, 0.4); background: rgba(229, 178, 93, 0.1); color: var(--color-gold-light); font-family: var(--font-body); font-size: var(--fs-095); font-weight: 700; text-decoration: none; transition: transform var(--duration-fast) var(--ease-spring), background var(--duration-fast); }
+.cdl-cta-btn:hover { transform: translateY(-2px); background: rgba(229, 178, 93, 0.2); }
+
+@media (max-width: 760px) {
+  .cdl-features { grid-template-columns: 1fr; }
+  .cdl-preview-metrics { grid-template-columns: repeat(2, 1fr); }
+}

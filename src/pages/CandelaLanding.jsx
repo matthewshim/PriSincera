@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import { useTranslation } from '../contexts/LanguageContext';
 import './CandelaLanding.css';
@@ -49,6 +50,48 @@ export default function CandelaLanding() {
             <h3 className="cdl-card-title">{t('candela.duo.webTitle')}</h3>
             <p className="cdl-card-body">{t('candela.duo.webBody')}</p>
           </article>
+        </div>
+      </section>
+
+      <section className="cdl-section">
+        <h2 className="cdl-sec-title">{t('candela.features.heading')}</h2>
+        <p className="cdl-sec-desc">{t('candela.features.desc')}</p>
+        <div className="cdl-features">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div className="cdl-feature" key={i}>
+              <h3 className="cdl-feature-title">{t(`candela.features.items.${i}.t`)}</h3>
+              <p className="cdl-feature-desc">{t(`candela.features.items.${i}.d`)}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="cdl-section">
+        <div className="cdl-sec-headrow">
+          <h2 className="cdl-sec-title">{t('candela.preview.heading')}</h2>
+          <span className="cdl-badge">{t('candela.preview.badge')}</span>
+        </div>
+        <p className="cdl-sec-desc">{t('candela.preview.desc')}</p>
+        <div className="cdl-card cdl-preview">
+          <div className="cdl-preview-chart">
+            <svg viewBox="0 0 600 170" className="cdl-preview-svg" role="img" aria-label={t('candela.preview.curveLabel')}>
+              <line x1="0" y1="150" x2="600" y2="150" stroke="currentColor" strokeOpacity="0.08" />
+              <line x1="0" y1="100" x2="600" y2="100" stroke="currentColor" strokeOpacity="0.08" />
+              <line x1="0" y1="50" x2="600" y2="50" stroke="currentColor" strokeOpacity="0.08" />
+              <polyline points="0,150 75,146 150,148 225,138 300,142 375,130 450,133 525,122 600,116" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeDasharray="5 4" opacity="0.7" />
+              <polyline points="0,152 75,138 150,120 225,128 300,96 375,106 450,70 525,60 600,40" fill="none" stroke="var(--color-gold)" strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round" />
+            </svg>
+            <span className="cdl-preview-chart-label">{t('candela.preview.curveLabel')}</span>
+          </div>
+          <div className="cdl-preview-metrics">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div className="cdl-preview-metric" key={i}>
+                <span className="cdl-preview-metric-k">{t(`candela.preview.metrics.${i}`)}</span>
+                <span className="cdl-preview-metric-v">&mdash;</span>
+              </div>
+            ))}
+          </div>
+          <p className="cdl-preview-note">{t('candela.preview.note')}</p>
         </div>
       </section>
 
@@ -184,6 +227,45 @@ export default function CandelaLanding() {
           {Array.from({ length: principleCount }).map((_, i) => (
             <span className="cdl-principle" key={i}>{t(`candela.principles.items.${i}`)}</span>
           ))}
+        </div>
+      </section>
+
+      <section className="cdl-section">
+        <h2 className="cdl-sec-title">{t('candela.roadmap.heading')}</h2>
+        <p className="cdl-sec-desc">{t('candela.roadmap.desc')}</p>
+        <ol className="cdl-roadmap">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <li className={`cdl-step${i === 0 ? ' cdl-step-now' : ''}`} key={i}>
+              <span className="cdl-step-dot" aria-hidden="true" />
+              <div className="cdl-step-body">
+                <div className="cdl-step-titlerow">
+                  <h3 className="cdl-step-title">{t(`candela.roadmap.steps.${i}.t`)}</h3>
+                  {i === 0 && <span className="cdl-step-nowtag">{t('candela.roadmap.now')}</span>}
+                </div>
+                <p className="cdl-step-desc">{t(`candela.roadmap.steps.${i}.d`)}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="cdl-section">
+        <h2 className="cdl-sec-title">{t('candela.faq.heading')}</h2>
+        <div className="cdl-faq">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <details className="cdl-faq-item" key={i}>
+              <summary className="cdl-faq-q">{t(`candela.faq.items.${i}.q`)}</summary>
+              <p className="cdl-faq-a">{t(`candela.faq.items.${i}.a`)}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="cdl-section">
+        <div className="cdl-cta">
+          <h2 className="cdl-cta-title">{t('candela.cta.heading')}</h2>
+          <p className="cdl-cta-desc">{t('candela.cta.desc')}</p>
+          <Link to="/builders-log" className="cdl-cta-btn">{t('candela.cta.button')} &rarr;</Link>
         </div>
       </section>
 
