@@ -177,6 +177,21 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
+// ── Builder's Log 발행 규정: 발행 아티클에 Revision History 금지 (publishing_guide §5) ──
+// 내부 문서(docs/)는 Revision History 의무지만, 공개 발행 아티클에는 넣지 않는다
+// (AI 작성 노출·버전 노이즈 방지). docs를 그대로 복붙하면 여기서 걸린다.
+(function buildersLogRevisionGate() {
+  const dir = 'public/content/logs';
+  let files = [];
+  try { files = readdirSync(dir).filter((f) => f.endsWith('.md')); } catch { return; }
+  const re = /(^|\n)#{1,6}[^\n]*Revision History/i;
+  for (const f of files) {
+    if (re.test(readFileSync(join(dir, f), 'utf-8'))) {
+      errors.push(`public/content/logs/${f}: 발행 아티클에 'Revision History' 섹션 금지 (내부 문서에만 유지 — publishing_guide §5)`);
+    }
+  }
+})();
+
 if (warns.length) {
   console.warn(`[design-check] WARN ${warns.length}건 (비차단 — §9-7 스케일 확장 백로그):`);
   for (const w of warns) console.warn('  -', w);

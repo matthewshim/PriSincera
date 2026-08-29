@@ -1,13 +1,5 @@
 # 🧭 唯一の真実(SSOT)：カテゴリごとにばらついたページタイトル・メタの統一記
 
-## 📝 Revision History
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-14 | Antigravity | ページタイトル・メタを単一の真実(SSOT)へ統一し、ヒーローベースのブランドOGを適用した記録を定義 | server.mjs, useSEO.js, seoMeta 共有モジュール |
-
----
-
 ## 1. 💡 導入：同じページ、違うタイトル
 
 PriSinceraはReact/ViteベースのSPAです。検索・ソーシャルクローラー向けに**サーバーが初期HTMLへメタタグを注入(SSR)**し、ブラウザでは**クライアントフックがタブタイトルとメタを更新(CSR)**する2つの経路が併存しています。

@@ -1,13 +1,5 @@
 # 🧭 하나의 진실(SSOT): 카테고리별로 흩어진 페이지 타이틀·메타 통일기
 
-## 📝 Revision History
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-14 | Antigravity | 페이지 타이틀·메타를 단일 소스(SSOT)로 통일하고 히어로 기반 브랜드 OG를 적용한 기록 정의 | server.mjs, useSEO.js, seoMeta 공유 모듈 |
-
----
-
 ## 1. 💡 도입부: 같은 페이지, 다른 제목
 
 PriSincera는 React/Vite 기반의 SPA입니다. 검색·소셜 크롤러를 위해 **서버가 초기 HTML에 메타 태그를 주입(SSR)**하고, 브라우저에서는 **클라이언트 훅이 탭 타이틀과 메타를 갱신(CSR)**하는 두 개의 경로가 공존합니다.

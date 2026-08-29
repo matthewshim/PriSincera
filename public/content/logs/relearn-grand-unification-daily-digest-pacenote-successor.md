@@ -1,13 +1,5 @@
 # 🪐 두 서비스를 하나의 여정으로: Daily Digest·Pace Note를 ReLearn으로 대통합한 승계기
 
-## 📝 Revision History
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-22 | Antigravity | Daily Digest·Pace Note를 통합 성장 루프 서비스 ReLearn으로 승계한 전 과정 기록 정의 | ReLearn, DailyDigest, PaceNote, Admin |
-
----
-
 ## 1. 💡 도입부: 철학은 하나인데, 메뉴는 둘이었다
 
 PriSincera의 성장 철학은 처음부터 하나의 문장이었습니다 — **배움이 실행이 되고, 실행이 복기를 거쳐 다음 배움을 개인화한다.** 매일의 지식 큐레이션(Daily Digest)과 주간 실행·회고 트래커(Pace Note)는 이 플라이휠의 앞바퀴와 뒷바퀴로 설계된 서비스였습니다.

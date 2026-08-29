@@ -1,15 +1,5 @@
 # 📐 PriSincera デザインシステム (v4.0: オーラニュートラル＆セマンティックインタラクション)
 
-## 📝 改訂履歴
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v2.0 | 2026-04-30 | Designer | プレミアムダークモード基準にデザインシステムを大規模に再設計 | CSS System |
-| v2.5 | 2026-05-19 | Designer | Bento Chrono-Calendar & 3-Tab Workstation Themeの仕様定義 | DailyDigest |
-| v2.6 | 2026-05-20 | Designer | PaceNote Bento Weekly Calendar & Voyage Horizonデザイントークン標準確立 | PaceNote |
-| v3.0 | 2026-05-27 | AI Agent | 余白最適化(Density)および紫色背景色の漏れを完全に除去(Desaturated Chrono-Neutral)する仕様を明文化 | CSS Layout & Color System |
-| v4.0 | 2026-05-27 | AI Agent | **次世代のセマンティックCTAボタン設計仕様(Semantic CTA)および世界最高水準のデザインシステム分析(Linear, Vercel, HIG)を反映** | Global Brand System & UI Refactoring |
-
 > **"Sincerity, Prioritized."**
 > 本文書は、PriSinceraウェブサイトが世界最高水準のデザイン品質を達成するための次世代デザインシステムv4.0標準ガイドラインです。 
 

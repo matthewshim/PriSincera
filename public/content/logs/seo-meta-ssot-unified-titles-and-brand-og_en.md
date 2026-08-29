@@ -1,13 +1,5 @@
 # 🧭 One Source of Truth (SSOT): Unifying Scattered Page Titles & Meta Across Categories
 
-## 📝 Revision History
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-14 | Antigravity | Defined the record of unifying page titles/meta into a single source of truth (SSOT) and applying a hero-based brand OG | server.mjs, useSEO.js, shared seoMeta module |
-
----
-
 ## 1. 💡 Intro: Same Page, Different Title
 
 PriSincera is a React/Vite SPA. Two paths coexist for metadata: the **server injects meta tags into the initial HTML (SSR)** for search/social crawlers, while a **client hook updates the tab title and meta in the browser (CSR)**.

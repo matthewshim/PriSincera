@@ -1,13 +1,5 @@
 # 🪐 Two Services, One Journey: How We Unified Daily Digest & Pace Note into ReLearn
 
-## 📝 Revision History
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-22 | Antigravity | Defined the full record of succeeding Daily Digest & Pace Note into the unified growth-loop service ReLearn | ReLearn, DailyDigest, PaceNote, Admin |
-
----
-
 ## 1. 💡 Intro: One Philosophy, Two Menus
 
 PriSincera's growth philosophy was always a single sentence — **learning becomes action, and action, through reflection, personalizes the next round of learning.** Daily Digest (daily knowledge curation) and Pace Note (weekly action & reflection tracker) were designed as the front and rear wheels of this flywheel.

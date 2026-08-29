@@ -1,8 +1,8 @@
 ---
 status: active
 domain: BuildersLog
-last_updated: 2026-06-29
-version: v1.0
+last_updated: 2026-08-29
+version: v1.1
 target_files:
   - src/data/buildersLogMeta.json
   - src/pages/BuildersLog.jsx
@@ -10,6 +10,13 @@ target_files:
 ---
 
 # 📘 Builder's Log 퍼블리싱 가이드
+
+## 📝 Revision History
+
+| Version | Date | Author | Description | Impact Area |
+| :--- | :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-29 | AI Agent | 최초 정의 — 로컬 정적 에셋 발행 워크플로우·마크다운 규칙·SEO 처리 | BuildersLog |
+| v1.1 | 2026-08-29 | AI Agent | §5 Revision History 정책 신설 — 내부 문서 의무·발행 아티클 제외, design-check 자동 집행 게이트 | BuildersLog, ci/ |
 
 본 문서는 PriSincera 웹사이트의 **Builder's Log (테크 블로그)**에 새로운 아티클을 작성하고 퍼블리싱하는 구체적인 워크플로우를 안내합니다. 프론트엔드 라우팅 및 렌더링 엔진(`react-markdown`) 아키텍처가 구축되어 있으므로, 데이터베이스(Firestore)를 거치지 않고 로컬 파일 시스템 제어만으로 즉시 포스팅이 가능합니다.
 
@@ -83,3 +90,24 @@ PriSincera 디자인 시스템에 맞춘 프리미엄 다크 모드 뷰어(`Buil
 `buildersLogMeta.json`에 입력된 데이터는 다음과 같이 작동합니다.
 - `title`과 `description`, `tags`는 아티클 진입 시 브라우저 탭 타이틀과 `<meta>` 태그에 동적으로 주입되어 검색 엔진 노출(SEO) 성능을 극대화합니다.
 - URL은 항상 `https://www.prisincera.com/builders-log/{slug}` 형태로 유지되므로 외부 플랫폼(LinkedIn 등) 공유 시 링크가 깨지지 않습니다.
+
+---
+
+## 5. 🔒 Revision History 정책 — 내부는 의무, 발행은 제외 (🔒 규범)
+
+Builder's Log 발행 아티클과 내부 설계 문서(`docs/`)는 Revision History를 **정반대로** 다룬다.
+
+| 대상 | Revision History |
+| :--- | :--- |
+| **내부 문서** (`docs/**.md`) | **의무** — 버전·날짜·작성자·변경 요지·영향 범위를 표로 기록. 프로젝트의 변경 이력 자산이다. |
+| **발행 아티클** (`public/content/logs/*.md`) | **금지** — 섹션을 넣지 않는다. |
+
+**왜 발행 아티클에서 제외하는가**
+- 공개 블로그에 버전 이력·작성자(예: `AI Agent`·`Designer`)가 노출되면 "AI로 찍어낸 콘텐츠"로 읽히고, 잦은 버전 업 노이즈가 독자 경험을 해친다.
+- 아티클 메타(챕터 배지·발행일)가 이미 필요한 최소 정보를 제공한다.
+
+**작성 흐름**
+1. 설계·변경은 내부 문서(`docs/`)에 Revision History와 함께 기록한다.
+2. 발행용 아티클은 그 내용을 스토리텔링으로 각색하되 **Revision History 섹션을 넣지 않는다** (docs를 그대로 복붙하지 말 것).
+
+**자동 집행 (Enforcement)**: `ci/design-check.mjs`의 prebuild 게이트가 `public/content/logs/*.md`에서 `Revision History` 헤딩을 발견하면 **빌드를 실패**시킨다. 규범을 의지가 아니라 게이트로 강제한다.

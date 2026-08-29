@@ -1,13 +1,5 @@
 # 🛠️ SEO Deep Dive: SPA의 크롤링 맹점 극복 및 동적 사이트맵 연동기
 
-## 📝 Revision History
-
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-26 | Antigravity | 최초 SEO 아키텍처 개선 및 빌더스 로그 게시 초안 정의 | server.mjs, DailyCalendar, BuildersLog.css, index.css |
-
----
-
 ## 1. 💡 도입부: 서비스는 살아있으나, 검색 엔진은 장님이었다
 PriSincera는 React/Vite 기반의 고성능 Single Page Application(SPA)으로 구축되었으며, 매일 테크 트렌드를 분석하는 **Daily Digest**와 기술 의사결정을 적어 내려가는 **Builders Log**라는 킬러 콘텐츠를 갖고 있습니다.
 
