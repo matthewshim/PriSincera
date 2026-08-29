@@ -139,19 +139,29 @@
 .cdl-preview-metric-v { font-family: var(--font-mono); font-size: var(--fs-180); font-weight: 600; color: var(--text-secondary); opacity: 0.45; }
 .cdl-preview-note { font-size: var(--fs-080); color: var(--text-muted); margin: 0; word-break: keep-all; }
 
-/* ── 진행 로드맵 ── */
-.cdl-roadmap { list-style: none; margin: 0; padding: 0; position: relative; }
-.cdl-roadmap::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--glass-border); }
-.cdl-step { position: relative; display: flex; gap: var(--space-md); padding: 0 0 var(--space-lg) var(--space-xl); }
-.cdl-step:last-child { padding-bottom: 0; }
-.cdl-step-dot { position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-surface); border: 2px solid var(--text-muted); }
+/* ── 진행 로드맵 (데스크톱 가로 스텝퍼 · 모바일 세로) ── */
+.cdl-roadmap { list-style: none; margin: 0; padding: 0; position: relative; display: flex; gap: var(--space-md); }
+.cdl-step { flex: 1; position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 0 var(--space-md) 0 0; }
+.cdl-step:not(:last-child)::before { content: ""; position: absolute; top: 7px; left: 22px; right: calc(var(--space-md) * -1); height: 2px; background: var(--glass-border); }
+.cdl-step-now:not(:last-child)::before { background: linear-gradient(90deg, rgba(229,178,93,0.7), var(--glass-border)); }
+.cdl-step-dot { position: relative; z-index: 1; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-surface); border: 2px solid var(--text-muted); margin-bottom: var(--space-md); flex-shrink: 0; }
 .cdl-step-now .cdl-step-dot { border-color: var(--color-gold); background: rgba(229, 178, 93, 0.2); box-shadow: 0 0 12px rgba(229, 178, 93, 0.5); }
-.cdl-step-body { flex: 1; }
 .cdl-step-titlerow { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
 .cdl-step-title { font-family: var(--font-display); font-size: var(--fs-115); font-weight: 600; color: var(--text-secondary); margin: 0; }
 .cdl-step-now .cdl-step-title { color: var(--text-primary); }
 .cdl-step-nowtag { font-family: var(--font-mono); font-size: var(--fs-070); color: var(--color-gold); padding: 2px 9px; border-radius: var(--radius-pill); border: 1px solid rgba(229, 178, 93, 0.3); background: rgba(229, 178, 93, 0.08); }
-.cdl-step-desc { font-size: var(--fs-085); color: var(--text-muted); margin: 4px 0 0; word-break: keep-all; }
+.cdl-step-desc { font-size: var(--fs-080); color: var(--text-muted); margin: 6px 0 0; word-break: keep-all; }
+
+/* ── 에요브로우 (섹션 리듬) ── */
+.cdl-eyebrow { font-family: var(--font-mono); font-size: var(--fs-070); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm); }
+.cdl-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--color-gold); opacity: 0.6; }
+
+/* ── 특징 카드 아이콘 + 가독성 ── */
+.cdl-feature { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); }
+.cdl-feature-icon { width: 26px; height: 26px; color: var(--color-gold); }
+.cdl-feature-title { margin: 0; }
+.cdl-feature-desc { line-height: 1.6; }
+.cdl-card-body, .cdl-control-body { line-height: 1.65; }
 
 /* ── FAQ ── */
 .cdl-faq { display: flex; flex-direction: column; gap: var(--space-sm); }
@@ -172,4 +182,10 @@
 @media (max-width: 760px) {
   .cdl-features { grid-template-columns: 1fr; }
   .cdl-preview-metrics { grid-template-columns: repeat(2, 1fr); }
+  .cdl-roadmap { flex-direction: column; gap: 0; }
+  .cdl-roadmap::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; height: auto; background: var(--glass-border); }
+  .cdl-step { flex: none; flex-direction: row; align-items: flex-start; gap: var(--space-md); padding: 0 0 var(--space-lg) var(--space-xl); }
+  .cdl-step:not(:last-child)::before { display: none; }
+  .cdl-step-dot { position: absolute; left: 0; top: 4px; margin-bottom: 0; }
+  .cdl-step-desc { margin-top: 4px; }
 }

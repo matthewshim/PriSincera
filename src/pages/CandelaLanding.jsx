@@ -28,6 +28,15 @@ export default function CandelaLanding() {
 
   const principleCount = 6;
 
+  const FEATURE_ICONS = [
+    (<polyline points="3 15 8 10 12 13 16 6 21 16" />),
+    (<><rect x="5" y="12" width="5" height="8" rx="1" /><rect x="14" y="5" width="5" height="15" rx="1" /></>),
+    (<><path d="M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6z" /><polyline points="9 12 11 14 15 9" /></>),
+    (<><circle cx="12" cy="12" r="8" /><line x1="7.5" y1="16.5" x2="16.5" y2="7.5" /></>),
+    (<><circle cx="12" cy="12" r="8" /><polyline points="12 8 12 12 15 14" /></>),
+    (<><rect x="4" y="5" width="16" height="14" rx="2" /><line x1="12" y1="5" x2="12" y2="19" /></>),
+  ];
+
   return (
     <div className="cdl-page">
       <header className="cdl-hero">
@@ -38,6 +47,7 @@ export default function CandelaLanding() {
       </header>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">TWO SYSTEMS</div>
         <h2 className="cdl-sec-title">{t('candela.duo.heading')}</h2>
         <div className="cdl-duo">
           <article className="cdl-card">
@@ -54,11 +64,13 @@ export default function CandelaLanding() {
       </section>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">WHY CANDELA</div>
         <h2 className="cdl-sec-title">{t('candela.features.heading')}</h2>
         <p className="cdl-sec-desc">{t('candela.features.desc')}</p>
         <div className="cdl-features">
           {Array.from({ length: 6 }).map((_, i) => (
             <div className="cdl-feature" key={i}>
+              <svg className="cdl-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{FEATURE_ICONS[i]}</svg>
               <h3 className="cdl-feature-title">{t(`candela.features.items.${i}.t`)}</h3>
               <p className="cdl-feature-desc">{t(`candela.features.items.${i}.d`)}</p>
             </div>
@@ -67,6 +79,7 @@ export default function CandelaLanding() {
       </section>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">WHAT YOU'LL SEE</div>
         <div className="cdl-sec-headrow">
           <h2 className="cdl-sec-title">{t('candela.preview.heading')}</h2>
           <span className="cdl-badge">{t('candela.preview.badge')}</span>
@@ -96,6 +109,7 @@ export default function CandelaLanding() {
       </section>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">ARCHITECTURE</div>
         <h2 className="cdl-sec-title">{t('candela.arch.heading')}</h2>
         <p className="cdl-sec-desc">{t('candela.arch.desc')}</p>
         <div className="cdl-diagram">
@@ -213,6 +227,7 @@ export default function CandelaLanding() {
       </section>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">CONTROL SURFACE</div>
         <h2 className="cdl-sec-title">{t('candela.control.heading')}</h2>
         <div className="cdl-card">
           <p className="cdl-control-body">{t('candela.control.body')}</p>
@@ -221,6 +236,7 @@ export default function CandelaLanding() {
       </section>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">DISCLOSURE</div>
         <h2 className="cdl-sec-title">{t('candela.principles.heading')}</h2>
         <p className="cdl-sec-desc">{t('candela.principles.desc')}</p>
         <div className="cdl-principles">
@@ -231,6 +247,7 @@ export default function CandelaLanding() {
       </section>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">THE JOURNEY</div>
         <h2 className="cdl-sec-title">{t('candela.roadmap.heading')}</h2>
         <p className="cdl-sec-desc">{t('candela.roadmap.desc')}</p>
         <ol className="cdl-roadmap">
@@ -250,6 +267,7 @@ export default function CandelaLanding() {
       </section>
 
       <section className="cdl-section">
+        <div className="cdl-eyebrow">QUESTIONS</div>
         <h2 className="cdl-sec-title">{t('candela.faq.heading')}</h2>
         <div className="cdl-faq">
           {Array.from({ length: 5 }).map((_, i) => (

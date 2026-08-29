@@ -12,10 +12,10 @@
       "heading": "One name, two systems",
       "coreTag": "TRADING CORE",
       "coreTitle": "The engine that will run real assets",
-      "coreBody": "An automated trading engine for the maker alone. Strategy, orders, and keys all live here, and it stays fully private.",
+      "coreBody": "The maker's engine alone — strategy, orders, and keys all private.",
       "webTag": "PUBLIC WEB",
       "webTitle": "A window that proves it works",
-      "webBody": "A page open to everyone. With no keys and no strategy, it only reads and shows the derived results the system leaves behind. Performance is published after live operation."
+      "webBody": "A window open to all — no keys, no strategy, just derived results. Live after real operation."
     },
     "arch": {
       "heading": "Three-tier architecture",
@@ -39,8 +39,8 @@
     },
     "control": {
       "heading": "The control surface is designed narrow",
-      "body": "All the operations console can send to the execution worker is a small set of predefined commands. Arbitrary orders naming a symbol, quantity, or price cannot even be expressed; that sizing belongs entirely to the worker's strategy logic.",
-      "note": "The concrete command list, auth policy, and paths are not disclosed — we show that it works, without exposing the operational detail that would become an attack surface."
+      "body": "All the console can send is a few predefined commands — no naming a symbol, quantity, or price.",
+      "note": "Commands, auth, and paths stay private — we show it works without exposing the attack surface."
     },
     "principles": {
       "heading": "Disclosure principles",
@@ -61,27 +61,27 @@
       "items": [
         {
           "t": "Honest track record",
-          "d": "MDD and the worst month are shown up front. Returns are never the only headline."
+          "d": "MDD and worst month, front and center — never returns alone."
         },
         {
           "t": "Benchmarked",
-          "d": "Validated against KOSPI and the S&P 500, not just an absolute return."
+          "d": "Validated against KOSPI and the S&P 500."
         },
         {
           "t": "Integrity hash chain",
-          "d": "Records can't be altered retroactively; the verification script is public for anyone to check."
+          "d": "Tamper-proof — a public script lets anyone verify."
         },
         {
           "t": "Free · non-commercial",
-          "d": "No subscriptions, no signal sales. We don't sell picks or trade calls."
+          "d": "No subscriptions, no signal sales. We don't sell calls."
         },
         {
           "t": "Delayed · weekly",
-          "d": "Trades are disclosed only on a T+1 delay, weekly — never a live feed."
+          "d": "T+1 delay, weekly only — never a live feed."
         },
         {
           "t": "Backtest vs. live, marked",
-          "d": "Never mixed. Fees, taxes, and slippage are all accounted for."
+          "d": "Backtest and live never mixed. All costs included."
         }
       ]
     },
