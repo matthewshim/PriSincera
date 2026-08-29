@@ -1,5 +1,71 @@
 [
   {
+    "id": "ep14",
+    "slug": "candela-intro-before-the-service",
+    "chapterNo": "14",
+    "title": {
+      "ko": "🕯️ 실적보다 소개가 먼저: Candela 홍보 페이지를 실서비스보다 앞서 세운 이유",
+      "en": "🕯️ Introduction Before Results: Why Candela's Landing Page Shipped Ahead of the Service",
+      "ja": "🕯️ 実績より紹介が先：Candela の紹介ページを実サービスに先んじて立てた理由"
+    },
+    "subtitle": {
+      "ko": "수익률이 아니라 아키텍처로 — 실적은 실운용 후 공개하되, '만드는 과정'을 소개 페이지로 먼저 세운 포지셔닝과 설계 기록",
+      "en": "Architecture over returns — the positioning and build record of shipping the 'making' as an intro page first, with performance held until live operation",
+      "ja": "利回りではなくアーキテクチャで — 実績は実運用後に公開しつつ、『作る過程』を紹介ページとして先に立てたポジショニングと設計の記録"
+    },
+    "tags": [
+      "Candela",
+      "Positioning",
+      "Design System",
+      "Security"
+    ],
+    "description": {
+      "ko": "Candela는 AI로 만드는 개인 자동매매 시스템이지만, 소개 페이지의 첫 화면에는 수익률이 없습니다. 투자 서비스가 아니라 '작동한다는 공개 증거'라는 포지셔닝 아래, 실서비스(실적)보다 소개 페이지를 먼저 공개하기로 한 이유와, 공개 저장소 전제에서 '보일 것(3계층·신뢰 경계·인바운드 없음)'과 '감출 것(경로·명령·임계값)'을 나눈 원칙, 그리고 히어로 그라디언트 함정·모바일 세로 다이어그램·가로 스텝퍼 같은 디자인 시스템 정합 과정을 담은 기록입니다.",
+      "en": "Candela is a personal automated trading system built with AI, yet its landing page opens with no return figure. Under the positioning that it's not an investment service but 'public evidence that the system works,' this is the record of why the intro page shipped before the service, how — on a public-repo premise — we split what to show (three tiers, trust boundary, no inbound) from what to hide (paths, commands, thresholds), and the design-system work behind the hero-gradient trap, the mobile vertical diagram, and the horizontal stepper.",
+      "ja": "Candela は AI で作る個人向け自動売買システムですが、紹介ページの最初の画面に利回りはありません。投資サービスではなく『動くという公開された証拠』というポジショニングのもと、実サービス（実績）より紹介ページを先に公開した理由、公開リポジトリ前提で『見せるもの（3階層・信頼境界・インバウンドなし）』と『隠すもの（経路・コマンド・しきい値）』を分けた原則、そしてヒーローのグラデーションの罠・モバイル縦図・横ステッパーといったデザインシステム整合の過程を記録しました。"
+    },
+    "accent": "#E5B25D",
+    "date": "2026-08-29",
+    "commits": [
+      {
+        "hash": "889e24b",
+        "type": "feat",
+        "msg": {
+          "ko": "소개 랜딩 /candela 라이브 + G-2 라우트별 게이트",
+          "en": "Landing page /candela live + route-specific G-2 gate",
+          "ja": "紹介ランディング /candela 公開 + G-2 ルート別ゲート"
+        }
+      },
+      {
+        "hash": "c4840ec",
+        "type": "feat",
+        "msg": {
+          "ko": "프로덕트 소개 강화 — 특징·미리보기·로드맵·FAQ·CTA",
+          "en": "Product intro enriched — features, preview, roadmap, FAQ, CTA",
+          "ja": "製品紹介の強化 — 特徴・プレビュー・ロードマップ・FAQ・CTA"
+        }
+      },
+      {
+        "hash": "7a20f30",
+        "type": "feat",
+        "msg": {
+          "ko": "아키텍처 다이어그램 모바일 세로 리플로우",
+          "en": "Architecture diagram vertical reflow on mobile",
+          "ja": "アーキテクチャ図のモバイル縦リフロー"
+        }
+      },
+      {
+        "hash": "35a4149",
+        "type": "refactor",
+        "msg": {
+          "ko": "디자인·가독성 개선 — 가로 스텝퍼·특징 아이콘·에요브로우",
+          "en": "Design & readability — horizontal stepper, feature icons, eyebrows",
+          "ja": "デザイン・可読性の改善 — 横ステッパー・特徴アイコン・アイブロウ"
+        }
+      }
+    ]
+  },
+  {
     "id": "ep13",
     "slug": "relearn-grand-unification-daily-digest-pacenote-successor",
     "chapterNo": "13",
