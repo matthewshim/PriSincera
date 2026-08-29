@@ -73,6 +73,8 @@
   color: var(--text-secondary);
 }
 .cdl-svg text { font-family: var(--font-mono); }
+.cdl-svg-mobile { display: none; }
+.cdl-svg-mobile text { font-family: var(--font-mono); }
 .cdl-caption {
   max-width: var(--measure); margin: var(--space-md) auto 0;
   font-size: var(--fs-085); line-height: 1.6; color: var(--text-secondary);
@@ -98,6 +100,9 @@
 
 @media (max-width: 760px) {
   .cdl-page { padding: 92px 18px 64px; }
+  .cdl-diagram { overflow-x: visible; }
+  .cdl-svg { display: none; }
+  .cdl-svg-mobile { display: block; width: 100%; height: auto; max-width: 360px; min-width: 0; margin: 0 auto; color: var(--text-secondary); }
   .cdl-hero { padding-top: 28px; }
   .cdl-hero-title { font-size: var(--fs-220); }
   .cdl-duo { grid-template-columns: 1fr; }

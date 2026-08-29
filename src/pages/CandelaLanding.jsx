@@ -110,6 +110,61 @@ export default function CandelaLanding() {
 
             <line x1="390" y1="492" x2="505" y2="492" stroke="currentColor" strokeOpacity="0.6" markerEnd="url(#cdlAh)" />
           </svg>
+
+          <svg className="cdl-svg-mobile" viewBox="0 0 360 720" role="img" aria-label={t('candela.arch.caption')}>
+            <defs>
+              <marker id="cdlAhM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
+              </marker>
+            </defs>
+
+            {/* Tier 1 Public */}
+            <rect x="14" y="16" width="272" height="50" rx="11" fill="rgba(165,180,252,0.06)" stroke="currentColor" strokeOpacity="0.28" />
+            <text x="28" y="41" fontSize="12.5" fontWeight="600" fill="currentColor">{t('candela.arch.t1name')}</text>
+            <text x="28" y="60" fontSize="10" fill="currentColor" opacity="0.7">{t('candela.arch.t1note')}</text>
+
+            {/* Results store */}
+            <rect x="14" y="100" width="196" height="42" rx="10" fill="rgba(255,255,255,0.03)" stroke="currentColor" strokeOpacity="0.28" />
+            <text x="112" y="126" fontSize="12" fontWeight="600" fill="currentColor" textAnchor="middle">{t('candela.arch.store')}</text>
+
+            {/* Tier 2 Console */}
+            <rect x="14" y="176" width="272" height="50" rx="11" fill="rgba(165,180,252,0.06)" stroke="currentColor" strokeOpacity="0.28" />
+            <text x="28" y="201" fontSize="12.5" fontWeight="600" fill="currentColor">{t('candela.arch.t2name')}</text>
+            <text x="28" y="220" fontSize="10" fill="currentColor" opacity="0.7">{t('candela.arch.t2note')}</text>
+
+            {/* Command queue */}
+            <rect x="14" y="260" width="196" height="42" rx="10" fill="rgba(255,255,255,0.03)" stroke="currentColor" strokeOpacity="0.28" />
+            <text x="112" y="286" fontSize="12" fontWeight="600" fill="currentColor" textAnchor="middle">{t('candela.arch.queue')}</text>
+
+            {/* Trust boundary */}
+            <line x1="8" y1="324" x2="352" y2="324" stroke="#E5B25D" strokeWidth="1.4" strokeDasharray="6 5" opacity="0.85" />
+            <text x="12" y="317" fontSize="9.5" fill="#E5B25D">{t('candela.arch.boundary')}</text>
+
+            {/* Tier 3 Worker */}
+            <rect x="14" y="342" width="272" height="60" rx="11" fill="rgba(229,178,93,0.05)" stroke="#E5B25D" strokeOpacity="0.55" />
+            <text x="28" y="368" fontSize="12.5" fontWeight="600" fill="currentColor">{t('candela.arch.t3name')}</text>
+            <text x="28" y="388" fontSize="10" fill="currentColor" opacity="0.75">{t('candela.arch.t3note')}</text>
+
+            {/* Brokerage */}
+            <rect x="14" y="426" width="196" height="42" rx="10" fill="rgba(255,255,255,0.03)" stroke="currentColor" strokeOpacity="0.28" />
+            <text x="112" y="452" fontSize="12" fontWeight="600" fill="currentColor" textAnchor="middle">{t('candela.arch.broker')}</text>
+
+            {/* Arrows — 모두 워커에서 나가는 방향 */}
+            <line x1="100" y1="226" x2="100" y2="260" stroke="currentColor" strokeOpacity="0.6" markerEnd="url(#cdlAhM)" />
+            <text x="106" y="249" fontSize="9" fill="currentColor" opacity="0.7">{t('candela.arch.arrCmd')}</text>
+
+            <line x1="60" y1="342" x2="60" y2="302" stroke="currentColor" strokeOpacity="0.6" strokeDasharray="4 3" markerEnd="url(#cdlAhM)" />
+            <text x="26" y="336" fontSize="9" fill="currentColor" opacity="0.7">{t('candela.arch.arrPoll')}</text>
+
+            <line x1="112" y1="100" x2="112" y2="66" stroke="currentColor" strokeOpacity="0.6" markerEnd="url(#cdlAhM)" />
+            <text x="118" y="89" fontSize="9" fill="currentColor" opacity="0.7">{t('candela.arch.arrRead')}</text>
+
+            <line x1="100" y1="402" x2="100" y2="426" stroke="currentColor" strokeOpacity="0.6" markerEnd="url(#cdlAhM)" />
+            <text x="106" y="420" fontSize="9" fill="currentColor" opacity="0.7">{t('candela.arch.arrOrder')}</text>
+
+            <polyline points="250,350 322,350 322,121 210,121" fill="none" stroke="currentColor" strokeOpacity="0.6" markerEnd="url(#cdlAhM)" />
+            <text transform="rotate(-90 332 236)" x="332" y="236" fontSize="9" fill="currentColor" opacity="0.7" textAnchor="middle">{t('candela.arch.arrSnap')}</text>
+          </svg>
         </div>
         <p className="cdl-caption">{t('candela.arch.caption')}</p>
       </section>
