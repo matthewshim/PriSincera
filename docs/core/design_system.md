@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-08-26
-version: v5.18
+last_updated: 2026-08-29
+version: v5.19
 target_files:
   - src/styles/index.css
   - ci/design-check.mjs
@@ -42,6 +42,7 @@ target_files:
 | v5.14 | 2026-08-05 | AI Agent | **§6-3 절제 예외 — Builder's Log 카드 3D 틸트 미적용** — 홈 플래그십(Chapter 11)과 동일 절제 철학으로 마우스 추적 3D 틸트·scale 제거, 호버를 CSS `translateY(-2px)` 부유+은은한 글로우로 정제(오너 "호버 과함" QA). featured 배포 패널을 검정 틴트→`--glass-bg` 정규 유리 재질로 정합하고 뒤 glow-sphere 제거(불균일 얼룩 해소). 틸트 제거로 해당 카드는 reduced-motion JS 가드 대상에서 이탈(CSS 호버는 전역 킬 스위치가 처리) | §6-3 인터랙션 규범, BuildersLog |
 | v5.17 | 2026-08-12 | AI Agent | **디스플레이 대역 토큰 등재 + clamp endpoint ERROR 승격** — 전 랜딩 히어로/대형 섹션 타이틀의 선재 raw clamp 8곳(Hero·Connect·Journey·Philosophy·Work·DailyDigest·Sylphio 가이드/개인정보)을 `var(--fs-*)` endpoint로 전수 토큰화(시각 무변경). 디스플레이 대역 5토큰(`--fs-250`/260/280/350/450) 등재로 스케일 30→35단. design-check clamp 규칙 WARN→ERROR 승격(v5.13 예고 이행)·§4-2 유동표 var() 정합 | index.css, ci/, 8개 CSS, §4-2·§9-1 |
 | v5.18 | 2026-08-26 | AI Agent | **§9-1 히어로 규격 보강** — 타이틀 `display: inline-block` 필수(그라디언트가 글자 폭에 클립; 풀폭 블록이면 텍스트가 중간색 lavender만 샘플해 gold 소실)·서브카피 `word-break: keep-all`/`overflow-wrap: break-word`·아이콘/타이틀 강제 line-height 금지(본문 1.6 상속) 명문화 (Candela 히어로 색·여백 이탈 환류) | §9-1, CandelaLanding |
+| v5.19 | 2026-08-29 | AI Agent | **§9-1 서브카피 규약 명문화** — `white-space: pre-line`(언어팩 `\n` 보존) + 콘텐츠 규약(1행 로케일 문장 + 2행 고정 영문 태그라인, 장문 금지) 추가 (Candela 서브카피가 장문·영문 태그라인 부재로 이탈했던 환류) | §9-1, CandelaLanding, locales |
 | v5.16 | 2026-08-05 | AI Agent | **§9-12 커스텀 스크롤바 규범 신설** — 전역 얇은 다크 테마 스크롤바(`index.css` `*`)로 전 스크롤 컨테이너 일괄 통일(리런 일기장 도크·빌더스로그 상세 목차·실피오 가이드/개인정보). 트랙 궤도 추가 즉시 반영(`onOrbitAdded`→`reload`) 동반 | §9-12, index.css, DailyView |
 | v5.15 | 2026-08-05 | AI Agent | **§9-11 문서형 페이지 레이아웃 규범 신설** — 장문 프로스 페이지(아티클 상세·정책·가이드)의 단일 패턴 명문화: 전폭 셸(1200) + 프로스 단(860 좌) + sticky TOC 사이드바(300 우) + 반응형 붕괴 + 플랫 프로스(중첩 라운드 박스 지양, 콜아웃만 단일 박스). BuildersLogDetail·Sylphio 가이드/개인정보 3개 페이지 정합 (오너 "상세 뷰 좁음·중첩 박스 답답함" QA 환류) | §9-11 레이아웃 규범, BuildersLogDetail·Sylphio |
 | v5.11 | 2026-08-04 | AI Agent | **리런 4채널·페이지 색·틴트·radius 정합** — §1-4 시맨틱 색 토큰(success/danger/star) 신설, §9-10 신설(컨테이너 radius `--radius-lg` 통일·§9-4 적용 범위·카테고리 브랜드 4색 그룹·DM Pick gold·JSX 인라인 금지). 시그널 미디어형→리스트형 통일, 16px 비토큰 종식, 쨍한 tailwind 다색·에메랄드 DM 제거 (오너 4채널 일관성 QA 환류) | ReLearn 4채널·셸, index.css, §1·§9 |
@@ -476,7 +477,7 @@ PaceNote 서비스(`/pacenote`)의 주차별(Weekly) 타임라인 운용 방식�
 - 구성 순서: **아이콘 → h1 타이틀 → 서브카피** (eyebrow·별도 영문 서브라인 등 추가 형식 금지)
 - 아이콘: 이모지 `3rem`, `float 6s ease-in-out infinite` 부유 애니메이션 · 강제 `line-height` 없음(본문 1.6 상속 — `line-height:1`로 조이면 타이틀과의 간격이 규격보다 좁아진다)
 - 타이틀: `--font-display` / `--fs-300`(모바일 `--fs-220`) / 700 / `--gradient-brand` 텍스트 클립 · **`display: inline-block` 필수** — 그라디언트가 글자 폭에 맞춰 클립되도록 한다. 풀폭 블록(h1 기본)이면 텍스트가 넓은 그라디언트의 **중간색(lavender)만 샘플**해 gold가 사라진다(2026-08-26 Candela 환류). 강제 line-height 없이 본문 1.6 상속(rl-hero는 1.2 허용, 단 inline-block 전제)
-- 서브카피: `--fs-115` / `--crystal-light` / lh 1.6 / opacity 0.9 · **`word-break: keep-all`·`overflow-wrap: break-word`**(CJK 단어 중간 줄바꿈 방지)
+- 서브카피: `--fs-115` / `--crystal-light` / lh 1.6 / opacity 0.9 · **`word-break: keep-all`·`overflow-wrap: break-word`**(CJK 단어 중간 줄바꿈 방지) · **`white-space: pre-line`**(언어팩 `\n` 줄바꿈 보존). **콘텐츠 규약: 1행=로케일별 핵심 한 문장 + 2행=로케일 불변 짧은 영문 태그라인**(예: Builder's Log "From first commit to launch.", Sylphio "Hear it once, read it instantly."). 장문 다문장 금지
 - 상단 보정: 데스크톱 **140px** / 모바일 **120px** (GNB 높이 포함)
 - 페이지 마운트 시 `body.hero-ready` 클래스 부여(GNB 노출 조건) 필수
 - **[제품 브랜드 예외]** 독립 제품 페이지(예: Sylphio)는 **타이틀 그라데이션에 한해** 제품 고유 팔레트를 허용합니다. 구조(아이콘→타이틀→서브)·크기·웨이트·보정 수치는 본 규격을 그대로 따릅니다.
