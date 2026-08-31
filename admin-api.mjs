@@ -1052,7 +1052,10 @@ router.get('/builderslog/meta', async (req, res) => {
 
 router.get('/builderslog/recent-commits', async (req, res) => {
   try {
-    const githubToken = process.env.GITHUB_TOKEN;
+    // Secret Manager 페이로드는 바이트 그대로 주입되므로 저장 시 딸려온 개행·공백이 값에 남는다.
+    // fetch 전송 계층은 헤더 값 앞뒤 공백을 정규화해주지만 그것에 기대지 않는다(전송 계층이
+    // 바뀌거나 이 값을 curl 등에 그대로 쓰면 Authorization 헤더가 깨진다).
+    const githubToken = process.env.GITHUB_TOKEN?.trim();
     const { Octokit } = await import('@octokit/rest');
     // Token is optional for public repos, but increases rate limit
     const octokit = githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
@@ -1165,7 +1168,7 @@ router.post('/builderslog/analyze', async (req, res) => {
     // Fetch recent commits to let AI choose relevant ones
     let recentCommitsText = "최근 커밋 내역 없음";
     try {
-      const githubToken = process.env.GITHUB_TOKEN;
+      const githubToken = process.env.GITHUB_TOKEN?.trim();
       const { Octokit } = await import('@octokit/rest');
       const octokit = githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
       const response = await octokit.rest.repos.listCommits({
@@ -1290,7 +1293,7 @@ router.post('/builderslog/publish', async (req, res) => {
     const suffix = locale && locale !== 'ko' ? `_${locale}` : '';
 
     // 3. GitHub API를 통한 커밋 푸시
-    const githubToken = process.env.GITHUB_TOKEN;
+    const githubToken = process.env.GITHUB_TOKEN?.trim();
     if (!githubToken) {
       // 로컬 테스트용: 직접 파일 쓰기
       const metaPath = path.join(__dirname, 'src', 'data', 'buildersLogMeta.json');
@@ -1384,7 +1387,7 @@ router.post('/docs/save', async (req, res) => {
     const cleanSummary = (summary || '텍스트 수정').toString().replace(/[\r\n]+/g, ' ').trim().slice(0, 80) || '텍스트 수정';
     const commitMessage = `docs(edit): ${relPath.replace(/^docs\//, '')} — ${cleanSummary} [${editor}]`;
 
-    const githubToken = process.env.GITHUB_TOKEN;
+    const githubToken = process.env.GITHUB_TOKEN?.trim();
     if (!githubToken) {
       // 로컬 fallback: 직접 파일 쓰기
       fs.writeFileSync(path.join(__dirname, relPath), content, 'utf-8');
@@ -1425,7 +1428,7 @@ router.get('/docs/history', async (req, res) => {
     const relPath = req.query.path;
     if (!isDocPathSafe(relPath)) return res.status(400).json({ error: '허용되지 않은 문서 경로입니다.' });
 
-    const githubToken = process.env.GITHUB_TOKEN;
+    const githubToken = process.env.GITHUB_TOKEN?.trim();
     if (!githubToken) return res.json({ history: [], local: true });
 
     const limit = Math.min(parseInt(req.query.limit, 10) || 20, 50);

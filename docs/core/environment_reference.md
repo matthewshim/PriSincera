@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-06-29
-version: v1.0
+last_updated: 2026-08-31
+version: v1.1
 target_files:
   - server.mjs
   - admin-api.mjs
@@ -22,6 +22,7 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-29 | AI Agent | 웹/파이프라인/로컬 env 전수 정리 최초 정의 (코드 `process.env` 실측 기반) | Operations |
+| v1.1 | 2026-08-31 | AI Agent | **시크릿 저장 규칙 명문화** — 페이로드가 바이트 그대로 주입되므로 `echo` 저장 시 개행이 값에 섞인다(`GITHUB_TOKEN` 실측: 40B 토큰이 `토큰+공백+CRLF` 43B로 저장). `printf '%s'` 저장 지침 + 소비 측 `?.trim()` 방어 기록 | Operations, admin-api.mjs |
 
 ---
 
@@ -94,6 +95,13 @@ target_files:
 | `GEMINI_ADMIN_API_KEY` | `GEMINI_API_KEY` | 웹(admin AI), 파이프라인(생성) |
 | `GITHUB_TOKEN` | `GITHUB_TOKEN` | 웹(Builder's Log 커밋) |
 
+> ⚠️ **저장 시**: 시크릿 페이로드는 **바이트 그대로** 환경변수에 주입됩니다. `echo`로 값을 넣으면 개행이 딸려 들어가
+> `GITHUB_TOKEN`이 `토큰+개행`이 됩니다(2026-08-31 점검: 40바이트 토큰이 `토큰+공백+CRLF` 43바이트로 저장돼 있었음).
+> Authorization 헤더에는 CR/LF가 들어갈 수 없으므로 전송 계층에 따라 인증이 깨집니다
+> (Octokit v22의 fetch 계층은 헤더 값 앞뒤 공백을 정규화해 넘어가지만, 그 동작에 기대면 안 됩니다).
+> 반드시 개행 없이 저장하세요: `printf '%s' "$TOKEN" | gcloud secrets versions add GITHUB_TOKEN --data-file=-`
+> 소비 측(`admin-api.mjs`)에도 `?.trim()` 방어를 두었지만, 저장을 바르게 하는 것이 1차 방어선입니다.
+>
 > ⚠️ **로테이션 시**: 새 Secret 버전을 추가(`gcloud secrets versions add`)한 뒤, `--set-secrets`가 `:latest`를 참조하므로 **웹은 다음 배포(또는 새 리비전)부터** 반영됩니다. 즉시 반영하려면 Cloud Run 서비스/잡을 재배포하세요.
 
 ## 5. 더 읽을 것
