@@ -129,10 +129,55 @@ export default function WorkSection() {
         </div>
 
         <div className={`work-grid${activeCardIndex !== -1 ? ' has-active-focus' : ''}`}>
-        {/* 1. Builder's Log — 만드는 과정의 기록 */}
+        {/* 1. Planner's View — 기획자의 시선 (GNB 1순위와 동일 위상) */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 0 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}
+          style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(199, 210, 254, 0.4)' }}
+          data-accent-color="199,210,254"
+        >
+          <div className="flagship-content">
+            <div className="flagship-narrative">{t('home.servicePlannerTag')}</div>
+            <div className="flagship-label" style={{ color: 'var(--prism-lavender)' }}>Product Planning · Perspective</div>
+            <h3 className="flagship-title">Planner's View</h3>
+            <p className="flagship-desc">
+              {t('home.servicePlannerDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">Product Planning</span>
+              <span className="work-tag">Leadership</span>
+              <span className="work-tag">Organization</span>
+            </div>
+            <div className="flagship-cta-wrap">
+              <Link to="/planners-view" className="btn-primary flagship-cta-btn indigo">
+                {t('home.servicePlannerCta')}
+              </Link>
+            </div>
+          </div>
+          <div className="flagship-visual">
+            <div className="dynamic-mockup plannersview-mockup">
+              <div className="pvm-compass">
+                <span className="pvm-tick pvm-tick-n"></span>
+                <span className="pvm-tick pvm-tick-e"></span>
+                <span className="pvm-tick pvm-tick-s"></span>
+                <span className="pvm-tick pvm-tick-w"></span>
+                <span className="pvm-needle"></span>
+                <span className="pvm-core"></span>
+              </div>
+              <div className="pvm-caption">Direction over velocity</div>
+            </div>
+            <div className="visual-blur-orb lavender"></div>
+          </div>
+        </div>
+
+        {/* 2. Builder's Log — 만드는 과정의 기록 */}
+        <div
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 1 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}
           data-accent-color="124,58,237"
         >
           <div className="flagship-content">
@@ -189,10 +234,10 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 2. ReLearn — 20년 경력의 제품화 (Daily Digest + Pace Note 통합 성장 루프) */}
+        {/* 3. ReLearn — 20년 경력의 제품화 (Daily Digest + Pace Note 통합 성장 루프) */}
         <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 1 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
           data-accent-color="34,211,238"
         >
           <div className="flagship-content">
@@ -214,7 +259,7 @@ export default function WorkSection() {
             </div>
             <div className="flagship-cta-wrap">
               <Link to="/relearn" className="btn-primary flagship-cta-btn cyan">
-                Explore in ReLearn →
+                {t('home.serviceReLearnCta')}
               </Link>
             </div>
           </div>
@@ -247,10 +292,10 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 3. Candela — 작동을 증명하는 사례 연구 (ReLearn 다음 위상) */}
+        {/* 4. Candela — 작동을 증명하는 사례 연구 (ReLearn 다음 위상) */}
         <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(229, 178, 93, 0.4)' }}
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(229, 178, 93, 0.4)' }}
           data-accent-color="229,178,93"
         >
           <div className="flagship-content">
@@ -272,7 +317,7 @@ export default function WorkSection() {
             </div>
             <div className="flagship-cta-wrap">
               <Link to="/candela" className="btn-primary flagship-cta-btn gold">
-                Discover Candela →
+                {t('home.serviceCandelaCta')}
               </Link>
             </div>
           </div>
@@ -288,10 +333,10 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 4. Sylphio — 실무 니즈의 해결 */}
+        {/* 5. Sylphio — 실무 니즈의 해결 */}
         <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 4 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.6s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
           data-accent-color="0,242,254"
         >
           <div className="flagship-content">

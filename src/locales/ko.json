@@ -158,6 +158,7 @@
     }
   },
   "header": {
+    "plannersView": "Planner's View",
     "buildersLog": "Builder's Log",
     "sylphio": "Sylphio",
     "sylphioAlert": "앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"
@@ -189,6 +190,22 @@
     "keyShipments": "핵심 배포 사항",
     "moreShipments": "+{count}개 배포 더 보기",
     "journeyContinues": "여정은 계속됩니다."
+  },
+  "plannersView": {
+    "badge": "관점",
+    "readTime": "{min}분 읽기",
+    "crumbCurrent": "아티클",
+    "ariaPath": "위치 경로",
+    "onThisPage": "이 글의 목차",
+    "otherNotes": "다른 글",
+    "tocAria": "목차",
+    "otherNotesAria": "다른 글",
+    "moreLabel": "이어서 읽기",
+    "loading": "글을 불러오는 중...",
+    "loadFail": "글을 불러오지 못했습니다.",
+    "disclaimer": "이 글은 필자 개인의 견해이며, 소속 조직의 공식 입장이 아닙니다.",
+    "empty": "아직 발행된 글이 없습니다.",
+    "crossCta": "Builder's Log 살펴보기"
   },
   "home": {
     "heroLabel": "✦ Matthew Shim · PriSincera",
@@ -235,13 +252,13 @@
       "desc": "20년의 경험과 AI 기술이 결합되어, 이제는 당신의 일상과 성장을 직접적으로 돕는 실질적인 웹 서비스로 탄생했습니다."
     },
     "servicesTitle": "태도가 낳은 것들 —",
-    "servicesTitleAccent": "직접 만든 네 가지 증거.",
-    "servicesSubtitle": "기획으로 쌓은 20년이 AI를 만나, 네 개의 제품이 되었습니다.\n만드는 과정부터 실무의 해결까지 — 태도의 결과물입니다.",
+    "servicesTitleAccent": "직접 만든 다섯 가지 증거.",
+    "servicesSubtitle": "기획으로 쌓은 20년이 AI를 만나, 다섯 가지 결과물이 되었습니다.\n만드는 과정부터 실무의 해결까지 — 태도의 결과물입니다.",
     "serviceBaseCta": "⚡ 오픈 소스 및 시스템 아키텍처 살펴보기",
     "serviceBuildersDesc": "Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.\n어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.",
-    "serviceBuildersCta": "🚀 개발 여정 및 엔지니어링 성장기 읽기",
+    "serviceBuildersCta": "🚀 개발 여정 읽기",
     "serviceSylphioDesc": "화면의 모든 소리와 마이크를 실시간 캡처하여 온디바이스에서 지체 없이 자막으로 구현하는 AI 실시간 통역 앱입니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
-    "serviceSylphioCta": "🍃 실시간 AI 통역사 Sylphio 만나기",
+    "serviceSylphioCta": "🍃 Sylphio 만나보기",
     "connectTitle": "함께 ",
     "connectTitleAccent": "이야기합시다.",
     "connectSubtitle": "비즈니스든, 커리어든, 태도에 대한 것이든 —\n편하게 연결해 주세요.",
@@ -254,7 +271,12 @@
     "serviceSylphioTag": "실무 니즈의 해결",
     "makerNote": "이 사이트의 전체 소스와 아키텍처는 오픈소스로 공개되어 있습니다.",
     "serviceCandelaTag": "실적이 아니라, 작동한다는 증거로",
-    "serviceCandelaDesc": "AI로 만드는 개인 자동매매 시스템.\n수익률이 아니라 아키텍처로, 시스템이 실제로 작동함을 공개 증거로 남깁니다."
+    "serviceCandelaDesc": "AI로 만드는 개인 자동매매 시스템.\n수익률이 아니라 아키텍처로, 시스템이 실제로 작동함을 공개 증거로 남깁니다.",
+    "servicePlannerTag": "기술과 기획 사이에서",
+    "servicePlannerDesc": "제품을 만드는 일의 앞단 — 무엇을, 누구를 위해, 왜 지금 만들 것인가.\n20년 넘게 여러 서비스를 만들며 배운 기획과 기술의 관계를 글로 남깁니다.",
+    "servicePlannerCta": "🧭 기획자의 시선 읽기",
+    "serviceReLearnCta": "🔄 성장 루프 살펴보기",
+    "serviceCandelaCta": "🕯️ 작동하는 시스템 보기"
   },
   "relearn": {
     "status": {

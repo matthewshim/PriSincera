@@ -21,16 +21,17 @@ const FOLDER_LABEL = {
   'daily-digest': '📁 daily-digest',
   pacenote: '📁 pacenote',
   'builders-log': '📁 builders-log',
+  'planners-view': '📁 planners-view',
   sylphio: '📁 sylphio',
   archive: '📁 archive',
   _root: '📁 (루트)',
 };
-const FOLDER_ORDER = ['core', 'daily-digest', 'pacenote', 'builders-log', 'sylphio', 'archive', '_root'];
+const FOLDER_ORDER = ['core', 'daily-digest', 'pacenote', 'builders-log', 'planners-view', 'sylphio', 'archive', '_root'];
 
 // 제목에 이모지가 없는 문서에 부여할 폴더별 fallback 이모지 (이곳은 중복 무방)
 const FOLDER_EMOJI = {
   core: '📘', 'daily-digest': '🗞️', pacenote: '⛵',
-  'builders-log': '📝', sylphio: '🌬️', archive: '🗄️', _root: '📄',
+  'builders-log': '📝', 'planners-view': '🧭', sylphio: '🌬️', archive: '🗄️', _root: '📄',
 };
 const LEADING_EMOJI_RE = /^\p{Extended_Pictographic}/u;
 

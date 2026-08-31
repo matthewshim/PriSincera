@@ -53,6 +53,7 @@ function Footer() {
             <div className="footer-col">
               <h4 className="footer-col-title">{t('footer.navigate')}</h4>
               <Link to="/" className="footer-link">Home</Link>
+              <Link to="/planners-view" className="footer-link">{t('header.plannersView')}</Link>
               <Link to="/builders-log" className="footer-link">{t('header.buildersLog')}</Link>
               <Link to="/relearn" className="footer-link">ReLearn</Link>
               <Link to="/sylphio" className="footer-link">{t('header.sylphio')}</Link>

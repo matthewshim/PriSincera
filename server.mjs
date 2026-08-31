@@ -37,6 +37,18 @@ if (existsSync(buildersLogMetaPath)) {
   }
 }
 
+// --- Load Planner's View Metadata for Sitemap & SEO Proxy ---
+const plannersViewMetaPath = join(__dirname, 'src', 'data', 'plannersViewMeta.json');
+let plannersView = [];
+if (existsSync(plannersViewMetaPath)) {
+  try {
+    plannersView = JSON.parse(readFileSync(plannersViewMetaPath, 'utf-8'));
+    console.log(`[Server] Loaded ${plannersView.length} Planner's View notes for Sitemap & SEO`);
+  } catch (err) {
+    console.error("[Server] Failed to load plannersViewMeta.json", err);
+  }
+}
+
 // --- Buttondown API key (deprecated — 마이그레이션 완료 후 환경변수에서 제거) ---
 // const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY || '';
 
@@ -480,6 +492,15 @@ app.get('/sitemap.xml', async (req, res) => {
       xml += `  <url>\n    <loc>${baseUrl}/relearn/daily/${date}</loc>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
     }
 
+    // Add Planner's View notes
+    // 섹션 루트(/planners-view)는 최신 글 본문을 그대로 렌더하고 canonical이 퍼머링크를 가리키므로
+    // 사이트맵에는 넣지 않는다 (색인 신호가 canonical과 어긋나지 않도록).
+    for (const note of plannersView) {
+      if (note.slug) {
+        xml += `  <url>\n    <loc>${baseUrl}/planners-view/${note.slug}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+      }
+    }
+
     // Add builders log chapters
     for (const chapter of buildersLog) {
       if (chapter.slug) {
@@ -521,6 +542,9 @@ app.use(async (req, res) => {
   const currentUrl = baseUrl + req.originalUrl;
   
   let override = null;   // 동적 페이지(글 상세/날짜)용 메타
+  let canonicalOverride = null; // 자기참조가 아닌 canonical(섹션 루트 → 퍼머링크)
+  let ogType = 'website';
+  let articleLd = null;  // Article JSON-LD (구조화 데이터)
 
   try {
     const dailyMatch = req.originalUrl.match(/^\/relearn\/daily\/(\d{4}-\d{2}-\d{2})/);
@@ -556,6 +580,42 @@ app.use(async (req, res) => {
       } catch (e) {
         console.error('[SEO Proxy] 아카이브 상세 대표글 조회 실패 — 날짜 폴백 메타 사용:', e.message);
       }
+    } else if (req.originalUrl.startsWith('/planners-view')) {
+      // 루트(/planners-view)는 최신 글을, 퍼머링크는 해당 글을 렌더한다.
+      // 어느 경로로 들어와도 canonical 은 퍼머링크로 고정 — 같은 본문이 두 URL에 노출되는 것을 막는다.
+      const noteMatch = req.originalUrl.match(/^\/planners-view\/([a-zA-Z0-9-_]+)/);
+      const note = noteMatch
+        ? plannersView.find((n) => n.slug === noteMatch[1])
+        : plannersView[0];
+      if (note) {
+        const pick = (obj) => {
+          if (!obj) return '';
+          if (typeof obj === 'object') return obj[req.locale] || obj['ko'] || '';
+          return obj;
+        };
+        const noteTitle = pick(note.title);
+        const noteDesc = pick(note.description);
+        override = {
+          pageTitle: `${noteTitle} — Planner's View`,
+          description: noteDesc.length > 150 ? `${noteDesc.substring(0, 150)}...` : noteDesc,
+          keywords: (note.tags && note.tags.length ? note.tags.join(', ') : PAGE_META['/planners-view'].keywords),
+          ogImage: PAGE_META['/planners-view'].ogImage,
+        };
+        canonicalOverride = `${baseUrl}/planners-view/${note.slug}`;
+        ogType = 'article';
+        articleLd = {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: noteTitle,
+          description: noteDesc,
+          datePublished: note.date,
+          inLanguage: req.locale,
+          mainEntityOfPage: canonicalOverride,
+          image: PAGE_META['/planners-view'].ogImage,
+          author: note.author ? { '@type': 'Person', name: note.author.name } : undefined,
+          publisher: { '@type': 'Organization', name: 'PriSincera' },
+        };
+      }
     } else if (req.originalUrl.startsWith('/builders-log')) {
       const logMatch = req.originalUrl.match(/^\/builders-log\/([a-zA-Z0-9-_]+)/);
       if (logMatch) {
@@ -581,7 +641,7 @@ app.use(async (req, res) => {
     console.error('[SEO Proxy] Error generating meta tags:', err.message);
   }
 
-  const meta = resolveMeta(req.originalUrl, { override });
+  const meta = resolveMeta(req.originalUrl, { override, canonical: canonicalOverride || undefined });
   const title = meta.title;
   const description = meta.description;
   const keywords = meta.keywords;
@@ -603,7 +663,8 @@ app.use(async (req, res) => {
     <meta property="og:description" content="${safeDesc}">
     <meta property="og:image" content="${image}">
     <meta property="og:url" content="${canonicalUrl}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="${ogType}">
+    ${ogType === 'article' && articleLd && articleLd.datePublished ? `<meta property="article:published_time" content="${articleLd.datePublished}">` : ''}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${safeDesc}">
@@ -614,9 +675,16 @@ app.use(async (req, res) => {
   html = html.replace(/<title>.*<\/title>/is, '');
   html = html.replace(/<meta name="description"[^>]*>/is, '');
   html = html.replace(/<meta name="keywords"[^>]*>/is, '');
-  html = html.replace(/<meta property="og:(title|description|image|url)"[^>]*>/gis, '');
+  // og:type 도 제거 대상 — 정적 index.html의 'website'가 남으면 아티클 경로에서 태그가 둘이 되고
+  // 크롤러가 앞의 값을 취해 article 신호가 무력화된다.
+  html = html.replace(/<meta property="og:(title|description|image|url|type)"[^>]*>/gis, '');
   html = html.replace(/<meta name="twitter:(title|description|image)"[^>]*>/gis, '');
-  html = html.replace('</head>', `${metaTags}\n</head>`);
+  // 구조화 데이터(Article) — '<'를 이스케이프해 스크립트 조기 종료를 차단
+  const ldTag = articleLd
+    ? `\n    <script type="application/ld+json">${JSON.stringify(articleLd).replace(/</g, '\\u003c')}</script>`
+    : '';
+
+  html = html.replace('</head>', `${metaTags}${ldTag}\n</head>`);
 
   // SPA HTML은 절대 캐시 금지 — 헤더 부재 시 브라우저/CDN 휴리스틱 캐시로
   // 경로별(예: /relearn) 옛 번들 HTML이 고착되는 문제 방지 (express.static의

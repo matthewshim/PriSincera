@@ -8,6 +8,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 const Home = lazy(() => import('./pages/Home'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const DailyView = lazy(() => import('./pages/DailyView'));
+const PlannersView = lazy(() => import('./pages/PlannersView'));
 const BuildersLog = lazy(() => import('./pages/BuildersLog'));
 const BuildersLogDetail = lazy(() => import('./pages/BuildersLogDetail'));
 
@@ -47,6 +48,11 @@ function App() {
           {/* Public — Layout 안 (GNB/Footer) */}
           <Route element={<Layout />}>
             <Route index element={<Home />} />
+            {/* Planner's View — 뷰 중심 IA: 루트=최신 글, 슬러그=퍼머링크 (목록 페이지 없음).
+                'archive'·'all'·'index'는 향후 목록 라우트를 위한 예약 슬러그로 쓰지 않는다. */}
+            <Route path="planners-view" element={<PlannersView />} />
+            <Route path="planners-view/:slug" element={<PlannersView />} />
+
             <Route path="builders-log" element={<BuildersLog />} />
             <Route path="builders-log/:slug" element={<BuildersLogDetail />} />
 

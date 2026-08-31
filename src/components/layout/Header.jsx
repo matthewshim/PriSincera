@@ -140,6 +140,7 @@ function Header() {
 
   const getThemeClass = () => {
     if (location.pathname.startsWith('/sylphio')) return 'sylphio-theme';
+    if (location.pathname.startsWith('/planners-view')) return 'planners-theme';
     if (location.pathname.startsWith('/builders-log')) return 'builders-theme';
     if (location.pathname.startsWith('/daily')) return 'daily-theme';
     if (location.pathname.startsWith('/pacenote')) return 'pacenote-theme';
@@ -204,6 +205,8 @@ function Header() {
           <span className="nav-wordmark">PriSincera</span>
         </Link>
         <div className="nav-links">
+          {/* Planner's View — GNB 1순위(오너 결정 2026-08-31). 기획자의 관점 섹션 */}
+          <Link to="/planners-view" className={`nav-link${location.pathname.startsWith('/planners-view') ? ' active' : ''}`} id="navPlannersView">{t('header.plannersView')}</Link>
           <Link to="/builders-log" className={`nav-link${location.pathname.startsWith('/builders-log') ? ' active' : ''}`} id="navBuildersLog">{t('header.buildersLog')}</Link>
           {/* ReLearn — 승계 위상 반영: 루프 서비스군 선두(공존형 A안). 전 언어 공통 영문 표기 */}
           <Link to="/relearn" className={`nav-link${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
@@ -317,7 +320,32 @@ function Header() {
             </div>
           </a>
 
-          {/* 2. Builder's Log (Growth Blog) */}
+          {/* 2. Planner's View (기획자의 시선) — GNB 1순위와 동일 위상 */}
+          <Link
+            to="/planners-view"
+            className={`mobile-bento-nav-item planner-lavender-theme${location.pathname.startsWith('/planners-view') ? ' active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: 'var(--prism-lavender)' }}>Product Planning</div>
+              <h3 className="bento-card-title">Planner&apos;s View</h3>
+              <div className="bento-card-arrow">🧭 Read the View →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup planner-mockup">
+                <div className="plnm-dial">
+                  <span className="plnm-tick plnm-tick-n"></span>
+                  <span className="plnm-tick plnm-tick-e"></span>
+                  <span className="plnm-tick plnm-tick-s"></span>
+                  <span className="plnm-tick plnm-tick-w"></span>
+                  <span className="plnm-needle"></span>
+                </div>
+              </div>
+              <div className="visual-blur-orb indigo"></div>
+            </div>
+          </Link>
+
+          {/* 3. Builder's Log (Growth Blog) */}
           <Link
             to="/builders-log"
             className={`mobile-bento-nav-item log-indigo-theme${location.pathname.startsWith('/builders-log') ? ' active' : ''}`}
@@ -352,7 +380,7 @@ function Header() {
             </div>
           </Link>
 
-          {/* 3. ReLearn (Unified Growth Loop) — 승계 위상: 루프 서비스군 선두(공존형 A안) */}
+          {/* 4. ReLearn (Unified Growth Loop) — 승계 위상: 루프 서비스군 선두(공존형 A안) */}
           <Link
             to="/relearn"
             className={`mobile-bento-nav-item relearn-loop-theme${location.pathname.startsWith('/relearn') ? ' active' : ''}`}
@@ -375,7 +403,7 @@ function Header() {
             </div>
           </Link>
 
-          {/* 4. Candela (Automated Trading Case Study) — ReLearn 다음 위상 */}
+          {/* 5. Candela (Automated Trading Case Study) — ReLearn 다음 위상 */}
           <Link
             to="/candela"
             className={`mobile-bento-nav-item candela-gold-theme${location.pathname.startsWith('/candela') ? ' active' : ''}`}
@@ -394,7 +422,7 @@ function Header() {
             </div>
           </Link>
 
-          {/* 5. Sylphio (AI Translation) */}
+          {/* 6. Sylphio (AI Translation) */}
           <Link
             to="/sylphio"
             className={`mobile-bento-nav-item sylphio-blue-theme${location.pathname.startsWith('/sylphio') ? ' active' : ''}`}

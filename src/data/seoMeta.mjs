@@ -11,7 +11,7 @@ export const SITE = 'PriSincera';
 export const BASE_URL = 'https://www.prisincera.com';
 export const HOME_TITLE = 'PriSincera — Sincerity, Prioritized.';
 export const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
-export const DEFAULT_KEYWORDS = "PriSincera, 프리싱케라, Daily Digest, Pace Note, Builder's Log, Sylphio";
+export const DEFAULT_KEYWORDS = "PriSincera, 프리싱케라, Daily Digest, Pace Note, Builder's Log, Planner's View, Sylphio";
 
 // pageTitle = 브랜드 접미어를 제외한 키워드형 페이지명 (홈은 null → 루트 브랜드 타이틀)
 export const PAGE_META = {
@@ -25,6 +25,12 @@ export const PAGE_META = {
     pageTitle: 'ReLearn — 배움·실행·복기 통합 성장 루프',
     description: '매일 제로에서, 다시 배우고 다시 달린다. Daily Digest의 배움과 Pace Note의 실행·복기를 하나의 여정으로 잇는 통합 성장 루프 서비스입니다.',
     keywords: 'PriSincera, ReLearn, 리런, 성장 루프, 데일리 다이제스트, 페이스 노트, 배움, 실행, 회고',
+  },
+  '/planners-view': {
+    ogImage: `${BASE_URL}/og-plannersview.png`,
+    pageTitle: "Planner's View — 기획자의 시선",
+    description: '기술과 기획, 그 사이에서 배운 것들. 무엇을·누구를 위해·왜 지금 만들 것인가에 대한 기획자의 관점을 기록합니다.',
+    keywords: '기획자, 프로덕트 기획, 기술 리더십, CPO, 조직문화, 게임 산업, PriSincera',
   },
   '/builders-log': {
     ogImage: `${BASE_URL}/og-builderslog.png`,

@@ -1,0 +1,431 @@
+/**
+ * PlannersView — 기획자의 시선 섹션 스타일
+ *
+ * §9-1 표준 히어로(아이콘→h1→서브카피) · §9-9 브레드크럼 · §9-11 문서형 2단 레이아웃
+ * (셸 1200 = 본문 860 + gap 40 + 사이드바 300, 1100px 이하 붕괴 후 본문 중앙 복귀)
+ * 본문 프로스 조판은 ../styles/markdown-body.css 공용 소스를 따른다.
+ */
+
+.pv-wrapper {
+  min-height: 100vh;
+  padding: 140px var(--space-lg) var(--space-2xl); /* §9-1 히어로 상단 보정(데스크톱) */
+  background: var(--bg-void);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  position: relative;
+  /* 세로는 visible로 둬야 사이드바 sticky가 산다(overflow:hidden 조상은 sticky 무력화) */
+  overflow-x: clip;
+}
+
+.pv-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 320px;
+  background: radial-gradient(ellipse at top, rgba(199, 210, 254, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pv-container {
+  width: 100%;
+  max-width: var(--container);
+  position: relative;
+  z-index: 1;
+}
+
+/* --- 뷰 히어로 (§9-1 표준: 아이콘 → h1 → 서브카피, 루트·퍼머링크 공통) --- */
+.pv-hero {
+  text-align: center;
+  margin-bottom: 56px;
+  position: relative;
+}
+
+/* 셸은 전폭이되 텍스트는 가독 단으로 — 긴 제목이 1200을 가로지르지 않게 한다 */
+.pv-hero-inner {
+  max-width: var(--measure);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.pv-hero-icon {
+  font-size: var(--fs-300);
+  margin-bottom: var(--space-md);
+  animation: pvFloat 6s ease-in-out infinite;
+}
+
+@keyframes pvFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 섹션 액센트 글로우 — 히어로 뒤 은은한 후광 */
+.pv-hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  background: var(--accent-color, var(--prism-lavender));
+  opacity: 0.15;
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pv-empty .hero-heading {
+  display: inline-block; /* 그라디언트가 글자 폭에 맞춰 클립되도록 (§9-1) */
+  font-family: var(--font-display);
+  font-size: var(--fs-300);
+  font-weight: 700;
+  margin: 0 0 var(--space-sm);
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- 브레드크럼 (퍼머링크 진입, §9-9) --- */
+.pv-crumb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-090);
+  margin-bottom: var(--space-xl);
+}
+.pv-crumb-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.pv-crumb-link:hover { color: var(--accent-color, var(--text-primary)); }
+.pv-crumb-sep { color: var(--text-muted); opacity: 0.5; }
+.pv-crumb-cur { color: var(--text-secondary); }
+
+/* --- 2단 레이아웃 --- */
+.pv-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.pv-main {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: var(--measure);
+}
+
+.pv-aside {
+  flex: 0 0 300px;
+  position: sticky;
+  top: 68px; /* GNB(53px) + 15 갭 — 타 문서형 페이지와 동일 오프셋 */
+  align-self: flex-start;
+  max-height: calc(100vh - 88px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.pv-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 히어로 중앙 정렬 */
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-md);
+  font-size: var(--fs-085);
+  color: var(--text-muted);
+}
+
+.pv-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: var(--fs-075);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  margin-right: var(--space-sm);
+}
+
+.pv-meta-sep { opacity: 0.5; }
+
+.pv-title {
+  display: inline-block; /* §9-1 — 그라디언트가 글자 폭에 맞춰 클립되도록 */
+  /* 가변 콘텐츠 타이틀 예외(§9-1 v5.13): 토큰 endpoint clamp. 모바일 오버라이드 없음 */
+  font-size: clamp(var(--fs-160), 3vw, var(--fs-240));
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  margin: 0 0 var(--space-md);
+  background: linear-gradient(135deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pv-subtitle {
+  font-size: clamp(var(--fs-105), 2vw, var(--fs-135));
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--text-muted);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  margin: 0 0 var(--space-lg);
+}
+
+/* --- 바이라인 --- */
+.pv-byline {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 히어로 중앙 정렬 */
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.pv-byline-name {
+  font-size: var(--fs-095);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.pv-byline-role {
+  font-size: var(--fs-085);
+  color: var(--text-muted);
+}
+
+.pv-byline-role::before {
+  content: '·';
+  margin-right: var(--space-sm);
+  opacity: 0.5;
+}
+
+.pv-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* 히어로 중앙 정렬 */
+  gap: var(--space-sm);
+}
+
+.pv-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-080);
+  color: var(--text-muted);
+}
+
+/* --- 핵심 문장(리드 인용) — 세로 강조선 없이 상하 헤어라인으로 구분(§9-5) --- */
+.pv-pullquote {
+  margin: 0 0 var(--space-2xl);
+  padding: var(--space-lg) 0;
+  border-top: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
+  font-family: var(--font-display);
+  font-size: var(--fs-135);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* --- 로딩 --- */
+.pv-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) 0;
+  color: var(--text-muted);
+  font-size: var(--fs-090);
+}
+
+.pv-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--accent-color, var(--color-indigo));
+  border-radius: var(--radius-pill);
+  animation: pvSpin 0.8s linear infinite;
+}
+
+@keyframes pvSpin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-hero-icon { animation: none; }
+  .pv-spinner { animation-duration: 2s; }
+}
+
+/* --- 개인 견해 고지 --- */
+.pv-disclaimer {
+  margin: var(--space-2xl) 0 0;
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: var(--fs-080);
+  line-height: 1.6;
+  color: var(--text-muted);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* --- 하단 크로스 내비 (사이드바가 사라지는 폭에서도 탐색 보전) --- */
+.pv-more {
+  margin-top: var(--space-2xl);
+}
+
+.pv-more-label {
+  font-size: var(--fs-075);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.pv-more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px; /* §9-3 카드 그리드 gap */
+}
+
+.pv-more-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: 18px; /* §9-3 리스트형 실효 패딩 */
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: transform var(--duration-fast) var(--ease-spring),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.pv-more-card:hover,
+.pv-more-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--glass-border-hover);
+}
+
+.pv-more-card:focus-visible {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 2px;
+}
+
+.pv-more-date {
+  font-size: var(--fs-075);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.pv-more-title {
+  font-size: var(--fs-095);
+  line-height: 1.45;
+  color: var(--text-secondary);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.pv-more-cross .pv-more-date { color: var(--color-indigo); }
+
+/* --- 사이드바: 목차(主) + 다른 글(副) --- */
+.pv-aside-label {
+  font-size: var(--fs-075);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.pv-toc { margin-bottom: var(--space-xl); }
+.pv-toc ul,
+.pv-other ul { list-style: none; margin: 0; padding: 0; }
+
+.pv-toc-item a {
+  display: block;
+  padding: 4px 0 4px 12px;
+  font-size: var(--fs-085);
+  line-height: 1.4;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+.pv-toc-item.pv-toc-l3 a { padding-left: 24px; font-size: var(--fs-080); }
+.pv-toc-item a:hover { color: var(--text-secondary); }
+.pv-toc-item.active a {
+  color: var(--accent-color);
+  border-left-color: var(--accent-color);
+}
+
+.pv-other li a {
+  display: block;
+  padding: 6px 0;
+  font-size: var(--fs-080);
+  line-height: 1.45;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+.pv-other li a:hover { color: var(--accent-color); }
+
+/* --- 빈 상태 --- */
+.pv-empty {
+  text-align: center;
+  padding: 0 0 var(--space-2xl);
+}
+
+.pv-empty-msg {
+  font-size: var(--fs-115);
+  color: var(--crystal-light);
+  opacity: 0.9;
+  margin: 0 0 var(--space-lg);
+}
+
+.pv-cross-cta {
+  display: inline-block;
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: transform var(--duration-fast) var(--ease-spring),
+              border-color var(--duration-fast) var(--ease-out);
+}
+.pv-cross-cta:hover { transform: translateY(-2px); border-color: var(--glass-border-hover); }
+
+/* --- 사이드바가 안 들어가는 폭: 숨기고 본문 중앙 복귀 (§9-11) --- */
+@media (max-width: 1100px) {
+  .pv-aside { display: none; }
+  .pv-main { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+}
+
+@media (max-width: 768px) {
+  .pv-wrapper {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+  .pv-wrapper { padding-top: 120px; } /* §9-1 히어로 상단 보정(모바일) */
+  .pv-empty { padding-top: 0; }
+  .pv-empty .hero-heading { font-size: var(--fs-220); } /* §9-1 히어로 모바일 표준 */
+  .pv-hero-icon { font-size: var(--fs-220); }
+}

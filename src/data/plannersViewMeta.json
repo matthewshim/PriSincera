@@ -1,0 +1,43 @@
+[
+  {
+    "id": "pv1",
+    "slug": "technology-common-planning-rare",
+    "title": {
+      "ko": "기술이 흔해진 시대, 기획이 귀해진 시대",
+      "en": "When Technology Became Common and Planning Became Rare",
+      "ja": "技術がありふれた時代、企画が貴くなった時代"
+    },
+    "subtitle": {
+      "ko": "두 리더의 동행에 관하여 — 병목은 '어떻게 만들까'에서 '무엇을 만들까'로 옮겨갔다",
+      "en": "On the partnership of two leaders — the bottleneck moved from how we build to what we build",
+      "ja": "二人のリーダーの同行について — ボトルネックは「どう作るか」から「何を作るか」へ移った"
+    },
+    "description": {
+      "ko": "클라우드와 오픈소스, AI가 '만들 수 있는가'라는 질문의 답을 대부분 '예'로 바꾸면서 조직의 병목은 '무엇을 만들 것인가'로 옮겨갔습니다. 빠르게 만들 수 있다는 것은 잘못된 것도 빠르게 만들 수 있다는 뜻이기에, 성패의 무게중심은 '얼마나 잘 만드는가'에서 '무엇을 만들기로 하는가'로 이동합니다. 20년 넘게 여러 도메인에서 서비스를 만들며 지켜본, 기술을 이끄는 사람과 기획을 이끄는 사람의 관계에 대한 기록입니다.",
+      "en": "Cloud, open source, and AI have turned the answer to 'can we build it?' into yes most of the time, so the bottleneck moved to 'what should we build?'. Being able to build fast means being able to build the wrong thing fast, so the center of gravity shifts from how well we build to what we decide to build. A record of the relationship between the one who leads technology and the one who leads planning, drawn from more than twenty years of building services across a range of domains.",
+      "ja": "クラウドとオープンソース、そして AI が「作れるか」という問いの答えをほとんど「はい」に変えたことで、組織のボトルネックは「何を作るか」へ移りました。速く作れるということは間違ったものも速く作れるということであり、成否の重心は「どれだけうまく作るか」から「何を作ると決めるか」へ移ります。20年以上さまざまな領域でサービスを作りながら見てきた、技術を率いる人と企画を率いる人の関係についての記録です。"
+    },
+    "pullQuote": {
+      "ko": "실행이 값싸진 시대의 희소 자원은 실행력이 아니라 '방향 감각'입니다.",
+      "en": "When execution becomes cheap, the scarce resource is not the ability to execute but a sense of direction.",
+      "ja": "実行が安くなった時代の希少資源は、実行力ではなく「方向感覚」です。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "tags": [
+      "Product Planning",
+      "Engineering Leadership",
+      "Organization",
+      "Game Industry"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-08-31",
+    "readMinutes": 6
+  }
+]

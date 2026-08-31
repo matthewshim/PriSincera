@@ -177,17 +177,20 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
-// ── Builder's Log 발행 규정: 발행 아티클에 Revision History 금지 (publishing_guide §5) ──
+// ── 발행 규정: 공개 아티클에 Revision History 금지 (publishing_guide §5) ──
 // 내부 문서(docs/)는 Revision History 의무지만, 공개 발행 아티클에는 넣지 않는다
 // (AI 작성 노출·버전 노이즈 방지). docs를 그대로 복붙하면 여기서 걸린다.
-(function buildersLogRevisionGate() {
-  const dir = 'public/content/logs';
-  let files = [];
-  try { files = readdirSync(dir).filter((f) => f.endsWith('.md')); } catch { return; }
+// 대상: Builder's Log + Planner's View — 발행 디렉터리가 늘면 여기에 추가한다.
+(function publishedArticleRevisionGate() {
+  const DIRS = ['public/content/logs', 'public/content/planners-view'];
   const re = /(^|\n)#{1,6}[^\n]*Revision History/i;
-  for (const f of files) {
-    if (re.test(readFileSync(join(dir, f), 'utf-8'))) {
-      errors.push(`public/content/logs/${f}: 발행 아티클에 'Revision History' 섹션 금지 (내부 문서에만 유지 — publishing_guide §5)`);
+  for (const dir of DIRS) {
+    let files = [];
+    try { files = readdirSync(dir).filter((f) => f.endsWith('.md')); } catch { continue; }
+    for (const f of files) {
+      if (re.test(readFileSync(join(dir, f), 'utf-8'))) {
+        errors.push(`${dir}/${f}: 발행 아티클에 'Revision History' 섹션 금지 (내부 문서에만 유지 — publishing_guide §5)`);
+      }
     }
   }
 })();

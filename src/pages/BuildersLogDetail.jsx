@@ -8,55 +8,20 @@ import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
 import logMeta from '../data/buildersLogMeta.json';
 import { useTranslation } from '../contexts/LanguageContext';
+import { slugify, nodeText, buildToc } from '../lib/toc';
+import '../styles/markdown-body.css';
 import './BuildersLogDetail.css';
 
-// Utility to separate leading emoji from text to prevent Chrome background-clip bugs on emojis
-const renderTitle = (title) => {
-  if (!title) return null;
-  // Matches standard emojis, including supplementary and pictograph blocks
+// 제목 선두의 이모지를 분리한다.
+// §9-1 히어로 규격상 아이콘은 제목 위 독립 요소이므로, 제목이 이모지로 시작하면 그것을 히어로
+// 아이콘으로 승격시키고 제목에서는 뺀다(아이콘 중복 방지). 없으면 섹션 기본 아이콘을 쓴다.
+const SECTION_ICON = '🛠️';
+const splitTitle = (title) => {
+  if (!title) return { icon: SECTION_ICON, text: '' };
   const emojiRegex = /^([\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F9FF}]+(?:️)?)\s*(.*)$/u;
   const match = title.match(emojiRegex);
-  if (match) {
-    const [, emoji, restOfTitle] = match;
-    return (
-      <>
-        <span className="title-emoji">{emoji}</span>
-        <span className="title-text">{restOfTitle}</span>
-      </>
-    );
-  }
-  return <span className="title-text">{title}</span>;
-};
-
-// 헤딩 텍스트 → 앵커 id. 한글·가나·한자 보존, 그 외 연속 문자는 '-'로. (rehype-slug 동일 전략, 무의존)
-const slugify = (str) =>
-  String(str).trim().toLowerCase()
-    .replace(/[#*`]/g, '')
-    .replace(/[^\w가-힣぀-ヿ一-鿿]+/g, '-') /* i18n-ok: 정규식 유니코드 범위(한글·가나·CJK 보존), UI 텍스트 아님 */
-    .replace(/^-+|-+$/g, '');
-
-// react-markdown children(문자열·배열·엘리먼트)에서 순수 텍스트 추출 (헤딩 id 계산용)
-const nodeText = (children) => {
-  if (children == null) return '';
-  if (typeof children === 'string' || typeof children === 'number') return String(children);
-  if (Array.isArray(children)) return children.map(nodeText).join('');
-  if (children.props && children.props.children) return nodeText(children.props.children);
-  return '';
-};
-
-// 본문 마크다운에서 H2/H3만 뽑아 TOC 구성. 코드펜스(```) 내부는 제외.
-const buildToc = (md) => {
-  const out = [];
-  let inFence = false;
-  for (const line of String(md).split('\n')) {
-    if (/^\s*```/.test(line)) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    const m = /^(#{2,3})\s+(.+?)\s*$/.exec(line);
-    if (!m) continue;
-    const text = m[2].replace(/[#*`]/g, '').trim();
-    out.push({ level: m[1].length, text, id: slugify(text) });
-  }
-  return out;
+  if (match) return { icon: match[1], text: match[2] };
+  return { icon: SECTION_ICON, text: title };
 };
 
 export default function BuildersLogDetail() {
@@ -165,6 +130,8 @@ export default function BuildersLogDetail() {
     );
   }
 
+  const { icon: heroIcon, text: heroTitleText } = splitTitle(localizedTitle);
+
   return (
     <div className="builders-log-detail-wrapper">
       <div className="detail-container" style={{ '--accent-color': articleMeta.accent }}>
@@ -175,24 +142,28 @@ export default function BuildersLogDetail() {
           <span className="detail-crumb-cur" aria-current="page">{t('buildersLog.detail.crumbCurrent')}</span>
         </nav>
 
+        {/* 상세 히어로 — §9-1 표준(아이콘 → h1 → 서브카피). 리런 아카이브 상세와 동일 규격.
+            셸 전폭에 두고 내부 텍스트만 가독 단으로 제한한다(§9-11 상단 요소는 전폭). */}
+        <header className="detail-hero">
+          <div className="detail-hero-inner">
+            <div className="detail-hero-icon">{heroIcon}</div>
+            <h1 className="detail-title">{heroTitleText}</h1>
+            <p className="detail-subtitle">{localizedSubtitle}</p>
+            <div className="detail-meta">
+              <span className="chapter-badge">Chapter {articleMeta.chapterNo}</span>
+              <span className="date-badge">{new Date(articleMeta.date).toLocaleDateString()}</span>
+            </div>
+            <div className="detail-tags">
+              {articleMeta.tags.map(tag => (
+                <span key={tag} className="tag-pill">#{tag}</span>
+              ))}
+            </div>
+          </div>
+        </header>
+
         {/* 본문(860 프로스 단) + 사이드바(목차·다른 챕터) 2단 레이아웃 */}
         <div className="detail-layout">
           <div className="detail-main">
-            <div className="detail-header">
-              <div className="detail-meta">
-                <span className="chapter-badge">Chapter {articleMeta.chapterNo}</span>
-                <span className="date-badge">{new Date(articleMeta.date).toLocaleDateString()}</span>
-              </div>
-              <h1 className="detail-title">{renderTitle(localizedTitle)}</h1>
-              <h2 className="detail-subtitle">{localizedSubtitle}</h2>
-
-              <div className="detail-tags">
-                {articleMeta.tags.map(tag => (
-                  <span key={tag} className="tag-pill">#{tag}</span>
-                ))}
-              </div>
-            </div>
-
             {loading ? (
               <div className="markdown-loading">
                 <div className="admin-spinner"></div> {t('buildersLog.detail.loading')}

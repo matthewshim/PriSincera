@@ -1030,3 +1030,56 @@
         50% { transform: scaleY(1.1); opacity: 1; }
     }
 }
+
+
+/* ── Planner's View 테마 & 모바일 벤토 (나침반 미니) — 2026-08-31 ── */
+.nav.planners-theme .gnb-bgm-btn.active .waveform-bar {
+    background: var(--prism-lavender); /* Planner's View Lavender */
+}
+
+@media (max-width: 768px) {
+    .mobile-bento-nav-item.planner-lavender-theme {
+        --point-color: var(--prism-lavender);
+        --glow-color: rgba(199, 210, 254, 0.12);
+        --aura-pulse: rgba(199, 210, 254, 0.22);
+        border: 1px solid rgba(199, 210, 254, 0.22);
+    }
+    .mobile-bento-nav-item .planner-mockup {
+        width: 240px !important; height: 240px !important;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .mobile-bento-nav-item .plnm-dial {
+        position: relative;
+        width: 96px; height: 96px;
+        border: 1px solid rgba(199, 210, 254, 0.35);
+        border-radius: var(--radius-pill);
+        box-shadow: 0 0 36px 6px rgba(199, 210, 254, 0.18);
+    }
+    .mobile-bento-nav-item .plnm-tick {
+        position: absolute;
+        width: 2px; height: 8px;
+        background: rgba(199, 210, 254, 0.55);
+        border-radius: var(--radius-pill);
+    }
+    .mobile-bento-nav-item .plnm-tick-n { top: 6px; left: 50%; transform: translateX(-50%); }
+    .mobile-bento-nav-item .plnm-tick-s { bottom: 6px; left: 50%; transform: translateX(-50%); }
+    .mobile-bento-nav-item .plnm-tick-e { right: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .mobile-bento-nav-item .plnm-tick-w { left: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .mobile-bento-nav-item .plnm-needle {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 3px; height: 38px;
+        margin: -34px 0 0 -1.5px;
+        transform-origin: 50% 89%;
+        background: linear-gradient(180deg, var(--color-gold) 0%, var(--prism-lavender) 100%);
+        border-radius: var(--radius-pill);
+        animation: plnmSweep 6s ease-in-out infinite;
+    }
+    @keyframes plnmSweep {
+        0%, 100% { transform: rotate(-24deg); }
+        50% { transform: rotate(28deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .mobile-bento-nav-item .plnm-needle { animation: none; }
+    }
+}

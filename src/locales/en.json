@@ -158,6 +158,7 @@
     }
   },
   "header": {
+    "plannersView": "Planner's View",
     "buildersLog": "Builder's Log",
     "sylphio": "Sylphio",
     "sylphioAlert": "Oops, not yet! 🙈\n\nSylphio, the wind spirit, is working hard on preparing for its debut.\nIt will bring some magical features soon, so please stay tuned! 🍃✨"
@@ -189,6 +190,22 @@
     "keyShipments": "Key Shipments",
     "moreShipments": "+{count} more shipments",
     "journeyContinues": "The journey continues."
+  },
+  "plannersView": {
+    "badge": "Perspective",
+    "readTime": "{min} min read",
+    "crumbCurrent": "Article",
+    "ariaPath": "Breadcrumb",
+    "onThisPage": "On this page",
+    "otherNotes": "Other notes",
+    "tocAria": "Table of contents",
+    "otherNotesAria": "Other notes",
+    "moreLabel": "Keep reading",
+    "loading": "Loading the note...",
+    "loadFail": "Failed to load the note.",
+    "disclaimer": "This piece reflects the author's personal views and does not represent the official position of any organization the author belongs to.",
+    "empty": "No notes have been published yet.",
+    "crossCta": "Explore Builder's Log"
   },
   "home": {
     "heroLabel": "✦ Matthew Shim · PriSincera",
@@ -235,13 +252,13 @@
       "desc": "Combining 20 years of experience with AI technology, now born as a practical web service that directly assists your daily life and growth."
     },
     "servicesTitle": "What that attitude built —",
-    "servicesTitleAccent": "four things I made myself.",
-    "servicesSubtitle": "Twenty years of planning met AI and became four products.\nFrom the making to solving real work — the results of an attitude.",
+    "servicesTitleAccent": "five things I made myself.",
+    "servicesSubtitle": "Twenty years of planning met AI and became five things.\nFrom the making to solving real work — the results of an attitude.",
     "serviceBaseCta": "⚡ Explore Open Source & System Architecture",
     "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
-    "serviceBuildersCta": "🚀 Read Development Journey & Engineering Growth Stories",
+    "serviceBuildersCta": "🚀 Read the Builder's Log",
     "serviceSylphioDesc": "An AI real-time translation app that captures all screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nFlawlessly experience the powerful multilingual intelligence of Gemini and GPT in a native Mac environment.",
-    "serviceSylphioCta": "🍃 Meet Sylphio, the Real-Time AI Translator",
+    "serviceSylphioCta": "🍃 Meet Sylphio",
     "connectTitle": "Let's ",
     "connectTitleAccent": "talk.",
     "connectSubtitle": "Whether it's business, career, or about attitude —\nfeel free to connect.",
@@ -254,7 +271,12 @@
     "serviceSylphioTag": "Solving a real need",
     "makerNote": "This site's full source and architecture are open source.",
     "serviceCandelaTag": "Not returns — proof that it works",
-    "serviceCandelaDesc": "A personal automated trading system built with AI.\nNot returns but architecture — public evidence that the system actually works."
+    "serviceCandelaDesc": "A personal automated trading system built with AI.\nNot returns but architecture — public evidence that the system actually works.",
+    "servicePlannerTag": "Between engineering and planning",
+    "servicePlannerDesc": "The upstream of building a product — what to build, for whom, and why now.\nNotes on the relationship between planning and engineering, learned across twenty years of building services.",
+    "servicePlannerCta": "🧭 Read the Planner's View",
+    "serviceReLearnCta": "🔄 Explore ReLearn",
+    "serviceCandelaCta": "🕯️ Discover Candela"
   },
   "relearn": {
     "status": {

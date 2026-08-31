@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """PriSincera OG 이미지 제너레이터 — 메인 히어로 'Star Prism Identity' 기반.
 
-기본(og-image.png) + 카테고리 변형(relearn/builders-log/sylphio)을 생성한다.
-사용: python3 ci/gen_og_images.py [--all | relearn builders sylphio]
+기본(og-image.png) + 카테고리 변형(relearn/builders-log/planners-view/sylphio)을 생성한다.
+사용: python3 ci/gen_og_images.py [--all | relearn builders planners sylphio]
 필요: Pillow (pip install Pillow). 출력: public/og-*.png (1200x630)
 """
 import os, sys, math, random
@@ -23,6 +23,8 @@ VARIANTS = {
                  "line": [("Learn from zero, ", WHITE), ("run again.", (34, 211, 238))]},
     "builders": {"file": "og-builderslog.png","kicker": "BUILDER'S LOG",            "accent": (165, 180, 252),
                  "line": [("Engineering, ", WHITE), ("in the open.", (165, 180, 252))]},
+    "planners": {"file": "og-plannersview.png","kicker": "PLANNER'S VIEW",        "accent": (199, 210, 254),
+                 "line": [("Direction, ", WHITE), ("over velocity.", (199, 210, 254))]},
     "sylphio":  {"file": "og-sylphio.png",    "kicker": "SYLPHIO — AI INTERPRETER", "accent": (135, 169, 236),
                  "line": [("Real-time AI, ", WHITE), ("on your Mac.", (135, 169, 236))]},
 }
@@ -130,7 +132,7 @@ def render(v):
     print("saved", out)
 
 if __name__ == "__main__":
-    args = sys.argv[1:] or ["relearn", "builders", "sylphio"]
+    args = sys.argv[1:] or ["relearn", "builders", "planners", "sylphio"]
     keys = VARIANTS.keys() if "--all" in args else args
     for k in keys:
         render(VARIANTS[k])

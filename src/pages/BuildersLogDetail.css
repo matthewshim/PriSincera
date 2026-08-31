@@ -1,6 +1,6 @@
 .builders-log-detail-wrapper {
   min-height: 100vh;
-  padding: var(--space-3xl) var(--space-lg) var(--space-2xl);
+  padding: 140px var(--space-lg) var(--space-2xl); /* §9-1 히어로 상단 보정(데스크톱) */
   background: var(--bg-void);
   color: var(--text-primary);
   display: flex;
@@ -50,12 +50,6 @@
   max-height: calc(100vh - 88px);
   overflow-y: auto;
   scrollbar-width: thin;
-}
-
-/* TOC 앵커 점프 시 헤딩이 GNB에 가리지 않도록 오프셋 */
-.markdown-body h2,
-.markdown-body h3 {
-  scroll-margin-top: 100px;
 }
 
 /* --- Sidebar: 목차(主) + 다른 챕터(副) --- */
@@ -108,26 +102,49 @@
   .detail-main { max-width: var(--measure); margin-left: auto; margin-right: auto; }
 }
 
-.detail-header {
-  margin-bottom: 48px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: var(--space-xl);
+/* --- 상세 히어로 (§9-1 표준: 아이콘 → h1 → 서브카피) --- */
+.detail-hero {
+  text-align: center;
+  margin-bottom: 56px;
   position: relative;
 }
 
-/* Sub-glow in header */
-.detail-header::before {
+/* 셸은 전폭이되 텍스트는 가독 단으로 — 긴 제목이 1200을 가로지르지 않게 한다 */
+.detail-hero-inner {
+  max-width: var(--measure);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.detail-hero-icon {
+  font-size: var(--fs-300);
+  margin-bottom: var(--space-md);
+  animation: detailHeroFloat 6s ease-in-out infinite;
+}
+
+@keyframes detailHeroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail-hero-icon { animation: none; }
+}
+
+/* 챕터 액센트 글로우 — 히어로 뒤 은은한 후광 */
+.detail-hero::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
+  width: 320px;
+  height: 320px;
   background: var(--accent-color, var(--prism-indigo));
   opacity: 0.15;
   filter: blur(100px);
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -171,7 +188,9 @@
 .detail-meta {
   display: flex;
   align-items: center;
+  justify-content: center; /* 히어로 중앙 정렬 */
   gap: var(--space-md);
+  margin-top: var(--space-lg);
   margin-bottom: var(--space-md);
 }
 
@@ -197,6 +216,7 @@
 }
 
 .detail-title {
+  display: inline-block; /* §9-1 — 그라디언트가 글자 폭에 맞춰 클립되도록 */
   /* 가변 콘텐츠 타이틀 예외(§9-1 v5.13): 토큰 endpoint clamp — 하한 --fs-160(25.6px)/상한 --fs-240(38.4px). 긴 편집형 제목이라 고정 히어로(--fs-300)보다 상한을 낮춰 과대 방지. clamp가 전 뷰포트 담당 → 모바일 오버라이드 없음 */
   font-size: clamp(var(--fs-160), 3vw, var(--fs-240));
   font-weight: 700;
@@ -207,14 +227,7 @@
   margin-bottom: var(--space-md);
 }
 
-.detail-title .title-emoji {
-  margin-right: 0.25em;
-  -webkit-text-fill-color: initial;
-  background: none;
-  background-clip: border-box;
-}
-
-.detail-title .title-text {
+.detail-title {
   background: linear-gradient(135deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -236,6 +249,7 @@
 .detail-tags {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center; /* 히어로 중앙 정렬 */
   gap: 0.5rem;
 }
 
@@ -246,143 +260,6 @@
   border-radius: var(--radius-pill);
   font-size: var(--fs-080);
   color: var(--text-muted);
-}
-
-/* Markdown Body Styles */
-.markdown-body {
-  font-size: var(--fs-105); /* 본문 가독 크기 — v5.6 그리드 스냅(17→16.8px) */
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.85);
-  word-break: keep-all;
-  overflow-wrap: break-word;
-  letter-spacing: -0.01em;
-}
-
-.markdown-body h1, 
-.markdown-body h2, 
-.markdown-body h3 {
-  color: var(--text-primary);
-  margin-top: 3rem;
-  margin-bottom: 1.25rem;
-  font-weight: 700;
-  line-height: 1.4; /* 제목의 줄바꿈 간격을 본문보다 타이트하게 설정 */
-  letter-spacing: -0.02em;
-}
-
-.markdown-body h2 {
-  font-size: var(--fs-160);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 0.5rem;
-}
-
-.markdown-body h3 {
-  font-size: var(--fs-135);
-}
-
-.markdown-body p {
-  margin-bottom: 1.5rem;
-}
-
-.markdown-body a {
-  color: var(--orbit-cyan);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--duration-fast) var(--ease-out);
-}
-
-.markdown-body a:hover {
-  border-color: var(--orbit-cyan);
-}
-
-.markdown-body ul, 
-.markdown-body ol {
-  margin-bottom: 1.5rem;
-  padding-left: 1.5rem;
-}
-
-.markdown-body li {
-  margin-bottom: 0.5rem;
-}
-
-.markdown-body blockquote {
-  border-left: 4px solid var(--orbit-cyan);
-  margin: 0 0 var(--space-lg) 0;
-  padding: var(--space-sm) 0 var(--space-sm) var(--space-md);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-secondary);
-  font-style: italic;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-
-/* Highlight.js overriding */
-.markdown-body pre {
-  margin-bottom: var(--space-lg);
-  border-radius: var(--radius-md);
-  background: #0d1117 !important; /* Deeper dark for code */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow-x: auto;
-}
-
-.markdown-body code {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: var(--fs-090);
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-}
-
-.markdown-body pre code {
-  background: transparent;
-  padding: var(--space-lg);
-  display: block;
-}
-
-/* Premium Table Styling */
-.markdown-body table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: var(--space-lg, 1.5rem);
-  margin-bottom: var(--space-lg, 1.5rem);
-  font-size: var(--fs-095);
-  line-height: 1.5;
-  border-spacing: 0;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-  overflow: hidden;
-}
-
-.markdown-body th,
-.markdown-body td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.markdown-body th {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
-  font-weight: 600;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.markdown-body tr:last-child td {
-  border-bottom: none;
-}
-
-.markdown-body tr:hover td {
-  background: rgba(255, 255, 255, 0.03);
-  transition: background var(--duration-fast, 0.2s) ease;
-}
-
-/* Responsive Table Scrollability on Mobile */
-@media (max-width: 768px) {
-  .markdown-body table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
 .markdown-loading {
@@ -426,17 +303,8 @@
 @media (max-width: 768px) {
   /* .detail-title/.detail-subtitle 모바일 폰트 오버라이드 제거 — 토큰 endpoint clamp가 전 뷰포트 담당(§9-1 v5.13, 이중 반응형 부채 해소) */
   .builders-log-detail-wrapper {
-    padding-top: 96px;
+    padding-top: 120px; /* §9-1 히어로 상단 보정(모바일) */
     padding-left: var(--space-md);
     padding-right: var(--space-md);
-  }
-  .markdown-body {
-    word-break: break-word;
-    overflow-wrap: break-word;
-  }
-  .markdown-body pre {
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
 }
