@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-08-19
-version: v2.3
+last_updated: 2026-08-31
+version: v2.4
 target_files:
   - server.mjs
   - Dockerfile
@@ -24,6 +24,7 @@ target_files:
 | v2.1 | 2026-07-22 | AI Agent | **리런 통합·실측 정합** — 디렉토리맵을 ReLearn 페이지 체제로 갱신, 유령 `builderslog-api.mjs` 참조 제거(server.mjs 인라인+admin-api로 정정), §7-4/7-5를 nginx.conf → server.mjs(express.static·helmet) 실값으로 교체, 잔여 Nginx 표기 정리 | §2, §3, §7 |
 | v2.2 | 2026-08-19 | AI Agent | §4-7 신설 — 머신 이동 시 시크릿 훅 활성화(진입점 4중화: SessionStart·PreToolUse·prepare·post-merge) + `git pull`로 따라오지 않는 항목 표 | package.json, .githooks, .claude/settings.json |
 | v2.3 | 2026-08-19 | AI Agent | 레거시 `nginx.conf` 삭제 반영 — 디렉토리맵을 `.githooks`·`ci`·`.gitattributes` 체제로 갱신, §7-3 표기 정리 | §3, §7 |
+| v2.4 | 2026-08-31 | AI Agent | **디렉터리 구조 현행화** — `src/lib/`(toc.js) 신설, `styles/markdown-body.css`(문서형 본문 조판 공용) 등재, `PlannersView.jsx`·`plannersViewMeta.json` 추가 | §디렉터리 구조 |
 
 > ⚠️ **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리에 남아 있던 레거시 `nginx.conf`는 **2026-08-19 삭제**되었습니다(미사용 + CSP 부재 + 인증 없는 프록시 키 주입 패턴 보유 — [security_spec §3-10](../candela/security_spec.md)).
 
@@ -118,15 +119,17 @@ d:\prisincera\www\
 │   ├── main.jsx                # 엔트리 포인트
 │   ├── 📁 components/          # 재사용 UI (layout, daily, admin, pacenote, relearn …)
 │   ├── 📁 hooks/               # 커스텀 React 훅 (usePaceNoteData 등)
-│   ├── 📁 data/                # 빌드 시 번들되는 정적 데이터 (buildersLogMeta.json, seoMeta.mjs 등)
+│   ├── 📁 data/                # 빌드 시 번들되는 정적 데이터 (buildersLogMeta.json, plannersViewMeta.json, seoMeta.mjs 등)
+│   ├── 📁 lib/                 # 프레임워크 비의존 순수 유틸 (toc.js — 문서형 페이지 공용 목차 생성)
 │   ├── 📁 pages/               # 페이지 컴포넌트
 │   │   ├── Home.jsx            #   메인 랜딩
 │   │   ├── ReLearn.jsx         #   /relearn (배움·실행·복기 통합 루프 — 구 /daily·/pacenote 승계)
 │   │   ├── ReLearnDaily.jsx    #   /relearn/daily/:date (다이제스트 아카이브 상세)
-│   │   ├── BuildersLog.jsx / BuildersLogDetail.jsx # /builders-log
+│   │   ├── BuildersLog.jsx / BuildersLogDetail.jsx # /builders-log (목록 + 상세)
+│   │   ├── PlannersView.jsx    #   /planners-view (뷰 중심 — 루트=최신 글, :slug=퍼머링크, 목록 없음)
 │   │   ├── AdminDashboard.jsx  #   /admin (콘텐츠·구독·서비스 문서 등)
 │   │   └── Sylphio*.jsx        #   /sylphio 랜딩·API 키 가이드
-│   └── 📁 styles/              # 글로벌 CSS
+│   └── 📁 styles/              # 글로벌 CSS (+ markdown-body.css — 문서형 페이지 본문 조판 공용)
 │
 ├── 📄 server.mjs               # ★ 프로덕션 웹 서버(Express): dist 서빙 + API 마운트 + GCS 프록시
 │                               #   (+ /api/builderslog/:slug/view 조회수 인라인, 구 /daily·/pacenote 301)

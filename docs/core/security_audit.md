@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-08-19
-version: v1.1
+last_updated: 2026-08-31
+version: v1.2
 target_files:
   - server.mjs
   - admin-api.mjs
@@ -17,7 +17,7 @@ target_files:
 # 🔍 보안 취약점 점검 보고서 (Security Audit)
 
 > **최초 작성일**: 2026-04-23  
-> **최종 조치 및 업데이트**: 2026-05-21  
+> **최종 조치 및 업데이트**: 2026-08-31 (v1.2 §12 로컬 자격증명 위생)  
 > **분석 및 조치 범위**: PriSincera 통합 웹 서비스(SPA 프론트엔드, Express `server.mjs`, admin/study/pacenote 라우터, Firestore 데이터 모델링, GCS 폴백 아키텍처, Gmail SMTP 발송 엔진, 데일리 스케줄러 파이프라인, CI/CD 빌드 파이프라인)  
 > **분석 기준**: OWASP Top 10, CWE 주요 항목, 개인정보보호법(개망법) 지침, 웹 보안 모범 사례  
 
@@ -339,3 +339,32 @@ Candela([candela/security_spec](../candela/security_spec.md)) 도입 검토 과�
 helmet CSP + HSTS preload · CORS origin 고정 · `router.use(requireAdmin)` 전역 적용 · Firebase ID 토큰 + Firestore 화이트리스트 + `super_admin` 역할 분리 · `adminApp` 세션 물리 격리 · Firestore **기본 deny**(신규 컬렉션 자동 차단) · `isDocPathSafe` 경로 화이트리스트 · 컨테이너 non-root 실행 · 소스 내 하드코딩 시크릿 0건.
 
 > `VITE_FIREBASE_API_KEY`는 클라이언트 번들에 실리지만 Firebase 웹 apiKey는 설계상 공개 식별자이므로 유출이 아니다. 실제 보호는 Firestore rules와 서버 화이트리스트가 담당한다 — **현행 유지.**
+
+---
+
+## 12. 2026-08-31 추가 점검 — 로컬 자격증명 위생 (v1.2)
+
+Planner's View 섹션 배포 중 `git remote -v` 출력에서 발견. **커밋된 시크릿이 아니라 로컬 개발 환경의 시크릿**이라는 점에서 기존 방어선의 사각이다.
+
+### 12-1. `.git/config` 원격 URL에 PAT 평문 노출 — ✅ 조치 완료
+
+| 항목 | 내용 |
+| :--- | :--- |
+| **발견** | `origin` URL이 `https://ghp_…@github.com/matthewshim/PriSincera.git` 형태. classic PAT 40바이트가 평문 저장 |
+| **노출 범위** | 워킹트리·**전체 커밋 이력에 없음**(`git log --all -S` 확인). public 저장소로 나간 적 없음 — 로컬 파일과 작업 세션 로그에 한정 |
+| **왜 안 걸렸나** | 시크릿 스캐너 3중 훅(§11)은 **커밋되는 파일**을 검사한다. `.git/config`는 추적 대상이 아니므로 **설계상 검사 범위 밖** |
+| **영향 판정** | Secret Manager `GITHUB_TOKEN`과 **다른 토큰**임을 SHA-256 지문 대조로 확인(`e4a7bcb4c791` ≠ `8f6bdb1f5641`) → 어드민 발행 파이프라인과 무관 |
+| **조치** | ① 원격 URL에서 토큰 제거(Keychain 인증으로 전환, 실제 푸시로 검증) ② **GitHub Credential Revocation API**(`POST /credentials/revoke`, 비인증)로 폐기 → 이후 해당 토큰 401 확인 |
+
+> **교훈**: 자격증명을 URL에 임베드하지 않는다. macOS는 `credential.helper=osxkeychain`이 이미 전역 설정돼 있어 URL에 토큰을 넣을 이유가 없다. 노출된 PAT는 웹 UI 없이도 Credential Revocation API로 즉시 폐기할 수 있다.
+
+### 12-2. `GITHUB_TOKEN` 시크릿 값에 개행 혼입 — ✅ 조치 완료
+
+- **발견**: Secret Manager 저장값이 `토큰(40B) + 공백 + CR + LF` = 43바이트. `echo`로 저장할 때 딸려 들어간 것으로 추정.
+- **위험**: Authorization 헤더에 CR/LF는 들어갈 수 없다. Node `http` 모듈이었다면 `ERR_INVALID_CHAR`로 거부됐을 것(실측 확인). 현재는 Octokit v22의 fetch(undici)가 헤더 값 앞뒤 공백을 정규화해준 덕에 동작 중이었다 — **전송 계층 구현에 의존한 우연한 생존**.
+- **조치**: 공백 제거 버전 2 생성(지문 동일 확인), `admin-api.mjs` 5곳 `?.trim()` 방어, [environment_reference v1.1](environment_reference.md)에 `printf '%s'` 저장 규칙 명문화.
+
+### 12-3. 잔여
+
+- 로컬 개발 환경 점검 체크리스트(원격 URL·`.env*`·에디터 설정)의 온보딩 편입 여부 — [task_backlog 13-3](task_backlog.md)
+- 다른 저장소 `.git/config`의 동일 PAT 잔존 가능성 — [task_backlog 13-4](task_backlog.md)

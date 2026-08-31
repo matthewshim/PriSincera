@@ -1,8 +1,8 @@
 ---
 status: active
 domain: BuildersLog
-last_updated: 2026-08-29
-version: v1.1
+last_updated: 2026-08-31
+version: v1.2
 target_files:
   - src/data/buildersLogMeta.json
   - src/pages/BuildersLog.jsx
@@ -16,9 +16,24 @@ target_files:
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-29 | AI Agent | 최초 정의 — 로컬 정적 에셋 발행 워크플로우·마크다운 규칙·SEO 처리 | BuildersLog |
+| v1.2 | 2026-08-31 | AI Agent | §0 섹션 경계 신설 — 커밋으로 증명되지 않는 관점 글은 Planner's View로 보낸다(챕터 연대기 희석·Featured 빈 패널 방지). Revision History 게이트가 두 발행 디렉터리를 함께 검사하도록 확장된 것 반영 | BuildersLog, PlannersView, ci/ |
 | v1.1 | 2026-08-29 | AI Agent | §5 Revision History 정책 신설 — 내부 문서 의무·발행 아티클 제외, design-check 자동 집행 게이트 | BuildersLog, ci/ |
 
 본 문서는 PriSincera 웹사이트의 **Builder's Log (테크 블로그)**에 새로운 아티클을 작성하고 퍼블리싱하는 구체적인 워크플로우를 안내합니다. 프론트엔드 라우팅 및 렌더링 엔진(`react-markdown`) 아키텍처가 구축되어 있으므로, 데이터베이스(Firestore)를 거치지 않고 로컬 파일 시스템 제어만으로 즉시 포스팅이 가능합니다.
+
+---
+
+## 0. 🔒 어느 섹션에 쓸 글인가 (Section Boundary)
+
+발행 전에 먼저 판단한다. **형식이 아니라 성격**으로 갈린다.
+
+| | **Builder's Log** (본 문서) | **Planner's View** ([가이드](../planners-view/publishing_guide.md)) |
+| :--- | :--- | :--- |
+| 무엇을 | PriSincera 프로덕트를 **만든 기록** | 만드는 일에 대한 **관점·판단** |
+| 증거 | 커밋(Key Shipments)·챕터 연대기 | 경험과 논지 (커밋 없음) |
+| 메타 | `chapterNo` + `commits[]` | `author` + `pullQuote` + `readMinutes` |
+
+**커밋으로 증명되지 않는 글을 여기에 넣지 않는다.** 챕터 연대기가 희석되고, `commits: []` 상태로 최신 글이 되면 목록 최상단 Featured 카드의 Key Shipments 패널이 **빈 상자로 렌더된다**(그리드 카드에는 가드가 있으나 Featured에는 없음).
 
 ---
 
@@ -110,4 +125,4 @@ Builder's Log 발행 아티클과 내부 설계 문서(`docs/`)는 Revision Hist
 1. 설계·변경은 내부 문서(`docs/`)에 Revision History와 함께 기록한다.
 2. 발행용 아티클은 그 내용을 스토리텔링으로 각색하되 **Revision History 섹션을 넣지 않는다** (docs를 그대로 복붙하지 말 것).
 
-**자동 집행 (Enforcement)**: `ci/design-check.mjs`의 prebuild 게이트가 `public/content/logs/*.md`에서 `Revision History` 헤딩을 발견하면 **빌드를 실패**시킨다. 규범을 의지가 아니라 게이트로 강제한다.
+**자동 집행 (Enforcement)**: `ci/design-check.mjs`의 prebuild 게이트가 **발행 디렉터리 전체**(`public/content/logs/`·`public/content/planners-view/`)에서 `Revision History` 헤딩을 발견하면 **빌드를 실패**시킨다. 발행 섹션이 늘면 게이트의 `DIRS` 배열에 추가한다. 규범을 의지가 아니라 게이트로 강제한다.

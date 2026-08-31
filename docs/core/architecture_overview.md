@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-08-02
-version: v1.2
+version: v1.3
 target_files:
   - server.mjs
   - pacenote-api.mjs
@@ -21,6 +21,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-24 | AI Agent | 전체 스택·데이터 흐름·파이프라인 맵 최초 정의 | Architecture |
 | v1.1 | 2026-07-22 | AI Agent | **리런 통합·실측 정합** — SPA 라우트에서 구 `/daily`·`/pacenote`를 301 표기로 전환, 유령 `builderslog-api.mjs` 참조를 실제 구조(server.mjs 인라인 + admin-api)로 정정 | §1, §2 |
+| v1.3 | 2026-08-31 | AI Agent | **Planner's View 신설 반영** — SPA 라우트 맵에 `/planners-view` 추가. 섹션 메타(`plannersViewMeta.json`)는 Builder's Log와 동일하게 server.mjs가 사이트맵·SEO 프록시용으로 로드하며, 조회수 API는 두지 않음 | §1, §2 |
 | v1.2 | 2026-08-02 | AI Agent | **비용/인프라 실측 정합** — `prisincera-web` min-instances 0(scale-to-zero) + 결제 안전장치(예산·킬스위치) 반영, §4 스케줄 실측 정정(composer 08:00·monitor 매일 08:30·중복 제거) | §1, §4 |
 
 ---
@@ -29,7 +30,7 @@ target_files:
 
 ```
 ┌─────────────────────────── 사용자(브라우저) ───────────────────────────┐
-│  React + Vite SPA  /relearn  /builders-log  /sylphio  /admin                    │
+│  React + Vite SPA  /relearn  /planners-view  /builders-log  /sylphio  /admin    │
 │  (구 /daily·/pacenote → /relearn 서버 301 — 2026-07-20 리런 승계)                │
 └───────────────────────────────┬─────────────────────────────────────────┘
                                  │ HTTPS (Cloudflare CDN)
@@ -70,7 +71,7 @@ target_files:
 | :--- | :--- | :--- |
 | **프론트엔드** | `src/` React + Vite SPA | 라우트별 lazy chunk. 마크다운은 `react-markdown`+`remark-gfm`+`rehype-highlight` |
 | **웹 서버** | `server.mjs` (Express, Cloud Run `prisincera-web`) | dist 서빙 + API 라우터 마운트 + GCS 프록시 |
-| **API 모듈** | `pacenote-api.mjs` · `admin-api.mjs` · `study-api.mjs` | 라우터 단위 분리. Builder's Log는 조회수만 server.mjs 인라인, 발행·통계는 admin-api 내 `/builderslog/*` |
+| **API 모듈** | `pacenote-api.mjs` · `admin-api.mjs` · `study-api.mjs` | 라우터 단위 분리. Builder's Log는 조회수만 server.mjs 인라인, 발행·통계는 admin-api 내 `/builderslog/*`. **Planner's View는 API 없음** — 정적 마크다운 + 메타 JSON만(조회수·어드민 발행 미지원, [publishing_guide §5](../planners-view/publishing_guide.md)) |
 | **DB** | **Firestore** | `pacenotes/{uid}/weeks/{weekId}`, `daily_signals`, `study_content`, `subscribers`, `config`, `admin_config`, `email_logs` 등 |
 | **정적 콘텐츠** | **GCS** + Cloudflare CDN | `daily/${date}.json`(signal+study), `daily/junior_·senior_${date}.json`(트랙), `daily/index.json` |
 | **파이프라인** | `pipeline/src/*` → Cloud Run Jobs | `lib/rss.mjs`(수집), `lib/gemini.mjs`(AI), `lib/storage.mjs`(GCS) |

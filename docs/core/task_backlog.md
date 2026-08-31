@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-08-19
-version: v2.6
+last_updated: 2026-08-31
+version: v2.7
 target_files: []  # 작업 백로그 — 특정 코드 미지배
 ---
 
@@ -20,6 +20,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | v2.2 | 2026-07-22 | AI Agent | 8구간(아카이브 상세 UI 재편) 신설·P1/P2 완료 — 훑어보기 기본 + 브리핑 히어로 + 스티키 채널 내비, 기본 상태 페이지 높이 9,753→6,099px(-37%, 첫 스크린 오버뷰 완결) | ReLearnDaily, SignalSection, DailyBriefing |
 | v2.3 | 2026-07-22 | AI Agent | 9구간(docs 최신화 전수 감사·정합화) 신설·완료 — 사실 오류 3건(개요·인증·INDEX)·target_files 삭제파일 잔존·archived 2종 이동 등 일괄 해소 | docs 전반 |
 | v2.4 | 2026-07-22 | AI Agent | 8-7 완료 — 아카이브 상세 헤더 §9-1 히어로 정합 + 주간 달력 스트립(DailyWeekStrip) 교체 (design_system v5.9 동반) | ReLearnDaily, DailyWeekStrip |
+| v2.7 | 2026-08-31 | AI Agent | 12구간(Planner's View 후속) · 13구간(시크릿 위생) 신설 — 섹션 신설 시 의도적으로 남긴 공백(어드민 발행 UI·조회수·목록 승격·메일 연동)과, 로컬 PAT 평문 노출·Secret Manager 값 개행 혼입에서 파생된 후속 점검을 등재 | PlannersView, admin-api, 운영 |
 | v2.5 | 2026-08-19 | AI Agent | 10구간(자동 커밋 전제 조건) 신설 — public 저장소 전제 재점검에서 파생. 11구간(Candela) 포인터 등재 | .gitignore, server.mjs, admin-api.mjs, git hooks |
 
 > **운영 규칙**: 본 문서가 잔여 작업의 단일 정본(SSOT)입니다. 작업 착수·완료 시 상태를 갱신하고, 완료 항목은 ~~취소선~~ + 완료일을 남깁니다. 새 작업은 우선순위 표에 추가하십시오.
@@ -186,3 +187,28 @@ P0~P5 로드맵·승격 게이트·미결 항목은 **[candela/roadmap.md](../ca
 | 11-5 | 시크릿 패턴에 한투 실제 키 형식 추가 — 발급 후 실측 기준으로 `secretPatterns.mjs` 보강 | Candela P4 |
 | 11-6 | **`design-check` 확장 — 샘플 데이터 노출 차단(G-2)**: `CANDELA_DATA_SOURCE === 'fixture'`인데 퍼블릭 `/candela` 라우트가 등록돼 있으면 빌드 ERROR | Candela P3 |
 | 11-7 | `candela` 로케일 네임스페이스 신설 — ko·en·ja **3종 동시**(D-2 결정). Admin은 i18n 게이트 제외 구역이라 ko 단일 | Candela P3 |
+
+---
+
+## 12. 🧭 Planner's View 후속 (2026-08-31 신설)
+
+섹션 신설(`a758726`) 시 **의도적으로 남긴 공백**이다. 필요해지는 시점이 오면 처리한다. 상세는 [planners-view/publishing_guide §5](../planners-view/publishing_guide.md).
+
+| # | 작업 | 착수 시점 |
+| :--- | :--- | :--- |
+| 12-1 | **어드민 발행 UI 미지원** — 현재 파일 기반 발행만 가능. `admin-api.mjs`의 `/builderslog/publish`가 `buildersLogMeta.json`·`public/content/logs` 경로를 리터럴로 박고 있어 **섹션 파라미터화가 선행**돼야 한다(엔드포인트 분기 or `section` 인자) | 웹에서 발행할 필요가 생길 때 |
+| 12-2 | **목록 페이지 신설** (`/planners-view/archive`) — 사이드바·하단 스트립이 최대 5건까지만 노출하므로 **6편을 넘기면 접근 불가 글이 생긴다**. 슬러그 예약어 `archive`·`all`·`index` 확보 완료 | 6편 초과 시 |
+| 12-3 | 조회수 집계 — Builder's Log의 `/api/builderslog/:slug/view` 대응 엔드포인트 없음 | 유입 측정이 필요해질 때 |
+| 12-4 | 데일리 다이제스트 메일 연동 — 현재 메일은 Builder's Log 최신 1건만 싣는다(`composer.mjs`) | 구독자 노출을 결정할 때 |
+| 12-5 | **홈 "Proof of Work" 카피 재검토** — 카드가 5장이 되며 `네 가지 증거`→`다섯 가지 결과물`로 최소 수정했다. 글 섹션까지 "만든 것"으로 묶는 표현이 적절한지 오너 판단 필요 | 오너 결정 |
+
+## 13. 🔑 시크릿 위생 (2026-08-31 신설)
+
+로컬 PAT가 `.git/config` 원격 URL에 평문으로 박혀 있던 것을 발견한 데서 파생. 토큰 자체는 폐기 완료(GitHub Credential Revocation API)이며, 아래는 재발 방지 후속이다.
+
+| # | 작업 | 상태 |
+| :--- | :--- | :--- |
+| ~~13-1~~ | ~~`.git/config` 원격 URL의 평문 PAT 제거 + Keychain 인증으로 전환 + 해당 토큰 폐기~~ | ✅ 2026-08-31 — 폐기 후 401 확인 |
+| ~~13-2~~ | ~~`GITHUB_TOKEN` 값에 혼입된 `공백+CRLF` 3바이트 제거(버전 2) + 소비 측 `?.trim()` 방어~~ | ✅ 2026-08-31 — [environment_reference v1.1](environment_reference.md) |
+| 13-3 | **시크릿 스캐너 사각 보완 검토** — 스캐너는 *커밋되는 파일*만 본다. `.git/config`처럼 추적 대상 밖 경로는 설계상 검사되지 않는다. 로컬 개발 환경 점검 체크리스트(원격 URL·`.env*`·에디터 설정)를 온보딩에 추가할지 결정 | 결정 대기 |
+| 13-4 | 다른 저장소의 `.git/config`에도 동일 PAT가 박혀 있을 수 있음 — 폐기 후 푸시 실패가 나면 같은 방식으로 URL만 정리 | 발생 시 |

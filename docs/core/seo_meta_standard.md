@@ -2,7 +2,7 @@
 status: active
 domain: Core
 last_updated: 2026-07-22
-version: v1.6
+version: v1.7
 target_files:
   - src/data/seoMeta.mjs
   - server.mjs
@@ -22,6 +22,7 @@ target_files:
 | v1.3 | 2026-07-14 | AI Agent | 별도 에셋 부재로 디자인 시스템 팔레트 기반 공통 대표 OG(1200×630) 생성·적용(레거시 PriSignal 교체) | public/og-image.png, public/daily-og.png |
 | v1.4 | 2026-07-14 | AI Agent | 대표 OG를 메인 히어로 Star Prism Identity(글래스 프리즘·골드 액센트·오빗) 디자인 기반으로 리디자인 | public/og-image.png, public/daily-og.png |
 | v1.5 | 2026-07-21 | AI Agent | 카테고리별 OG 3종(ReLearn·Builder's Log·Sylphio) 생성·PAGE_META 매핑, 제너레이터 ci/ 등재(재현성) | ci/gen_og_images.py, seoMeta.mjs |
+| v1.7 | 2026-08-31 | AI Agent | **§10 신설 — 뷰 중심 섹션의 canonical·구조화 데이터** — Planner's View(루트=최신 글) 도입에 따라 canonical 오버라이드·사이트맵 등재 정책·`og:type=article`·`article:published_time`·Article JSON-LD(레포 최초) 규정. 정적 `og:type` 미제거로 아티클 경로에서 태그가 2개 방출되던 결함 수정 기록 | §5, §10, server.mjs, seoMeta.mjs |
 | v1.6 | 2026-07-22 | AI Agent | **리런 통합 라우트 정합** — §1.3·§5 표의 `/daily`·`/pacenote`는 감사·이행 당시 기록임을 명시하고 현행 라우트 매핑(`/relearn`·`/relearn/daily/:date`) 추가. 아카이브된 OG 전략 문서 링크 경로 갱신 | §1, §5 |
 
 ---
@@ -147,6 +148,8 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 > | :--- | :--- |
 > | `/relearn` | `ReLearn — 배움·실행·복기 통합 성장 루프 \| PriSincera` (og: `og-relearn.png`) |
 > | `/relearn/daily/:date` | `{date} Daily Digest — ReLearn \| PriSincera` (아카이브 상세, 대표글 변형 포함) |
+> | `/planners-view` | `{최신 글 제목} — Planner's View \| PriSincera` (루트가 최신 글을 렌더 — §10) |
+> | `/planners-view/:slug` | `{글 제목} — Planner's View \| PriSincera` (og: `og-plannersview.png`) |
 > | `/builders-log`(및 상세)·`/sylphio` 3종·`/` | 위 표와 동일 |
 
 ---
@@ -183,5 +186,31 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 
 - **공통 대표 OG 이미지**: ✅ Star Prism Identity 대표 OG 적용(v1.4). ✅ **카테고리별 변형 3종**(ReLearn 시안·Builder's Log 인디고·Sylphio 실프 블루)을 `ci/gen_og_images.py`(재현 가능)로 생성해 PAGE_META `ogImage`로 매핑(v1.5). 잔여: 없음 — 신규 카테고리는 제너레이터 VARIANTS에 추가.
 - **언어별 SSR 본문**: 현 SSR은 ko 단일 메타/HTML을 서빙(클라이언트 i18n). 완전한 언어별 검색 색인을 원하면 `?lang`별 서버 렌더가 필요 → 대공사 후속.
+
+---
+
+## 10. 뷰 중심 섹션의 canonical·구조화 데이터 (v1.7) — 🔒 규범
+
+목록 페이지 없이 **섹션 루트가 최신 글 본문을 그대로 렌더**하는 섹션(Planner's View)은 같은 본문이 두 URL에 노출된다. 아래 규칙으로 색인 신호를 일원화한다.
+
+### 10-1. canonical은 항상 퍼머링크
+- `/{섹션}` 과 `/{섹션}/{slug}` 어디로 들어와도 canonical은 **퍼머링크**를 가리킨다.
+- SSR은 `resolveMeta(url, { canonical })` 의 canonical 오버라이드로, CSR은 `useSEO({ ogUrl })` 로 동일 값을 방출한다. 둘이 갈리면 크롤러 뷰와 브라우저가 어긋난다.
+- **섹션 루트는 사이트맵에 넣지 않는다.** 넣으면 "색인하라"(사이트맵)와 "정본은 다른 URL"(canonical)이 서로 모순되는 신호가 된다. 대가로 섹션 루트 자체는 검색 진입점이 되지 않는다 — GNB·공유 링크가 주 경로인 섹션에 한해 감수한다.
+- **퍼머링크는 리다이렉트하지 않는다.** ReLearn은 오늘 날짜 URL을 `/relearn`으로 수렴시키지만(`DailyView`), 아티클에 같은 규칙을 쓰면 외부에 공유된 링크가 "최신인 동안에만 튕기는" 시한부 링크가 된다.
+
+### 10-2. 아티클 신호 (`og:type` · 발행일 · JSON-LD)
+- 아티클 경로는 `og:type=article` 과 `article:published_time`(발행일)을 방출한다. 그 외 페이지는 `website` 유지.
+- `Article` JSON-LD(`headline`·`description`·`datePublished`·`inLanguage`·`mainEntityOfPage`·`author`·`publisher`)를 `<script type="application/ld+json">` 로 주입한다. `<` 는 `\u003c` 로 이스케이프해 스크립트 조기 종료를 막는다.
+- **정적 태그 제거 목록에 `og:type` 을 포함할 것** — `index.html` 의 `og:type=website` 가 남으면 아티클 경로에서 태그가 둘이 되고 크롤러가 앞의 값을 취해 article 신호가 무력화된다(2026-08-31 실측·수정).
+
+### 10-3. 신규 섹션 체크리스트
+- [ ] `PAGE_META` 에 라우트 등재(ogImage 포함) — `matchStaticPath` 가 최장 접두 일치이므로 상세 경로는 자동 상속
+- [ ] `ci/gen_og_images.py` `VARIANTS` 에 카테고리 OG 추가 후 생성(§9)
+- [ ] 사이트맵에 퍼머링크 등재(섹션 루트는 정책에 따라 판단)
+- [ ] SSR 프록시 분기에서 canonical·og:type·JSON-LD 방출
+- [ ] CSR(`useSEO`)이 동일 canonical을 쓰는지 확인
+
+---
 
 > 관련 문서: [SEO 아키텍처 및 크롤러 대응 명세서](../builders-log/seo_optimization.md), [동적 OG 이미지 전략 아카이브](../archive/og_image_strategy.md).
