@@ -65,12 +65,12 @@ target_files:
         │                           │
         ▼                           ▼
 [Cloud Run]  ←── Deploy ── [Artifact Registry]
-        │  (Node/Express 컨테이너 — server.mjs)
-        ▼
-[HTTPS Load Balancer + Cloud CDN]
+        ▲  (Node/Express 컨테이너 — server.mjs)
+        │  rewrite "**"
+[Firebase Hosting]  (무료 호스팅 · 자동 SSL)
+        ▲
         │
-        ▼
-prisincera.com (커스텀 도메인)
+prisincera.com / www.prisincera.com (커스텀 도메인 · 사용자 진입)
 ```
 
 | 항목 | 값 |
@@ -80,9 +80,10 @@ prisincera.com (커스텀 도메인)
 | **GCP 리전** | `asia-northeast3` (서울) |
 | **Cloud Run 서비스** | `prisincera-web` |
 | **Cloud Run URL** | https://prisincera-web-1094711522476.asia-northeast3.run.app |
-| **Load Balancer IP** | `136.110.131.58` |
-| **커스텀 도메인** | https://www.prisincera.com |
-| **리다이렉트** | `prisincera.com` → `www.prisincera.com` (301) |
+| **호스팅 진입** | **Firebase Hosting** (`prisincera.web.app`) → rewrite → Cloud Run |
+| **커스텀 도메인** | https://www.prisincera.com (Firebase Hosting 자동 SSL) |
+| **리다이렉트** | `prisincera.com` → `www.prisincera.com` (server.mjs 301) |
+| **인프라 정본** | [infrastructure_2026-09.md](infrastructure_2026-09.md) — LB→Firebase 전환·삭제 리소스 |
 | **GitHub 저장소** | https://github.com/matthewshim/PriSincera.git |
 | **기본 브랜치** | `main` |
 | **로컬 프로젝트 경로** | `d:\prisincera\www` |
@@ -103,7 +104,7 @@ prisincera.com (커스텀 도메인)
 | **호스팅** | GCP Cloud Run | — | **Node(Express) 컨테이너** 서빙 (~~Nginx 아님~~) |
 | **CI/CD** | Cloud Build | — | 자동 빌드 & 배포 (web + 파이프라인 잡) |
 | **이미지 저장** | Artifact Registry | — | Docker 이미지 저장 (`web`, `pipeline`) |
-| **로드밸런서** | HTTPS Load Balancer | — | SSL 종단 & 글로벌 CDN |
+| **호스팅 진입** | **Firebase Hosting** | — | 무료 호스팅 + rewrite→Cloud Run + 자동 SSL (2026-09 LB 대체) |
 | **버전 관리** | Git + GitHub | — | 소스 코드 버전 관리 |
 | **런타임** | Node.js | 20 (alpine) | 빌드 & 프로덕션 서버 런타임 |
 
@@ -459,12 +460,10 @@ gcloud run deploy prisincera-web \
 | **Artifact Registry** | `prisincera-images` | Docker 이미지 저장소 |
 | **Cloud Build 트리거** | `deploy-to-cloud-run` | GitHub main 푸시 시 웹 서비스 자동 빌드 |
 | **Cloud Build 트리거** | `deploy-pipeline` | GitHub main 푸시 시 파이프라인 이미지 빌드 |
-| **Network Endpoint Group** | `prisincera-neg` | Cloud Run → LB 연결 |
-| **Backend Service** | `prisincera-backend` | LB 백엔드 |
-| **URL Map** | `prisincera-urlmap` | 요청 라우팅 |
-| **HTTPS 프록시** | `prisincera-https-proxy` | SSL 종단 |
-| **고정 IP** | `prisincera-ip` | `136.110.131.58` |
-| **SSL 인증서** | `prisincera-cert` | Google 관리형 자동 인증서 |
+| **호스팅 진입** | Firebase Hosting (사이트 `prisincera`) | rewrite `**` → Cloud Run + 커스텀 도메인/자동 SSL (2026-09 LB 대체) |
+| **Network Endpoint Group** | `prisincera-neg` | ⚠️ LB 삭제로 미연결 상태(비용 없음, 정리 무방) |
+
+> ⚠️ **2026-09-03 LB 방식 폐지**: `prisincera-backend`·`prisincera-urlmap`·`prisincera-https-proxy`·고정 IP `prisincera-ip`(136.110.131.58)·SSL 인증서 `prisincera-cert`/`-cert-v2`는 **모두 삭제**되었습니다. 재생성·재참조 금지 — [infrastructure_2026-09 §3](infrastructure_2026-09.md).
 
 ### 7-2. Dockerfile (멀티스테이지 빌드)
 
@@ -669,24 +668,23 @@ git push origin main               # 자동 재배포 트리거
 | **정식(canonical) URL** | `https://www.prisincera.com` |
 | **등록 업체** | Squarespace (구 Google Domains) |
 | **DNS 관리** | Google Cloud DNS (`prisincera-zone`) |
-| **연결 방식** | GCP HTTPS Load Balancer → Cloud Run |
+| **연결 방식** | **Firebase Hosting rewrite → Cloud Run** (2026-09 전환, [infrastructure_2026-09](infrastructure_2026-09.md)) |
 | **리다이렉트** | `prisincera.com` → `www.prisincera.com` (server.mjs 301) |
 
-### 9-2. Load Balancer를 통한 도메인 연결
+### 9-2. Firebase Hosting을 통한 도메인 연결 (2026-09 전환)
 
-Cloud Run `asia-northeast3`(서울) 리전은 직접 도메인 매핑이 미지원이므로,  
-Global HTTPS Load Balancer를 통해 커스텀 도메인을 연결합니다.
+Cloud Run `asia-northeast3`(서울) 리전은 직접 도메인 매핑이 미지원이라, 과거에는 Global HTTPS Load Balancer를 썼으나 **LB 최소 시간요금(월 ~₩28,000)** 때문에 **무료 Firebase Hosting rewrite로 전환**했습니다(2026-09-03). 상세·삭제 리소스는 [infrastructure_2026-09](infrastructure_2026-09.md).
 
 ```
-prisincera.com / www.prisincera.com (A 레코드)
-    → 136.110.131.58 (고정 IP)
-    → HTTPS Load Balancer (SSL 종단)
-    → Backend Service
-    → Serverless NEG
-    → Cloud Run (prisincera-web)
-
-* prisincera.com 접속 시 server.mjs에서 www.prisincera.com으로 301 리다이렉트
+prisincera.com (A 199.36.158.100 = Firebase Hosting)
+    → [server.mjs가 www로 301 리다이렉트]
+    → www.prisincera.com (CNAME prisincera.web.app)
+    → Firebase Hosting (사이트 ID: prisincera)
+    → rewrite "**" → Cloud Run (prisincera-web, asia-northeast3)
 ```
+
+- Firebase Hosting 설정은 Cloud Shell `~/fbhosting/`에서 `firebase deploy --only hosting --project prisincera`로 배포. `firebase.json`의 rewrite(`** → prisincera-web`)를 반드시 유지하고, `public/`은 **비워 둡니다**(정적 파일 투입 시 Cloud Run 앱이 가려짐).
+- ⚠️ www는 **직접 서빙(리디렉션 아님)**. Firebase에서 www를 apex로 리디렉션하면 앱의 canonical(→www)과 충돌해 **무한 루프**가 됩니다(§infrastructure 4.3).
 
 ### 9-3. DNS 레코드 설정
 
@@ -695,13 +693,15 @@ prisincera.com / www.prisincera.com (A 레코드)
 | 타입 | 호스트 | 값 | TTL |
 |:----:|--------|-----|:---:|
 | TXT | `@` | `hosting-site=prisincera` | 300 |
-| A | `@` | `136.110.131.58` | 300 |
+| A | `@` | `199.36.158.100` (Firebase Hosting) | 300 |
 
 #### WWW 서브도메인 (`www.prisincera.com`)
 
 | 타입 | 호스트 | 값 | TTL |
 |:----:|--------|-----|:---:|
-| A | `www` | `136.110.131.58` | 300 |
+| CNAME | `www` | `prisincera.web.app.` | 300 |
+
+> ⚠️ A 레코드를 `136.110.131.58`(해제된 옛 LB IP)로 되돌리지 말 것. TXT `hosting-site=prisincera`는 Firebase 소유권 확인용 — 삭제 금지.
 
 > ⚠️ DNS는 **Google Cloud DNS** (`prisincera-zone`)에서 관리됩니다.  
 > Squarespace DNS UI가 아닌 `gcloud dns record-sets` 명령어로 변경해야 합니다.
@@ -721,7 +721,7 @@ prisincera.com / www.prisincera.com (A 레코드)
 | 문제 | 원인 | 해결 |
 |------|------|------|
 | **Squarespace 변경 미반영** | 네임서버가 Google Cloud DNS를 사용 | `gcloud dns record-sets` 명령어로 변경 |
-| **CNAME + A 공존 불가** | DNS 표준: 같은 호스트에 CNAME과 A 동시 불가 | Apex(`@`)와 `www` 모두 A 레코드 사용 |
+| **CNAME + A 공존 불가** | DNS 표준: 같은 호스트에 CNAME과 A 동시 불가 | Apex(`@`)는 A(199.36.158.100), `www`는 CNAME(prisincera.web.app) |
 | **전파 지연** | DNS 레코드 변경 후 전파에 시간 소요 | TTL 300초(5분), 일반적으로 즉시 반영 |
 | **네임서버 불일치** | 외부 네임서버 사용 중일 수 있음 | `ns1~ns4.squarespace.com` 확인 |
 
@@ -750,7 +750,7 @@ nslookup -type=TXT prisincera.com
 |------|------|------|
 | 소유권 확인 실패 | TXT 레코드 미전파 또는 오타 | `nslookup -type=TXT`로 확인, 정확한 값 재입력 |
 | DNS 레코드 미감지 | 기존 레코드 충돌 | 기존 A 레코드 삭제 → GCP IP만 남김 |
-| ERR_CONNECTION_REFUSED | A 레코드 IP 불일치 | `136.110.131.58` 확인 |
+| ERR_CONNECTION_REFUSED | A 레코드 불일치 | apex A=`199.36.158.100`, www CNAME=`prisincera.web.app` 확인 |
 | CSS/JS 깨짐 | Docker 빌드 실패 | Cloud Build 로그 확인 |
 | 502 Bad Gateway | Cloud Run 응답 실패 | Cloud Run 로그 확인, server.mjs 기동 오류 점검 |
 
@@ -758,20 +758,11 @@ nslookup -type=TXT prisincera.com
 
 ## 11. SSL 인증서
 
-GCP HTTPS Load Balancer는 **Google 관리형 SSL 인증서**를 자동 발급/갱신합니다.
+**Firebase Hosting이 커스텀 도메인 SSL 인증서를 자동 발급/갱신**합니다(2026-09 전환). 과거 LB용 Google 관리 인증서(`prisincera-cert`, `prisincera-cert-v2`)와 `gcloud compute ssl-certificates` 명령은 **더 이상 유효하지 않습니다**(인증서·LB 삭제됨).
 
-| 상태 | 의미 |
-|------|------|
-| PROVISIONING | 인증서 발급 중 (DNS 전파 대기) |
-| ACTIVE | 인증서 발급 완료, HTTPS 활성 |
-| FAILED_NOT_VISIBLE | DNS가 GCP IP를 가리키지 않음 → 전파 대기 필요 |
-
-인증서 상태 확인:
-```bash
-gcloud compute ssl-certificates describe prisincera-cert --global --format='table(name,managed.status,managed.domainStatus)'
-```
-
-별도의 인증서 관리가 필요 없습니다.
+- 상태 확인: **Firebase Console → Hosting → 사이트 `prisincera` → 도메인 목록** (도메인별 "연결됨/SSL 정상" 표시).
+- 도메인 추가 직후 인증서 프로비저닝에 수 분~시간 소요. DNS(A/CNAME)가 Firebase를 정확히 가리키면 자동 발급.
+- 별도의 수동 인증서 관리는 필요 없습니다.
 
 ---
 
@@ -789,7 +780,7 @@ gcloud compute ssl-certificates describe prisincera-cert --global --format='tabl
 | **분기 1회** | npm 패키지 업데이트 | `npm outdated` → `npm update` |
 | **분기 1회** | gcloud CLI 업데이트 | `gcloud components update` |
 | **분기 1회** | DNS 레코드 정상 여부 | `nslookup prisincera.com` |
-| **분기 1회** | SSL 인증서 상태 | `gcloud compute ssl-certificates describe prisincera-cert --global` |
+| **분기 1회** | SSL/도메인 상태 | Firebase Console → Hosting → 사이트 `prisincera` → 도메인 목록 |
 | **연 1회** | 도메인 갱신 확인 | Squarespace 대시보드에서 자동갱신/결제 확인 |
 
 ### 12-2. 패키지 업데이트
@@ -814,14 +805,16 @@ npm install react@latest react-dom@latest
 ### 🚨 사이트 접속 불가
 
 ```
-1. Cloud Run URL 직접 접속 시도
-   https://prisincera-web-1094711522476.asia-northeast3.run.app
-   ├─ 접속 가능 → DNS 또는 Load Balancer 문제
-   │   ├─ nslookup prisincera.com → A 레코드 확인
-   │   └─ LB 상태 확인: GCP Console → Load Balancing
-   └─ 접속 불가 → Cloud Run 문제
-       ├─ Cloud Run 로그 확인
-       └─ gcloud run deploy 재시도
+1. 계층별 분기 진단
+   a. https://prisincera.web.app (Firebase 기본 URL)
+      ├─ 정상 → 커스텀 도메인/DNS 문제 (아래 b)
+      └─ 불가 → Firebase rewrite 또는 Cloud Run 문제 (아래 c)
+   b. nslookup prisincera.com → A=199.36.158.100 / www CNAME=prisincera.web.app 확인.
+      Firebase Console → Hosting → 도메인 목록에서 SSL·연결 상태 확인.
+   c. Cloud Run URL 직접 접속:
+      https://prisincera-web-1094711522476.asia-northeast3.run.app
+      ├─ 정상 → Firebase rewrite 설정(firebase.json) 점검
+      └─ 불가 → Cloud Run 로그 확인 → gcloud run deploy 재시도
 ```
 
 ### 🚨 잘못된 코드 배포

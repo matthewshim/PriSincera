@@ -177,7 +177,7 @@ gcloud run jobs update tech-composer --region asia-northeast3 \
 - 완화가 필요하면 **조직관리자 권한으로 프로젝트 레벨 override → 작업 완료 즉시 원복**. 임시로 부여한 `orgpolicy.policyAdmin`도 회수할 것.
 
 ## 5. 웹 서비스 장애 / 롤백
-- 사이트 다운·502·DNS·SSL·잘못된 배포 롤백 → [development_guide](development_guide.md) §13(긴급 상황 대응) 참조.
+- 사이트 다운·502·DNS·SSL·잘못된 배포 롤백 → [development_guide](development_guide.md) §13(긴급 상황 대응) · [infrastructure_2026-09](infrastructure_2026-09.md)(호스팅/DNS/SSL 현황) 참조.
 - **비용 급증·결제 폭탄 우려** → §4-b(킬스위치·예산). 수동 즉시 차단: `gcloud billing projects unlink prisincera`(서비스 중단됨, 데이터는 유예기간 보존).
 
 ## 6. 빠른 링크

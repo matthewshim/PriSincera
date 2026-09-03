@@ -44,7 +44,7 @@ target_files:
 ### 1-B. 운영 철학 메서드 — "가변비 ≈ 0인 1인 운영"
 > 출처: [service_overview.md](service_overview.md) §1·§4 · [business_model.md](business_model.md)
 
-- **중앙 서버/DB 의존 최소화 + 무료 티어 최대 활용**: Firestore·GCS·Cloudflare 무료 티어 + Gemini 무료 키 → 유저가 늘어도 개발사 가변비가 0에 수렴.
+- **중앙 서버/DB 의존 최소화 + 무료 티어 최대 활용**: Firestore·GCS·**Firebase Hosting**(2026-09 LB 대체) 무료 티어 + Gemini 무료 키 → 유저가 늘어도 개발사 가변비가 0에 수렴.
 - **정적 우선(Static-first)**: Builder's Log는 서버리스 정적 CMS로 운영.
 
 ### 1-C. 제품 포트폴리오 (3제품 체제, 2026-07 승계 완료)

@@ -48,9 +48,9 @@ target_files:
 | `UNSUBSCRIBE_SECRET` | 구독 해지 HMAC 토큰 검증 | Cloud Run env/Secret | [server.mjs:630](../../server.mjs#L630) |
 | `GCP_PROJECT_ID` | Firestore·Job 제어 프로젝트 | Cloud Run env | 기본 `prisincera` ([admin-api.mjs:545](../../admin-api.mjs#L545)) |
 | `RUN_REGION` | Admin "지금 생성"이 Job 실행 시 리전 | Cloud Run env | 기본 `asia-northeast3` |
-| `CF_ZONE_ID` | Cloudflare 캐시 퍼지 존 ID | Cloud Run env/Secret | 선택 ([admin-api.mjs:42](../../admin-api.mjs#L42)) |
-| `CF_API_TOKEN` | Cloudflare API 토큰 | Cloud Run env/Secret | 선택 |
-| `CDN_BASE_URL` | 캐시 퍼지 대상 베이스 URL | Cloud Run env | 선택 |
+| `CF_ZONE_ID` | Cloudflare 캐시 퍼지 존 ID | Cloud Run env/Secret | 선택 · **현재 미설정**(CDN 미사용, 코드 no-op — [admin-api.mjs:42](../../admin-api.mjs#L42)) |
+| `CF_API_TOKEN` | Cloudflare API 토큰 | Cloud Run env/Secret | 선택 · **현재 미설정**(no-op) |
+| `CDN_BASE_URL` | 캐시 퍼지 대상 베이스 URL | Cloud Run env | 선택 · **현재 미설정**. GCS 직접 서빙(CDN 없음) |
 | `BUTTONDOWN_API_KEY` | (레거시) Buttondown 구독 | — | 자체 SMTP 엔진 전환으로 **사실상 미사용** |
 
 ## 2. 배치 파이프라인 (Cloud Run Jobs)

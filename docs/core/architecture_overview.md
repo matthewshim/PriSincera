@@ -33,7 +33,8 @@ target_files:
 │  React + Vite SPA  /relearn  /planners-view  /builders-log  /sylphio  /admin    │
 │  (구 /daily·/pacenote → /relearn 서버 301 — 2026-07-20 리런 승계)                │
 └───────────────────────────────┬─────────────────────────────────────────┘
-                                 │ HTTPS (Cloudflare CDN)
+                                 │ Firebase Hosting (rewrite "**") · 자동 SSL
+                                 │ (2026-09 LB 대체 — infrastructure_2026-09.md)
 ┌────────────────────────────────▼─────────────────────────────────────────┐
 │  Cloud Run: prisincera-web  ──  server.mjs (Express)                       │
 │   · 정적 dist/ 서빙(SPA)                                                    │
@@ -70,10 +71,11 @@ target_files:
 | 레이어 | 구현 | 비고 |
 | :--- | :--- | :--- |
 | **프론트엔드** | `src/` React + Vite SPA | 라우트별 lazy chunk. 마크다운은 `react-markdown`+`remark-gfm`+`rehype-highlight` |
+| **호스팅 진입** | **Firebase Hosting** → rewrite `**` → Cloud Run | 무료·커스텀 도메인·자동 SSL. 2026-09 LB 대체([infrastructure_2026-09](infrastructure_2026-09.md)) |
 | **웹 서버** | `server.mjs` (Express, Cloud Run `prisincera-web`) | dist 서빙 + API 라우터 마운트 + GCS 프록시 |
 | **API 모듈** | `pacenote-api.mjs` · `admin-api.mjs` · `study-api.mjs` | 라우터 단위 분리. Builder's Log는 조회수만 server.mjs 인라인, 발행·통계는 admin-api 내 `/builderslog/*`. **Planner's View는 API 없음** — 정적 마크다운 + 메타 JSON만(조회수·어드민 발행 미지원, [publishing_guide §5](../planners-view/publishing_guide.md)) |
 | **DB** | **Firestore** | `pacenotes/{uid}/weeks/{weekId}`, `daily_signals`, `study_content`, `subscribers`, `config`, `admin_config`, `email_logs` 등 |
-| **정적 콘텐츠** | **GCS** + Cloudflare CDN | `daily/${date}.json`(signal+study), `daily/junior_·senior_${date}.json`(트랙), `daily/index.json` |
+| **정적 콘텐츠** | **GCS** (직접 서빙, CDN 없음) | `daily/${date}.json`(signal+study), `daily/junior_·senior_${date}.json`(트랙), `daily/index.json` |
 | **파이프라인** | `pipeline/src/*` → Cloud Run Jobs | `lib/rss.mjs`(수집), `lib/gemini.mjs`(AI), `lib/storage.mjs`(GCS) |
 | **AI** | Gemini (`callGemini`) | 무료 티어, Secret Manager `GEMINI_API_KEY`. 일일 할당량 대응(재시도 중단) — [api_usage_analysis](api_usage_analysis.md) |
 | **인증** | Firebase Auth (idToken) | PaceNote/Admin 보호. [authentication_architecture](authentication_architecture.md) |
