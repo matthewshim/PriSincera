@@ -472,6 +472,7 @@ app.get('/sitemap.xml', async (req, res) => {
     const staticPages = [
       { url: '/', changefreq: 'weekly', priority: 1.0 },
       { url: '/relearn', changefreq: 'daily', priority: 0.9 },
+      { url: '/planners-view', changefreq: 'weekly', priority: 0.8 },
       { url: '/builders-log', changefreq: 'weekly', priority: 0.8 },
       { url: '/sylphio', changefreq: 'weekly', priority: 0.9 },
       { url: '/sylphio/guide', changefreq: 'weekly', priority: 0.8 },
@@ -493,8 +494,8 @@ app.get('/sitemap.xml', async (req, res) => {
     }
 
     // Add Planner's View notes
-    // 섹션 루트(/planners-view)는 최신 글 본문을 그대로 렌더하고 canonical이 퍼머링크를 가리키므로
-    // 사이트맵에는 넣지 않는다 (색인 신호가 canonical과 어긋나지 않도록).
+    // v2.0 IA: 루트는 목록, 슬러그는 글 — 서로 다른 콘텐츠이므로 양쪽 모두 자기참조 canonical이고
+    // 사이트맵에도 함께 등재한다 (루트는 staticPages 에 있음).
     for (const note of plannersView) {
       if (note.slug) {
         xml += `  <url>\n    <loc>${baseUrl}/planners-view/${note.slug}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
@@ -542,7 +543,6 @@ app.use(async (req, res) => {
   const currentUrl = baseUrl + req.originalUrl;
   
   let override = null;   // 동적 페이지(글 상세/날짜)용 메타
-  let canonicalOverride = null; // 자기참조가 아닌 canonical(섹션 루트 → 퍼머링크)
   let ogType = 'website';
   let articleLd = null;  // Article JSON-LD (구조화 데이터)
 
@@ -581,12 +581,10 @@ app.use(async (req, res) => {
         console.error('[SEO Proxy] 아카이브 상세 대표글 조회 실패 — 날짜 폴백 메타 사용:', e.message);
       }
     } else if (req.originalUrl.startsWith('/planners-view')) {
-      // 루트(/planners-view)는 최신 글을, 퍼머링크는 해당 글을 렌더한다.
-      // 어느 경로로 들어와도 canonical 은 퍼머링크로 고정 — 같은 본문이 두 URL에 노출되는 것을 막는다.
+      // v2.0 IA: 루트는 목록(PAGE_META 그대로, og:type=website), 슬러그만 글 메타를 방출한다.
+      // canonical 은 양쪽 모두 자기참조 — resolveMeta 의 기본 동작을 그대로 쓴다.
       const noteMatch = req.originalUrl.match(/^\/planners-view\/([a-zA-Z0-9-_]+)/);
-      const note = noteMatch
-        ? plannersView.find((n) => n.slug === noteMatch[1])
-        : plannersView[0];
+      const note = noteMatch ? plannersView.find((n) => n.slug === noteMatch[1]) : null;
       if (note) {
         const pick = (obj) => {
           if (!obj) return '';
@@ -601,7 +599,6 @@ app.use(async (req, res) => {
           keywords: (note.tags && note.tags.length ? note.tags.join(', ') : PAGE_META['/planners-view'].keywords),
           ogImage: PAGE_META['/planners-view'].ogImage,
         };
-        canonicalOverride = `${baseUrl}/planners-view/${note.slug}`;
         ogType = 'article';
         articleLd = {
           '@context': 'https://schema.org',
@@ -610,7 +607,7 @@ app.use(async (req, res) => {
           description: noteDesc,
           datePublished: note.date,
           inLanguage: req.locale,
-          mainEntityOfPage: canonicalOverride,
+          mainEntityOfPage: `${baseUrl}/planners-view/${note.slug}`,
           image: PAGE_META['/planners-view'].ogImage,
           author: note.author ? { '@type': 'Person', name: note.author.name } : undefined,
           publisher: { '@type': 'Organization', name: 'PriSincera' },
@@ -641,7 +638,7 @@ app.use(async (req, res) => {
     console.error('[SEO Proxy] Error generating meta tags:', err.message);
   }
 
-  const meta = resolveMeta(req.originalUrl, { override, canonical: canonicalOverride || undefined });
+  const meta = resolveMeta(req.originalUrl, { override });
   const title = meta.title;
   const description = meta.description;
   const keywords = meta.keywords;

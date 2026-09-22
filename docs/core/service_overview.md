@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-08-31
-version: v1.3
+last_updated: 2026-09-22
+version: v1.4
 target_files:
   - src/pages/DailyView.jsx
   - src/components/relearn/DiaryDock.jsx
@@ -21,6 +21,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-24 | AI Agent | 서비스 전체 개요·제품 포트폴리오·성장 플라이휠 최초 정의 | Service |
 | v1.1 | 2026-07-15 | AI Agent | **ReLearn 출시 반영** — 통합 성장 루프 서비스(`/relearn`) 포트폴리오 등재. Daily Digest·PaceNote는 전환기 병존 후 리런으로 승계 예정([relearn/product_strategy](../relearn/product_strategy.md) §4·§5-1) | Service, ReLearn |
+| v1.4 | 2026-09-22 | AI Agent | Planner's View IA 전환 반영 — 목록 없는 뷰 중심에서 **시리즈 연재 구조**(루트=목록)로 승격 | Service, PlannersView |
 | v1.3 | 2026-08-31 | AI Agent | **Planner's View 신설 등재** — 기획자 관점 섹션(`/planners-view`, GNB 1순위) 포트폴리오 추가. Builder's Log와의 경계(제작 기록 vs 관점)를 명시하고 잘못 적힌 `/builderslog` 경로를 `/builders-log`로 정정 | Service, PlannersView |
 | v1.2 | 2026-07-22 | AI Agent | **승계 완료 반영** — Daily Digest·PaceNote 독립 웹 UI는 2026-07-20 리런으로 승계·비공개(구 경로 301). 포트폴리오를 3제품 체제(ReLearn·Builder's Log·Sylphio)로 재편, target_files 삭제 파일 정리 | Service 전반 |
 
@@ -37,7 +38,7 @@ target_files:
 | 제품 | 경로 | 핵심 가치 | 성격 |
 | :--- | :--- | :--- | :--- |
 | **ReLearn** | `/relearn` | **배움→실행→복기 통합 성장 루프** — 다이제스트 4채널 + 궤도 + 회고 + 기록을 한 여정으로. "매일 제로에서, 다시 배우고 다시 달린다" | **플래그십(Loop)** |
-| **Planner's View** | `/planners-view` | 기획자의 관점·판단을 기록하는 에세이 섹션 — 무엇을·누구를 위해·왜 지금 만들 것인가. 뷰 중심 IA(루트=최신 글, 목록 없음) | 브랜딩 |
+| **Planner's View** | `/planners-view` | 기획자의 관점·판단을 기록하는 에세이 섹션 — 무엇을·누구를 위해·왜 지금 만들 것인가. **시리즈 연재** 구조(목록 + 퍼머링크) | 브랜딩 |
 | **Builder's Log** | `/builders-log` | 제작 과정을 투명 공개하는 정적 CMS 블로그 — **커밋으로 증명되는 기록**(챕터·Key Shipments) | 브랜딩 |
 | **Sylphio** | `/sylphio` | 온디바이스 AI 동시통역 비서(별도 데스크톱 제품) | 확장 제품 |
 | **Candela** | `/candela` | 제작자 본인만을 위한 개인 자동매매 시스템과, 그것이 작동한다는 **공개 증거** — 투자 서비스가 아닌 제작 역량 사례 연구. 전략·실행은 별도 private 저장소([candela/system_architecture](../candela/system_architecture.md)) | **기획 중(draft)** |

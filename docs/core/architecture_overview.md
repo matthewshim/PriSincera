@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-08-02
-version: v1.3
+last_updated: 2026-09-22
+version: v1.4
 target_files:
   - server.mjs
   - pacenote-api.mjs
@@ -21,6 +21,7 @@ target_files:
 | :--- | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-06-24 | AI Agent | 전체 스택·데이터 흐름·파이프라인 맵 최초 정의 | Architecture |
 | v1.1 | 2026-07-22 | AI Agent | **리런 통합·실측 정합** — SPA 라우트에서 구 `/daily`·`/pacenote`를 301 표기로 전환, 유령 `builderslog-api.mjs` 참조를 실제 구조(server.mjs 인라인 + admin-api)로 정정 | §1, §2 |
+| v1.4 | 2026-09-22 | AI Agent | Planner's View IA 전환 — 루트=목록(`PlannersView.jsx`) + 퍼머링크 상세(`PlannersViewDetail.jsx`)로 분리, 시리즈 정본 `plannersViewSeries.json` 추가 | §1, §2 |
 | v1.3 | 2026-08-31 | AI Agent | **Planner's View 신설 반영** — SPA 라우트 맵에 `/planners-view` 추가. 섹션 메타(`plannersViewMeta.json`)는 Builder's Log와 동일하게 server.mjs가 사이트맵·SEO 프록시용으로 로드하며, 조회수 API는 두지 않음 | §1, §2 |
 | v1.2 | 2026-08-02 | AI Agent | **비용/인프라 실측 정합** — `prisincera-web` min-instances 0(scale-to-zero) + 결제 안전장치(예산·킬스위치) 반영, §4 스케줄 실측 정정(composer 08:00·monitor 매일 08:30·중복 제거) | §1, §4 |
 

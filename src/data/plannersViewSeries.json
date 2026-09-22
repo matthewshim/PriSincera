@@ -1,0 +1,15 @@
+[
+  {
+    "id": "cheap-execution",
+    "title": {
+      "ko": "실행이 값싸진 시대",
+      "en": "When Execution Got Cheap",
+      "ja": "実行が安くなった時代"
+    },
+    "description": {
+      "ko": "AI가 만드는 비용을 무너뜨린 뒤, 조직에서 무엇이 귀해지는가. 같은 전제에서 출발해 기획·실패·판단으로 이어지는 연작입니다.",
+      "en": "After AI collapsed the cost of building, what becomes scarce inside an organization? A series that starts from one premise and follows it into planning, failure, and judgment.",
+      "ja": "AI が作るコストを崩したあと、組織で何が貴くなるのか。同じ前提から出発し、企画・失敗・判断へとつながる連作です。"
+    }
+  }
+]
