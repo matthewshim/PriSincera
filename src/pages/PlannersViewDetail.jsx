@@ -175,11 +175,16 @@ export default function PlannersViewDetail() {
   return (
     <div className="pv-wrapper">
       <div className="pv-container" style={{ '--accent-color': article.accent }}>
-        {/* 상단 내비 — 상위 링크는 목록을 가리킨다(§9-9: 상위 = 그 글이 속한 목록) */}
+        {/* 상단 내비 — 상위는 목록, 현재 노드는 연재물이면 시리즈명(§9-9).
+            시리즈 전용 URL이 없으므로 3뎁스로 늘리지 않고 2뎁스를 유지한다. */}
         <nav className="pv-crumb" aria-label={t('plannersView.ariaPath')}>
           <Link to="/planners-view" className="pv-crumb-link">Planner&apos;s View</Link>
           <span className="pv-crumb-sep" aria-hidden="true">›</span>
-          <span className="pv-crumb-cur" aria-current="page">{t('plannersView.crumbCurrent')}</span>
+          <span className="pv-crumb-cur" aria-current="page">
+            {seriesInfo && seriesInfo.def
+              ? localize(seriesInfo.def.title)
+              : t('plannersView.crumbCurrent')}
+          </span>
         </nav>
 
         {/* 뷰 히어로 — §9-1 표준(아이콘 → h1 → 서브카피) */}
@@ -190,16 +195,11 @@ export default function PlannersViewDetail() {
             <p className="pv-subtitle">{subtitle}</p>
 
             <div className="pv-meta">
-              {seriesInfo && seriesInfo.def ? (
-                <Link to="/planners-view" className="pv-badge pv-badge-series">
-                  {localize(seriesInfo.def.title)}
-                  <span className="pv-badge-part">
-                    {t('plannersView.part', { n: article.series.order })}
-                  </span>
-                </Link>
-              ) : (
-                <span className="pv-badge">{t('plannersView.badge')}</span>
-              )}
+              <span className="pv-badge">
+                {seriesInfo && seriesInfo.def
+                  ? t('plannersView.part', { n: article.series.order })
+                  : t('plannersView.badge')}
+              </span>
               <span className="pv-meta-item">{new Date(article.date).toLocaleDateString()}</span>
               <span className="pv-meta-sep">•</span>
               <span className="pv-meta-item">{readTime}</span>

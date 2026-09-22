@@ -159,24 +159,6 @@
 
 .pv-meta-sep { opacity: 0.5; }
 
-/* 시리즈 배지 — 목록으로 이동하는 링크 겸용 */
-.pv-badge-series {
-  gap: var(--space-sm);
-  text-decoration: none;
-  transition: border-color var(--duration-fast) var(--ease-out);
-}
-.pv-badge-series:hover,
-.pv-badge-series:focus-visible {
-  border-color: color-mix(in srgb, var(--accent-color) 55%, transparent);
-}
-.pv-badge-series:focus-visible {
-  outline: 2px solid var(--color-indigo);
-  outline-offset: 2px;
-}
-.pv-badge-part {
-  font-family: var(--font-mono);
-  opacity: 0.75;
-}
 
 .pv-title {
   display: inline-block; /* §9-1 — 그라디언트가 글자 폭에 맞춰 클립되도록 */
