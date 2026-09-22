@@ -1,5 +1,46 @@
 [
   {
+    "id": "pv2",
+    "slug": "failure-common-learning-rare",
+    "title": {
+      "ko": "실패가 흔해지는 시대, 실패를 다루는 능력이 귀해집니다",
+      "en": "When Failure Becomes Common, Handling Failure Becomes Rare",
+      "ja": "失敗がありふれる時代、失敗を扱う能力が貴くなります"
+    },
+    "subtitle": {
+      "ko": "회복탄력성을 넘어 안티프래질로 — 시도가 흔해진 시대의 경쟁력은 '실패당 학습량'이다",
+      "en": "Beyond resilience, toward antifragility — when attempts get cheap, the edge is learning per failure",
+      "ja": "回復力を超えてアンチフラジャイルへ — 試行が安くなった時代の競争力は「失敗あたりの学習量」"
+    },
+    "description": {
+      "ko": "AI가 실행 비용을 무너뜨리면서 시도의 횟수가 늘고, 시도가 늘면 실패의 절대량도 함께 늘어납니다. 그래서 경쟁의 축은 '실패하지 않는 능력'에서 '실패당 학습량'으로 옮겨갑니다. 회복탄력성이 복원의 언어라면 반면교사는 학습의 언어이고, 둘이 합쳐질 때 조직은 충격을 성장의 입력값으로 바꾸는 안티프래질이 됩니다. 20년 넘게 글로벌 서비스를 만들며 지켜본, 실패를 사고가 아니라 정보로 다루는 조직의 조건에 대한 기록입니다.",
+      "en": "As AI collapses the cost of execution the number of attempts rises, and with it the absolute volume of failure. So the axis of competition moves from the ability not to fail to learning per failure. If resilience is the language of restoration, treating failure as a teacher is the language of learning — and when the two combine, an organization becomes antifragile, converting shock into an input for growth. A record of what makes an organization treat failure as information rather than as an incident, drawn from more than twenty years of building global services.",
+      "ja": "AI が実行コストを崩すことで試行の回数が増え、試行が増えれば失敗の絶対量も増えます。そのため競争の軸は「失敗しない能力」から「失敗あたりの学習量」へ移ります。回復力が復元の言語なら、失敗を教師とすることは学習の言語であり、二つが合わさったとき組織は衝撃を成長の入力値へ変えるアンチフラジャイルになります。20年以上グローバルサービスを作りながら見てきた、失敗を事故ではなく情報として扱う組織の条件についての記録です。"
+    },
+    "pullQuote": {
+      "ko": "조직이 엄격해야 할 대상은 실패 자체가 아니라, 실패에서 배우지 못하는 것입니다.",
+      "en": "What an organization should be strict about is not failure itself, but the failure to learn from it.",
+      "ja": "組織が厳格であるべき対象は、失敗そのものではなく、失敗から学べないことです。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "tags": [
+      "Antifragile",
+      "Learning Agility",
+      "Failure Management",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-09-22",
+    "readMinutes": 6
+  },
+  {
     "id": "pv1",
     "slug": "technology-common-planning-rare",
     "title": {
