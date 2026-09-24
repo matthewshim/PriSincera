@@ -285,7 +285,9 @@
     "servicePlannerDesc": "제품을 만드는 일의 앞단 — 무엇을, 누구를 위해, 왜 지금 만들 것인가.\n20년 넘게 여러 서비스를 만들며 배운 기획과 기술의 관계를 글로 남깁니다.",
     "servicePlannerCta": "🧭 기획자의 시선 읽기",
     "serviceReLearnCta": "🔄 성장 루프 살펴보기",
-    "serviceCandelaCta": "🕯️ 작동하는 시스템 보기"
+    "serviceCandelaCta": "🕯️ 작동하는 시스템 보기",
+    "latestNote": "최신 글",
+    "latestPart": "{n}편 중 최신"
   },
   "relearn": {
     "status": {

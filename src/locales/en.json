@@ -285,7 +285,9 @@
     "servicePlannerDesc": "The upstream of building a product — what to build, for whom, and why now.\nNotes on the relationship between planning and engineering, learned across twenty years of building services.",
     "servicePlannerCta": "🧭 Read the Planner's View",
     "serviceReLearnCta": "🔄 Explore ReLearn",
-    "serviceCandelaCta": "🕯️ Discover Candela"
+    "serviceCandelaCta": "🕯️ Discover Candela",
+    "latestNote": "Latest",
+    "latestPart": "Latest of {n}"
   },
   "relearn": {
     "status": {
