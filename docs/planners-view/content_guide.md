@@ -1,8 +1,8 @@
 ---
 status: active
 domain: PlannersView
-last_updated: 2026-09-22
-version: v1.0
+last_updated: 2026-09-24
+version: v1.1
 target_files:
   - public/content/planners-view/
   - src/data/plannersViewMeta.json
@@ -15,6 +15,7 @@ target_files:
 
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
+| v1.1 | 2026-09-24 | AI Agent | §2-2 **열거형 예외 신설** — `N가지`를 병렬로 다루는 글은 소제목에 문장형 대신 병렬 라벨을 허용(형식 혼용은 금지). 3편(다섯 가지 '왜') 집필 환류 | PlannersView 콘텐츠 |
 | v1.0 | 2026-09-22 | AI Agent | 최초 정의 — 글 구조·분량·메타 문안 작성법·시리즈 운영 규칙·발행 전 체크리스트. 발행 메커니즘은 [publishing_guide](publishing_guide.md)가 담당 | PlannersView 콘텐츠 |
 
 ---
@@ -68,6 +69,7 @@ target_files:
 - **문장형으로 쓴다.** `복원과 학습은 층위가 다릅니다`(O) / `회복탄력성`(X)
 - 명사 나열형 제목은 문서의 문법이지 에세이의 문법이 아니다.
 - 목차를 위에서 아래로 읽었을 때 **논증의 뼈대**가 보이는지 확인한다.
+- **[열거형 예외 — v1.1]** 글이 `N가지 …`를 병렬로 다루는 **열거형 구조**라면, 문장형 대신 **병렬 라벨**을 허용한다(예: `첫째, 문제를 향해 묻는 '왜' — 문제를 다시 쓰는 훈련`). 목차에서 N개 항목이 한눈에 대비되는 편이 규격의 취지(목차만 읽어도 논지가 흐른다)를 더 잘 충족하기 때문이다. 다만 **라벨 형식을 글 안에서 섞지 않는다** — 열거형이면 전부 병렬 라벨로, 아니면 전부 문장형으로 간다.
 
 ### 2-3. 분량
 

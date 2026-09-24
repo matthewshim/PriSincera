@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv3",
+    "slug": "answers-common-essence-rare",
+    "title": {
+      "ko": "답이 쏟아지는 시대, 본질을 보는 눈이 귀해집니다",
+      "en": "When Answers Become Common, Seeing the Essence Becomes Rare",
+      "ja": "答えがあふれる時代、本質を見る目が貴くなります"
+    },
+    "subtitle": {
+      "ko": "본질을 보는 다섯 가지 '왜' — AI는 무엇과 어떻게에 강하지만, 왜는 여전히 묻는 사람의 몫이다",
+      "en": "Five directions to ask why — AI is strong at what and how, but why still belongs to the one who asks",
+      "ja": "本質を見る五つの「なぜ」 — AI は何とどうに強いが、なぜは問う人の役目のままだ"
+    },
+    "description": {
+      "ko": "AI에게 물으면 몇 초 만에 그럴듯한 답이 돌아옵니다. 그런데 그럴듯한 답은 본질에서 빗나간 질문 위에서도 얼마든지 만들어집니다. 그래서 승부처는 '답을 얻는 능력'에서 '본질을 파악하는 능력'으로 옮겨갑니다. AI는 무엇과 어떻게에 강하지만 '왜'는 여전히 묻는 사람의 몫이고, 그 '왜'는 훈련하지 않으면 퇴화하는 근육입니다. 문제·관행·이해·자신·시간 다섯 방향으로 묻는 훈련에 대한 기록입니다.",
+      "en": "Ask AI anything and a plausible answer comes back in seconds — but a plausible answer can be produced just as easily on top of a question that has already missed the essence. So the decisive ground shifts from the ability to obtain answers to the ability to grasp the essence. AI is strong at what and how, but why still belongs to the person asking, and that why is a muscle that atrophies without training. A record of training it in five directions: the problem, convention, your own understanding, yourself, and time.",
+      "ja": "AI に尋ねれば数秒でもっともらしい答えが返ってきます。しかしもっともらしい答えは、本質から外れた問いの上にもいくらでも作られます。だから勝負どころは「答えを得る能力」から「本質をつかむ能力」へ移ります。AI は何とどうに強いけれど「なぜ」は問う人の役目のままであり、その「なぜ」は訓練しなければ退化する筋肉です。問題・慣行・理解・自分・時間という五つの方向へ問う訓練についての記録です。"
+    },
+    "pullQuote": {
+      "ko": "잘못된 질문에 정확하게 답하는 것만큼 정교한 낭비도 없습니다.",
+      "en": "Nothing is a more elaborate waste than answering the wrong question precisely.",
+      "ja": "誤った問いに正確に答えることほど精巧な浪費もありません。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "cheap-execution",
+      "order": 3
+    },
+    "tags": [
+      "First Principles",
+      "Critical Thinking",
+      "Learning Agility",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-09-24",
+    "readMinutes": 7
+  },
+  {
     "id": "pv2",
     "slug": "failure-common-learning-rare",
     "title": {
