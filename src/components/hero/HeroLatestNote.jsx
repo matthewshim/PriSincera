@@ -56,9 +56,24 @@ export default function HeroLatestNote({ visible }) {
       const p = Math.max(0, Math.min(1, (window.scrollY / vh) / DOCK_AT));
       const dock = window.innerWidth <= 768 ? DOCK_RIGHT_MOBILE : DOCK_RIGHT_DESKTOP;
 
-      el.style.transform =
-        `translateX(calc(${-(50 + 50 * p)}% + ${50 * p}vw - ${dock * p}px))`;
-      el.classList.toggle('is-docked', p >= 0.995);
+      const docked = p >= 0.995;
+
+      if (docked) {
+        // 도착 상태에서는 transform 을 쓰지 않고 right 로 직접 앵커한다.
+        // 합성 레이어에 올라간 변환 요소가 히트테스트에서 어긋나는 경우가 있어,
+        // **클릭이 실제로 일어나는 상태**는 변환 없는 평범한 fixed 요소로 둔다.
+        // p=1 의 transform 결과와 좌표가 동일하므로 전환 시 점프가 없다.
+        el.style.transform = 'none';
+        el.style.left = 'auto';
+        el.style.right = `${dock}px`;
+      } else {
+        el.style.left = '';   // CSS 의 left: 50% 로 복귀
+        el.style.right = '';
+        el.style.transform =
+          `translateX(calc(${-(50 + 50 * p)}% + ${50 * p}vw - ${dock * p}px))`;
+      }
+
+      el.classList.toggle('is-docked', docked);
     };
 
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply); };
