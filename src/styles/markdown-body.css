@@ -160,3 +160,49 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* --- 강조 2층 ---
+   볼드 = 문장 안의 단어 방점 / 하이라이트(==문장==) = 읽는 중 걸리는 문장.
+   역할이 겹치지 않도록 시각 언어를 다르게 둔다. */
+
+.markdown-body strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* 하이라이트 — 배경 블록이 아니라 글자 아랫부분을 스치는 '언더글로우'.
+   본문을 평평하게 유지하기 위해서다(§9-11 플랫 프로스 — 박스 중첩 지양).
+
+   **두 겹으로 그린다**: 아래쪽에 선명한 골드 밑선(2px)으로 윤곽을 주고, 그 위를 옅은
+   워시가 덮는다. 단일 워시만으로는 다크 배경에서 경계가 흐려 '얼룩'처럼 보이고 체감이
+   약하다. 선이 있으면 적은 알파로도 형광펜으로 즉시 읽힌다.
+
+   색은 gold — 본문 흰 글자와 색상 대비가 생긴다
+   (§9-10 "'추천 강조'는 브랜드 메인 gold 로 통일" 선례).
+
+   ⚠️ 기본값은 **반드시 '보이는 상태'** 다. 애니메이션은 덤이고 가시성이 본질이라,
+   JS·관찰자에 문제가 생겨도 하이라이트가 사라지면 안 된다. 화면 아래에 있어
+   아직 그을 차례가 아닌 것만 .pending 으로 0 에서 출발시킨다. */
+.markdown-body mark {
+  background-color: transparent; /* UA 기본 노란 배경 제거 */
+  color: var(--crystal-white);
+  background-image:
+    linear-gradient(rgba(229, 178, 93, 0.62), rgba(229, 178, 93, 0.62)),
+    linear-gradient(rgba(229, 178, 93, 0.26), rgba(229, 178, 93, 0.26));
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 94%, 0 88%;
+  background-size: 100% 2px, 100% 0.58em;
+  padding: 0 0.08em;
+  border-radius: 2px;
+  transition: background-size 0.65s var(--ease-out);
+}
+
+/* 아직 화면 아래에 있는 문장만 0 에서 출발해 좌→우로 그어진다 */
+.markdown-body mark.pending {
+  background-size: 0% 2px, 0% 0.58em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .markdown-body mark { transition: none; }
+  .markdown-body mark.pending { background-size: 100% 2px, 100% 0.58em; }
+}

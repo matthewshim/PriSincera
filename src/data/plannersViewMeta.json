@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv4",
+    "slug": "skill-common-attitude-rare",
+    "title": {
+      "ko": "실력이 흔해진 시대, 태도가 귀해집니다",
+      "en": "When Skill Becomes Common, Attitude Becomes Rare",
+      "ja": "実力がありふれる時代、態度が貴くなります"
+    },
+    "subtitle": {
+      "ko": "결국 남는 것은 태도입니다 — 실력이 원금이라면 태도는 이자율이다",
+      "en": "What remains is attitude — if skill is the principal, attitude is the interest rate",
+      "ja": "結局残るのは態度です — 実力が元本なら、態度は金利だ"
+    },
+    "description": {
+      "ko": "함께 일했던 사람들 가운데 지금도 선명하게 기억나는 이들에게서 떠오르는 것은 스펙이나 기술이 아니라, 일을 대하던 자세였습니다. 태도는 역량과 나란히 놓이는 항목이 아니라 역량이 자라는 속도를 정하는 변수입니다. 실력이 원금이라면 태도는 이자율이고, 복리의 세계에서 승부를 가르는 것은 이자율입니다. AI가 실행 비용을 무너뜨려 실력이 상향 평준화될수록 격차는 도구가 아니라 자세에서 납니다.",
+      "en": "Looking back at the people I still remember vividly, what comes to mind is not their credentials or their skills but the way they approached the work. Attitude is not an item placed alongside capability; it is the variable that sets how fast capability grows. If skill is the principal, attitude is the interest rate — and in a compounding world it is always the rate that decides the outcome. The more AI levels skill upward, the more the gap comes from stance rather than tools.",
+      "ja": "共に働いた人のうち今も鮮明に思い出す人たちについて浮かぶのは、経歴でも技術でもなく、仕事に向き合う姿勢でした。態度は能力と並ぶ項目ではなく、能力が伸びる速度を決める変数です。実力が元本なら態度は金利であり、複利の世界で勝負を分けるのは常に金利です。AI が実行コストを崩して実力が底上げされるほど、差は道具ではなく姿勢から生まれます。"
+    },
+    "pullQuote": {
+      "ko": "실력은 태도를 이기지 못하고, 태도는 시간이 지날수록 실력이 됩니다.",
+      "en": "Skill does not beat attitude, and attitude becomes skill as time passes.",
+      "ja": "実力は態度に勝てず、態度は時間が経つほど実力になります。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "cheap-execution",
+      "order": 4
+    },
+    "tags": [
+      "Attitude",
+      "Career",
+      "Learning Agility",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-10-01",
+    "readMinutes": 5
+  },
+  {
     "id": "pv3",
     "slug": "answers-common-essence-rare",
     "title": {

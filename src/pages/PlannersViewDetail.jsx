@@ -7,7 +7,7 @@
  * - 사이드바(목차 主 + 이 시리즈 副)는 1100px 이하에서 사라지므로, 하단 연재 내비를
  *   상시 배치해 모바일에서 순서 이동 수단이 0이 되지 않게 한다(§9-11 v5.22).
  */
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -19,6 +19,8 @@ import notesMeta from '../data/plannersViewMeta.json';
 import seriesMeta from '../data/plannersViewSeries.json';
 import { useTranslation } from '../contexts/LanguageContext';
 import { slugify, nodeText, buildToc } from '../lib/toc';
+import remarkHighlight from '../lib/remarkHighlight';
+import useMarkReveal from '../hooks/useMarkReveal';
 import '../styles/markdown-body.css';
 import './PlannersViewDetail.css';
 
@@ -38,6 +40,7 @@ export default function PlannersViewDetail() {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState('');
+  const bodyRef = useRef(null);
 
   const article = notesMeta.find((n) => n.slug === slug);
   const currentSlug = article ? article.slug : '';
@@ -116,6 +119,9 @@ export default function PlannersViewDetail() {
 
     return () => { cancelled = true; };
   }, [currentSlug, locale, t]);
+
+  // 하이라이트는 뷰포트 진입 시 좌→우로 그어진다 (본문 렌더 후 관찰)
+  useMarkReveal(bodyRef, [content, loading]);
 
   // 목차 스크롤스파이 — 현재 뷰포트 상단에 걸린 섹션을 활성 표시
   useEffect(() => {
@@ -232,9 +238,9 @@ export default function PlannersViewDetail() {
                 {t('plannersView.loading')}
               </div>
             ) : (
-              <article className="markdown-body">
+              <article className="markdown-body" ref={bodyRef}>
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
+                  remarkPlugins={[remarkGfm, remarkHighlight]}
                   rehypePlugins={[rehypeHighlight]}
                   components={markdownComponents}
                 >

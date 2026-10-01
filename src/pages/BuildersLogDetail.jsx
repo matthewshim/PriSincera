@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -9,6 +9,8 @@ import { PAGE_META } from '../data/seoMeta.mjs';
 import logMeta from '../data/buildersLogMeta.json';
 import { useTranslation } from '../contexts/LanguageContext';
 import { slugify, nodeText, buildToc } from '../lib/toc';
+import remarkHighlight from '../lib/remarkHighlight';
+import useMarkReveal from '../hooks/useMarkReveal';
 import '../styles/markdown-body.css';
 import './BuildersLogDetail.css';
 
@@ -29,6 +31,7 @@ export default function BuildersLogDetail() {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState('');
+  const bodyRef = useRef(null);
   const { t, locale, localize } = useTranslation();
 
   const articleMeta = logMeta.find(m => m.slug === slug);
@@ -103,6 +106,9 @@ export default function BuildersLogDetail() {
     fetch(`/api/builderslog/${slug}/view`, { method: 'POST' }).catch(e => console.error(e));
   }, [slug, articleMeta, locale, localize]);
 
+  // 하이라이트는 뷰포트 진입 시 좌→우로 그어진다 (본문 렌더 후 관찰)
+  useMarkReveal(bodyRef, [content, loading]);
+
   // TOC 스크롤스파이 — 현재 뷰포트 상단에 걸린 섹션을 활성 표시
   useEffect(() => {
     if (loading || toc.length === 0) return;
@@ -169,9 +175,9 @@ export default function BuildersLogDetail() {
                 <div className="admin-spinner"></div> {t('buildersLog.detail.loading')}
               </div>
             ) : (
-              <article className="markdown-body">
+              <article className="markdown-body" ref={bodyRef}>
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
+                  remarkPlugins={[remarkGfm, remarkHighlight]}
                   rehypePlugins={[rehypeHighlight]}
                   components={markdownComponents}
                 >
