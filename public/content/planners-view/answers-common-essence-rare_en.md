@@ -2,7 +2,7 @@ We have arrived in an age where you can ask AI anything and a plausible answer c
 
 So I believe the decisive ground of the AI era is shifting from *the ability to obtain answers* to *the ability to grasp the essence*. And at the center of that ability sits a startlingly simple word. The question "why?"
 
-AI is strong at *what* and *how*. Tell it what to build and it will work out how to build it in an instant. But *why* still belongs to the person asking. Why is this a problem, why now, why this approach? An answer obtained without that question, however refined, is only speed without direction. The trouble is that asking "why" well is harder than it sounds. A child asks why dozens of times a day; an adult loses the question within a few years of organizational life. In an environment where pretending to know the answer looks safer than asking, *why* is a muscle that atrophies without training.
+AI is strong at *what* and *how*. Tell it what to build and it will work out how to build it in an instant. But *why* still belongs to the person asking. Why is this a problem, why now, why this approach? An answer obtained without that question, however refined, is only speed without direction. The trouble is that asking "why" well is harder than it sounds. A child asks why dozens of times a day; an adult loses the question within a few years of organizational life. ==In an environment where pretending to know the answer looks safer than asking, "why" is a muscle that atrophies without training.==
 
 The people I have watched in the field who saw the essence clearly were, without exception, people who had trained that muscle for a long time. But their "why" did not point in one direction. They asked it of the problem, of convention, of their own understanding, of themselves, and of time. Today I want to write about those five directions of "why" — the things you can train in order to see the essence.
 
@@ -22,7 +22,7 @@ The tool for breaking that fossil is also "why." Pick one familiar practice and 
 
 The third is building precision in language. I tend to think that if you cannot define a concept in a single sentence, you do not yet know it. A definition is, in the end, an answer to "why is this different from that." If you cannot answer why resilience differs from antifragility, your strategy for handling failure gets blurry. If you cannot answer why growth differs from expansion, the direction of your investment gets blurry.
 
-So the training is writing. Take the problem you are wrestling with and write it out in ten lines or fewer, without jargon. The point where you get stuck while writing is exactly where your understanding ends — and that point is precisely where the next "why" belongs. Between what you can say fluently and what you can write clearly runs a wide river, and the essence is on the far bank. This is also why having AI summarize something and writing the definition with your own hand are entirely different acts. The former lets you skip understanding; the latter sits you down face to face with "why."
+So the training is writing. Take the problem you are wrestling with and write it out in ten lines or fewer, without jargon. The point where you get stuck while writing is exactly where your understanding ends — and that point is precisely where the next "why" belongs. ==Between what you can say fluently and what you can write clearly runs a wide river, and the essence is on the far bank.== This is also why having AI summarize something and writing the definition with your own hand are entirely different acts. The former lets you skip understanding; the latter sits you down face to face with "why."
 
 ## Fourth, asking "why" of yourself — training to kill your own hypothesis
 
@@ -38,7 +38,7 @@ Here "why" aims at persistence. Was this true ten years ago, and if so, why was 
 
 ## In the end, every training converges on "why"
 
-Having written the five out, it becomes clearer. Rewriting the problem, taking convention apart, writing the definition, attacking the hypothesis, finding what does not change — all of it is, in the end, throwing one question in five different directions. Seeing the essence is not a separate talent; it is a repertoire of directions and depths for asking why.
+Having written the five out, it becomes clearer. Rewriting the problem, taking convention apart, writing the definition, attacking the hypothesis, finding what does not change — all of it is, in the end, throwing one question in five different directions. ==Seeing the essence is not a separate talent; it is a repertoire of directions and depths for asking why.==
 
 And the fact that this is something you can train feels hopeful to me. Asking "why" is tedious, and it looks like it slows you down in the moment. All the more so in an age when the answer arrives in seconds. But looking back, among the people I have worked with, the ones who changed an organization's direction were always the ones who never stopped asking this tedious question. It was not that they answered faster than everyone else. It was that while everyone else ran off holding an answer, they paused half a beat and asked "why" one more time. In an age when execution has become cheap, that half beat is no longer a delay — it is the highest-return investment available.
 

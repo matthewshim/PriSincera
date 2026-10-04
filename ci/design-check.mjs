@@ -195,6 +195,39 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
+// ── 하이라이트 문법 게이트: `==문장==` 이 실제로 <mark> 로 렌더되는지 보장 ──
+// remarkHighlight 는 **하나의 텍스트 노드 안에서만** 매칭한다. 하이라이트 안에 인라인
+// 마크업(*강조*·`코드`·[링크] 등)이 들어가면 노드가 쪼개져 조용히 렌더되지 않는다.
+// 실제로 3편 영문에서 `*why*` 때문에 하이라이트 하나가 사라진 적이 있다(2026-10-04).
+// 눈으로는 알 수 없으므로 빌드에서 막는다.
+//
+// 코드 블록·인라인 코드는 제외한다 — 플러그인도 건드리지 않는 영역이고, JS 의 `===`
+// 같은 코드가 오탐을 낸다(Builder's Log 실측).
+(function highlightSyntaxGate() {
+  const DIRS = ['public/content/planners-view', 'public/content/logs'];
+  const stripCode = (md) =>
+    md.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '');
+
+  for (const dir of DIRS) {
+    let files = [];
+    try { files = readdirSync(dir).filter((f) => f.endsWith('.md')); } catch { continue; }
+    for (const f of files) {
+      const md = stripCode(readFileSync(join(dir, f), 'utf-8'));
+      const pairs = md.match(/==/g) || [];
+      if (pairs.length % 2 !== 0) {
+        errors.push(`${dir}/${f}: '==' 개수가 홀수 — 하이라이트가 닫히지 않았다`);
+      }
+      const re = /==([^=\n]+)==/g;
+      let m;
+      while ((m = re.exec(md)) !== null) {
+        if (/[*`\[\]_]/.test(m[1])) {
+          errors.push(`${dir}/${f}: 하이라이트 안에 인라인 마크업 — 렌더되지 않는다: "${m[1].slice(0, 40)}…"`);
+        }
+      }
+    }
+  }
+})();
+
 if (warns.length) {
   console.warn(`[design-check] WARN ${warns.length}건 (비차단 — §9-7 스케일 확장 백로그):`);
   for (const w of warns) console.warn('  -', w);

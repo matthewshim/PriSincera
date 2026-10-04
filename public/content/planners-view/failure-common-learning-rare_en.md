@@ -2,7 +2,7 @@ Over more than twenty years of building global services across a range of domain
 
 ## Recovery and learning sit on different levels
 
-We often talk about resilience: the strength to take a hit without breaking and return to where you were. It is a valuable thing, of course. But look closely and resilience is the language of *restoration*. If the place you return to is the state you were in before the failure, that team is quietly preparing to meet the same failure again.
+We often talk about resilience: the strength to take a hit without breaking and return to where you were. It is a valuable thing, of course. But look closely and resilience is the language of *restoration*. ==If the place you return to is the state you were in before the failure, that team is quietly preparing to meet the same failure again.==
 
 Treating failure as a teacher is a different order of thing. It is not returning to the original state but *moving* to a better one than before the failure. If the former is restoration, the latter is learning. And when the two combine, you get a capability one level above plain resilience.
 
@@ -14,7 +14,7 @@ Why does this capability matter precisely now? I think the reason is clear: AI i
 
 When the cost of building falls, the number of attempts rises. An experiment that once required committing a whole quarter can now be run several times in a single week. But as attempts rise, so does the absolute volume of failure. An organization that used to try ten things and now tries a hundred will fail ten times as often. This is not an avoidable side effect; it is a structural consequence.
 
-Once you see that, you can see where the axis of competition moves. In an era when attempts were scarce, *the ability not to fail* was the competitive edge. In an era when attempts are cheap, *learning per failure* is the competitive edge. If out of the same hundred failures one organization extracts a hundred lessons while another accumulates only scar tissue, the gap between them compounds within the same span of time. The board has been reset: the winner is not the organization that avoids failure, but the one that digests failure fastest.
+Once you see that, you can see where the axis of competition moves. In an era when attempts were scarce, *the ability not to fail* was the competitive edge. In an era when attempts are cheap, *learning per failure* is the competitive edge. If out of the same hundred failures one organization extracts a hundred lessons while another accumulates only scar tissue, the gap between them compounds within the same span of time. ==The board has been reset: the winner is not the organization that avoids failure, but the one that digests failure fastest.==
 
 ## Failure is verified in the field, every day
 
@@ -26,7 +26,7 @@ At that moment an organization has only two choices. Treat failure as an *incide
 
 There is something here that must not be misread. Saying we should treat failure as data is not saying we should become numb to it. But the trap on the opposite side is far more common: organizations that treat failure too strictly.
 
-In an organization where failure is followed by blame, what people learn is not the lesson but concealment. Failures vanish from the reports, experiments shrink to a size small enough not to get anyone punished, and the organization looks flawless on the surface while it actually stops learning. In an era when the absolute volume of failure is bound to rise, assigning guilt to each individual failure is cutting the organization's own learning circuit.
+In an organization where failure is followed by blame, what people learn is not the lesson but concealment. Failures vanish from the reports, experiments shrink to a size small enough not to get anyone punished, and the organization looks flawless on the surface while it actually stops learning. ==In an era when the absolute volume of failure is bound to rise, assigning guilt to each individual failure is cutting the organization's own learning circuit.==
 
 The principle I have arrived at is this. What an organization should be strict about is not failure itself, but the failure to learn from it. Be generous with failure, and serious about the absence of learning. And even that seriousness should take the form of *adjustment*, not reprimand. When the same failure repeats, ask before you punish a person: was the lesson never extracted, did the extracted lesson never reach the person who needed it, or was there a structure that could not be changed even though everyone knew? The remedies for those three cases are entirely different, and none of the three is solved by rebuke.
 
