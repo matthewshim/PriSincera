@@ -20,6 +20,7 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 *   **[디자인 시스템 (Design System)](core/design_system.md)** (`design_system.md`): 8pt 그리드·OLED 흑백 컬러 토큰·타이포 0.05rem 그리드(`--fs-*` 전량 토큰화)·컴포넌트 규범(§9)과 prebuild `design-check` 자동 집행 게이트를 아우르는 표준 가이드라인 (v5.8).
 *   **[스크롤 인터랙션 강화 제안서](core/scroll_interaction_proposal.md)** (`scroll_interaction_proposal.md`): 별똥별(Shooting Star) 모티브 기반 메인 페이지 카드 및 오브젝트 스크롤/호버 인터랙션 강화 계획서.
 *   **[보안 취약점 점검 보고서 (Security Audit)](core/security_audit.md)** (`security_audit.md`): XSS 방어, CORS 정책, Rate Limiter 적용 등 실질적 라이브 보안 조치 이력 및 권장 수칙.
+*   **🆕 [저장소 보안 규범 (Security Spec)](core/security_spec.md)** (`security_spec.md`): public 저장소 전제의 절대 금지 규칙(N-1~N-6)·적용 완료 하드닝(.claude gitignore·에이전트 push 권한 회수·trust proxy·시크릿 스캐너 3중 훅·훅 이동성 fail-closed)·퍼블릭 시크릿 커밋 사고 대응·기존 방어 현행 유지. **active.** (2026-10 Candela→core 일반화 이관)
 *   **🆕 [SEO 메타·페이지 타이틀 표준 (SEO Meta Standard)](core/seo_meta_standard.md)** (`seo_meta_standard.md`): 전 카테고리 페이지 타이틀/메타를 일관 표준으로 통일하되 카테고리별 SEO를 유지하는 규격 — SSR(`server.mjs`)·CSR(`useSEO.js`) 이중 소스 정합(SSOT) 공유 모듈 `src/data/seoMeta.mjs`. **active(구현 완료).**
 *   **🆕 [잔여 작업 백로그 (Task Backlog)](core/task_backlog.md)** (`task_backlog.md`): 리런 통폐합 완료 시점 기준 잔여 작업의 **단일 정본** — 검증·리팩터·디자인/SEO 백로그·결정 대기 항목. 착수·완료 시 본 문서를 갱신.
 *   **[BI 중심 프리미엄 UX 가이드](core/bi_centered_ux_guide.md)** (`bi_centered_ux_guide.md`): 네온 컬러를 절제하고 명독성과 심미성을 극한으로 끌어올린 하이엔드 다크 테마 디자인 수칙.
@@ -72,15 +73,9 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 
 ---
 
-## 📁 candela/ (Candela — 초개인 자동매매 & 공개 사례 연구)
-제작자 본인만을 위한 **개인 자동매매 시스템**과, 그 시스템이 실제로 작동한다는 것을 공개 증명하는 **퍼블릭 사례 연구**의 이원 구조 명세서입니다. 전략 로직·백테스트·주문 집행은 **별도 private 저장소(`candela-worker`)** 에서 관리하며, 본 폴더에는 public 저장소에 존재해도 안전한 문서만 둡니다.
-*   **🆕 [캔델라 제품 전략서 (Product Strategy)](candela/product_strategy.md)** (`product_strategy.md`): "투자 서비스가 아니라 제작 역량의 증거" — 명칭·이원 구조·포지셔닝(수익률이 아닌 아키텍처를 헤드라인으로)·공개 원칙 7조(무료·금액 비공개·T+1 사후·주간 집계·손실 은폐 금지)·성공 기준. **draft.**
-*   **🆕 [캔델라 시스템 아키텍처 (System Architecture)](candela/system_architecture.md)** (`system_architecture.md`): 3계층 분리(Public Web / Admin 조종석 / Executor Worker) — Admin은 키를 갖지 않고 명령 enum만 큐에 기록, 실적은 git이 아닌 **GCS 적재 + 해시 체인**으로 발행, 일봉 스윙 기반 배치 운영. **draft.**
-*   **🆕 [캔델라 데이터 계약 (Data Contract)](candela/data_contract.md)** (`data_contract.md`): UI 선행 개발의 **최대 위험(더미가 스키마를 결정)**을 막는 선행 산출물 — 퍼블릭 계약에서 **금액·수량 필드를 스키마 레벨로 배제**(존재하지 않는 필드는 실수로 렌더링할 수 없다), `dataSource` 판별 필드, 해시 체인, Admin/퍼블릭 계층 분리. **draft.**
-*   **🆕 [캔델라 UI 구현 명세서 (UI Specification)](candela/ui_specification.md)** (`ui_specification.md`): 픽스처 기반 UI 선행 개발 규범 — **샘플 데이터 노출 차단 게이트 3중**(데이터 소스 선언·빌드 차단·해제 불가 워터마크), 우선 설계 화면 2종, 픽스처 3 시나리오(하락장 통과가 게이트), **킬스위치는 목업하지 않는다**. **draft.**
-*   **🆕 [캔델라 보안 규범 (Security Spec)](candela/security_spec.md)** (`security_spec.md`): **public 저장소 전제**의 절대 금지 규칙 6조(`VITE_` 접두어·프록시 키 주입·전략 커밋 등)와 즉시 조치 4건 반영 내역(.claude gitignore·에이전트 push 권한 회수·trust proxy·시크릿 스캐너 보강), 계좌 분리라는 비기술적 상한선. **active(조치 완료).**
-*   **🆕 [캔델라 사고 대응 런북 (Incident Response)](candela/incident_response.md)** (`incident_response.md`): 키 유출·시크릿 커밋·세션 탈취·오작동·외부 장애 5종 시나리오별 절차 — **출혈 차단 → 접근 차단 → 원인 규명 → 복구** 순서 원칙과 연 1회 훈련 수칙. **draft.**
-*   **🆕 [캔델라 로드맵 (Roadmap)](candela/roadmap.md)** (`roadmap.md`): M0~M5 단계와 승격 게이트(백테스트→모의투자→실계좌 소액→증액), 확정 사항 8건·미결 5건·**하지 않기로 한 것 5건**. **draft.**
+## 📁 waymark/ (Waymark — 의사결정 동반 서비스)
+Candela(자동매매) 슬롯을 **의사결정 동반 서비스 Waymark**로 전환한 신규 도메인입니다. 결정을 많이 내리는 사람(기획·PO·PM·리더)을 위한 **결정 저널 + 먼저 찾아오는 AI 동반자 + 경험담**. 기존 자동매매 계획은 폐기되어 [아카이브](archive/candela_trading_archive.md)로 통합, 레포 전체 보안 규범은 [core/security_spec](core/security_spec.md)로 이관되었습니다.
+*   **🆕 [Waymark 재포지셔닝 제안서 (Repositioning Proposal)](waymark/repositioning_proposal.md)** (`repositioning_proposal.md`): Candela(자동매매) → Waymark(의사결정 동반) 전환의 근거·서비스 개요·**ReLearn 차별화(경계: 성장을 돕는다/결정을 지킨다)**·명칭 확정(Waymark)·전환 범위·진행 현황. **active(차별화 경계 승인·정식 문서 세트 대기).**
 
 ---
 
@@ -96,6 +91,7 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 
 ## 📁 archive/ (역사적 참고용 통합 아카이브)
 서비스 고도화 및 통폐합 마일스톤이 완전히 완수됨에 따라, 과거의 개발 파편들을 고맥락 중심으로 고밀도 병합하여 보관 중인 참고서입니다.
+*   **🆕 [캔델라 자동매매 아카이브 (Candela — Automated Trading)](archive/candela_trading_archive.md)** (`candela_trading_archive.md`): *(2026-10-17 archived — Waymark 피벗)* 폐기된 개인 자동매매·공개 사례 연구 계획 7종(전략·3계층 아키텍처·데이터 계약·UI 게이트·로드맵 + 트레이딩 전용 보안·사고 대응)의 고밀도 요약. 레포 보안 규범은 [core/security_spec](core/security_spec.md)로 존치.
 *   **[이메일 발송 엔진 전환 아카이브](archive/email_migration_history.md)** (`email_migration_history.md`): 외부 SaaS(Buttondown) 의존성을 완전 탈피하고 Gmail SMTP 자체 엔진 전환 및 중복 발송 차단용 Firestore 선행 락(Pending Lock) 해결사.
 *   **[PriSignal 레거시 아카이브](archive/prisignal_legacy_archive.md)** (`prisignal_legacy_archive.md`): 과거 독립형 IT 큐레이션 웹 시절의 탭 리디자인, 카드 진입 스태거 효과, 구독 CTA 및 소셜 프루프 컴포넌트 변천사.
 *   **[PriStudy 레거시 아카이브](archive/pristudy_legacy_archive.md)** (`pristudy_legacy_archive.md`): 과거 어학 마이크로러닝 앱 시절의 초기 MVP 데이터베이스 스키마 및 비즈니스 일어/프롬프트 3단계 확장 기획 기록.
@@ -158,7 +154,7 @@ admin **「서비스 문서」 사이드바 라벨은 각 문서의 첫 H1(`# �
 ```yaml
 ---
 status: active | draft | archived  # active: 현재 가동 스펙, draft: 기획 중, archived: 레거시 아카이브
-domain: Core | ReLearn | PaceNote | BuildersLog | DailyDigest | Sylphio | Candela  # 서비스 도메인
+domain: Core | ReLearn | PaceNote | BuildersLog | DailyDigest | Sylphio | Candela | Waymark  # 서비스 도메인
 nav_title: ✍️ 짧은 사이드바 라벨  # (선택) 편집형 개발기 등 본문 H1과 사이드바 라벨을 분리할 때만
 last_updated: YYYY-MM-DD  # 최신 업데이트 날짜
 version: vX.Y  # 문서 버전 정보

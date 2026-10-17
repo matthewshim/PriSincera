@@ -1,162 +1,4 @@
 {
-  "candela": {
-    "seo": {
-      "title": "Candela — A Case Study Proving an Automated Trading System Works",
-      "description": "Candela, a personal automated trading system built with AI. Not returns, but architecture — public evidence that the system actually works."
-    },
-    "hero": {
-      "status": "In progress · Under construction — the performance dashboard opens after live operation",
-      "sub": "Automated trading proven by architecture, not returns.\nNot returns. Architecture."
-    },
-    "duo": {
-      "heading": "One name, two systems",
-      "coreTag": "TRADING CORE",
-      "coreTitle": "The engine that will run real assets",
-      "coreBody": "The maker's engine alone — strategy, orders, and keys all private.",
-      "webTag": "PUBLIC WEB",
-      "webTitle": "A window that proves it works",
-      "webBody": "A window open to all — no keys, no strategy, just derived results. Live after real operation."
-    },
-    "arch": {
-      "heading": "Three-tier architecture",
-      "desc": "Better a structure with nothing to lose than one merely well guarded",
-      "t1name": "Tier 1 · Public Web",
-      "t1note": "Read-only · no keys · no strategy",
-      "t2name": "Tier 2 · Operations Console",
-      "t2note": "Private · predefined commands only · no keys",
-      "t3name": "Tier 3 · Execution Worker (private)",
-      "t3note": "No inbound port · polling only · isolated keys",
-      "boundary": "Trust boundary — keys, strategy, and order execution live only below this line",
-      "caption": "No request path leads into the execution worker. Polling, publishing, and orders all flow outward from the worker, so there is no inbound port, and no path runs from the public web into the execution layer.",
-      "store": "Results store",
-      "broker": "Brokerage API",
-      "queue": "Command queue",
-      "arrCmd": "command",
-      "arrPoll": "polling",
-      "arrSnap": "results snapshot",
-      "arrRead": "read",
-      "arrOrder": "orders · quotes"
-    },
-    "control": {
-      "heading": "The control surface is designed narrow",
-      "body": "All the console can send is a few predefined commands — no naming a symbol, quantity, or price.",
-      "note": "Commands, auth, and paths stay private — we show it works without exposing the attack surface."
-    },
-    "principles": {
-      "heading": "Disclosure principles",
-      "desc": "Once performance is published, these always hold",
-      "items": [
-        "Free · no signal sales",
-        "Amounts and quantities withheld · ratios only",
-        "Delayed disclosure (T+1)",
-        "Weekly aggregation",
-        "No hiding losses · MDD shown",
-        "Backtest vs. live clearly marked"
-      ]
-    },
-    "footer": "This page is a service introduction. The performance dashboard opens once live-operation data is in hand.",
-    "features": {
-      "heading": "What makes it different",
-      "desc": "Not a service that sells performance — one that proves it, honestly.",
-      "items": [
-        {
-          "t": "Honest track record",
-          "d": "MDD and worst month, front and center — never returns alone."
-        },
-        {
-          "t": "Benchmarked",
-          "d": "Validated against KOSPI and the S&P 500."
-        },
-        {
-          "t": "Integrity hash chain",
-          "d": "Tamper-proof — a public script lets anyone verify."
-        },
-        {
-          "t": "Free · non-commercial",
-          "d": "No subscriptions, no signal sales. We don't sell calls."
-        },
-        {
-          "t": "Delayed · weekly",
-          "d": "T+1 delay, weekly only — never a live feed."
-        },
-        {
-          "t": "Backtest vs. live, marked",
-          "d": "Backtest and live never mixed. All costs included."
-        }
-      ]
-    },
-    "preview": {
-      "heading": "What we'll publish",
-      "desc": "Once live, these are the metrics we'll disclose — honestly.",
-      "badge": "Coming soon · example layout",
-      "curveLabel": "Equity curve vs. blended benchmark",
-      "note": "Real figures publish once live-operation data is in hand. Above is a layout example, not a result.",
-      "metrics": [
-        "Cumulative return",
-        "Max drawdown",
-        "Sharpe",
-        "Win rate",
-        "Avg. holding"
-      ]
-    },
-    "roadmap": {
-      "heading": "The journey",
-      "desc": "No stage is skipped. We publish only after enough real data.",
-      "now": "You are here",
-      "steps": [
-        {
-          "t": "Design · architecture",
-          "d": "Data contract and three-tier structure locked"
-        },
-        {
-          "t": "Backtest",
-          "d": "Validated with fees and slippage"
-        },
-        {
-          "t": "Paper trading",
-          "d": "1–2 months of observation before real money"
-        },
-        {
-          "t": "Small live account",
-          "d": "Start with money we can afford to lose"
-        },
-        {
-          "t": "Go public",
-          "d": "Dashboard opens after 3 months of real results"
-        }
-      ]
-    },
-    "faq": {
-      "heading": "FAQ",
-      "items": [
-        {
-          "q": "Is this an investment service?",
-          "a": "No. It's a case study that provides no picks or trade calls. It's free and sells no signals."
-        },
-        {
-          "q": "Can I copy the trades or get recommendations?",
-          "a": "No. Trades are disclosed only afterward, as ratios; symbols and amounts stay private. It's not a live feed."
-        },
-        {
-          "q": "Will the published results be real?",
-          "a": "Yes. An integrity hash chain makes retroactive edits impossible, and the verification script is public for anyone to check. Drawdowns and losses are never hidden."
-        },
-        {
-          "q": "When does it go public?",
-          "a": "After at least three months of live-operation data. Until then, the making is logged on Builder's Log."
-        },
-        {
-          "q": "Is it paid?",
-          "a": "No. We never charge for picks or trade calls."
-        }
-      ]
-    },
-    "cta": {
-      "heading": "See it being built",
-      "desc": "The design and experiments behind Candela are logged on Builder's Log.",
-      "button": "Read the making on Builder's Log"
-    }
-  },
   "header": {
     "plannersView": "Planner's View",
     "buildersLog": "Builder's Log",
@@ -263,8 +105,8 @@
       "desc": "Combining 20 years of experience with AI technology, now born as a practical web service that directly assists your daily life and growth."
     },
     "servicesTitle": "What that attitude built —",
-    "servicesTitleAccent": "five things I made myself.",
-    "servicesSubtitle": "Twenty years of planning met AI and became five things.\nFrom the making to solving real work — the results of an attitude.",
+    "servicesTitleAccent": "four things I made myself.",
+    "servicesSubtitle": "Twenty years of planning met AI and became four things.\nFrom the making to solving real work — the results of an attitude.",
     "serviceBaseCta": "⚡ Explore Open Source & System Architecture",
     "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
     "serviceBuildersCta": "🚀 Read the Builder's Log",
@@ -281,13 +123,10 @@
     "serviceReLearnTag": "Two decades, productized",
     "serviceSylphioTag": "Solving a real need",
     "makerNote": "This site's full source and architecture are open source.",
-    "serviceCandelaTag": "Not returns — proof that it works",
-    "serviceCandelaDesc": "A personal automated trading system built with AI.\nNot returns but architecture — public evidence that the system actually works.",
     "servicePlannerTag": "Between engineering and planning",
     "servicePlannerDesc": "The upstream of building a product — what to build, for whom, and why now.\nNotes on the relationship between planning and engineering, learned across twenty years of building services.",
     "servicePlannerCta": "🧭 Read the Planner's View",
     "serviceReLearnCta": "🔄 Explore ReLearn",
-    "serviceCandelaCta": "🕯️ Discover Candela",
     "latestNote": "Latest",
     "latestPart": "Latest of {n}"
   },

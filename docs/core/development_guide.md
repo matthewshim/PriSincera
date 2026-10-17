@@ -26,7 +26,7 @@ target_files:
 | v2.3 | 2026-08-19 | AI Agent | 레거시 `nginx.conf` 삭제 반영 — 디렉토리맵을 `.githooks`·`ci`·`.gitattributes` 체제로 갱신, §7-3 표기 정리 | §3, §7 |
 | v2.4 | 2026-08-31 | AI Agent | **디렉터리 구조 현행화** — `src/lib/`(toc.js) 신설, `styles/markdown-body.css`(문서형 본문 조판 공용) 등재, `PlannersView.jsx`·`plannersViewMeta.json` 추가 | §디렉터리 구조 |
 
-> ⚠️ **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리에 남아 있던 레거시 `nginx.conf`는 **2026-08-19 삭제**되었습니다(미사용 + CSP 부재 + 인증 없는 프록시 키 주입 패턴 보유 — [security_spec §3-10](../candela/security_spec.md)).
+> ⚠️ **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리에 남아 있던 레거시 `nginx.conf`는 **2026-08-19 삭제**되었습니다(미사용 + CSP 부재 + 인증 없는 프록시 키 주입 패턴 보유 — [security_spec §3-9](security_spec.md)).
 
 > **최종 업데이트**: 2026-06-29  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  

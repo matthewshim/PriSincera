@@ -114,7 +114,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 
 ## 10. 🔐 자동 커밋 전제 조건 (2026-08-19 신설)
 
-정본: [candela/security_spec.md](../candela/security_spec.md) · 배경: [security_audit.md §11](security_audit.md)
+정본: [core/security_spec.md](security_spec.md) · 배경: [security_audit.md §11](security_audit.md)
 
 **이 저장소는 public이고, push된 시크릿은 force push로도 회수되지 않는다.** 자동 커밋이 필요한 이유는 편의가 아니라 **git이 Windows 데스크톱 ↔ macOS 노트북의 동기화 수단**이기 때문이다. 동기화 빈도에서 사람 승인은 고무도장이 되고, 그건 검증된 스캐너보다 나쁘다.
 
@@ -138,7 +138,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | :--- | :--- | :--- |
 | ~~10-7~~ | ~~자동 커밋 식별 trailer~~ | ✅ **별도 조치 불필요** — Claude 커밋에는 `Co-Authored-By` trailer가 자동으로 붙고 사람 커밋에는 없다. 기존 커밋 5건에서 확인 |
 | ~~10-8~~ | ~~회수 리허설~~ | ✅ plumbing(`commit-tree`)으로 훅 우회 커밋을 임시 브랜치에 생성 → `pre-push`가 포착하는 것 확인 → `reset --soft` 회수 절차 실연 → 브랜치 삭제. main 무영향 |
-| ~~10-9~~ | ~~미조치 항목 기술 원칙~~ | ✅ [security_spec §2 N-7](../candela/security_spec.md) 등재 |
+| ~~10-9~~ | ~~미조치 항목 기술 원칙~~ | ✅ [security_spec §2 N-5](security_spec.md) 등재 |
 | ~~10-10~~ | ~~훅 이동성 (fail-closed)~~ | ✅ `.githooks/` + `prepare` + **prebuild 게이트가 hooksPath 미설정 시 빌드 실패**. Docker는 `.git` 부재로 자동 skip |
 | ~~10-11~~ | ~~`.claude/` 분할~~ | ✅ `settings.json`(OS 중립 정책) 커밋 / `settings.local.json`(머신별 162건) 제외 |
 | ~~10-13~~ | ~~`pre-push` 훅 (신설)~~ | ✅ 검증 중 발견한 구멍 대응 — `git commit -m "x" --no-verify`는 접두어 매칭 deny를 빠져나간다. push 직전 범위 재검사로 포착 |
@@ -150,12 +150,12 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | ~~10-D1~~ | ~~자동 커밋 범위~~ | ✅ **경로 지정 add만** (`docs/` `src/` `ci/` `.githooks/` `pipeline/` `public/`). 전체 스테이징은 deny |
 | ~~10-D2~~ | ~~자동 푸시~~ | ✅ **허용으로 전환.** 초기 권고(영구 금지)는 git이 동기화 수단이라는 전제에서 틀렸다 — 고빈도 승인은 고무도장이 된다. 대신 최후 방어선을 사람이 아니라 `pre-push` + GitHub 서버 측에 둔다. `--force`·`--no-verify`는 계속 deny |
 | 10-D3 | `Bash(node -e ' *)`·`Bash(npm i *)` 권한 존치 여부 | ⏳ Candela M4에 재검토. 단 로컬 `.env`에는 `VITE_FIREBASE_API_KEY`(공개 식별자)뿐이고 실 시크릿은 Secret Manager에만 있어 현 위험은 낮음 |
-| ~~10-D4~~ | ~~`nginx.conf` 처분~~ | ✅ 2026-08-19 **삭제** — 코드·빌드 참조 0건 전수 확인 후 제거(git 히스토리가 아카이브 역할). 문서 참조 5곳 정리, `ROOT_ALLOW`에서도 제외. 패턴 금지는 [security_spec N-2](../candela/security_spec.md)로 존치 |
+| ~~10-D4~~ | ~~`nginx.conf` 처분~~ | ✅ 2026-08-19 **삭제** — 코드·빌드 참조 0건 전수 확인 후 제거(git 히스토리가 아카이브 역할). 문서 참조 5곳 정리, `ROOT_ALLOW`에서도 제외. 패턴 금지는 [security_spec N-2](security_spec.md)로 존치 |
 | 10-D5 | 저장소 단위 push protection 활성화 | ⏳ **사용자 액션 (30초)** — 아래 §10-D5 참조 |
 
 #### 10-D5 상세 — 저장소 단위 push protection
 
-**왜 자동화 불가**: 활성화에는 저장소 `Administration: write` 권한이 필요하다. 로컬에 그런 토큰이 없고(`.env`에는 `VITE_FIREBASE_API_KEY` 1건뿐), Secret Manager의 `GITHUB_TOKEN`은 콘텐츠 커밋용이라 권한이 부족할뿐더러 **프로덕션 시크릿을 개발 머신으로 내리는 것 자체가 [N-8 원칙](../candela/security_spec.md) 위반**이다. `gh` CLI도 미설치이며 설치해도 인증이 대화형이다.
+**왜 자동화 불가**: 활성화에는 저장소 `Administration: write` 권한이 필요하다. 로컬에 그런 토큰이 없고(`.env`에는 `VITE_FIREBASE_API_KEY` 1건뿐), Secret Manager의 `GITHUB_TOKEN`은 콘텐츠 커밋용이라 권한이 부족할뿐더러 **프로덕션 시크릿을 개발 머신으로 내리는 것 자체가 [보안 규범](security_spec.md) 위반**이다. `gh` CLI도 미설치이며 설치해도 인증이 대화형이다.
 
 **절차**
 
@@ -173,23 +173,14 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 
 **우선순위가 낮은 이유와, 그럼에도 켜는 이유**: 1인 소유 public 저장소에서는 계정 단위 protection이 이미 같은 detector로 동작하므로 당장의 델타는 작다. 다만 계정 단위 protection은 **public 저장소에만** 적용되므로, ① 협업자를 추가하거나 ② 저장소를 private로 전환하면 보호가 사라진다. 저장소 단위로 켜 두면 그 두 경우에도 유지된다.
 
-## 11. 🕯️ Candela (2026-08-19 신설)
+## 11. 🕯️ Candela → Waymark 피벗 (2026-10-17 폐기)
 
-P0~P5 로드맵·승격 게이트·미결 항목은 **[candela/roadmap.md](../candela/roadmap.md)가 정본**이다. 본 문서에는 중복 등재하지 않으며, 도메인 외 파급이 있는 항목만 여기로 승격한다.
+Candela(자동매매·공개 사례 연구)는 **의사결정 동반 서비스 Waymark로 피벗**되어 폐기되었다(2026-10-17). 라이브 Candela(랜딩·라우트·GNB·메인 카드·i18n·fixture/스키마·design-check G-2 게이트)와 Builder's Log ch.14는 제거 완료. 아래 과제(11-2~11-7·P0~P5 로드맵)는 **모두 취소**된다.
 
-> **2026-08-19 방식 개정**: 실행 계층을 먼저 만드는 M0~M5에서 **UI 선행(P0~P5)**으로 전환했다 — 계약 → 픽스처 → Admin UI → Public UI → Worker → 공개. 근거와 위험 대응은 [ui_specification](../candela/ui_specification.md)·[data_contract](../candela/data_contract.md).
-
-| # | 작업 | 상태 |
-| :--- | :--- | :--- |
-| ~~11-1~~ | ~~public 저장소 전제 보안 개선 4건 — `.claude/` gitignore·에이전트 push 권한 회수·`trust proxy`·시크릿 스캐너 보강~~ | ✅ 2026-08-19 — [security_audit.md §11](security_audit.md) |
-| 11-2 | `firestore.rules`에 `candela_*` 명시적 deny 등재 (기본 deny로 이미 차단되나 향후 규칙 추가 실수 방지) | Candela M2 |
-| 11-3 | Candela 관리 화면 `React.lazy` 코드 스플리팅 — 퍼블릭 방문자 번들에 매매 로직·엔드포인트 미포함 | Candela M2 |
-| 11-4 | **브로커 키를 로컬 머신에 두지 않는다** — Worker는 클라우드 실행, 실계좌 키는 Secret Manager 전용. 로컬 개발은 모의투자 키로만. (Windows·macOS 2대를 오가는 환경 전제) | 원칙 등재 완료 — [security_spec §2 N-8](../candela/security_spec.md) |
-| 11-5 | 시크릿 패턴에 한투 실제 키 형식 추가 — 발급 후 실측 기준으로 `secretPatterns.mjs` 보강 | Candela P4 |
-| 11-6 | **`design-check` 확장 — 샘플 데이터 노출 차단(G-2)**: `CANDELA_DATA_SOURCE === 'fixture'`인데 퍼블릭 `/candela` 라우트가 등록돼 있으면 빌드 ERROR | Candela P3 |
-| 11-7 | `candela` 로케일 네임스페이스 신설 — ko·en·ja **3종 동시**(D-2 결정). Admin은 i18n 게이트 제외 구역이라 ko 단일 | Candela P3 |
-
----
+- 폐기 배경·전환 범위: [waymark/repositioning_proposal](../waymark/repositioning_proposal.md)
+- 트레이딩 계획 아카이브: [archive/candela_trading_archive](../archive/candela_trading_archive.md)
+- 레포 전체 보안 규범(§10 적용 완료분)은 [core/security_spec](security_spec.md)로 존치·이관
+- Waymark 정식 과제는 `docs/waymark/` 문서 세트(product_strategy·roadmap·ui_specification) 작성 후 재등재
 
 ## 12. 🧭 Planner's View 후속 (2026-08-31 신설)
 

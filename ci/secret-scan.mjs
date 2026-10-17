@@ -61,7 +61,7 @@ function fail(lines) {
   조치:
     1) 해당 값을 파일에서 제거하고 환경변수 / Secret Manager로 옮기십시오
     2) 오탐이라면 해당 줄 끝에 secret-scan:ignore 주석을 추가하십시오
-    3) 이미 유출된 값이라면 즉시 폐기·재발급 — docs/candela/incident_response.md §2
+    3) 이미 유출된 값이라면 즉시 폐기·재발급 — docs/core/security_spec.md §5
 `);
   process.exit(1);
 }

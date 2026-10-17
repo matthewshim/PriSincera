@@ -212,8 +212,6 @@ function Header() {
           <Link to="/relearn" className={`nav-link${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
             ReLearn
           </Link>
-          {/* Candela — ReLearn 다음 위상. 브랜드명 리터럴(전 언어 공통 영문 표기) */}
-          <Link to="/candela" className={`nav-link${location.pathname.startsWith('/candela') ? ' active' : ''}`} id="navCandela">Candela</Link>
           <Link to="/sylphio" className={`nav-link${location.pathname.startsWith('/sylphio') ? ' active' : ''}`} id="navSylphio">{t('header.sylphio')}</Link>
         </div>
         <div className="nav-right">
@@ -400,25 +398,6 @@ function Header() {
                 </div>
               </div>
               <div className="visual-blur-orb indigo"></div>
-            </div>
-          </Link>
-
-          {/* 5. Candela (Automated Trading Case Study) — ReLearn 다음 위상 */}
-          <Link
-            to="/candela"
-            className={`mobile-bento-nav-item candela-gold-theme${location.pathname.startsWith('/candela') ? ' active' : ''}`}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: '#E5B25D' }}>Automated Trading Case Study</div>
-              <h3 className="bento-card-title">Candela</h3>
-              <div className="bento-card-arrow">🕯️ See the System →</div>
-            </div>
-            <div className="bento-card-visual">
-              <div className="dynamic-mockup candela-mockup">
-                <div className="cdlm-candle"><span className="cdlm-flame"></span></div>
-              </div>
-              <div className="visual-blur-orb amber"></div>
             </div>
           </Link>
 

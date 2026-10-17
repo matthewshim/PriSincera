@@ -316,7 +316,7 @@ Pace Note 내 **'사색의 기록(Captain's Log, 주간 회고)'** 텍스트 박
 
 ## 11. 2026-08-19 추가 점검 — 공개 저장소 전제 재검토 (v1.1)
 
-Candela([candela/security_spec](../candela/security_spec.md)) 도입 검토 과정에서, **저장소가 public이라는 전제**로 기존 구조를 재점검했다. 콘텐츠 사이트로서는 감수 가능하던 항목들이 브로커 자격증명이 로컬에 놓이는 순간 위험 등급이 달라지므로, Candela 착수 **이전에** 4건을 선반영했다.
+Candela([security_spec](security_spec.md)) 도입 검토 과정에서, **저장소가 public이라는 전제**로 기존 구조를 재점검했다. 콘텐츠 사이트로서는 감수 가능하던 항목들이 브로커 자격증명이 로컬에 놓이는 순간 위험 등급이 달라지므로, Candela 착수 **이전에** 4건을 선반영했다.
 
 > `github.com/matthewshim/PriSincera` — 비인증 GitHub API 200 응답으로 public 확인. **public 저장소는 push된 순간 캐시·포크·아카이브에 남아 force push로도 회수되지 않는다. "커밋 전 차단"만이 유효한 방어다.**
 
@@ -332,7 +332,7 @@ Candela([candela/security_spec](../candela/security_spec.md)) 도입 검토 과�
 ### 11-2. 잔여 항목 (Candela M4 시점 재검토)
 
 *   `.claude/settings.json`의 `Bash(node -e ' *)`·`Bash(npm i *)` — 임의 코드 실행·패키지 설치 허용. git 경로는 닫혔으나 네트워크 경유 유출 경로는 열려 있다. 브로커 키가 로컬에 놓이는 시점에 판단한다.
-*   ~~`nginx.conf`~~ — ✅ **2026-08-19 삭제 완료.** Dockerfile이 COPY하지 않는 미사용 파일이었으나 CSP가 없고 `/api/subscribe`의 "인증 없는 프록시 + API 키 주입" 패턴을 담고 있었다. 코드·빌드 참조 0건 확인 후 제거(git 히스토리에 보존). 해당 **패턴 자체의 금지**는 [security_spec N-2](../candela/security_spec.md)로 존치한다.
+*   ~~`nginx.conf`~~ — ✅ **2026-08-19 삭제 완료.** Dockerfile이 COPY하지 않는 미사용 파일이었으나 CSP가 없고 `/api/subscribe`의 "인증 없는 프록시 + API 키 주입" 패턴을 담고 있었다. 코드·빌드 참조 0건 확인 후 제거(git 히스토리에 보존). 해당 **패턴 자체의 금지**는 [security_spec N-2](security_spec.md)로 존치한다.
 
 ### 11-3. 재확인된 양호 항목
 
