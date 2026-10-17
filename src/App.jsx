@@ -18,6 +18,9 @@ const SylphioLanding = lazy(() => import('./pages/SylphioLanding'));
 const SylphioApiKeyGuide = lazy(() => import('./pages/SylphioApiKeyGuide'));
 const SylphioPrivacy = lazy(() => import('./pages/SylphioPrivacy'));
 
+/* ── Waymark (의사결정 동반 서비스) ── */
+const WaymarkLanding = lazy(() => import('./pages/WaymarkLanding'));
+
 /** Minimal loading fallback — invisible, prevents layout shift */
 const PageFallback = (
   <div style={{ minHeight: '100vh', background: 'var(--bg-void, var(--bg-void))' }} />
@@ -63,6 +66,9 @@ function App() {
             <Route path="sylphio" element={<SylphioLanding />} />
             <Route path="sylphio/guide" element={<SylphioApiKeyGuide />} />
             <Route path="sylphio/privacy" element={<SylphioPrivacy />} />
+
+            {/* Waymark — 의사결정 동반 서비스 소개 랜딩 (Candela 슬롯 피벗) */}
+            <Route path="waymark" element={<WaymarkLanding />} />
             
             {/* Legacy Redirects */}
             <Route path="signal/*" element={<Navigate to="/relearn" replace />} />

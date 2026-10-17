@@ -105,8 +105,8 @@
       "desc": "Combining 20 years of experience with AI technology, now born as a practical web service that directly assists your daily life and growth."
     },
     "servicesTitle": "What that attitude built —",
-    "servicesTitleAccent": "four things I made myself.",
-    "servicesSubtitle": "Twenty years of planning met AI and became four things.\nFrom the making to solving real work — the results of an attitude.",
+    "servicesTitleAccent": "five things I made myself.",
+    "servicesSubtitle": "Twenty years of planning met AI and became five things.\nFrom the making to solving real work — the results of an attitude.",
     "serviceBaseCta": "⚡ Explore Open Source & System Architecture",
     "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
     "serviceBuildersCta": "🚀 Read the Builder's Log",
@@ -128,7 +128,10 @@
     "servicePlannerCta": "🧭 Read the Planner's View",
     "serviceReLearnCta": "🔄 Explore ReLearn",
     "latestNote": "Latest",
-    "latestPart": "Latest of {n}"
+    "latestPart": "Latest of {n}",
+    "serviceWaymarkTag": "Companion for decisions",
+    "serviceWaymarkDesc": "The bigger the decision, the more you need someone beside you.\nWaymark remembers your decisions and reaches out first when you waver — an AI companion.",
+    "serviceWaymarkCta": "Meet Waymark"
   },
   "relearn": {
     "status": {
@@ -336,5 +339,77 @@
     "chunkDesc": "A new patch may be rolling out, or a brief network drop kept resources from loading. Click the restore button below to refresh.",
     "genericDesc": "A runtime error in one component was contained before it could shut down the app. Press the restore button below to continue using the service.",
     "restore": "Restore service"
+  },
+  "waymark": {
+    "seo": {
+      "title": "Waymark — An AI companion that stays beside you at every decision",
+      "description": "The bigger the decision, the more you need someone beside you — not someone to decide for you. Waymark remembers your decisions, reaches out when you waver, and brings stories from people who walked the same path. Coming soon."
+    },
+    "hero": {
+      "sub": "So that you, standing before decisions big and small, are never alone in the moment.\nAt every fork, beside you.",
+      "chip": "Soon, beside your decisions — arriving before long",
+      "ctaPrimary": "Read the pivot story",
+      "ctaGhost": "How it stays beside you"
+    },
+    "empathy": {
+      "title": "The bigger the decision, the rarer it is to have someone beside you — not someone with the answer.",
+      "p1": "We all make countless decisions every day — from today's small choices to the forks that change our direction. Yet in the heaviest moments, advice is everywhere while someone to carry the weight with you is rare.",
+      "p2": "Waymark isn't a tool that decides for you. It's a companion that remembers the decisions you've made, reaches out first when you waver, and offers the story of someone who walked the same road."
+    },
+    "loop": {
+      "title": "Four beats that never leave you alone",
+      "desc": "A decision doesn't end in a single moment. From capture to reflection, Waymark walks the whole arc of a decision with you.",
+      "steps": [
+        {
+          "t": "Capture",
+          "d": "Record the moment you decided — and how you felt."
+        },
+        {
+          "t": "Reach out",
+          "d": "When you waver, Waymark speaks to you first."
+        },
+        {
+          "t": "Stories",
+          "d": "A story arrives from someone who faced the same fork."
+        },
+        {
+          "t": "Revisit",
+          "d": "In time, you meet that decision again."
+        }
+      ]
+    },
+    "modes": {
+      "title": "Four tones, one posture",
+      "desc": "It comes to you in the tone the moment calls for — comfort when you need comfort, clarity when you need clarity.",
+      "items": [
+        {
+          "t": "Comfort",
+          "d": "On days a decision feels heavy, it steadies your heart first."
+        },
+        {
+          "t": "Counsel",
+          "d": "It doesn't hand you an answer; it traces the branches of your thinking with you."
+        },
+        {
+          "t": "Cheer",
+          "d": "It adds the strength to carry the decision you've made forward."
+        },
+        {
+          "t": "Clarify",
+          "d": "It distills tangled thoughts into a shape you can decide on."
+        }
+      ],
+      "reassure": "The decision is always yours. Waymark never decides for you — it only lights the fork and keeps you company."
+    },
+    "teaser": {
+      "title": "Soon, more company",
+      "desc": "Stories from people who passed the same fork will gather here before long. The day we're ready, you'll be the first we reach."
+    },
+    "cta": {
+      "title": "The service isn't here yet.\nThe thinking already began.",
+      "desc": "Why we turned from automated stock trading to 'a companion that guards your decisions' — we're recording that pivot in the Builder's Log.",
+      "btn": "Read the pivot story on Builder's Log",
+      "soon": "The day we're ready, you'll be the first we reach."
+    }
   }
 }

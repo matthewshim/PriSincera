@@ -212,6 +212,8 @@ function Header() {
           <Link to="/relearn" className={`nav-link${location.pathname.startsWith('/relearn') ? ' active' : ''}`} id="navReLearn">
             ReLearn
           </Link>
+          {/* Waymark — ReLearn 다음 위상(의사결정 동반). 브랜드 리터럴(전 언어 공통) */}
+          <Link to="/waymark" className={`nav-link${location.pathname.startsWith('/waymark') ? ' active' : ''}`} id="navWaymark">Waymark</Link>
           <Link to="/sylphio" className={`nav-link${location.pathname.startsWith('/sylphio') ? ' active' : ''}`} id="navSylphio">{t('header.sylphio')}</Link>
         </div>
         <div className="nav-right">
@@ -396,6 +398,25 @@ function Header() {
                   <span className="relearn-loop-dot d2"></span>
                   <span className="relearn-loop-dot d3"></span>
                 </div>
+              </div>
+              <div className="visual-blur-orb indigo"></div>
+            </div>
+          </Link>
+
+          {/* 5. Waymark (Decision Companion) — ReLearn 다음 위상 (Candela 슬롯 피벗) */}
+          <Link
+            to="/waymark"
+            className={`mobile-bento-nav-item waymark-indigo-theme${location.pathname.startsWith('/waymark') ? ' active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="bento-card-content">
+              <div className="bento-card-label" style={{ color: '#A5B4FC' }}>Decision Companion</div>
+              <h3 className="bento-card-title">Waymark</h3>
+              <div className="bento-card-arrow">✦ Coming soon →</div>
+            </div>
+            <div className="bento-card-visual">
+              <div className="dynamic-mockup waymark-mockup-m">
+                <span className="wkmm-star">✦</span>
               </div>
               <div className="visual-blur-orb indigo"></div>
             </div>

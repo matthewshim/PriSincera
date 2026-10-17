@@ -76,6 +76,7 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 ## 📁 waymark/ (Waymark — 의사결정 동반 서비스)
 Candela(자동매매) 슬롯을 **의사결정 동반 서비스 Waymark**로 전환한 신규 도메인입니다. 결정을 많이 내리는 사람(기획·PO·PM·리더)을 위한 **결정 저널 + 먼저 찾아오는 AI 동반자 + 경험담**. 기존 자동매매 계획은 폐기되어 [아카이브](archive/candela_trading_archive.md)로 통합, 레포 전체 보안 규범은 [core/security_spec](core/security_spec.md)로 이관되었습니다.
 *   **🆕 [Waymark 재포지셔닝 제안서 (Repositioning Proposal)](waymark/repositioning_proposal.md)** (`repositioning_proposal.md`): Candela(자동매매) → Waymark(의사결정 동반) 전환의 근거·서비스 개요·**ReLearn 차별화(경계: 성장을 돕는다/결정을 지킨다)**·명칭 확정(Waymark)·전환 범위·진행 현황. **active(차별화 경계 승인·정식 문서 세트 대기).**
+*   **🆕 [Waymark 소개 페이지 UI 명세 (UI Specification)](waymark/ui_specification.md)** (`ui_specification.md`): `/waymark` 선공개 소개 페이지 구현 명세 — 형제 랜딩 전개 공식(단일 컨테이너+섹션 리듬·eyebrow→타이틀→리드·좌측 리딩·CTA 닫는 카드), 섹션 6종(히어로·문제공감·핵심 루프·AI 4모드·경험담 티저·CTA), 브랜드(indigo·lavender/✦ 웨이포인트), 라우트·GNB·모바일·메인 카드·3개국어·SEO 통합. **active(구현 완료).**
 
 ---
 

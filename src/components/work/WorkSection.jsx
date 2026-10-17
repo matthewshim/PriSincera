@@ -292,10 +292,54 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* 4. Sylphio — 실무 니즈의 해결 */}
+        {/* 4. Waymark — 의사결정 동반 서비스 (ReLearn 다음·Sylphio 앞, Candela 슬롯 피벗) */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
+          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(165, 180, 252, 0.4)' }}
+          data-accent-color="165,180,252"
+        >
+          <div className="flagship-content">
+            <div className="flagship-narrative">{t('home.serviceWaymarkTag')}</div>
+            <div className="flagship-label" style={{ color: 'var(--color-indigo)' }}>Decision Companion · Coming Soon</div>
+            <h3 className="flagship-title">Waymark</h3>
+            <p className="flagship-desc">
+              {t('home.serviceWaymarkDesc').split('\n').map((line, idx) => (
+                <React.Fragment key={idx}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
+            </p>
+            <div className="work-card-tags">
+              <span className="work-tag">Decision Journal</span>
+              <span className="work-tag">Proactive AI</span>
+              <span className="work-tag">Peer Stories</span>
+            </div>
+            <div className="flagship-cta-wrap">
+              <Link to="/waymark" className="btn-primary flagship-cta-btn indigo">
+                {t('home.serviceWaymarkCta')}
+              </Link>
+            </div>
+          </div>
+          <div className="flagship-visual">
+            <div className="dynamic-mockup waymark-mockup">
+              <div className="wkm-orbit"><span className="wkm-ring r1"></span><span className="wkm-ring r2"></span></div>
+              <svg className="wkm-star" viewBox="0 0 120 120" aria-hidden="true">
+                <defs>
+                  <linearGradient id="wkmG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#A5B4FC" /><stop offset="1" stopColor="#C7D2FE" /></linearGradient>
+                </defs>
+                <path d="M60 14 L68 52 L106 60 L68 68 L60 106 L52 68 L14 60 L52 52 Z" fill="url(#wkmG)" />
+                <circle cx="60" cy="60" r="5" fill="#020205" />
+              </svg>
+            </div>
+            <div className="visual-blur-orb indigo"></div>
+          </div>
+        </div>
+
+        {/* 5. Sylphio — 실무 니즈의 해결 */}
+        <div
+          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 4 ? ' active-focus' : ''}`}
+          style={{ '--reveal-delay': '0.6s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
           data-accent-color="0,242,254"
         >
           <div className="flagship-content">

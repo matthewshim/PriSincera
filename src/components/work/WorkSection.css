@@ -1351,3 +1351,31 @@
 @media (max-width: 768px) {
     .flagship-visual .plannersview-mockup { width: 100%; height: auto; }
 }
+
+
+/* ── Waymark flagship 비주얼 (웨이포인트 별) — 2026-10-17 ── */
+.flagship-cta-btn.indigo {
+    background: linear-gradient(135deg, rgba(165, 180, 252, 0.15), rgba(199, 210, 254, 0.1));
+    border-color: rgba(165, 180, 252, 0.4);
+}
+.flagship-cta-btn.indigo:hover {
+    background: linear-gradient(135deg, rgba(165, 180, 252, 0.25), rgba(199, 210, 254, 0.2));
+    border-color: rgba(165, 180, 252, 0.6);
+    box-shadow: 0 8px 30px rgba(165, 180, 252, 0.3);
+}
+.visual-blur-orb.indigo { background: #A5B4FC; top: 16%; right: 14%; }
+.flagship-visual .waymark-mockup {
+    width: 280px; height: 300px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+}
+.flagship-visual .wkm-star {
+    width: 128px; height: 128px; position: relative; z-index: 2;
+    filter: drop-shadow(0 0 24px rgba(165, 180, 252, 0.45));
+    animation: wkmFloat 6s ease-in-out infinite;
+}
+.flagship-visual .wkm-orbit { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; }
+.flagship-visual .wkm-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(165, 180, 252, 0.22); }
+.flagship-visual .wkm-ring.r1 { width: 180px; height: 180px; }
+.flagship-visual .wkm-ring.r2 { width: 250px; height: 250px; border-color: rgba(165, 180, 252, 0.12); }
+@keyframes wkmFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .flagship-visual .wkm-star { animation: none; } }

@@ -56,6 +56,11 @@ export const PAGE_META = {
     description: '로컬 녹음 저장·BYOK 오디오 전송·화면 녹화 권한·하이브리드 STT를 투명하게 고지하는 Sylphio 개인정보 처리방침(데이터 무수집 원칙).',
     keywords: 'Sylphio 개인정보, 데이터 무수집, 프라이버시, BYOK, 온디바이스',
   },
+  '/waymark': {
+    pageTitle: 'Waymark — 결정의 갈림길에서 곁을 지키는 AI 동반자',
+    description: '큰 결정일수록 답을 말해줄 사람보다 곁에 있어 줄 사람이 필요합니다. Waymark은 당신의 결정을 기억하고, 흔들리는 순간 먼저 찾아오는 AI 동반자입니다. 곧 찾아갑니다.',
+    keywords: 'Waymark, 웨이마크, 의사결정, 결정 저널, AI 동반자, 리더, 기획자, PriSincera',
+  },
 };
 
 /** 브랜드 접미어 적용: 홈(null)은 루트 타이틀, 그 외 `{pageTitle} | PriSincera` */

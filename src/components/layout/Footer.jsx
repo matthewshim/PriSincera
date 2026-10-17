@@ -56,6 +56,7 @@ function Footer() {
               <Link to="/planners-view" className="footer-link">{t('header.plannersView')}</Link>
               <Link to="/builders-log" className="footer-link">{t('header.buildersLog')}</Link>
               <Link to="/relearn" className="footer-link">ReLearn</Link>
+              <Link to="/waymark" className="footer-link">Waymark</Link>
               <Link to="/sylphio" className="footer-link">{t('header.sylphio')}</Link>
             </div>
             <div className="footer-col">
