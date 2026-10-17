@@ -29,8 +29,8 @@ export const PAGE_META = {
   '/planners-view': {
     ogImage: `${BASE_URL}/og-plannersview.png`,
     pageTitle: "Planner's View — 기획자의 시선",
-    description: '기술과 기획, 그 사이에서 배운 것들. 무엇을·누구를 위해·왜 지금 만들 것인가에 대한 기획자의 관점을 기록합니다.',
-    keywords: '기획자, 프로덕트 기획, 기술 리더십, CPO, 조직문화, 게임 산업, PriSincera',
+    description: 'AI가 실행의 비용을 무너뜨려 만드는 일이 쉬워진 시대에, 무엇이 어려워졌는가. 무엇을·누구를 위해·왜 지금 만들 것인가, 그리고 출시 이후 무엇을 볼 것인가. 서비스를 만들고 운영하며 얻은 판단의 기준을 기획자의 시선으로 기록합니다.',
+    keywords: '기획자, 프로덕트 기획, 기술 리더십, CPO, 라이브 서비스, 프로덕트 운영, 조직문화, PriSincera',
   },
   '/builders-log': {
     ogImage: `${BASE_URL}/og-builderslog.png`,
