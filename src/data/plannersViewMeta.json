@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv5",
+    "slug": "launch-is-the-start",
+    "title": {
+      "ko": "출시는 끝이 아니라 가설의 시작입니다",
+      "en": "Shipping Is Not the End but the Start of a Hypothesis",
+      "ja": "リリースは終わりではなく仮説の始まりです"
+    },
+    "subtitle": {
+      "ko": "만드는 비용이 무너질수록 제품의 무게중심은 출시 이후로 옮겨간다",
+      "en": "The cheaper building gets, the further a product's center of gravity moves past launch",
+      "ja": "作るコストが崩れるほど、プロダクトの重心はリリース以降へ移る"
+    },
+    "description": {
+      "ko": "대부분의 로드맵은 출시일에서 끝납니다. 만드는 일이 비쌌던 시절에는 맞는 설계였지만, 반년이 몇 주가 되고 몇 주가 며칠이 되면 제품의 시간은 전부 출시 이후로 넘어갑니다. 출시는 정답의 제출이 아니라 가설의 제출이 되고, 추측이 신호로 바뀌는 바로 그 순간에 조직의 주의력은 가장 빠르게 빠져나갑니다.",
+      "en": "Most roadmaps end on launch day. That was the right design when building was expensive, but once half a year becomes a few weeks and a few weeks become days, almost all of a product's time sits after launch. Shipping stops being the submission of an answer and becomes the submission of a hypothesis — and at the very moment guesswork turns into signal, an organization's attention drains away fastest.",
+      "ja": "ほとんどのロードマップはリリース日で終わります。作ることが高価だった時代には正しい設計でしたが、半年が数週間になり数週間が数日になれば、プロダクトの時間はほぼすべてリリース以降へ移ります。リリースは答えの提出ではなく仮説の提出になり、推測が信号に変わるまさにその瞬間に、組織の注意力は最も速く抜けていきます。"
+    },
+    "pullQuote": {
+      "ko": "출시는 정답의 제출이 아니라 가설의 제출이 됩니다.",
+      "en": "Shipping stops being the submission of an answer and becomes the submission of a hypothesis.",
+      "ja": "リリースは答えの提出ではなく、仮説の提出になります。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "endless-launch",
+      "order": 1
+    },
+    "tags": [
+      "Live Service",
+      "Product Operations",
+      "Hypothesis",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-10-17",
+    "readMinutes": 5
+  },
+  {
     "id": "pv4",
     "slug": "skill-common-attitude-rare",
     "title": {

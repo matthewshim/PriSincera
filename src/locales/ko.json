@@ -214,7 +214,9 @@
     "seriesEnd": "가장 최근 편입니다",
     "backToList": "전체 글 살펴보기",
     "seriesNavAria": "연재 이동",
-    "seriesTocAria": "이 시리즈의 글"
+    "seriesTocAria": "이 시리즈의 글",
+    "seriesLabel": "연재",
+    "seriesTotal": "{n}편"
   },
   "home": {
     "heroLabel": "✦ Matthew Shim · PriSincera",

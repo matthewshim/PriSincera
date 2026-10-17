@@ -81,22 +81,54 @@
 
 /* --- 시리즈 묶음 --- */
 .pvl-series {
-  margin-bottom: var(--space-2xl);
+  margin-bottom: var(--space-3xl); /* 묶음 사이 큰 여백 = 박스 없는 구분 */
 }
 
+/* --- 시리즈 헤더 ---
+   카드와 확실히 갈라야 하지만 **박스를 더 얹지 않는다**. 카드가 이미 면을 갖고 있어
+   그 위에 패널을 두면 박스 안의 박스가 되고, 다크 테마에서 그 중첩은 바로 답답해진다.
+   §9-11 의 원칙 그대로 — 구조는 타이포·여백·구분선으로 만든다.
+
+   ① 라벨에서 오른쪽으로 흘러나가며 사라지는 선 — 묶음의 시작을 긋는다.
+      히어로의 스크롤 라인이 쓰는 '페이드 그라디언트 선'과 같은 어휘다.
+   ② 모노 라벨 — 카드가 쓰지 않는 유일한 서체(한국어에서는 display·body 가 같은
+      Pretendard 로 해석되므로, 실질적인 서체 대비는 모노에서만 나온다).
+   ③ 제목은 섹션 컬러(lavender) — 카드 제목(흰색)과 색으로 갈린다.
+   ④ 묶음 사이에 큰 여백 — 가장 조용하고 확실한 구분선. */
 .pvl-series-head {
-  margin-bottom: var(--space-lg);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--space-xl);
 }
 
-.pvl-series-title { /* §9-2 섹션 타이틀 규격 */
+.pvl-series-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-070);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.pvl-series-dot { opacity: 0.45; }
+
+.pvl-series-rule {
+  flex: 1;
+  height: 1px;
+  margin-left: var(--space-sm);
+  background: linear-gradient(90deg, rgba(199, 210, 254, 0.38), transparent 78%);
+}
+
+.pvl-series-title { /* §9-2 섹션 타이틀 규격 — 색만 섹션 컬러로 */
   font-family: var(--font-display);
   font-size: var(--fs-140);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--prism-lavender);
   margin: 0 0 var(--space-sm);
   letter-spacing: -0.01em;
+  word-break: keep-all;
+  text-wrap: balance;
 }
 
 .pvl-series-desc {
@@ -107,6 +139,8 @@
   max-width: var(--measure);
   word-break: keep-all;
   overflow-wrap: break-word;
+  /* 마지막 줄에 한 단어만 남는 것(고아)을 막는다 */
+  text-wrap: pretty;
 }
 
 /* --- 카드 그리드 (§9-3 리스트형) --- */
@@ -184,7 +218,7 @@
 }
 
 .pvl-card-title {
-  font-size: var(--fs-125);
+  font-size: var(--fs-115);
   font-weight: 700;
   line-height: 1.4;
   letter-spacing: -0.02em;
@@ -192,6 +226,7 @@
   margin: 0;
   word-break: keep-all;
   overflow-wrap: break-word;
+  text-wrap: pretty;
 }
 
 .pvl-card-sub {
@@ -201,6 +236,7 @@
   margin: 0;
   word-break: keep-all;
   overflow-wrap: break-word;
+  text-wrap: pretty;
 }
 
 /* --- 빈 상태 (글이 0건일 때의 탈출 경로) --- */

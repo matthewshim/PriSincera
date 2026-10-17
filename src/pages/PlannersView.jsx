@@ -36,8 +36,13 @@ export default function PlannersView() {
   // 배열 맨 앞이 최신 — NEW 배지 기준
   const latestSlug = notesMeta.length > 0 ? notesMeta[0].slug : '';
 
-  // 시리즈 정본 순서대로 묶고, 시리즈에 속하지 않는 글은 마지막 '단독 글' 묶음으로
+  // 시리즈별로 묶는다. **묶음 순서는 등록순이 아니라 '최신 글' 기준 내림차순** —
+  // 지금 연재 중인 시리즈가 항상 최상단에 오도록 한다(새 시리즈를 수동으로 올릴 필요가 없다).
+  // 묶음 '안'은 연재 정순 — 시리즈는 1편부터 읽어야 하므로 역순을 쓰지 않는다.
+  // 시리즈에 속하지 않는 단독 글은 성격이 달라 항상 마지막에 둔다.
   const groups = useMemo(() => {
+    const newest = (items) => items.reduce((max, n) => (n.date > max ? n.date : max), '');
+
     const out = seriesMeta
       .map((def) => ({
         key: def.id,
@@ -46,7 +51,8 @@ export default function PlannersView() {
           .filter((n) => n.series && n.series.id === def.id)
           .sort((a, b) => a.series.order - b.series.order),
       }))
-      .filter((g) => g.items.length > 0);
+      .filter((g) => g.items.length > 0)
+      .sort((a, b) => newest(b.items).localeCompare(newest(a.items)));
 
     const standalone = notesMeta.filter((n) => !n.series);
     if (standalone.length > 0) {
@@ -73,9 +79,22 @@ export default function PlannersView() {
           groups.map((g) => (
             <section key={g.key} className="pvl-series">
               <div className="pvl-series-head">
+                {/* 묶음 라벨 — 아래 카드와 '같은 종류'로 보이지 않게 하는 장치.
+                    모노·넓은 자간은 이 사이트에서 '구역 라벨'의 문법이다. */}
+                {g.def && (
+                  <div className="pvl-series-eyebrow">
+                    {t('plannersView.seriesLabel')}
+                    <span className="pvl-series-dot" aria-hidden="true">·</span>
+                    {t('plannersView.seriesTotal', { n: g.items.length })}
+                    {/* 라벨에서 오른쪽으로 흘러나가며 사라지는 선 — 묶음의 시작을 긋는다 */}
+                    <span className="pvl-series-rule" aria-hidden="true"></span>
+                  </div>
+                )}
+
                 <h2 className="pvl-series-title">
                   {g.def ? localize(g.def.title) : t('plannersView.standalone')}
                 </h2>
+
                 {g.def && <p className="pvl-series-desc">{localize(g.def.description)}</p>}
               </div>
 

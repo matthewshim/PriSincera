@@ -11,5 +11,18 @@
       "en": "After AI collapsed the cost of building, what becomes scarce? Planning as direction, the ability to handle failure, an eye for the essence, and attitude — a series that starts from one premise and branches in four directions.",
       "ja": "AI が作るコストを崩したあと、何が貴くなるのか。企画（方向）・失敗を扱う能力・本質を見る目、そして態度 — 同じ前提から出発し、四つの方向へ伸びた連作です。"
     }
+  },
+  {
+    "id": "endless-launch",
+    "title": {
+      "ko": "끝나지 않는 출시",
+      "en": "The Launch That Never Ends",
+      "ja": "終わらないリリース"
+    },
+    "description": {
+      "ko": "AI가 만드는 비용을 무너뜨린 뒤, 진짜 일은 출시 이후에 시작됩니다. 무엇을 읽고, 무엇을 되돌리고, 무엇을 말할 것인가에 대한 연작입니다.",
+      "en": "After AI collapsed the cost of building, the real work begins once you ship. A series on what to read, what to roll back, and what to say.",
+      "ja": "AI が作るコストを崩したあと、本当の仕事はリリース後に始まります。何を読み、何を戻し、何を語るのかについての連作です。"
+    }
   }
 ]
