@@ -11,7 +11,7 @@ import './WaymarkLanding.css';
  * Candela(자동매매) 슬롯에서 피벗 — 배경: docs/waymark/repositioning_proposal.md
  * 전개 규범: 형제 랜딩(구 CandelaLanding) 정합 — 단일 컨테이너 + margin-top 섹션 리듬,
  *   섹션 공식(eyebrow → 타이틀 → 리드 → 콘텐츠), 좌측 리딩(히어로만 중앙), CTA 닫는 카드.
- * 브랜드 액센트 = indigo→lavender · 모티브 = ✦ 웨이포인트(길잡이 별). design_system §9-1 준수.
+ * 브랜드 액센트 = indigo→lavender · 모티브 = 🧭 나침반(길잡이). design_system §9-1 준수.
  * 원칙 안전성: "AI가 대신 결정하지 않는다 — 갈림길을 비추고 곁에 있을 뿐".
  */
 
@@ -42,19 +42,7 @@ export default function WaymarkLanding() {
 
       {/* HERO — 중앙(§9-1): 아이콘 → 타이틀(그라디언트 클립) → 서브카피(1행 로케일 + 2행 고정 EN) → CTA → 기대 칩 */}
       <header className="wm-hero">
-        <svg className="wm-hero-mark" viewBox="0 0 76 76" aria-hidden="true">
-          <defs>
-            <linearGradient id="wmMark" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#A5B4FC" /><stop offset="1" stopColor="#C7D2FE" />
-            </linearGradient>
-            <radialGradient id="wmGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="#A5B4FC" stopOpacity="0.45" /><stop offset="1" stopColor="#A5B4FC" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-          <circle cx="38" cy="38" r="34" fill="url(#wmGlow)" />
-          <path d="M38 10 L43 33 L66 38 L43 43 L38 66 L33 43 L10 38 L33 33 Z" fill="url(#wmMark)" />
-          <circle cx="38" cy="38" r="3.4" fill="#020205" />
-        </svg>
+        <div className="wm-hero-icon" aria-hidden="true">🧭</div>
         <h1 className="wm-hero-title">Waymark</h1>
         <p className="wm-hero-sub">
           {heroSub[0]}

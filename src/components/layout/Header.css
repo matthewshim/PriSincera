@@ -1003,7 +1003,7 @@
 
 
 
-/* ── Planner's View 테마 & 모바일 벤토 (나침반 미니) — 2026-08-31 ── */
+/* ── Planner's View 테마 & 모바일 벤토 (연재 미니) — 2026-08-31·2026-10-17 개정 ── */
 .nav.planners-theme .gnb-bgm-btn.active .waveform-bar {
     background: var(--prism-lavender); /* Planner's View Lavender */
 }
@@ -1019,44 +1019,27 @@
         width: 240px !important; height: 240px !important;
         display: flex; align-items: center; justify-content: center;
     }
-    .mobile-bento-nav-item .plnm-dial {
-        position: relative;
-        width: 96px; height: 96px;
-        border: 1px solid rgba(199, 210, 254, 0.35);
-        border-radius: var(--radius-pill);
+    .mobile-bento-nav-item .plnm-stack { position: relative; width: 110px; height: 128px; }
+    .mobile-bento-nav-item .plnm-sheet {
+        position: absolute; left: 50%; top: 50%; width: 88px; height: 112px;
+        border-radius: var(--radius-sm); border: 1px solid rgba(199, 210, 254, 0.3);
+        background: linear-gradient(160deg, rgba(199, 210, 254, 0.12), rgba(255, 255, 255, 0.03));
+    }
+    .mobile-bento-nav-item .plnm-sheet.s3 { transform: translate(-60%, -46%) rotate(-9deg); opacity: 0.45; }
+    .mobile-bento-nav-item .plnm-sheet.s2 { transform: translate(-42%, -50%) rotate(6deg); opacity: 0.7; }
+    .mobile-bento-nav-item .plnm-sheet.s1 {
+        transform: translate(-50%, -52%) rotate(-2deg);
+        display: flex; flex-direction: column; justify-content: center; gap: 9px; padding: 0 14px;
         box-shadow: 0 0 36px 6px rgba(199, 210, 254, 0.18);
     }
-    .mobile-bento-nav-item .plnm-tick {
-        position: absolute;
-        width: 2px; height: 8px;
-        background: rgba(199, 210, 254, 0.55);
-        border-radius: var(--radius-pill);
-    }
-    .mobile-bento-nav-item .plnm-tick-n { top: 6px; left: 50%; transform: translateX(-50%); }
-    .mobile-bento-nav-item .plnm-tick-s { bottom: 6px; left: 50%; transform: translateX(-50%); }
-    .mobile-bento-nav-item .plnm-tick-e { right: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
-    .mobile-bento-nav-item .plnm-tick-w { left: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
-    .mobile-bento-nav-item .plnm-needle {
-        position: absolute;
-        top: 50%; left: 50%;
-        width: 3px; height: 38px;
-        margin: -34px 0 0 -1.5px;
-        transform-origin: 50% 89%;
-        background: linear-gradient(180deg, var(--color-gold) 0%, var(--prism-lavender) 100%);
-        border-radius: var(--radius-pill);
-        animation: plnmSweep 6s ease-in-out infinite;
-    }
-    @keyframes plnmSweep {
-        0%, 100% { transform: rotate(-24deg); }
-        50% { transform: rotate(28deg); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-        .mobile-bento-nav-item .plnm-needle { animation: none; }
-    }
+    .mobile-bento-nav-item .plnm-line { display: block; height: 4px; border-radius: 2px; background: rgba(199, 210, 254, 0.55); }
+    .mobile-bento-nav-item .plnm-line.l1 { width: 78%; }
+    .mobile-bento-nav-item .plnm-line.l2 { width: 96%; }
+    .mobile-bento-nav-item .plnm-line.l3 { width: 58%; }
 }
 
 
-/* ── Waymark 테마 & 모바일 벤토 (웨이포인트 별) — 2026-10-17 ── */
+/* ── Waymark 테마 & 모바일 벤토 (나침반 — 길잡이) — 2026-10-17 ── */
 @media (max-width: 768px) {
     .mobile-bento-nav-item.waymark-indigo-theme {
         --point-color: var(--color-indigo);
@@ -1068,13 +1051,23 @@
         width: 240px !important; height: 240px !important;
         display: flex; align-items: center; justify-content: center;
     }
-    .mobile-bento-nav-item .wkmm-star {
-        font-size: var(--fs-450); line-height: 1;
-        background: linear-gradient(135deg, #A5B4FC, #C7D2FE);
-        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 22px rgba(165, 180, 252, 0.5));
-        animation: wkmmPulse 3s ease-in-out infinite;
+    .mobile-bento-nav-item .wkmm-dial {
+        position: relative; width: 96px; height: 96px;
+        border: 1px solid rgba(165, 180, 252, 0.35); border-radius: var(--radius-pill);
+        box-shadow: 0 0 36px 6px rgba(165, 180, 252, 0.18);
     }
-    @keyframes wkmmPulse { 0%, 100% { transform: scale(1); opacity: 0.92; } 50% { transform: scale(1.06); opacity: 1; } }
+    .mobile-bento-nav-item .wkmm-tick { position: absolute; width: 2px; height: 8px; background: rgba(165, 180, 252, 0.55); border-radius: var(--radius-pill); }
+    .mobile-bento-nav-item .wkmm-tick-n { top: 6px; left: 50%; transform: translateX(-50%); }
+    .mobile-bento-nav-item .wkmm-tick-s { bottom: 6px; left: 50%; transform: translateX(-50%); }
+    .mobile-bento-nav-item .wkmm-tick-e { right: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .mobile-bento-nav-item .wkmm-tick-w { left: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .mobile-bento-nav-item .wkmm-needle {
+        position: absolute; top: 50%; left: 50%; width: 3px; height: 38px; margin: -34px 0 0 -1.5px;
+        transform-origin: 50% 89%;
+        background: linear-gradient(180deg, var(--color-indigo) 0%, var(--prism-lavender) 100%);
+        border-radius: var(--radius-pill); animation: wkmmSweep 6s ease-in-out infinite;
+    }
+    @keyframes wkmmSweep { 0%, 100% { transform: rotate(-24deg); } 50% { transform: rotate(28deg); } }
+    @media (prefers-reduced-motion: reduce) { .mobile-bento-nav-item .wkmm-needle { animation: none; } }
     .mobile-bento-nav-item.waymark-indigo-theme .visual-blur-orb { background: #A5B4FC; }
 }

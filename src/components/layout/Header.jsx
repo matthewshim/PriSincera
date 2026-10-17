@@ -329,16 +329,16 @@ function Header() {
             <div className="bento-card-content">
               <div className="bento-card-label" style={{ color: 'var(--prism-lavender)' }}>Product Planning</div>
               <h3 className="bento-card-title">Planner&apos;s View</h3>
-              <div className="bento-card-arrow">🧭 Read the View →</div>
+              <div className="bento-card-arrow">📖 Read the View →</div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup planner-mockup">
-                <div className="plnm-dial">
-                  <span className="plnm-tick plnm-tick-n"></span>
-                  <span className="plnm-tick plnm-tick-e"></span>
-                  <span className="plnm-tick plnm-tick-s"></span>
-                  <span className="plnm-tick plnm-tick-w"></span>
-                  <span className="plnm-needle"></span>
+                <div className="plnm-stack">
+                  <span className="plnm-sheet s3"></span>
+                  <span className="plnm-sheet s2"></span>
+                  <span className="plnm-sheet s1">
+                    <i className="plnm-line l1"></i><i className="plnm-line l2"></i><i className="plnm-line l3"></i>
+                  </span>
                 </div>
               </div>
               <div className="visual-blur-orb indigo"></div>
@@ -412,11 +412,17 @@ function Header() {
             <div className="bento-card-content">
               <div className="bento-card-label" style={{ color: '#A5B4FC' }}>Decision Companion</div>
               <h3 className="bento-card-title">Waymark</h3>
-              <div className="bento-card-arrow">✦ Coming soon →</div>
+              <div className="bento-card-arrow">🧭 Coming soon →</div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup waymark-mockup-m">
-                <span className="wkmm-star">✦</span>
+                <div className="wkmm-dial">
+                  <span className="wkmm-tick wkmm-tick-n"></span>
+                  <span className="wkmm-tick wkmm-tick-e"></span>
+                  <span className="wkmm-tick wkmm-tick-s"></span>
+                  <span className="wkmm-tick wkmm-tick-w"></span>
+                  <span className="wkmm-needle"></span>
+                </div>
               </div>
               <div className="visual-blur-orb indigo"></div>
             </div>

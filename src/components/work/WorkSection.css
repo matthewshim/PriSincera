@@ -1281,79 +1281,43 @@
 
 
 
-/* ── Planner's View flagship 비주얼 (나침반) — 2026-08-31 ── */
+/* ── Planner's View flagship 비주얼 (연재 — 쌓이는 글) — 2026-10-17 개정 */
 .visual-blur-orb.lavender { background: var(--prism-lavender); top: 18%; right: 12%; }
 
 .flagship-visual .plannersview-mockup {
     width: 280px; height: 300px;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
 }
-
-.flagship-visual .pvm-compass {
-    position: relative;
-    width: 150px; height: 150px;
-    border: 1px solid rgba(199, 210, 254, 0.3);
-    border-radius: var(--radius-pill);
-    background: radial-gradient(circle at 50% 45%, rgba(199, 210, 254, 0.10) 0%, transparent 65%);
-    box-shadow: inset 0 0 30px rgba(199, 210, 254, 0.08);
+.flagship-visual .pvm-stack { position: relative; width: 150px; height: 160px; }
+.flagship-visual .pvm-sheet {
+    position: absolute; left: 50%; top: 50%; width: 120px; height: 150px;
+    border-radius: var(--radius-md); border: 1px solid rgba(199, 210, 254, 0.28);
+    background: linear-gradient(160deg, rgba(199, 210, 254, 0.10), rgba(255, 255, 255, 0.02));
 }
-
-.flagship-visual .pvm-tick {
-    position: absolute;
-    width: 2px; height: 10px;
-    background: rgba(199, 210, 254, 0.5);
-    border-radius: var(--radius-pill);
+.flagship-visual .pvm-sheet.s3 { transform: translate(-58%, -46%) rotate(-9deg); opacity: 0.45; z-index: 1; }
+.flagship-visual .pvm-sheet.s2 { transform: translate(-44%, -50%) rotate(5deg); opacity: 0.7; z-index: 2; }
+.flagship-visual .pvm-sheet.s1 {
+    transform: translate(-50%, -52%) rotate(-2deg); z-index: 3;
+    display: flex; flex-direction: column; justify-content: center; gap: 11px; padding: 0 18px;
+    animation: pvmDrift 7s ease-in-out infinite;
 }
-.flagship-visual .pvm-tick-n { top: 8px; left: 50%; transform: translateX(-50%); }
-.flagship-visual .pvm-tick-s { bottom: 8px; left: 50%; transform: translateX(-50%); }
-.flagship-visual .pvm-tick-e { right: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); }
-.flagship-visual .pvm-tick-w { left: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); }
-
-.flagship-visual .pvm-needle {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 3px; height: 58px;
-    margin: -52px 0 0 -1.5px;
-    transform-origin: 50% 89%;
-    background: linear-gradient(180deg, var(--color-gold) 0%, var(--prism-lavender) 100%);
-    border-radius: var(--radius-pill);
-    box-shadow: 0 0 14px rgba(229, 178, 93, 0.35);
-    animation: pvmSweep 7s ease-in-out infinite;
-}
-
-.flagship-visual .pvm-core {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 8px; height: 8px;
-    margin: -4px 0 0 -4px;
-    border-radius: var(--radius-pill);
-    background: var(--prism-lavender);
-    box-shadow: 0 0 12px rgba(199, 210, 254, 0.6);
-}
-
+.flagship-visual .pvm-line { display: block; height: 4px; border-radius: 2px; background: rgba(199, 210, 254, 0.5); }
+.flagship-visual .pvm-line.l1 { width: 78%; }
+.flagship-visual .pvm-line.l2 { width: 96%; }
+.flagship-visual .pvm-line.l3 { width: 58%; }
 .flagship-visual .pvm-caption {
-    font-family: var(--font-mono);
-    font-size: var(--fs-075);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(199, 210, 254, 0.7);
+    font-family: var(--font-mono); font-size: var(--fs-075); letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(199, 210, 254, 0.7);
 }
-
-@keyframes pvmSweep {
-    0%, 100% { transform: rotate(-22deg); }
-    50% { transform: rotate(26deg); }
+@keyframes pvmDrift {
+    0%, 100% { transform: translate(-50%, -52%) rotate(-2deg); }
+    50% { transform: translate(-50%, -55%) rotate(-2deg); }
 }
-
-@media (prefers-reduced-motion: reduce) {
-    .flagship-visual .pvm-needle { animation: none; }
-}
-
-@media (max-width: 768px) {
-    .flagship-visual .plannersview-mockup { width: 100%; height: auto; }
-}
+@media (prefers-reduced-motion: reduce) { .flagship-visual .pvm-sheet.s1 { animation: none; } }
+@media (max-width: 768px) { .flagship-visual .plannersview-mockup { width: 100%; height: auto; } }
 
 
-/* ── Waymark flagship 비주얼 (웨이포인트 별) — 2026-10-17 ── */
+/* ── Waymark flagship 비주얼 (나침반 — 길잡이) — 2026-10-17 개정 */
 .flagship-cta-btn.indigo {
     background: linear-gradient(135deg, rgba(165, 180, 252, 0.15), rgba(199, 210, 254, 0.1));
     border-color: rgba(165, 180, 252, 0.4);
@@ -1365,17 +1329,32 @@
 }
 .visual-blur-orb.indigo { background: #A5B4FC; top: 16%; right: 14%; }
 .flagship-visual .waymark-mockup {
-    width: 280px; height: 300px; position: relative;
-    display: flex; align-items: center; justify-content: center;
+    width: 280px; height: 300px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
 }
-.flagship-visual .wkm-star {
-    width: 128px; height: 128px; position: relative; z-index: 2;
-    filter: drop-shadow(0 0 24px rgba(165, 180, 252, 0.45));
-    animation: wkmFloat 6s ease-in-out infinite;
+.flagship-visual .wkm-compass {
+    position: relative; width: 150px; height: 150px;
+    border: 1px solid rgba(165, 180, 252, 0.3); border-radius: var(--radius-pill);
+    background: radial-gradient(circle at 50% 45%, rgba(165, 180, 252, 0.10) 0%, transparent 65%);
+    box-shadow: inset 0 0 30px rgba(165, 180, 252, 0.08);
 }
-.flagship-visual .wkm-orbit { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; }
-.flagship-visual .wkm-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(165, 180, 252, 0.22); }
-.flagship-visual .wkm-ring.r1 { width: 180px; height: 180px; }
-.flagship-visual .wkm-ring.r2 { width: 250px; height: 250px; border-color: rgba(165, 180, 252, 0.12); }
-@keyframes wkmFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-@media (prefers-reduced-motion: reduce) { .flagship-visual .wkm-star { animation: none; } }
+.flagship-visual .wkm-tick { position: absolute; width: 2px; height: 10px; background: rgba(165, 180, 252, 0.5); border-radius: var(--radius-pill); }
+.flagship-visual .wkm-tick-n { top: 8px; left: 50%; transform: translateX(-50%); }
+.flagship-visual .wkm-tick-s { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.flagship-visual .wkm-tick-e { right: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+.flagship-visual .wkm-tick-w { left: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+.flagship-visual .wkm-needle {
+    position: absolute; top: 50%; left: 50%; width: 3px; height: 58px; margin: -52px 0 0 -1.5px;
+    transform-origin: 50% 89%;
+    background: linear-gradient(180deg, var(--color-indigo) 0%, var(--prism-lavender) 100%);
+    border-radius: var(--radius-pill); box-shadow: 0 0 14px rgba(165, 180, 252, 0.4);
+    animation: wkmSweep 7s ease-in-out infinite;
+}
+.flagship-visual .wkm-core { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: var(--radius-pill); background: var(--prism-lavender); box-shadow: 0 0 12px rgba(199, 210, 254, 0.6); }
+.flagship-visual .wkm-caption {
+    font-family: var(--font-mono); font-size: var(--fs-075); letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(165, 180, 252, 0.7);
+}
+@keyframes wkmSweep { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(26deg); } }
+@media (prefers-reduced-motion: reduce) { .flagship-visual .wkm-needle { animation: none; } }
+@media (max-width: 768px) { .flagship-visual .waymark-mockup { width: 100%; height: auto; } }

@@ -65,7 +65,7 @@ export default function PlannersView() {
     <div className="pvl-wrapper">
       <div className="pvl-container">
         <header className="pvl-hero">
-          <div className="pvl-hero-icon">🧭</div>
+          <div className="pvl-hero-icon">📖</div>
           <h1 className="pvl-hero-title">Planner&apos;s View</h1>
           <p className="pvl-hero-copy">{t('plannersView.heroParagraph')}</p>
         </header>

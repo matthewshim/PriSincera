@@ -25,7 +25,7 @@ import '../styles/markdown-body.css';
 import './PlannersViewDetail.css';
 
 const CONTENT_DIR = '/content/planners-view';
-const SECTION_ICON = '🧭';
+const SECTION_ICON = '📖';
 
 // 제목이 이모지로 시작하면 히어로 아이콘으로 승격하고 제목에서 뺀다(아이콘 중복 방지, §9-1)
 const splitTitle = (title) => {

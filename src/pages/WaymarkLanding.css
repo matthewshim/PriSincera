@@ -40,7 +40,7 @@
 
 /* ── Hero (중앙, §9-1) ── */
 .wm-hero { text-align: center; padding: 30px 0 40px; }
-.wm-hero-mark { margin: 0 auto var(--space-lg); width: 76px; height: 76px; animation: wmFloat 6s ease-in-out infinite; }
+.wm-hero-icon { font-size: var(--fs-300); line-height: 1; margin-bottom: var(--space-lg); animation: wmFloat 6s ease-in-out infinite; }
 .wm-hero-title {
   display: inline-block; /* §9-1 필수 — 그라디언트가 글자 폭에 클립 */
   font-size: var(--fs-300); font-weight: 700; letter-spacing: -0.01em; margin: 0;
@@ -137,12 +137,13 @@
 
 /* ── Motion ── */
 @keyframes wmFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-@media (prefers-reduced-motion: reduce) { .wm-hero-mark { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .wm-hero-icon { animation: none; } }
 
 /* ── Responsive ── */
 @media (max-width: 760px) {
   .wm-page { padding: 92px 18px 64px; }
   .wm-hero { padding-top: 28px; }
+  .wm-hero-icon { font-size: var(--fs-220); }
   .wm-hero-title { font-size: var(--fs-220); }
   .wm-sec-title.lg { font-size: var(--fs-150); }
   .wm-steps { grid-template-columns: 1fr; gap: var(--space-lg); }

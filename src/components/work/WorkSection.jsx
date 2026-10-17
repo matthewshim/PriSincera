@@ -160,15 +160,14 @@ export default function WorkSection() {
           </div>
           <div className="flagship-visual">
             <div className="dynamic-mockup plannersview-mockup">
-              <div className="pvm-compass">
-                <span className="pvm-tick pvm-tick-n"></span>
-                <span className="pvm-tick pvm-tick-e"></span>
-                <span className="pvm-tick pvm-tick-s"></span>
-                <span className="pvm-tick pvm-tick-w"></span>
-                <span className="pvm-needle"></span>
-                <span className="pvm-core"></span>
+              <div className="pvm-stack">
+                <span className="pvm-sheet s3"></span>
+                <span className="pvm-sheet s2"></span>
+                <span className="pvm-sheet s1">
+                  <i className="pvm-line l1"></i><i className="pvm-line l2"></i><i className="pvm-line l3"></i>
+                </span>
               </div>
-              <div className="pvm-caption">Direction over velocity</div>
+              <div className="pvm-caption">A continuing column</div>
             </div>
             <div className="visual-blur-orb lavender"></div>
           </div>
@@ -323,14 +322,15 @@ export default function WorkSection() {
           </div>
           <div className="flagship-visual">
             <div className="dynamic-mockup waymark-mockup">
-              <div className="wkm-orbit"><span className="wkm-ring r1"></span><span className="wkm-ring r2"></span></div>
-              <svg className="wkm-star" viewBox="0 0 120 120" aria-hidden="true">
-                <defs>
-                  <linearGradient id="wkmG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#A5B4FC" /><stop offset="1" stopColor="#C7D2FE" /></linearGradient>
-                </defs>
-                <path d="M60 14 L68 52 L106 60 L68 68 L60 106 L52 68 L14 60 L52 52 Z" fill="url(#wkmG)" />
-                <circle cx="60" cy="60" r="5" fill="#020205" />
-              </svg>
+              <div className="wkm-compass">
+                <span className="wkm-tick wkm-tick-n"></span>
+                <span className="wkm-tick wkm-tick-e"></span>
+                <span className="wkm-tick wkm-tick-s"></span>
+                <span className="wkm-tick wkm-tick-w"></span>
+                <span className="wkm-needle"></span>
+                <span className="wkm-core"></span>
+              </div>
+              <div className="wkm-caption">Beside every decision</div>
             </div>
             <div className="visual-blur-orb indigo"></div>
           </div>
