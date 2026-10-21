@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv6",
+    "slug": "ai-is-for-reading",
+    "title": {
+      "ko": "AI의 쓸모는 만드는 쪽이 아니라 읽는 쪽에 있습니다",
+      "en": "AI Earns Its Keep on the Reading Side, Not the Building Side",
+      "ja": "AIの使いどころは、つくる側ではなく読む側にあります"
+    },
+    "subtitle": {
+      "ko": "만드는 쪽의 AI는 입장료가 되었고, 출시 이후를 읽는 쪽은 아직 비어 있다",
+      "en": "AI on the building side has become table stakes; the reading side after launch is still empty",
+      "ja": "つくる側のAIは参加料になり、リリース以降を読む側はまだ空いている"
+    },
+    "description": {
+      "ko": "같은 모델을 비슷한 가격에 경쟁자도 씁니다. 모두가 같은 도구로 같은 속도를 얻으면 그 속도는 경쟁우위가 아니라 입장료입니다. 반면 출시 이후 쏟아지는 비정형 신호는 여전히 사람이 표본으로 읽고 있습니다. 환각과 비결정성이라는 AI의 약점은 코드에서는 치명적이지만 십만 건을 분류하는 일에서는 비용이 몇 자릿수 낮고, 전수 처리와 다국어라는 강점은 그대로 쓰입니다.",
+      "en": "Competitors run the same models at similar prices. When everyone gets the same speed from the same tool, that speed is table stakes, not an advantage. Meanwhile the unstructured signal pouring in after launch is still read by hand, in samples. Hallucination and nondeterminism are fatal in code but cost orders of magnitude less when classifying a hundred thousand items — while exhaustive coverage and multilingual reach carry over intact.",
+      "ja": "同じモデルを似た価格で競合も使います。全員が同じ道具で同じ速度を得るなら、その速度は競争優位ではなく参加料です。一方、リリース後に押し寄せる非定型の信号は、いまも人が標本で読んでいます。ハルシネーションと非決定性というAIの弱点はコードでは致命的ですが、十万件を分類する仕事では桁違いに安く、全件処理と多言語という強みはそのまま効きます。"
+    },
+    "pullQuote": {
+      "ko": "AI를 생산성 도구로만 보면 만드는 쪽에 붙이게 되고, 감각 기관으로 보면 읽는 쪽에 붙이게 됩니다.",
+      "en": "See AI as a productivity tool and you attach it to the building side; see it as a sense organ and you attach it to the reading side.",
+      "ja": "AIを生産性の道具として見ればつくる側に付け、感覚器官として見れば読む側に付けることになります。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "endless-launch",
+      "order": 2
+    },
+    "tags": [
+      "Live Service",
+      "Product Operations",
+      "AI",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-10-21",
+    "readMinutes": 6
+  },
+  {
     "id": "pv5",
     "slug": "launch-is-the-start",
     "title": {
