@@ -49,7 +49,7 @@ export default function WaymarkLanding() {
           {heroSub[1] && <span className="en">{heroSub[1]}</span>}
         </p>
         <div className="wm-hero-cta">
-          <Link to="/builders-log" className="wm-btn wm-btn-primary">{t('waymark.hero.ctaPrimary')} <span aria-hidden="true">→</span></Link>
+          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.hero.ctaPrimary')} <span aria-hidden="true">→</span></Link>
           <a href="#wmLoop" className="wm-btn wm-btn-ghost">{t('waymark.hero.ctaGhost')}</a>
         </div>
         <div className="wm-chip"><span className="wm-chip-dot" aria-hidden="true"></span> {t('waymark.hero.chip')}</div>
@@ -118,7 +118,7 @@ export default function WaymarkLanding() {
         <div className="wm-cta">
           <h2>{t('waymark.cta.title')}</h2>
           <p>{t('waymark.cta.desc')}</p>
-          <Link to="/builders-log" className="wm-btn wm-btn-primary">{t('waymark.cta.btn')} <span aria-hidden="true">→</span></Link>
+          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.cta.btn')} <span aria-hidden="true">→</span></Link>
           <p className="wm-cta-soon">{t('waymark.cta.soon')}</p>
         </div>
       </section>

@@ -348,7 +348,7 @@
     "hero": {
       "sub": "크고 작은 결정 앞에 선 당신이, 그 순간 혼자가 아니도록.\nAt every fork, beside you.",
       "chip": "머지않아, 당신의 결정 곁에 — 곧 찾아갑니다",
-      "ctaPrimary": "피벗 이야기 읽기",
+      "ctaPrimary": "Waymark 이야기 읽기",
       "ctaGhost": "어떻게 곁에 있나"
     },
     "empathy": {
@@ -407,8 +407,8 @@
     },
     "cta": {
       "title": "서비스는 아직입니다.\n생각은 이미 시작됐습니다.",
-      "desc": "왜 주식 자동매매에서 '결정을 지키는 동반자'로 방향을 틀었는지 — 그 피벗의 기록을 Builder's Log에 남기고 있습니다.",
-      "btn": "Builder's Log에서 피벗 이야기 읽기",
+      "desc": "왜 Waymark을 만드는지, 그 시작을 Builder's Log에 기록하고 있습니다.",
+      "btn": "Builder's Log에서 시작 이야기 읽기",
       "soon": "준비가 끝나는 날, 가장 먼저 당신을 찾아가겠습니다."
     }
   }

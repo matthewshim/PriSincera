@@ -348,7 +348,7 @@
     "hero": {
       "sub": "大小さまざまな決断の前に立つあなたが、その瞬間ひとりにならないように。\nAt every fork, beside you.",
       "chip": "まもなく、あなたの決断のそばへ — 近日公開",
-      "ctaPrimary": "ピボットの物語を読む",
+      "ctaPrimary": "Waymarkの物語を読む",
       "ctaGhost": "どうそばにいるのか"
     },
     "empathy": {
@@ -407,8 +407,8 @@
     },
     "cta": {
       "title": "サービスはまだです。\n思考はすでに始まっています。",
-      "desc": "なぜ株の自動売買から『決断を守る伴走者』へ舵を切ったのか — そのピボットの記録をBuilder's Logに残しています。",
-      "btn": "Builder's Logでピボットの物語を読む",
+      "desc": "なぜWaymarkを作るのか、その始まりをBuilder's Logに記しています。",
+      "btn": "Builder's Logで始まりの物語を読む",
       "soon": "準備が整う日、まっさきにあなたのもとへ。"
     }
   }

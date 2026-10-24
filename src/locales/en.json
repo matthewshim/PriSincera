@@ -348,7 +348,7 @@
     "hero": {
       "sub": "So that you, standing before decisions big and small, are never alone in the moment.\nAt every fork, beside you.",
       "chip": "Soon, beside your decisions — arriving before long",
-      "ctaPrimary": "Read the pivot story",
+      "ctaPrimary": "Read the Waymark story",
       "ctaGhost": "How it stays beside you"
     },
     "empathy": {
@@ -407,8 +407,8 @@
     },
     "cta": {
       "title": "The service isn't here yet.\nThe thinking already began.",
-      "desc": "Why we turned from automated stock trading to 'a companion that guards your decisions' — we're recording that pivot in the Builder's Log.",
-      "btn": "Read the pivot story on Builder's Log",
+      "desc": "Why I'm building Waymark — I'm recording the beginning in the Builder's Log.",
+      "btn": "Read the origin story on Builder's Log",
       "soon": "The day we're ready, you'll be the first we reach."
     }
   }

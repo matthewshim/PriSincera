@@ -1,5 +1,43 @@
 [
   {
+    "id": "ep14",
+    "slug": "introducing-waymark",
+    "chapterNo": "14",
+    "title": {
+      "ko": "🗺️ Waymark을 시작합니다 — 결정의 갈림길에서, 혼자이지 않도록",
+      "en": "🗺️ Starting Waymark — So you're not alone at the fork of a decision",
+      "ja": "🗺️ Waymarkを始めます — 決断の岐路で、ひとりにならないように"
+    },
+    "subtitle": {
+      "ko": "결정을 많이 내리는 사람을 위한 결정 저널 + 먼저 찾아오는 동반자 + 경험담.",
+      "en": "A decision journal + a companion that reaches out first + peer stories — for people who decide a lot.",
+      "ja": "決断を多く下す人のための、決断ジャーナル + 自ら歩み寄る伴走者 + 経験談。"
+    },
+    "tags": [
+      "Waymark",
+      "Product",
+      "의사결정"
+    ],
+    "description": {
+      "ko": "결정은 많이 내리지만 무거운 순간엔 혼자인 사람들을 위해 — 기록하고, 먼저 찾아오고, 경험담을 건네고, 다시 보게 하는 동반자 Waymark을 시작하며. '대신 결정하지 않는다'는 원칙과 이름(갈림길의 이정표)에 담은 뜻을 적었습니다.",
+      "en": "For people who make many decisions yet feel alone in the heavy moments — introducing Waymark, a companion that records, reaches out first, brings peer stories, and lets you revisit. On the principle of never deciding for you, and the meaning behind the name.",
+      "ja": "決断は多いのに重い瞬間はひとり、という人のために — 記録し、自ら歩み寄り、経験談を届け、見つめ直させる伴走者Waymarkを始めるにあたり。『代わりに決めない』原則と名前に込めた意味。"
+    },
+    "accent": "#A5B4FC",
+    "date": "2026-10-24",
+    "commits": [
+      {
+        "hash": "8f92d29",
+        "type": "feat",
+        "msg": {
+          "ko": "Waymark 소개 페이지 신설 (라우트·GNB·메인 카드·3개국어)",
+          "en": "Add Waymark intro page (route·GNB·home card·i18n)",
+          "ja": "Waymark紹介ページ新設（ルート・GNB・ホームカード・多言語）"
+        }
+      }
+    ]
+  },
+  {
     "id": "ep13",
     "slug": "relearn-grand-unification-daily-digest-pacenote-successor",
     "chapterNo": "13",
