@@ -77,6 +77,11 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 Candela(자동매매) 슬롯을 **의사결정 동반 서비스 Waymark**로 전환한 신규 도메인입니다. 결정을 많이 내리는 사람(기획·PO·PM·리더)을 위한 **결정 저널 + 먼저 찾아오는 AI 동반자 + 경험담**. 기존 자동매매 계획은 폐기되어 [아카이브](archive/candela_trading_archive.md)로 통합, 레포 전체 보안 규범은 [core/security_spec](core/security_spec.md)로 이관되었습니다.
 *   **🆕 [Waymark 재포지셔닝 제안서 (Repositioning Proposal)](waymark/repositioning_proposal.md)** (`repositioning_proposal.md`): Candela(자동매매) → Waymark(의사결정 동반) 전환의 근거·서비스 개요·**ReLearn 차별화(경계: 성장을 돕는다/결정을 지킨다)**·명칭 확정(Waymark)·전환 범위·진행 현황. **active(차별화 경계 승인·정식 문서 세트 대기).**
 *   **🆕 [Waymark 소개 페이지 UI 명세 (UI Specification)](waymark/ui_specification.md)** (`ui_specification.md`): `/waymark` 선공개 소개 페이지 구현 명세 — 형제 랜딩 전개 공식(단일 컨테이너+섹션 리듬·eyebrow→타이틀→리드·좌측 리딩·CTA 닫는 카드), 섹션 6종(히어로·문제공감·핵심 루프·AI 4모드·경험담 티저·CTA), 브랜드(indigo·lavender/✦ 웨이포인트), 라우트·GNB·모바일·메인 카드·3개국어·SEO 통합. **active(구현 완료).**
+*   **🆕 [Waymark 추진계획서 (Execution Plan)](waymark/execution_plan.md)** (`execution_plan.md`): **경영진 보고용** — 경영 요약·기회·전략 적합성·추진 범위/마일스톤(M0~M4·GA '27.3)·자원/비용(가변비 0 지향)·KPI·**의사결정 요청(스택·예산·베타 시드)**·리스크·타임라인. **draft.**
+*   **🆕 [Waymark 제품 전략서 (Product Strategy)](waymark/product_strategy.md)** (`product_strategy.md`): **서비스(운영 제품) 빌드 전략 정본** — 문제·페르소나(결정 피로 실무 리더), 핵심 가치·ReLearn 경계, 핵심 루프, **MVP 범위(풀 루프·경험담 커뮤니티 소싱·시간 규칙 먼저찾아옴)**, 성공 지표(North Star·KPI), 로드맵(M0~M4 · GA '27.3), 리스크. **draft.**
+*   **🆕 [Waymark 기능 명세서 (Functional Spec)](waymark/functional_spec.md)** (`functional_spec.md`): 주니어 즉시 착수 수준 — 기능 F-1~F-10 수용 기준(AC), 화면 S-1~S-10, IA/내비, AI 4모드 톤·프롬프트 가이드·하드룰, 먼저찾아옴 스케줄 규칙(중요도·조용시간·감쇠), 경험담 매칭/검수 체크리스트, 분류셋, 카피·보이스, 비기능 요구. **draft.**
+*   **🆕 [Waymark 보안·프라이버시 규범 (Security & Privacy)](waymark/security_spec.md)** (`security_spec.md`): C1~C4 데이터 분류, 위협 모델(IDOR·LLM 유출·프롬프트 인젝션·내부자), 인증/인가/RLS 테넌트 격리, 암호화·시크릿, **AI 보안(최소 전송·무학습/무보존·레드액션·인젝션 방어·출력 가드레일)**, 경험담 3중 관문·익명성, 프라이버시/컴플라이언스(PIPA/GDPR·삭제/내보내기), 로깅·백업·사고 대응, **출시 전 보안 게이트**. **draft.**
+*   **🆕 [Waymark 시스템 아키텍처 (System Architecture)](waymark/system_architecture.md)** (`system_architecture.md`): 스택(Next.js PWA·Supabase·Claude·Web Push), **데이터 모델(테이블·컬럼·타입·RLS 정책)**, 먼저찾아옴 스케줄러(pg_cron·멱등), AI 통합·가드레일, 웹푸시, 경험담 파이프라인(pgvector 매칭), 인증·프라이버시·배포, 미결 결정(스택 확정 등). **draft.**
 
 ---
 
