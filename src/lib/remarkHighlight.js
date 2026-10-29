@@ -45,7 +45,12 @@ function walk(node) {
   for (const child of node.children) {
     if (child.type === 'text' && child.value.includes('==')) {
       const parts = split(child.value);
-      if (parts.length > 1) { next.push(...parts); changed = true; continue; }
+      // 쪼갠 결과에 mark 가 하나라도 있으면 교체한다.
+      // 과거 `parts.length > 1` 로 판정하던 탓에 **문단 전체가 하이라이트 하나**인 경우
+      // (앞뒤 텍스트가 없어 parts 가 1개) 조용히 교체되지 않고 `==…==` 가 그대로 노출됐다.
+      if (parts.some((part) => part.type === 'emphasis')) {
+        next.push(...parts); changed = true; continue;
+      }
     }
     if (!SKIP.has(child.type)) walk(child);
     next.push(child);

@@ -71,6 +71,15 @@ export default function PlannersViewDetail() {
   const markdownComponents = useMemo(() => ({
     h2: ({ children }) => <h2 id={slugify(nodeText(children))}>{children}</h2>,
     h3: ({ children }) => <h3 id={slugify(nodeText(children))}>{children}</h3>,
+    // 출처 섹션의 외부 링크는 새 탭으로 — 읽던 자리를 잃지 않게 한다.
+    // rel=noopener,noreferrer 는 target=_blank 와 반드시 함께 둔다(탭나빙·리퍼러 유출 차단).
+    // 내부 경로·앵커(#)는 같은 탭을 유지한다.
+    a: ({ href, children, ...rest }) => {
+      const external = typeof href === 'string' && /^https?:\/\//i.test(href);
+      return external
+        ? <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>{children}</a>
+        : <a href={href} {...rest}>{children}</a>;
+    },
   }), []);
 
   useSEO({

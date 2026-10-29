@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv7",
+    "slug": "automation-common-decomposition-rare",
+    "title": {
+      "ko": "자동화가 흔해진 시대, 직무를 읽는 눈이 귀해집니다",
+      "en": "As Automation Becomes Common, Reading a Job Becomes Rare",
+      "ja": "自動化が当たり前になった時代に、職務を読む目が貴重になります"
+    },
+    "subtitle": {
+      "ko": "AI는 직무가 아니라 과제를 대체한다 — 과제 자동화율을 인원 감축률로 읽는 순간 번복이 시작된다",
+      "en": "AI replaces tasks, not jobs — the moment you read task automation as a headcount cut, the reversal begins",
+      "ja": "AIは職務ではなく課題を代替する — 課題の自動化率を人員削減率と読んだ瞬間に、撤回が始まる"
+    },
+    "description": {
+      "ko": "생산성 효과는 실재하지만 균등하지 않습니다. 숙련자에게서는 개선이 거의 측정되지 않고, 통제 실험에서는 기대 24%·체감 20%·실측 마이너스 19%로 세 단계가 벌어졌습니다. 그런데 AI가 대체하는 것은 직무가 아니라 과제입니다. 과제의 70%를 자동화하고 인원을 70% 줄이면, 남는 30%가 조직에서 가장 어려운 일이었다는 것을 뒤늦게 발견하게 됩니다.",
+      "en": "The productivity gains are real but far from even. Experienced workers show almost no measurable improvement, and in a controlled trial the three numbers split apart: 24% expected, 20% felt, 19% slower measured. Yet what AI replaces is tasks, not jobs. Automate 70% of the tasks and cut 70% of the headcount, and you discover too late that the remaining 30% was the hardest work in the organization.",
+      "ja": "生産性の効果は実在しますが、まったく均等ではありません。熟練者ではほとんど改善が測定されず、対照実験では期待24%・体感20%・実測マイナス19%と三段に分かれました。しかしAIが代替するのは職務ではなく課題です。課題の70%を自動化して人員を70%削れば、残る30%が組織で最も難しい仕事だったと後から気づくことになります。"
+    },
+    "pullQuote": {
+      "ko": "AI는 직무가 아니라 과제를 대체하는데, 인원 계획은 여전히 직무 단위로 세워집니다.",
+      "en": "AI replaces tasks, not jobs — yet headcount planning is still done job by job.",
+      "ja": "AIは職務ではなく課題を代替するのに、人員計画はいまも職務単位で立てられます。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "cheap-execution",
+      "order": 5
+    },
+    "tags": [
+      "Organization",
+      "Workforce Planning",
+      "AI",
+      "Product Planning"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-10-29",
+    "readMinutes": 10
+  },
+  {
     "id": "pv6",
     "slug": "ai-is-for-reading",
     "title": {
