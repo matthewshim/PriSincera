@@ -186,7 +186,6 @@
   gap: var(--space-12);
   background: rgba(196, 181, 253, 0.04);
   border: 1px solid var(--admin-border);
-  border-radius: var(--radius-sm);
   padding: 3px 14px 3px 5px;   /* 단일 행 — 로그아웃 버튼과 동일 높이 */
   transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, transform 0.2s;
   position: relative;
@@ -277,7 +276,6 @@
   padding: var(--btn-pad-xs);
   min-height: var(--btn-h-xs);
   font-size: 13px;
-  border-radius: var(--radius-sm);
 }
 
 .admin-logout-btn:hover {
@@ -585,14 +583,12 @@
   min-height: var(--btn-h-sm);
   font-size: 14px;
   font-weight: 500;
-  border-radius: var(--radius-sm);
 }
 
 .admin-btn-secondary {
   padding: var(--btn-pad-sm);
   min-height: var(--btn-h-sm);
   font-size: 13px;
-  border-radius: var(--radius-sm);
 }
 
 /* ─── Test Send ───────────────────────────────── */
@@ -716,7 +712,6 @@
 .admin-action-btn {
   background: transparent;
   border: 1px solid var(--admin-border);
-  border-radius: var(--radius-sm);
   padding: var(--btn-pad-xs);
   min-height: var(--btn-h-xs);
   font-size: 14px;

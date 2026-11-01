@@ -24,7 +24,7 @@
 .wma-btn {
   font-family: var(--font-body); font-size: var(--fs-base); font-weight: 500;
   padding: var(--btn-pad-md);
-  min-height: var(--btn-h-md); border-radius: var(--radius-pill);  color: var(--bg-void); background: linear-gradient(135deg, var(--color-indigo), var(--prism-lavender));
+  min-height: var(--btn-h-md);  color: var(--bg-void); background: linear-gradient(135deg, var(--color-indigo), var(--prism-lavender));
   border: 1px solid rgba(199, 210, 254, 0.5);
   transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast), opacity var(--duration-fast);
 }

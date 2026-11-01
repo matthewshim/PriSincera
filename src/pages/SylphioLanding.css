@@ -219,7 +219,6 @@ color: var(--text-primary);  /* P2-1: 섹션 제목 — 페이지 h1과 경쟁�
   color: var(--text-secondary);
   padding: var(--btn-pad-sm);
   min-height: var(--btn-h-sm);
-  border-radius: var(--radius-md);
   transition: transform var(--duration-fast) ease, background-color var(--duration-fast) ease, color var(--duration-fast) ease, border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
   font-weight: 500;
   font-size: var(--fs-sm);
@@ -532,12 +531,13 @@ color: var(--text-primary);  /* P2-1: 섹션 제목 — 페이지 h1과 경쟁�
 
 /* PRO 뱃지 스타일 */
 .btn-sim-pro-badge {
+  /* 배지는 클릭 대상이 아니다 — 알약을 쓰면 버튼으로 오인된다(§4-4 v6.2 역할표) */
+  border-radius: var(--radius-xs);
   background: linear-gradient(135deg, #ffb800, #ff8a00);
   color: #050505;
   font-size: var(--fs-micro);
   font-weight: 600;
   padding: 1.5px 4px;
-  border-radius: var(--radius-pill);
   letter-spacing: var(--tracking-wider);
   margin-left: 4px;
 }
@@ -629,7 +629,6 @@ color: var(--text-primary);  /* P2-1: off-system 그라디언트(#3b82f6→var(-
   color: white;
   padding: var(--btn-pad-md);
   min-height: var(--btn-h-md);
-  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: var(--fs-base);
   transition: background 0.2s, transform 0.1s;

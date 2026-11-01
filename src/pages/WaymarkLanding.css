@@ -77,7 +77,7 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
 .wm-btn {
   font-family: var(--font-body); font-size: var(--fs-base); font-weight: 500;  /* 600→500: 배경·보더가 강조를 맡는다 */
   padding: var(--btn-pad-md);
-  min-height: var(--btn-h-md); border-radius: var(--radius-pill);gap: var(--space-sm); border: 1px solid transparent;
+  min-height: var(--btn-h-md);gap: var(--space-sm); border: 1px solid transparent;
   transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast), border-color var(--duration-fast), background var(--duration-fast);
 }
 .wm-btn-primary {

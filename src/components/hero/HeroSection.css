@@ -242,7 +242,6 @@
     position: relative;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-md);
     background: var(--glass-bg);
     border: 1px solid rgba(165, 180, 252, 0.08);
     display: flex;
@@ -265,7 +264,8 @@
     content: '';
     position: absolute;
     inset: -4px;
-    border-radius: var(--radius-md);
+    /* 버튼 본체와 같은 라운드여야 한다 — 어긋나면 클릭 리플 테두리가 겹쳐 보인다(§4-4 v6.2) */
+    border-radius: var(--radius-sm);
     border: 1px solid rgba(165, 180, 252, 0.3);
     opacity: 0;
     transition: background-color 0.5s var(--ease-out), border-color 0.5s var(--ease-out), transform 0.5s var(--ease-out), opacity 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
@@ -483,7 +483,6 @@
     .celestial-btn {
         width: 42px;
         height: 42px;
-        border-radius: var(--radius-md);
     }
     .waveform-bars {
         height: 18px;

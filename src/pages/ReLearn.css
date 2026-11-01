@@ -32,7 +32,6 @@
 .rl-hero-cta {
   margin-top: 26px; padding: var(--btn-pad-lg);
   min-height: var(--btn-h-lg);
-  border-radius: var(--radius-pill);
   border: 1px solid rgba(229, 178, 93, 0.55);
   background: rgba(229, 178, 93, 0.12);
   color: var(--color-gold); font-size: var(--fs-base); font-weight: 600;
@@ -127,8 +126,7 @@ transition: background 0.15s, box-shadow 0.15s;
 }
 .rl-expand-btn {
   display: inline-block; margin: 14px 0 0; padding: var(--btn-pad-xs);
-  min-height: var(--btn-h-xs);
-  border-radius: var(--radius-pill); border: 1px solid var(--glass-border);
+  min-height: var(--btn-h-xs); border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.02); color: var(--text-secondary);
   font-size: var(--fs-xs); font-weight: 500;transition: border-color 0.15s, color 0.15s;
 }
@@ -171,7 +169,7 @@ transition: background 0.15s, box-shadow 0.15s;
 .rl-login-cta p { font-size: var(--fs-sm); color: var(--text-muted); margin: 0 0 14px; }
 .rl-login-btn {
   padding: var(--btn-pad-md);
-  min-height: var(--btn-h-md); border-radius: var(--radius-pill);
+  min-height: var(--btn-h-md);
   border: 1px solid rgba(229, 178, 93, 0.5); background: rgba(229, 178, 93, 0.1);
   color: var(--color-gold); font-size: var(--fs-sm); font-weight: 600;
 transition: background 0.15s;

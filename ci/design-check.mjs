@@ -119,6 +119,24 @@ for (const file of cssFiles(ROOT)) {
       const line = code.slice(0, m.index).split('\n').length;
       errors.push(`${rel}:${line} border-radius: ${m[1].trim()} (§9-10 P4-1 — var(--radius-*)/0/50%/inherit만 허용)`);
     }
+    /* ①-b 버튼 라운드 — **사각 단일**(§4-4 v6.2). 규범만 적어두면 되돌아가므로 집행한다.
+       대상: 셀렉터에 btn/cta/button이 있는 규칙. 허용: --radius-sm / 50%(아이콘 전용 정사각).
+       제외: CTA **컨테이너**(버튼이 아니라 문구+버튼을 감싸는 패널)와 배지·바 같은 비클릭 요소. */
+    {
+      const BTN = /(^|[\s,>])\.[a-z0-9_-]*(btn|cta|button)[a-z0-9_-]*(:|\s|,|$)/i;
+      const NOT_A_BUTTON = /rl-login-cta|wm-cta|intro-cta|cross-cta|sim-pro-badge|waveform-bar/;
+      const rr = /([^{}]+)\{([^{}]*)\}/g; let m2;
+      while ((m2 = rr.exec(code)) !== null) {
+        const sel = m2[1].trim().replace(/\s+/g, ' ');
+        if (!BTN.test(sel + ' ') || NOT_A_BUTTON.test(sel)) continue;
+        const r = /border-radius:\s*([^;}!]+)/.exec(m2[2]);
+        if (!r) continue;
+        const v = r[1].trim();
+        if (v === 'var(--radius-sm)' || v === '50%' || v === 'inherit') continue;
+        const line = code.slice(0, m2.index).split('\n').length;
+        errors.push(`${rel}:${line} 버튼 라운드 ${v} — ${sel.slice(0, 40)} (§4-4 v6.2 — CTA·클릭 버튼은 var(--radius-sm) 사각 단일. 알약 금지)`);
+      }
+    }
     // ② letter-spacing — --tracking-* 만
     for (const m of code.matchAll(/letter-spacing:\s*([^;}!]+)/g)) {
       if (/^var\(--tracking-(?:tight|wide|wider|widest|ultra)\)$/.test(m[1].trim())) continue;

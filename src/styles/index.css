@@ -247,7 +247,6 @@ body {
 *::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-pill);
     border: 2px solid transparent;
     background-clip: padding-box;
 }
@@ -348,7 +347,6 @@ button { background: none; border: none; font: inherit; color: inherit; }
     background: var(--btn-primary-bg);
     color: #FFFFFF;
     border: 1px solid var(--btn-primary-border);
-    border-radius: var(--radius-pill);
     box-shadow: 0 4px 20px var(--btn-primary-glow);
     transition: background-color var(--duration-fast) var(--ease-spring), border-color var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast) var(--ease-spring), transform var(--duration-fast) var(--ease-spring);
     user-select: none;
@@ -374,7 +372,6 @@ button { background: none; border: none; font: inherit; color: inherit; }
     background: var(--btn-secondary-bg);
     color: var(--crystal-light);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-pill);
     transition: background-color var(--duration-fast) var(--ease-spring), border-color var(--duration-fast) var(--ease-spring), color var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast) var(--ease-spring), transform var(--duration-fast) var(--ease-spring);
     user-select: none;
     text-decoration: none;
@@ -593,6 +590,11 @@ button:active,
     cursor: pointer;
     text-decoration: none;
     user-select: none;
+    /* §4-4 v6.2 — CTA·클릭 버튼은 **사각 단일**(6px). 알약 금지.
+       알약은 생성 도구의 기본값이라 그 자체로 AI 잔재로 읽힌다(오너 결정 2026-11-01).
+       여기서 한 번만 선언한다 — 지면 CSS에 다시 적지 말 것.
+       예외는 아이콘 전용 정사각 컨트롤의 `50%`뿐이며, 각 파일에서 덮는다. */
+    border-radius: var(--radius-sm);
 }
 
 /* ══ 대문자 마이크로 라벨 — 3역할 (P1-H2a, 2026-11-01) ══

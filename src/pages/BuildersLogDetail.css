@@ -256,7 +256,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
   text-decoration: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);   /* §4-4 v6.2 사각 단일 */
   font-weight: 500;
   transition: background-color var(--duration-fast) var(--ease-spring), transform var(--duration-fast) var(--ease-spring);
 }
