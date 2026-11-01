@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Icon from '../common/Icon';
 import { useTranslation } from '../../contexts/LanguageContext';
 import useScrollProgress from '../../hooks/useScrollProgress';
 import './JourneySection.css';
@@ -167,10 +168,11 @@ export default function JourneySection() {
             {t('home.journeyTitle')}<span className="accent">{t('home.journeyTitleAccent')}</span>
           </h2>
           <p className="journey-subtitle">
-            {t('home.journeySubtitle').split('\n').map((line, idx) => (
+            {t('home.journeySubtitle').split('\n').map((line, idx, arr) => (
               <React.Fragment key={idx}>
                 {line}
-                <br />
+                {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                {idx < arr.length - 1 && <br />}
               </React.Fragment>
             ))}
           </p>
@@ -217,6 +219,7 @@ export default function JourneySection() {
             className="maker-note-link"
           >
             {t('home.serviceBaseCta')}
+            <Icon name="arrowRight" size={14} />
           </a>
         </div>
       </div>

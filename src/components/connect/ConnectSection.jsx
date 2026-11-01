@@ -28,10 +28,11 @@ export default function ConnectSection() {
             {t('home.connectTitle')} <span className="accent">{t('home.connectTitleAccent')}</span>
           </h2>
           <p className="connect-subtitle reveal-item" style={{ '--reveal-delay': '0.2s' }}>
-            {t('home.connectSubtitle').split('\n').map((line, idx) => (
+            {t('home.connectSubtitle').split('\n').map((line, idx, arr) => (
               <React.Fragment key={idx}>
                 {line}
-                <br />
+                {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                {idx < arr.length - 1 && <br />}
               </React.Fragment>
             ))}
           </p>

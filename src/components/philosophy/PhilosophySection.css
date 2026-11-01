@@ -370,7 +370,11 @@ color: var(--color-gold);  /* P2-1: 본문 inline 강조 — strong에 그라디
 }
 
 .reveal-section.revealed .section-label {
-    opacity: 0.6;
+    /* P2-6 교정(2026-11-01): base의 `opacity`는 AA(4.5:1) 미달로 제거했는데
+       리빌 **종료 상태가 0.6으로 되돌려** 놓고 있었다 — 메인 4개 섹션 라벨
+       (Belief·Journey·Proof of Work·Connect)이 전부 실효 대비 ≈4.1:1이었다.
+       흐림은 `--text-muted`가 맡는다. 리빌은 0 → 1로만 간다. */
+    opacity: 1;
     transform: translateX(0);
 }
 

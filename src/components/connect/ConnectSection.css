@@ -123,16 +123,7 @@
 }
 
 /* Section label fade */
-.connect .section-label {
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.8s ease 0.05s, transform 0.8s ease 0.05s;
-}
-
-.connect.revealed .section-label {
-    opacity: 0.6;
-    transform: translateX(0);
-}
+/* .section-label 리빌은 전역 `.reveal-section` 규칙이 담당(중복 선언 제거, 2026-11-01) */
 
 /* ============================================
    Responsive — Connect

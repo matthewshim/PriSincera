@@ -53,7 +53,10 @@
     color: var(--text-muted);
     line-height: var(--leading-loose);
     max-width: 600px;
-    margin: 0 auto;
+    /* P1-H1 교정(2026-11-01): 헤더를 좌측 리딩으로 바꿨는데 `margin: 0 auto`를 남겨
+       서브카피 **블록만 가운데로 떠서** 타이틀 좌단과 어긋났다(오너 발견).
+       max-width는 가독 폭 제한으로 남기고 중앙 정렬만 해제한다. */
+    margin: 0;
 }
 
 /* --- Project Grid --- */
@@ -183,6 +186,10 @@
 }
 
 /* --- Flagship Visual Effects & CSS Art --- */
+/* P2-4 교정(2026-11-01): `animation`만 호버로 게이트하려 했는데 **규칙 전체**를 `:hover`로
+   옮겨 기하·레이아웃까지 호버 뒤로 숨었다. 평상시 목업이 어긋나 보였다(오너 발견).
+   기본 규칙 = 기하·레이아웃, `:hover` = 모션. 이 분리를 깨지 말 것. */
+
 .flagship-visual {
     flex: 1;
     position: relative;
@@ -197,22 +204,22 @@
     z-index: 1;
 }
 
-.flagship-card:hover .visual-blur-orb {
+/* 블러 오브 — 색은 카드의 --card-accent에서 온다(P1-A1). 변종 클래스 6종 폐지.
+   .cyan/.emerald는 플래그십이 아닌 work-card 변종이 쓰므로 존치(각자 --card-accent 보유). */
+.visual-blur-orb {
     position: absolute;
     width: 250px;
     height: 250px;
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.3;
-    animation: orbFloat 10s infinite ease-in-out alternate;
     z-index: 0;
-}
-/* 블러 오브 — 색은 카드의 --card-accent에서 온다(P1-A1). 변종 클래스 6종 폐지.
-   .cyan/.emerald는 플래그십이 아닌 work-card 변종이 쓰므로 존치(각자 --card-accent 보유). */
-.visual-blur-orb {
     background: var(--card-accent);
     top: 15%;
     right: 14%;
+}
+.flagship-card:hover .visual-blur-orb {
+    animation: orbFloat 10s infinite ease-in-out alternate;
 }
 .visual-blur-orb.cyan { background: var(--color-cyan); top: 10%; right: 10%; }
 .visual-blur-orb.emerald { background: var(--color-success); bottom: 10%; left: 10%; }
@@ -238,19 +245,23 @@
     transform: rotateY(-2deg) rotateX(2deg) translateY(-10px);
 }.mockup-skeleton-text.short { width: 80%; }
 
-.flagship-card:hover .mockup-ai-card {
+.mockup-ai-card {
     margin-top: auto;
     background: rgba(34, 211, 238, 0.1);
     border: 1px solid rgba(34, 211, 238, 0.3);
     border-radius: var(--radius-md);
-    padding: 16px;
+    padding: var(--space-md);
     display: flex;
     align-items: center;
     gap: var(--space-12);
+}
+.flagship-card:hover .mockup-ai-card {
     animation: pulseAI 4s infinite ease-in-out;
 }
-.flagship-card:hover .ai-spark {
+.ai-spark {
     font-size: var(--fs-xl);
+}
+.flagship-card:hover .ai-spark {
     animation: spin 6s linear infinite;
 }@keyframes pulseAI {
     0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
@@ -270,19 +281,21 @@
     50% { opacity: 0.7; transform: scale(0.95); }
 }
 
-.flagship-card:hover .pace-floating-card {
+.pace-floating-card {
     position: absolute;
     bottom: -20px;
     right: -20px;
     background: rgba(26, 16, 53, 0.9);
     border: 1px solid rgba(52, 211, 153, 0.4);
     border-radius: var(--radius-md);
-    padding: 16px;
+    padding: var(--space-md);
     display: flex;
     align-items: center;
     gap: var(--space-12);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     transform: translateZ(30px);
+}
+.flagship-card:hover .pace-floating-card {
     animation: floatCard 5s infinite ease-in-out;
 }@keyframes floatCard {
     0%, 100% { transform: translateZ(30px) translateY(0); }
@@ -298,7 +311,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 24px;
+    padding: var(--space-lg);
 }
 
 .mockup-timeline {
@@ -379,7 +392,8 @@
     font-size: var(--fs-micro);
     letter-spacing: var(--tracking-widest);
     color: color-mix(in srgb, var(--prism-lavender) 60%, transparent);
-    padding: 3px 10px;
+    /* 역할 동일 칩 — `.milestone-keyword`(Journey)와 짝. 치수를 맞춘다(2026-11-01). */
+    padding: var(--space-xs) 10px;
     border: 1px solid color-mix(in srgb, var(--prism-lavender) 12%, transparent);
     border-radius: var(--radius-xs);
     text-transform: uppercase;
@@ -417,16 +431,7 @@
 }
 
 /* Section label fade */
-.work .section-label {
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.8s ease 0.05s, transform 0.8s ease 0.05s;
-}
-
-.work.revealed .section-label {
-    opacity: 0.6;
-    transform: translateX(0);
-}
+/* .section-label 리빌은 전역 `.reveal-section` 규칙이 담당(중복 선언 제거, 2026-11-01) */
 
 /* --- PriSincera Base Mockup & Engine Visuals --- */
 .base-mockup {
@@ -451,11 +456,13 @@
     margin-bottom: 12px;
 }
 
-.flagship-card:hover .prism-core {
+.prism-core {
     width: 36px;
     height: 36px;
     position: relative;
     transform-style: preserve-3d;
+}
+.flagship-card:hover .prism-core {
     animation: rotatePrism 8s linear infinite;
 }
 
@@ -476,10 +483,12 @@
 .prism-face.top    { transform: rotateX(90deg) translateZ(18px); }
 .prism-face.bottom { transform: rotateX(-90deg) translateZ(18px); }
 
-.flagship-card:hover .engine-ring {
+.engine-ring {
     position: absolute;
     border-radius: 50%;
     border: 1px dashed rgba(245, 158, 11, 0.35);
+}
+.flagship-card:hover .engine-ring {
     animation: rotateRing 10s linear infinite;
 }
 
@@ -592,6 +601,11 @@
    분리 선언은 검사기도 사람도 규칙 전체를 한눈에 못 보게 만든다(.detail-title에서
    '그라디언트인데 inline-block 없음'을 숨긴 것과 같은 패턴). */
 .flagship-cta-btn {
+    /* 텍스트 + 화살표 아이콘 정렬. 구 구조는 라벨 선두에 이모지를 박아
+       OS마다 글리프 폭·베이스라인이 달라 정렬이 흔들렸다(2026-11-01). */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
     padding: var(--btn-pad-lg);
     min-height: var(--btn-h-lg);
     font-size: var(--fs-base);
@@ -640,18 +654,22 @@
     align-items: center;
     justify-content: center;
 }
-.flagship-card:hover .sym-core-img {
+.sym-core-img {
     width: 56px;
     height: 56px;
     border-radius: var(--radius-md);
     box-shadow: 0 0 26px rgba(30, 128, 255, 0.45), 0 0 54px rgba(0, 242, 254, 0.25);
+}
+.flagship-card:hover .sym-core-img {
     animation: symFloat 5s ease-in-out infinite;
 }
-.flagship-card:hover .sym-ring {
+.sym-ring {
     position: absolute;
     inset: -8px;
     border: 1.5px solid rgba(0, 242, 254, 0.4);
     border-radius: var(--radius-lg);
+}
+.flagship-card:hover .sym-ring {
     animation: symRing 2.6s infinite linear;
 }
 .sym-ring.r2 { animation-delay: 1.3s; }
@@ -669,10 +687,12 @@
     gap: var(--space-xs);
     height: 22px;
 }
-.flagship-card:hover .sym-wave i {
+.sym-wave i {
     width: 4px;
     border-radius: var(--radius-pill);
     background: linear-gradient(180deg, var(--card-accent), color-mix(in srgb, var(--card-accent) 50%, transparent));
+}
+.flagship-card:hover .sym-wave i {
     animation: symWave 1.1s ease-in-out infinite alternate;
 }
 .sym-wave i:nth-child(1) { height: 30%; animation-delay: 0s; }
@@ -712,7 +732,7 @@
     align-items: center;
     gap: var(--space-xs);
 }
-.flagship-card:hover .sym-caption-status::before {
+.sym-caption-status::before {
     content: '';
     display: inline-block;
     width: 6px;
@@ -720,18 +740,22 @@
     background: var(--card-accent);
     border-radius: 50%;
     box-shadow: 0 0 8px var(--card-accent);
+}
+.flagship-card:hover .sym-caption-status::before {
     animation: statusBlink 1.5s infinite;
 }
 .sym-line { line-height: var(--leading-relaxed); }
 .sym-line.src { color: rgba(255, 255, 255, 0.5); }
 .sym-line.dst { color: rgba(0, 242, 254, 0.9); }
-.flagship-card:hover .sym-caret {
+.sym-caret {
     display: inline-block;
     width: 6px;
     height: 11px;
     margin-left: 3px;
     background: var(--card-accent);
     vertical-align: -1px;
+}
+.flagship-card:hover .sym-caret {
     animation: statusBlink 0.9s infinite;
 }
 
@@ -746,11 +770,16 @@
         0 0 30px rgba(30, 128, 255, 0.4),
         0 0 60px rgba(0, 242, 254, 0.2);
 }
-.flagship-card:hover .sylphio-bento-pulse {
+.sylphio-bento-pulse {
     position: absolute;
-    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
     border: 1.5px solid rgba(0, 242, 254, 0.4);
     border-radius: 50%;
+}
+.flagship-card:hover .sylphio-bento-pulse {
     animation: bentoPulse 2.5s infinite linear;
 }
 /* @keyframes bentoPulse — index.css 전역 정의 사용(중복 선언 제거) */
@@ -777,7 +806,7 @@
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         gap: var(--space-md);
-        padding: 12px 4px 24px 4px;
+        padding: var(--space-12) var(--space-xs) var(--space-lg) var(--space-xs);
         scrollbar-width: none;
         width: 100%;
         box-sizing: border-box;
@@ -796,7 +825,7 @@
     }
 
     .flagship-content {
-        padding: 24px;
+        padding: var(--space-lg);
         align-items: center;
         text-align: center;
     }
@@ -807,7 +836,7 @@
 
     .flagship-visual {
         min-height: auto;
-        padding: 32px 16px;
+        padding: var(--space-xl) var(--space-md);
         border-left: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
@@ -845,10 +874,12 @@
     border: 1px dashed rgba(255, 255, 255, 0.18);
     box-shadow: 0 0 24px rgba(34, 211, 238, 0.08) inset;
 }
-.flagship-card:hover .rlm-orbit-rotor {
+.rlm-orbit-rotor {
     position: absolute;
     width: 118px;
     height: 118px;
+}
+.flagship-card:hover .rlm-orbit-rotor {
     animation: spin 9s linear infinite;
 }
 .rlm-comet {
@@ -863,10 +894,12 @@
     box-shadow: 0 0 10px var(--color-cyan), 0 0 22px rgba(34, 211, 238, 0.6);
 }
 
-.flagship-card:hover .rlm-core {
+.rlm-core {
     font-size: var(--fs-xl);
-    animation: symFloat 6s ease-in-out infinite;
     filter: drop-shadow(0 0 14px rgba(165, 180, 252, 0.5));
+}
+.flagship-card:hover .rlm-core {
+    animation: symFloat 6s ease-in-out infinite;
 }
 .rlm-node {
     position: absolute;
@@ -927,7 +960,7 @@
     align-items: center;
     gap: var(--space-xs);
 }
-.flagship-card:hover .rlm-report-status::before {
+.rlm-report-status::before {
     content: '';
     display: inline-block;
     width: 6px;
@@ -935,6 +968,8 @@
     background: var(--color-cyan);
     border-radius: 50%;
     box-shadow: 0 0 8px var(--color-cyan);
+}
+.flagship-card:hover .rlm-report-status::before {
     animation: statusBlink 1.5s infinite;
 }
 .rlm-report-row {
@@ -1000,9 +1035,16 @@
 }
 .flagship-visual .pvm-sheet.s3 { transform: translate(-58%, -46%) rotate(-9deg); opacity: 0.45; z-index: 1; }
 .flagship-visual .pvm-sheet.s2 { transform: translate(-44%, -50%) rotate(5deg); opacity: 0.7; z-index: 2; }
+.flagship-visual .pvm-sheet.s1 {
+    transform: translate(-50%, -52%) rotate(-2deg);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-12);
+    padding: 0 18px;
+}
 .flagship-card:hover .flagship-visual .pvm-sheet.s1 {
-    transform: translate(-50%, -52%) rotate(-2deg); z-index: 3;
-    display: flex; flex-direction: column; justify-content: center; gap: var(--space-12); padding: 0 18px;
     animation: pvmDrift 7s ease-in-out infinite;
 }
 .flagship-visual .pvm-line { display: block; height: 4px; border-radius: var(--radius-pill); background: rgba(199, 210, 254, 0.5); }
@@ -1038,11 +1080,19 @@
 .flagship-visual .wkm-tick-s { bottom: 8px; left: 50%; transform: translateX(-50%); }
 .flagship-visual .wkm-tick-e { right: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); }
 .flagship-visual .wkm-tick-w { left: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); }
-.flagship-card:hover .flagship-visual .wkm-needle {
-    position: absolute; top: 50%; left: 50%; width: 3px; height: 58px; margin: -52px 0 0 -1.5px;
+.flagship-visual .wkm-needle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 58px;
+    margin: -52px 0 0 -1.5px;
     transform-origin: 50% 89%;
     background: linear-gradient(180deg, var(--color-indigo) 0%, var(--prism-lavender) 100%);
-    border-radius: var(--radius-pill); box-shadow: 0 0 14px rgba(165, 180, 252, 0.4);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 14px rgba(165, 180, 252, 0.4);
+}
+.flagship-card:hover .flagship-visual .wkm-needle {
     animation: wkmSweep 7s ease-in-out infinite;
 }
 .flagship-visual .wkm-core { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: var(--radius-pill); background: var(--prism-lavender); box-shadow: 0 0 12px rgba(199, 210, 254, 0.6); }

@@ -79,6 +79,11 @@ export function collect({ noAdmin = false, root = 'src' } = {}) {
      CSS 쪽 stripComments와 동일한 교정. */
   const jsx = jsxFiles.map((p) => stripComments(readFileSync(p, 'utf-8')).replace(/^\s*\/\/.*$/gm, '')).join('\n');
 
+  /* 로케일 사전 — UI 문자열의 실제 거주지. 주석이 없는 JSON이라 그대로 읽는다. */
+  const localeText = ['ko', 'en', 'ja']
+    .map((l) => { try { return readFileSync(`src/locales/${l}.json`, 'utf-8'); } catch { return ''; } })
+    .join('\n');
+
   const n = (re) => (css.match(re) || []).length;
   const kf = [...css.matchAll(/@keyframes\s+([A-Za-z0-9_-]+)/g)].map((m) => m[1]);
   const kfDup = Object.entries(kf.reduce((a, x) => ((a[x] = (a[x] || 0) + 1), a), {}))
@@ -294,7 +299,10 @@ export function collect({ noAdmin = false, root = 'src' } = {}) {
     })(),
     'breakpoint-unique': new Set([...css.matchAll(/@media[^{]*?\b(?:max|min)-width:\s*(\d+)px/g)].map((m) => m[1])).size,
     'inline-style-jsx': (jsx.match(/style=\{\{/g) || []).length,
-    'emoji-jsx': (jsx.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]/gu) || []).length,
+    /* 이모지. **로케일 JSON까지 센다** — UI 라벨의 선두 이모지가 `src/locales/*.json`에
+       들어 있어 `.jsx`만 보던 구 지표가 **93건을 전부 놓쳤다**(2026-11-01 오너 발견:
+       "카드 내 버튼은 여전히 이모지가 있다"). 화살표 블록(U+2190–21FF)도 누락이었다. */
+    'emoji-jsx': ((jsx + localeText).match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2190}-\u{21FF}]/gu) || []).length,
 
     // ── 하드 규칙: 0이어야 하고 0을 유지해야 한다 ──
     'keyframes-duplicate': kfDup.length,

@@ -15,18 +15,20 @@ export default function BeliefIntro() {
         <span className="title-line accent">{t('home.philosophyTitleLine2')}</span>
       </h2>
       <p className="philosophy-lead reveal-item" style={{ '--reveal-delay': '0.3s' }}>
-        {t('home.philosophyLead1').split('\n').map((line, idx) => (
+        {t('home.philosophyLead1').split('\n').map((line, idx, arr) => (
           <React.Fragment key={idx}>
             {line}
-            <br/>
+            {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 */}
+            {idx < arr.length - 1 && <br/>}
           </React.Fragment>
         ))}
       </p>
       <p className="philosophy-lead reveal-item" style={{ '--reveal-delay': '0.45s' }}>
-        {t('home.philosophyLead2').split('\n').map((line, idx) => (
+        {t('home.philosophyLead2').split('\n').map((line, idx, arr) => (
           <React.Fragment key={idx}>
             {line}
-            <br/>
+            {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 */}
+            {idx < arr.length - 1 && <br/>}
           </React.Fragment>
         ))}
       </p>
@@ -35,14 +37,15 @@ export default function BeliefIntro() {
       </p>
       <div className="belief-declaration reveal-item" style={{ '--reveal-delay': '0.8s' }}>
         <p className="declaration-text">
-          {t('home.philosophyDeclaration').split('\n').map((line, idx) => (
+          {t('home.philosophyDeclaration').split('\n').map((line, idx, arr) => (
             <React.Fragment key={idx}>
               {line.includes('PriSincera') ? (
                 <>
                   {line.split('PriSincera')[0]}<strong>PriSincera</strong>{line.split('PriSincera')[1]}
                 </>
               ) : line}
-              <br/>
+              {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 */}
+              {idx < arr.length - 1 && <br/>}
             </React.Fragment>
           ))}
         </p>

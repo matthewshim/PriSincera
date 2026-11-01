@@ -120,10 +120,11 @@ export default function WorkSection() {
             <span className="accent">{t('home.servicesTitleAccent')}</span>
           </h2>
           <p className="work-subtitle">
-            {t('home.servicesSubtitle').split('\n').map((line, idx) => (
+            {t('home.servicesSubtitle').split('\n').map((line, idx, arr) => (
               <React.Fragment key={idx}>
                 {line}
-                <br />
+                {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                {idx < arr.length - 1 && <br />}
               </React.Fragment>
             ))}
           </p>
@@ -141,10 +142,11 @@ export default function WorkSection() {
             <div className="flagship-label">Product Planning · Perspective</div>
             <h3 className="flagship-title">Planner's View</h3>
             <p className="flagship-desc">
-              {t('home.servicePlannerDesc').split('\n').map((line, idx) => (
+              {t('home.servicePlannerDesc').split('\n').map((line, idx, arr) => (
                 <React.Fragment key={idx}>
                   {line}
-                  <br />
+                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                  {idx < arr.length - 1 && <br />}
                 </React.Fragment>
               ))}
             </p>
@@ -156,6 +158,7 @@ export default function WorkSection() {
             <div className="flagship-cta-wrap">
               <Link to="/planners-view" className="btn-primary flagship-cta-btn">
                 {t('home.servicePlannerCta')}
+                <Icon name="arrowRight" size={15} />
               </Link>
             </div>
           </div>
@@ -185,10 +188,11 @@ export default function WorkSection() {
             <div className="flagship-label">Engineering & Growth Logs</div>
             <h3 className="flagship-title">Builder's Log</h3>
             <p className="flagship-desc">
-              {t('home.serviceBuildersDesc').split('\n').map((line, idx) => (
+              {t('home.serviceBuildersDesc').split('\n').map((line, idx, arr) => (
                 <React.Fragment key={idx}>
                   {line}
-                  <br />
+                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                  {idx < arr.length - 1 && <br />}
                 </React.Fragment>
               ))}
             </p>
@@ -200,6 +204,7 @@ export default function WorkSection() {
             <div className="flagship-cta-wrap">
               <Link to="/builders-log" className="btn-primary flagship-cta-btn">
                 {t('home.serviceBuildersCta')}
+                <Icon name="arrowRight" size={15} />
               </Link>
             </div>
           </div>
@@ -245,10 +250,11 @@ export default function WorkSection() {
             <div className="flagship-label">Unified Growth Loop — Learn · Run · Reflect</div>
             <h3 className="flagship-title">ReLearn</h3>
             <p className="flagship-desc">
-              {t('home.serviceReLearnDesc').split('\n').map((line, idx) => (
+              {t('home.serviceReLearnDesc').split('\n').map((line, idx, arr) => (
                 <React.Fragment key={idx}>
                   {line}
-                  <br />
+                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                  {idx < arr.length - 1 && <br />}
                 </React.Fragment>
               ))}
             </p>
@@ -260,6 +266,7 @@ export default function WorkSection() {
             <div className="flagship-cta-wrap">
               <Link to="/relearn" className="btn-primary flagship-cta-btn">
                 {t('home.serviceReLearnCta')}
+                <Icon name="arrowRight" size={15} />
               </Link>
             </div>
           </div>
@@ -303,10 +310,11 @@ export default function WorkSection() {
             <div className="flagship-label">Decision Companion · Coming Soon</div>
             <h3 className="flagship-title">Waymark</h3>
             <p className="flagship-desc">
-              {t('home.serviceWaymarkDesc').split('\n').map((line, idx) => (
+              {t('home.serviceWaymarkDesc').split('\n').map((line, idx, arr) => (
                 <React.Fragment key={idx}>
                   {line}
-                  <br />
+                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                  {idx < arr.length - 1 && <br />}
                 </React.Fragment>
               ))}
             </p>
@@ -318,6 +326,7 @@ export default function WorkSection() {
             <div className="flagship-cta-wrap">
               <Link to="/waymark" className="btn-primary flagship-cta-btn">
                 {t('home.serviceWaymarkCta')}
+                <Icon name="arrowRight" size={15} />
               </Link>
             </div>
           </div>
@@ -348,10 +357,11 @@ export default function WorkSection() {
             <div className="flagship-label">On-Device AI Translation</div>
             <h3 className="flagship-title">Sylphio</h3>
             <p className="flagship-desc">
-              {t('home.serviceSylphioDesc').split('\n').map((line, idx) => (
+              {t('home.serviceSylphioDesc').split('\n').map((line, idx, arr) => (
                 <React.Fragment key={idx}>
                   {line}
-                  <br />
+                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+                  {idx < arr.length - 1 && <br />}
                 </React.Fragment>
               ))}
             </p>
@@ -364,6 +374,7 @@ export default function WorkSection() {
             <div className="flagship-cta-wrap">
               <Link to="/sylphio" className="btn-primary flagship-cta-btn">
                 {t('home.serviceSylphioCta')}
+                <Icon name="arrowRight" size={15} />
               </Link>
             </div>
           </div>

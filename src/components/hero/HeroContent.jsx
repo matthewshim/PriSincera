@@ -76,10 +76,11 @@ export default function HeroContent({ visible, onIntroComplete }) {
       <p className="hero-sub">
         <strong>{t('home.heroSubStrong')}</strong>
         <br/><br/>
-        {t('home.heroSubText').split('\n').map((line, idx) => (
+        {t('home.heroSubText').split('\n').map((line, idx, arr) => (
           <React.Fragment key={idx}>
             {line}
-            <br />
+            {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
+            {idx < arr.length - 1 && <br />}
           </React.Fragment>
         ))}
       </p>
