@@ -77,7 +77,22 @@ export function collect({ noAdmin = false, root = 'src' } = {}) {
   /* JSX도 주석을 제거한 사본으로 센다 — 규범 설명 주석에 쓴 `⚠️`·`🔴` 같은 기호가
      이모지 지표에 잡혀 '나빠진 것이 없는데' 예산이 초과되는 일이 있었다(2026-11-01).
      CSS 쪽 stripComments와 동일한 교정. */
-  const jsx = jsxFiles.map((p) => stripComments(readFileSync(p, 'utf-8')).replace(/^\s*\/\/.*$/gm, '')).join('\n');
+  /* 2차 교정(2026-11-01): 구 구현은 **줄 선두 주석만** 지워서 줄 끝 주석이 남았고
+     (예: 상태 선언 뒤에 붙은 설명 주석) 그 안의 화살표를 UI 글리프로 오산했다.
+     이제 줄 끝 주석도 자른다 — 단, 문자열 리터럴 안의 슬래시 두 개(URL 등)는 건드리지
+     않도록 따옴표 밖만 본다. (이 주석에 정규식 리터럴을 적지 않는 이유: 그 안의
+     별표·슬래시 조합이 블록 주석을 조기 종료시킨다 — 방금 겪었다.) */
+  const stripLineComments = (t) => t.split('\n').map((ln) => {
+    let q = null;
+    for (let i = 0; i < ln.length; i++) {
+      const c = ln[i];
+      if (q) { if (c === q && ln[i - 1] !== '\\') q = null; }
+      else if (c === '\'' || c === '"' || c === '`') q = c;
+      else if (c === '/' && ln[i + 1] === '/') return ln.slice(0, i);
+    }
+    return ln;
+  }).join('\n');
+  const jsx = jsxFiles.map((p) => stripLineComments(stripComments(readFileSync(p, 'utf-8')))).join('\n');
 
   /* 아티클 본문·메타 — 빌더스 로그/플래너스 뷰의 마크다운과 카드 메타(제목·요약).
      UI가 아니라 **콘텐츠**이고, 작성 경로가 어드민 에디터(AI 초안)라 이모지가 가장 쉽게

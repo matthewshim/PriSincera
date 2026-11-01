@@ -157,7 +157,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
                   <span className="rl-excluded-t">{task.title}</span>
                   {onRestore && (
                     <button className="rl-excluded-restore haptic-trigger" onClick={() => onRestore(task.id)}>
-                      {t('relearn.orbit.restore')}
+                      <Icon name="cycle" /> {t('relearn.orbit.restore')}
                     </button>
                   )}
                 </div>

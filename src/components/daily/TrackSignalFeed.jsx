@@ -192,7 +192,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
           <span className="track-loop-banner-text">
             {t('relearn.track.loopBannerText')} · <strong>{DOMAIN_LABEL[topDomain] || topDomain}</strong>
           </span>
-          <span className="track-loop-banner-cta">{t('relearn.track.loopBannerCta')}</span>
+          <span className="track-loop-banner-cta">{t('relearn.track.loopBannerCta')} <Icon name="arrowRight" /></span>
         </button>
       )}
 
@@ -301,7 +301,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
           to={`/relearn/daily/${date}`}
           onClick={() => trackRelearn('relearn_learn_more', { channel: 'track' })}
         >
-          {t('relearn.track.viewAll')}
+          {t('relearn.track.viewAll')} <Icon name="arrowRight" />
         </Link>
       )}
     </div>

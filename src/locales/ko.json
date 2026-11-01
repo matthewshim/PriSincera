@@ -3,7 +3,7 @@
     "plannersView": "Planner's View",
     "buildersLog": "Builder's Log",
     "sylphio": "Sylphio",
-    "sylphioAlert": "앗, 아직은 안 돼요! 🙈\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요! 🍃✨"
+    "sylphioAlert": "앗, 아직은 안 돼요!\n\n바람의 정령 Sylphio가 지금 열심히 데뷔 준비를 하고 있습니다.\n조만간 깜짝 놀랄 마법 같은 기능으로 찾아올 테니 조금만 기다려주세요!"
   },
   "footer": {
     "navigate": "Navigate",
@@ -28,6 +28,7 @@
     "heroParagraph": "아이디어가 프로덕트로 완성되는 모든 순간의 기록.\nFrom first commit to launch.",
     "seoDescription": "PriSincera의 프로덕트 메이킹과 비즈니스 구축 여정을 기록한 기술 블로그입니다.",
     "readArticle": "아티클 읽기",
+    "backToLog": "로그 목록으로",
     "recentShipments": "최근 배포 사항",
     "keyShipments": "핵심 배포 사항",
     "moreShipments": "+{count}개 배포 더 보기",
@@ -143,7 +144,7 @@
       "loadFail": "불러오기 실패"
     },
     "hero": {
-      "tagline": "오늘의 나를 다시 빌드하는 곳.",
+      "tagline": "오늘의 나를 다시 빌드하는 곳.\nLearn from zero, run again.",
       "loginCta": "나의 루프 시작하기 — Google로 로그인"
     },
     "crumb": {
@@ -202,7 +203,7 @@
       "searchTitle": "누적 추천 궤도 검색",
       "searchBtn": "검색",
       "excludedFold": "제외된 궤도 {n}개 보기",
-      "restore": "↩ 복원",
+      "restore": "복원",
       "searchAria": "궤도 검색",
       "searchPlaceholder": "추천 궤도 검색 또는 새 궤도 입력 — ↑↓ 이동 · Enter 추가 · Esc 닫기",
       "searchNewTag": "새 궤도",
@@ -256,15 +257,15 @@
       "noFeed": "아직 생성된 트랙 피드가 없습니다.",
       "loading": "트랙 피드 불러오는 중…",
       "loopBannerText": "당신의 궤도와 연결된 오늘의 배움",
-      "loopBannerCta": "바로 보기 →",
+      "loopBannerCta": "바로 보기",
       "mine": "내 궤도",
       "learningFold": "학습 포인트 보기",
       "learningLabel": "학습",
       "tasksFold": "할 일 {n}개 보기",
-      "sourceRead": "{name} 읽기 →",
+      "sourceRead": "{name} 읽기",
       "sourceDefault": "원문",
       "emptyDomain": "해당 도메인의 카드가 없습니다.",
-      "viewAll": "트랙 시그널 전체 보기 →"
+      "viewAll": "트랙 시그널 전체 보기"
     },
     "loop": {
       "title": "성장 루프",
@@ -330,7 +331,7 @@
       "listenPron": "발음 듣기"
     },
     "signalCard": {
-      "readSource": "원문 읽기 →"
+      "readSource": "원문 읽기"
     }
   },
   "errorBoundary": {

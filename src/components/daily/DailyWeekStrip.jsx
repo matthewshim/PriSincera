@@ -6,6 +6,7 @@
  * 좌우 화살표 = 주 단위 이동(그 방향에 아카이브가 더 없으면 비활성).
  */
 import { useState, useEffect } from 'react';
+import Icon from '../common/Icon';
 import { Link } from 'react-router-dom';
 import { trackRelearn } from '../relearn/funnel';
 import { useTranslation } from '../../contexts/LanguageContext';
@@ -59,14 +60,14 @@ export default function DailyWeekStrip({ date, dates }) {
           onClick={() => setWeekOffset(o => o - 1)}
           disabled={!canPrev}
           aria-label={t('relearn.week.prev')}
-        >←</button>
+        ><Icon name="arrowLeft" /></button>
         <span className="rl-week-label">{label}</span>
         <button
           className="rl-week-arrow haptic-trigger"
           onClick={() => setWeekOffset(o => o + 1)}
           disabled={!canNext}
           aria-label={t('relearn.week.next')}
-        >→</button>
+        ><Icon name="arrowRight" /></button>
       </div>
       <div className="rl-week-days">
           {days.map(d => {

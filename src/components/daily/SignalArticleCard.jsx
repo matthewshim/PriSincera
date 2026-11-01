@@ -85,7 +85,7 @@ const SignalArticleCard = ({ article, compact }) => {
         <h3>{article.title}</h3>
         {article.insight && <div className="signal-insight"><Icon name="insight" /> {article.insight}</div>}
         {!compact && <p>{article.summary}</p>}
-        <span className="signal-link">{t('relearn.signalCard.readSource')}</span>
+        <span className="signal-link">{t('relearn.signalCard.readSource')} <Icon name="arrowRight" /></span>
       </div>
     </a>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import Icon from '../components/common/Icon';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -128,7 +129,7 @@ export default function BuildersLogDetail() {
     return (
       <div className="builders-log-detail-wrapper error-state">
         <h2>Article Not Found</h2>
-        <Link to="/builders-log" className="back-btn">← Back to Log</Link>
+        <Link to="/builders-log" className="back-btn"><Icon name="arrowLeft" /> {t('buildersLog.backToLog')}</Link>
       </div>
     );
   }

@@ -266,11 +266,10 @@ export default function DailyView() {
         {isToday ? (
           <div className="rl-hero">
             <h1 className="rl-hero-title">ReLearn</h1>
-            <p className="rl-hero-tagline">
-              {t('relearn.hero.tagline')}
-              <br />
-              Learn from zero, run again.
-            </p>
+            {/* 형제 히어로(Builder's Log·Planner's View·Waymark)와 동일 패턴 —
+                영문 2행도 언어팩에 담고 `white-space: pre-line`으로 받는다.
+                구 구조는 JSX에 영문을 하드코딩했다(i18n 게이트는 한국어만 검출한다). */}
+            <p className="rl-hero-tagline">{t('relearn.hero.tagline')}</p>
             {!user && (
               <button className="rl-hero-cta haptic-trigger" onClick={() => { trackRelearn('relearn_login_cta'); loginWithGoogle(); }}>
                 {t('relearn.hero.loginCta')}

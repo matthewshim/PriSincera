@@ -8,6 +8,7 @@
  *   상시 배치해 모바일에서 순서 이동 수단이 0이 되지 않게 한다(§9-11 v5.22).
  */
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import Icon from '../components/common/Icon';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -161,7 +162,7 @@ export default function PlannersViewDetail() {
       <div className="pv-seriesnav-grid">
         {seriesInfo && seriesInfo.prev ? (
           <Link to={`/planners-view/${seriesInfo.prev.slug}`} className="pv-seriesnav-card pv-seriesnav-prev">
-            <span className="pv-seriesnav-dir">← {t('plannersView.prevPart')}</span>
+            <span className="pv-seriesnav-dir"><Icon name="arrowLeft" /> {t('plannersView.prevPart')}</span>
             <span className="pv-seriesnav-title">{localize(seriesInfo.prev.title)}</span>
           </Link>
         ) : (
@@ -171,7 +172,7 @@ export default function PlannersViewDetail() {
         )}
         {seriesInfo && seriesInfo.next ? (
           <Link to={`/planners-view/${seriesInfo.next.slug}`} className="pv-seriesnav-card pv-seriesnav-next">
-            <span className="pv-seriesnav-dir">{t('plannersView.nextPart')} →</span>
+            <span className="pv-seriesnav-dir">{t('plannersView.nextPart')} <Icon name="arrowRight" /></span>
             <span className="pv-seriesnav-title">{localize(seriesInfo.next.title)}</span>
           </Link>
         ) : (

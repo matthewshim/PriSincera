@@ -27,7 +27,9 @@
   font-size: var(--fs-md);
   color: var(--crystal-light);
   line-height: var(--leading-relaxed);
-  opacity: 0.9;
+  /* 텍스트 `opacity` 제거(2026-11-01) — 중첩 시 실효 대비가 떨어지고 측정이 불가해진다
+     (P2-6에서 AA 미달 4건의 원인). 흐림은 색 토큰이 맡는다(§4-4). */
+  white-space: pre-line;   /* 언어팩 줄바꿈 보존 — 형제 히어로 정합 */
 }
 .rl-hero-cta {
   margin-top: 26px; padding: var(--btn-pad-lg);

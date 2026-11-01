@@ -3,7 +3,7 @@
     "plannersView": "Planner's View",
     "buildersLog": "Builder's Log",
     "sylphio": "Sylphio",
-    "sylphioAlert": "Oops, not yet! 🙈\n\nSylphio, the wind spirit, is working hard on preparing for its debut.\nIt will bring some magical features soon, so please stay tuned! 🍃✨"
+    "sylphioAlert": "Oops, not yet!\n\nSylphio, the wind spirit, is working hard on preparing for its debut.\nIt will bring some magical features soon, so please stay tuned!"
   },
   "footer": {
     "navigate": "Navigate",
@@ -28,6 +28,7 @@
     "heroParagraph": "A record of every moment an idea becomes a product.\nFrom first commit to launch.",
     "seoDescription": "A tech blog recording PriSincera's product making and business building journey.",
     "readArticle": "Read Article",
+    "backToLog": "Back to Log",
     "recentShipments": "Recent Shipments",
     "keyShipments": "Key Shipments",
     "moreShipments": "+{count} more shipments",
@@ -143,7 +144,7 @@
       "loadFail": "Failed to load"
     },
     "hero": {
-      "tagline": "A place to rebuild today's you.",
+      "tagline": "A place to rebuild today's you.\nLearn from zero, run again.",
       "loginCta": "Start my loop — Sign in with Google"
     },
     "crumb": {
@@ -202,7 +203,7 @@
       "searchTitle": "Search recommended orbits",
       "searchBtn": "Search",
       "excludedFold": "View {n} excluded orbits",
-      "restore": "↩ Restore",
+      "restore": "Restore",
       "searchAria": "Orbit search",
       "searchPlaceholder": "Search orbits or type a new one — ↑↓ move · Enter add · Esc close",
       "searchNewTag": "New orbit",
@@ -256,15 +257,15 @@
       "noFeed": "No track feed generated yet.",
       "loading": "Loading track feed…",
       "loopBannerText": "Today's learning linked to your orbit",
-      "loopBannerCta": "View now →",
+      "loopBannerCta": "View now",
       "mine": "My orbit",
       "learningFold": "View learning points",
       "learningLabel": "Learning",
       "tasksFold": "View {n} tasks",
-      "sourceRead": "Read {name} →",
+      "sourceRead": "Read {name}",
       "sourceDefault": "the source",
       "emptyDomain": "No cards for this domain.",
-      "viewAll": "View all track signals →"
+      "viewAll": "View all track signals"
     },
     "loop": {
       "title": "Growth Loop",
@@ -330,7 +331,7 @@
       "listenPron": "Listen Pronunciation"
     },
     "signalCard": {
-      "readSource": "Read source →"
+      "readSource": "Read source"
     }
   },
   "errorBoundary": {

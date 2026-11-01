@@ -58,8 +58,9 @@
   color: var(--crystal-light);
   line-height: var(--leading-relaxed);
   margin: 0;
-  opacity: 0.9;
   white-space: pre-line; /* 언어팩 \n 보존 */
+  /* 텍스트 `opacity` 제거(2026-11-01) — 중첩 시 실효 대비가 떨어지고 측정이 불가해진다
+     (P2-6에서 AA 미달 4건의 원인). 흐림은 색 토큰이 맡는다(§4-4). */
 }
 
 /* --- 시리즈 묶음 --- */
@@ -221,8 +222,9 @@
 .pvl-empty-msg {
   font-size: var(--fs-md);
   color: var(--crystal-light);
-  opacity: 0.9;
   margin: 0 0 var(--space-lg);
+  /* 텍스트 `opacity` 제거(2026-11-01) — 중첩 시 실효 대비가 떨어지고 측정이 불가해진다
+     (P2-6에서 AA 미달 4건의 원인). 흐림은 색 토큰이 맡는다(§4-4). */
 }
 
 .pvl-cross-cta {

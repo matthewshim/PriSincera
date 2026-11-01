@@ -342,7 +342,7 @@ export default function ServiceDocs() {
                           <span className="svc-history-date">{fmtDate(h.date)}</span>
                           <span className="svc-history-editor">{h.editor}</span>
                           <span className="svc-history-summary">{h.summary}</span>
-                          {h.url && <a className="svc-history-diff" href={h.url} target="_blank" rel="noopener noreferrer">diff ↗</a>}
+                          {h.url && <a className="svc-history-diff" href={h.url} target="_blank" rel="noopener noreferrer">diff <Icon name="external" /></a>}
                         </div>
                       ))
                     )}

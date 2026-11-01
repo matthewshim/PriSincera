@@ -3,7 +3,7 @@
     "plannersView": "Planner's View",
     "buildersLog": "Builder's Log",
     "sylphio": "Sylphio",
-    "sylphioAlert": "おっと、まだ準備中ですよ！ 🙈\n\n風の精霊 Sylphio がデビューに向けて一生懸命準備しています。\n間もなく魔法のような驚きの機能でお会いできるので、少々お待ちください！ 🍃✨"
+    "sylphioAlert": "おっと、まだ準備中ですよ！\n\n風の精霊 Sylphio がデビューに向けて一生懸命準備しています。\n間もなく魔法のような驚きの機能でお会いできるので、少々お待ちください！"
   },
   "footer": {
     "navigate": "Navigate",
@@ -28,6 +28,7 @@
     "heroParagraph": "アイデアがプロダクトとして完成する、すべての瞬間の記録。\nFrom first commit to launch.",
     "seoDescription": "PriSinceraのプロダクトメイキングとビジネス構築の旅を記録した技術ブログです。",
     "readArticle": "記事を読む",
+    "backToLog": "ログ一覧へ戻る",
     "recentShipments": "最近のデプロイ",
     "keyShipments": "主要なデプロイ",
     "moreShipments": "+{count}個のデプロイをさらに表示",
@@ -143,7 +144,7 @@
       "loadFail": "読み込みに失敗しました"
     },
     "hero": {
-      "tagline": "今日の自分を、もう一度ビルドする場所。",
+      "tagline": "今日の自分を、もう一度ビルドする場所。\nLearn from zero, run again.",
       "loginCta": "マイループを始める — Googleでログイン"
     },
     "crumb": {
@@ -202,7 +203,7 @@
       "searchTitle": "おすすめ軌道を検索",
       "searchBtn": "検索",
       "excludedFold": "除外した軌道 {n}件を見る",
-      "restore": "↩ 復元",
+      "restore": "復元",
       "searchAria": "軌道検索",
       "searchPlaceholder": "おすすめ軌道を検索、または新しい軌道を入力 — ↑↓ 移動 · Enter 追加 · Esc 閉じる",
       "searchNewTag": "新しい軌道",
@@ -256,15 +257,15 @@
       "noFeed": "まだ生成されたトラックフィードはありません。",
       "loading": "トラックフィードを読み込み中…",
       "loopBannerText": "あなたの軌道につながる今日の学び",
-      "loopBannerCta": "すぐ見る →",
+      "loopBannerCta": "すぐ見る",
       "mine": "マイ軌道",
       "learningFold": "学習ポイントを見る",
       "learningLabel": "学習",
       "tasksFold": "タスク {n}件を見る",
-      "sourceRead": "{name} を読む →",
+      "sourceRead": "{name} を読む",
       "sourceDefault": "原文",
       "emptyDomain": "このドメインのカードはありません。",
-      "viewAll": "トラックシグナルをすべて見る →"
+      "viewAll": "トラックシグナルをすべて見る"
     },
     "loop": {
       "title": "成長ループ",
@@ -330,7 +331,7 @@
       "listenPron": "発音を聞く"
     },
     "signalCard": {
-      "readSource": "原文を読む →"
+      "readSource": "原文を読む"
     }
   },
   "errorBoundary": {

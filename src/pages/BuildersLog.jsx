@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Icon from '../components/common/Icon';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
@@ -136,7 +137,7 @@ const ChapterCard = ({ chapter, index }) => {
  
           <div className="card-footer">
             <span className="read-more-btn">
-              {t('buildersLog.readArticle')} <span className="read-more-arrow">→</span>
+              {t('buildersLog.readArticle')} <span className="read-more-arrow"><Icon name="arrowRight" /></span>
             </span>
           </div>
         </div>
