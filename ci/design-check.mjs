@@ -230,16 +230,41 @@ for (const file of cssFiles(ROOT)) {
       const line = src.slice(0, m.index).split('\n').length;
       errors.push(`${rel}:${line} <img> alt 누락 (P4-3)`);
     }
-    for (const m of src.matchAll(/<button\s([^>]*)>([\s\S]{0,160}?)<\/button>/g)) {
-      if (/aria-label|aria-labelledby|title=/.test(m[1])) continue;
-      /* `<Icon label="…">`는 role="img" + aria-label을 내보내므로 버튼의 접근명이 된다.
-         이 분기가 없어 어드민 이모지 전환(P1-E 어드민분) 때 정상 코드를 오탐했다. */
-      if (/<Icon[^>]*\slabel=/.test(m[2])) continue;
-      const text = m[2].replace(/<[^>]*>/g, '').replace(/\{[^}]*\}/g, '').trim();
+    /* 아이콘 전용 버튼의 접근명. **속성 구간을 중괄호 균형으로 잡는다** — 구 구현은
+       `<button\s([^>]*)>`로 잘라서 `onClick={() => x}`의 화살표 `>`를 태그 끝으로
+       오인했다. 그러면 `aria-label`이 속성 밖으로 밀려나 무시되고, 남은 쓰레기(`}>`)가
+       본문으로 들어가 "텍스트 있음"이 되어 **진짜 위반을 전부 통과시켰다**
+       (2026-11-01 역검증으로 발견 — 위의 onClick 검사에만 적용돼 있던 교정이다). */
+    for (const m of src.matchAll(/<button(\s)/g)) {
+      let i = m.index + 7, depth = 0;
+      for (; i < src.length; i++) {
+        const ch = src[i];
+        if (ch === '{') depth++;
+        else if (ch === '}') depth--;
+        else if (ch === '>' && depth === 0) break;
+      }
+      const attrs = src.slice(m.index + 7, i);
+      const close = src.indexOf('</button>', i);
+      if (close === -1) continue;
+      const inner = src.slice(i + 1, close);
+      if (/aria-label|aria-labelledby|title=/.test(attrs)) continue;
+      /* `<Icon label="…">`는 role="img" + aria-label을 내보내므로 버튼의 접근명이 된다. */
+      if (/<Icon[^>]*\slabel=/.test(inner)) continue;
+      /* JSX 표현식에서 오는 라벨도 **텍스트로 인정한다**. 구 구현은 `{...}`를 통째로
+         지운 뒤 "텍스트 없음"을 판정해서 `{t('…')}`·`{label}`·`{r}`처럼 **보이는 글자를
+         담은 표현식**을 가진 버튼을 오탐했고, 그 오탐은 저자에게 불필요한 `aria-label`을
+         덧붙이게 만든다(보이는 텍스트가 이미 접근명이므로 중복이다).
+         판정: 표현식은 기본적으로 텍스트로 본다. **요소를 렌더하는 것**(`<` 포함)과
+         **아이콘 전용 변수**(이름에 icon)만 텍스트에서 제외한다 — 느슨한 쪽으로 틀리면
+         오탐이 되고, 오탐은 규범을 불신하게 만들어 게이트 자체를 무력화한다. */
+      const text = inner
+        .replace(/<[^>]*>/g, '')
+        .replace(/\{([^}]*)\}/g, (_, e) => (/<|icon/i.test(e) ? '' : 'LABEL'))
+        .trim();
       if (text.length > 0) continue;
-      if (!/<Icon|<svg|className="[^"]*icon/i.test(m[2])) continue;
+      if (!/<Icon|<svg|className="[^"]*icon/i.test(inner)) continue;
       const line = src.slice(0, m.index).split('\n').length;
-      errors.push(`${rel}:${line} 아이콘 전용 <button>에 접근 가능 이름 없음 (P4-3 — aria-label을 주십시오)`);
+      errors.push(`${rel}:${line} 아이콘 전용 <button>에 접근 가능 이름 없음 (P4-3 — aria-label 또는 <Icon label>을 주십시오)`);
     }
   }
 })();
@@ -358,38 +383,53 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
-// ── 이모지 게이트: Planner's View 발행물에 이모지 금지 (content_guide §2-6) ──
-// 이 섹션은 1인칭 에세이다. 이모지는 문장의 어조를 대신해버려서, 문장으로 세워야 하는
-// 논지를 약화시킨다. 7편 21개 파일을 전수 조사한 결과 실사용이 0건이었으므로
-// 관행을 규범으로 고정한다(소급 위반 없음).
+// ── 이모지 게이트: 발행 아티클 전 섹션에 이모지 금지 ──
+// 정본: Planner's View [content_guide §2-6] · Builder's Log [publishing_guide §6]
 //
-// 적용 범위를 좁게 둔다:
-//   · 대상 — Planner's View 본문 + 메타/시리즈 정본의 독자 노출 텍스트
-//   · 제외 — Builder's Log(실사용 44건, 제작 기록이라 성격이 다르다)
-//   · 제외 — 내부 문서(docs/)와 UI 요소. 히어로 아이콘은 이모지가 §9-1 규격이다
-(function plannersViewEmojiGate() {
+// 두 섹션의 사유는 다르지만 결론이 같다. 뷰는 1인칭 에세이라 이모지가 문장의 어조를
+// 대신해 논지를 약화시키고, 로그는 제작 기록이라 이모지가 **정보를 주지 않는 장식**으로
+// 소제목마다 반복됐다(2026-11-01 전수 정리 378건 — 제목 선두 글리프·`💡` 콜아웃·
+// 표의 `✅/❌/🟡` 상태 표식). 의미를 지녔던 것은 텍스트로 승계했다.
+//
+// 처음에는 뷰에만 적용하고 로그를 "성격이 다르다"는 이유로 제외했는데, 그 예외가
+// 곧 철회됐다 — 같은 사이트의 두 발행 섹션에 서로 다른 활자 규범을 두면 독자에게는
+// 일관성 없음으로만 읽힌다. **발행물에는 예외를 두지 않는다.**
+//
+// 적용 범위:
+//   · 대상 — 두 섹션의 본문 + 메타/시리즈 정본의 독자 노출 텍스트(커밋 메시지 포함)
+//   · 제외 — 내부 문서(docs/). 이 가이드 자체가 `📝`·`🔒`를 쓴다. 규범은
+//            **독자에게 발행되는 텍스트**에만 적용된다
+//   · 제외 — 본문의 `→`(U+2192). 이모지가 아니라 타이포그래피다(`배움 → 실행 → 복기`,
+//            `4→3`). 아래 정규식이 화살표 블록을 포함하지 않는 이유다
+(function articleEmojiGate() {
   // 범위를 넓게 잡으면 전각 기호·화살표까지 걸려 오탐이 난다. 실제 이모지 블록만 본다.
   const EMOJI = /[\u{1F300}-\u{1FAFF}\u{1F000}-\u{1F2FF}\u{2600}-\u{27BF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/u;
-  const DIR = 'public/content/planners-view';
+  const DIRS = [
+    ['public/content/planners-view', 'content_guide §2-6'],
+    ['public/content/logs', 'publishing_guide §6'],
+  ];
 
-  let files = [];
-  try { files = readdirSync(DIR).filter((f) => f.endsWith('.md')); } catch { files = []; }
-  for (const f of files) {
-    const md = readFileSync(join(DIR, f), 'utf-8');
-    md.split('\n').forEach((line, i) => {
-      const m = line.match(EMOJI);
-      if (m) {
-        errors.push(`${DIR}/${f}:${i + 1}: 발행 아티클에 이모지 금지 — "${m[0]}" (content_guide §2-6)`);
-      }
-    });
+  for (const [dir, ref] of DIRS) {
+    let files = [];
+    try { files = readdirSync(dir).filter((f) => f.endsWith('.md')); } catch { files = []; }
+    for (const f of files) {
+      const md = readFileSync(join(dir, f), 'utf-8');
+      md.split('\n').forEach((line, i) => {
+        const m = line.match(EMOJI);
+        if (m) {
+          errors.push(`${dir}/${f}:${i + 1}: 발행 아티클에 이모지 금지 — "${m[0]}" (${ref})`);
+        }
+      });
+    }
   }
 
   // 메타·시리즈 정본의 독자 노출 문안도 같은 규범을 받는다
   const JSONS = [
-    ['src/data/plannersViewMeta.json', ['title', 'subtitle', 'description', 'pullQuote']],
-    ['src/data/plannersViewSeries.json', ['title', 'description']],
+    ['src/data/plannersViewMeta.json', ['title', 'subtitle', 'description', 'pullQuote'], 'content_guide §2-6'],
+    ['src/data/plannersViewSeries.json', ['title', 'description'], 'content_guide §2-6'],
+    ['src/data/buildersLogMeta.json', ['title', 'subtitle', 'description'], 'publishing_guide §6'],
   ];
-  for (const [path, fields] of JSONS) {
+  for (const [path, fields, ref] of JSONS) {
     let rows;
     try { rows = JSON.parse(readFileSync(path, 'utf-8')); } catch { continue; }
     for (const row of rows) {
@@ -398,13 +438,21 @@ for (const file of srcFiles(ROOT)) {
         if (!val || typeof val !== 'object') continue;
         for (const [loc, text] of Object.entries(val)) {
           if (typeof text === 'string' && EMOJI.test(text)) {
-            errors.push(`${path}: ${row.id || row.slug} ${field}.${loc} 에 이모지 금지 (content_guide §2-6)`);
+            errors.push(`${path}: ${row.id || row.slug} ${field}.${loc} 에 이모지 금지 (${ref})`);
           }
         }
       }
       for (const tag of row.tags || []) {
         if (typeof tag === 'string' && EMOJI.test(tag)) {
-          errors.push(`${path}: ${row.id || row.slug} tags 에 이모지 금지 (content_guide §2-6)`);
+          errors.push(`${path}: ${row.id || row.slug} tags 에 이모지 금지 (${ref})`);
+        }
+      }
+      /* Key Shipments 패널에 그대로 렌더되는 커밋 메시지도 독자 노출 텍스트다 */
+      for (const c of row.commits || []) {
+        for (const [loc, text] of Object.entries(c.msg && typeof c.msg === 'object' ? c.msg : {})) {
+          if (typeof text === 'string' && EMOJI.test(text)) {
+            errors.push(`${path}: ${row.id || row.slug} commits[${c.hash}].msg.${loc} 에 이모지 금지 (${ref})`);
+          }
         }
       }
     }

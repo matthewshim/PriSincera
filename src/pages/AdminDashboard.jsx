@@ -1478,7 +1478,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
               <div className="admin-modal-header">
                 <h3>{poolModal === 'create' ? '추천 항목 추가' : '추천 항목 수정'}</h3>
-                <button className="admin-modal-close" onClick={() => setPoolModal(null)}><Icon name="close" /></button>
+                <button className="admin-modal-close" onClick={() => setPoolModal(null)}><Icon name="close" label="닫기" /></button>
               </div>
               <form onSubmit={handlePoolSubmit}>
                 <div className="admin-modal-body">
@@ -1543,7 +1543,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px', width: '90%' }}>
               <div className="admin-modal-header">
                 <h3>{buildersLogModal === 'create' ? '새 아티클 작성' : '아티클 수정 및 재배포'}</h3>
-                <button className="admin-modal-close" onClick={() => setBuildersLogModal(null)}><Icon name="close" /></button>
+                <button className="admin-modal-close" onClick={() => setBuildersLogModal(null)}><Icon name="close" label="닫기" /></button>
               </div>
               <form onSubmit={handleBuildersLogSubmit}>
                 <div className="admin-modal-body" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr', maxHeight: '70vh', overflowY: 'auto' }}>
@@ -1622,7 +1622,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       />
                     </label>
                   </div>
-                  <textarea required rows={15} value={buildersLogForm.markdown[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: { ...f.markdown, [buildersLogActiveTab]: e.target.value } }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'var(--font-mono)', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)', color: 'var(--admin-text)', padding: '12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
+                  <textarea required rows={15} value={buildersLogForm.markdown[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: { ...f.markdown, [buildersLogActiveTab]: e.target.value } }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요... (이모지는 쓰지 않습니다 — 발행 시 거부됩니다. publishing_guide §6)" style={{ gridColumn: 'span 2', fontFamily: 'var(--font-mono)', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)', color: 'var(--admin-text)', padding: '12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
 
                   {buildersLogAction && (
                     <div className={`admin-send-status ${buildersLogAction.type} adm-span-2`} >{buildersLogAction.msg}</div>
@@ -1711,7 +1711,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
               <div className="admin-modal-header">
                 <h3><Icon name="user" /> 마이페이지</h3>
-                <button className="admin-modal-close" onClick={() => setProfileModal(false)}><Icon name="close" /></button>
+                <button className="admin-modal-close" onClick={() => setProfileModal(false)}><Icon name="close" label="닫기" /></button>
               </div>
               <form onSubmit={handleProfileSubmit}>
                 <div className="admin-modal-body">
@@ -1756,7 +1756,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-modal" style={{ maxWidth: 600 }} onClick={e => e.stopPropagation()}>
               <div className="admin-modal-header">
                 <h3>{contentModal.mode === 'create' ? '콘텐츠 수동 발행' : '콘텐츠 수정'}</h3>
-                <button className="admin-modal-close" onClick={() => setContentModal(null)}><Icon name="close" /></button>
+                <button className="admin-modal-close" onClick={() => setContentModal(null)}><Icon name="close" label="닫기" /></button>
               </div>
               <form onSubmit={handleContentSubmit}>
                 <div className="admin-modal-body">

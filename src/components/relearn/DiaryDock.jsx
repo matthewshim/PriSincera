@@ -126,8 +126,8 @@ export default function DiaryDock({
   );
 
   const TABS = isToday
-    ? [['run', t('relearn.diary.tabRun')], ['reflect', t('relearn.diary.tabReflect')], ['report', t('relearn.diary.tabReport')]]
-    : [['run', t('relearn.diary.tabRun')], ['reflect', t('relearn.diary.tabReflect')]];
+    ? [['run', t('relearn.diary.tabRun'), 'rocket'], ['reflect', t('relearn.diary.tabReflect'), 'pen'], ['report', t('relearn.diary.tabReport'), 'cycle']]
+    : [['run', t('relearn.diary.tabRun'), 'rocket'], ['reflect', t('relearn.diary.tabReflect'), 'pen']];
 
   return (
     <aside className={`rl-dock${open ? ' open' : ''}`} aria-label={t('relearn.diary.aria')}>
@@ -159,11 +159,11 @@ export default function DiaryDock({
 
             {/* 책갈피 탭 — 실행 | 복기 | (오늘) 리포트 */}
             <nav className="rl-dock-tabs" role="tablist" aria-label={t('relearn.diary.ariaTabs')}>
-              {TABS.map(([k, label]) => (
+              {TABS.map(([k, label, ic]) => (
                 <button key={k} role="tab" aria-selected={tab === k}
                   className={`rl-dock-tab${tab === k ? ' on' : ''} haptic-trigger`}
                   onClick={() => switchTab(k)}>
-                  {label}
+                  <Icon name={ic} /> {label}
                 </button>
               ))}
             </nav>
@@ -183,7 +183,7 @@ export default function DiaryDock({
               <>
                 <LoopReport profile={profile} />
                 <div className="rl-dock-tools">
-                  <button className="rl-expand-btn haptic-trigger" onClick={exportRecords}>{t('relearn.diary.export')}</button>
+                  <button className="rl-expand-btn haptic-trigger" onClick={exportRecords} aria-label={t('relearn.diary.export')}><Icon name="download" /> {t('relearn.diary.export')}</button>
                 </div>
               </>
             )}

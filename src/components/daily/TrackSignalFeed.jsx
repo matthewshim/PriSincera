@@ -206,7 +206,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
           <div key={card.id} className="track-card">
             <div className="track-card-meta">
               <span className="track-card-domain">{DOMAIN_LABEL[card.domain] || card.domain}</span>
-              {myDomains.has(card.domain) && <span className="track-card-mine">{t('relearn.track.mine')}</span>}
+              {myDomains.has(card.domain) && <span className="track-card-mine"><Icon name="compass" /> {t('relearn.track.mine')}</span>}
               {(card.tags || []).slice(0, compact ? 2 : 5).map(tag => (
                 <span key={tag} className="track-card-tag">#{tag}</span>
               ))}
@@ -222,7 +222,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                   className="track-learning rl-fold"
                   onToggle={(e) => e.currentTarget.open && trackRelearn('relearn_learn_expand', { block: 'track_learning' })}
                 >
-                  <summary className="rl-fold-summary">{t('relearn.track.learningFold')}</summary>
+                  <summary className="rl-fold-summary"><Icon name="book" /> {t('relearn.track.learningFold')}</summary>
                   {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
                   {(card.learning.key_points || []).length > 0 && (
                     <ul className="track-learning-points">
@@ -232,7 +232,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                 </details>
               ) : (
                 <div className="track-learning">
-                  <div className="track-learning-label">{t('relearn.track.learningLabel')}</div>
+                  <div className="track-learning-label"><Icon name="book" /> {t('relearn.track.learningLabel')}</div>
                   {card.learning.concept && <p className="track-learning-concept">{card.learning.concept}</p>}
                   {(card.learning.key_points || []).length > 0 && (
                     <ul className="track-learning-points">
@@ -272,7 +272,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
             {/* 🔗 참조: 실제 출처 원문 링크 (근거 있는 경우만) — 실행 전 확인 */}
             {card.sourceUrl && (
               <a className="track-source-link" href={card.sourceUrl} target="_blank" rel="noopener noreferrer">
-                {t('relearn.track.sourceRead', { name: card.sourceName || t('relearn.track.sourceDefault') })}
+                <Icon name="link" /> {t('relearn.track.sourceRead', { name: card.sourceName || t('relearn.track.sourceDefault') })}
               </a>
             )}
 
@@ -283,7 +283,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
                 onClick={() => addOrbit(card)}
                 disabled={st === 'adding' || st === 'added'}
               >
-                {st === 'added' ? t('relearn.orbitBtn.added') : st === 'adding' ? t('relearn.orbitBtn.adding') : st === 'error' ? t('relearn.orbitBtn.error') : t('relearn.orbitBtn.add')}
+                <Icon name={st === 'added' ? 'check' : 'plus'} /> {st === 'added' ? t('relearn.orbitBtn.added') : st === 'adding' ? t('relearn.orbitBtn.adding') : st === 'error' ? t('relearn.orbitBtn.error') : t('relearn.orbitBtn.add')}
               </button>
             )}
           </div>

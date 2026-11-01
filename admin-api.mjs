@@ -1194,6 +1194,11 @@ router.post('/builderslog/analyze', async (req, res) => {
 2. 이 아티클을 150~200자 내외로 명확하게 요약한 SEO용 한국어 설명문(description)을 작성해.
 3. 아래 제공된 [최근 커밋 리스트]를 분석하여, 이 아티클의 내용과 실제로 관련된 커밋들만 선별(최대 5개)하여 JSON 배열로 반환해. 연관된 것이 없다면 빈 배열 []을 반환해.
 
+[작성 규범 — 반드시 지켜라]
+- **이모지를 쓰지 마라.** title·subtitle·description·tags·commits[].msg 어디에도 이모지를 넣지 마라. 제목 선두 글리프(예: "🚀 제목")도 금지다. 발행 아티클은 이모지를 쓰지 않는다(docs/builders-log/publishing_guide.md §6).
+- 초안 본문에 이모지가 있더라도 메타로 옮겨 적지 마라.
+- 화살표가 필요하면 딩뱃(➡️·➔)이 아니라 '→'(U+2192)를 써라.
+
 반드시 아래 JSON 형식으로만 응답해 (Markdown code block 표시 없이 순수 JSON 문자열만 출력):
 {
   "title": "추출한 제목",
@@ -1290,9 +1295,28 @@ router.post('/builderslog/publish', async (req, res) => {
       }
     }
 
+    // 3. 이모지 게이트 — 발행물에 이모지를 쓰지 않는다(publishing_guide §6).
+    //    빌드(ci/design-check.mjs articleEmojiGate)가 어차피 막지만, 거기서 막히면
+    //    이미 main에 커밋된 뒤라 배포가 깨진 상태로 발견된다. 커밋 전에 되돌린다.
+    //    화살표(→, U+2192)는 타이포그래피이므로 대상이 아니다.
+    const found = [
+      ...new Set([
+        ...(finalMarkdown.match(ARTICLE_EMOJI) || []),
+        ...(JSON.stringify(metaArray || '').match(ARTICLE_EMOJI) || []),
+      ]),
+    ];
+    if (found.length) {
+      return res.status(400).json({
+        error: `규범 위반: 발행 아티클에 이모지를 쓰지 않습니다 — ${found.join(' ')} (${found.length}종). `
+          + '본문과 메타(제목·부제·요약·태그·커밋 메시지)에서 제거한 뒤 다시 발행하십시오. '
+          + '의미를 지닌 글리프는 텍스트로 승계합니다(예: (🔴 Critical) → (Critical)). '
+          + '규범: docs/builders-log/publishing_guide.md §6',
+      });
+    }
+
     const suffix = locale && locale !== 'ko' ? `_${locale}` : '';
 
-    // 3. GitHub API를 통한 커밋 푸시
+    // 4. GitHub API를 통한 커밋 푸시
     const githubToken = process.env.GITHUB_TOKEN?.trim();
     if (!githubToken) {
       // 로컬 테스트용: 직접 파일 쓰기
@@ -1350,6 +1374,11 @@ router.post('/builderslog/publish', async (req, res) => {
 // ─── 서비스 문서 인라인 수정 (GitHub 커밋 = 버전 이력) ──────────────────
 // 저장 = docs/**.md 1파일을 GitHub main에 커밋. 매 수정이 곧 커밋 1건이라
 // 별도 히스토리 저장소 없이 listCommits({path})로 콘텐츠별 이력을 제공한다.
+
+/* 발행 아티클 이모지 게이트의 문자 집합 — ci/design-check.mjs의 articleEmojiGate와
+   동일하게 유지한다. 화살표 블록(U+2190–21FF)은 포함하지 않는다: 본문의 `→`는 이모지가
+   아니라 타이포그래피다. 규범: docs/builders-log/publishing_guide.md §6 */
+const ARTICLE_EMOJI = /[\u{1F300}-\u{1FAFF}\u{1F000}-\u{1F2FF}\u{2600}-\u{27BF}\u{1F1E6}-\u{1F1FF}]/gu;
 
 // 시크릿 패턴은 src/data/secretPatterns.mjs가 단일 소스(SSOT)다.
 // 로컬 git 훅(ci/secret-scan.mjs)과 동일 집합을 공유해야 탐지 강도가 갈리지 않는다.
@@ -1474,6 +1503,7 @@ router.post('/builderslog/translate', async (req, res) => {
 전달된 한국어 원문 텍스트들(Title, Subtitle, Description, Markdown 본문)을 분석하여, 다음을 수행해:
 1. 의미를 정확하게 유지하면서 전문적이고 세련된 영어(en) 및 일본어(ja)로 완역해.
 2. 마크다운 본문의 경우, 마크다운 서식(H2, H3, Blockquote, bold, code 등)을 그대로 완벽하게 보존해야 해.
+3. **이모지를 쓰지 마라.** 원문에 없는 이모지를 번역문에 추가하지 말고, 원문에 있다면 번역문에서는 빼라. 발행 아티클은 3개 로케일 모두 이모지를 쓰지 않는다(docs/builders-log/publishing_guide.md §6). 화살표는 딩뱃(➡️·➔)이 아니라 '→'(U+2192)로 통일해라.
 
 반드시 아래 JSON 형식으로만 응답해 (Markdown code block 표시 없이 순수 JSON 문자열만 출력):
 {

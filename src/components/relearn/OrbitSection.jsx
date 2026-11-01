@@ -138,11 +138,11 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
               placeholder={t('relearn.orbit.addPlaceholder')}
               maxLength={ADD_MAX}
             />
-            <button className="rl-add-btn haptic-trigger" onClick={handleAdd} disabled={adding || !newTitle.trim()}>
-              {adding ? t('relearn.orbit.adding') : t('relearn.orbit.addBtn')}
+            <button className="rl-add-btn haptic-trigger" onClick={handleAdd} disabled={adding || !newTitle.trim()} aria-label={t('relearn.orbit.addBtn')}>
+              <Icon name="plus" /> {adding ? t('relearn.orbit.adding') : t('relearn.orbit.addBtn')}
             </button>
             <button className="rl-osearch-btn haptic-trigger" onClick={() => setSearchOpen(true)} title={t('relearn.orbit.searchTitle')}>
-              {t('relearn.orbit.searchBtn')}
+              <Icon name="search" /> {t('relearn.orbit.searchBtn')}
             </button>
           </div>
         )}
@@ -203,7 +203,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
 
       {recs.length > 0 && (
         <div className="rl-recs">
-          <div className="rl-recs-head">{t('relearn.orbit.recsHead')}</div>
+          <div className="rl-recs-head"><Icon name="star" /> {t('relearn.orbit.recsHead')}</div>
           {recs.map(item => {
             const hasAffinity = affinity && Object.keys(affinity).length > 0;
             const reason = hasAffinity ? (affinity[affKey(item.category)] > 0 ? 'strong' : 'stretch') : null;
@@ -218,7 +218,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
                   onClick={() => run(item.id, onAccept)}
                   disabled={busyId === item.id}
                 >
-                  {busyId === item.id ? '…' : t('relearn.orbit.addBtn')}
+                  {busyId === item.id ? '…' : <><Icon name="plus" /> {t('relearn.orbit.addBtn')}</>}
                 </button>
               </div>
             );

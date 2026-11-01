@@ -44,7 +44,7 @@ export default function PromptSection({ study, compact, headerAction }) {
           </div>
           <div className="terminal-title">SYSTEM PROMPT // terminal</div>
           <button className={`terminal-copy-btn ${copied ? 'copied' : ''}`} onClick={() => copyToClipboard(study.prompt_snippet)}>
-            {copied ? t('relearn.prompt.copied') : t('relearn.prompt.copy')}
+            <Icon name={copied ? 'check' : 'document'} /> {copied ? t('relearn.prompt.copied') : t('relearn.prompt.copy')}
           </button>
         </div>
         <div className="terminal-body">
@@ -62,7 +62,7 @@ export default function PromptSection({ study, compact, headerAction }) {
           {study.explanation && <div className="study-kr">{study.explanation}</div>}
           {study.business_context && (
             <div className="signal-insight ai-insight">
-              <div className="insight-badge">{t('relearn.prompt.practicalTip')}</div>
+              <div className="insight-badge"><Icon name="insight" /> {t('relearn.prompt.practicalTip')}</div>
               <p>{study.business_context}</p>
             </div>
           )}
@@ -95,7 +95,7 @@ export default function PromptSection({ study, compact, headerAction }) {
                   </details>
                 ) : (
                   <>
-                    <div className="params-header">{t('relearn.prompt.promptParams')}</div>
+                    <div className="params-header"><Icon name="prompt" /> {t('relearn.prompt.promptParams')}</div>
                     {paramsTable}
                   </>
                 )}

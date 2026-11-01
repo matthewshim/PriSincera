@@ -59,7 +59,7 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 
 ## 📁 builders-log/ (Builders' Log 서비스 도메인)
 프로덕션 제품의 생생한 기획 및 엔지니어링 제작 과정을 투명하게 공개하는 **Builder's Log** 관련 명세서입니다.
-*   **[Builder's Log 퍼블리싱 가이드](builders-log/publishing_guide.md)** (`publishing_guide.md`): 빌더스 로그 연재 시나리오, 작성 톤앤매너 가이드라인 및 관리자 발행 워크플로우.
+*   **[Builder's Log 퍼블리싱 가이드](builders-log/publishing_guide.md)** (`publishing_guide.md`): 빌더스 로그 연재 시나리오, 작성 톤앤매너 가이드라인 및 관리자 발행 워크플로우. **§6 이모지 금지 규범**(발행 본문·메타 전 로케일, 3겹 자동 집행)과 §5 Revision History 제외 정책이 여기에 있다.
 *   **[Admin 통합 CMS 개발기](builders-log/admin_integration.md)** (`admin_integration.md`): Read-Only 서버리스 환경 극복을 위한 GitHub API 연동 Git-less 원격 커밋 기술, 3중 보안 시크릿 스캐너, Firestore 기반 일별/누적 조회수 정밀 통계 시스템.
 *   **[Builder's Log UI 명세서](builders-log/ui_specification.md)** (`ui_specification.md`): 최신 포스트 가로 분할 압축, 하위 포스트 균등 2열 그리드 및 3단계 디바이스 반응형 최적화 카드 디자인 사양서.
 *   **[SEO 크롤러 대응 개발기](builders-log/seo_optimization.md)** (`seo_optimization.md`): 정적 사이트맵 충돌 제거를 통한 100% 실시간 동적 사이트맵 동기화, SPA 한계를 뛰어넘는 검색 로봇 전용 개별 메타 태그 서버 사이드 인젝션 아키텍처.

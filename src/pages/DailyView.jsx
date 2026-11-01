@@ -32,8 +32,8 @@ const todayKST = () => new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().s
 // 문구·라벨은 언어팩 relearn.channelOrbits / relearn.channels 에서 로케일별 해석
 const CHANNEL_KEYS = ['signal', 'prompt', 'jp'];
 
-/* jp는 국기 — 언어를 식별하는 기호이므로 SVG로 바꾸지 않는다(유지) */
-const ZONE_ICONS = { track: 'satellite', signal: 'news', prompt: 'prompt', jp: '🇯🇵' };
+/* jp 북마크 탭 — 국기 이모지(🇯🇵) 대신 globe 아이콘 (2026-11-01 오너 결정: 리런 글리프 이모지 제거, 예외 없음) */
+const ZONE_ICONS = { track: 'satellite', signal: 'news', prompt: 'prompt', jp: 'globe' };
 
 export default function DailyView() {
   const { date: dateParam } = useParams();
@@ -340,7 +340,7 @@ export default function DailyView() {
         <footer className="rl-loop-close">
           {user ? (
             <>
-              <div className="rl-loop-close-t">{t('relearn.footer.loopTitle')}</div>
+              <div className="rl-loop-close-t"><Icon name="cycle" /> {t('relearn.footer.loopTitle')}</div>
               <div className="rl-loop-close-s">{t('relearn.footer.loopSub')}</div>
               {/* 계정·구독 — 박스 없이 헤어라인 아래 조용한 한 줄 */}
               <div className="rl-account-footer" aria-label={t('relearn.footer.ariaAccount')}>
@@ -349,11 +349,11 @@ export default function DailyView() {
                 {subState === 'unknown' && <span className="rl-account-sub muted">{t('relearn.sub.checking')}</span>}
                 {subState === 'loading' && <span className="rl-account-sub muted">{t('relearn.sub.processing')}</span>}
                 {subState === 'unsubscribed' && (
-                  <button className="rl-af-btn sub haptic-trigger" onClick={handleSubscribe}>{t('relearn.sub.subscribe')}</button>
+                  <button className="rl-af-btn sub haptic-trigger" onClick={handleSubscribe} aria-label={t('relearn.sub.subscribe')}><Icon name="mail" /> {t('relearn.sub.subscribe')}</button>
                 )}
                 {(subState === 'subscribed' || subState === 'done') && (
                   <>
-                    <span className="rl-account-sub ok">{t('relearn.sub.subscribed')}</span>
+                    <span className="rl-account-sub ok"><Icon name="mail" /> {t('relearn.sub.subscribed')}</span>
                     <button className="rl-af-btn haptic-trigger" onClick={handleUnsubscribe}>{t('relearn.sub.unsubscribe')}</button>
                   </>
                 )}

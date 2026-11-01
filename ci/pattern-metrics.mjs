@@ -314,7 +314,11 @@ export function collect({ noAdmin = false, root = 'src' } = {}) {
        들어 있어 `.jsx`만 보던 구 지표가 **93건을 전부 놓쳤다**(2026-11-01 오너 발견:
        "카드 내 버튼은 여전히 이모지가 있다"). 화살표 블록(U+2190–21FF)도 누락이었다. */
     'emoji-jsx': ((jsx + localeText).match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2190}-\u{21FF}]/gu) || []).length,
-    /* 아티클 이모지. **화살표 블록(U+2190–21FF)은 세지 않는다** — 본문의 `→`는 이모지가
+    /* 아티클 이모지 **총량**. 위치를 지목하는 차단은 `ci/design-check.mjs`의
+       `articleEmojiGate`가 담당한다(파일:행 + 규범 조항). 여기 값은 래칫 대시보드
+       (`npm run budget -- --report`)에 총량을 노출하기 위한 것이고, 두 게이트는 같은
+       범위를 보므로 결과가 갈릴 수 없다.
+       **화살표 블록(U+2190–21FF)은 세지 않는다** — 본문의 `→`는 이모지가
        아니라 타이포그래피(`배움 → 실행 → 복기`, `4→3`)이고, 지우면 문장이 깨진다.
        JSX 지표가 화살표를 세는 것은 거기서는 `<Icon name="arrowRight">`가 정답이기 때문이다. */
     'emoji-article': (articleText.match(/[\u{1F300}-\u{1FAFF}\u{1F1E6}-\u{1F1FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]/gu) || []).length,

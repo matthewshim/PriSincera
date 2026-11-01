@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
 import { trackRelearn } from '../relearn/funnel';
+import Icon from '../common/Icon';
 import '../../pages/DailyDigest.css';
 
 export default function JapaneseSection({ study, compact, headerAction }) {
@@ -29,7 +30,7 @@ export default function JapaneseSection({ study, compact, headerAction }) {
   return (
     <div className="daily-section fade-in">
       <div className="daily-section-header">
-        <span className="daily-section-icon">🇯🇵</span>
+        <span className="daily-section-icon"><Icon name="globe" /></span>
         <h2 className="daily-section-title">{t('relearn.jpChannel.businessJpOnePick')}</h2>
         <button className="japanese-audio-play-main" onClick={() => playAudio(study.sentence_jp)}>
           <svg viewBox="0 0 24 24" width="14" height="14" className="jp-inline-icon">
@@ -58,14 +59,14 @@ export default function JapaneseSection({ study, compact, headerAction }) {
 
         {(!study.prompt_snippet && study.business_context) && (
           <div className="signal-insight jp-insight">
-            <div className="insight-badge">{t('relearn.jpChannel.businessContextTip')}</div>
+            <div className="insight-badge"><Icon name="insight" /> {t('relearn.jpChannel.businessContextTip')}</div>
             <p>{study.business_context}</p>
           </div>
         )}
 
         {study.vocabulary && study.vocabulary.length > 0 && (
           <div className="vocab-section">
-            <h3 className="vocab-title">{t('relearn.jpChannel.keyVocab')}</h3>
+            <h3 className="vocab-title"><Icon name="book" /> {t('relearn.jpChannel.keyVocab')}</h3>
             <div className="study-vocab-grid">
               {(compact && !showAllVocab ? study.vocabulary.slice(0, 4) : study.vocabulary).map((v, i) => (
                 <div key={i} className="study-vocab-card">

@@ -14,11 +14,13 @@ import useMarkReveal from '../hooks/useMarkReveal';
 import '../styles/markdown-body.css';
 import './BuildersLogDetail.css';
 
-// 제목 선두의 이모지를 분리한다.
-// §9-1 히어로 규격상 아이콘은 제목 위 독립 요소이므로, 제목이 이모지로 시작하면 그것을 히어로
-/* 히어로 마크 폐지(2026-11-01) — 타이틀이 이미 섹션을 말하므로 마크는 정보를 더하지 않는다.
-   제목 선두 이모지의 '아이콘 승격'(구 §9-1 v5.21)도 함께 폐지했다: 승격은 제목에서 이모지를
-   떼어내는 조작이었고, 마크가 없어진 지금은 제목에 그대로 두는 것이 작성자 의도에 맞다. */
+/* 히어로 마크 폐지(2026-11-01, design_system §9-1 v5.24) — 타이틀이 이미 섹션을 말하므로
+   마크는 정보를 더하지 않는다. 제목 선두 이모지의 '아이콘 승격'(구 v5.21)도 함께 폐지했다.
+
+   이후 **발행물 이모지 금지**(publishing_guide §6)로 제목에서 이모지 자체가 사라졌다 —
+   승격할 것도, 떼어낼 것도 없다. 그래서 이 함수는 제목을 그대로 통과시키는 항등 함수다.
+   `ci/design-check.mjs`의 articleEmojiGate가 메타 제목에 이모지가 돌아오는 것을 막으므로
+   여기서 방어 분리를 다시 들여올 필요는 없다. 호출부 호환을 위해 형태만 유지한다. */
 const splitTitle = (title) => ({ icon: null, text: title || '' });
 
 export default function BuildersLogDetail() {
