@@ -410,6 +410,17 @@
       "desc": "なぜWaymarkを作るのか、その始まりをBuilder's Logに記しています。",
       "btn": "Builder's Logで始まりの物語を読む",
       "soon": "準備が整う日、まっさきにあなたのもとへ。"
+    },
+    "app": {
+      "seoTitle": "Waymark — あなたの決断のそばに",
+      "seoDesc": "決断を記録し、自ら歩み寄る伴走者とともに見つめ直す場所。",
+      "signInPrompt": "ログインして、あなたの決断のそばにWaymarkを。",
+      "signInBtn": "Googleで始める",
+      "betaNote": "準備中です — まもなく公開。",
+      "logout": "ログアウト",
+      "emptyTitle": "まだ記録した決断がありません",
+      "emptyDesc": "最初の決断を残してみましょう。小さな選択でも大丈夫です。",
+      "newDecision": "決断を記録する"
     }
   }
 }

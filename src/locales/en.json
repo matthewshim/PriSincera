@@ -410,6 +410,17 @@
       "desc": "Why I'm building Waymark — I'm recording the beginning in the Builder's Log.",
       "btn": "Read the origin story on Builder's Log",
       "soon": "The day we're ready, you'll be the first we reach."
+    },
+    "app": {
+      "seoTitle": "Waymark — beside your decisions",
+      "seoDesc": "A space to record decisions and revisit them with a companion that reaches out first.",
+      "signInPrompt": "Sign in to keep Waymark beside your decisions.",
+      "signInBtn": "Continue with Google",
+      "betaNote": "In the works — opening soon.",
+      "logout": "Sign out",
+      "emptyTitle": "No decisions recorded yet",
+      "emptyDesc": "Capture your first decision. Even a small one is fine.",
+      "newDecision": "Record a decision"
     }
   }
 }

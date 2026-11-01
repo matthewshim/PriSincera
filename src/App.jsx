@@ -20,6 +20,7 @@ const SylphioPrivacy = lazy(() => import('./pages/SylphioPrivacy'));
 
 /* ── Waymark (의사결정 동반 서비스) ── */
 const WaymarkLanding = lazy(() => import('./pages/WaymarkLanding'));
+const WaymarkApp = lazy(() => import('./pages/waymark/WaymarkApp'));
 
 /** Minimal loading fallback — invisible, prevents layout shift */
 const PageFallback = (
@@ -69,6 +70,8 @@ function App() {
 
             {/* Waymark — 의사결정 동반 서비스 소개 랜딩 (Candela 슬롯 피벗) */}
             <Route path="waymark" element={<WaymarkLanding />} />
+            {/* Waymark 앱(인증 게이트) — 통합·server REST. M0 스캐폴드 */}
+            <Route path="waymark/app/*" element={<WaymarkApp />} />
             
             {/* Legacy Redirects */}
             <Route path="signal/*" element={<Navigate to="/relearn" replace />} />

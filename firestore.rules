@@ -43,5 +43,20 @@ service cloud.firestore {
     match /admin_config/{docId} {
       allow read, write: if false;
     }
+
+    // ── Waymark — 전부 서버(Admin SDK) 경유. 클라이언트 직접 접근 차단(방어).
+    //    접근 흐름: client → server REST(Bearer, requireAuth) → firebase-admin.
+    match /waymark_decisions/{id} {
+      allow read, write: if false;
+      match /{sub=**} { allow read, write: if false; }
+    }
+    match /waymark_events/{id}         { allow read, write: if false; }
+    match /waymark_stories/{id}        { allow read, write: if false; }
+    match /waymark_stories_public/{id} { allow read, write: if false; } // 공개 노출도 서버 경유(향후 직접 read 열 수 있음)
+    match /waymark_feedback/{id}       { allow read, write: if false; }
+    match /waymark_notifications/{id}  { allow read, write: if false; }
+    match /waymark_moderation/{id}     { allow read, write: if false; }
+    match /waymark_ai_usage/{id}       { allow read, write: if false; }
+    match /waymark_users/{id}          { allow read, write: if false; }
   }
 }

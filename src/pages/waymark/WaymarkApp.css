@@ -1,0 +1,61 @@
+/* WaymarkApp (/waymark/app) — 인증 게이트 + 앱 셸 (M0 스캐폴드)
+   토큰은 src/styles/index.css 정본 사용. 액센트 indigo(#A5B4FC). */
+
+.wma-gate {
+  min-height: calc(100vh - 110px);
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--space-xl);
+}
+.wma-gate-card {
+  max-width: 420px; width: 100%; text-align: center;
+  padding: var(--space-2xl) var(--space-xl);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, rgba(165, 180, 252, 0.07), var(--glass-bg));
+  border: 1px solid rgba(165, 180, 252, 0.18); backdrop-filter: blur(12px);
+}
+.wma-gate-mark { font-size: var(--fs-300); line-height: 1; margin-bottom: var(--space-md); }
+.wma-gate-title {
+  font-size: var(--fs-220); font-weight: 700; margin: 0 0 var(--space-sm);
+  background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent; display: inline-block;
+}
+.wma-gate-sub { font-size: var(--fs-110); color: var(--text-secondary); margin: 0 0 var(--space-xl); word-break: keep-all; }
+.wma-gate-note { font-family: var(--font-mono); font-size: var(--fs-075); color: var(--text-muted); margin: var(--space-lg) 0 0; }
+
+.wma-btn {
+  font-family: var(--font-body); font-size: var(--fs-095); font-weight: 600;
+  padding: 13px 26px; border-radius: var(--radius-pill); cursor: pointer;
+  color: var(--bg-void); background: linear-gradient(135deg, #A5B4FC, #C7D2FE);
+  border: 1px solid rgba(199, 210, 254, 0.5);
+  transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast), opacity var(--duration-fast);
+}
+.wma-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(165, 180, 252, 0.34); }
+.wma-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── 앱 셸 ── */
+.wma-shell { max-width: var(--measure); margin: 0 auto; padding: var(--space-xl); min-height: calc(100vh - 110px); }
+.wma-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: var(--space-lg); border-bottom: 1px solid var(--glass-border);
+}
+.wma-brand {
+  font-weight: 700; font-size: var(--fs-130);
+  background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.wma-logout {
+  font-family: var(--font-body); font-size: var(--fs-085); color: var(--text-muted);
+  background: transparent; border: 1px solid var(--glass-border); border-radius: var(--radius-pill);
+  padding: 6px 14px; cursor: pointer; transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+.wma-logout:hover { color: var(--text-secondary); border-color: var(--glass-border-hover); }
+
+.wma-main { padding-top: var(--space-3xl); }
+.wma-empty { text-align: center; max-width: 380px; margin: 0 auto; }
+.wma-empty-mark { font-size: var(--fs-300); color: var(--color-indigo); margin-bottom: var(--space-md); }
+.wma-empty-title { font-size: var(--fs-150); font-weight: 600; color: var(--text-primary); margin: 0 0 var(--space-sm); }
+.wma-empty-desc { font-size: var(--fs-100); color: var(--text-muted); margin: 0 0 var(--space-xl); word-break: keep-all; }
+
+@media (max-width: 760px) {
+  .wma-gate, .wma-shell { min-height: calc(100vh - 92px); }
+}

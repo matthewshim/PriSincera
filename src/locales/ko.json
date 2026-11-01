@@ -410,6 +410,17 @@
       "desc": "왜 Waymark을 만드는지, 그 시작을 Builder's Log에 기록하고 있습니다.",
       "btn": "Builder's Log에서 시작 이야기 읽기",
       "soon": "준비가 끝나는 날, 가장 먼저 당신을 찾아가겠습니다."
+    },
+    "app": {
+      "seoTitle": "Waymark — 내 결정 곁에",
+      "seoDesc": "결정을 기록하고, 먼저 찾아오는 동반과 함께 다시 보는 공간.",
+      "signInPrompt": "로그인하고, 내 결정 곁에 Waymark을 두세요.",
+      "signInBtn": "Google로 시작하기",
+      "betaNote": "지금은 준비 중입니다 — 곧 열립니다.",
+      "logout": "로그아웃",
+      "emptyTitle": "아직 기록한 결정이 없어요",
+      "emptyDesc": "첫 결정을 남겨보세요. 작은 선택이어도 괜찮아요.",
+      "newDecision": "결정 기록하기"
     }
   }
 }
