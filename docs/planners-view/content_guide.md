@@ -1,8 +1,8 @@
 ---
 status: active
 domain: PlannersView
-last_updated: 2026-10-29
-version: v1.5
+last_updated: 2026-11-01
+version: v1.6
 target_files:
   - public/content/planners-view/
   - src/data/plannersViewMeta.json
@@ -15,6 +15,7 @@ target_files:
 
 | Version | Date | Author | Description | Impact Area |
 | :--- | :--- | :--- | :--- | :--- |
+| v1.6 | 2026-11-01 | AI Agent | **§2-6 이모지 금지 규범 신설** — 발행 본문·메타·시리즈 정본에 이모지를 쓰지 않는다(1인칭 에세이에서 이모지가 문장의 어조를 대신해 논지를 약화시킨다). 히어로 아이콘(§9-1 규격)·내부 문서·SNS 피드는 적용 밖임을 명시. Builder's Log는 실사용 44건으로 성격이 달라 제외. `design-check`의 `plannersViewEmojiGate`로 자동 집행하고 역검증(본문·메타·태그 차단 / logs 오탐 0) 완료. 전수 조사 결과 실사용 0건이라 소급 위반 없음 | PlannersView 콘텐츠, ci/ |
 | v1.5 | 2026-10-29 | AI Agent | **§2-4 단독 하이라이트 문단 허용 + 플러그인 버그 수정** — `remarkHighlight`가 문단 전체가 하이라이트 하나인 경우(앞뒤 텍스트 없음) 교체를 건너뛰어 `==…==`를 그대로 노출하던 결함을 `parts.some(emphasis)` 판정으로 수정. 전 발행분 전수 조사 결과 피해 1건(5편)이며 기존 1~4편은 앞뒤 텍스트가 있어 영향 없음 | src/lib/remarkHighlight.js, PlannersView 콘텐츠 |
 | v1.4 | 2026-10-29 | AI Agent | **§2-5 출처 표기 규범 신설** — 외부 연구·타사 사례를 근거로 쓰는 글은 `## 출처`를 최종 섹션으로 둔다. H2 카운트·분량·readMinutes 산정에서 제외, 본문 인라인 링크 금지, **1차 출처 우선**(2차 보도가 IBM 수치를 왜곡한 사례 환류), **후속 정정·철회 확인 의무**(METR이 2026-02 자체 유보를 발표한 사례 환류), URL 응답 코드 사전 검증, 3개 국어 동일 적용. 외부 링크 새 탭 렌더 구현 | PlannersView 콘텐츠, PlannersViewDetail |
 | v1.3 | 2026-10-04 | AI Agent | §2-4 하이라이트 제약 명문화 — 내부 인라인 마크업 금지(노드가 쪼개져 조용히 렌더 실패). `design-check` 게이트로 자동 차단. 1~3편 소급 적용(각 3곳) | PlannersView, ci/ |
@@ -120,6 +121,29 @@ target_files:
 - **기업 자체 발표 수치는 주장으로 표기한다.** 제3자 검증을 거치지 않았다는 한 줄을 출처 섹션 끝에 둔다.
 - **3개 국어 모두에 동일한 출처 섹션을 둔다.** URL은 동일하고 설명만 번역한다(§6 문단 수 일치 규격 적용).
 - 렌더: 외부 링크는 `target="_blank"` + `rel="noopener noreferrer"`로 **새 탭에서 열린다**(`PlannersViewDetail`의 `markdownComponents.a`). 내부 경로·앵커는 같은 탭을 유지한다.
+
+---
+
+### 2-6. 이모지 (🔒 규범)
+
+**발행 아티클에 이모지를 쓰지 않는다.**
+
+이 섹션의 글은 1인칭 에세이다. 이모지는 문장의 어조를 대신해버리기 때문에, 문장으로 세워야 하는 논지를 약하게 만든다. 강조가 필요하면 §2-4의 세 층(`pullQuote` / `==하이라이트==` / `**볼드**`)을 쓴다 — 수단이 이미 충분하다.
+
+**적용 범위**
+
+| 대상 | 이모지 |
+| :--- | :--- |
+| 본문(`public/content/planners-view/*.md`) | **금지** |
+| 메타 `title`·`subtitle`·`description`·`pullQuote`·`tags` | **금지** |
+| 시리즈 정본 `title`·`description` | **금지** |
+| 히어로 아이콘 | **필수** — 이모지가 [design_system §9-1](../core/design_system.md) 규격이다(목록 `📖`). 본 규범과 충돌하지 않는다 |
+| 내부 문서(`docs/`) | 허용 — 이 가이드 자체가 `📝`·`🔒`를 쓴다. 규범은 **독자에게 발행되는 텍스트**에만 적용된다 |
+| SNS 피드 | 본 규범 밖 — 첫 댓글의 `👉` 등은 [publishing_guide §5](publishing_guide.md)가 담당한다 |
+
+**다른 섹션과의 경계**: Builder's Log는 본문에 이모지를 쓴다(2026-11-01 기준 44건). 제작 기록이라 성격이 다르므로 그 관행을 그대로 둔다. **이 규범은 Planner's View에만 적용된다.**
+
+`ci/design-check.mjs`의 `plannersViewEmojiGate`가 빌드에서 차단한다. 7편 21개 파일을 전수 조사한 결과 실사용이 0건이었으므로, 이 규범은 새 제약이 아니라 **이미 지켜온 관행의 명문화**다(소급 위반 없음).
 
 ---
 

@@ -340,6 +340,59 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
+// ── 이모지 게이트: Planner's View 발행물에 이모지 금지 (content_guide §2-6) ──
+// 이 섹션은 1인칭 에세이다. 이모지는 문장의 어조를 대신해버려서, 문장으로 세워야 하는
+// 논지를 약화시킨다. 7편 21개 파일을 전수 조사한 결과 실사용이 0건이었으므로
+// 관행을 규범으로 고정한다(소급 위반 없음).
+//
+// 적용 범위를 좁게 둔다:
+//   · 대상 — Planner's View 본문 + 메타/시리즈 정본의 독자 노출 텍스트
+//   · 제외 — Builder's Log(실사용 44건, 제작 기록이라 성격이 다르다)
+//   · 제외 — 내부 문서(docs/)와 UI 요소. 히어로 아이콘은 이모지가 §9-1 규격이다
+(function plannersViewEmojiGate() {
+  // 범위를 넓게 잡으면 전각 기호·화살표까지 걸려 오탐이 난다. 실제 이모지 블록만 본다.
+  const EMOJI = /[\u{1F300}-\u{1FAFF}\u{1F000}-\u{1F2FF}\u{2600}-\u{27BF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/u;
+  const DIR = 'public/content/planners-view';
+
+  let files = [];
+  try { files = readdirSync(DIR).filter((f) => f.endsWith('.md')); } catch { files = []; }
+  for (const f of files) {
+    const md = readFileSync(join(DIR, f), 'utf-8');
+    md.split('\n').forEach((line, i) => {
+      const m = line.match(EMOJI);
+      if (m) {
+        errors.push(`${DIR}/${f}:${i + 1}: 발행 아티클에 이모지 금지 — "${m[0]}" (content_guide §2-6)`);
+      }
+    });
+  }
+
+  // 메타·시리즈 정본의 독자 노출 문안도 같은 규범을 받는다
+  const JSONS = [
+    ['src/data/plannersViewMeta.json', ['title', 'subtitle', 'description', 'pullQuote']],
+    ['src/data/plannersViewSeries.json', ['title', 'description']],
+  ];
+  for (const [path, fields] of JSONS) {
+    let rows;
+    try { rows = JSON.parse(readFileSync(path, 'utf-8')); } catch { continue; }
+    for (const row of rows) {
+      for (const field of fields) {
+        const val = row[field];
+        if (!val || typeof val !== 'object') continue;
+        for (const [loc, text] of Object.entries(val)) {
+          if (typeof text === 'string' && EMOJI.test(text)) {
+            errors.push(`${path}: ${row.id || row.slug} ${field}.${loc} 에 이모지 금지 (content_guide §2-6)`);
+          }
+        }
+      }
+      for (const tag of row.tags || []) {
+        if (typeof tag === 'string' && EMOJI.test(tag)) {
+          errors.push(`${path}: ${row.id || row.slug} tags 에 이모지 금지 (content_guide §2-6)`);
+        }
+      }
+    }
+  }
+})();
+
 if (warns.length) {
   console.warn(`[design-check] WARN ${warns.length}건 (비차단 — §9-7 스케일 확장 백로그):`);
   for (const w of warns) console.warn('  -', w);
