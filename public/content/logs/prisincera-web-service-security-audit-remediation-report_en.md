@@ -8,7 +8,7 @@ Recently, a meticulous security audit was conducted across PriSincera's entire c
 
 ---
 
-## 🏗️ Architectural Evolution and New Security Responsibilities
+## Architectural Evolution and New Security Responsibilities
 
 Before diving into the details of the security vulnerability countermeasures, it's essential to understand PriSincera's current multi-routing data architecture.
 
@@ -38,18 +38,18 @@ As each API route required different authentication levels and rate limits, we f
 
 ---
 
-## 🛠️ 5 Core Vulnerabilities We Defeated and Engineering Patches
+## 5 Core Vulnerabilities We Defeated and Engineering Patches
 
 Here are the five defects discovered through static analysis and penetration simulations, along with the detailed troubleshooting history of how they were perfectly remedied without service interruption.
 
-### 1. Traces Left by Temporary Debugging APIs: Blocking Personal Identifiable Information (PII) Exposure (🔴 Critical)
+### 1. Traces Left by Temporary Debugging APIs: Blocking Personal Identifiable Information (PII) Exposure (Critical)
 *   **Problem Discovered**: Temporary debug APIs (`/api/env-check`, `/api/temp-check-subs`, `/api/temp-logs`), which were created in a local development environment for convenient checking of email sending status or subscriber status, were exposed in the production environment.
 *   **Security Threat**: Anyone could call these APIs to scrape the email address list (PII, personal information) of all subscribers, or hijack sensitive infrastructure configuration values such as SMTP server account information for mail delivery. This posed an extremely dangerous situation under GDPR and personal information protection laws.
 *   **Engineering Action**:
   - These debug endpoints were **permanently and completely deleted from the production code (`server.mjs`)**.
   - Formal administration functions requiring subscriber information lookup and log verification were **fully migrated to a dedicated admin-only secure router (`/admin/api/subscribers`)**, accessible only after passing Firebase JWT Admin ID token verification and `super_admin` role comparison middleware.
 
-### 2. Blog Slug Parameter Validation and NoSQL Injection Prevention (🟡 Medium)
+### 2. Blog Slug Parameter Validation and NoSQL Injection Prevention (Medium)
 *   **Problem Discovered**: In the `/api/builderslog/:slug/view` API, which increments the view count for articles in the Builder's Log tech blog, no format restrictions were placed on the `:slug` parameter.
 *   **Security Threat**: There was a potential injection risk where an attacker could arbitrarily inject special characters or path traversal characters (`../`) into the Slug value, potentially corrupting documents in other areas of the database or causing unexpected system malfunctions.
 *   **Engineering Action**:
@@ -64,14 +64,14 @@ if (!/^[a-zA-Z0-9-_]+$/.test(slug)) {
 }
 ```
 
-### 3. Defending Against Database Overload with User Input Payload Length Limit (🟡 Medium)
+### 3. Defending Against Database Overload with User Input Payload Length Limit (Medium)
 *   **Problem Discovered**: In the `POST /api/pacenote/add` endpoint, where users add their custom tasks within the Pace Note feature, there was no character limit for the incoming `title` value.
 *   **Security Threat**: If a malicious user were to send a flood of requests with enormous texts in megabytes or abnormal dummy payloads, there was a risk that Firestore's storage capacity would rapidly deplete, or server memory usage would spike, potentially causing the entire service to crash (DoS).
 *   **Engineering Action**:
   - A defense logic was added at the custom task addition API to **enforce a maximum character limit of 100 for the title**.
   - This established a boundary that fully satisfied business requirements (setting task titles) while fundamentally filtering out abnormal payload injection attacks.
 
-### 4. Normalizing Matching Errors in Firestore Security Rules (🟡 Medium)
+### 4. Normalizing Matching Errors in Firestore Security Rules (Medium)
 *   **Problem Discovered**: Within the `firestore.rules` configuration, which securely controls real-time data queries for Firestore, the permission matching path for the study progress collection (`study_progress`) was incorrectly designed.
   - *Existing Rule*: `match /study_progress/{userId}/{document=**}`
 *   **Security Threat**: The existing rule only protected the sub-collection tree under `{userId}` and failed to adequately protect the client's direct read/write permissions for the root document itself (`/study_progress/{userId}`) containing the user's progress information, potentially leading to integration errors or rule circumvention.
@@ -88,7 +88,7 @@ match /study_progress/{userId} {
 }
 ```
 
-### 5. Tracing 500 Internal Errors in PriStudy Progress API: Resolving Runtime ReferenceError (🟡 Medium)
+### 5. Tracing 500 Internal Errors in PriStudy Progress API: Resolving Runtime ReferenceError (Medium)
 *   **Problem Discovered**: An hidden bug was found within the `GET /api/study/progress` API that fetches study progress. When an exception handling logic, designed to automatically correct the email field for older subscribers with missing email data, was triggered, it referenced an undeclared variable `docRef`, causing a server crash and emitting a 500 error.
 *   **Engineering Action**:
   - The `const docRef = db.collection(COLLECTIONS.STUDY_PROGRESS).doc(uid);` variable was explicitly declared and instantiated within the function scope to complete the binding.
@@ -96,7 +96,7 @@ match /study_progress/{userId} {
 
 ---
 
-## 🛡️ Fortifying the Entire Backend Security: Rate Limiting & CSP & CORS
+## Fortifying the Entire Backend Security: Rate Limiting & CSP & CORS
 
 Beyond resolving specific bugs, we have further fortified the defense system at the backend Express web server infrastructure level.
 
@@ -133,7 +133,7 @@ app.use(helmet({
 
 ---
 
-## 🐳 Infrastructure and Container Deployment Level Security
+## Infrastructure and Container Deployment Level Security
 
 We also ensured **operational security enhancement** to prevent the entire host server's privileges from being compromised even if a container is hacked.
 
@@ -146,23 +146,23 @@ Ensuring API keys are never hardcoded into the source code is fundamental. In ad
 
 ---
 
-## 📈 Final Comparison of Security Improvement Achievements
+## Final Comparison of Security Improvement Achievements
 
 Here are the results of an objective table comparing the main headers and response achievements applied during this intensive security improvement week.
 
 | Security Item / Header | Before Measures (04-23) | After Measures & Current (05-21) | Security Assessment |
 | :--- | :---: | :---: | :---: |
-| **X-Content-Type-Options** | `nosniff` | `nosniff` | ✅ Safe (Prevents MIME sniffing) |
-| **X-Frame-Options** | `DENY` | `DENY` | ✅ Safe (Prevents clickjacking) |
-| **Content-Security-Policy** | ❌ Not set | 🌟 Strict CSP defined | ✅ Safe (External malicious scripts cannot run) |
-| **Strict-Transport-Security** | ❌ Not set | 🌟 `max-age=31536000; ...` | ✅ Safe (Enforced HTTPS encrypted connection) |
-| **Referrer-Policy** | ❌ Not set | `strict-origin-when-cross-origin` | ✅ Safe (Prevents referrer header information leakage) |
-| **PII Exposure Vulnerability** | 🔴 3 Debug APIs exposed | 🌟 **Completely removed & Admin controlled** | ✅ Safe (Full PII protection for subscribers) |
-| **API Runtime Reliability** | 🟡 500 ReferenceError present | 🌟 **Exception logic normalized** | ✅ Safe (Ensured API response reliability) |
+| **X-Content-Type-Options** | `nosniff` | `nosniff` | Safe (Prevents MIME sniffing) |
+| **X-Frame-Options** | `DENY` | `DENY` | Safe (Prevents clickjacking) |
+| **Content-Security-Policy** | Not set | Strict CSP defined | Safe (External malicious scripts cannot run) |
+| **Strict-Transport-Security** | Not set | `max-age=31536000; ...` | Safe (Enforced HTTPS encrypted connection) |
+| **Referrer-Policy** | Not set | `strict-origin-when-cross-origin` | Safe (Prevents referrer header information leakage) |
+| **PII Exposure Vulnerability** | 3 Debug APIs exposed | **Completely removed & Admin controlled** | Safe (Full PII protection for subscribers) |
+| **API Runtime Reliability** | 500 ReferenceError present | **Exception logic normalized** | Safe (Ensured API response reliability) |
 
 ---
 
-## 💡 Concluding Thoughts: "Protecting is as much engineering as building"
+## Concluding Thoughts: "Protecting is as much engineering as building"
 
 Transitioning a service from a static page-centric site to a large-scale learning management and action plan platform is an incredibly exhilarating joy for an engineer. However, through this meticulous security diagnostic and vulnerability patching work, I profoundly realized once again that building a safe enclosure that users can trust and use is also entirely the builder's responsibility.
 
@@ -170,4 +170,4 @@ Based on successful builds (Vite SPA compilation completed) and fully armed back
 
 We will continue to build even more securely and splendidly in the future.
 
-Keep Building! 🚀
+Keep Building!

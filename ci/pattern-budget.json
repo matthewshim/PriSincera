@@ -8,7 +8,8 @@
     "maxwidth-band-violation": "대역[880,2000]px max-width 리터럴 금지 — --container/--measure 또는 스코프 토큰만(§3-3, P0-4)",
     "phantom-font": "index.html이 요청하지 않는 웹폰트 참조 금지 — 로드 후 폐기/조용한 폴백(P0-1·P0-2)",
     "undeclared-token-ref": "미선언 토큰 참조 금지 — 폴백 없이 참조하면 **선언 전체가 무효화**된다. 실제 피해: Footer 브랜드 폰트가 브라우저 기본으로 떨어짐(--font-sans), BuildersLog 카드 전이 미동작(--duration-medium) (P1 발견)",
-    "dead-var-fallback": "index.css :root에 선언된 토큰에 var() 폴백 금지 — 폴백이 영원히 쓰이지 않으면서 **오해를 유발하는 문서**가 된다. 실측 117건이 토큰 실제값과 모순이었다(예: var(--space-xl, 40px) ← 실제 32px). 런타임 주입 변수(--card-accent·--accent-color·--reveal-delay 등)는 대상 아님"
+    "dead-var-fallback": "index.css :root에 선언된 토큰에 var() 폴백 금지 — 폴백이 영원히 쓰이지 않으면서 **오해를 유발하는 문서**가 된다. 실측 117건이 토큰 실제값과 모순이었다(예: var(--space-xl, 40px) ← 실제 32px). 런타임 주입 변수(--card-accent·--accent-color·--reveal-delay 등)는 대상 아님",
+    "emoji-article": "아티클 본문·메타 이모지 금지 — 빌더스 로그 38편(국/영/일)과 카드 메타를 2026-11-01에 전수 정리했다. 제목 선두 글리프·`💡` 콜아웃·표의 `✅/❌/🟡` 상태 표식을 전부 걷어내고, 의미를 지녔던 것은 텍스트로 승계했다(`(🔴 Critical)`→`(Critical)`, 터미널 모사 블록의 `✅`→`[PASS]`). 작성 경로가 어드민 에디터(AI 초안)라 재유입이 가장 쉬운 자리이므로 래칫이 아니라 0 고정이다. 본문의 `→`는 타이포그래피이므로 대상 아님"
   },
   "metrics": {
     "gradient-text": {

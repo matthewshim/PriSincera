@@ -1,10 +1,10 @@
-# 🗺️ Starting Waymark — So You're Not Alone at the Fork
+# Starting Waymark — So You're Not Alone at the Fork
 
 > A **decision journal + a companion that reaches out first + peer stories**, for people who make a lot of decisions. Here's why I'm building it, what it is, and the one line it will never cross.
 
 I'm starting a new PriSincera product. Its name is **Waymark**. Not a single line of code runs yet — but I decided to **publish the thinking before building**. If you write the promise down first, you're less likely to drift from it while you build.
 
-## 1. 💡 Why build this — deciding is lonelier than it looks
+## 1. Why build this — deciding is lonelier than it looks
 
 After nearly two decades as a planner, PO, and lead, I've learned one thing: we make countless decisions every day, yet **in the heavy moments we're alone**.
 
@@ -15,11 +15,11 @@ Two problems.
 - **Advice is everywhere; company is not.** Search and answers pour out. But an answer isn't *company*. Often what you need isn't "do this" — it's **someone who feels the weight with you.**
 - **Nothing is recorded, so nothing is learned.** A decision passes like an event. Months later, trying to recall "why did I do that," there's nothing left. So we repeat the **same regret** at the next fork.
 
-> 💡 **In one line**: The trouble with decisions isn't "no right answer" — it's that **you're alone in the moment, and nothing remains afterward.**
+> **In one line**: The trouble with decisions isn't "no right answer" — it's that **you're alone in the moment, and nothing remains afterward.**
 
 ---
 
-## 2. 🧭 What Waymark is — four beats that never leave you alone
+## 2. What Waymark is — four beats that never leave you alone
 
 Waymark is not a tool that decides for you. It's a companion that **remembers** the decisions you've made, **reaches out first** when you waver, and **brings the story** of someone who faced the same fork. It moves in four beats.
 
@@ -28,11 +28,11 @@ Waymark is not a tool that decides for you. It's a companion that **remembers** 
 3. **Stories** — A story comes from someone who **actually walked** the same fork. Not polished advice, but real, uneven experience. Empathy comes from the person who says, "I stood there too."
 4. **Revisit** — In time you meet that decision again. Only when the loop of decision → outcome → reflection closes does **learning accumulate**, and the next decision gets a little less lonely.
 
-> 💡 **In one line**: Not a single piece of advice, but a **relationship of capture–company–reflection** that builds up. That's where Waymark differs from a notes app or a chatbot.
+> **In one line**: Not a single piece of advice, but a **relationship of capture–company–reflection** that builds up. That's where Waymark differs from a notes app or a chatbot.
 
 ---
 
-## 3. 🛟 The one line it won't cross — it never decides for you
+## 3. The one line it won't cross — it never decides for you
 
 The most important principle: **Waymark never decides for you.**
 
@@ -46,7 +46,7 @@ It **lights** the fork but never **walks it for you** — and no feature we add 
 
 ---
 
-## 4. 🤝 The maker is the user
+## 4. The maker is the user
 
 This is the service **I most need myself.** As someone who has made decisions for a living for almost twenty years, I too have passed through those lonely nights.
 
@@ -56,7 +56,7 @@ Of course this isn't only my story. **Anyone who has stood before a decision, bi
 
 ---
 
-## 5. 🏷️ About the name — a waymark, not a compass
+## 5. About the name — a waymark, not a compass
 
 **Waymark** = Way + Mark — a signpost standing at the fork.
 
@@ -66,7 +66,7 @@ A compass and a signpost differ. A compass **points** — "go that way." A signp
 
 ---
 
-## 6. 🌱 Not yet — and already
+## 6. Not yet — and already
 
 Honestly, the service is **not here yet.** The features and screens start from now.
 

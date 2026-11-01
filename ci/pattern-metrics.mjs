@@ -79,6 +79,17 @@ export function collect({ noAdmin = false, root = 'src' } = {}) {
      CSS 쪽 stripComments와 동일한 교정. */
   const jsx = jsxFiles.map((p) => stripComments(readFileSync(p, 'utf-8')).replace(/^\s*\/\/.*$/gm, '')).join('\n');
 
+  /* 아티클 본문·메타 — 빌더스 로그/플래너스 뷰의 마크다운과 카드 메타(제목·요약).
+     UI가 아니라 **콘텐츠**이고, 작성 경로가 어드민 에디터(AI 초안)라 이모지가 가장 쉽게
+     재유입되는 자리다. 2026-11-01에 3개 로케일 38편을 전수 정리했으므로 0을 유지한다. */
+  const articleText = [
+    ...['public/content/logs', 'public/content/planners-view'].flatMap((d) => {
+      try { return [...walk(d, ['.md'])]; } catch { return []; }
+    }),
+    'src/data/buildersLogMeta.json',
+    'src/data/plannersViewMeta.json',
+  ].map((f) => { try { return readFileSync(f, 'utf-8'); } catch { return ''; } }).join('\n');
+
   /* 로케일 사전 — UI 문자열의 실제 거주지. 주석이 없는 JSON이라 그대로 읽는다. */
   const localeText = ['ko', 'en', 'ja']
     .map((l) => { try { return readFileSync(`src/locales/${l}.json`, 'utf-8'); } catch { return ''; } })
@@ -303,6 +314,10 @@ export function collect({ noAdmin = false, root = 'src' } = {}) {
        들어 있어 `.jsx`만 보던 구 지표가 **93건을 전부 놓쳤다**(2026-11-01 오너 발견:
        "카드 내 버튼은 여전히 이모지가 있다"). 화살표 블록(U+2190–21FF)도 누락이었다. */
     'emoji-jsx': ((jsx + localeText).match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2190}-\u{21FF}]/gu) || []).length,
+    /* 아티클 이모지. **화살표 블록(U+2190–21FF)은 세지 않는다** — 본문의 `→`는 이모지가
+       아니라 타이포그래피(`배움 → 실행 → 복기`, `4→3`)이고, 지우면 문장이 깨진다.
+       JSX 지표가 화살표를 세는 것은 거기서는 `<Icon name="arrowRight">`가 정답이기 때문이다. */
+    'emoji-article': (articleText.match(/[\u{1F300}-\u{1FAFF}\u{1F1E6}-\u{1F1FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]/gu) || []).length,
 
     // ── 하드 규칙: 0이어야 하고 0을 유지해야 한다 ──
     'keyframes-duplicate': kfDup.length,

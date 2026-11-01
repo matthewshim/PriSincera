@@ -1,11 +1,11 @@
-# 📐 PriSincera Design System (v4.0: Aura-Neutral & Semantic Interaction)
+# PriSincera Design System (v4.0: Aura-Neutral & Semantic Interaction)
 
 > **"Sincerity, Prioritized."**
 > 본 문서는 PriSincera 웹사이트가 세계 최고 수준(World-class)의 디자인 품질을 달성하기 위한 차세대 디자인 시스템 v4.0 표준 가이드라인입니다. 
 
 ---
 
-## 0. 🌐 글로벌 최고 수준 디자인 시스템 분석 및 사전 조사 (Preliminary Analysis)
+## 0. 글로벌 최고 수준 디자인 시스템 분석 및 사전 조사 (Preliminary Analysis)
 
 전 세계에서 가장 정교하고 프리미엄한 디자인 시스템을 구축한 글로벌 기술 기업들의 설계 철학을 조사·분석하여, PriSincera v4.0의 핵심 설계 뼈대로 내재화하였습니다.
 
@@ -25,7 +25,7 @@
 
 ---
 
-## 1. 🎨 Color System: Refined & Sophisticated
+## 1. Color System: Refined & Sophisticated
 
 **[디벨롭 사유]** 텍스트를 장시간 집중해서 읽어야 하는 `DailyDigest` 아티클이나 `PaceNote` 주차별 타임라인에서 배경이나 카드에 보라색 색조가 섞여 있으면, 색상 간섭 현상으로 인해 가독성이 급격히 저하됩니다. 또한 호버 시 포인트 컬러가 강조되는 시각적 효과가 배경색과 희석되어 고급스러움이 저하됩니다.
 **[v4.0 설계 표준]** 배경과 카드의 기조면은 보라색 혼합을 완전히 배제한 **순수 무채색(Desaturated Neutral OLED Slate)**으로 정제하고, 고귀한 브랜드 컬러인 Violet과 Cyan은 사용자의 인터랙션 순간에만 '보석처럼 선명하게' 나타나도록 제한합니다.
@@ -59,7 +59,7 @@
 
 ---
 
-## 2. 🔘 의미론적 CTA 버튼 설계 규격 (Semantic CTA Button System)
+## 2. 의미론적 CTA 버튼 설계 규격 (Semantic CTA Button System)
 
 **[디벨롭 사유]** 기존 코드에서는 버튼들마다 인라인으로 상이한 백그라운드 색조(그린, 퍼플, 인디고)와 서로 다른 테두리 두께가 적용되어 있었습니다. 이는 사용자의 인지 행동 패턴(Action Mapping)을 왜곡하고 브랜드의 신뢰도를 저하시킵니다. 
 **[v4.0 설계 표준]** 전역적인 의미론적 CTA 버튼 명세(`.btn-primary`, `.btn-secondary`, `.btn-glow`)를 수립하여 전면에 동일한 물리법칙과 비주얼 토큰을 상속시킵니다.
@@ -129,7 +129,7 @@
 
 ---
 
-## 3. 📐 Geometry & Spatial System (The 8-Point Grid & Spacing Optimization)
+## 3. Geometry & Spatial System (The 8-Point Grid & Spacing Optimization)
 
 불규칙한 스페이싱(`6px, 12px, 80px`)을 버리고, **엄격한 4pt / 8pt Grid System**을 도입합니다. 인간의 눈은 수학적 비례에서 무의식적인 편안함과 고급스러움을 느낍니다.
 
@@ -143,7 +143,7 @@
 | `--space-2xl` | `64px` | 주요 섹션 간 간격 |
 | `--space-3xl` | `128px` | 대형 Hero 여백, 페이지 상하단 여백 |
 
-### 3-1. 🚀 v4.0 Card & Content Spacing Optimization (Density)
+### 3-1. v4.0 Card & Content Spacing Optimization (Density)
 기존의 카드들은 텍스트의 볼륨에 비해 과도한 내부 여백과 넓은 카드 사이의 간격을 가지고 있어 화면이 비어 보이거나 산만한 단점이 있었습니다. v4.0에서는 최적의 정보 밀도를 확보하기 위해 아래와 같이 규격화합니다.
 
 * **카드 내부 여백 (Card Padding)**:
@@ -163,7 +163,7 @@
 
 ---
 
-## 4. 🔠 Typography & Multilingual Optimization
+## 4. Typography & Multilingual Optimization
 
 글로벌 수준의 타이포그래피는 '어떤 디바이스에서도 완벽하게, 그리고 아름답게 읽히는 것'을 목표로 합니다.
 
@@ -187,7 +187,7 @@
 
 ---
 
-## 5. 🪞 Elevation & Glassmorphism 3.0
+## 5. Elevation & Glassmorphism 3.0
 
 투명도 높은 보라색 배경에 의존하던 1세대를 넘어, **정밀한 1px 보더(Border)와 다중 그림자(Multi-layer Shadow)**를 활용한 하이엔드 글래스모피즘을 제안합니다.
 
@@ -226,7 +226,7 @@
 
 ---
 
-## 6. ⚡ Interaction & Animation
+## 6. Interaction & Animation
 
 프리미엄 UI의 핵심은 '물리법칙을 따르는 자연스러운 인터랙션'입니다.
 
@@ -250,7 +250,7 @@
 
 ---
 
-## 7. 🧩 핵심 레이아웃 패턴 (The Unified Bento Grid)
+## 7. 핵심 레이아웃 패턴 (The Unified Bento Grid)
 
 현재 `PaceNoteDashboard`와 `BuildersLog`에 파편화된 **Bento Grid**를 메인 공식 UI 패턴으로 승격합니다.
 
@@ -260,7 +260,7 @@
 
 ---
 
-## 8. 🌌 3D WebGL & Physics System (Phase 2.0)
+## 8. 3D WebGL & Physics System (Phase 2.0)
 
 PriSincera의 공간 디자인은 2D 평면을 넘어 Three.js 기반의 3D WebGL 영역으로 확장되었습니다. HTML DOM 요소와의 시각적 통일성을 위해 다음의 3D 전용 파라미터(Token)를 엄격히 준수합니다.
 
@@ -284,7 +284,7 @@ PriSincera의 공간 디자인은 2D 평면을 넘어 Three.js 기반의 3D WebG
 
 ---
 
-## 9. 🗓️ Bento Chrono-Calendar & Themed Workstation System (v2.5)
+## 9. Bento Chrono-Calendar & Themed Workstation System (v2.5)
 
 Daily Digest 아카이브 개편과 3-Tab 워크스페이스 리뉴얼 과정에서 정립된 **Bento Chrono-Calendar**와 **3-Tab 워크스테이션 테마 시스템**의 표준 가이드라인입니다. 다른 개발자나 AI가 즉시 이해하고 코드로 이식할 수 있도록 구현 패턴과 세부 설계 토큰을 완벽히 규격화합니다.
 
@@ -326,7 +326,7 @@ Daily Digest 아카이브 개편과 3-Tab 워크스페이스 리뉴얼 과정에
 
 ---
 
-### 9-5. ⛵ PaceNote Bento Weekly Calendar & Voyage Horizon (v2.6)
+### 9-5. PaceNote Bento Weekly Calendar & Voyage Horizon (v2.6)
 
 PaceNote 서비스(`/pacenote`)의 주차별(Weekly) 타임라인 운용 방식을 극대화하기 위해 설계된 **분기별 13주차 벤트 매트릭스(Chrono-Quarterly Bento Matrix)** 디자인 시스템 가이드라인입니다.
 
@@ -336,7 +336,7 @@ PaceNote 서비스(`/pacenote`)의 주차별(Weekly) 타임라인 운용 방식�
 * **주차별 셀 비주얼 상태 스펙 (Weekly Cell States)**:
   1. **과거 완료 주차 (Past Completed)**: 투명도 높은 글래스모피즘 스킨(`background: rgba(0, 0, 0, 0.25)`, `border: 1px solid rgba(255, 255, 255, 0.06)`). 해당 주차의 실시간 Task 달성도(완료한 테스크 / 총 테스크)에 비례한 하단 마이크로 게이지바(`cell-progress-fill`) 탑재.
   2. **현재 개척 주차 (Current Active)**: 사이버 사이언 네온 아우라 테두리(`#22D3EE`). 2초 주기로 테두리가 부드럽게 펄싱되는 외곽 글로우 애니메이션(`pulseAura`)과 중앙의 맥동 도트 인디케이터(`pulse-indicator`) 연동.
-  3. **미래 대기 주차 (Future Locked)**: 딤드 처리(`opacity: 0.25`), 포인터 및 클릭 차단(`disabled`), 점선 테두리(`border-style: dashed`), 자물쇠 아이콘(`🔒`) 노출.
+  3. **미래 대기 주차 (Future Locked)**: 딤드 처리(`opacity: 0.25`), 포인터 및 클릭 차단(`disabled`), 점선 테두리(`border-style: dashed`), 자물쇠 아이콘 노출.
 * **0-Lag Debounced Hover Peek (150ms)**:
   * 마우스 호버 시 `150ms` 동안 커서가 멈춘 경우에만 궤도 상세 요약 오버레이 패널(`weekly-hover-peek-panel`)을 부드럽게 슬라이드업(`peekSlideUp`) 시켜 렌더링 부하를 예방합니다.
 * **CLS 방지 및 공간 정규화**:

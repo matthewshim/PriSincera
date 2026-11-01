@@ -1,6 +1,6 @@
-# 🧭 하나의 진실(SSOT): 카테고리별로 흩어진 페이지 타이틀·메타 통일기
+# 하나의 진실(SSOT): 카테고리별로 흩어진 페이지 타이틀·메타 통일기
 
-## 1. 💡 도입부: 같은 페이지, 다른 제목
+## 1. 도입부: 같은 페이지, 다른 제목
 
 PriSincera는 React/Vite 기반의 SPA입니다. 검색·소셜 크롤러를 위해 **서버가 초기 HTML에 메타 태그를 주입(SSR)**하고, 브라우저에서는 **클라이언트 훅이 탭 타이틀과 메타를 갱신(CSR)**하는 두 개의 경로가 공존합니다.
 
@@ -10,7 +10,7 @@ PriSincera는 React/Vite 기반의 SPA입니다. 검색·소셜 크롤러를 위
 
 ---
 
-## 2. 🔍 발견된 불일치
+## 2. 발견된 불일치
 
 ### [불일치 1] 이중 소스가 낳은 드리프트
 * **발견**: SSR(`server.mjs`)과 CSR(클라이언트 SEO 훅)이 **각자 타이틀/설명을 하드코딩**하고 있었습니다.
@@ -28,7 +28,7 @@ PriSincera는 React/Vite 기반의 SPA입니다. 검색·소셜 크롤러를 위
 
 ---
 
-## 3. 🛠️ 솔루션: 단일 소스(SSOT)로 통일
+## 3. 솔루션: 단일 소스(SSOT)로 통일
 
 ### 1) route → meta 공유 모듈
 카테고리별 타이틀·설명·키워드를 **한 곳에 정의**하고, **서버 SSR과 클라이언트 훅이 같은 모듈을 소비**하도록 만들었습니다. 이로써 드리프트를 구조적으로 차단했습니다.
@@ -66,7 +66,7 @@ export function resolveMeta(pathname, opts = {}) {
 
 ---
 
-## 4. 🌐 다국어 SEO: hreflang & og:locale
+## 4. 다국어 SEO: hreflang & og:locale
 
 메타가 통일되었으니, 다국어 발견성(discoverability)도 정돈했습니다. 전 페이지 SSR에 **`ko`/`en`/`ja` + `x-default` hreflang 대체 링크**와 **`og:locale`/`og:locale:alternate`**를 방출합니다.
 
@@ -85,7 +85,7 @@ export function hreflangLinks(canonical) {
 
 ---
 
-## 5. 🎨 소셜 카드: 히어로를 OG로
+## 5. 소셜 카드: 히어로를 OG로
 
 마지막은 얼굴, 즉 소셜 공유 카드(OG 이미지)였습니다. 별도의 디자인 에셋이 없었기에, **메인 히어로의 'Star Prism Identity'**(글래스 육망성 프리즘·골드 액센트 삼각형·오빗 링·다크 스타필드 + 하단 골드 앰비언트)를 **1200×630 OG 카드로 프로그래밍 생성**했습니다.
 
@@ -94,7 +94,7 @@ export function hreflangLinks(canonical) {
 
 ---
 
-## 6. 📈 결과 및 인사이트
+## 6. 결과 및 인사이트
 
 이번 개편으로 PriSincera는 다음을 얻었습니다:
 

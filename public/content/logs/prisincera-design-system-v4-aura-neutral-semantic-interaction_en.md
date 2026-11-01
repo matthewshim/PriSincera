@@ -1,11 +1,11 @@
-# 📐 PriSincera Design System (v4.0: Aura-Neutral & Semantic Interaction)
+# PriSincera Design System (v4.0: Aura-Neutral & Semantic Interaction)
 
 > **"Sincerity, Prioritized."**
 > This document serves as the next-generation design system v4.0 standard guideline for the PriSincera website to achieve world-class design quality. 
 
 ---
 
-## 0. 🌐 World-Class Design System Analysis & Preliminary Research (Preliminary Analysis)
+## 0. World-Class Design System Analysis & Preliminary Research (Preliminary Analysis)
 
 We have researched and analyzed the design philosophies of global technology companies that have built the most sophisticated and premium design systems worldwide, internalizing them as the core design framework for PriSincera v4.0.
 
@@ -25,7 +25,7 @@ We have researched and analyzed the design philosophies of global technology com
 
 ---
 
-## 1. 🎨 Color System: Refined & Sophisticated
+## 1. Color System: Refined & Sophisticated
 
 **[Development Rationale]** When purple hues are mixed into the background or cards in `DailyDigest` articles or `PaceNote` weekly timelines where text needs to be read with focused attention for extended periods, readability sharply decreases due to color interference. Additionally, the visual effect of accented point colors on hover is diluted by the background color, diminishing the sense of sophistication.
 **[v4.0 Design Standard]** The base surfaces of backgrounds and cards are refined to **pure achromatic (Desaturated Neutral OLED Slate)**, completely excluding purple blends. Noble brand colors, Violet and Cyan, are restricted to appear 'as vivid as jewels' only at moments of user interaction.
@@ -59,7 +59,7 @@ We have researched and analyzed the design philosophies of global technology com
 
 ---
 
-## 2. 🔘 Semantic CTA Button Design Specification (Semantic CTA Button System)
+## 2. Semantic CTA Button Design Specification (Semantic CTA Button System)
 
 **[Development Rationale]** In the existing code, buttons had different inline background hues (green, indigo, purple, etc.) and varying border thicknesses applied. This distorts user cognitive behavior patterns (Action Mapping) and diminishes brand credibility.
 **[v4.0 Design Standard]** We establish global semantic CTA button specifications (`.btn-primary`, `.btn-secondary`, `.btn-glow`) to inherit consistent physical laws and visual tokens across all instances.
@@ -129,7 +129,7 @@ We have researched and analyzed the design philosophies of global technology com
 
 ---
 
-## 3. 📐 Geometry & Spatial System (The 8-Point Grid & Spacing Optimization)
+## 3. Geometry & Spatial System (The 8-Point Grid & Spacing Optimization)
 
 We abandon irregular spacing (`6px, 12px, 80px`) and introduce a **strict 4pt / 8pt Grid System**. The human eye unconsciously perceives comfort and sophistication in mathematical proportions.
 
@@ -143,7 +143,7 @@ We abandon irregular spacing (`6px, 12px, 80px`) and introduce a **strict 4pt / 
 | `--space-2xl` | `64px` | Spacing between major sections |
 | `--space-3xl` | `128px` | Large Hero margins, page top/bottom margins |
 
-### 3-1. 🚀 v4.0 Card & Content Spacing Optimization (Density)
+### 3-1. v4.0 Card & Content Spacing Optimization (Density)
 Existing cards had excessive internal padding and wide gaps between cards relative to the text volume, leading to a sparse or cluttered screen appearance. In v4.0, we standardize as follows to ensure optimal information density.
 
 * **Card Internal Padding (Card Padding)**:
@@ -163,7 +163,7 @@ Existing cards had excessive internal padding and wide gaps between cards relati
 
 ---
 
-## 4. 🔠 Typography & Multilingual Optimization
+## 4. Typography & Multilingual Optimization
 
 World-class typography aims to be 'perfectly and beautifully legible on any device'.
 
@@ -187,7 +187,7 @@ We apply a font system based on a geometric scale, rather than simple pixel unit
 
 ---
 
-## 5. 🪞 Elevation & Glassmorphism 3.0
+## 5. Elevation & Glassmorphism 3.0
 
 Beyond the first generation that relied on highly transparent purple backgrounds, we propose high-end glassmorphism utilizing **precise 1px borders and multi-layer shadows**.
 
@@ -226,7 +226,7 @@ We reduce the color mixing of the existing `--glass-bg` and use pure white trans
 
 ---
 
-## 6. ⚡ Interaction & Animation
+## 6. Interaction & Animation
 
 The core of premium UI is 'natural interactions that obey the laws of physics'.
 
@@ -250,7 +250,7 @@ We use a tension-filled spring effect as the default, replacing the bland `ease-
 
 ---
 
-## 7. 🧩 Core Layout Pattern (The Unified Bento Grid)
+## 7. Core Layout Pattern (The Unified Bento Grid)
 
 We elevate the **Bento Grid**, currently fragmented across `PaceNoteDashboard` and `BuildersLog`, to the main official UI pattern.
 
@@ -260,7 +260,7 @@ We elevate the **Bento Grid**, currently fragmented across `PaceNoteDashboard` a
 
 ---
 
-## 8. 🌌 3D WebGL & Physics System (Phase 2.0)
+## 8. 3D WebGL & Physics System (Phase 2.0)
 
 PriSincera's spatial design has expanded beyond 2D planes into the Three.js-based 3D WebGL domain. To maintain visual consistency with HTML DOM elements, the following 3D-specific parameters (Tokens) are strictly adhered to.
 
@@ -284,7 +284,7 @@ To unify the tactile feel of 3D and 2D interactions, we use **damping**-based in
 
 ---
 
-## 9. 🗓️ Bento Chrono-Calendar & Themed Workstation System (v2.5)
+## 9. Bento Chrono-Calendar & Themed Workstation System (v2.5)
 
 This is the standard guideline for the **Bento Chrono-Calendar** and **3-Tab Workstation Theme System** established during the Daily Digest archive reorganization and 3-Tab workspace renewal. Implementation patterns and detailed design tokens are fully standardized so that other developers or AI can immediately understand and port them into code.
 
@@ -326,7 +326,7 @@ This is a belt layout for instantly scanning three workspaces: IT Tech, AI Works
 
 ---
 
-### 9-5. ⛵ PaceNote Bento Weekly Calendar & Voyage Horizon (v2.6)
+### 9-5. PaceNote Bento Weekly Calendar & Voyage Horizon (v2.6)
 
 This is a design system guideline for the **Chrono-Quarterly Bento Matrix (13-week per quarter)**, designed to maximize the weekly timeline operation of the PaceNote service (`/pacenote`).
 
@@ -336,7 +336,7 @@ This is a design system guideline for the **Chrono-Quarterly Bento Matrix (13-we
 * **Weekly Cell Visual State Specifications**:
   1. **Past Completed Weeks**: High-transparency glassmorphism skin (`background: rgba(0, 0, 0, 0.25)`, `border: 1px solid rgba(255, 255, 255, 0.06)`). Includes a micro-gauge bar (`cell-progress-fill`) at the bottom, proportional to the real-time Task completion rate (completed tasks / total tasks) for that week.
   2. **Current Active Week**: Cyber Cyan neon aura border (`#22D3EE`). Integrated with an outer glow animation (`pulseAura`) where the border softly pulses every 2 seconds, and a central pulsating dot indicator (`pulse-indicator`).
-  3. **Future Locked Weeks**: Dimmed (`opacity: 0.25`), pointer and click blocked (`disabled`), dashed border (`border-style: dashed`), padlock icon (`🔒`) displayed.
+  3. **Future Locked Weeks**: Dimmed (`opacity: 0.25`), pointer and click blocked (`disabled`), dashed border (`border-style: dashed`), padlock icon displayed.
 * **0-Lag Debounced Hover Peek (150ms)**:
   * To prevent rendering load, the detailed summary overlay panel (`weekly-hover-peek-panel`) is smoothly slid up (`peekSlideUp`) only when the cursor remains static for `150ms` on mouse hover.
 * **CLS Prevention & Spatial Normalization**:

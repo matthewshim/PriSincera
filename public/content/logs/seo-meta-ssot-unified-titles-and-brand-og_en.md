@@ -1,6 +1,6 @@
-# 🧭 One Source of Truth (SSOT): Unifying Scattered Page Titles & Meta Across Categories
+# One Source of Truth (SSOT): Unifying Scattered Page Titles & Meta Across Categories
 
-## 1. 💡 Intro: Same Page, Different Title
+## 1. Intro: Same Page, Different Title
 
 PriSincera is a React/Vite SPA. Two paths coexist for metadata: the **server injects meta tags into the initial HTML (SSR)** for search/social crawlers, while a **client hook updates the tab title and meta in the browser (CSR)**.
 
@@ -10,7 +10,7 @@ Notation was inconsistent too. Some pages used `| PriSincera`, some `— PriSinc
 
 ---
 
-## 2. 🔍 The Inconsistencies We Found
+## 2. The Inconsistencies We Found
 
 ### [Issue 1] Drift born from a dual source
 * **Finding**: SSR (`server.mjs`) and CSR (the client SEO hook) were each **hardcoding their own titles/descriptions**.
@@ -28,7 +28,7 @@ Notation was inconsistent too. Some pages used `| PriSincera`, some `— PriSinc
 
 ---
 
-## 3. 🛠️ The Solution: Converging on a Single Source of Truth
+## 3. The Solution: Converging on a Single Source of Truth
 
 ### 1) A route → meta shared module
 We defined each category's title, description, and keywords **in one place**, and made **both the server SSR and the client hook consume the same module** — structurally eliminating drift.
@@ -66,7 +66,7 @@ The most valuable lesson came from a mundane place. A **shared module imported b
 
 ---
 
-## 4. 🌐 Multilingual SEO: hreflang & og:locale
+## 4. Multilingual SEO: hreflang & og:locale
 
 With meta unified, we tidied multilingual discoverability too. Every page's SSR now emits **`ko`/`en`/`ja` + `x-default` hreflang alternates** and **`og:locale`/`og:locale:alternate`**.
 
@@ -85,7 +85,7 @@ Since every language variant emits the **same hreflang set**, the reciprocal-ref
 
 ---
 
-## 5. 🎨 The Social Card: Turning the Hero into an OG
+## 5. The Social Card: Turning the Hero into an OG
 
 The last piece was the face — the social share card (OG image). With no separate design asset on hand, we **programmatically generated a 1200×630 OG card** from the main hero's **"Star Prism Identity"** (a glass hexagram prism, a gold accent triangle, an orbit ring, a dark starfield with a warm gold ambient glow).
 
@@ -94,7 +94,7 @@ The last piece was the face — the social share card (OG image). With no separa
 
 ---
 
-## 6. 📈 Results & Insights
+## 6. Results & Insights
 
 This overhaul earned PriSincera:
 

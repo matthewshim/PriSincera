@@ -8,7 +8,7 @@ Users seamlessly onboarded with a single click, and our growth flywheel seemed t
 
 ---
 
-## 🚨 The Problem Encountered: A Power Struggle in LocalStorage
+## The Problem Encountered: A Power Struggle in LocalStorage
 
 During the process of unifying our authentication system, our architectural Achilles' heel emerged as the **Admin Backend (`AdminDashboard`)**.
 
@@ -26,7 +26,7 @@ This was a severe session entanglement where two completely distinct roles, 'reg
 
 ---
 
-## 🏗️ Session Isolation Architecture
+## Session Isolation Architecture
 
 To perfectly isolate session tokens at the browser level, we adopted Firebase's multi-application initialization technique and designed a **dual-security track that physically separates sessions**.
 
@@ -83,7 +83,7 @@ req.user = { uid: decodedToken.uid };
 
 ---
 
-## 💡 Lesson Learned: Session Design from a Builder's Perspective
+## Lesson Learned: Session Design from a Builder's Perspective
 
 Simply "using the default login functions supported by a library" is very easy. However, as service architectures gradually evolve and various permission levels become intertwined – such as **back-office, cron pipelines, and third-party integrations** – the security responsibility to deeply control even a single local session storage follows.
 

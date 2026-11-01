@@ -1,6 +1,6 @@
-# 🪐 Two Services, One Journey: How We Unified Daily Digest & Pace Note into ReLearn
+# Two Services, One Journey: How We Unified Daily Digest & Pace Note into ReLearn
 
-## 1. 💡 Intro: One Philosophy, Two Menus
+## 1. Intro: One Philosophy, Two Menus
 
 PriSincera's growth philosophy was always a single sentence — **learning becomes action, and action, through reflection, personalizes the next round of learning.** Daily Digest (daily knowledge curation) and Pace Note (weekly action & reflection tracker) were designed as the front and rear wheels of this flywheel.
 
@@ -8,11 +8,11 @@ The problem was that to the user, these two appeared as **two completely separat
 
 Ironically, **the backend was already connected.** The Growth Loop pipeline (Phases 0–4) was already feeding completion and reflection signals back into the recommendation engine and the digest lens. Only one thing remained — **the final surface-level work of lifting this invisible connection up onto the screen.**
 
-> 💡 **In one line**: The essence of this unification wasn't building new features — it was dressing an already-existing data flywheel in a "single journey" UI.
+> **In one line**: The essence of this unification wasn't building new features — it was dressing an already-existing data flywheel in a "single journey" UI.
 
 ---
 
-## 2. 🏷️ Naming: Re-Learn, and Re-run
+## 2. Naming: Re-Learn, and Re-run
 
 We settled on **ReLearn** as the name of the unified service. It carries a double meaning — "**Re-Learn**" and "**Re-run** (as in *runner*)" — packed into one word, so that the name itself symbolizes the service's target: *"a Learner & Runner starting over from zero."*
 
@@ -22,7 +22,7 @@ We considered candidates like ZeroRun, Day One, and Base Camp, but only ReLearn 
 
 ---
 
-## 3. 🧭 The Strategic Call: Not Coexistence, but Succession
+## 3. The Strategic Call: Not Coexistence, but Succession
 
 The most important decision wasn't technical — it was **positioning.**
 
@@ -36,7 +36,7 @@ Three principles emerged from this redefinition:
 
 ---
 
-## 4. 🛠️ Architecture: Zero New APIs, Zero New Jobs
+## 4. Architecture: Zero New APIs, Zero New Jobs
 
 For a project of this scope, the number I'm proudest of isn't a flashy new feature — it's **zero.**
 
@@ -63,7 +63,7 @@ Since the shell draws the learning and action stages together, the profile, orbi
 
 ---
 
-## 5. 🔄 One Journey: Today | Records, and the 3-Stage Loop
+## 5. One Journey: Today | Records, and the 3-Stage Loop
 
 ReLearn's screen toggles between **`Today | Records`** within a single route.
 
@@ -84,7 +84,7 @@ There was a fun discovery too. Pace Note's five default orbits ("Try running the
 
 ---
 
-## 6. 🌅 Executing Succession: A Three-Step Sunset
+## 6. Executing Succession: A Three-Step Sunset
 
 Once the parity gate was cleared, succession was executed in three steps.
 
@@ -94,11 +94,11 @@ Once the parity gate was cleared, succession was executed in three steps.
 | **Phase 2** | Swapped entry points — moved the GNB, home, and email entries to ReLearn, and migrated SEO for the old paths (`/daily`, `/pacenote`) via **server-side 301** |
 | **Phase 3** | Tidied the old pages' code, routes, meta, and doc status — two large page components retired from the repository |
 
-We finished the surrounding alignment too. The home service section merged the two Daily·Pace cards into a single ReLearn flagship card; the Admin console was reorganized for the ReLearn regime (groups 4→3, tabs 10→8); and the daily newsletter succeeded its branding to "📬 ReLearn Daily."
+We finished the surrounding alignment too. The home service section merged the two Daily·Pace cards into a single ReLearn flagship card; the Admin console was reorganized for the ReLearn regime (groups 4→3, tabs 10→8); and the daily newsletter succeeded its branding to "ReLearn Daily."
 
 ---
 
-## 7. 🎯 Closing: Unification Was Subtraction
+## 7. Closing: Unification Was Subtraction
 
 If I compress what I learned from this grand unification into one sentence — **good unification is subtraction, not addition.**
 
@@ -107,4 +107,4 @@ If I compress what I learned from this grand unification into one sentence — *
 - Two menus → one journey, yet URLs and SEO assets 100% preserved
 - The growth flywheel that already existed in the backend, finally made visible on screen
 
-PriSincera's product portfolio is now a three-product lineup: **ReLearn (the growth loop) · Builder's Log (the making-of) · Sylphio (on-device interpretation)**. Every day, from zero, we learn again and run again. 🏃
+PriSincera's product portfolio is now a three-product lineup: **ReLearn (the growth loop) · Builder's Log (the making-of) · Sylphio (on-device interpretation)**. Every day, from zero, we learn again and run again.

@@ -1,9 +1,9 @@
 # A Growth Journey at Your Own Pace: PriSincera Pace Note
 
-> 💡 **Directional Statement (Pace Note Vision)**
+> **Directional Statement (Pace Note Vision)**
 > For those who pursue their own tempo and direction without being swayed by others' pace, PriSincera introduces **Pace Note**, an AI-powered personal branding action platform.
 
-PriSincera supports users in growing at their own tempo and pursuing their own direction, without being swayed by uniform standards. Under this philosophy, we introduce Pace Note, the final stage that completes PriSincera's **3S Pipeline (Signal ➔ Study ➔ Step)**, a premium 'personal branding action platform' that applies collected insights to the correct trajectory of life and silently records its footsteps.
+PriSincera supports users in growing at their own tempo and pursuing their own direction, without being swayed by uniform standards. Under this philosophy, we introduce Pace Note, the final stage that completes PriSincera's **3S Pipeline (Signal → Study → Step)**, a premium 'personal branding action platform' that applies collected insights to the correct trajectory of life and silently records its footsteps.
 
 ---
 
@@ -44,7 +44,7 @@ Pace Note moves beyond the fatigue of simple daily logins or blind 'growth strea
 ### 3.1. AI-Powered Hyper-Personalized Weekly Missions: Intelligent Guidance for Finding Your Own Pace
 Pace Note moves beyond uniform mission lists, proposing customized directions that best suit the user's current growth pace, based on the Daily Digest data consumed during the week.
 
-> 🛡️ **Pace Note AI Flywheel**
+> **Pace Note AI Flywheel**
 > PriSincera's Gemini AI deeply analyzes the IT Tech Signal categories clicked by the user and the learned AI prompt data. Every Sunday night, it proposes three concrete action guidelines (Pace Guides) that can be immediately applied to practical work for the coming week.
 
 *   **Sophisticated Data Linkage**: Combines user-clicked categories and learned prompts in real-time statistics.

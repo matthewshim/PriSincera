@@ -6,13 +6,13 @@ While static sites boast excellent speed and optimal SEO performance, content up
 
 ---
 
-## 🏗️ Architecture Design: Overcoming Serverless Limitations
+## Architecture Design: Overcoming Serverless Limitations
 
 Admin backends deployed in **serverless container environments** such as Vercel or Google Cloud Run typically have **read-only** disks. Even if writing is possible, modified local files are immediately lost when the temporary container session ends. This means that permanently creating `.md` files directly on the local disk within the server, like a traditional CMS, is not possible.
 
 To solve this problem, instead of introducing a database to the backend, we utilized **GitHub REST API (Octokit)** to build a **remote automation pipeline** that allows the Admin backend to remotely push commits directly to the `main` branch (Git-less Commit).
 
-### 🔄 Full Operation Pipeline (Data Flow)
+### Full Operation Pipeline (Data Flow)
 
 ```text
 +------------------------+
@@ -48,7 +48,7 @@ To solve this problem, instead of introducing a database to the backend, we util
 +------------------------+
 ```
 
-> 💡 **Step-by-Step Data Flow Summary (Data Flow Steps)**
+> **Step-by-Step Data Flow Summary (Data Flow Steps)**
 > *   **Admin Dashboard:** The administrator initiates the pipeline by clicking the `Publish` button for a post in the web browser.
 > *   **Express Backend:** Performs secret information masking and AI engine-based automatic contextual correction for the incoming article.
 > *   **GitHub REST API & Commit/Push:** Directly integrates the GitHub API in-memory to push Git-less remote commits, bypassing local disk file writing.
@@ -57,11 +57,11 @@ To solve this problem, instead of introducing a database to the backend, we util
 
 ---
 
-## 💻 Frontend: Intuitive Integrated Editor UI/UX in the Browser
+## Frontend: Intuitive Integrated Editor UI/UX in the Browser
 
 To enable control of all static articles directly from the browser without needing to open a development environment (IDE), we significantly expanded the existing Admin Panel to implement an **integrated editor modal**.
 
-### 🌟 Key Component Features
+### Key Component Features
 
 *   **Metadata Integrated Viewer:** Manages Chapter numbers, Title, Slug, and Date information of currently published articles at a glance, allowing for intuitive addition and modification.
 *   **Markdown Draft Auto-Analyzer (AI Metadata Extractor):** Simply drag and drop an `.md` markdown draft file created locally, and AI (Gemini) automatically comprehends the entire context to **extract and fill metadata forms** such as `Title`, `Subtitle`, `Slug`, and `Tags`.
@@ -70,11 +70,11 @@ To enable control of all static articles directly from the browser without needi
 
 ---
 
-## ⚙️ Backend: Secure Remote Git-less Commit API Specification
+## Backend: Secure Remote Git-less Commit API Specification
 
 A backend-specific API endpoint, strongly protected by administrator authentication middleware (`requireAdmin`), is designed to handle actual data manipulation.
 
-### 📌 API Endpoint Specification
+### API Endpoint Specification
 
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
@@ -85,7 +85,7 @@ A backend-specific API endpoint, strongly protected by administrator authenticat
 
 ---
 
-## 🔒 Security and Quality Management (AI & Security Workflow)
+## Security and Quality Management (AI & Security Workflow)
 
 To ensure the stability of the static CMS and prevent source code leakage, a **Human-in-the-Loop (HITL) automated verification system** combining automated scanners with human intuition was designed.
 
@@ -98,7 +98,7 @@ To ensure the stability of the static CMS and prevent source code leakage, a **H
 3.  **Phase 3 (Regex-based Local Secret Scanner):** Just before publishing, a powerful regular expression engine is activated on the backend server to conduct a **secondary inspection for critical hardcoded sensitive information patterns** such as API Key, AWS Secret, and GitHub Access Token within the body. If detected, the publishing process is immediately `Abort`ed.
 4.  **Phase 4 (GitHub Advanced Security):** Immediately after the final push, GitHub's own Secret Scanning feature operates threefold, establishing complete security trustworthiness.
 
-> 🛡️ **Security Guide: Examples of Key Defense Filter Patterns for Regex Secret Scanner**
+> **Security Guide: Examples of Key Defense Filter Patterns for Regex Secret Scanner**
 
 ```javascript
 const secretPatterns = [
@@ -110,7 +110,7 @@ const secretPatterns = [
 
 ---
 
-## 🚀 Further Enhancement and Troubleshooting Resolution Process
+## Further Enhancement and Troubleshooting Resolution Process
 
 We didn't just stop at completing the basic publishing pipeline but diligently resolved the limitations and bottlenecks encountered in a production traffic environment.
 
@@ -118,7 +118,7 @@ We didn't just stop at completing the basic publishing pipeline but diligently r
 
 We fundamentally resolved the phenomenon where article publishing was blocked due to API traffic limits (Quota Limits) or temporary failures of specific high-performance AI models. A **graceful degradation fallback model** was implemented in the AI core analysis loop.
 
-> 💡 **AI Fallback Workflow Architecture**
+> **AI Fallback Workflow Architecture**
 > 
 > `[gemini-2.5-flash]` ──(On Failure)──► `[gemini-2.0-flash]` ──(On Failure)──► `[gemini-1.5-flash-latest]` ──(On Complete Failure)──► `[Manual Recovery Mode]`
 
@@ -136,7 +136,7 @@ Serverless Docker environments like Cloud Run typically have a **Read-Only file 
 
 This was permanently resolved by completely switching to a **low-level Git data workflow of the GitHub REST API that operates 100% in memory**, without using any physical disk.
 
-> 🛠️ **Engineering Tip: Core 100% Remote Git-less Implementation Code Actually Applied**
+> **Engineering Tip: Core 100% Remote Git-less Implementation Code Actually Applied**
 
 ```javascript
 // 1. Remotely retrieve the latest Commit SHA and Base Tree SHA of the current branch (main)

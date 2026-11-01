@@ -85,7 +85,7 @@ for (let attempt = 1; attempt <= maxRetries; attempt++) {
 ```
 Since call spraying is not triggered during temporary network issues, unnecessary call consumption is immediately **reduced by over 80%**.
 
-### Prescription 3: Expanding Batch Size (5 ➡️ 12)
+### Prescription 3: Expanding Batch Size (5 → 12)
 The Gemini Flash model possesses a massive bandwidth of up to 1 million tokens, making it capable of cross-referencing and summarizing multiple articles simultaneously.
 We boldly expanded the batch size from 5 to **12**.
 - API requests that previously had to be split into 12 separate calls are now compressed into **just 5 calls**.

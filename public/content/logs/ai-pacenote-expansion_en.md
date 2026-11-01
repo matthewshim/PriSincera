@@ -10,7 +10,7 @@ To inject infinite vitality into this stagnant AI engine and evolve autonomously
 
 ---
 
-## 🚨 The Problem Encountered: The End Brought by Stagnant Recommendations
+## The Problem Encountered: The End Brought by Stagnant Recommendations
 
 To overcome hardcoding, we built a pipeline (`pacenote-composer.mjs`) that dynamically creates and supplies new recommended goals daily at midnight, separating it into a database (`config/pacenote_daily_pool`).
 
@@ -26,7 +26,7 @@ Ultimately, only initial masterpieces holding vested interests would survive ind
 
 ---
 
-## 🏗️ Dynamic Eviction Algorithm for Preventing Stagnation
+## Dynamic Eviction Algorithm for Preventing Stagnation
 
 To overcome this contradiction, we designed a **"Velocity-based multi-dimensional eviction algorithm"** inspired by the laws of physics.
 
@@ -52,7 +52,7 @@ Every midnight, the algorithm precisely targets and **evicts the lowest 3 tracks
 
 ---
 
-## 🔄 Self-Evolving AI Feedback Flywheel
+## Self-Evolving AI Feedback Flywheel
 
 The true beauty of this structure is not limited to merely automating eviction; it lies in the **circular structure** where well-utilized user response data flows back as a foundation for AI learning.
 
@@ -84,7 +84,7 @@ As a result of incorporating this Dynamic Few-Shot technique:
 
 ---
 
-## 💡 Conclusion and Future Plans
+## Conclusion and Future Plans
 
 Systems that simply hardcode static data and leave them unattended eventually become obsolete.
 The **"150-item recommendation pool limit and dynamic eviction algorithm"** applied to Pace Note, and the **"feedback flywheel"** that recirculates data into AI prompts, demonstrate the essence of true modern data engineering that constantly moves and improves its own quality.

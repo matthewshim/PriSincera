@@ -1,6 +1,6 @@
-# 🌌 Aesthetic of Moderation: Scroll-linked Interaction Overhaul & Ultra-Refined Minimal Focus Design
+# Aesthetic of Moderation: Scroll-linked Interaction Overhaul & Ultra-Refined Minimal Focus Design
 
-## 1. 💡 Introduction: Lost on the Border Between Flashy and 'Cheap'
+## 1. Introduction: Lost on the Border Between Flashy and 'Cheap'
 One of the most common pitfalls in product design and frontend engineering is the misconception that **"the more it shakes and flashes, the more premium it looks."**
 
 During our efforts to refine the user experience (UX) of PriSincera, we wanted to make our web interface feel alive. We sequentially integrated flashy 3D card tilts, diagonal shimmer sweeps, periodic text glints, and rapid mockup animations that accelerated when focused on scroll.
@@ -14,7 +14,7 @@ This article shares our engineering journey of analyzing the issues caused by ou
 
 ---
 
-## 2. 🔍 Analyzing the Issues: Why Was Our Interaction So Cluttering?
+## 2. Analyzing the Issues: Why Was Our Interaction So Cluttering?
 
 By dissecting the scroll-linked and micro-interactions one by one, we isolated three critical visual noise factors that hindered readability.
 
@@ -32,7 +32,7 @@ By dissecting the scroll-linked and micro-interactions one by one, we isolated t
 
 ---
 
-## 3. 🛠️ Engineering Solution: Stripping Down to Leave Contrast
+## 3. Engineering Solution: Stripping Down to Leave Contrast
 
 We decided to return to the fundamental purpose of micro-interaction: **"Interactions should guide the user's eye naturally, not distract them."** We stripped away all distracting visual effects and established an ultra-minimal focus system.
 
@@ -72,7 +72,7 @@ We styled cards as semi-transparent glass blocks (`backdrop-filter: blur(16px)`)
 
 ---
 
-## 4. 📈 Lessons: True Premium is 'Less is More'
+## 4. Lessons: True Premium is 'Less is More'
 
 Through this process of iteration, trial, and rollbacks, we solidified our core UX design guidelines:
 

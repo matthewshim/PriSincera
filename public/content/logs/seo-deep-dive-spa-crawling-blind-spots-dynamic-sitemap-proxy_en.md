@@ -1,6 +1,6 @@
-# 🛠️ SEO Deep Dive: Overcoming SPA Crawling Blind Spots and Integrating Dynamic Sitemaps
+# SEO Deep Dive: Overcoming SPA Crawling Blind Spots and Integrating Dynamic Sitemaps
 
-## 1. 💡 Introduction: The Service Was Alive, But Search Engines Were Blind
+## 1. Introduction: The Service Was Alive, But Search Engines Were Blind
 PriSincera is built as a high-performance Single Page Application (SPA) based on React/Vite, featuring killer content such as **Daily Digest**, which analyzes tech trends daily, and **Builders Log**, where technical decisions are documented.
 
 Despite diligently producing high-density content, **organic visitor inflow was stagnant**. The reason was clear: **search crawlers (Googlebot, Naverbot) and social media bots (Slack, LinkedIn, Discord, etc.) were trapped in a huge SEO blind spot, failing to recognize the individual article bodies that constitute the true value of our service.**
@@ -9,7 +9,7 @@ This article shares the analysis process of the three critical SEO barriers disc
 
 ---
 
-## 2. 🔍 The 3 Major SEO Barriers Discovered and Disruptive Analysis
+## 2. The 3 Major SEO Barriers Discovered and Disruptive Analysis
 
 ### [Barrier 1] The Static File Counterattack: Dynamic Sitemap Intrusion (Sitemap Interception)
 *   **Discovery**: The backend `server.mjs` was perfectly designed with a `/sitemap.xml` router that parsed Firestore and GCS data in real-time to provide a list of the latest publication dates.
@@ -36,7 +36,7 @@ This article shares the analysis process of the three critical SEO barriers disc
 
 ---
 
-## 3. 🛠️ Engineering Solution: Breaking Down Barriers
+## 3. Engineering Solution: Breaking Down Barriers
 
 ### 1) Physical Destruction of the Static Interceptor
 First, the `public/sitemap.xml` file, which was obstructing crawling robots, was **physically deleted** (`git rm`). With the static file removed, `/sitemap.xml` requests are no longer blocked at the file serving stage and naturally **fall through** to the next middleware: the **dynamic sitemap router**.
@@ -79,7 +79,7 @@ This allows crawlers to accurately index **perfectly complete individual meta ta
 
 ---
 
-## 4. 📈 Results and Marketing Insights
+## 4. Results and Marketing Insights
 Through this seemingly minor yet critical architectural overhaul, PriSincera gained the following business advantages:
 
 1.  **Automatic Growth Engine (SEO Flywheel)**: All future series articles and newsletters will be **automatically indexed in real-time** on Google and Naver search engines via a daily updated sitemap, without manual registration.
