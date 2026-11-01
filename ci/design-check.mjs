@@ -137,6 +137,29 @@ for (const file of cssFiles(ROOT)) {
         errors.push(`${rel}:${line} 버튼 라운드 ${v} — ${sel.slice(0, 40)} (§4-4 v6.2 — CTA·클릭 버튼은 var(--radius-sm) 사각 단일. 알약 금지)`);
       }
     }
+    /* ①-c **버튼처럼 생긴 비(非)btn 셀렉터** — ①-b는 이름에 btn/cta/button이 있는 규칙만 본다.
+       그래서 `.maker-note-link`(오픈소스 링크 버튼)가 알약으로 남아 있었다(오너 발견 2026-11-01).
+       이름으로 거르는 방식의 한계다. 형태로 찾는다: radius + (padding|min-height) + 클릭성.
+       **차단하지 않고 WARN**으로 둔다 — 이 목록에는 클릭 버튼(→ `--radius-sm`)과
+       배지·칩(→ `--radius-xs`)이 섞여 있어 역할 판단이 필요하고, 그 판단은 사람이 한다. */
+    {
+      const BTN = /(^|[\s,>])\.[a-z0-9_-]*(btn|cta|button)[a-z0-9_-]*(:|\s|,|$)/i;
+      const CLICKY = /cursor:\s*pointer/;
+      const CLICKY_NAME = /-link|-tab\b|-chip|-pill|-item|-action|-restore|-logout|-play/;
+      const rr = /([^{}]+)\{([^{}]*)\}/g; let m3;
+      while ((m3 = rr.exec(code)) !== null) {
+        const sel = m3[1].trim().replace(/\s+/g, ' ');
+        if (BTN.test(sel + ' ')) continue;
+        const r = /border-radius:\s*([^;}!]+)/.exec(m3[2]);
+        if (!r) continue;
+        const v = r[1].trim();
+        if (v === 'var(--radius-sm)' || v === 'var(--radius-xs)' || v === '50%' || v === 'inherit') continue;
+        if (!/padding:|min-height:/.test(m3[2])) continue;
+        if (!(CLICKY.test(m3[2]) || CLICKY_NAME.test(sel))) continue;
+        const line = code.slice(0, m3.index).split('\n').length;
+        warns.push(`${rel}:${line} 버튼형 라운드 ${v} — ${sel.slice(0, 36)} (§4-4 — 클릭 버튼이면 --radius-sm, 배지·칩이면 --radius-xs)`);
+      }
+    }
     // ② letter-spacing — --tracking-* 만
     for (const m of code.matchAll(/letter-spacing:\s*([^;}!]+)/g)) {
       if (/^var\(--tracking-(?:tight|wide|wider|widest|ultra)\)$/.test(m[1].trim())) continue;

@@ -432,7 +432,9 @@
     text-decoration: none;
     padding: var(--btn-pad-sm);
     min-height: var(--btn-h-sm);
-    border-radius: var(--radius-pill);
+    /* §4-4 v6.2 — CTA·클릭 버튼은 사각 단일. 셀렉터에 btn/cta/button이 없어
+       게이트가 놓쳤다(오너 발견 2026-11-01). 같은 사각지대의 나머지는 WARN으로 노출한다. */
+    border-radius: var(--radius-sm);
     box-shadow: inset 0 0 0 1px rgba(229, 178, 93, 0.24);
     transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
 }
