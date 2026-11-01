@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
 import { trackRelearn } from '../relearn/funnel';
 import '../../pages/DailyDigest.css';
+import Icon from '../common/Icon';
 
 export default function PromptSection({ study, compact, headerAction }) {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ export default function PromptSection({ study, compact, headerAction }) {
   return (
     <div className="daily-section fade-in">
       <div className="daily-section-header">
-        <span className="daily-section-icon">🤖</span>
+        <span className="daily-section-icon"><Icon name="prompt" /></span>
         <h2 className="daily-section-title">{t('relearn.prompt.aiPromptOnePick')}</h2>
         {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>

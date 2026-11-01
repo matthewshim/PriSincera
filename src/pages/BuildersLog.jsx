@@ -170,7 +170,6 @@ export default function BuildersLog() {
         ref={headerRef}
       >
         <div className="log-hero-content">
-          <div className="log-hero-icon">🛠️</div>
           <h1 className="hero-heading">Builder's Log</h1>
           <p className="hero-paragraph">
             {t('buildersLog.heroParagraph')}

@@ -12,35 +12,40 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/atom-one-dark.css';
 import './ServiceDocs.css';
+import Icon from '../common/Icon';
 
 // 빌드 타임에 docs 마크다운 전체를 raw 문자열로 번들
 const RAW = import.meta.glob('/docs/**/*.md', { query: '?raw', import: 'default', eager: true });
 
 const FOLDER_LABEL = {
-  core: '📁 core (공통 규격)',
-  'daily-digest': '📁 daily-digest',
-  pacenote: '📁 pacenote',
-  'builders-log': '📁 builders-log',
-  'planners-view': '📁 planners-view',
-  sylphio: '📁 sylphio',
-  archive: '📁 archive',
-  _root: '📁 (루트)',
+  core: 'core (공통 규격)',
+  'daily-digest': 'daily-digest',
+  pacenote: 'pacenote',
+  'builders-log': 'builders-log',
+  'planners-view': 'planners-view',
+  sylphio: 'sylphio',
+  archive: 'archive',
+  _root: '(루트)',
 };
 const FOLDER_ORDER = ['core', 'daily-digest', 'pacenote', 'builders-log', 'planners-view', 'sylphio', 'archive', '_root'];
 
-// 제목에 이모지가 없는 문서에 부여할 폴더별 fallback 이모지 (이곳은 중복 무방)
-const FOLDER_EMOJI = {
-  core: '📘', 'daily-digest': '🗞️', pacenote: '⛵',
-  'builders-log': '📝', 'planners-view': '🧭', sylphio: '🌬️', archive: '🗄️', _root: '📄',
+/* 제목에 선행 글리프가 없는 문서에 부여할 폴더별 fallback **아이콘 이름**.
+   구 구조는 이모지를 `navTitle` 문자열에 구워 넣었다 — 문자열이라 SVG로 바꿀 수 없었고,
+   그래서 어드민만 이모지가 남아 있었다(P1-E 어드민분). 이제 렌더에서 아이콘으로 붙인다. */
+const FOLDER_ICON = {
+  core: 'book', 'daily-digest': 'news', pacenote: 'trail',
+  'builders-log': 'document', 'planners-view': 'compass', sylphio: 'mic', archive: 'folder', _root: 'document',
 };
 const LEADING_EMOJI_RE = /^\p{Extended_Pictographic}/u;
+// 역할 탭 아이콘 (키는 순수 텍스트 — 이모지를 키에 섞으면 상태·렌더가 함께 묶인다)
+const ROLE_ICON = { '기획': 'compass', '디자인': 'palette', '개발': 'laptop' };
 
 // 역할별 필독 경로 (docs 상대 경로)
 const COMMON = ['core/service_overview.md', 'core/architecture_overview.md', 'core/onboarding_guide.md'];
 const ROLE_PATHS = {
-  '🧭 기획': ['core/business_model.md', 'pacenote/product_strategy.md', 'daily-digest/content_sourcing_policy.md'],
-  '🎨 디자인': ['core/design_system.md', 'core/branding.md', 'core/bi_centered_ux_guide.md'],
-  '💻 개발': ['core/development_guide.md', 'core/authentication_architecture.md', 'core/api_usage_analysis.md', 'data_contract_v2.md'],
+  '기획': ['core/business_model.md', 'pacenote/product_strategy.md', 'daily-digest/content_sourcing_policy.md'],
+  '디자인': ['core/design_system.md', 'core/branding.md', 'core/bi_centered_ux_guide.md'],
+  '개발': ['core/development_guide.md', 'core/authentication_architecture.md', 'core/api_usage_analysis.md', 'data_contract_v2.md'],
 };
 
 function parseDoc(raw) {
@@ -82,10 +87,11 @@ export default function ServiceDocs() {
       const t = title || rel;
       // 사이드바 라벨: nav_title frontmatter가 있으면 우선(편집형 개발기의 본문 H1 보존용), 없으면 H1
       const label = fm.nav_title || t;
-      // 라벨에 선행 이모지가 없으면 폴더 fallback 이모지를 붙여 목록 일관성 확보
+      /* 문서 제목 자체의 선행 이모지는 **오너가 쓴 콘텐츠**이므로 그대로 둔다.
+         없는 문서에만 UI가 폴더 아이콘을 붙인다(문자열이 아니라 렌더에서). */
       const folder = rel.includes('/') ? rel.split('/')[0] : '_root';
-      const navTitle = LEADING_EMOJI_RE.test(label.trim()) ? label : `${FOLDER_EMOJI[folder] || '📄'} ${label}`;
-      map[rel] = { raw, fm, body, title: t, navTitle };
+      const ownGlyph = LEADING_EMOJI_RE.test(label.trim());
+      map[rel] = { raw, fm, body, title: t, navTitle: label, ownGlyph, folder };
     }
     return map;
   }, []);
@@ -101,7 +107,7 @@ export default function ServiceDocs() {
   }, [docs]);
 
   const [selected, setSelected] = useState(COMMON[0]);
-  const [role, setRole] = useState('🧭 기획');
+  const [role, setRole] = useState('기획');
   const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
@@ -219,6 +225,7 @@ export default function ServiceDocs() {
 
   const NavItem = ({ rel }) => (
     <button className={`svc-doc-item ${selected === rel ? 'active' : ''}`} onClick={() => open(rel)} title={rel}>
+      {!docs[rel]?.ownGlyph && <Icon name={FOLDER_ICON[docs[rel]?.folder] || 'document'} />}{' '}
       {docs[rel]?.navTitle || docs[rel]?.title || rel}
     </button>
   );
@@ -226,7 +233,7 @@ export default function ServiceDocs() {
   return (
     <div className="svc-docs">
       <aside className="svc-docs-nav">
-        <input className="svc-docs-search" placeholder="🔍 문서 검색…" value={query} onChange={e => setQuery(e.target.value)} />
+        <input className="svc-docs-search" placeholder="문서 검색…" value={query} onChange={e => setQuery(e.target.value)} />
 
         {filtered ? (
           <div className="svc-docs-group">
@@ -238,13 +245,13 @@ export default function ServiceDocs() {
           <>
             {/* 역할별 필독 */}
             <div className="svc-docs-group">
-              <div className="svc-docs-group-title">⭐ 필독 (공통)</div>
+              <div className="svc-docs-group-title"><Icon name="star" /> 필독 (공통)</div>
               {COMMON.map(rel => <NavItem key={rel} rel={rel} />)}
             </div>
             <div className="svc-docs-group">
               <div className="svc-docs-roletabs">
                 {Object.keys(ROLE_PATHS).map(r => (
-                  <button key={r} className={`svc-role-tab ${role === r ? 'active' : ''}`} onClick={() => setRole(r)}>{r}</button>
+                  <button key={r} className={`svc-role-tab ${role === r ? 'active' : ''}`} onClick={() => setRole(r)}><Icon name={ROLE_ICON[r]} /> {r}</button>
                 ))}
               </div>
               {(ROLE_PATHS[role] || []).filter(rel => docs[rel]).map(rel => <NavItem key={rel} rel={rel} />)}
@@ -253,7 +260,7 @@ export default function ServiceDocs() {
             {/* 도메인 트리 */}
             {FOLDER_ORDER.filter(f => folders[f]).map(f => (
               <div className="svc-docs-group" key={f}>
-                <div className="svc-docs-group-title">{FOLDER_LABEL[f] || f}</div>
+                <div className="svc-docs-group-title"><Icon name="folder" /> {FOLDER_LABEL[f] || f}</div>
                 {folders[f].map(rel => <NavItem key={rel} rel={rel} />)}
               </div>
             ))}
@@ -270,7 +277,7 @@ export default function ServiceDocs() {
               {doc.fm.version && <span className="svc-badge">{doc.fm.version}</span>}
               {doc.fm.last_updated && <span className="svc-badge muted">{doc.fm.last_updated}</span>}
               {overrides[selected] && <span className="svc-badge status-active" title="저장됨 — 배포 반영 대기">● 편집본(반영 대기)</span>}
-              {!editing && <button className="svc-edit-btn" onClick={startEdit}>✏️ 수정</button>}
+              {!editing && <button className="svc-edit-btn" onClick={startEdit}><Icon name="pen" /> 수정</button>}
             </div>
 
             {saveMsg && <div className={`svc-savemsg ${saveMsg.type}`}>{saveMsg.text}</div>}
@@ -293,7 +300,7 @@ export default function ServiceDocs() {
                   />
                   <button className="svc-btn ghost" onClick={() => setEditing(false)} disabled={saving}>취소</button>
                   <button className="svc-btn primary" onClick={saveEdit} disabled={saving}>
-                    {saving ? '저장 중…' : '💾 저장(커밋)'}
+                    {saving ? '저장 중…' : '저장(커밋)'}
                   </button>
                 </div>
                 <p className="svc-editor-hint">저장 시 GitHub main에 커밋되며 약 3~4분 후 배포에 반영됩니다. 편집자는 로그인 계정으로 자동 기록됩니다.</p>
@@ -321,7 +328,7 @@ export default function ServiceDocs() {
             {!editing && (
               <section className="svc-history">
                 <button className="svc-history-head" onClick={() => setHistoryOpen(o => !o)}>
-                  📜 수정 이력 {history.length > 0 && `(${history.length})`} <span className="svc-history-caret">{historyOpen ? '▾' : '▸'}</span>
+                  <Icon name="document" /> 수정 이력 {history.length > 0 && `(${history.length})`} <span className="svc-history-caret">{historyOpen ? '▾' : '▸'}</span>
                 </button>
                 {historyOpen && (
                   <div className="svc-history-body">
@@ -351,7 +358,7 @@ export default function ServiceDocs() {
                   onClick={downloadMd}
                   title={`${(selected || '').split('/').pop()} 내려받기`}
                 >
-                  📥 .md 다운로드
+                  <Icon name="download" /> .md 다운로드
                 </button>
               </div>
             )}

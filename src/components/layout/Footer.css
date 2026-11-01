@@ -72,7 +72,7 @@
 
 .footer-wordmark {
     font-family: var(--font-display);
-    font-size: var(--fs-110);
+    font-size: var(--fs-md);
     font-weight: 600;
     background: var(--gradient-brand);
     -webkit-background-clip: text;
@@ -81,9 +81,9 @@
 }
 
 .footer-tagline {
-    font-size: var(--fs-085);
+    font-size: var(--fs-sm);
     color: var(--text-muted);
-    letter-spacing: 0.03em;
+    letter-spacing: var(--tracking-wide);
 }
 
 /* 듀얼 칼럼 레이아웃 래퍼 (좌 네비게이션 & 우 슬로건 영역 병렬 배치) */
@@ -112,16 +112,16 @@
 
 .footer-col-title {
     font-family: var(--font-display);
-    font-size: var(--fs-075);
+    font-size: var(--fs-xs);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: var(--tracking-widest);
     color: var(--text-secondary);
     margin-bottom: var(--space-xs);
 }
 
 .footer-link {
-    font-size: var(--fs-085);
+    font-size: var(--fs-sm);
     color: var(--text-muted);
     transition: color var(--duration-fast) var(--ease-out);
 }
@@ -148,61 +148,9 @@
     background: none;
     border-color: transparent;
     box-shadow: none;
-}
-
-/* 꽃 모양의 별자리 SVG 스타일 */
-.flower-constellation {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.constellation-svg {
-    filter: drop-shadow(0 0 3px rgba(215, 202, 185, 0.05));
-    animation: constellationBreathe 5.0s ease-in-out infinite;
-}
-
-.constellation-ring {
-    stroke: rgba(215, 202, 185, 0.05);
-    stroke-width: 0.35;
-}
-
-.constellation-ring.outer {
+}.constellation-ring.outer {
     stroke-dasharray: 1.5 3;
-}
-
-.constellation-tick {
-    stroke: rgba(215, 202, 185, 0.12);
-    stroke-width: 0.35;
-}
-
-.constellation-line {
-    stroke-linecap: round;
-    transition: stroke var(--duration-normal) var(--ease-out), stroke-width var(--duration-normal) var(--ease-out);
-}
-
-.constellation-line.core-line {
-    stroke: rgba(172, 192, 212, 0.06); /* 극도로 은은한 앤티크 실버 */
-    stroke-width: 0.3;
-}
-
-.constellation-line.petal-line {
-    stroke: rgba(215, 202, 185, 0.18); /* 앤티크 골드 꽃잎 */
-    stroke-width: 0.35;
-}
-
-.constellation-dust {
-    fill: rgba(255, 243, 214, 0.2);
-}
-
-.constellation-major-star {
-    fill: #FFF3D6;
-    opacity: 0.85;
-    filter: drop-shadow(0 0 1px rgba(255, 243, 214, 0.5));
-}
-
-/* 마우스 오버 시 꽃의 성좌도 활성 반응 */
+}/* 마우스 오버 시 꽃의 성좌도 활성 반응 */
 .footer-slogan-card:hover .constellation-svg {
     animation-play-state: paused;
 }
@@ -227,25 +175,15 @@
     align-items: flex-end; /* Align lines to the right edge */
     text-align: right; /* Right align the text sentences */
     gap: var(--space-xs);
-}
-
-.slogan-kr {
-    font-family: var(--font-sans);
-    font-size: var(--fs-085);
-    font-weight: 500;
-    color: var(--text-secondary);
-    letter-spacing: 0.06em;
-}
-
-.slogan-en {
+}.slogan-en {
     font-family: var(--font-display);
-    font-size: var(--fs-070);
+    font-size: var(--fs-micro);
     font-style: italic;
     font-weight: 400;
     color: rgba(255, 255, 255, 0.92); /* 가독성 향상을 위해 텍스트 색상을 선명한 밝은 백색으로 튜닝 */
-    letter-spacing: 0.04em;
+    letter-spacing: var(--tracking-wider);
     white-space: pre-line; /* Support explicit newlines from translation files */
-    line-height: 1.5; /* Premium reading rhythm for multiline english texts */
+    line-height: var(--leading-normal); /* Premium reading rhythm for multiline english texts */
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.98), 
                  0 2px 8px rgba(0, 0, 0, 0.95), 
                  0 4px 16px rgba(0, 0, 0, 0.9); /* 모닥불/성도 디테일 위에서도 선명하게 글자가 분리되어 읽히는 3중 텍스트 섀도 기법 */
@@ -260,27 +198,16 @@
 }
 
 .footer-copy {
-    font-size: var(--fs-075);
+    font-size: var(--fs-xs);
     color: var(--text-muted);
-    opacity: 0.6;
     margin: 0; /* Reset default paragraph margin to keep it perfectly compact */
+    /* P2-6: opacity 제거 — --text-muted에 0.5~0.6을 곱하면 실효 대비 ≈4.1:1로
+       소형 텍스트 AA(4.5:1) 미달이었다. 제거 시 7.3:1 + 대비 측정 가능 */
 }
 
 /* 들꽃 성좌도 숨쉬기 반짝임 애니메이션 */
-@keyframes constellationBreathe {
-    0%, 100% {
-        opacity: 0.65;
-        transform: scale(0.98);
-        filter: drop-shadow(0 0 2px rgba(215, 202, 185, 0.05));
-    }
-    50% {
-        opacity: 0.95;
-        transform: scale(1.02);
-        filter: drop-shadow(0 0 6px rgba(215, 202, 185, 0.18));
-    }
-}
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .footer-links-wrapper {
         flex-direction: column;
         align-items: stretch;

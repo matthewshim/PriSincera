@@ -41,26 +41,11 @@
   margin-bottom: var(--space-2xl);
 }
 
-.pvl-hero-icon {
-  font-size: var(--fs-300);
-  margin-bottom: var(--space-md);
-  animation: pvlFloat 6s ease-in-out infinite;
-}
-
-@keyframes pvlFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pvl-hero-icon { animation: none; }
-}
-
 .pvl-hero-title {
   display: inline-block; /* §9-1 — 그라디언트가 글자 폭에 맞춰 클립되도록 */
   font-family: var(--font-display);
-  font-size: var(--fs-300);
-  font-weight: 700;
+  font-size: var(--fs-display);
+  font-weight: 500;
   margin: 0 0 var(--space-sm);
   background: var(--gradient-brand);
   -webkit-background-clip: text;
@@ -69,14 +54,12 @@
 }
 
 .pvl-hero-copy {
-  font-size: var(--fs-115);
+  font-size: var(--fs-md);
   color: var(--crystal-light);
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
   margin: 0;
   opacity: 0.9;
   white-space: pre-line; /* 언어팩 \n 보존 */
-  word-break: keep-all;
-  overflow-wrap: break-word;
 }
 
 /* --- 시리즈 묶음 --- */
@@ -103,10 +86,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  font-family: var(--font-mono);
-  font-size: var(--fs-070);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: var(--fs-micro);
   color: var(--text-muted);
   margin-bottom: var(--space-md);
 }
@@ -122,23 +102,20 @@
 
 .pvl-series-title { /* §9-2 섹션 타이틀 규격 — 색만 섹션 컬러로 */
   font-family: var(--font-display);
-  font-size: var(--fs-140);
+  font-size: var(--fs-xl);
   font-weight: 600;
   color: var(--prism-lavender);
   margin: 0 0 var(--space-sm);
-  letter-spacing: -0.01em;
-  word-break: keep-all;
+  letter-spacing: var(--tracking-tight);
   text-wrap: balance;
 }
 
 .pvl-series-desc {
-  font-size: var(--fs-085);
-  line-height: 1.6;
+  font-size: var(--fs-sm);
+  line-height: var(--leading-relaxed);
   color: var(--text-muted);
   margin: 0;
   max-width: var(--measure);
-  word-break: keep-all;
-  overflow-wrap: break-word;
   /* 마지막 줄에 한 단어만 남는 것(고아)을 막는다 */
   text-wrap: pretty;
 }
@@ -147,7 +124,7 @@
 .pvl-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 14px; /* §9-3 카드 그리드 gap */
+  gap: var(--space-md); /* §9-3 카드 그리드 gap */
 }
 
 .pvl-card {
@@ -167,7 +144,7 @@
 /* 호버 단일 규격 — 배경 변화·스케일 금지, 기본 그림자 유지 (§9-3) */
 .pvl-card:hover,
 .pvl-card:focus-visible {
-  transform: translateY(-2px);
+  transform: translateY(var(--lift-hover));
   border-color: var(--glass-border-hover);
 }
 
@@ -182,7 +159,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  font-size: var(--fs-075);
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 
@@ -190,8 +167,8 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
   color: var(--prism-lavender);
   background: rgba(199, 210, 254, 0.06); /* §9-4 틴트 단계 */
   border: 1px solid rgba(199, 210, 254, 0.16);
@@ -208,8 +185,8 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
   color: var(--color-gold);
   background: rgba(229, 178, 93, 0.06); /* §9-4 틴트 단계 */
   border: 1px solid rgba(229, 178, 93, 0.16);
@@ -218,24 +195,20 @@
 }
 
 .pvl-card-title {
-  font-size: var(--fs-115);
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.02em;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
   color: var(--text-primary);
   margin: 0;
-  word-break: keep-all;
-  overflow-wrap: break-word;
   text-wrap: pretty;
 }
 
 .pvl-card-sub {
-  font-size: var(--fs-090);
-  line-height: 1.55;
+  font-size: var(--fs-sm);
+  line-height: var(--leading-normal);
   color: var(--text-muted);
   margin: 0;
-  word-break: keep-all;
-  overflow-wrap: break-word;
   text-wrap: pretty;
 }
 
@@ -246,7 +219,7 @@
 }
 
 .pvl-empty-msg {
-  font-size: var(--fs-115);
+  font-size: var(--fs-md);
   color: var(--crystal-light);
   opacity: 0.9;
   margin: 0 0 var(--space-lg);
@@ -267,7 +240,7 @@
 
 .pvl-cross-cta:hover,
 .pvl-cross-cta:focus-visible {
-  transform: translateY(-2px);
+  transform: translateY(var(--lift-hover));
   border-color: var(--glass-border-hover);
 }
 
@@ -280,7 +253,5 @@
   .pvl-wrapper {
     padding: 120px var(--space-md) var(--space-2xl); /* §9-1 히어로 상단 보정(모바일) */
   }
-  .pvl-hero-title { font-size: var(--fs-220); } /* §9-1 히어로 모바일 표준 */
-  .pvl-hero-icon { font-size: var(--fs-220); }
-  .pvl-grid { grid-template-columns: 1fr; }
+  .pvl-hero-title { font-size: var(--fs-4xl); }   .pvl-grid { grid-template-columns: 1fr; }
 }

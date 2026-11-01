@@ -7,7 +7,7 @@
 .track-controls {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-md);
   margin-bottom: 20px;
 }
 
@@ -16,18 +16,16 @@
 
 .track-toggle-btn {
   flex: 1;
-  padding: 10px 14px;
+  padding: var(--btn-pad-sm);
+  min-height: var(--btn-h-sm);
   border-radius: var(--radius-md);
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.015);
   color: var(--text-muted);
   font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-090);
-  cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all var(--duration-fast) var(--ease-spring);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  transition: border-color var(--duration-fast) var(--ease-spring), color var(--duration-fast) var(--ease-spring), background-color var(--duration-fast) var(--ease-spring);
 }
 .track-toggle-btn:hover { border-color: var(--glass-border-hover); color: var(--text-secondary); }
 .track-toggle-btn.active {
@@ -47,10 +45,10 @@
   background: transparent;
   color: var(--text-muted);
   font-family: var(--font-body);
-  font-size: var(--fs-080);
+  font-size: var(--fs-xs);
   font-weight: 500;
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-spring);
+  transition: border-color var(--duration-fast) var(--ease-spring), color var(--duration-fast) var(--ease-spring), background-color var(--duration-fast) var(--ease-spring);
 }
 .track-chip:hover { border-color: var(--glass-border-hover); color: var(--text-secondary); }
 .track-chip.active {
@@ -64,7 +62,7 @@
   text-align: center;
   color: var(--text-muted);
   padding: 32px 0;
-  font-size: var(--fs-090);
+  font-size: var(--fs-sm);
 }
 
 /* ── 카드 (signal-article-card 와 동일 글래스 스킨) ── */
@@ -74,48 +72,46 @@
   border-radius: var(--radius-md);
   padding: 18px;
   margin-bottom: 14px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
   transition: border-color var(--duration-fast) var(--ease-out),
               transform var(--duration-fast) var(--ease-out);
 }
-.track-card:hover { border-color: var(--glass-border-hover); transform: translateY(-2px); }
+.track-card:hover { border-color: var(--glass-border-hover); transform: translateY(var(--lift-hover)); }
 
 .track-card-meta { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: 8px; flex-wrap: wrap; }
 
 .track-card-domain {
   display: inline-flex;
-  font-size: var(--fs-075);
-  font-weight: 700;
+  font-size: var(--fs-xs);
+  font-weight: 600;
   padding: 3px 10px;
   border-radius: var(--radius-pill);
   background: rgba(34, 211, 238, 0.06);
   color: var(--color-cyan);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-wide);
 }
-.track-card-tag { font-size: var(--fs-075); color: var(--text-muted); font-family: var(--font-mono); }
+.track-card-tag { font-size: var(--fs-xs); color: var(--text-muted); font-family: var(--font-mono); }
 
 /* Phase 3: '내 궤도' 배지 (도메인=cyan과 구분되는 indigo=PaceNote 궤도 색) */
 .track-card-mine {
   display: inline-flex;
   align-items: center;
-  font-size: var(--fs-070);
-  font-weight: 700;
+  font-size: var(--fs-micro);
+  font-weight: 600;
   padding: 3px 9px;
   border-radius: var(--radius-pill);
   background: rgba(165, 180, 252, 0.06);
   color: var(--color-indigo);
   border: 1px solid rgba(165, 180, 252, 0.16);
-  letter-spacing: 0.01em;
+  letter-spacing: var(--tracking-wide);
 }
 
 /* Phase 3: 실행→배움 연결 배너 */
 .track-loop-banner {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-12);
   width: 100%;
   text-align: left;
   padding: 12px 16px;
@@ -131,24 +127,24 @@
   border-color: rgba(165, 180, 252, 0.5);
   background: linear-gradient(135deg, rgba(165, 180, 252, 0.16), rgba(34, 211, 238, 0.09));
 }
-.track-loop-banner-icon { font-size: var(--fs-105); flex-shrink: 0; }
-.track-loop-banner-text { flex: 1; font-size: var(--fs-090); }
-.track-loop-banner-text strong { color: var(--color-indigo); font-weight: 700; }
-.track-loop-banner-cta { font-size: var(--fs-080); font-weight: 600; color: var(--color-cyan); white-space: nowrap; }
+.track-loop-banner-icon { font-size: var(--fs-md); flex-shrink: 0; }
+.track-loop-banner-text { flex: 1; font-size: var(--fs-sm); }
+.track-loop-banner-text strong { color: var(--color-indigo); font-weight: 600; }
+.track-loop-banner-cta { font-size: var(--fs-xs); font-weight: 500; color: var(--color-cyan); white-space: nowrap; }
 
 .track-card-title {
   font-family: var(--font-display);
-  font-size: var(--fs-105);
-  font-weight: 700;
+  font-size: var(--fs-md);
+  font-weight: 600;
   color: var(--text-primary);
   margin: 0 0 6px;
-  line-height: 1.4;
+  line-height: var(--leading-snug);
 }
 .track-card-summary {
-  font-size: var(--fs-090);
+  font-size: var(--fs-sm);
   color: var(--text-secondary);
   margin: 0 0 14px;
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
 }
 
 /* ── 📚 학습 레이어 (개념 + 핵심 포인트) — Nebula Indigo 인사이트 톤 ── */
@@ -160,24 +156,24 @@
   margin: 0 0 14px;
 }
 .track-learning-label {
-  font-size: var(--fs-075);
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
   color: var(--color-indigo);
   margin-bottom: 6px;
 }
 .track-learning-concept {
-  font-size: var(--fs-090);
+  font-size: var(--fs-sm);
   color: var(--text-secondary);
-  line-height: 1.65;
+  line-height: var(--leading-relaxed);
   margin: 0 0 8px;
 }
 .track-learning-points {
   margin: 0;
   padding-left: 18px;
   color: var(--text-muted);
-  font-size: var(--fs-085);
-  line-height: 1.7;
+  font-size: var(--fs-sm);
+  line-height: var(--leading-loose);
 }
 .track-learning-points li { margin-bottom: 2px; }
 
@@ -185,9 +181,9 @@
 .track-source-link {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-xs);
   margin-top: 12px;
-  font-size: var(--fs-085);
+  font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-cyan);
   text-decoration: none;
@@ -198,13 +194,13 @@
 /* ── action_challenge (실전 액션) ── */
 .track-challenge { border-top: 1px dashed var(--glass-border); padding-top: 12px; }
 
-.track-challenge-title { font-size: var(--fs-085); font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+.track-challenge-title { font-size: var(--fs-sm); font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
 .track-challenge-tasks {
   margin: 0 0 12px;
   padding-left: 18px;
   color: var(--text-muted);
-  font-size: var(--fs-085);
-  line-height: 1.7;
+  font-size: var(--fs-sm);
+  line-height: var(--leading-loose);
 }
 
 /* ── 오빗 추가 버튼 (Semantic Primary 차용) ── */
@@ -212,21 +208,20 @@
   display: flex;          /* 자체 라인(블록) — 참조(원문 링크) 아래 '실행' 버튼으로 배치 */
   width: fit-content;
   margin-top: 14px;       /* 원문 링크와의 여백 (참조 → 실행 흐름 구분) */
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+  gap: var(--space-sm);
+  padding: var(--btn-pad-sm);
+  min-height: var(--btn-h-sm);
   border-radius: var(--radius-pill);
   border: 1px solid transparent;
   background: var(--gradient-brand);
-  color: #0E0E1A;                 /* 밝은 그라디언트 위 고대비 잉크 */
+  color: var(--bg-surface);                 /* 밝은 그라디언트 위 고대비 잉크 */
   font-family: var(--font-body);
-  font-weight: 700;
-  font-size: var(--fs-085);
-  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--fs-sm);
   box-shadow: 0 4px 18px rgba(165, 180, 252, 0.18);
-  transition: all var(--duration-fast) var(--ease-spring);
+  transition: transform var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast) var(--ease-spring);
 }
-.track-orbit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(165, 180, 252, 0.28); }
+.track-orbit-btn:hover:not(:disabled) { transform: translateY(var(--lift-hover)); box-shadow: 0 8px 26px rgba(165, 180, 252, 0.28); }
 .track-orbit-btn:disabled { cursor: default; }
 
 /* 추가됨 = 골드(완료/긍정 액센트) */
@@ -240,7 +235,7 @@
 .track-orbit-btn.error {
   background: rgba(248, 113, 113, 0.10);
   border-color: rgba(248, 113, 113, 0.35);
-  color: #F87171;
+  color: var(--color-danger);
   box-shadow: none;
 }
 .track-orbit-btn.adding { opacity: 0.7; }
@@ -249,10 +244,10 @@
 .track-cards.compact {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  gap: var(--space-md);
   align-items: start;
 }
 .track-cards.compact .track-card { margin-bottom: 0; }
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .track-cards.compact { grid-template-columns: 1fr; }
 }

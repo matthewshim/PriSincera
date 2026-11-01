@@ -6,7 +6,10 @@
   "scripts": {
     "prepare": "node ci/install-hooks.mjs || exit 0",
     "dev": "vite",
-    "prebuild": "node ci/design-check.mjs",
+    "prebuild": "node ci/design-check.mjs && node ci/pattern-budget.mjs",
+    "metrics": "node ci/pattern-metrics.mjs",
+    "budget": "node ci/pattern-budget.mjs --report",
+    "budget:tighten": "node ci/pattern-budget.mjs --update",
     "build": "vite build",
     "preview": "vite preview",
     "start": "node server.mjs",

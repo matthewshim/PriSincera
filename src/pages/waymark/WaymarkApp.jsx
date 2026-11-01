@@ -2,6 +2,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../contexts/LanguageContext';
 import useSEO from '../../hooks/useSEO';
 import './WaymarkApp.css';
+import Icon from '../../components/common/Icon';
 
 /**
  * Waymark 서비스 앱 셸 (/waymark/app) — 인증 게이트 + 홈 스캐폴드 (M0).
@@ -25,7 +26,6 @@ export default function WaymarkApp() {
     return (
       <div className="wma-gate">
         <div className="wma-gate-card">
-          <div className="wma-gate-mark" aria-hidden="true">🧭</div>
           <h1 className="wma-gate-title">Waymark</h1>
           <p className="wma-gate-sub">{t('waymark.app.signInPrompt')}</p>
           <button type="button" className="wma-btn" onClick={loginWithGoogle}>
@@ -48,7 +48,7 @@ export default function WaymarkApp() {
       </header>
       <main className="wma-main">
         <div className="wma-empty">
-          <div className="wma-empty-mark" aria-hidden="true">✦</div>
+          <div className="wma-empty-mark" aria-hidden="true"><Icon name="star" size={28} /></div>
           <h2 className="wma-empty-title">{t('waymark.app.emptyTitle')}</h2>
           <p className="wma-empty-desc">{t('waymark.app.emptyDesc')}</p>
           <button type="button" className="wma-btn" disabled>

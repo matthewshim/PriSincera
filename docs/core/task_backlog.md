@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-09-22
-version: v2.8
+last_updated: 2026-11-01
+version: v2.9
 target_files: []  # 작업 백로그 — 특정 코드 미지배
 ---
 
@@ -20,6 +20,7 @@ target_files: []  # 작업 백로그 — 특정 코드 미지배
 | v2.2 | 2026-07-22 | AI Agent | 8구간(아카이브 상세 UI 재편) 신설·P1/P2 완료 — 훑어보기 기본 + 브리핑 히어로 + 스티키 채널 내비, 기본 상태 페이지 높이 9,753→6,099px(-37%, 첫 스크린 오버뷰 완결) | ReLearnDaily, SignalSection, DailyBriefing |
 | v2.3 | 2026-07-22 | AI Agent | 9구간(docs 최신화 전수 감사·정합화) 신설·완료 — 사실 오류 3건(개요·인증·INDEX)·target_files 삭제파일 잔존·archived 2종 이동 등 일괄 해소 | docs 전반 |
 | v2.4 | 2026-07-22 | AI Agent | 8-7 완료 — 아카이브 상세 헤더 §9-1 히어로 정합 + 주간 달력 스트립(DailyWeekStrip) 교체 (design_system v5.9 동반) | ReLearnDaily, DailyWeekStrip |
+| v2.9 | 2026-11-01 | AI Agent | 14구간(AI 생성 디자인 패턴 개선) **포인터** 등재 — 진단/실행 정본은 `ai_pattern_audit.md`·`ai_pattern_remediation_plan.md`에 위임(중복 관리 금지) | docs, 전 프런트엔드 |
 | v2.8 | 2026-09-22 | AI Agent | 12-2 해소(목록 IA 전환·시리즈 도입) 반영. 글 규격 정본으로 [content_guide](../planners-view/content_guide.md) 신설 | PlannersView, docs |
 | v2.7 | 2026-08-31 | AI Agent | 12구간(Planner's View 후속) · 13구간(시크릿 위생) 신설 — 섹션 신설 시 의도적으로 남긴 공백(어드민 발행 UI·조회수·목록 승격·메일 연동)과, 로컬 PAT 평문 노출·Secret Manager 값 개행 혼입에서 파생된 후속 점검을 등재 | PlannersView, admin-api, 운영 |
 | v2.5 | 2026-08-19 | AI Agent | 10구간(자동 커밋 전제 조건) 신설 — public 저장소 전제 재점검에서 파생. 11구간(Candela) 포인터 등재 | .gitignore, server.mjs, admin-api.mjs, git hooks |
@@ -204,3 +205,24 @@ Candela(자동매매·공개 사례 연구)는 **의사결정 동반 서비스 W
 | ~~13-2~~ | ~~`GITHUB_TOKEN` 값에 혼입된 `공백+CRLF` 3바이트 제거(버전 2) + 소비 측 `?.trim()` 방어~~ | ✅ 2026-08-31 — [environment_reference v1.1](environment_reference.md) |
 | 13-3 | **시크릿 스캐너 사각 보완 검토** — 스캐너는 *커밋되는 파일*만 본다. `.git/config`처럼 추적 대상 밖 경로는 설계상 검사되지 않는다. 로컬 개발 환경 점검 체크리스트(원격 URL·`.env*`·에디터 설정)를 온보딩에 추가할지 결정 | 결정 대기 |
 | 13-4 | 다른 저장소의 `.git/config`에도 동일 PAT가 박혀 있을 수 있음 — 폐기 후 푸시 실패가 나면 같은 방식으로 URL만 정리 | 발생 시 |
+
+## 14. 🧬 AI 생성 디자인 패턴 개선 (2026-11-01 신설 — 포인터)
+
+바이브코딩 수렴 패턴 전수 감사에서 파생. **진단 정본은 [ai_pattern_audit.md](ai_pattern_audit.md), 실행·진척 정본은 [ai_pattern_remediation_plan.md](ai_pattern_remediation_plan.md)** 이며, 투두 51건의 체크·진척 갱신은 그쪽에서 수행한다. 본 백로그는 **포인터만** 유지한다(중복 관리 금지).
+
+> **2026-11-01 완결.** 투두 **57/57**, 예산 지표 **28건 전부 기준선 이하 + 목표 미달 0건**.
+> 측정 정본은 `ci/pattern-metrics.mjs`, 집행은 `ci/pattern-budget.mjs`(prebuild) + `ci/design-check.mjs`.
+> 주요 결과: 이모지 251→20(잔여는 황도 12궁 데이터·앱 UI 설명문·조판 기호) · JSX 인라인 176→117(비어드민 40 중 34는 정당)
+> · `!important` 67→7 · `transition:all` 62→0 · 생hex 337→37 · 중복 셀렉터 0 · 고아 키프레임 0 · 미선언 토큰 0 · CSS −1,667줄.
+> **진행 중 자가 발각한 측정기·게이트 결함 7건**(모두 교정): 비율 지표 래칫 오적용 · `uniqueValues` 경계 누락 ·
+> `duplicate-selector` 첫 `@media` 절단 및 3중 중첩 마스킹 실패 · `raw-hex-css`가 토큰 선언을 계수 ·
+> P4-3이 `<Icon label>`을 미인식 · 글로우 게이트가 `.hovering-`/`.near-` 상태 클래스 미인식.
+
+| # | 작업 | 상태 |
+| :--- | :--- | :--- |
+| ~~14-1~~ | ~~P0 결함 교정 8건~~ | ✅ 2026-11-01 — 폰트 5→3패밀리·`Outfit` 9곳·토큰 동일 생hex 72건·금지대역 max-width 2건·Sylphio 3중 복제(−218줄)·키프레임 중복 6종·스크롤 락·모달 시맨틱 전부 해소 |
+| ~~14-2~~ | ~~P1 A·G·H 계층 정합 19건~~ | ✅ 2026-11-01 — 전건 완료 |
+| ~~14-3~~ | ~~P2 장식 밀도 예산화 9건~~ | ✅ 2026-11-01 — `transition:all` **62→0** · 유휴 `infinite` **69→8** · 유휴 글로우 **15→12** · 고아 키프레임 **0** · 텍스트 opacity 중첩(AA 미달 4건) 해소 |
+| ~~14-4~~ | ~~P3 구성 공식 깨기~~ | ✅ 2026-11-01 — 타입 스케일 **35→11단**(347개 사용처) · 브레이크포인트 **10→5**(역할 3티어) · Waymark 섹션 형식 4종 · Sylphio 7카드→3+리스트 · 데드 CSS **−1,667줄** |
+| ~~14-5~~ | ~~P4 집행 체계 전환 6건~~ | ✅ 2026-11-01 — 래칫 게이트 **28지표**(prebuild 연결) · `design-check` 집행 차원 **1→12** · P4-3 접근성 게이트 · `design_system` **v5.23→v6.1** · EXCLUDE 정책 명문화 |
+| ~~14-6~~ | ~~결정 대기 6건(D-1~D-6)~~ | ✅ 2026-11-01 — 전건 확정: 세리프 폐지·`\n` 유지·커서 홈 한정(위임)·제품 테마 구분 강화·다크 전용 유지·브랜드 4색 수렴. **차단 요소 0** |

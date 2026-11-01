@@ -32,7 +32,7 @@ export default function JapaneseSection({ study, compact, headerAction }) {
         <span className="daily-section-icon">🇯🇵</span>
         <h2 className="daily-section-title">{t('relearn.jpChannel.businessJpOnePick')}</h2>
         <button className="japanese-audio-play-main" onClick={() => playAudio(study.sentence_jp)}>
-          <svg viewBox="0 0 24 24" width="14" height="14" style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }}>
+          <svg viewBox="0 0 24 24" width="14" height="14" className="jp-inline-icon">
             <path fill="currentColor" d="M12 3v18l-6-6H2V9h4l6-6zm4.5 9c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 4.45v2.06c2.89.86 5 3.54 5 6.49s-2.11 5.63-5 6.49v2.06c4.01-.91 7-4.49 7-8.55s-2.99-7.64-7-8.55z"/>
           </svg>
           {t('relearn.jpChannel.playFullAudio')}
@@ -70,7 +70,7 @@ export default function JapaneseSection({ study, compact, headerAction }) {
               {(compact && !showAllVocab ? study.vocabulary.slice(0, 4) : study.vocabulary).map((v, i) => (
                 <div key={i} className="study-vocab-card">
                   <div className="vocab-card-header">
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div className="jp-stack">
                       <span className="vocab-word">{v.word}</span>
                       <span className="vocab-reading">[{v.reading}]</span>
                     </div>

@@ -5,43 +5,41 @@
   border-radius: var(--radius-lg);
   border: 1px solid rgba(165, 180, 252, 0.16);
   background: linear-gradient(135deg, rgba(165, 180, 252, 0.06), rgba(34, 211, 238, 0.045));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
 .loop-report-head {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--space-sm);
   margin-bottom: 14px;
 }
-.loop-report-icon { font-size: var(--fs-100); }
-.loop-report-title { font-size: var(--fs-095); font-weight: 700; color: var(--text-primary, #FAFAFA); }
-.loop-report-sub { font-size: var(--fs-080); color: var(--text-muted, #94A3B8); }
+.loop-report-icon { font-size: var(--fs-base); }
+.loop-report-title { font-size: var(--fs-base); font-weight: 600; color: var(--text-primary); }
+.loop-report-sub { font-size: var(--fs-xs); color: var(--text-muted); }
 
 .loop-report-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .loop-stat {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: var(--space-xs);
   padding: 12px 14px;
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
-.loop-stat-label { font-size: var(--fs-075); color: var(--text-muted, #94A3B8); font-weight: 600; }
-.loop-stat-value { font-size: var(--fs-150); font-weight: 800; color: var(--text-primary, #FAFAFA); line-height: 1.1; }
-.loop-stat-unit { font-size: var(--fs-090); font-weight: 600; color: var(--text-secondary, #CBD5E1); margin-left: 2px; }
-.loop-stat-sub { font-size: var(--fs-075); color: var(--text-muted, #94A3B8); }
+.loop-stat-label { font-size: var(--fs-xs); color: var(--text-muted); font-weight: 600; }
+.loop-stat-value { font-size: var(--fs-xl); font-weight: 600; color: var(--text-primary); line-height: var(--leading-tight); }
+.loop-stat-unit { font-size: var(--fs-sm); font-weight: 600; color: var(--text-secondary); margin-left: 2px; }
+.loop-stat-sub { font-size: var(--fs-xs); color: var(--text-muted); }
 
 .loop-stat-domain { border-color: rgba(165, 180, 252, 0.16); background: rgba(165, 180, 252, 0.06); }
-.loop-stat-domain-name { font-size: var(--fs-105); color: var(--color-indigo, #A5B4FC); }
+.loop-stat-domain-name { font-size: var(--fs-md); color: var(--color-indigo); }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .loop-report-stats { grid-template-columns: repeat(2, 1fr); }
 }

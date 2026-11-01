@@ -5,6 +5,7 @@ import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioLanding.css';
 import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
+import Icon from '../components/common/Icon';
 
 // 3D Tilt Hover Feature Card Component
 function FeatureCard({ icon, title, description }) {
@@ -31,24 +32,25 @@ function FeatureCard({ icon, title, description }) {
       className="sylphio-feature-card premium-card"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ 
-        transform, 
-        transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, background 0.3s ease' 
-      }}
+      style={{ transform }}
     >
-      <div className="sylphio-feature-icon">{icon}</div>
+      <div className="sylphio-feature-icon"><Icon name={icon} size={28} /></div>
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
   );
 }
 
+/* 통역 데모 시나리오 — `translated` 필드가 한국어인 것은 **설계**다(원문 언어 → 한국어 번역을
+   시연한다). UI 문자열이 아니라 제품 데모 콘텐츠이므로 i18n-ok.
+   ⚠️ 다만 영문·일문 사용자에게도 '→ 한국어'만 보여주는 것은 제품 판단 사항이다
+   (로케일별 타깃 언어 전환은 별도 과제). */
 // Typing Simulator Data (Multilingual Input Scenarios)
 const SCENARIOS = {
   en: {
     speaker: "Steve (Product Manager)",
     source: "Good morning everyone. Today we are gathered to discuss our product roadmap for the next quarter, including the integration of our new AI engine.",
-    translated: "여러분 안녕하십니까. 오늘은 새로운 AI 엔진 통합을 포함한 다음 분기 제품 로드맵을 논의하기 위해 모였습니다."
+    translated: "여러분 안녕하십니까. 오늘은 새로운 AI 엔진 통합을 포함한 다음 분기 제품 로드맵을 논의하기 위해 모였습니다."  // i18n-ok: 통역 데모의 번역 결과(제품 콘텐츠)
   },
   ko: {
     speaker: "민수 (프로젝트 리더)",
@@ -58,7 +60,7 @@ const SCENARIOS = {
   jp: {
     speaker: "Kenji (AI Engineer)",
     source: "皆さん、こんにちは。本日のセミナーでは, オンデバイスAI技術が私たちの日常生活にどのような変化をもたらすかについてお話しします。",
-    translated: "여러분, 안녕하십니까. 오늘 세미나에서는 온디바이스 AI 기술이 우리의 일상 생활에 어떤 변화를 가져올지에 대해 말씀드리겠습니다."
+    translated: "여러분, 안녕하십니까. 오늘 세미나에서는 온디바이스 AI 기술이 우리의 일상 생활에 어떤 변화를 가져올지에 대해 말씀드리겠습니다."  // i18n-ok: 통역 데모의 번역 결과(제품 콘텐츠)
   }
 };
 
@@ -67,11 +69,11 @@ const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
     heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
-    heroCtaGuide: "💡 API Key 발급 가이드 보기",
+    heroCtaDownload: "Mac App Store에서 무료 다운로드",
     heroSysReq: "시스템 요구사항: macOS 13.0 (Ventura) 이상",
-    featuresTitle: "가장 완벽한 실시간 AI 통역·회의록의 7대 무기",
-    featuresSub: "기존 번역 솔루션의 침묵 장애와 캡처 실패 한계를 뛰어넘은 Mac 전용 아키텍처",
+    featuresTitle: "침묵과 캡처 실패를 없앤 Mac 전용 설계",
+    featuresSub: "오디오를 어떻게 모으고, 어떻게 알아듣고, 무엇으로 남기는가. 이 세 가지를 다시 만들었습니다.",
+    featuresMore: "그 위에 더한 것",
     f1Title: "AirPods Max & Bluetooth 동적 락온",
     f1Desc: "회의 시작 시 블루투스 이어폰 탈착으로 인한 오디오 장치 유실을 방지합니다. 사용 중인 에어팟 실명을 동적으로 감지하여 실시간 오디오 수집 스트림에 자동 매핑하며, 연결이 끊기면 내장 마이크로 자연스럽게 폴백합니다.",
     f2Title: "하이브리드 로컬 STT 엔진",
@@ -89,10 +91,23 @@ const TRANSLATIONS = {
     simTitle: "실시간 가상 자막바 미리 체험하기",
     simSub: "웹 시뮬레이터를 통해 실제 실피오 앱이 자막을 생성하고 실시간 통역하는 방식을 간접 경험해보세요.",
     simPlaceholder: "위의 시나리오 버튼을 클릭하여 AI 실시간 자막 시뮬레이션을 가동해 보세요.",
+    /* P3-5: 하드코딩 로케일 삼항을 사전으로 이관 — design-check i18n 게이트 대상 복원 */
+    purchaseComm: "App Store와 통신 중...",
+    purchaseOk: "구매 성공! 감사합니다.",
+    micSource: "내장 마이크",
+    closeLabel: "닫기",
+    paywallDesc: "평생 라이선스 한 번으로, 이후 모든 Pro 기능을 쓰실 수 있습니다.",
+    /* 🔴 P3-5: 아래 5개는 모의 결제 모달에 **한국어가 그대로 렌더**되고 있었다 —
+       영문·일문 사용자에게도 한국어가 보였다(파일이 I18N_EXCLUDE라 게이트가 못 잡았다). */
+    paywallLang: "12개 다국어 번역",
+    paywallCaption: "자막 커스텀 그라데이션",
+    paywallSummary: "AI 요약 정밀 회의록 기능",
+    paywallEngine: "고성능 AI 엔진 연동 (BYOK)",
+    paywallBuy: "Sylphio Pro Lifetime 평생 소장하기 ($9.99)",
     pricingTitle: "합리적인 라이선스 모델",
     pricingSub: "매달 청구되는 무거운 구독 요금을 종결하세요.\n개인 API Key 연동으로 쓰고 마신 만큼만 1원 단위로 지불합니다.",
     priceFreeDesc: "기본적인 온디바이스 통역과 오디오 캡처 기능을 무제한 경험해 보세요.",
-    priceProDesc: "단 한 번의 커피 두 잔 값 결제로 평생 라이선스를 획득하고 AI Pro 번역 기능을 완전 봉인 해제하세요.",
+    priceProDesc: "커피 두 잔 값 한 번으로 평생 라이선스를 받고, AI Pro 번역까지 함께 씁니다.",
     freeTitle: "Sylphio Free",
     freePrice: "₩0",
     freePricePeriod: "/ 평생 무료",
@@ -104,8 +119,8 @@ const TRANSLATIONS = {
     freeFeature3: "영어 및 한국어 실시간 오프라인/하이브리드 번역 자막 제공",
     freeFeature4: "실시간 글래스모피즘 자막 뷰어 기본 제공",
     freeFeature5: "전체 세션 녹음 저장 및 .m4a 다운로드 (무료)",
-    proFeature1: "10개 이상 다국어(일본어, 중국어, 프랑스어 등) 잠금 전면 해제",
-    proFeature2: "AI PRO 요약 및 Action Items 엔진 잠금해제 (BYOK)",
+    proFeature1: "일본어 · 중국어 · 프랑스어 등 10개 이상 다국어 번역",
+    proFeature2: "AI PRO 요약 및 Action Items 엔진 (BYOK)",
     proFeature3: "Google Gemini / OpenAI API 연동 지원",
     proFeature4: "macOS Secure Keychain API Key 암호화 저장",
     proFeature5: "AI Executive 회의록 및 요약 보고서 자동 생성 (.md)",
@@ -121,11 +136,11 @@ const TRANSLATIONS = {
   en: {
     heroTitle: "Sylphio",
     heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Free Download on Mac App Store",
-    heroCtaGuide: "💡 View API Key Integration Guide",
+    heroCtaDownload: "Free Download on Mac App Store",
     heroSysReq: "Requires macOS 13.0 (Ventura) or later",
-    featuresTitle: "7 Ultimate Weapons for Flawless Real-Time AI Translation & Minutes",
-    featuresSub: "A Mac-dedicated architecture designed to eliminate silent freezes and capture failures.",
+    featuresTitle: "Built for Mac: no silent freezes, no capture failures",
+    featuresSub: "How audio gets gathered, how it gets understood, and what it leaves behind — we rebuilt all three.",
+    featuresMore: "And on top of that",
     f1Title: "AirPods Max & Bluetooth Dynamic Lock-on",
     f1Desc: "Prevents audio device loss caused by detaching bluetooth earphones during meetings. It dynamically detects your AirPods' real name and maps it automatically to the audio stream, gracefully falling back to the built-in mic if the connection drops.",
     f2Title: "Hybrid Local STT Engine",
@@ -143,10 +158,20 @@ const TRANSLATIONS = {
     simTitle: "Experience the Virtual Subtitle Bar in Real-Time",
     simSub: "Get a sneak peek at how the real Sylphio app captures and translates dialogue in real-time through this web simulator.",
     simPlaceholder: "Click the scenario buttons above to run the AI real-time subtitle simulation.",
+    purchaseComm: "Communicating with App Store...",
+    purchaseOk: "Purchase successful! Thank you.",
+    micSource: "Built-in Mic",
+    closeLabel: "Close",
+    paywallDesc: "One lifetime license, and every Pro feature is yours from then on.",
+    paywallLang: "All 12 languages unlocked",
+    paywallCaption: "Custom subtitle gradients",
+    paywallSummary: "AI-summarized meeting minutes",
+    paywallEngine: "High-performance AI engine (BYOK)",
+    paywallBuy: "Get Sylphio Pro Lifetime ($9.99)",
     pricingTitle: "A Fair and Reasonable License Model",
     pricingSub: "End heavy monthly subscriptions.\nPay only for what you use down to the penny by connecting your own API key.",
     priceFreeDesc: "Experience basic on-device speech-to-text and screen audio capture for free, forever.",
-    priceProDesc: "Unlock professional AI translation features permanently for the price of just two cups of coffee.",
+    priceProDesc: "Unlock professional AI translation permanently for the price of two cups of coffee.",
     freeTitle: "Sylphio Free",
     freePrice: "$0",
     freePricePeriod: "/ Free Forever",
@@ -158,8 +183,8 @@ const TRANSLATIONS = {
     freeFeature3: "English & Korean real-time offline/hybrid translation subtitles",
     freeFeature4: "Real-time glassmorphism subtitle viewer",
     freeFeature5: "Save & download full-session recordings (.m4a) — free",
-    proFeature1: "Unlock all 10+ global languages (Japanese, Chinese, etc.)",
-    proFeature2: "Unlock AI PRO summary and Action Items engine (BYOK)",
+    proFeature1: "10+ global languages (Japanese, Chinese, French, etc.)",
+    proFeature2: "AI PRO summary & Action Items engine (BYOK)",
     proFeature3: "Google Gemini / OpenAI API integration support",
     proFeature4: "macOS Secure Keychain encrypted key storage",
     proFeature5: "AI Executive minutes & summary auto-generation (.md)",
@@ -175,11 +200,11 @@ const TRANSLATIONS = {
   ja: {
     heroTitle: "Sylphio",
     heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
-    heroCtaGuide: "💡 APIキー連携ガイドを見る",
+    heroCtaDownload: "Mac App Storeで無料ダウンロード",
     heroSysReq: "動作環境: macOS 13.0 (Ventura) 以降",
-    featuresTitle: "完璧なリアルタイムAI通訳・議事録を実現する7つの武器",
-    featuresSub: "従来の翻訳ツールの沈黙フリーズやキャプチャ失敗の限界を克服した、Mac専用アーキテクチャ。",
+    featuresTitle: "沈黙と取り逃しをなくした、Mac専用設計",
+    featuresSub: "音声をどう集め、どう聞き取り、何として残すか。この三つを作り直しました。",
+    featuresMore: "さらに加えたもの",
     f1Title: "AirPods Max & Bluetooth 動的ロックオン",
     f1Desc: "会議開始時のBluetoothイヤホン着脱によるオーディオデバイスの切断を防ぎます。お使いのAirPodsのデバイス名を動的に検知し、リアルタイムの集音ストリームへ自動マッピングし、接続が切れた場合は内蔵マイクへ自然にフォールバックします。",
     f2Title: "ハイブリッド・ローカル STTエンジン",
@@ -197,6 +222,16 @@ const TRANSLATIONS = {
     simTitle: "リアルタイム仮想字幕バーを体験する",
     simSub: "Webシミュレータを通じて、実際のSylphioアプリが字幕を生成しリアルタイムに通訳するフローを体験してみてください。",
     simPlaceholder: "上のシナリオボタンをクリックして、AIリアルタイム字幕シミュレーションを起動します。",
+    purchaseComm: "App Storeと通信中...",
+    purchaseOk: "購入成功！ありがとうございます。",
+    micSource: "内蔵マイク",
+    closeLabel: "閉じる",
+    paywallDesc: "買い切りライセンス一度で、以降すべてのPro機能をお使いいただけます。",
+    paywallLang: "12言語すべて利用可能",
+    paywallCaption: "字幕カスタムグラデーション",
+    paywallSummary: "AI要約の議事録機能",
+    paywallEngine: "高性能AIエンジン連携 (BYOK)",
+    paywallBuy: "Sylphio Pro Lifetimeを購入 ($9.99)",
     pricingTitle: "合理的なライセンスモデル",
     pricingSub: "重い月額サブスクリプションはもう不要。\n個人APIキーとの連携により、消費した分だけ1円単位で支払う合理的なモデルです。",
     priceFreeDesc: "基本的なオンデバイス通訳およびオーディオキャプチャ機能を無制限に体験してください。",
@@ -212,8 +247,8 @@ const TRANSLATIONS = {
     freeFeature3: "英語と韓国語専用のリアルタイム・オフライン/ハイブリッド翻訳字幕の提供",
     freeFeature4: "リアルタイム・グラスモフィズム字幕ビューアを標準搭載",
     freeFeature5: "セッション録音の保存と.m4aダウンロード（無料）",
-    proFeature1: "10以上の多言語（日本語、中国語、フランス語など）ロックを全面解除",
-    proFeature2: "AI PRO 要約およびアクションアイテムエンジンのアンロック (BYOK)",
+    proFeature1: "日本語・中国語・フランス語など10以上の多言語翻訳",
+    proFeature2: "AI PRO 要約およびアクションアイテムエンジン (BYOK)",
     proFeature3: "Google Gemini / OpenAI API 連携のサポート",
     proFeature4: "macOS Secure Keychain APIキー暗号化保管",
     proFeature5: "AI Executive 議事録および要約自動作成 (.mdエクスポート)",
@@ -330,10 +365,10 @@ export default function SylphioLanding() {
   // 결제 모사 핸들러 (StoreKit 2 구매 트랜잭션 흉내내기)
   const handlePurchasePro = () => {
     setIsPurchasing(true);
-    setPurchaseStatus(locale === 'ko' ? "App Store와 통신 중..." : locale === 'ja' ? "App Storeと通信中..." : "Communicating with App Store...");
+    setPurchaseStatus(d.purchaseComm);
     
     setTimeout(() => {
-      setPurchaseStatus(locale === 'ko' ? "구매 성공! 감사합니다." : locale === 'ja' ? "購入成功！ありがとうございます。" : "Purchase successful! Thank you.");
+      setPurchaseStatus(d.purchaseOk);
       setIsPurchasing(false);
       setShowSuccessCheck(true);
       
@@ -351,14 +386,10 @@ export default function SylphioLanding() {
     <div className="sylphio-landing">
       {/* --- HERO SECTION --- */}
       <section className="sylphio-hero">
-        <div className="sylphio-core-container">
-          <div className="sylphio-aurora-core"></div>
-          <img src="/sylphio-icon.png?v=3" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
-        </div>
         
         <h1>{d.heroTitle}</h1>
         
-        <p className="tagline" style={{ whiteSpace: 'pre-line' }}>
+        <p className="tagline u-prewrap">
           {d.heroTagline}
         </p>
         
@@ -369,10 +400,10 @@ export default function SylphioLanding() {
             className="btn-primary"
             id="btn-download-mac"
           >
-            <span>{d.heroCtaDownload}</span>
+            <Icon name="download" /><span>{d.heroCtaDownload}</span>
           </a>
         </div>
-        <p style={{ marginTop: '16px', fontSize: '0.82rem', opacity: 0.55, letterSpacing: '0.02em' }}>{d.heroSysReq}</p>
+        <p className="u-fineprint">{d.heroSysReq}</p>
       </section>
       
       <SylphioNav />
@@ -384,43 +415,25 @@ export default function SylphioLanding() {
           <p>{d.featuresSub}</p>
         </div>
         
+        {/* 7개는 대등한 7개가 아니었다(P3-3) — 부제가 말하는 세 주장만 카드로 세운다:
+            수집(f3) · 인식(f2) · 산출물(f5). 나머지 넷은 그 하위 사항이므로 아래 리스트로. */}
         <div className="sylphio-features-grid">
-          <FeatureCard 
-            icon="🎙️"
-            title={d.f1Title}
-            description={d.f1Desc}
-          />
-          <FeatureCard 
-            icon="🛡️"
-            title={d.f2Title}
-            description={d.f2Desc}
-          />
-          <FeatureCard 
-            icon="💻"
-            title={d.f3Title}
-            description={d.f3Desc}
-          />
-          <FeatureCard 
-            icon="🧠"
-            title={d.f4Title}
-            description={d.f4Desc}
-          />
-          <FeatureCard 
-            icon="📊"
-            title={d.f5Title}
-            description={d.f5Desc}
-          />
-          <FeatureCard 
-            icon="🖥️"
-            title={d.f6Title}
-            description={d.f6Desc}
-          />
-          <FeatureCard
-            icon="🎧"
-            title={d.f7Title}
-            description={d.f7Desc}
-          />
+          <FeatureCard icon="laptop" title={d.f3Title} description={d.f3Desc} />
+          <FeatureCard icon="shield" title={d.f2Title} description={d.f2Desc} />
+          <FeatureCard icon="chart" title={d.f5Title} description={d.f5Desc} />
         </div>
+
+        {/* 설명 길이가 1줄~5줄로 들쭉날쭉한 항목들 — 등높이 카드에 밀어넣지 않고 리스트가 받는다 */}
+        <p className="sylphio-features-more-label u-eyebrow">{d.featuresMore}</p>
+        <dl className="sylphio-features-more">
+          {[['core', d.f4Title, d.f4Desc], ['headphones', d.f7Title, d.f7Desc],
+            ['mic', d.f1Title, d.f1Desc], ['monitor', d.f6Title, d.f6Desc]].map(([ico, title, desc]) => (
+            <div key={title}>
+              <dt><Icon name={ico} size={16} /> {title}</dt>
+              <dd>{desc}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
       
       {/* --- INTERACTIVE SIMULATOR SECTION --- */}
@@ -456,7 +469,7 @@ export default function SylphioLanding() {
               id="btn-sim-japanese"
             >
               🇯🇵 Japanese Seminar ( Kenji )
-              {!isProUnlocked && <span className="btn-sim-pro-badge">✨ PRO</span>}
+              {!isProUnlocked && <span className="btn-sim-pro-badge">PRO</span>}
             </button>
           </div>
           
@@ -471,9 +484,9 @@ export default function SylphioLanding() {
               <div className="sylphio-window-title">Sylphio Live Translator</div>
               <div className="sylphio-window-badges">
                 <span className={`badge-tier ${isProUnlocked ? 'pro' : 'free'}`}>
-                  {isProUnlocked ? '✨ PRO' : 'FREE'}
+                  {isProUnlocked ? 'PRO' : 'FREE'}
                 </span>
-                <span className="badge-source">🎙️ {locale === 'ko' ? '내장 마이크' : locale === 'ja' ? '内蔵マイク' : 'Built-in Mic'}</span>
+                <span className="badge-source"><Icon name="mic" /> {d.micSource}</span>
               </div>
             </div>
             
@@ -498,7 +511,7 @@ export default function SylphioLanding() {
                       <p className="sylphio-sim-translated">
                         {displayedTranslated}
                         {isPlaying && displayedTranslated.length < SCENARIOS[activeScenario].translated.length && (
-                          <span className="sylphio-cursor-pulse" style={{ color: '#10B981' }}>|</span>
+                          <span className="sylphio-cursor-pulse">|</span>
                         )}
                       </p>
                     )}
@@ -517,25 +530,31 @@ export default function SylphioLanding() {
         {showMockPaywall && (
           <div className="sylphio-mock-paywall-overlay">
             <div className="sylphio-mock-paywall-modal">
-              <div className="paywall-close" onClick={() => setShowMockPaywall(false)}>✕</div>
+              {/* 시맨틱 교정 — div+onClick은 키보드로 도달·실행할 수 없다 (ai_pattern_audit §2-5 G10) */}
+              <button
+                type="button"
+                className="paywall-close"
+                onClick={() => setShowMockPaywall(false)}
+                aria-label={d.closeLabel}
+              ><Icon name="close" size={18} /></button>
               
               {showSuccessCheck ? (
                 <div className="paywall-success-screen">
-                  <div className="success-checkmark">✓</div>
+                  <div className="success-checkmark"><Icon name="check" size={40} /></div>
                   <h3>{purchaseStatus}</h3>
                 </div>
               ) : (
                 <>
                   <div className="paywall-header">
-                    <h2>✨ Sylphio Pro Lifetime ✨</h2>
-                    <p>{locale === 'ko' ? "평생 소장 라이선스로 모든 기능을 무제한 해제하세요." : "Unlock everything permanently with a lifetime license."}</p>
+                    <h2>Sylphio Pro Lifetime</h2>
+                    <p>{d.paywallDesc}</p>
                   </div>
                   
                   <div className="paywall-grid">
-                    <div className="paywall-item">🔒 ➔ 🔓 12개 다국어 전면 해제</div>
-                    <div className="paywall-item">🎨 자막 커스텀 그라데이션</div>
-                    <div className="paywall-item">📊 AI 요약 정밀 회의록 기능</div>
-                    <div className="paywall-item">⚙️ 고성능 AI 엔진 연동 (BYOK)</div>
+                    <div className="paywall-item"><Icon name="unlock" /> {d.paywallLang}</div>
+                    <div className="paywall-item"><Icon name="palette" /> {d.paywallCaption}</div>
+                    <div className="paywall-item"><Icon name="chart" /> {d.paywallSummary}</div>
+                    <div className="paywall-item"><Icon name="core" /> {d.paywallEngine}</div>
                   </div>
                   
                   <button 
@@ -546,7 +565,7 @@ export default function SylphioLanding() {
                     {isPurchasing ? (
                       <span className="spinner"></span>
                     ) : (
-                      <span>Sylphio Pro Lifetime 평생 소장하기 ($9.99)</span>
+                      <span>{d.paywallBuy}</span>
                     )}
                   </button>
                   {isPurchasing && <p className="paywall-status">{purchaseStatus}</p>}
@@ -583,7 +602,7 @@ export default function SylphioLanding() {
               href="#" 
               onClick={handleAlert} 
               className="btn-secondary"
-              style={{ textAlign: 'center', justifyContent: 'center' }}
+             
               id="btn-pricing-free"
             >
               {d.btnFreeCta}
@@ -591,7 +610,7 @@ export default function SylphioLanding() {
           </div>
           
           {/* Pro Lifetime Tier */}
-          <div className="sylphio-pricing-card premium-card premium" style={{ position: 'relative', overflow: 'hidden' }}>
+          <div className="sylphio-pricing-card premium-card premium">
             <div className="sylphio-pricing-badge">POPULAR</div>
             <h3>{d.proTitle}</h3>
             <div className="sylphio-price">{d.proPrice} <span>{d.proPricePeriod}</span></div>
@@ -611,7 +630,7 @@ export default function SylphioLanding() {
               href="#" 
               onClick={handleAlert} 
               className="btn-primary"
-              style={{ textAlign: 'center', justifyContent: 'center' }}
+             
               id="btn-pricing-pro"
             >
               {d.btnProCta}

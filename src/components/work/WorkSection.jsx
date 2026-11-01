@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../../contexts/LanguageContext';
 import useScrollReveal from '../../hooks/useScrollReveal';
 import './WorkSection.css';
+import Icon from '../common/Icon';
 
 export default function WorkSection() {
   const { t } = useTranslation();
@@ -132,12 +133,12 @@ export default function WorkSection() {
         {/* 1. Planner's View — 기획자의 시선 (GNB 1순위와 동일 위상) */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 0 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.2s', '--glow-color': 'rgba(199, 210, 254, 0.4)' }}
+          style={{ '--reveal-delay': '0.2s', '--card-accent': 'var(--accent-planner)' }}
           data-accent-color="199,210,254"
         >
           <div className="flagship-content">
             <div className="flagship-narrative">{t('home.servicePlannerTag')}</div>
-            <div className="flagship-label" style={{ color: 'var(--prism-lavender)' }}>Product Planning · Perspective</div>
+            <div className="flagship-label">Product Planning · Perspective</div>
             <h3 className="flagship-title">Planner's View</h3>
             <p className="flagship-desc">
               {t('home.servicePlannerDesc').split('\n').map((line, idx) => (
@@ -153,7 +154,7 @@ export default function WorkSection() {
               <span className="work-tag">Organization</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/planners-view" className="btn-primary flagship-cta-btn indigo">
+              <Link to="/planners-view" className="btn-primary flagship-cta-btn">
                 {t('home.servicePlannerCta')}
               </Link>
             </div>
@@ -169,19 +170,19 @@ export default function WorkSection() {
               </div>
               <div className="pvm-caption">A continuing column</div>
             </div>
-            <div className="visual-blur-orb lavender"></div>
+            <div className="visual-blur-orb"></div>
           </div>
         </div>
 
         {/* 2. Builder's Log — 만드는 과정의 기록 */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 1 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.3s', '--glow-color': 'rgba(124, 58, 237, 0.4)' }}
-          data-accent-color="124,58,237"
+          style={{ '--reveal-delay': '0.3s', '--card-accent': 'var(--accent-log)' }}
+          data-accent-color="229,178,93"
         >
           <div className="flagship-content">
             <div className="flagship-narrative">{t('home.serviceBuildersTag')}</div>
-            <div className="flagship-label" style={{ color: '#8B5CF6' }}>Engineering & Growth Logs</div>
+            <div className="flagship-label">Engineering & Growth Logs</div>
             <h3 className="flagship-title">Builder's Log</h3>
             <p className="flagship-desc">
               {t('home.serviceBuildersDesc').split('\n').map((line, idx) => (
@@ -197,7 +198,7 @@ export default function WorkSection() {
               <span className="work-tag">Troubleshooting</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/builders-log" className="btn-primary flagship-cta-btn indigo">
+              <Link to="/builders-log" className="btn-primary flagship-cta-btn">
                 {t('home.serviceBuildersCta')}
               </Link>
             </div>
@@ -229,19 +230,19 @@ export default function WorkSection() {
                 </div>
               </div>
             </div>
-            <div className="visual-blur-orb indigo"></div>
+            <div className="visual-blur-orb"></div>
           </div>
         </div>
 
         {/* 3. ReLearn — 20년 경력의 제품화 (Daily Digest + Pace Note 통합 성장 루프) */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.4s', '--glow-color': 'rgba(34, 211, 238, 0.4)' }}
+          style={{ '--reveal-delay': '0.4s', '--card-accent': 'var(--accent-relearn)' }}
           data-accent-color="34,211,238"
         >
           <div className="flagship-content">
             <div className="flagship-narrative">{t('home.serviceReLearnTag')}</div>
-            <div className="flagship-label" style={{ color: 'var(--orbit-cyan)' }}>Unified Growth Loop — Learn · Run · Reflect</div>
+            <div className="flagship-label">Unified Growth Loop — Learn · Run · Reflect</div>
             <h3 className="flagship-title">ReLearn</h3>
             <p className="flagship-desc">
               {t('home.serviceReLearnDesc').split('\n').map((line, idx) => (
@@ -257,7 +258,7 @@ export default function WorkSection() {
               <span className="work-tag">AI Reflection</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/relearn" className="btn-primary flagship-cta-btn cyan">
+              <Link to="/relearn" className="btn-primary flagship-cta-btn">
                 {t('home.serviceReLearnCta')}
               </Link>
             </div>
@@ -268,10 +269,10 @@ export default function WorkSection() {
               <div className="rlm-orbit-canvas">
                 <div className="rlm-orbit-ring"></div>
                 <div className="rlm-orbit-rotor"><span className="rlm-comet"></span></div>
-                <div className="rlm-core">🪐</div>
-                <div className="rlm-node n1"><span className="rlm-node-ico">📚</span><span className="rlm-node-tag">Learn</span></div>
-                <div className="rlm-node n2"><span className="rlm-node-ico">⛵</span><span className="rlm-node-tag">Run</span></div>
-                <div className="rlm-node n3"><span className="rlm-node-ico">📝</span><span className="rlm-node-tag">Reflect</span></div>
+                <div className="rlm-core"><Icon name="orbit" size={30} /></div>
+                <div className="rlm-node n1"><span className="rlm-node-ico"><Icon name="book" /></span><span className="rlm-node-tag">Learn</span></div>
+                <div className="rlm-node n2"><span className="rlm-node-ico"><Icon name="compass" /></span><span className="rlm-node-tag">Run</span></div>
+                <div className="rlm-node n3"><span className="rlm-node-ico"><Icon name="document" /></span><span className="rlm-node-tag">Reflect</span></div>
               </div>
               {/* 하단: 루프 리포트 미니 터미널 (Base 터미널과 동일 문법) */}
               <div className="rlm-report">
@@ -284,22 +285,22 @@ export default function WorkSection() {
                   <span className="rlm-report-bar"><i className="rlm-report-fill"></i></span>
                   <span className="rlm-report-val">68%</span>
                 </div>
-                <div className="rlm-report-meta">🔥 6-week streak · Learn → Run → Reflect</div>
+                <div className="rlm-report-meta"><Icon name="flame" /> 6-week streak · Learn → Run → Reflect</div>
               </div>
             </div>
-            <div className="visual-blur-orb cyan"></div>
+            <div className="visual-blur-orb"></div>
           </div>
         </div>
 
         {/* 4. Waymark — 의사결정 동반 서비스 (ReLearn 다음·Sylphio 앞, Candela 슬롯 피벗) */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.5s', '--glow-color': 'rgba(165, 180, 252, 0.4)' }}
+          style={{ '--reveal-delay': '0.5s', '--card-accent': 'var(--accent-waymark)' }}
           data-accent-color="165,180,252"
         >
           <div className="flagship-content">
             <div className="flagship-narrative">{t('home.serviceWaymarkTag')}</div>
-            <div className="flagship-label" style={{ color: 'var(--color-indigo)' }}>Decision Companion · Coming Soon</div>
+            <div className="flagship-label">Decision Companion · Coming Soon</div>
             <h3 className="flagship-title">Waymark</h3>
             <p className="flagship-desc">
               {t('home.serviceWaymarkDesc').split('\n').map((line, idx) => (
@@ -315,7 +316,7 @@ export default function WorkSection() {
               <span className="work-tag">Peer Stories</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/waymark" className="btn-primary flagship-cta-btn indigo">
+              <Link to="/waymark" className="btn-primary flagship-cta-btn">
                 {t('home.serviceWaymarkCta')}
               </Link>
             </div>
@@ -332,19 +333,19 @@ export default function WorkSection() {
               </div>
               <div className="wkm-caption">Beside every decision</div>
             </div>
-            <div className="visual-blur-orb indigo"></div>
+            <div className="visual-blur-orb"></div>
           </div>
         </div>
 
         {/* 5. Sylphio — 실무 니즈의 해결 */}
         <div
           className={`flagship-card reveal-item flagship-glow${activeCardIndex === 4 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.6s', '--glow-color': 'rgba(0, 242, 254, 0.4)' }}
-          data-accent-color="0,242,254"
+          style={{ '--reveal-delay': '0.6s', '--card-accent': 'var(--accent-sylphio)' }}
+          data-accent-color="135,169,236"
         >
           <div className="flagship-content">
             <div className="flagship-narrative">{t('home.serviceSylphioTag')}</div>
-            <div className="flagship-label" style={{ color: '#00F2FE' }}>On-Device AI Translation</div>
+            <div className="flagship-label">On-Device AI Translation</div>
             <h3 className="flagship-title">Sylphio</h3>
             <p className="flagship-desc">
               {t('home.serviceSylphioDesc').split('\n').map((line, idx) => (
@@ -361,7 +362,7 @@ export default function WorkSection() {
               <span className="work-tag">Secure Keychain</span>
             </div>
             <div className="flagship-cta-wrap">
-              <Link to="/sylphio" className="btn-primary flagship-cta-btn blue">
+              <Link to="/sylphio" className="btn-primary flagship-cta-btn">
                 {t('home.serviceSylphioCta')}
               </Link>
             </div>
@@ -389,7 +390,7 @@ export default function WorkSection() {
                 <div className="sym-line dst">Q3 로드맵을 함께 맞춰보시죠.<span className="sym-caret"></span></div>{/* i18n-ok — Sylphio 통역 데모 콘텐츠(원문→번역 시연) */}
               </div>
             </div>
-            <div className="visual-blur-orb blue"></div>
+            <div className="visual-blur-orb"></div>
           </div>
         </div>
         </div>

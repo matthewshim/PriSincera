@@ -32,6 +32,28 @@
     --orbit-cyan: var(--color-cyan);
     --orbit-cyan-light: #67E8F9;
 
+    /* ── 제품 액센트 (Product Accents) — D-6 결정 2026-11-01 ──
+       [문제] 제품마다 라벨·글로우·보더·아이콘 배경이 **서로 다른 색**으로 돌고 있었다.
+       예: Builder's Log = 라벨 violet-500(#8B5CF6) / 글로우 violet-600 / 보더 violet-300
+           / 자체 지면 CTA 테마는 gold. 한 제품에 세 가지 색이 공존했다.
+           ReLearn은 홈 카드 cyan인데 GNB 벤토 라벨만 indigo로 이탈.
+       [결정] D-6 ① — 선언 브랜드 색(gold·indigo·cyan·lavender·silver)으로 수렴한다.
+       [배정 원칙] **제품이 자기 지면에서 이미 쓰는 색을 우선**한다. 사용자가 제품 안에서
+           보는 색이 가장 강한 신호이므로, 홈 카드·GNB를 그쪽에 맞춘다.
+       [주의] 아래 토큰이 각 제품 액센트의 **유일한 선언 지점**이다. 카드는 `--card-accent`에
+           이 토큰을 꽂고, 라벨·글로우·보더·CTA는 전부 `--card-accent`에서 color-mix로 파생한다.
+           제품 색을 바꿀 일이 생기면 **이 블록 한 줄만** 고친다. */
+    --accent-base:    var(--prism-rose);      /* PriSincera Base — 플랫폼 셸은 중립 실버(구 amber #F59E0B: 브랜드 4색 밖) */
+    --accent-planner: var(--prism-lavender);  /* Planner's View — 현상 유지 */
+    --accent-log:     var(--color-gold);      /* Builder's Log — 자체 지면 스코프 CTA 테마가 이미 gold(§4-7). 홈 카드의 violet이 이탈이었다 */
+    --accent-relearn: var(--color-cyan);      /* ReLearn — 홈 카드가 이미 cyan. GNB 벤토의 indigo를 정합 */
+    --accent-waymark: var(--color-indigo);    /* Waymark — 현상 유지 */
+    --accent-sylphio: #87A9EC;                /* Sylphio — 독립 제품 고유 사파이어. 구 라벨색 #00F2FE는 불일치였다.
+                                                 근거 갱신(2026-11-01): §9-1 '제품 브랜드 예외'는 v5.25에서 **폐지**됐다
+                                                 — 히어로 타이틀 그라디언트는 전 지면 `--gradient-brand` 단일이다.
+                                                 이 토큰이 남는 근거는 §9-1이 아니라 **제품 UI 액센트**(GNB 라벨·TOC 활성·링크)로,
+                                                 다른 4제품의 `--accent-*`와 같은 자격이다. */
+
     /* Semantic Status Colors (기능색 — design_system §1-4) — 브랜드 4색 절제의 명시적 예외.
        성공/위험/별점은 보편 관례색을 시맨틱 토큰으로 단일화(애드혹 hex 산개 종식). */
     --color-success: #34D399;   /* 완료·저장 성공 */
@@ -55,20 +77,47 @@
     --btn-primary-glow: rgba(229, 178, 93, 0.02);
     --btn-primary-glow-hover: rgba(229, 178, 93, 0.06);
     --btn-primary-hover-bg: linear-gradient(135deg, rgba(229, 178, 93, 0.18), rgba(255, 255, 255, 0.06));
-    --btn-glow-color: rgba(229, 178, 93, 0.15); /* Default starlight gold glow */
     
     --btn-secondary-bg: rgba(22, 22, 41, 0.65);
     --btn-secondary-bg-hover: rgba(30, 30, 56, 0.85);
 
     /* Typography Stack */
-    --font-serif: 'Cormorant Garamond', 'Playfair Display', serif;
-    --font-display: var(--font-serif); /* Serif for display/headings, Sans for reading text */
+    /* [D-1 결정 — 2026-11-01] 세리프 디스플레이(Cormorant Garamond·Playfair Display) 폐지.
+       :lang(en)/:lang(ko)/:lang(ja) 세 블록이 모두 --font-display를 산세리프로 재정의했고
+       지원 로케일이 그 3종뿐이어서 두 패밀리는 '렌더 경로 0'인 상태로 매 방문자가
+       내려받고 버렸다. index.html의 Google Fonts 요청에서도 제거.
+       근거: ai_pattern_audit.md §2-3 C2 / ai_pattern_remediation_plan.md P0-1 */
+    --font-display: 'Pretendard Variable', 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     --font-body: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', 'Pretendard Variable', 'Pretendard', monospace;
+
+    /* ── Letter Spacing (자간) — P1-H3, 2026-11-01 ──
+       [문제] 폰트 크기는 35종을 CI로 집행하는데 **자간은 토큰이 0개**였다(비대칭).
+       같은 역할의 아이브로우가 파일마다 0.08 / 0.1 / 0.12 / 0.16 / 0.18em으로 따로 돌았다.
+       실사용 20종 → 5종으로 압축. 스냅 폭은 최대 0.04em(장식 마이크로 라벨 1곳). */
+    --tracking-tight:  -0.02em;  /* 대형 디스플레이·히어로 타이틀 (← -0.01/-0.015/-0.02/-0.03/-0.04) */
+    --tracking-wide:    0.02em;  /* 버튼·칩 라벨 (← 0.01/0.02/0.03) */
+    --tracking-wider:   0.05em;  /* 배지 역할 — display 계열 대문자 배지 (← 0.04/0.05/0.06) */
+    --tracking-widest:  0.1em;   /* 아이브로우 역할 — mono 계열 섹션 머리 라벨 (← 0.08/0.1/0.12/1px) */
+    --tracking-ultra:   0.16em;  /* 장식 마이크로 라벨 (← 0.14/0.15/0.16/0.18/0.2) */
+
+    /* ── Line Height (행간) — P1-H4, 2026-11-01 ──
+       실사용 16종 → 6종. 역할이 6개여서 6단이다(목표 5단에 1 초과 — 1.5↔1.65를 한 토큰으로
+       합치면 콤팩트 UI 박스에서 넘침 위험이 있어 분리 유지). 스냅 폭 최대 0.1. */
+    --leading-none:    1;      /* 아이콘·단일 행 (← 1) */
+    --leading-tight:   1.2;    /* 대형 타이틀 (← 1.1/1.2/1.25) */
+    --leading-snug:    1.4;    /* 소형 헤딩·카드 제목 (← 1.3/1.35/1.4/1.45) */
+    --leading-normal:  1.55;   /* 콤팩트 UI 텍스트 (← 1.5/1.55) */
+    --leading-relaxed: 1.6;    /* 본문 기본(body와 동일) (← 1.6/1.65) */
+    --leading-loose:   1.8;    /* 장문 프로스 (← 1.7/1.75/1.8/1.9) */
 
     /* Geometry & Spatial System (8pt Grid) */
     --space-xs: 4px;
     --space-sm: 8px;
+    /* [P1-G8 신설] 8↔16 사이의 구멍. gap 실사용 1위 값(29회)이면서 4pt 그리드 위에 있다.
+       t셔츠 스케일(xs/sm/md/lg/xl)에 이 단계의 이름이 없어서 생값으로 29번 반복됐다.
+       스냅(8 또는 16)하면 29곳의 간격이 ±4px 움직이므로 토큰화가 옳다. */
+    --space-12: 12px;
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 32px;
@@ -76,40 +125,78 @@
     /* Layout Width 토큰 — 유일 허용 폭 (design_system.md §3-3 v5.5)
        컨테이너는 --container만, 장문 단은 --measure만. 대역[880,2000]px 리터럴 금지. */
     --container: 1200px;  /* 모든 페이지 셸·GNB·푸터·섹션 */
+    /* [P1-G8 신설] 문서형 레이아웃(§9-11) 거터 — **하중을 받는 값**이다.
+       860(--measure 프로스) + 300(목차 사이드바) + 40(거터) = 1200(--container).
+       스케일 단계로 스냅하면(40→32) 열 합이 컨테이너와 맞지 않아 레이아웃이 어긋난다.
+       스케일 토큰이 아니라 '레이아웃 상수'이므로 별도 이름을 준다. */
+    --doc-gutter: 40px;
     --measure: 860px;     /* 장문 프로스 단·좁은 중앙 스택 (≈74자) */
 
-    /* Typography Scale 토큰 — 유일 허용 폰트 사이즈 (design_system.md §4-2 규범)
-       규칙: font-size는 아래 토큰(또는 동일 값)만 사용. px·임의 값 금지.
-       신규 단계가 필요하면 design_system.md 개정을 통해서만 추가한다. */
-    --fs-070: 0.7rem;   /* 미세 캡션·뱃지 */
-    --fs-075: 0.75rem;  /* Caption/Tag (모노 라벨) */
-    --fs-080: 0.8rem;   /* 보조 텍스트·링크 */
-    --fs-085: 0.85rem;  /* 콤팩트 본문·버튼·접기 요약 */
-    --fs-090: 0.9rem;   /* 스몰 본문·상태 문구 */
-    --fs-095: 0.95rem;  /* 서브 본문 */
-    --fs-100: 1rem;     /* Body Base */
-    --fs-110: 1.1rem;   /* 강조 본문 */
-    --fs-115: 1.15rem;  /* Body Large — 서비스 히어로 서브카피 */
-    --fs-130: 1.3rem;   /* 소형 헤딩·마커 아이콘 */
-    --fs-140: 1.4rem;   /* 섹션 타이틀 */
-    --fs-150: 1.5rem;   /* Heading 2 하한 */
-    --fs-220: 2.2rem;   /* 서비스 히어로 타이틀(모바일) */
-    --fs-300: 3rem;     /* 서비스 히어로 타이틀(데스크톱) */
-    /* v5.17 디스플레이 대역 — 랜딩 히어로 clamp endpoint 토큰화(§4-2 유동 Display/H1·H2 실사용 값) */
-    --fs-250: 2.5rem;   --fs-260: 2.6rem;   --fs-280: 2.8rem;   --fs-350: 3.5rem;   --fs-450: 4.5rem;
-    /* v5.6 그리드 전면화 — 0.05rem 그리드 위 실사용 값 전부 등재 */
-    --fs-050: 0.5rem;   --fs-055: 0.55rem;  --fs-060: 0.6rem;   --fs-065: 0.65rem;  /* 장식 마이크로 라벨 */
-    --fs-105: 1.05rem;  --fs-120: 1.2rem;   --fs-125: 1.25rem;  --fs-135: 1.35rem;
-    --fs-145: 1.45rem;  --fs-155: 1.55rem;  --fs-160: 1.6rem;   --fs-170: 1.7rem;
-    --fs-175: 1.75rem;  --fs-180: 1.8rem;   --fs-200: 2rem;     --fs-240: 2.4rem;   /* 헤딩·디스플레이 */
+    /* ══ Typography Scale v2 — 11단 모듈러 스케일 (P3-8, 2026-11-01) ══
+       [구 체계의 문제] 35단 · 0.05rem **균일 격자**였다. 이것은 스케일이 아니라
+       '생성된 값들의 사후 조회표'다 — 0.80과 0.85는 눈이 구분하지 못하는데 둘 다 토큰이고,
+       그래서 새 값이 필요할 때마다 등재가 반복돼 13단→30단→35단으로 자랐다.
+       실사용도 치우쳐 있었다: 0.65~1.05 대역 9개 토큰이 전체 사용의 **69%**를 흡수하고,
+       1.1~1.8 대역은 14개 토큰이 70회만 쓰였다(토큰당 5회).
+       [v2 설계] **역할 이름 + 비율 간격.** 숫자 이름(`--fs-082`)은 "0.82가 필요해"를
+       부르지만 역할 이름은 "이건 어느 역할인가"를 묻게 한다. 읽기 대역은 비율 ≈1.12,
+       디스플레이로 갈수록 넓힌다. 새 단계는 본 문서 개정으로만 추가한다. */
+    --fs-micro:   0.70rem;  /* 마이크로 라벨·배지·아이브로우 */
+    --fs-xs:      0.80rem;  /* 캡션·태그·메타 */
+    --fs-sm:      0.90rem;  /* 보조 본문·버튼·상태 */
+    --fs-base:    1.00rem;  /* 본문 기본 */
+    --fs-md:      1.15rem;  /* 강조 본문·히어로 서브카피(Body Large) */
+    --fs-lg:      1.30rem;  /* 카드 제목·소제목 */
+    --fs-xl:      1.50rem;  /* 소형 헤딩 */
+    --fs-2xl:     1.75rem;  /* 섹션 타이틀 */
+    --fs-3xl:     2.10rem;  /* 대형 섹션 타이틀 */
+    --fs-4xl:     2.40rem;  /* 목록·상세 히어로 타이틀 */
+    --fs-display: 3.00rem;  /* 서비스 히어로 타이틀 */
+
     --space-2xl: 64px;
     --space-3xl: 128px;
 
     /* Border Radius */
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 24px;
-    --radius-pill: 9999px;
+    /* ── Border Radius (P1-G1 — 2026-11-01) ──
+       선언은 4종이었지만 실사용 생값은 1·1.5·2·3·4·5·6·8·9·10·12·14·16·18·20·24px였다.
+       4종으로는 실제 설계를 못 덮으므로 칩·태그·배지용 --radius-xs(4px)를 **1종만** 추가한다
+       (실사용 13곳이 정확히 4px). 그 이상 늘리지 않는다 — 토큰 인플레이션은
+       --fs-* 35단이 된 경로다(ai_pattern_audit.md §2-3 C1).
+       나머지 생값(8·10·14·16·18·20px 등)의 스냅은 ±2~6px 시각 변화를 수반하므로
+       오너 검토 후 일괄 처리한다(계획서 P1-G1b). */
+    --radius-xs: 4px;      /* 태그·배지·칩 */
+    --radius-sm: 6px;      /* 작은 컨트롤 */
+    --radius-md: 12px;     /* 리스트형 카드·입력 */
+    --radius-lg: 24px;     /* 컨테이너형 카드·패널 */
+    --radius-pill: 9999px; /* 알약·원형 바 */
+
+    /* 포커스 링 (§접근성) — 규범 설명은 아래 :focus-visible 그룹 주석 참조.
+       2회 선언을 피해 토큰 선언을 한 곳으로 모은다(duplicate-selector 0 유지). */
+    --focus-ring: 2px solid var(--crystal-white);
+    --focus-ring-offset: 3px;
+
+    /* ── 버튼 기하 (P1-G3·G6 — 2026-11-01) ──
+       [문제] 버튼류 패딩 고유 조합이 **29종**이었다. 전역 표준(`12px 28px`)을 쓰는 버튼이
+       2개뿐이어서, 같은 위계의 CTA가 12/13/14px 수직 패딩으로 갈려 나란히 두면
+       베이스라인이 맞지 않았다. 또 버튼류에 `min-height` 선언이 **0건**이어서
+       터치 타깃이 '패딩 + 폰트 크기의 우연한 합'으로 결정됐다.
+       [규격] 실측 역할은 4단이다(3단으로 줄이면 인라인 마이크로 컨트롤이 과대해진다).
+       각 버튼 클래스는 아래 토큰만 쓴다 — 생값 패딩 금지. */
+    --btn-pad-xs: 6px 12px;    --btn-h-xs: 30px;   /* 인라인 마이크로 컨트롤(복사·펼치기·편집) */
+    --btn-pad-sm: 9px 16px;    --btn-h-sm: 38px;   /* 보조 액션(추가·검색·토글) */
+    --btn-pad-md: 12px 28px;   --btn-h-md: 44px;   /* **전역 표준** — .btn-primary/.btn-secondary */
+    --btn-pad-lg: 14px 30px;   --btn-h-lg: 48px;   /* 섹션 주 CTA·히어로 */
+
+    /* ── 호버 부유 거리 (P1-G4 — 2026-11-01) ──
+       동일 제스처는 동일 거리여야 한다. 실측 결과 호버 부유는 2px(25곳)·4px(5곳)·1px(3곳)
+       3종이었고(감사 v1.1의 '7종'은 @keyframes 부유 애니메이션 진폭과 중앙정렬
+       translateY(-50%)까지 섞어 센 과대 집계였다 — 측정기에서 정정),
+       2단으로 규범화한다: 기본 2px, 면적이 큰 카드류 4px.
+       1px(작은 버튼 3곳)은 기본값으로 흡수한다.
+       **예외**: 카드 호버 시 내부 목업이 떠오르는 패럴랙스(-6/-10px)는 '카드가 뜨는' 것과
+       다른 제스처이므로 별도 유지한다(--lift-parallax). */
+    --lift-hover: -2px;        /* 기본 — 버튼·링크·리스트형 카드 */
+    --lift-hover-card: -4px;   /* 면적 큰 컨테이너형 카드 */
 
     /* Spring Physics Animation (Heavier, more grounded) */
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -135,8 +222,18 @@ body {
     font-family: var(--font-body);
     background: var(--bg-void);
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: var(--leading-relaxed);
     overflow-x: hidden;
+    /* ── CJK 줄바꿈 규범 단일화 (P1-H6, 2026-11-01) ──
+       [문제] `word-break: keep-all`이 **31곳**, `overflow-wrap: break-word`가 **21곳**에
+       흩어져 있었다. 규범 없이 "줄바꿈이 이상하다"는 QA가 올 때마다 해당 셀렉터에
+       한 줄씩 추가된 결과다. 그리고 그 중복이 `:lang(ja) * { word-break: normal !important }`
+       라는 **전역 해머**를 불렀다 — 개별 선언이 언어 규칙을 이기니까 `*`와 `!important`로
+       덮어야 했던 것이다.
+       [해법] 두 속성 모두 **상속**되므로 `body`에 한 번 선언하면 전부 따라온다.
+       개별 선언 52곳을 제거하자 `:lang(ja)`도 `*`·`!important` 없이 작동한다. */
+    word-break: keep-all;        /* 한국어: 단어 중간 줄바꿈 방지 */
+    overflow-wrap: break-word;   /* 단, 컨테이너를 넘치는 긴 토큰은 끊는다 */
 }
 
 /* ── 전역 커스텀 스크롤바 (얇고 세련된 다크 테마 — design_system §9-12) ──
@@ -164,14 +261,17 @@ img, svg { max-width: 100%; display: block; }
 button { background: none; border: none; font: inherit; color: inherit; }
 
 /* --- Orbit Ring Keyframes --- */
-@keyframes orbitSpin {
+/* 360° 회전 canonical. 본문이 같은 회전이 **8개 이름**(orbitSpin·spinOrbit·sparkSpin·
+   rlmSpin·pvSpin·peekSpinner·admin-spin·spin)으로 흩어져 있었다(2026-11-01 통합).
+   @keyframes는 문서 스코프라 여기 한 번이면 전 지면에 통한다. */
+@keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 .orbit-ring { transform-origin: center; }
-.orbit-spin { animation: orbitSpin 40s linear infinite; }
-.orbit-spin-slow { animation: orbitSpin 55s linear infinite; }
+.orbit-spin { animation: spin 40s linear infinite; }
+.orbit-spin-slow { animation: spin 55s linear infinite; }
 
 /* GPU Accelerated fade-in */
 @keyframes fadeIn {
@@ -179,17 +279,19 @@ button { background: none; border: none; font: inherit; color: inherit; }
     to { opacity: 1; }
 }
 
-@keyframes gentlePulse {
-    0%, 100% { opacity: 0.55; }
-    50% { opacity: 1; }
+/* 벤토 카드 펄스 — Header(전 지면)와 WorkSection(홈)이 공유한다.
+   양쪽 로컬에 동일 정의가 중복 선언돼 있었고, 키프레임은 전역 스코프라
+   '마지막 로드'가 전역을 덮는 구조였다(ai_pattern_audit §2-7 F2). 여기로 단일화. */
+@keyframes bentoPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.3); opacity: 0; }
 }
+
 
 
 /* --- Glassmorphism 3.0 Premium Card (Restrained Authority & Celestial Accent) --- */
 .premium-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
     border-top: 1px solid rgba(255, 255, 255, 0.08); /* Fine top highlight */
     border-radius: var(--radius-lg);
@@ -201,7 +303,7 @@ button { background: none; border: none; font: inherit; color: inherit; }
     background: rgba(26, 26, 26, 0.65);
     border-color: rgba(229, 178, 93, 0.25); /* Subtle starlight gold edge on hover */
     box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.7), 0 0 15px rgba(229, 178, 93, 0.03);
-    transform: translateY(-2px);
+    transform: translateY(var(--lift-hover));
 }
 
 
@@ -214,15 +316,9 @@ button { background: none; border: none; font: inherit; color: inherit; }
     }
 }
 
-/* --- Japanese (CJK) Word Wrapping Override --- */
-/* Restores standard character-level wrapping for Japanese, overriding 'keep-all' bugs */
-:lang(ja) * {
-    word-break: normal !important;
-}
-
 /* --- Language-Specific Font Families (v3.0 Chrono-Neutral) --- */
 :lang(en) {
-    --font-display: 'Inter', 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;  /* 'Geist' 제거 — 미로드 웹폰트(시스템 설치 기반 없음), Outfit과 동일 유형 */
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
@@ -234,6 +330,9 @@ button { background: none; border: none; font: inherit; color: inherit; }
 :lang(ja) {
     --font-display: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
     --font-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    /* 일본어는 문자 단위 줄바꿈이 정상 — `body`의 keep-all을 로케일에서 되돌린다.
+       개별 선언 52곳을 제거했으므로 `*`와 `!important`가 필요 없다(P1-H6). */
+    word-break: normal;
 }
 
 /* --- Semantic CTA Button System (v4.0) --- */
@@ -241,18 +340,17 @@ button { background: none; border: none; font: inherit; color: inherit; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 28px;
-    font-size: var(--fs-095);
-    font-weight: 600;
+    gap: var(--space-sm);
+    padding: var(--btn-pad-md);
+    min-height: var(--btn-h-md);
+    font-size: var(--fs-base);
+    font-weight: 500;
     background: var(--btn-primary-bg);
     color: #FFFFFF;
     border: 1px solid var(--btn-primary-border);
     border-radius: var(--radius-pill);
     box-shadow: 0 4px 20px var(--btn-primary-glow);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: all var(--duration-fast) var(--ease-spring);
+    transition: background-color var(--duration-fast) var(--ease-spring), border-color var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast) var(--ease-spring), transform var(--duration-fast) var(--ease-spring);
     user-select: none;
     text-decoration: none;
 }
@@ -261,24 +359,23 @@ button { background: none; border: none; font: inherit; color: inherit; }
     background: var(--btn-primary-hover-bg);
     border-color: var(--btn-primary-border-hover);
     box-shadow: 0 8px 30px var(--btn-primary-glow-hover);
-    transform: translateY(-2px);
+    transform: translateY(var(--lift-hover));
 }
 
 .btn-secondary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 28px;
-    font-size: var(--fs-095);
-    font-weight: 600;
+    gap: var(--space-sm);
+    padding: var(--btn-pad-md);
+    min-height: var(--btn-h-md);
+    font-size: var(--fs-base);
+    font-weight: 500;
     background: var(--btn-secondary-bg);
     color: var(--crystal-light);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-pill);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: all var(--duration-fast) var(--ease-spring);
+    transition: background-color var(--duration-fast) var(--ease-spring), border-color var(--duration-fast) var(--ease-spring), color var(--duration-fast) var(--ease-spring), box-shadow var(--duration-fast) var(--ease-spring), transform var(--duration-fast) var(--ease-spring);
     user-select: none;
     text-decoration: none;
 }
@@ -288,26 +385,81 @@ button { background: none; border: none; font: inherit; color: inherit; }
     border-color: var(--glass-border-hover);
     color: var(--text-primary);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    transform: translateY(-2px);
+    transform: translateY(var(--lift-hover));
 }
 
-.btn-glow {
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 0 0 var(--btn-glow-color, rgba(165, 180, 252, 0));
-    animation: activePulse 4s infinite ease-in-out;
+/* .btn-glow 폐지 (P2-4) — 선언·키프레임(activePulse)·토큰(--btn-glow-color) 4종이
+   모두 있었으나 **JSX 사용 0회**였다. 전역 CTA '3종 체계'의 3분의 1이 사문이었던 셈이다. */
+
+
+/* ============================================
+   Global Focus Visibility (P1-G5 — 2026-11-01)
+   ============================================
+   [신설 사유] 전역 CTA 시스템(§2)에 포커스 스타일이 **0건**이었다. 호버는 §6-3까지
+   규범화해 두고, 키보드 사용자는 자신의 위치를 알 수 없는 상태였다 — 다크 글래스
+   pill 위에서 브라우저 기본 아웃라인은 사실상 식별 불가다.
+   design_system v5.7이 '`:focus-visible` 호버 미러링'을 규정했지만 전역에는
+   미적용이었다(30개 CSS 중 5개 파일만 보유). 근거: ai_pattern_audit.md §2-5 G5
+
+   [설계] ① `:focus-visible`만 사용한다 — 마우스 클릭에는 링이 뜨지 않는다.
+          ② 색은 액센트가 아니라 **고정 밝은 링**: 제품별 스코프 액센트(§4-7)가
+             배경과 섞여 링이 사라지는 사고를 막는다.
+          ③ `outline-offset`으로 모서리 바깥에 띄운다. outline은 현대 브라우저에서
+             `border-radius`를 자동으로 따라가므로 radius를 건드리지 않는다
+             (`border-radius: inherit`은 포커스 순간 요소의 radius를 부모 값으로
+              바꿔버리므로 쓰지 않는다).
+          ④ `box-shadow`를 쓰지 않는다 — 제네릭 규칙에서 쓰면 요소의 기존 그림자를
+             포커스 동안 덮어버린다. 다크 배경에서는 흰 링만으로 충분하다.
+          ⑤ 호버 미러링: 포커스 시 호버와 **같은 부유·테두리**를 적용해 상태를 일치시킨다. */
+
+/* 기본값 — 모든 인터랙티브 요소. 개별 컴포넌트가 더 구체적 셀렉터로 덮을 수 있다. */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
 }
 
-@keyframes activePulse {
-    0%, 100% { box-shadow: 0 0 0 0 var(--btn-glow-color, rgba(165, 180, 252, 0)); }
-    50% { box-shadow: 0 0 15px 0 var(--btn-glow-color, rgba(165, 180, 252, 0.2)); }
+/* 전역 CTA — 포커스를 호버와 동일 상태로 미러링(§5.7 규정의 전역 이행) */
+.btn-primary:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    background: var(--btn-primary-hover-bg);
+    border-color: var(--btn-primary-border-hover);
+    transform: translateY(var(--lift-hover));
+}
+
+.btn-secondary:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    background: var(--btn-secondary-bg-hover);
+    border-color: var(--glass-border-hover);
+    color: var(--text-primary);
+    transform: translateY(var(--lift-hover));
+}
+
+/* 유리 카드형 전체 링크 — 부유를 미러링하되 링은 외곽에 */
+.premium-card:focus-visible,
+.premium-card:has(:focus-visible) {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+}
+
+/* 마우스 클릭 시 아웃라인 억제(:focus-visible 미지원 폴백 환경 보호) */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+    outline: none;
 }
 
 /* Unified Haptic Active pressed scaling state (v4.5) */
 .haptic-trigger:active,
 .btn-primary:active,
 .btn-secondary:active,
-.btn-glow:active,
 a:active,
 button:active,
 .sylphio-tab:active,
@@ -316,9 +468,38 @@ button:active,
 .pacenote-cell:active,
 .builder-card:active,
 .daily-card:active,
-.signal-article-card:active {
+.signal-article-card:active,
+.btn-simulator:active,
+.admin-profile-btn:active,
+.admin-logout-btn:active {
     transform: scale(0.97) translateY(0) !important;
     transition-duration: 70ms !important;
+}
+
+/* ── 터치 타깃 보장 (P1-G6 — 2026-11-01) ──
+   [문제] 버튼류 `min-height` 선언이 0건이어서 터치 영역이 우연에 맡겨져 있었고,
+   `.gnb-bgm-btn`은 32×32px로 44px 최소 기준에 미달했다.
+   [해법] 개별 버튼을 일일이 키우지 않는다 — **토큰을 바꾸면 전 소비처가 따라온다.**
+   포인터가 거칠면(손가락) xs·sm 단의 높이를 44px로 올리고, 데스크톱 밀도는 유지한다. */
+@media (pointer: coarse) {
+    :root {
+        --btn-h-xs: 44px;
+        --btn-h-sm: 44px;
+    }
+    /* 아이콘 전용 정사각 버튼 — 시각 크기는 유지하고 히트 영역만 확장 */
+    .gnb-bgm-btn,
+    .mobile-locale-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    /* 인라인 텍스트 토글·탭 — 데스크톱 밀도는 유지하고 터치에서만 히트 영역 확보.
+       (버튼 단 토큰을 쓰면 데스크톱 레이아웃이 벌어지므로 coarse 전용으로 분리) */
+    .rl-af-btn,
+    .daily-nav-btn,
+    .workspace-tab-btn,
+    .rl-dock-tab {
+        min-height: 44px;
+    }
 }
 
 /* 3D Tilt Card Base Utility (v4.5) */
@@ -330,7 +511,7 @@ button:active,
 
 /* Ensure default cursor for mobile media queries */
 @media (max-width: 768px) {
-    .btn-primary, .btn-secondary, .btn-glow, .haptic-trigger {
+    .btn-primary, .btn-secondary, .haptic-trigger {
         cursor: pointer;
     }
 }
@@ -348,31 +529,7 @@ button:active,
     --btn-primary-glow: rgba(229, 178, 93, 0.02);
     --btn-primary-glow-hover: rgba(229, 178, 93, 0.06);
     --btn-primary-hover-bg: linear-gradient(135deg, rgba(229, 178, 93, 0.20), rgba(226, 226, 231, 0.08));
-}
-
-/* 2. Daily Digest (Muted Silver-Indigo Theme) */
-.daily-digest-page {
-    --btn-primary-bg: linear-gradient(135deg, rgba(148, 163, 184, 0.12), rgba(165, 180, 252, 0.06));
-    --btn-primary-border: rgba(148, 163, 184, 0.25);
-    --btn-primary-border-hover: rgba(165, 180, 252, 0.35);
-    --btn-primary-glow: rgba(165, 180, 252, 0.01);
-    --btn-primary-glow-hover: rgba(165, 180, 252, 0.03);
-    --btn-primary-hover-bg: linear-gradient(135deg, rgba(148, 163, 184, 0.20), rgba(165, 180, 252, 0.12));
-    --btn-glow-color: rgba(165, 180, 252, 0.15); /* Nebula Indigo glow */
-}
-
-/* 3. Pace Note (Muted Platinum-Indigo Theme) */
-.pacenote-page {
-    --btn-primary-bg: linear-gradient(135deg, rgba(226, 226, 231, 0.12), rgba(165, 180, 252, 0.06));
-    --btn-primary-border: rgba(226, 226, 231, 0.25);
-    --btn-primary-border-hover: rgba(165, 180, 252, 0.35);
-    --btn-primary-glow: rgba(165, 180, 252, 0.01);
-    --btn-primary-glow-hover: rgba(165, 180, 252, 0.03);
-    --btn-primary-hover-bg: linear-gradient(135deg, rgba(226, 226, 231, 0.20), rgba(165, 180, 252, 0.12));
-    --btn-glow-color: rgba(165, 180, 252, 0.15); /* Nebula Indigo glow */
-}
-
-/* 4. Sylphio (Deep Sapphire-Starlight Blue Theme) */
+}/* 4. Sylphio (Deep Sapphire-Starlight Blue Theme) */
 .sylphio-landing,
 .sylphio-guide,
 .sylphio-privacy {
@@ -382,6 +539,138 @@ button:active,
     --btn-primary-glow: rgba(30, 60, 114, 0.02);
     --btn-primary-glow-hover: rgba(30, 60, 114, 0.05);
     --btn-primary-hover-bg: linear-gradient(135deg, rgba(30, 60, 114, 0.25), rgba(135, 169, 236, 0.15));
-    --btn-glow-color: rgba(135, 169, 236, 0.15); /* Sylphio Blue glow */
 }
 
+
+/* ══ 버튼 공통 골격 (P1-G2, 2026-11-01) ══
+   [문제] §2가 '전역에 동일한 물리법칙을 상속시킨다'고 선언했지만, 실제로는
+   **고유 버튼 클래스 60종 이상**이 각자 `display: inline-flex; align-items: center;
+   cursor: pointer; font-family: inherit; …` 를 **다시 적고** 있었다(29규칙이 3개 이상 중복).
+   중앙 체계가 있는데 아무도 쓰지 않는 상태였다.
+
+   [방식] JSX를 건드리지 않고 기존 버튼 셀렉터를 그룹으로 묶어 **골격을 여기서 한 번만**
+   선언한다. 각 버튼 클래스에는 **고유한 것만**(색·치수 단·패딩 토큰) 남긴다.
+   치수는 §4-4의 `--btn-pad-*`/`--btn-h-*` 4단이 담당한다.
+   [신규 코드] 새 버튼은 `.btn-primary`/`.btn-secondary`를 쓰거나, 부득이하면
+   아래 그룹에 셀렉터를 **추가**할 것 — 골격을 또 적지 말 것. */
+.btn-primary,
+.btn-secondary,
+.celestial-btn,
+.flagship-cta-btn,
+.cta-button,
+.connect-btn,
+.daily-google-sub-btn,
+.rl-hero-cta,
+.rl-login-btn,
+.rl-add-btn,
+.rl-osearch-btn,
+.rl-expand-btn,
+.wm-btn,
+.wma-btn,
+.btn-simulator,
+.btn-paywall-purchase,
+.track-toggle-btn,
+.track-orbit-btn,
+.terminal-copy-btn,
+.vocab-audio-btn,
+.chrono-calendar-nav-btn,
+.read-more-btn,
+.svc-btn,
+.svc-download-btn,
+.svc-edit-btn,
+.admin-btn-primary,
+.admin-btn-secondary,
+.admin-action-btn,
+.admin-logout-btn,
+.admin-profile-btn,
+.mobile-locale-btn,
+.gnb-bgm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+}
+
+/* ══ 대문자 마이크로 라벨 — 3역할 (P1-H2a, 2026-11-01) ══
+   [신설 사유] `text-transform: uppercase` 규칙이 33개 파일에 흩어져 있었고, 처음엔
+   `.eyebrow` **하나**로 수렴할 계획이었다. 전수 분석하니 **단일 패턴이 아니라 3역할**이었다:
+   아이브로우(mono·weight 없음)·배지(display·600)·사이드바 라벨(family 없음·600).
+   하나로 합치면 세 역할이 섞인다. 역할별로 **메트릭을 한 곳에** 모은다.
+
+   [방식] JSX를 건드리지 않고 **기존 셀렉터를 그룹으로 묶어** 메트릭을 여기서 선언하고,
+   페이지 CSS에는 **고유값(색)만** 남긴다. index.css가 먼저 로드되고 페이지 CSS에서
+   해당 선언을 제거했으므로 충돌이 없다.
+   [신규 코드] 아래 유틸리티 클래스(`.u-eyebrow`/`.u-badge`/`.u-aside-label`)를 쓴다 —
+   새 셀렉터를 만들어 메트릭을 또 적지 말 것. */
+
+/* ① 배지 — 콘텐츠 메타(챕터·카테고리·DM Pick 등). display 계열 + 600 */
+.u-badge,
+.chapter-badge,
+.shipments-header,
+.visual-meta-title,
+.dm-pick-badge,
+.signal-article-category,
+.pv-badge,
+.sylphio-guide-section-badge,
+.grid-weekday {
+    font-family: var(--font-display);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+}
+
+/* ② 사이드바·목차 라벨 — 문서형 지면의 보조 내비 제목 */
+.u-aside-label,
+.detail-aside-label,
+.pv-aside-label,
+.sylphio-doc-toc-label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* ④ 잔글씨 — 히어로 하단 요구사양·갱신일 같은 메타 1행.
+      Sylphio 3지면이 **같은 인라인 스타일을 그대로 복제**하고 있었다(JSX 인라인은
+      design-check의 사각지대라 비토큰 font-size·텍스트 opacity가 게이트를 통과했다).
+      `opacity: 0.55`는 색 토큰으로 교체 — 텍스트 투명도 중첩은 P2에서 AA 미달 4건의 원인이었다. */
+.u-fineprint {
+    margin-top: var(--space-md);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-muted);
+}
+
+/* 사전 문자열의 개행(\n)을 그대로 살리는 자리. 콘텐츠 형태 유틸이라 역할 라벨과 무관하게 공용. */
+.u-prewrap { white-space: pre-line; }
+
+/* ③ 아이브로우 — 섹션 머리 라벨. mono 계열, 굵기를 쓰지 않는다(크기·자간으로 구분)
+   자간을 `--tracking-widest` 하나로 통일했다 — 같은 역할인데 파일마다
+   widest(0.1em)와 ultra(0.16em)로 갈려 있었다(P1-H3 토큰화 후에도 남은 드리프트). */
+.u-eyebrow,
+.section-label,
+.wm-eyebrow,
+.pvl-series-eyebrow,
+.flagship-label,
+.work-card-label,
+.stat-label,
+.milestone-keyword {
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+}
+
+/* ── 인라인 SVG 아이콘 (P2-7) ──
+   텍스트와 같은 줄에 놓이므로 베이스라인에 맞추고, 크기는 글자 크기에 비례시킨다
+   (1em 기본 — 상위 font-size를 따라가므로 자리마다 크기를 지정하지 않아도 어울린다). */
+.ui-icon {
+    display: inline-block;
+    vertical-align: -0.125em;
+    flex-shrink: 0;
+}

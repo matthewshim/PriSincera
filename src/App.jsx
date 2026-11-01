@@ -24,7 +24,7 @@ const WaymarkApp = lazy(() => import('./pages/waymark/WaymarkApp'));
 
 /** Minimal loading fallback — invisible, prevents layout shift */
 const PageFallback = (
-  <div style={{ minHeight: '100vh', background: 'var(--bg-void, var(--bg-void))' }} />
+  <div style={{ minHeight: '100vh', background: 'var(--bg-void)' }} />
 );
 
 function ScrollToTop() {

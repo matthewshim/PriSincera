@@ -39,7 +39,7 @@
         rgba(245,158,11,0.02) 40%,
         transparent 70%);
     pointer-events: none;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* --- Info Label --- */
@@ -49,9 +49,9 @@
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-mono);
-    font-size: var(--fs-055);
+    font-size: var(--fs-micro);
     color: rgba(253, 230, 138, 0.65);
-    letter-spacing: 0.1em;
+    letter-spacing: var(--tracking-widest);
     white-space: nowrap;
     opacity: 0;
     transition: opacity 0.3s;
@@ -112,10 +112,10 @@
     left: 50%;
     transform: translate(-50%, -50%) scale(0.9);
     font-family: var(--font-mono);
-    font-size: var(--fs-060);
-    font-weight: 700;
+    font-size: var(--fs-micro);
+    font-weight: 600;
     color: rgba(253, 230, 138, 0.95);
-    letter-spacing: 0.15em;
+    letter-spacing: var(--tracking-ultra);
     text-transform: uppercase;
     white-space: nowrap;
     opacity: 0;

@@ -35,10 +35,7 @@
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 0.9s var(--ease-out),
-    visibility 0s linear 0.9s,
-    border-color var(--duration-fast) var(--ease-out),
-    padding var(--duration-normal) var(--ease-out);
+    opacity 0.9s var(--ease-out), visibility 0s linear 0.9s, border-color var(--duration-fast) var(--ease-out);
 }
 
 .hero-latest.revealed {
@@ -83,13 +80,13 @@
 .hero-latest-meta {
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
+  gap: var(--space-sm);
   min-width: 0;
   flex: 0 2 auto;
   max-width: 42%;
   font-family: var(--font-mono);
-  font-size: var(--fs-070);
-  letter-spacing: 0.1em;
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-widest);
   color: var(--text-muted);
   white-space: nowrap;
   transition: max-width var(--duration-normal) var(--ease-out),
@@ -121,11 +118,11 @@
 .hero-latest-title {
   min-width: 0;
   flex: 1 1 auto;
-  font-size: var(--fs-090);
+  font-size: var(--fs-sm);
   font-weight: 500;
-  line-height: 1.4;
+  line-height: var(--leading-snug);
   color: var(--crystal-light);
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tracking-tight);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -201,9 +198,9 @@
     border-radius: var(--radius-md);
   }
   .hero-latest-dot   { grid-area: dot; align-self: center; }
-  .hero-latest-meta  { grid-area: meta; max-width: 100%; font-size: var(--fs-065); }
+  .hero-latest-meta  { grid-area: meta; max-width: 100%; font-size: var(--fs-micro); }
   .hero-latest-div   { display: none; } /* 두 줄 배치에서는 구분선이 불필요 */
-  .hero-latest-title { grid-area: title; font-size: var(--fs-085); }
+  .hero-latest-title { grid-area: title; font-size: var(--fs-sm); }
   .hero-latest-arrow { grid-area: arrow; align-self: center; }
 
   /* 모바일은 출발부터 컴팩트하므로 도착 시 추가 축소를 하지 않는다.

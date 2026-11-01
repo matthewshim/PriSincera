@@ -23,7 +23,7 @@
       "en": "For people who make many decisions yet feel alone in the heavy moments — introducing Waymark, a companion that records, reaches out first, brings peer stories, and lets you revisit. On the principle of never deciding for you, and the meaning behind the name.",
       "ja": "決断は多いのに重い瞬間はひとり、という人のために — 記録し、自ら歩み寄り、経験談を届け、見つめ直させる伴走者Waymarkを始めるにあたり。『代わりに決めない』原則と名前に込めた意味。"
     },
-    "accent": "#A5B4FC",
+    "accent": "var(--color-indigo)",
     "date": "2026-10-24",
     "commits": [
       {
@@ -62,7 +62,7 @@
       "en": "PriSincera's growth philosophy (learn→act→reflect) was one, but Daily Digest and Pace Note were split into two menus, so users never felt the loop. This is the engineering record of succeeding both services into the unified service ReLearn, to surface on screen the growth flywheel that already existed in the backend. Zero new APIs, jobs, or color tokens; extraction of two monolithic pages into section components (debt repayment); old-path 301s with 100% SEO preservation; and the Today|Records dual view with the four learning-channel-to-orbit mapping — all built on the principle that 'unification is subtraction.'",
       "ja": "PriSinceraの成長哲学(学び→実行→振り返り)は一つでしたが、Daily DigestとPace Noteが二つのメニューに分離し、ユーザーがループを実感できませんでした。バックエンドにすでに存在していた成長フライホイールを画面へ表出させるため、二つのサービスを統合サービスReLearnへ継承したエンジニアリング記録です。新規API・新規ジョブ・新規カラートークン 0、モノリシックな2ページのセクションコンポーネント抽出(負債返済)、旧経路301・SEO資産100%保存、そして今日|記録の2ビューと学び4チャネル-軌道マッピングまで — 「統合は引き算」という原則で完成させた過程を収めました。"
     },
-    "accent": "#22D3EE",
+    "accent": "var(--color-cyan)",
     "date": "2026-07-22",
     "commits": [
       {
@@ -128,7 +128,7 @@
       "en": "PriSincera's SPA had its server SSR and client hook each build page meta, causing drift where a crawler's title and the browser tab title diverged for the same page. This article details unifying them into a single route→meta source of truth (SSOT), standardizing the title format, emitting canonical and multilingual hreflang, and generating a brand OG card from the main hero's Star Prism identity.",
       "ja": "PriSinceraのSPAは、サーバーSSRとクライアントフックがそれぞれページメタを生成し、同じページでもクローラーのタイトルとブラウザタブのタイトルが食い違うドリフトを抱えていました。これをroute→metaの単一の真実(SSOT)共有モジュールへ統一し、標準タイトルフォーマット・canonical・多言語hreflangを出力し、メインヒーローのStar PrismアイデンティティをブランドOGカードとして生成・適用したエンジニアリング記録です。"
     },
-    "accent": "#1E80FF",
+    "accent": "var(--color-gold)",
     "date": "2026-07-14",
     "commits": [
       {
@@ -174,7 +174,7 @@
       "Design System",
       "Refactoring"
     ],
-    "accent": "#8B5CF6",
+    "accent": "var(--color-indigo)",
     "commits": [
       {
         "type": "refactor",
@@ -214,7 +214,7 @@
       "Automation",
       "Refactoring"
     ],
-    "accent": "#10B981",
+    "accent": "var(--color-cyan)",
     "commits": [
       {
         "type": "feat",
@@ -249,7 +249,7 @@
       "Pace Note",
       "Automation"
     ],
-    "accent": "#EC4899",
+    "accent": "var(--color-cyan)",
     "commits": [
       {
         "type": "feat",
@@ -284,7 +284,7 @@
       "Performance Optimization",
       "Astrophotography"
     ],
-    "accent": "#8B5CF6",
+    "accent": "var(--color-indigo)",
     "commits": [
       {
         "type": "feat",
@@ -319,7 +319,7 @@
       "Glassmorphism",
       "Frontend Development"
     ],
-    "accent": "#6D28D9",
+    "accent": "var(--color-indigo)",
     "commits": [
       {
         "type": "design",
@@ -374,7 +374,7 @@
       "Node.js",
       "크롤링"
     ],
-    "accent": "#6D28D9",
+    "accent": "var(--color-gold)",
     "commits": [
       {
         "type": "feat",
@@ -430,7 +430,7 @@
       "Backend Dev",
       "PII Protection"
     ],
-    "accent": "#DC2626",
+    "accent": "var(--color-cyan)",
     "commits": [
       {
         "type": "fix",
@@ -485,7 +485,7 @@
       "AI Productivity",
       "Growth Tracking"
     ],
-    "accent": "#6D28D9",
+    "accent": "var(--color-cyan)",
     "commits": [
       {
         "type": "feat",
@@ -540,7 +540,7 @@
       "AI Automation",
       "Admin Dashboard"
     ],
-    "accent": "#6D28D9",
+    "accent": "var(--color-gold)",
     "commits": [
       {
         "type": "feat",
@@ -595,7 +595,7 @@
       "Backend",
       "Firestore"
     ],
-    "accent": "var(--prism-indigo)",
+    "accent": "var(--color-cyan)",
     "commits": [
       {
         "type": "feat",
@@ -634,7 +634,7 @@
       "Firebase Auth",
       "React"
     ],
-    "accent": "var(--orbit-cyan)",
+    "accent": "var(--color-cyan)",
     "commits": [
       {
         "type": "feat",

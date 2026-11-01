@@ -381,6 +381,22 @@
     "modes": {
       "title": "Four tones, one posture",
       "desc": "It comes to you in the tone the moment calls for — comfort when you need comfort, clarity when you need clarity.",
+      "demo": {
+        "entryLabel": "Logged",
+        "entryDate": "Nov 2",
+        "entry": "Got an offer. Better pay, but I'd be putting down the work I do.",
+        "gap": "Three days later, Waymark speaks first",
+        "turns": [
+          {
+            "mode": "Comfort",
+            "msg": "You're not failing to decide. You're weighing it."
+          },
+          {
+            "mode": "Clarify",
+            "msg": "What's costly to let go — the work, or what you've built around it?"
+          }
+        ]
+      },
       "items": [
         {
           "t": "Comfort",
@@ -400,10 +416,6 @@
         }
       ],
       "reassure": "The decision is always yours. Waymark never decides for you — it only lights the fork and keeps you company."
-    },
-    "teaser": {
-      "title": "Soon, more company",
-      "desc": "Stories from people who passed the same fork will gather here before long. The day we're ready, you'll be the first we reach."
     },
     "cta": {
       "title": "The service isn't here yet.\nThe thinking already began.",

@@ -50,16 +50,7 @@
   z-index: 1;
 }
 
-.pv-hero-icon {
-  font-size: var(--fs-300);
-  margin-bottom: var(--space-md);
-  animation: pvFloat 6s ease-in-out infinite;
-}
 
-@keyframes pvFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
 
 /* 섹션 액센트 글로우 — 히어로 뒤 은은한 후광 */
 .pv-hero::before {
@@ -80,8 +71,8 @@
 .pv-empty .hero-heading {
   display: inline-block; /* 그라디언트가 글자 폭에 맞춰 클립되도록 (§9-1) */
   font-family: var(--font-display);
-  font-size: var(--fs-300);
-  font-weight: 700;
+  font-size: var(--fs-display);
+  font-weight: 500;
   margin: 0 0 var(--space-sm);
   background: var(--gradient-brand);
   -webkit-background-clip: text;
@@ -93,8 +84,8 @@
 .pv-crumb {
   display: flex;
   align-items: center;
-  gap: 7px;
-  font-size: var(--fs-090);
+  gap: var(--space-sm);
+  font-size: var(--fs-sm);
   margin-bottom: var(--space-xl);
 }
 .pv-crumb-link {
@@ -110,7 +101,7 @@
 .pv-layout {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: var(--doc-gutter);
 }
 
 .pv-main {
@@ -137,18 +128,13 @@
   gap: var(--space-sm);
   margin-top: var(--space-lg);
   margin-bottom: var(--space-md);
-  font-size: var(--fs-085);
+  font-size: var(--fs-sm);
   color: var(--text-muted);
 }
 
 .pv-badge {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-display);
-  font-size: var(--fs-075);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   color: var(--accent-color);
   background: color-mix(in srgb, var(--accent-color) 15%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
@@ -163,27 +149,23 @@
 .pv-title {
   display: inline-block; /* §9-1 — 그라디언트가 글자 폭에 맞춰 클립되도록 */
   /* 가변 콘텐츠 타이틀 예외(§9-1 v5.13): 토큰 endpoint clamp. 모바일 오버라이드 없음 */
-  font-size: clamp(var(--fs-160), 3vw, var(--fs-240));
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.02em;
-  word-break: keep-all;
-  overflow-wrap: break-word;
+  font-size: clamp(var(--fs-2xl), 3vw, var(--fs-4xl));
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
   margin: 0 0 var(--space-md);
-  background: linear-gradient(135deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
+  background: var(--gradient-brand);  /* 히어로 타이틀 그라디언트 단일화(2026-11-01) — 지면마다 달랐다 */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .pv-subtitle {
-  font-size: clamp(var(--fs-105), 2vw, var(--fs-135));
+  font-size: clamp(var(--fs-md), 2vw, var(--fs-xl));
   font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-tight);
   color: var(--text-muted);
-  word-break: keep-all;
-  overflow-wrap: break-word;
   margin: 0 0 var(--space-lg);
 }
 
@@ -198,13 +180,13 @@
 }
 
 .pv-byline-name {
-  font-size: var(--fs-095);
+  font-size: var(--fs-base);
   font-weight: 600;
   color: var(--text-secondary);
 }
 
 .pv-byline-role {
-  font-size: var(--fs-085);
+  font-size: var(--fs-sm);
   color: var(--text-muted);
 }
 
@@ -226,7 +208,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: var(--space-xs) var(--space-md);
   border-radius: var(--radius-pill);
-  font-size: var(--fs-080);
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 
@@ -237,12 +219,10 @@
   border-top: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
   font-family: var(--font-display);
-  font-size: var(--fs-135);
-  line-height: 1.6;
-  letter-spacing: -0.01em;
+  font-size: var(--fs-xl);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-tight);
   color: var(--text-primary);
-  word-break: keep-all;
-  overflow-wrap: break-word;
 }
 
 /* --- 로딩 --- */
@@ -253,7 +233,7 @@
   gap: var(--space-md);
   padding: var(--space-2xl) 0;
   color: var(--text-muted);
-  font-size: var(--fs-090);
+  font-size: var(--fs-sm);
 }
 
 .pv-spinner {
@@ -262,14 +242,13 @@
   border: 2px solid rgba(255, 255, 255, 0.15);
   border-top-color: var(--accent-color, var(--color-indigo));
   border-radius: var(--radius-pill);
-  animation: pvSpin 0.8s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
-@keyframes pvSpin { to { transform: rotate(360deg); } }
+
 
 @media (prefers-reduced-motion: reduce) {
-  .pv-hero-icon { animation: none; }
-  .pv-spinner { animation-duration: 2s; }
+    .pv-spinner { animation-duration: 2s; }
 }
 
 /* --- 개인 견해 고지 --- */
@@ -277,11 +256,9 @@
   margin: var(--space-2xl) 0 0;
   padding-top: var(--space-lg);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: var(--fs-080);
-  line-height: 1.6;
+  font-size: var(--fs-xs);
+  line-height: var(--leading-relaxed);
   color: var(--text-muted);
-  word-break: keep-all;
-  overflow-wrap: break-word;
 }
 
 /* --- 하단 연재 내비 (사이드바가 숨겨지는 폭에서도 순서 이동 보전, §9-11 v5.22) --- */
@@ -292,7 +269,7 @@
 .pv-seriesnav-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px; /* §9-3 카드 그리드 gap */
+  gap: var(--space-md); /* §9-3 카드 그리드 gap */
 }
 
 .pv-seriesnav-card {
@@ -312,7 +289,7 @@
 /* 호버 단일 규격 — 기본 그림자 유지(§9-3) */
 a.pv-seriesnav-card:hover,
 a.pv-seriesnav-card:focus-visible {
-  transform: translateY(-2px);
+  transform: translateY(var(--lift-hover));
   border-color: var(--glass-border-hover);
 }
 
@@ -331,26 +308,24 @@ a.pv-seriesnav-card:focus-visible {
 .pv-seriesnav-next { text-align: right; }
 
 .pv-seriesnav-dir {
-  font-size: var(--fs-075);
+  font-size: var(--fs-xs);
   font-family: var(--font-mono);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wider);
   color: var(--accent-color, var(--prism-lavender));
 }
 
 .pv-seriesnav-empty .pv-seriesnav-dir { color: var(--text-muted); }
 
 .pv-seriesnav-title {
-  font-size: var(--fs-095);
-  line-height: 1.45;
+  font-size: var(--fs-base);
+  line-height: var(--leading-snug);
   color: var(--text-secondary);
-  word-break: keep-all;
-  overflow-wrap: break-word;
 }
 
 .pv-backtolist {
   display: inline-block;
   margin-top: var(--space-lg);
-  font-size: var(--fs-085);
+  font-size: var(--fs-sm);
   color: var(--text-muted);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-out);
@@ -361,11 +336,6 @@ a.pv-seriesnav-card:focus-visible {
 
 /* --- 사이드바: 목차(主) + 다른 글(副) --- */
 .pv-aside-label {
-  font-size: var(--fs-075);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  font-weight: 700;
   margin-bottom: var(--space-sm);
 }
 
@@ -376,14 +346,14 @@ a.pv-seriesnav-card:focus-visible {
 .pv-toc-item a {
   display: block;
   padding: 4px 0 4px 12px;
-  font-size: var(--fs-085);
-  line-height: 1.4;
+  font-size: var(--fs-sm);
+  line-height: var(--leading-snug);
   color: var(--text-muted);
   text-decoration: none;
   border-left: 2px solid rgba(255, 255, 255, 0.08);
   transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
 }
-.pv-toc-item.pv-toc-l3 a { padding-left: 24px; font-size: var(--fs-080); }
+.pv-toc-item.pv-toc-l3 a { padding-left: 24px; font-size: var(--fs-xs); }
 .pv-toc-item a:hover { color: var(--text-secondary); }
 .pv-toc-item.active a {
   color: var(--accent-color);
@@ -393,10 +363,10 @@ a.pv-seriesnav-card:focus-visible {
 .pv-other li a,
 .pv-other li > span {
   display: flex;
-  gap: 8px;
+  gap: var(--space-sm);
   padding: 6px 0;
-  font-size: var(--fs-080);
-  line-height: 1.45;
+  font-size: var(--fs-xs);
+  line-height: var(--leading-snug);
   color: var(--text-secondary);
   text-decoration: none;
   transition: color var(--duration-fast) ease;
@@ -411,37 +381,8 @@ a.pv-seriesnav-card:focus-visible {
 
 /* 현재 읽고 있는 편 — 목차 활성과 동일한 액센트 문법 */
 .pv-other-current > span { color: var(--accent-color); }
-.pv-other-current .pv-other-no { color: var(--accent-color); }
-
-/* --- 빈 상태 --- */
-.pv-empty {
-  text-align: center;
-  padding: 0 0 var(--space-2xl);
-}
-
-.pv-empty-msg {
-  font-size: var(--fs-115);
-  color: var(--crystal-light);
-  opacity: 0.9;
-  margin: 0 0 var(--space-lg);
-}
-
-.pv-cross-cta {
-  display: inline-block;
-  padding: var(--space-md) var(--space-lg);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: transform var(--duration-fast) var(--ease-spring),
-              border-color var(--duration-fast) var(--ease-out);
-}
-.pv-cross-cta:hover { transform: translateY(-2px); border-color: var(--glass-border-hover); }
-
-/* --- 사이드바가 안 들어가는 폭: 숨기고 본문 중앙 복귀 (§9-11) --- */
-@media (max-width: 1100px) {
+.pv-other-current .pv-other-no { color: var(--accent-color); }/* --- 사이드바가 안 들어가는 폭: 숨기고 본문 중앙 복귀 (§9-11) --- */
+@media (max-width: 1024px) {
   .pv-aside { display: none; }
   .pv-main { max-width: var(--measure); margin-left: auto; margin-right: auto; }
 }
@@ -451,8 +392,4 @@ a.pv-seriesnav-card:focus-visible {
     padding-left: var(--space-md);
     padding-right: var(--space-md);
   }
-  .pv-wrapper { padding-top: 120px; } /* §9-1 히어로 상단 보정(모바일) */
-  .pv-empty { padding-top: 0; }
-  .pv-empty .hero-heading { font-size: var(--fs-220); } /* §9-1 히어로 모바일 표준 */
-  .pv-hero-icon { font-size: var(--fs-220); }
-}
+  .pv-wrapper { padding-top: 120px; }  .pv-empty .hero-heading { font-size: var(--fs-4xl); } }

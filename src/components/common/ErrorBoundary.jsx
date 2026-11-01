@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from './Icon';
 import ko from '../../locales/ko.json';
 import en from '../../locales/en.json';
 import ja from '../../locales/ja.json';
@@ -102,7 +103,7 @@ export default class ErrorBoundary extends React.Component {
               marginBottom: '24px',
               boxShadow: isChunk ? '0 0 20px rgba(34, 211, 238, 0.05)' : '0 0 20px rgba(139, 92, 246, 0.05)'
             }}>
-              {isChunk ? '📡' : '🛡️'}
+              <Icon name={isChunk ? 'antenna' : 'shield'} size={44} />
             </div>
 
             {/* Error Message */}

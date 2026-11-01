@@ -115,7 +115,7 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
 
                 {/* Ecliptic arc */}
                 <ellipse cx="13" cy="13" rx="8" ry="4" className="atlas-grid"
-                  stroke="rgba(196, 181, 253, 0.2)" strokeWidth="0.4" fill="none"
+                  stroke="rgba(199, 210, 254, 0.2)" strokeWidth="0.4" fill="none"
                   transform="rotate(-25 13 13)" />
 
                 {/* Star dots — mini constellation pattern */}

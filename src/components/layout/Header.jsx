@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from '../../contexts/LanguageContext';
 import './Header.css';
+import Icon from '../common/Icon';
 
 function Header() {
   const { locale, setLocale, t, SUPPORTED_LANGUAGES } = useTranslation();
@@ -225,7 +226,7 @@ function Header() {
               aria-label="Select Language"
               aria-expanded={isDropdownOpen}
             >
-              <span className="globe-icon">🌐</span>
+              <span className="globe-icon"><Icon name="globe" /></span>
               <span className="current-locale-text">{locale.toUpperCase()}</span>
               <span className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}>▾</span>
             </button>
@@ -286,9 +287,9 @@ function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: '#F59E0B' }}>Platform Foundation</div>
+              <div className="bento-card-label">Platform Foundation</div>
               <h3 className="bento-card-title">PriSincera Base</h3>
-              <div className="bento-card-arrow">🪐 Explore GitHub →</div>
+              <div className="bento-card-arrow"><Icon name="orbit" /> Explore GitHub <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup base-mockup">
@@ -316,7 +317,7 @@ function Header() {
                   </div>
                 </div>
               </div>
-              <div className="visual-blur-orb amber"></div>
+              <div className="visual-blur-orb"></div>
             </div>
           </a>
 
@@ -327,9 +328,9 @@ function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: 'var(--prism-lavender)' }}>Product Planning</div>
+              <div className="bento-card-label">Product Planning</div>
               <h3 className="bento-card-title">Planner&apos;s View</h3>
-              <div className="bento-card-arrow">📖 Read the View →</div>
+              <div className="bento-card-arrow"><Icon name="book" /> Read the View <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup planner-mockup">
@@ -341,7 +342,7 @@ function Header() {
                   </span>
                 </div>
               </div>
-              <div className="visual-blur-orb indigo"></div>
+              <div className="visual-blur-orb"></div>
             </div>
           </Link>
 
@@ -352,9 +353,9 @@ function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: '#8B5CF6' }}>Engineering & Growth</div>
+              <div className="bento-card-label">Engineering & Growth</div>
               <h3 className="bento-card-title">Builder's Log</h3>
-              <div className="bento-card-arrow">📖 Read Logs →</div>
+              <div className="bento-card-arrow"><Icon name="tools" /> Read Logs <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup builderslog-mockup">
@@ -376,7 +377,7 @@ function Header() {
                   </div>
                 </div>
               </div>
-              <div className="visual-blur-orb indigo"></div>
+              <div className="visual-blur-orb"></div>
             </div>
           </Link>
 
@@ -387,9 +388,9 @@ function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: 'var(--color-indigo)' }}>Unified Growth Loop</div>
+              <div className="bento-card-label">Unified Growth Loop</div>
               <h3 className="bento-card-title">ReLearn</h3>
-              <div className="bento-card-arrow">🔄 Learn · Run · Reflect →</div>
+              <div className="bento-card-arrow"><Icon name="loop" /> Learn · Run · Reflect <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup relearn-mockup">
@@ -399,7 +400,7 @@ function Header() {
                   <span className="relearn-loop-dot d3"></span>
                 </div>
               </div>
-              <div className="visual-blur-orb indigo"></div>
+              <div className="visual-blur-orb"></div>
             </div>
           </Link>
 
@@ -410,9 +411,9 @@ function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: '#A5B4FC' }}>Decision Companion</div>
+              <div className="bento-card-label">Decision Companion</div>
               <h3 className="bento-card-title">Waymark</h3>
-              <div className="bento-card-arrow">🧭 Coming soon →</div>
+              <div className="bento-card-arrow"><Icon name="compass" /> Coming soon <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup waymark-mockup-m">
@@ -424,7 +425,7 @@ function Header() {
                   <span className="wkmm-needle"></span>
                 </div>
               </div>
-              <div className="visual-blur-orb indigo"></div>
+              <div className="visual-blur-orb"></div>
             </div>
           </Link>
 
@@ -435,9 +436,9 @@ function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <div className="bento-card-content">
-              <div className="bento-card-label" style={{ color: '#00F2FE' }}>On-Device AI Translation</div>
+              <div className="bento-card-label">On-Device AI Translation</div>
               <h3 className="bento-card-title">Sylphio</h3>
-              <div className="bento-card-arrow">🍃 Meet the Spirit →</div>
+              <div className="bento-card-arrow"><Icon name="mic" /> Meet the Spirit <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
               <div className="dynamic-mockup sylphio-mockup">
@@ -446,7 +447,7 @@ function Header() {
                   <div className="sylphio-bento-pulse"></div>
                 </div>
               </div>
-              <div className="visual-blur-orb blue"></div>
+              <div className="visual-blur-orb"></div>
             </div>
           </Link>
 

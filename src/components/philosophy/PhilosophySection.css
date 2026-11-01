@@ -21,7 +21,7 @@
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: 24px;
+    border-radius: var(--radius-lg);
     padding: var(--space-2xl) var(--space-xl);
     box-shadow:
         0 4px 60px rgba(0, 0, 0, 0.35),
@@ -30,15 +30,13 @@
 
 /* --- Section Label --- */
 .section-label {
-    font-family: var(--font-mono);
-    font-size: var(--fs-070);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-size: var(--fs-micro);
     color: var(--text-muted);
     margin-bottom: var(--space-2xl);
     padding-left: 28px;
     position: relative;
-    opacity: 0.6;
+    /* P2-6: opacity 제거 — --text-muted에 0.5~0.6을 곱하면 실효 대비 ≈4.1:1로
+       소형 텍스트 AA(4.5:1) 미달이었다. 제거 시 7.3:1 + 대비 측정 가능 */
 }
 
 .section-label::before {
@@ -66,9 +64,9 @@
 
 .philosophy-title {
     font-family: var(--font-display);
-    font-size: clamp(var(--fs-200), 4vw, var(--fs-280));
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: clamp(var(--fs-3xl), 4vw, var(--fs-display));
+    font-weight: 500;
+    line-height: var(--leading-snug);
     margin-bottom: var(--space-xl);
 }
 
@@ -86,7 +84,7 @@
 .philosophy-lead {
     font-size: clamp(0.9rem, 1.3vw, 1rem);
     color: var(--text-muted);
-    line-height: 1.9;
+    line-height: var(--leading-loose);
     margin-bottom: var(--space-md);
 }
 
@@ -96,7 +94,7 @@
 }
 
 .philosophy-lead:first-of-type {
-    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    font-size: clamp(var(--fs-base), 1.5vw, var(--fs-md));
     color: var(--text-secondary);
     font-weight: 400;
 }
@@ -105,7 +103,7 @@
 .concept-cards {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--space-md);
 }
 /* --- Base & Surfaces (OLED Black & Slate) --- */
 .concept-card {
@@ -115,9 +113,7 @@
         linear-gradient(rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.75)) padding-box,
         linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)) border-box;
     border: 1px solid transparent;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: flex-start;
     gap: var(--space-lg);
@@ -146,7 +142,7 @@
     background: 
         linear-gradient(rgba(12, 12, 12, 0.8), rgba(12, 12, 12, 0.8)) padding-box,
         linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)) border-box;
-    transform: translateY(-4px);
+    transform: translateY(var(--lift-hover-card));
     box-shadow:
         0 16px 48px rgba(0, 0, 0, 0.45),
         0 0 1px rgba(255, 255, 255, 0.1);
@@ -160,8 +156,8 @@
 }
 
 .concept-card.active-focus {
-    opacity: 1 !important;
-    transform: translateY(-4px) scale(1.02) !important;
+    opacity: 1;
+    transform: translateY(-4px) scale(1.02);
     background: 
         linear-gradient(rgba(15, 15, 15, 0.85), rgba(15, 15, 15, 0.85)) padding-box,
         radial-gradient(circle at 0% 100%, var(--card-accent) 0%, transparent 70%) border-box;
@@ -205,10 +201,10 @@
     width: 48px;
     height: 48px;
     padding: 6px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     background: rgba(165, 180, 252, 0.06);
     border: 1px solid var(--glass-border);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     z-index: 1;
 }
@@ -230,12 +226,9 @@
 .concept-card.active-focus .orbit-outer {
     transform-origin: center;
     transform-origin: 24px 24px;
-    animation: spinOrbit 12s linear infinite;
+    animation: spin 12s linear infinite;
 }
-@keyframes spinOrbit {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+
 
 .concept-card.active-focus .orbit-center {
     animation: orbitCenterPulse 2s ease-in-out infinite;
@@ -290,7 +283,7 @@
 
 .concept-title {
     font-family: var(--font-display);
-    font-size: var(--fs-100);
+    font-size: var(--fs-base);
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: var(--space-sm);
@@ -301,34 +294,34 @@
 }
 
 .concept-symbol {
-    font-size: var(--fs-090);
+    font-size: var(--fs-sm);
     opacity: 0.5;
-    line-height: 1;
+    line-height: var(--leading-none);
 }
 
 .concept-subtitle {
     font-family: var(--font-body);
-    font-size: var(--fs-070);
+    font-size: var(--fs-micro);
     font-weight: 400;
     color: var(--text-muted);
-    letter-spacing: 0.04em;
+    letter-spacing: var(--tracking-wider);
     opacity: 0.7;
 }
 
 .concept-quote {
     font-family: var(--font-display);
-    font-size: var(--fs-105);
+    font-size: var(--fs-md);
     font-weight: 600;
     color: var(--text-primary);
-    line-height: 1.5;
+    line-height: var(--leading-normal);
     margin-bottom: var(--space-sm);
     opacity: 0.9;
 }
 
 .concept-desc {
-    font-size: var(--fs-090);
+    font-size: var(--fs-sm);
     color: var(--text-muted);
-    line-height: 1.7;
+    line-height: var(--leading-loose);
 }
 
 /* --- Brand Declaration (inside left column) --- */
@@ -340,20 +333,17 @@
 
 .declaration-text {
     font-family: var(--font-body);
-    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    font-size: clamp(var(--fs-base), 1.3vw, var(--fs-md));
     font-weight: 400;
     color: var(--text-muted);
-    line-height: 1.8;
-    letter-spacing: 0.01em;
+    line-height: var(--leading-loose);
+    letter-spacing: var(--tracking-wide);
 }
 
 .declaration-text strong {
     font-family: var(--font-display);
     font-weight: 600;
-    background: var(--gradient-brand);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+color: var(--color-gold);  /* P2-1: 본문 inline 강조 — strong에 그라디언트는 과함 */
 }
 
 /* ============================================
@@ -422,7 +412,7 @@
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
-        gap: 14px;
+        gap: var(--space-md);
         padding: 10px 4px 20px 4px;
         scrollbar-width: none;
         width: 100%;

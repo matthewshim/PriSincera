@@ -4,7 +4,7 @@
     width: 100%;
     z-index: 1000;
     padding: var(--space-md) var(--space-xl);
-    transition: all var(--duration-fast) var(--ease-smooth);
+    transition: opacity var(--duration-fast) var(--ease-smooth), color var(--duration-fast) var(--ease-smooth), background-color var(--duration-fast) var(--ease-smooth);
     /* Hidden during hero animation, fades in when hero-ready */
     opacity: 0;
     pointer-events: none;
@@ -53,9 +53,9 @@
 
 .nav-wordmark {
     font-family: var(--font-display);
-    font-size: var(--fs-110);
+    font-size: var(--fs-md);
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: var(--tracking-wider);
     background: var(--gradient-brand);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -69,12 +69,12 @@
 
 .nav-link {
     font-family: var(--font-body);
-    font-size: var(--fs-085);
+    font-size: var(--fs-sm);
     font-weight: 400;
     color: var(--text-muted);
     text-decoration: none;
     transition: color var(--duration-fast) var(--ease-out);
-    letter-spacing: 0.02em;
+    letter-spacing: var(--tracking-wide);
     padding: var(--space-xs) 0;
     position: relative;
 }
@@ -96,16 +96,7 @@
 .nav-link:hover::after,
 .nav-link.active::after {
     width: 100%;
-}
-
-/* Study button styled as nav link */
-.nav-link-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-/* --- Right Side Group --- */
+}/* --- Right Side Group --- */
 .nav-right {
     display: flex;
     align-items: center;
@@ -140,8 +131,6 @@
 
 .gnb-bgm-btn {
     display: flex;
-    align-items: center;
-    justify-content: center;
     width: 32px;
     height: 32px;
     background: none;
@@ -160,14 +149,14 @@
 .gnb-bgm-btn .waveform-bars {
     display: flex;
     align-items: flex-end;
-    gap: 2px;
+    gap: var(--space-xs);
     height: 14px;
 }
 
 .gnb-bgm-btn .waveform-bar {
     width: 2px;
     background: var(--text-muted);
-    border-radius: 1px;
+    border-radius: var(--radius-pill);
     transition: background 0.3s ease;
 }
 
@@ -177,7 +166,7 @@
 
 /* Service Scoped Theme overrides for BGM wavebars */
 .nav.sylphio-theme .gnb-bgm-btn.active .waveform-bar {
-    background: #87A9EC; /* Sylphio Sapphire Blue */
+    background: var(--accent-sylphio); /* Sylphio Sapphire Blue */
 }
 
 .nav.builders-theme .gnb-bgm-btn.active .waveform-bar {
@@ -204,8 +193,8 @@
     width: 100%; height: 100%;
 }
 .mobile-bento-nav-item .relearn-loop-track {
-    display: flex; align-items: center; gap: 14px;
-    padding: 10px 16px; border-radius: 9999px;
+    display: flex; align-items: center; gap: var(--space-md);
+    padding: 10px 16px; border-radius: var(--radius-pill);
     border: 1px solid rgba(165, 180, 252, 0.25);
     background: linear-gradient(135deg, rgba(165, 180, 252, 0.08), rgba(34, 211, 238, 0.05));
 }
@@ -237,17 +226,17 @@
 .locale-dropdown-trigger {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-sm);
     height: 28px;
     padding: 0 4px;
     background: transparent;
     border: none;
     color: var(--text-muted);
-    font-family: var(--font-mono, monospace);
-    font-size: var(--fs-075);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
     font-weight: 500;
     cursor: pointer;
-    transition: all var(--duration-fast, 0.2s) var(--ease-smooth, ease);
+    transition: background-color var(--duration-fast) var(--ease-smooth), color var(--duration-fast) var(--ease-smooth), transform var(--duration-fast) var(--ease-smooth), opacity var(--duration-fast) var(--ease-smooth);
     user-select: none;
 }
 
@@ -263,7 +252,7 @@
 }
 
 .locale-dropdown-trigger .globe-icon {
-    font-size: var(--fs-080);
+    font-size: var(--fs-xs);
     opacity: 0.6;
     transition: opacity 0.2s ease;
 }
@@ -274,13 +263,13 @@
 }
 
 .locale-dropdown-trigger .current-locale-text {
-    letter-spacing: 0.02em;
+    letter-spacing: var(--tracking-wide);
 }
 
 .locale-dropdown-trigger .dropdown-arrow {
-    font-size: var(--fs-055);
+    font-size: var(--fs-micro);
     opacity: 0.4;
-    transition: transform 0.25s var(--ease-smooth, ease), opacity 0.2s ease;
+    transition: transform 0.25s var(--ease-smooth), opacity 0.2s ease;
     margin-left: 2px;
 }
 
@@ -302,11 +291,11 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    border-radius: var(--radius-md, 8px);
+    border-radius: var(--radius-md);
     padding: 5px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: var(--space-xs);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
     z-index: 1010;
     animation: localeMenuFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -327,20 +316,20 @@
 .locale-dropdown-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-sm);
     width: 100%;
     height: 30px;
     padding: 0 10px;
     background: none;
     border: none;
-    border-radius: var(--radius-sm, 4px);
+    border-radius: var(--radius-sm);
     color: var(--text-muted);
-    font-family: var(--font-body, inherit);
-    font-size: var(--fs-075);
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
     font-weight: 400;
     text-align: left;
     cursor: pointer;
-    transition: all 0.15s var(--ease-smooth, ease);
+    transition: background-color 0.15s var(--ease-smooth), color 0.15s var(--ease-smooth), font-weight 0.15s var(--ease-smooth), opacity 0.15s var(--ease-smooth), transform 0.15s var(--ease-smooth);
     position: relative;
 }
 
@@ -363,7 +352,7 @@
     box-shadow: 0 0 8px var(--orbit-cyan), 0 0 12px var(--prism-lavender);
     opacity: 0;
     transform: scale(0.5);
-    transition: all 0.2s var(--ease-smooth, ease);
+    transition: background-color 0.2s var(--ease-smooth), border-color 0.2s var(--ease-smooth), color 0.2s var(--ease-smooth), transform 0.2s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth), opacity 0.2s var(--ease-smooth);
 }
 
 .locale-dropdown-item.active .locale-laser-dot {
@@ -372,7 +361,7 @@
 }
 
 .locale-dropdown-item .locale-label {
-    letter-spacing: 0.01em;
+    letter-spacing: var(--tracking-wide);
 }
 
 @media (max-width: 768px) {
@@ -381,7 +370,7 @@
     .nav-links { display: none; }
     .nav-right { gap: var(--space-sm); }
     .nav-symbol { width: 28px; height: 28px; }
-    .nav-wordmark { font-size: var(--fs-095); }
+    .nav-wordmark { font-size: var(--fs-base); }
     .gnb-bgm-btn { width: 28px; height: 28px; }
 
     .mobile-menu-toggle {
@@ -415,7 +404,7 @@
     .mobile-bento-menu-container {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: var(--space-md);
         width: 100%;
         max-width: 420px;
         margin: 0 auto;
@@ -426,7 +415,7 @@
     .mobile-menu-header {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--space-xs);
         margin-bottom: 8px;
         opacity: 0;
         transform: translateY(15px);
@@ -438,19 +427,16 @@
     }
     .mobile-menu-title {
         font-family: var(--font-display);
-        font-size: var(--fs-155);
-        font-weight: 700;
-        background: var(--gradient-brand);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.01em;
+        font-size: var(--fs-2xl);
+        font-weight: 600;
+        letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);  /* P2-1: 메뉴 제목 — 워드마크(.nav-wordmark)가 이미 브랜드를 담당 */
     }
     .mobile-menu-subtitle {
-        font-size: var(--fs-075);
+        font-size: var(--fs-xs);
         color: var(--text-muted);
         font-weight: 400;
-        letter-spacing: 0.01em;
+        letter-spacing: var(--tracking-wide);
     }
 
     /* Bento Nav Item base style */
@@ -459,7 +445,7 @@
         align-items: center;
         justify-content: space-between;
         min-height: 110px;
-        border-radius: 16px;
+        border-radius: var(--radius-md);
         border: 1px solid rgba(255, 255, 255, 0.05);
         background: rgba(17, 17, 17, 0.45);
         padding: 16px 20px;
@@ -488,36 +474,26 @@
     .mobile-nav-overlay.open .mobile-bento-nav-item:nth-child(5) { transition-delay: 0.20s; }
     .mobile-nav-overlay.open .mobile-bento-nav-item:nth-child(6) { transition-delay: 0.25s; }
 
-    /* Point Color Theme Variables */
-    .mobile-bento-nav-item.base-gold-theme {
-        --point-color: #F59E0B;
-        --glow-color: rgba(245, 158, 11, 0.15);
-        --aura-pulse: rgba(245, 158, 11, 0.25);
-        border: 1px solid rgba(245, 158, 11, 0.22);
-    }
-    .mobile-bento-nav-item.log-indigo-theme {
-        --point-color: var(--color-indigo);
-        --glow-color: rgba(165, 180, 252, 0.12);
-        --aura-pulse: rgba(165, 180, 252, 0.22);
-        border: 1px solid rgba(165, 180, 252, 0.22);
-    }
-    .mobile-bento-nav-item.daily-cyan-theme {
-        --point-color: #22D3EE;
-        --glow-color: rgba(34, 211, 238, 0.12);
-        --aura-pulse: rgba(34, 211, 238, 0.22);
-        border: 1px solid rgba(34, 211, 238, 0.22);
-    }
-    .mobile-bento-nav-item.pace-green-theme {
-        --point-color: #34D399;
-        --glow-color: rgba(52, 211, 153, 0.12);
-        --aura-pulse: rgba(52, 211, 153, 0.22);
-        border: 1px solid rgba(52, 211, 153, 0.22);
-    }
-    .mobile-bento-nav-item.sylphio-blue-theme {
-        --point-color: #1E80FF;
-        --glow-color: rgba(30, 128, 255, 0.12);
-        --aura-pulse: rgba(30, 128, 255, 0.22);
-        border: 1px solid rgba(30, 128, 255, 0.22);
+    /* ── 벤토 항목 제품 테마 — 제품 액센트 토큰(index.css) 단일 소스에서 파생 (P1-A1) ──
+       [교체 사유] ① 테마마다 같은 색을 `--point-color`(토큰/생hex) + `--glow-color`(rgba)
+         + `--aura-pulse`(rgba) + `border`(rgba) **네 번 따로** 적어, 색 하나 바꾸려면 4곳을
+         고쳐야 했고 실제로 어긋나 있었다.
+       ② `relearn-loop-theme`은 **CSS 정의가 아예 없었다** — ReLearn 벤토 항목은 point·glow·
+         aura·border가 전부 미정의여서 active 상태에서 배경·테두리가 나타나지 않았다.
+       ③ `daily-cyan-theme`·`pace-green-theme`은 Daily Digest·Pace Note가 ReLearn으로
+         통폐합된 뒤 JSX에서 사라진 사문이었다 — 제거.
+       이제 각 테마는 `--point-color` 한 줄만 선언하고 나머지는 color-mix로 파생한다. */
+    .mobile-bento-nav-item.base-gold-theme    { --point-color: var(--accent-base); }
+    .mobile-bento-nav-item.planner-lavender-theme { --point-color: var(--accent-planner); }
+    .mobile-bento-nav-item.log-indigo-theme   { --point-color: var(--accent-log); }
+    .mobile-bento-nav-item.relearn-loop-theme { --point-color: var(--accent-relearn); }
+    .mobile-bento-nav-item.waymark-indigo-theme { --point-color: var(--accent-waymark); }
+    .mobile-bento-nav-item.sylphio-blue-theme { --point-color: var(--accent-sylphio); }
+
+    .mobile-bento-nav-item[class*="-theme"] {
+        --glow-color: color-mix(in srgb, var(--point-color) 12%, transparent);
+        --aura-pulse: color-mix(in srgb, var(--point-color) 22%, transparent);
+        border: 1px solid color-mix(in srgb, var(--point-color) 22%, transparent);
     }
 
     /* Aura breathing and glow for active page items */
@@ -541,7 +517,7 @@
     .bento-card-content {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--space-xs);
         z-index: 2;
         flex: 1;
         max-width: 58%;
@@ -549,21 +525,22 @@
     }
     .bento-card-label {
         font-family: var(--font-mono);
-        font-size: var(--fs-065);
-        letter-spacing: 0.08em;
+        font-size: var(--fs-micro);
+        letter-spacing: var(--tracking-widest);
         text-transform: uppercase;
         font-weight: 500;
+        color: var(--point-color, var(--text-muted));  /* JSX 인라인 색 6건 제거 → 제품 테마 상속(P1-A1) */
     }
     .bento-card-title {
         font-family: var(--font-display);
-        font-size: var(--fs-115);
-        font-weight: 700;
+        font-size: var(--fs-md);
+        font-weight: 600;
         color: var(--text-primary);
         margin: 2px 0 6px 0;
     }
     .bento-card-arrow {
         font-family: var(--font-body);
-        font-size: var(--fs-075);
+        font-size: var(--fs-xs);
         color: var(--text-muted);
         font-weight: 500;
         transition: color 0.2s;
@@ -586,18 +563,21 @@
     }
 
     /* Compact Mockup Scaling Overrides */
+    /* [P2-9] !important 제거 — 특정도가 이미 이긴다.
+       `.bento-card-visual .dynamic-mockup`(0,2,0) > `WorkSection.css`의 `.dynamic-mockup`(0,1,0).
+       특정도로 이기는데 선언으로도 이기려 한 중복 방어였다. 아래 3개 규칙도 동일. */
     .bento-card-visual .dynamic-mockup {
         position: absolute;
         right: 12px; /* Shifted left to establish premium visual layout breathing room */
         top: 50%;
-        width: 240px !important;
-        height: 240px !important;
+        width: 240px;
+        height: 240px;
         transform: translateY(-50%) scale(0.42) rotateY(-8deg) rotateX(4deg);
         transform-origin: right center;
-        background: rgba(255, 255, 255, 0.03) !important; /* Re-engineered mockup background */
-        border: 1px solid rgba(255, 255, 255, 0.1) !important; /* Re-engineered mockup border */
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-        border-radius: 16px !important;
+        background: rgba(255, 255, 255, 0.03); /* Re-engineered mockup background */
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Re-engineered mockup border */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-md);
         pointer-events: none;
     }
 
@@ -606,16 +586,16 @@
     }
 
     .mobile-bento-nav-item .base-mockup {
-        width: 240px !important;
-        height: 240px !important;
+        width: 240px;
+        height: 240px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         padding: 16px;
-        box-sizing: border-box !important;
-        background: rgba(17, 17, 17, 0.7) !important; /* Specific dark background for base cube */
-        border: 1px solid rgba(245, 158, 11, 0.25) !important; /* Specific amber border for base cube */
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        box-sizing: border-box;
+        background: rgba(17, 17, 17, 0.7); /* Specific dark background for base cube */
+        border: 1px solid rgba(245, 158, 11, 0.25); /* Specific amber border for base cube */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     /* Scoped CSS Art definitions for the menu overlay */
@@ -629,7 +609,7 @@
         margin-bottom: 12px;
         width: 200px;
     }
-    .mobile-bento-nav-item .prism-core {
+    .mobile-nav-overlay.open .mobile-bento-nav-item .prism-core {
         width: 36px;
         height: 36px;
         position: relative;
@@ -643,7 +623,7 @@
         background: linear-gradient(135deg, rgba(245, 158, 11, 0.45), rgba(244, 63, 94, 0.45));
         border: 1px solid rgba(255, 255, 255, 0.6);
         box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
-        border-radius: 6px;
+        border-radius: var(--radius-sm);
         backdrop-filter: blur(4px);
     }
     .mobile-bento-nav-item .prism-face.front  { transform: rotateY(0deg) translateZ(18px); }
@@ -653,7 +633,7 @@
     .mobile-bento-nav-item .prism-face.top    { transform: rotateX(90deg) translateZ(18px); }
     .mobile-bento-nav-item .prism-face.bottom { transform: rotateX(-90deg) translateZ(18px); }
 
-    .mobile-bento-nav-item .engine-ring {
+    .mobile-nav-overlay.open .mobile-bento-nav-item .engine-ring {
         position: absolute;
         border-radius: 50%;
         border: 1px dashed rgba(245, 158, 11, 0.35);
@@ -674,17 +654,17 @@
     .mobile-bento-nav-item .engine-ring.ring-z {
         width: 130px; height: 130px;
         transform: rotateZ(30deg) rotateX(45deg);
-        border-color: rgba(196, 181, 253, 0.4);
+        border-color: color-mix(in srgb, var(--prism-lavender) 40%, transparent);
         animation-duration: 12s;
     }
 
     .mobile-bento-nav-item .base-terminal {
         background: rgba(10, 10, 10, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         padding: 10px;
         font-family: var(--font-mono);
-        font-size: var(--fs-065);
+        font-size: var(--fs-micro);
         color: rgba(255, 255, 255, 0.7);
         width: 190px;
         box-sizing: border-box;
@@ -700,28 +680,28 @@
         color: rgba(255, 255, 255, 0.45);
     }
     .mobile-bento-nav-item .terminal-status.active {
-        color: #F59E0B;
-        font-weight: bold;
+        color: var(--point-color);
+        font-weight: 600;
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--space-xs);
     }
     .mobile-bento-nav-item .terminal-status.active::before {
         content: '';
         display: inline-block;
         width: 6px; height: 6px;
-        background: #F59E0B;
+        background: var(--point-color);
         border-radius: 50%;
         animation: statusBlink 1.5s infinite;
     }
     .mobile-bento-nav-item .terminal-lines {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--space-xs);
         text-align: left;
     }
     .mobile-bento-nav-item .terminal-line:nth-child(1) { color: rgba(255, 255, 255, 0.8); }
-    .mobile-bento-nav-item .terminal-line:nth-child(2) { color: #34D399; }
+    .mobile-bento-nav-item .terminal-line:nth-child(2) { color: var(--color-success); }
 
     /* Timeline Scoped Art */
     .mobile-bento-nav-item .builderslog-mockup {
@@ -736,7 +716,7 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: var(--space-md);
         padding-left: 20px;
         text-align: left;
     }
@@ -744,13 +724,13 @@
         position: absolute;
         left: 4px; top: 8px; bottom: 8px;
         width: 2px;
-        background: linear-gradient(to bottom, #8B5CF6 0%, rgba(139, 92, 246, 0.1) 100%);
+        background: linear-gradient(to bottom, var(--accent-log) 0%, color-mix(in srgb, var(--accent-log) 10%, transparent) 100%);
         opacity: 0.5;
     }
     .mobile-bento-nav-item .timeline-node {
         display: flex;
         align-items: flex-start;
-        gap: 16px;
+        gap: var(--space-md);
         position: relative;
         opacity: 0.65;
     }
@@ -760,30 +740,30 @@
     .mobile-bento-nav-item .node-dot {
         width: 10px; height: 10px;
         border-radius: 50%;
-        background: rgba(139, 92, 246, 0.4);
-        border: 2px solid rgba(139, 92, 246, 0.2);
+        background: color-mix(in srgb, var(--accent-log) 40%, transparent);
+        border: 2px solid color-mix(in srgb, var(--accent-log) 20%, transparent);
         position: absolute;
         left: -20px; top: 5px;
         z-index: 1;
     }
     .mobile-bento-nav-item .timeline-node.active .node-dot {
-        background: #8B5CF6;
+        background: var(--accent-log);
         border-color: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 0 10px #8B5CF6;
+        box-shadow: 0 0 10px var(--accent-log);
         transform: scale(1.2);
     }
     .mobile-bento-nav-item .node-info {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: var(--space-xs);
     }
     .mobile-bento-nav-item .node-title {
-        font-size: var(--fs-090);
+        font-size: var(--fs-sm);
         font-weight: 600;
         color: var(--text-primary);
     }
     .mobile-bento-nav-item .node-meta {
-        font-size: var(--fs-075);
+        font-size: var(--fs-xs);
         color: var(--text-muted);
     }
 
@@ -798,45 +778,45 @@
     }
     .mobile-bento-nav-item .mockup-header {
         display: flex;
-        gap: 6px;
+        gap: var(--space-sm);
         margin-bottom: 16px;
     }
     .mobile-bento-nav-item .mockup-dot {
         width: 10px; height: 10px;
         border-radius: 50%;
     }
-    .mobile-bento-nav-item .mockup-dot:nth-child(1) { background: #F87171; }
+    .mobile-bento-nav-item .mockup-dot:nth-child(1) { background: var(--color-danger); }
     .mobile-bento-nav-item .mockup-dot:nth-child(2) { background: #FBBF24; }
-    .mobile-bento-nav-item .mockup-dot:nth-child(3) { background: #34D399; }
+    .mobile-bento-nav-item .mockup-dot:nth-child(3) { background: var(--color-success); }
     .mobile-bento-nav-item .mockup-body {
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--space-12);
     }
     .mobile-bento-nav-item .mockup-skeleton-title {
         width: 70%; height: 20px;
         background: rgba(255, 255, 255, 0.15);
-        border-radius: 4px;
+        border-radius: var(--radius-xs);
     }
     .mobile-bento-nav-item .mockup-skeleton-text {
         width: 100%; height: 12px;
         background: rgba(255, 255, 255, 0.08);
-        border-radius: 4px;
+        border-radius: var(--radius-xs);
     }
-    .mobile-bento-nav-item .mockup-ai-card {
+    .mobile-nav-overlay.open .mobile-bento-nav-item .mockup-ai-card {
         background: rgba(34, 211, 238, 0.1);
         border: 1px solid rgba(34, 211, 238, 0.3);
-        border-radius: 12px;
+        border-radius: var(--radius-md);
         padding: 12px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--space-12);
         animation: pulseAI 4s infinite ease-in-out;
     }
-    .mobile-bento-nav-item .ai-spark {
-        font-size: var(--fs-130);
-        animation: sparkSpin 6s linear infinite;
+    .mobile-nav-overlay.open .mobile-bento-nav-item .ai-spark {
+        font-size: var(--fs-lg);
+        animation: spin 6s linear infinite;
     }
     .mobile-bento-nav-item .ai-lines {
         flex: 1;
@@ -846,7 +826,7 @@
     .mobile-bento-nav-item .ai-line {
         height: 8px;
         background: rgba(34, 211, 238, 0.4);
-        border-radius: 4px;
+        border-radius: var(--radius-xs);
         width: 100%;
     }
 
@@ -861,13 +841,13 @@
     .mobile-bento-nav-item .pacenote-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 8px;
+        gap: var(--space-sm);
         width: 100%;
         height: 100%;
     }
     .mobile-bento-nav-item .pace-cell {
         background: rgba(255, 255, 255, 0.05);
-        border-radius: 6px;
+        border-radius: var(--radius-sm);
     }
     .mobile-bento-nav-item .pace-cell.active {
         background: rgba(52, 211, 153, 0.3);
@@ -878,7 +858,7 @@
         box-shadow: 0 0 15px rgba(52, 211, 153, 0.6);
         animation: cellPulse 2s infinite;
     }
-    .mobile-bento-nav-item .pace-floating-card {
+    .mobile-nav-overlay.open .mobile-bento-nav-item .pace-floating-card {
         position: absolute;
         bottom: 10px; right: 10px;
         background: rgba(26, 16, 53, 0.9);
@@ -894,14 +874,14 @@
     .mobile-bento-nav-item .pace-check {
         width: 20px; height: 20px;
         border-radius: 50%;
-        background: #34D399;
-        color: #0A0714;
+        background: var(--color-success);
+        color: var(--bg-deep);
         display: flex; align-items: center; justify-content: center;
-        font-weight: bold; font-size: var(--fs-075);
+        font-weight: 600; font-size: var(--fs-xs);
     }
 
     /* Ambient Blur Orbs inside Cards */
-    .mobile-bento-nav-item .visual-blur-orb {
+    .mobile-nav-overlay.open .mobile-bento-nav-item .visual-blur-orb {
         position: absolute;
         width: 140px;
         height: 140px;
@@ -911,11 +891,8 @@
         animation: orbFloat 10s infinite ease-in-out alternate;
         z-index: 0;
     }
-    .mobile-bento-nav-item .visual-blur-orb.amber { background: #F59E0B; top: 10%; right: 10%; }
-    .mobile-bento-nav-item .visual-blur-orb.indigo { background: var(--color-indigo); top: 10%; right: 10%; }
-    .mobile-bento-nav-item .visual-blur-orb.cyan { background: #22D3EE; top: 10%; right: 10%; }
-    .mobile-bento-nav-item .visual-blur-orb.emerald { background: #34D399; top: 10%; right: 10%; }
-    .mobile-bento-nav-item .visual-blur-orb.blue { background: #1E80FF; top: 10%; right: 10%; }
+    /* 벤토 블러 오브 — 색은 테마의 --point-color 하나에서. 변종 4종 폐지(P1-A1) */
+    .mobile-bento-nav-item .visual-blur-orb { background: var(--point-color); top: 10%; right: 10%; }
 
     /* Sylphio Scoped Art in Bento */
     .mobile-bento-nav-item .sylphio-mockup {
@@ -944,17 +921,14 @@
         z-index: 2;
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     }
-    .mobile-bento-nav-item .sylphio-bento-pulse {
+    .mobile-nav-overlay.open .mobile-bento-nav-item .sylphio-bento-pulse {
         position: absolute;
         top: -5px; left: -5px; right: -5px; bottom: -5px;
         border: 1px solid rgba(0, 242, 254, 0.3);
         border-radius: 50%;
         animation: bentoPulse 2s infinite linear;
     }
-    @keyframes bentoPulse {
-        0% { transform: scale(1); opacity: 0.8; }
-        100% { transform: scale(1.3); opacity: 0; }
-    }
+    /* @keyframes bentoPulse — index.css 전역 정의 사용(중복 선언 제거) */
 
     /* Mobile Hide Desktop Locale Capsule */
     .locale-dropdown-wrapper {
@@ -979,16 +953,14 @@
         flex: 1;
         height: 44px;
         display: flex;
-        align-items: center;
-        justify-content: center;
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-md);
         font-family: var(--font-display);
-        font-size: var(--fs-085);
+        font-size: var(--fs-sm);
         font-weight: 500;
         color: var(--text-muted);
-        transition: all 0.2s var(--ease-smooth);
+        transition: background-color 0.2s var(--ease-smooth), border-color 0.2s var(--ease-smooth), color 0.2s var(--ease-smooth), font-weight 0.2s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth);
     }
 
     .mobile-locale-btn:active,
@@ -996,7 +968,7 @@
         background: rgba(255, 255, 255, 0.05);
         border-color: rgba(6, 182, 212, 0.4);
         color: var(--text-primary);
-        font-weight: 600;
+        font-weight: 500;
         box-shadow: 0 0 15px rgba(6, 182, 212, 0.08);
     }
 }
@@ -1009,14 +981,9 @@
 }
 
 @media (max-width: 768px) {
-    .mobile-bento-nav-item.planner-lavender-theme {
-        --point-color: var(--prism-lavender);
-        --glow-color: rgba(199, 210, 254, 0.12);
-        --aura-pulse: rgba(199, 210, 254, 0.22);
-        border: 1px solid rgba(199, 210, 254, 0.22);
-    }
+    /* .planner 테마 중복 선언 제거 — 상단 단일 블록이 담당(P1-A1) */
     .mobile-bento-nav-item .planner-mockup {
-        width: 240px !important; height: 240px !important;
+        width: 240px; height: 240px;
         display: flex; align-items: center; justify-content: center;
     }
     .mobile-bento-nav-item .plnm-stack { position: relative; width: 110px; height: 128px; }
@@ -1029,10 +996,10 @@
     .mobile-bento-nav-item .plnm-sheet.s2 { transform: translate(-42%, -50%) rotate(6deg); opacity: 0.7; }
     .mobile-bento-nav-item .plnm-sheet.s1 {
         transform: translate(-50%, -52%) rotate(-2deg);
-        display: flex; flex-direction: column; justify-content: center; gap: 9px; padding: 0 14px;
+        display: flex; flex-direction: column; justify-content: center; gap: var(--space-12); padding: 0 14px;
         box-shadow: 0 0 36px 6px rgba(199, 210, 254, 0.18);
     }
-    .mobile-bento-nav-item .plnm-line { display: block; height: 4px; border-radius: 2px; background: rgba(199, 210, 254, 0.55); }
+    .mobile-bento-nav-item .plnm-line { display: block; height: 4px; border-radius: var(--radius-pill); background: rgba(199, 210, 254, 0.55); }
     .mobile-bento-nav-item .plnm-line.l1 { width: 78%; }
     .mobile-bento-nav-item .plnm-line.l2 { width: 96%; }
     .mobile-bento-nav-item .plnm-line.l3 { width: 58%; }
@@ -1041,14 +1008,9 @@
 
 /* ── Waymark 테마 & 모바일 벤토 (나침반 — 길잡이) — 2026-10-17 ── */
 @media (max-width: 768px) {
-    .mobile-bento-nav-item.waymark-indigo-theme {
-        --point-color: var(--color-indigo);
-        --glow-color: rgba(165, 180, 252, 0.12);
-        --aura-pulse: rgba(165, 180, 252, 0.22);
-        border: 1px solid rgba(165, 180, 252, 0.22);
-    }
+    /* .waymark 테마 중복 선언 제거 — 상단 단일 블록이 담당(P1-A1) */
     .mobile-bento-nav-item .waymark-mockup-m {
-        width: 240px !important; height: 240px !important;
+        width: 240px; height: 240px;
         display: flex; align-items: center; justify-content: center;
     }
     .mobile-bento-nav-item .wkmm-dial {
@@ -1061,7 +1023,7 @@
     .mobile-bento-nav-item .wkmm-tick-s { bottom: 6px; left: 50%; transform: translateX(-50%); }
     .mobile-bento-nav-item .wkmm-tick-e { right: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
     .mobile-bento-nav-item .wkmm-tick-w { left: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
-    .mobile-bento-nav-item .wkmm-needle {
+    .mobile-nav-overlay.open .mobile-bento-nav-item .wkmm-needle {
         position: absolute; top: 50%; left: 50%; width: 3px; height: 38px; margin: -34px 0 0 -1.5px;
         transform-origin: 50% 89%;
         background: linear-gradient(180deg, var(--color-indigo) 0%, var(--prism-lavender) 100%);
@@ -1069,5 +1031,5 @@
     }
     @keyframes wkmmSweep { 0%, 100% { transform: rotate(-24deg); } 50% { transform: rotate(28deg); } }
     @media (prefers-reduced-motion: reduce) { .mobile-bento-nav-item .wkmm-needle { animation: none; } }
-    .mobile-bento-nav-item.waymark-indigo-theme .visual-blur-orb { background: #A5B4FC; }
+    .mobile-bento-nav-item.waymark-indigo-theme .visual-blur-orb { background: var(--color-indigo); }
 }

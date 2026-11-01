@@ -6,6 +6,7 @@
  */
 import SignalArticleCard from './SignalArticleCard';
 import '../../pages/DailyDigest.css';
+import Icon from '../common/Icon';
 
 // limit(옵션): 표시할 아티클 상한 — 미지정 시 전체.
 // headerAction(옵션): 섹션 헤더 우측 액션(궤도 추가 버튼 등).
@@ -22,7 +23,7 @@ export default function SignalSection({ signal, limit, compact, headerAction }) 
   return (
     <div className="daily-section fade-in">
       <div className="daily-section-header">
-        <span className="daily-section-icon">📰</span>
+        <span className="daily-section-icon"><Icon name="news" /></span>
         <h2 className="daily-section-title">IT Tech Signal</h2>
         {headerAction && <div className="daily-section-action">{headerAction}</div>}
       </div>

@@ -15,6 +15,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
 import './ReLearnSections.css';
+import Icon from '../common/Icon';
 
 const ADD_MAX = 100; // pacenote-api /add 제한과 동일
 
@@ -103,7 +104,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
                 disabled={busyId === task.id}
                 aria-label={task.completed ? t('relearn.orbit.ariaUndone') : t('relearn.orbit.ariaDone')}
               >
-                {task.completed ? '✓' : ''}
+                {task.completed ? <Icon name="check" /> : null}
               </button>
               <span className="rl-orbit-t">{task.title}</span>
               {!task.completed && onExclude && (
@@ -170,7 +171,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
           <div className="rl-osearch-backdrop" onClick={closeSearch}>
             <div className="rl-osearch-modal" role="dialog" aria-label={t('relearn.orbit.searchAria')} onClick={e => e.stopPropagation()}>
               <div className="rl-osearch-inputrow">
-                <span className="rl-osearch-ic">✨</span>
+                <span className="rl-osearch-ic"><Icon name="star" /></span>
                 <input
                   className="rl-osearch-input"
                   autoFocus
@@ -208,7 +209,7 @@ export default function OrbitSection({ current, onToggle, onAccept, onAdd, onExc
             const reason = hasAffinity ? (affinity[affKey(item.category)] > 0 ? 'strong' : 'stretch') : null;
             return (
               <div key={item.id} className="rl-rec-item">
-                <span className="rl-rec-star" style={{ color: item.color || 'var(--color-indigo)' }}>✦</span>
+                <span className="rl-rec-star" style={{ color: item.color || 'var(--color-indigo)' }}><Icon name="star" /></span>
                 <span className="rl-rec-t">{item.title}</span>
                 {reason === 'strong' && <span className="rl-rec-reason strong">{t('relearn.orbit.reasonStrong')}</span>}
                 {reason === 'stretch' && <span className="rl-rec-reason stretch">{t('relearn.orbit.reasonStretch')}</span>}

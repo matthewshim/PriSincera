@@ -14,6 +14,7 @@ import ReflectionSection from './ReflectionSection';
 import LoopReport from '../pacenote/LoopReport';
 import { trackRelearn } from './funnel';
 import { useTranslation } from '../../contexts/LanguageContext';
+import Icon from '../common/Icon';
 
 const tt = (v) => (typeof v === 'object' ? v.ko : v);
 
@@ -111,7 +112,7 @@ export default function DiaryDock({
   const ReadonlyTasks = ({ tasks }) => (
     tasks.length > 0 ? tasks.map(t => (
       <div key={t.id} className="rl-dock-done">
-        <span className="rl-dock-mk">✓</span>
+        <span className="rl-dock-mk"><Icon name="check" /></span>
         <span className="rl-dock-t">{tt(t.title)}</span>
         {t.category && <span className="rl-orbit-cat" style={{ color: t.color || 'var(--color-indigo)', background: 'rgba(255,255,255,0.05)' }}>{t.category}</span>}
       </div>
@@ -132,7 +133,7 @@ export default function DiaryDock({
     <aside className={`rl-dock${open ? ' open' : ''}`} aria-label={t('relearn.diary.aria')}>
       {/* 헤더 — 모바일에선 도크 바(탭하면 시트), 데스크톱에선 패널 타이틀 */}
       <button className="rl-dock-head haptic-trigger" onClick={toggleOpen} aria-expanded={open}>
-        <span className="rl-dock-icon">✍️</span>
+        <span className="rl-dock-icon"><Icon name="document" /></span>
         <span className="rl-dock-title">{isToday ? t('relearn.diary.title') : t('relearn.diary.titleDate', { date })}</span>
         <span className="rl-dock-sum">{summary}</span>
         <span className="rl-dock-chev" aria-hidden="true">▴</span>

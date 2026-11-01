@@ -5,14 +5,14 @@ import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioPrivacy.css';
 import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
+import Icon from '../components/common/Icon';
 
 // Local Multilingual Translation Dict for Privacy Policy
 const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
     heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
-    heroCtaGuide: "💡 API Key 발급 가이드 보기",
+    heroCtaDownload: "Mac App Store에서 무료 다운로드",
     heroSysReq: "시스템 요구사항: macOS 13.0 (Ventura) 이상",
     badge: "데이터 무수집 원칙",
     title: "실피오 개인정보 처리방침",
@@ -49,8 +49,7 @@ const TRANSLATIONS = {
   en: {
     heroTitle: "Sylphio",
     heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Free Download on Mac App Store",
-    heroCtaGuide: "💡 View API Key Integration Guide",
+    heroCtaDownload: "Free Download on Mac App Store",
     heroSysReq: "Requires macOS 13.0 (Ventura) or later",
     badge: "Zero Data Collection",
     title: "Sylphio Privacy Policy",
@@ -87,8 +86,7 @@ const TRANSLATIONS = {
   ja: {
     heroTitle: "Sylphio",
     heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
-    heroCtaGuide: "💡 APIキー連携ガイドを見る",
+    heroCtaDownload: "Mac App Storeで無料ダウンロード",
     heroSysReq: "動作環境: macOS 13.0 (Ventura) 以降",
     badge: "データ無収集",
     title: "Sylphio 個人情報保護方針",
@@ -135,7 +133,7 @@ export default function SylphioPrivacy() {
   });
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   const [activeId, setActiveId] = useState('');
-  const tocLabel = locale === 'ja' ? '目次' : locale === 'en' ? 'On this page' : '이 문서의 목차';
+  const tocLabel = locale === 'ja' ? '目次' : locale === 'en' ? 'On this page' : '이 문서의 목차';  // i18n-ok: 3로케일 완비 목차 라벨(레이아웃 상수 — 콘텐츠 사전 d와 역할이 다름)
 
   // Alert handler for preparing app Store / downloads
   const handleAlert = (e) => {
@@ -172,14 +170,10 @@ export default function SylphioPrivacy() {
     <div className="sylphio-privacy">
       {/* 2Depth LNB 상단 공통 히어로 영역 */}
       <section className="sylphio-hero">
-        <div className="sylphio-core-container">
-          <div className="sylphio-aurora-core"></div>
-          <img src="/sylphio-icon.png?v=3" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
-        </div>
         
         <h1>{d.heroTitle}</h1>
         
-        <p className="tagline" style={{ whiteSpace: 'pre-line' }}>
+        <p className="tagline u-prewrap">
           {d.heroTagline}
         </p>
         
@@ -190,10 +184,10 @@ export default function SylphioPrivacy() {
             className="btn-primary"
             id="btn-download-mac"
           >
-            <span>{d.heroCtaDownload}</span>
+            <Icon name="download" /><span>{d.heroCtaDownload}</span>
           </a>
         </div>
-        <p style={{ marginTop: '16px', fontSize: '0.82rem', opacity: 0.55, letterSpacing: '0.02em' }}>{d.heroSysReq}</p>
+        <p className="u-fineprint">{d.heroSysReq}</p>
       </section>
 
       <SylphioNav />
@@ -208,12 +202,12 @@ export default function SylphioPrivacy() {
             <section className="sylphio-privacy-section" id={`section-${idx}`} key={idx}>
               <h2>{section.title}</h2>
               {section.content && (
-                <p style={{ whiteSpace: 'pre-line' }}>{section.content}</p>
+                <p className="u-prewrap">{section.content}</p>
               )}
               {section.bullets && (
                 <ul>
                   {section.bullets.map((bullet, bIdx) => (
-                    <li key={bIdx} style={{ whiteSpace: 'pre-line' }}>{bullet}</li>
+                    <li key={bIdx} className="u-prewrap">{bullet}</li>
                   ))}
                 </ul>
               )}

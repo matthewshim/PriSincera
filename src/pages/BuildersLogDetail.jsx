@@ -16,15 +16,10 @@ import './BuildersLogDetail.css';
 
 // 제목 선두의 이모지를 분리한다.
 // §9-1 히어로 규격상 아이콘은 제목 위 독립 요소이므로, 제목이 이모지로 시작하면 그것을 히어로
-// 아이콘으로 승격시키고 제목에서는 뺀다(아이콘 중복 방지). 없으면 섹션 기본 아이콘을 쓴다.
-const SECTION_ICON = '🛠️';
-const splitTitle = (title) => {
-  if (!title) return { icon: SECTION_ICON, text: '' };
-  const emojiRegex = /^([\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F9FF}]+(?:️)?)\s*(.*)$/u;
-  const match = title.match(emojiRegex);
-  if (match) return { icon: match[1], text: match[2] };
-  return { icon: SECTION_ICON, text: title };
-};
+/* 히어로 마크 폐지(2026-11-01) — 타이틀이 이미 섹션을 말하므로 마크는 정보를 더하지 않는다.
+   제목 선두 이모지의 '아이콘 승격'(구 §9-1 v5.21)도 함께 폐지했다: 승격은 제목에서 이모지를
+   떼어내는 조작이었고, 마크가 없어진 지금은 제목에 그대로 두는 것이 작성자 의도에 맞다. */
+const splitTitle = (title) => ({ icon: null, text: title || '' });
 
 export default function BuildersLogDetail() {
   const { slug } = useParams();
@@ -136,7 +131,7 @@ export default function BuildersLogDetail() {
     );
   }
 
-  const { icon: heroIcon, text: heroTitleText } = splitTitle(localizedTitle);
+  const { text: heroTitleText } = splitTitle(localizedTitle);
 
   return (
     <div className="builders-log-detail-wrapper">
@@ -152,7 +147,6 @@ export default function BuildersLogDetail() {
             셸 전폭에 두고 내부 텍스트만 가독 단으로 제한한다(§9-11 상단 요소는 전폭). */}
         <header className="detail-hero">
           <div className="detail-hero-inner">
-            <div className="detail-hero-icon">{heroIcon}</div>
             <h1 className="detail-title">{heroTitleText}</h1>
             <p className="detail-subtitle">{localizedSubtitle}</p>
             <div className="detail-meta">

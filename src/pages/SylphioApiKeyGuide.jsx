@@ -5,14 +5,14 @@ import SylphioNav from '../components/layout/SylphioNav';
 import './SylphioApiKeyGuide.css';
 import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
+import Icon from '../components/common/Icon';
 
 // Local Translation Dict for Premium UX
 const TRANSLATIONS = {
   ko: {
     heroTitle: "Sylphio",
     heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Mac App Store에서 무료 다운로드",
-    heroCtaGuide: "💡 API Key 발급 가이드 보기",
+    heroCtaDownload: "Mac App Store에서 무료 다운로드",
     heroSysReq: "시스템 요구사항: macOS 13.0 (Ventura) 이상",
     title: "Sylphio API Key 연동 가이드",
     subtitle: "개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고 품질의 AI 회의록 요약 및 Action Items(AI Executive Summary) 기능을 한계 없이 누려보세요.",
@@ -20,7 +20,7 @@ const TRANSLATIONS = {
     byokDesc: "Sylphio는 사용자 개인이 소유한 API Key를 직접 입력하는 안전한 방식(BYOK)을 사용합니다. 모든 AI 처리는 개발사의 중개 서버를 전혀 거치지 않고 사용자의 기기와 AI 제공사의 보안 엔드포인트 간에만 다이렉트로 이뤄지며, 저장된 키는 macOS의 최고 보안 금고 Secure Keychain(키체인)에 암호화 보존됩니다. 실시간 자막 요약 시에는 대화 텍스트가 전송되고, '정밀 회의록' 기능을 사용하면 녹음된 오디오 파일(.m4a)이 사용자의 API Key로 Google Gemini 등 제공사에 직접 업로드되어 전사·요약에 사용됩니다.",
     geminiTitle: "1. Google Gemini API Key 발급 프로세스 (무료 추천)",
     geminiIntro: "Google Gemini는 대단히 뛰어난 번역 텍스트 이해도와 더불어 압도적인 무료 혜택(Free Tier)을 제공하여 실피오 사용 장벽을 극적으로 낮춰 줍니다.",
-    geminiStep1: "웹 브라우저를 열고 aistudio.google.com에 접속하여 개인 구글 계정으로 로그인합니다.",
+    geminiStep1: "웹 브라우저를 열고 aistudio.google.com에 접속하여 개인 구글 계정으로 로그인합니다.",  // i18n-ok: 사전의 ko 블록 외부이지만 가이드 본문 콘텐츠(링크 포함)
     geminiStep2: "좌측 상단 사이드바 메뉴의 Get API key 버튼을 클릭합니다.",
     geminiStep3: "화면 중앙의 Create API key 버튼을 클릭한 뒤, 나타나는 팝업에서 Create API key in new project를 클릭하여 키를 생성합니다.",
     geminiStep4: "생성 완료 즉시 제공되는 복사 버튼을 눌러 AIzaSy...로 시작하는 고유 API Key 문자열을 메모장 등에 안전하게 복사하여 보관합니다.",
@@ -34,7 +34,7 @@ const TRANSLATIONS = {
     openaiIntro: "OpenAI의 GPT-4o-mini 엔진은 뛰어난 언어 스위칭 정확성과 대화 요약 능력을 보장하며, 고속 응답성에 특화되어 있습니다.",
     openaiWarningTitle: "OpenAI 필수 유의사항: 결제 크레딧 사전 충전 (Prerequisite)",
     openaiWarningDesc: "OpenAI는 구글과 달리 무료 체험용 Credit이 비어있을 경우, Key를 생성하여 연동하더라도 인식을 개시하자마자 번역 에러(Quota Exceeded)를 반환하며 작동하지 않습니다. 반드시 발급 전 최저 5달러($5)를 선충전해주셔야 작동합니다.",
-    openaiStep1: "platform.openai.com에 접속하여 가입 후 로그인합니다.",
+    openaiStep1: "platform.openai.com에 접속하여 가입 후 로그인합니다.",  // i18n-ok: 사전의 ko 블록 외부이지만 가이드 본문 콘텐츠(링크 포함)
     openaiStep2: "좌측 내비게이션 바에서 열쇠 모양 아이콘인 API keys 메뉴를 선택합니다.",
     openaiStep3: "화면 우측 상단의 + Create new secret key 버튼을 클릭하고, 키의 이름을 입력한 뒤 생성합니다.",
     openaiStep4: "생성된 sk-proj-... 비밀 키를 즉시 복사하여 보관합니다. (창을 닫은 후에는 키를 다시 확인할 수 없습니다.)",
@@ -51,17 +51,16 @@ const TRANSLATIONS = {
     appStep6: "복사해 두었던 API Key 문자열을 붙여넣기(CMD + V) 합니다.",
     appStep7: "API Key 연동 성공 및 활성화 표시를 확인한 뒤 설정창을 닫으면 다국어 자동 감지 및 실시간 번역 통역 기능의 잠금이 해제되어 완벽 가동됩니다!",
     
-    faqHeader: "🚨 긴급 장애 극복 및 트러블슈팅 (Troubleshooting)",
+    faqHeader: "긴급 장애 극복 및 트러블슈팅 (Troubleshooting)",
     faq1Q: "Q1. \"설정 ⚙️에서 AI 번역을 활성화하세요\" 또는 \"번역 에러\" 가 계속 발생합니다.",
     faq1A: "- 원인: 입력하신 API Key 내부에 불필요한 공백 문자나 줄바꿈(\\n)이 섞여 들어갔거나, 키 자체가 유효하지 않을 때 발생합니다.\n- 해결법: 키 입력란을 완전히 비운 후, 메모장에 키를 붙여넣어 공백이 없는지 확인하고 다시 복사하여 깨끗하게 입력해 주십시오.",
     faq2Q: "Q2. OpenAI Key를 넣었는데 계속 \"Quota Exceeded\" 에러가 뜹니다.",
-    faq2A: "- 원인: 사용 중인 OpenAI 플랫폼 계정에 사전 충전된 Balance(달러 크레딧)가 0인 상태이거나, 등록했던 카드 결제 정보가 만료되어 계정이 일시 잠금 상태일 때 발생합니다.\n- 해결법: platform.openai.com으로 이동하셔서 충전 잔액이 남아 있는지 재차 확인하시고 최소 5달러를 결제/충전해 두셔야 정상 가동됩니다."
+    faq2A: "- 원인: 사용 중인 OpenAI 플랫폼 계정에 사전 충전된 Balance(달러 크레딧)가 0인 상태이거나, 등록했던 카드 결제 정보가 만료되어 계정이 일시 잠금 상태일 때 발생합니다.\n- 해결법: platform.openai.com으로 이동하셔서 충전 잔액이 남아 있는지 재차 확인하시고 최소 5달러를 결제/충전해 두셔야 정상 가동됩니다."  // i18n-ok: 사전의 ko 블록 외부이지만 가이드 본문 콘텐츠(링크 포함)
   },
   en: {
     heroTitle: "Sylphio",
     heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Free Download on Mac App Store",
-    heroCtaGuide: "💡 View API Key Integration Guide",
+    heroCtaDownload: "Free Download on Mac App Store",
     heroSysReq: "Requires macOS 13.0 (Ventura) or later",
     title: "Sylphio API Key Integration Guide",
     subtitle: "Integrate your personal AI API Key with Sylphio to enjoy the ultimate AI minutes summary and Action Items (AI Executive Summary) features without limits and without monthly subscription fees.",
@@ -100,7 +99,7 @@ const TRANSLATIONS = {
     appStep6: "Paste (CMD + V) your copied API Key string into the field.",
     appStep7: "Verify the key activation display. Once done, close settings to unlock the AI Executive summary and multi-language auto-detection features immediately!",
     
-    faqHeader: "🚨 Troubleshooting & Emergency FAQ",
+    faqHeader: "Troubleshooting & Emergency FAQ",
     faq1Q: "Q1. It keeps showing \"Activate AI Translation in Settings ⚙️\" or \"Translation Error.\"",
     faq1A: "- Cause: Unwanted whitespace, trailing newlines (\\n), or an invalid character is mixed into your API Key input.\n- Solution: Completely clear the input box, paste your key into a plain text editor to make sure there are no spaces, and copy-paste it cleanly again.",
     faq2Q: "Q2. I connected my OpenAI key, but it keeps returning a \"Quota Exceeded\" error.",
@@ -109,8 +108,7 @@ const TRANSLATIONS = {
   ja: {
     heroTitle: "Sylphio",
     heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
-    heroCtaDownload: "📥 Mac App Storeで無料ダウンロード",
-    heroCtaGuide: "💡 APIキー連携ガイドを見る",
+    heroCtaDownload: "Mac App Storeで無料ダウンロード",
     heroSysReq: "動作環境: macOS 13.0 (Ventura) 以降",
     title: "Sylphio APIキー連携ガイド",
     subtitle: "個人用のAI APIキーをSylphioに連携し、月々の定額サブスク料金なしで、最高精度の議事録要約とアクションアイテム生成（AI Executive Summary）を制限なく体験してください。",
@@ -149,7 +147,7 @@ const TRANSLATIONS = {
     appStep6: "コピーしたAPIキー文字列を入力欄に貼り付け（CMD + V）します。",
     appStep7: "連携成功のマークを確認し、設定画面を閉じれば、AI議事録要約と自動多言語検知機能が即座にアンロックされます！",
     
-    faqHeader: "🚨 トラブルシューティング＆緊急FAQ",
+    faqHeader: "トラブルシューティング＆緊急FAQ",
     faq1Q: "Q1. 「設定 ⚙️でAI翻訳を有効にしてください」または「翻訳エラー」が続きます。",
     faq1A: "- 原因：入力されたAPIキーに不要な空白スペースや改行（\\n）が含まれているか、キー自体が無効な場合に発生します。\n- 解決策：入力欄を一度完全に空にし、メモ帳等でスペースがないことを確認してから、きれいに再度コピー＆ペーストしてください。",
     faq2Q: "Q2. OpenAIキーを連携したのに「Quota Exceeded」エラーが解消されません。",
@@ -168,7 +166,7 @@ export default function SylphioApiKeyGuide() {
   });
   const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
   const [activeId, setActiveId] = useState('');
-  const tocLabel = locale === 'ja' ? '目次' : locale === 'en' ? 'On this page' : '이 문서의 목차';
+  const tocLabel = locale === 'ja' ? '目次' : locale === 'en' ? 'On this page' : '이 문서의 목차';  // i18n-ok: 3로케일 완비 목차 라벨(레이아웃 상수 — 콘텐츠 사전 d와 역할이 다름)
   const toc = [
     { id: 'section-gemini', label: d.geminiTitle },
     { id: 'section-openai', label: d.openaiTitle },
@@ -211,14 +209,10 @@ export default function SylphioApiKeyGuide() {
     <div className="sylphio-guide">
       {/* 2Depth LNB 상단 공통 히어로 영역 */}
       <section className="sylphio-hero">
-        <div className="sylphio-core-container">
-          <div className="sylphio-aurora-core"></div>
-          <img src="/sylphio-icon.png?v=3" alt="Sylphio App Icon" className="sylphio-hero-icon-img" />
-        </div>
         
         <h1>{d.heroTitle}</h1>
         
-        <p className="tagline" style={{ whiteSpace: 'pre-line' }}>
+        <p className="tagline u-prewrap">
           {d.heroTagline}
         </p>
         
@@ -229,10 +223,10 @@ export default function SylphioApiKeyGuide() {
             className="btn-primary"
             id="btn-download-mac"
           >
-            <span>{d.heroCtaDownload}</span>
+            <Icon name="download" /><span>{d.heroCtaDownload}</span>
           </a>
         </div>
-        <p style={{ marginTop: '16px', fontSize: '0.82rem', opacity: 0.55, letterSpacing: '0.02em' }}>{d.heroSysReq}</p>
+        <p className="u-fineprint">{d.heroSysReq}</p>
       </section>
 
       <SylphioNav />
@@ -241,7 +235,7 @@ export default function SylphioApiKeyGuide() {
         <div className="sylphio-guide-main">
 
         <div className="sylphio-guide-byok-note">
-          <div className="sylphio-guide-byok-icon">🛡️</div>
+          <div className="sylphio-guide-byok-icon"><Icon name="shield" size={28} /></div>
           <div className="sylphio-guide-byok-content">
             <h4>{d.byokTitle}</h4>
             <p>{d.byokDesc}</p>
@@ -254,7 +248,7 @@ export default function SylphioApiKeyGuide() {
             <span className="sylphio-guide-section-badge gemini-badge">Highly Recommended</span>
             <h2>{d.geminiTitle}</h2>
           </div>
-          <p style={{ color: '#94a3b8', lineHeight: '1.6', marginBottom: '24px' }}>
+          <p className="sylphio-guide-lead">
             {d.geminiIntro}
           </p>
 
@@ -264,7 +258,7 @@ export default function SylphioApiKeyGuide() {
               <span className="sylphio-guide-step-text">
                 {locale === 'ko' ? (
                   <>
-                    웹 브라우저를 열고 <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">Google AI Studio (aistudio.google.com)</a>에 접속하여 개인 구글 계정으로 로그인합니다.
+                    웹 브라우저를 열고 <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">Google AI Studio (aistudio.google.com)</a>에 접속하여 개인 구글 계정으로 로그인합니다.  {/* i18n-ok: 문장 중간에 링크가 박힌 로케일별 리치 텍스트 — 문자열 사전으로는 HTML을 담아야 한다 */}
                   </>
                 ) : locale === 'ja' ? (
                   <>
@@ -296,7 +290,7 @@ export default function SylphioApiKeyGuide() {
             <div className="sylphio-guide-pricing-list">
               <div className="sylphio-guide-pricing-item free">
                 <h5>{d.geminiFreeTitle}</h5>
-                <p style={{ whiteSpace: 'pre-line' }}>{d.geminiFreeDesc}</p>
+                <p className="u-prewrap">{d.geminiFreeDesc}</p>
               </div>
               <div className="sylphio-guide-pricing-item pay">
                 <h5>{d.geminiPayTitle}</h5>
@@ -312,12 +306,12 @@ export default function SylphioApiKeyGuide() {
             <span className="sylphio-guide-section-badge openai-badge">Pro Specialist</span>
             <h2>{d.openaiTitle}</h2>
           </div>
-          <p style={{ color: '#94a3b8', lineHeight: '1.6', marginBottom: '24px' }}>
+          <p className="sylphio-guide-lead">
             {d.openaiIntro}
           </p>
 
           <div className="sylphio-guide-warning-box">
-            <span className="sylphio-guide-warning-icon">⚠️</span>
+            <span className="sylphio-guide-warning-icon"><Icon name="warning" /></span>
             <div className="sylphio-guide-warning-content">
               <h5>{d.openaiWarningTitle}</h5>
               <p>{d.openaiWarningDesc}</p>
@@ -330,7 +324,7 @@ export default function SylphioApiKeyGuide() {
               <span className="sylphio-guide-step-text">
                 {locale === 'ko' ? (
                   <>
-                    <a href="https://platform.openai.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">OpenAI API Platform (platform.openai.com)</a>에 접속하여 가입 후 로그인합니다.
+                    <a href="https://platform.openai.com/" target="_blank" rel="noreferrer" className="sylphio-guide-step-link">OpenAI API Platform (platform.openai.com)</a>에 접속하여 가입 후 로그인합니다.  {/* i18n-ok: 문장 중간에 링크가 박힌 로케일별 리치 텍스트 — 문자열 사전으로는 HTML을 담아야 한다 */}
                   </>
                 ) : locale === 'ja' ? (
                   <>
@@ -364,7 +358,7 @@ export default function SylphioApiKeyGuide() {
           <div className="sylphio-guide-pricing-card">
             <div className="sylphio-guide-pricing-header">{d.openaiPriceHeader}</div>
             <div className="sylphio-guide-pricing-item">
-              <p style={{ whiteSpace: 'pre-line' }}>{d.openaiPriceDesc}</p>
+              <p className="u-prewrap">{d.openaiPriceDesc}</p>
             </div>
           </div>
         </section>
@@ -414,12 +408,12 @@ export default function SylphioApiKeyGuide() {
           
           <div className="sylphio-guide-faq-item">
             <h5>{d.faq1Q}</h5>
-            <p style={{ whiteSpace: 'pre-line' }}>{d.faq1A}</p>
+            <p className="u-prewrap">{d.faq1A}</p>
           </div>
 
           <div className="sylphio-guide-faq-item">
             <h5>{d.faq2Q}</h5>
-            <p style={{ whiteSpace: 'pre-line' }}>{d.faq2A}</p>
+            <p className="u-prewrap">{d.faq2A}</p>
           </div>
         </section>
 

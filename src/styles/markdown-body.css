@@ -13,12 +13,10 @@
 
 /* Markdown Body Styles */
 .markdown-body {
-  font-size: var(--fs-105); /* 본문 가독 크기 — v5.6 그리드 스냅(17→16.8px) */
-  line-height: 1.7;
+  font-size: var(--fs-md); /* 본문 가독 크기 — v5.6 그리드 스냅(17→16.8px) */
+  line-height: var(--leading-loose);
   color: rgba(255, 255, 255, 0.85);
-  word-break: keep-all;
-  overflow-wrap: break-word;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tracking-tight);
 }
 
 .markdown-body h1, 
@@ -27,19 +25,19 @@
   color: var(--text-primary);
   margin-top: 3rem;
   margin-bottom: 1.25rem;
-  font-weight: 700;
-  line-height: 1.4; /* 제목의 줄바꿈 간격을 본문보다 타이트하게 설정 */
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  line-height: var(--leading-snug); /* 제목의 줄바꿈 간격을 본문보다 타이트하게 설정 */
+  letter-spacing: var(--tracking-tight);
 }
 
 .markdown-body h2 {
-  font-size: var(--fs-160);
+  font-size: var(--fs-2xl);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
 }
 
 .markdown-body h3 {
-  font-size: var(--fs-135);
+  font-size: var(--fs-xl);
 }
 
 .markdown-body p {
@@ -88,7 +86,7 @@
 
 .markdown-body code {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: var(--fs-090);
+  font-size: var(--fs-sm);
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
@@ -104,10 +102,10 @@
 .markdown-body table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: var(--space-lg, 1.5rem);
-  margin-bottom: var(--space-lg, 1.5rem);
-  font-size: var(--fs-095);
-  line-height: 1.5;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  font-size: var(--fs-base);
+  line-height: var(--leading-normal);
   border-spacing: 0;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -135,7 +133,7 @@
 
 .markdown-body tr:hover td {
   background: rgba(255, 255, 255, 0.03);
-  transition: background var(--duration-fast, 0.2s) ease;
+  transition: background var(--duration-fast) ease;
 }
 
 /* Responsive Table Scrollability on Mobile */
@@ -152,7 +150,6 @@
 @media (max-width: 768px) {
   .markdown-body {
     word-break: break-word;
-    overflow-wrap: break-word;
   }
   .markdown-body pre {
     max-width: 100%;
@@ -193,7 +190,7 @@
   background-position: 0 94%, 0 88%;
   background-size: 100% 2px, 100% 0.58em;
   padding: 0 0.08em;
-  border-radius: 2px;
+  border-radius: var(--radius-pill);
   transition: background-size 0.65s var(--ease-out);
 }
 

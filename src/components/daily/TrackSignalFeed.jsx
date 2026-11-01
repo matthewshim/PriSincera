@@ -12,10 +12,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../contexts/LanguageContext';
 import { trackRelearn } from '../relearn/funnel';
 import './TrackSignalFeed.css';
+import Icon from '../common/Icon';
 
 const TRACKS = [
-  { key: 'junior', icon: '🚀' },
-  { key: 'senior', icon: '🧭' },
+  { key: 'junior', icon: 'star' },
+  { key: 'senior', icon: 'compass' },
 ];
 
 const DOMAINS = [
@@ -146,7 +147,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
   return (
     <div className="daily-section fade-in">
       <div className="daily-section-header">
-        <span className="daily-section-icon">🛰️</span>
+        <span className="daily-section-icon"><Icon name="satellite" /></span>
         <h2 className="daily-section-title">Tech Track Signal</h2>
       </div>
 
@@ -159,7 +160,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
               className={`track-toggle-btn haptic-trigger ${track === tk.key ? 'active' : ''}`}
               onClick={() => setTrack(tk.key)}
             >
-              <span className="track-toggle-icon">{tk.icon}</span>{t(`relearn.track.${tk.key}`)}
+              <span className="track-toggle-icon"><Icon name={tk.icon} /></span>{t(`relearn.track.${tk.key}`)}
             </button>
           ))}
         </div>
@@ -187,7 +188,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
       {/* 🧭 실행→배움 연결 배너 (Phase 3): 내 궤도와 연결된 오늘의 도메인 */}
       {!loading && !error && topDomain && activeDomain === 'all' && (
         <button className="track-loop-banner haptic-trigger" onClick={() => setActiveDomain(topDomain)}>
-          <span className="track-loop-banner-icon">🧭</span>
+          <span className="track-loop-banner-icon"><Icon name="compass" /></span>
           <span className="track-loop-banner-text">
             {t('relearn.track.loopBannerText')} · <strong>{DOMAIN_LABEL[topDomain] || topDomain}</strong>
           </span>
@@ -245,7 +246,7 @@ export default function TrackSignalFeed({ date, affinity: externalAffinity, onOr
             {/* 🎯 action_challenge (할 일 미리보기) — C4 */}
             {card.action_challenge && (
               <div className="track-challenge">
-                <div className="track-challenge-title">🎯 {card.action_challenge.title}</div>
+                <div className="track-challenge-title"><Icon name="target" /> {card.action_challenge.title}</div>
                 {compact ? (
                   <details
                     className="rl-fold"

@@ -24,6 +24,7 @@ import JapaneseSection from '../components/daily/JapaneseSection';
 import TrackSignalFeed from '../components/daily/TrackSignalFeed';
 import './ReLearn.css';
 import './ReLearnDaily.css';
+import Icon, { IconOrGlyph } from '../components/common/Icon';
 
 const todayKST = () => new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -31,7 +32,8 @@ const todayKST = () => new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().s
 // 문구·라벨은 언어팩 relearn.channelOrbits / relearn.channels 에서 로케일별 해석
 const CHANNEL_KEYS = ['signal', 'prompt', 'jp'];
 
-const ZONE_ICONS = { track: '🛰️', signal: '📰', prompt: '🤖', jp: '🇯🇵' };
+/* jp는 국기 — 언어를 식별하는 기호이므로 SVG로 바꾸지 않는다(유지) */
+const ZONE_ICONS = { track: 'satellite', signal: 'news', prompt: 'prompt', jp: '🇯🇵' };
 
 export default function DailyView() {
   const { date: dateParam } = useParams();
@@ -263,7 +265,6 @@ export default function DailyView() {
         )}
         {isToday ? (
           <div className="rl-hero">
-            <div className="rl-hero-icon">🪐</div>
             <h1 className="rl-hero-title">ReLearn</h1>
             <p className="rl-hero-tagline">
               {t('relearn.hero.tagline')}
@@ -278,7 +279,6 @@ export default function DailyView() {
           </div>
         ) : (
           <div className="rl-hero rl-daily-hero">
-            <div className="rl-hero-icon">📅</div>
             <h1 className="rl-hero-title rl-daily-htitle">{date} Daily Digest</h1>
             <p className="rl-hero-tagline">{t('relearn.pastHero.tagline')}</p>
           </div>
@@ -305,7 +305,7 @@ export default function DailyView() {
                   onClick={() => selectCh(z)}
                   aria-current={curCh === z}
                 >
-                  <span className="rl-bm-ic">{ZONE_ICONS[z]}</span>
+                  <span className="rl-bm-ic"><IconOrGlyph value={ZONE_ICONS[z]} /></span>
                   <span className="rl-bm-label">{t(`relearn.channels.${z}`)}</span>
                 </button>
               ))}
@@ -344,7 +344,7 @@ export default function DailyView() {
               <div className="rl-loop-close-s">{t('relearn.footer.loopSub')}</div>
               {/* 계정·구독 — 박스 없이 헤어라인 아래 조용한 한 줄 */}
               <div className="rl-account-footer" aria-label={t('relearn.footer.ariaAccount')}>
-                <span className="rl-account-user" title={user.email}>👤 {user.email}</span>
+                <span className="rl-account-user" title={user.email}><Icon name="user" /> {user.email}</span>
                 <span className="rl-af-sep" aria-hidden="true">·</span>
                 {subState === 'unknown' && <span className="rl-account-sub muted">{t('relearn.sub.checking')}</span>}
                 {subState === 'loading' && <span className="rl-account-sub muted">{t('relearn.sub.processing')}</span>}

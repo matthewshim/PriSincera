@@ -8,6 +8,7 @@ import React from 'react';
 import { useTranslation } from '../../contexts/LanguageContext';
 import { getCategoryStyles } from './categoryStyles';
 import '../../pages/DailyDigest.css';
+import Icon from '../common/Icon';
 
 const SignalArticleCard = ({ article, compact }) => {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ const SignalArticleCard = ({ article, compact }) => {
         <div className="signal-article-meta-row">
           {article.isDmPick && (
             <span className="dm-pick-badge">
-              ✦ DM Pick
+              <Icon name="star" /> DM Pick
             </span>
           )}
           {article.category && <span className="signal-article-category" style={getCategoryStyles(article.category)}>{article.category}</span>}
@@ -74,7 +75,7 @@ const SignalArticleCard = ({ article, compact }) => {
           <div className="signal-article-meta-info">
             {article.weightedScore && (
               <span className="signal-article-score">
-                <span className="signal-article-star">★</span> {Number(article.weightedScore).toFixed(1)} {article.tier === 1 && '🌟'}
+                <span className="signal-article-star"><Icon name="star" /></span> {Number(article.weightedScore).toFixed(1)} {article.tier === 1 && <Icon name="star" className="signal-tier1" label="Tier 1" />}
               </span>
             )}
             {article.weightedScore && article.source && <span className="signal-article-div">|</span>}
@@ -82,7 +83,7 @@ const SignalArticleCard = ({ article, compact }) => {
           </div>
         </div>
         <h3>{article.title}</h3>
-        {article.insight && <div className="signal-insight">💡 {article.insight}</div>}
+        {article.insight && <div className="signal-insight"><Icon name="insight" /> {article.insight}</div>}
         {!compact && <p>{article.summary}</p>}
         <span className="signal-link">{t('relearn.signalCard.readSource')}</span>
       </div>

@@ -25,14 +25,11 @@ import '../styles/markdown-body.css';
 import './PlannersViewDetail.css';
 
 const CONTENT_DIR = '/content/planners-view';
-const SECTION_ICON = '📖';
 
-// 제목이 이모지로 시작하면 히어로 아이콘으로 승격하고 제목에서 뺀다(아이콘 중복 방지, §9-1)
-const splitTitle = (title) => {
-  if (!title) return { icon: SECTION_ICON, text: '' };
-  const m = title.match(/^([\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F9FF}]+(?:️)?)\s*(.*)$/u);
-  return m ? { icon: m[1], text: m[2] } : { icon: SECTION_ICON, text: title };
-};
+/* 히어로 마크 폐지(2026-11-01) — 타이틀이 이미 섹션을 말하므로 마크는 정보를 더하지 않는다.
+   제목 선두 이모지의 '아이콘 승격'(구 §9-1 v5.21)도 함께 폐지했다: 승격은 제목에서 이모지를
+   떼어내는 조작이었고, 마크가 없어진 지금은 제목에 그대로 두는 것이 작성자 의도에 맞다. */
+const splitTitle = (title) => ({ icon: null, text: title || '' });
 
 export default function PlannersViewDetail() {
   const { slug } = useParams();
@@ -156,7 +153,7 @@ export default function PlannersViewDetail() {
   const readTime = t('plannersView.readTime', { min: article.readMinutes || 1 });
   const pullQuote = article.pullQuote ? localize(article.pullQuote) : '';
   const authorRole = article.author && article.author.role ? localize(article.author.role) : '';
-  const { icon: heroIcon, text: heroTitleText } = splitTitle(title);
+  const { text: heroTitleText } = splitTitle(title);
 
   // 하단 연재 내비 — 사이드바가 숨겨지는 폭(≤1100px)에서 유일한 순서 이동 수단이므로 상시 배치(§9-11 v5.22)
   const seriesNav = (
@@ -205,7 +202,6 @@ export default function PlannersViewDetail() {
         {/* 뷰 히어로 — §9-1 표준(아이콘 → h1 → 서브카피) */}
         <header className="pv-hero">
           <div className="pv-hero-inner">
-            <div className="pv-hero-icon">{heroIcon}</div>
             <h1 className="pv-title">{heroTitleText}</h1>
             <p className="pv-subtitle">{subtitle}</p>
 

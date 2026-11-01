@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../contexts/LanguageContext';
 import './LoopReport.css';
+import Icon from '../common/Icon';
 
 const DOMAIN_LABEL = {
   ai_llm: 'AI/LLM', system_design: 'System Design', devops: 'DevOps', tech_lead: 'Tech Lead',
@@ -58,7 +59,7 @@ export default function LoopReport({ profile: externalProfile }) {
   return (
     <div className="loop-report">
       <div className="loop-report-head">
-        <span className="loop-report-icon">🔄</span>
+        <span className="loop-report-icon"><Icon name="loop" /></span>
         <span className="loop-report-title">{t('relearn.loop.title')}</span>
         <span className="loop-report-sub">{t('relearn.loop.sub')}</span>
       </div>
@@ -70,7 +71,7 @@ export default function LoopReport({ profile: externalProfile }) {
         </div>
         <div className="loop-stat">
           <span className="loop-stat-label">{t('relearn.loop.monthLabel')}</span>
-          <span className="loop-stat-value">🔥 {practice.monthDays || 0}<span className="loop-stat-unit">{t('relearn.loop.monthUnit')}</span></span>
+          <span className="loop-stat-value"><Icon name="flame" /> {practice.monthDays || 0}<span className="loop-stat-unit">{t('relearn.loop.monthUnit')}</span></span>
           <span className="loop-stat-sub">{t('relearn.loop.monthSub', { n: practice.last7Days || 0 })}</span>
         </div>
         <div className="loop-stat">
@@ -81,7 +82,7 @@ export default function LoopReport({ profile: externalProfile }) {
         {topDomain && (
           <div className="loop-stat loop-stat-domain">
             <span className="loop-stat-label">{t('relearn.loop.domainLabel')}</span>
-            <span className="loop-stat-value loop-stat-domain-name">🧭 {prettyDomain(topDomain)}</span>
+            <span className="loop-stat-value loop-stat-domain-name"><Icon name="compass" /> {prettyDomain(topDomain)}</span>
             <span className="loop-stat-sub">{t('relearn.loop.domainSub')}</span>
           </div>
         )}

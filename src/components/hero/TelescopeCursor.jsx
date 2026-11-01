@@ -13,7 +13,12 @@ export default function TelescopeCursor() {
   useEffect(() => {
     // Detect mobile/tablet touch screens to bypass event listeners and RAF animation loop for performance
     const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouchDevice) {
+    // [design_system §6-3 v5.7] JS가 인라인 transform을 직접 쓰면 전역 CSS 킬 스위치가
+    // 막지 못한다. 이 컴포넌트는 RAF 루프에서 cursor.style.transform을 lerp로 갱신하므로
+    // 가드가 의무다. 감쇠 없는 커서는 의미가 없으니 reduced-motion에서는 아예 끄고
+    // 네이티브 커서를 되돌린다(터치 가드와 동일 처리).
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isTouchDevice || reduceMotion) {
       const cursor = cursorRef.current;
       if (cursor) cursor.style.display = 'none';
       return;

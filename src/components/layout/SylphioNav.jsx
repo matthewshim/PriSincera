@@ -2,25 +2,26 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from '../../contexts/LanguageContext';
 import './SylphioNav.css';
+import Icon from '../common/Icon';
 
 const NAV_ITEMS = {
   ko: [
-    { type: 'route', icon: '📋', label: '서비스 소개', path: '/sylphio', end: true },
-    { type: 'route', icon: '💡', label: 'API Key 발급 가이드', path: '/sylphio/guide' },
-    { type: 'route', icon: '🛡️', label: '개인정보 처리방침', path: '/sylphio/privacy' },
-    { type: 'link', icon: '✉️', label: '고객지원', path: 'mailto:support@prisincera.com' }
+    { type: 'route', icon: 'document', label: '서비스 소개', path: '/sylphio', end: true },
+    { type: 'route', icon: 'key', label: 'API Key 발급 가이드', path: '/sylphio/guide' },
+    { type: 'route', icon: 'shield', label: '개인정보 처리방침', path: '/sylphio/privacy' },
+    { type: 'link', icon: 'mail', label: '고객지원', path: 'mailto:support@prisincera.com' }
   ],
   en: [
-    { type: 'route', icon: '📋', label: 'Introduction', path: '/sylphio', end: true },
-    { type: 'route', icon: '💡', label: 'API Key Guide', path: '/sylphio/guide' },
-    { type: 'route', icon: '🛡️', label: 'Privacy Policy', path: '/sylphio/privacy' },
-    { type: 'link', icon: '✉️', label: 'Support', path: 'mailto:support@prisincera.com' }
+    { type: 'route', icon: 'document', label: 'Introduction', path: '/sylphio', end: true },
+    { type: 'route', icon: 'key', label: 'API Key Guide', path: '/sylphio/guide' },
+    { type: 'route', icon: 'shield', label: 'Privacy Policy', path: '/sylphio/privacy' },
+    { type: 'link', icon: 'mail', label: 'Support', path: 'mailto:support@prisincera.com' }
   ],
   ja: [
-    { type: 'route', icon: '📋', label: 'サービス紹介', path: '/sylphio', end: true },
-    { type: 'route', icon: '💡', label: 'APIキー連携ガイド', path: '/sylphio/guide' },
-    { type: 'route', icon: '🛡️', label: '個人情報保護方針', path: '/sylphio/privacy' },
-    { type: 'link', icon: '✉️', label: 'サポート', path: 'mailto:support@prisincera.com' }
+    { type: 'route', icon: 'document', label: 'サービス紹介', path: '/sylphio', end: true },
+    { type: 'route', icon: 'key', label: 'APIキー連携ガイド', path: '/sylphio/guide' },
+    { type: 'route', icon: 'shield', label: '個人情報保護方針', path: '/sylphio/privacy' },
+    { type: 'link', icon: 'mail', label: 'サポート', path: 'mailto:support@prisincera.com' }
   ]
 };
 
@@ -41,7 +42,7 @@ export default function SylphioNav() {
                 className={({ isActive }) => `sylphio-tab haptic-trigger ${isActive ? 'active' : ''}`}
                 role="tab"
               >
-                {item.icon && <span className="sylphio-tab-icon">{item.icon}</span>}
+                {item.icon && <span className="sylphio-tab-icon"><Icon name={item.icon} /></span>}
                 <span className="sylphio-tab-label">{item.label}</span>
               </NavLink>
             );
@@ -53,7 +54,7 @@ export default function SylphioNav() {
                 className="sylphio-tab support-link haptic-trigger"
                 role="tab"
               >
-                {item.icon && <span className="sylphio-tab-icon">{item.icon}</span>}
+                {item.icon && <span className="sylphio-tab-icon"><Icon name={item.icon} /></span>}
                 <span className="sylphio-tab-label">{item.label}</span>
               </a>
             );

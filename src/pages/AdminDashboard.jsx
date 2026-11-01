@@ -3,6 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import './AdminDashboard.css';
+import Icon, { IconOrGlyph } from '../components/common/Icon';
 
 // 서비스 문서 허브 — docs 전체를 번들하므로 별도 청크로 lazy 로드
 const ServiceDocs = lazy(() => import('../components/admin/ServiceDocs'));
@@ -91,7 +92,7 @@ function LoginForm({ onLogin }) {
   return (
     <div className="admin-login">
       <div className="admin-login-card">
-        <div className="admin-login-logo">🛡️</div>
+        <div className="admin-login-logo"><Icon name="shield" size={30} /></div>
         <h1>PriSincera Admin</h1>
         <p className="admin-login-sub">관리자 인증이 필요합니다</p>
         <form onSubmit={handleSubmit}>
@@ -107,7 +108,7 @@ function LoginForm({ onLogin }) {
           <button id="admin-login-btn" type="submit" className="btn-primary" disabled={loading} style={{ marginBottom: 12 }}>
             {loading ? '인증 중...' : '이메일로 로그인'}
           </button>
-          <button type="button" onClick={handleGoogleLogin} disabled={loading} style={{ background: '#4285F4', width: '100%', padding: '12px', borderRadius: '8px', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
+          <button type="button" onClick={handleGoogleLogin} disabled={loading} style={{ background: 'var(--admin-google-blue)', width: '100%', padding: '12px', borderRadius: '8px', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
             Google 계정으로 로그인
           </button>
         </form>
@@ -201,7 +202,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     title: { ko: '', en: '', ja: '' },
     subtitle: { ko: '', en: '', ja: '' },
     description: { ko: '', en: '', ja: '' },
-    date: '', tags: '', accent: '#6D28D9', commits: '',
+    date: '', tags: '', accent: 'var(--color-indigo)', commits: '',
     markdown: { ko: '', en: '', ja: '' }
   });
   const [buildersLogAction, setBuildersLogAction] = useState(null);
@@ -306,13 +307,13 @@ function Dashboard({ token, adminEmail, onLogout }) {
         sessionStorage.setItem('admin_token', result.idToken);
       }
 
-      setProfileAction({ type: 'success', msg: '✅ 프로필이 수정되었습니다' });
+      setProfileAction({ type: 'success', msg: '프로필이 수정되었습니다' });
       setTimeout(() => {
         setProfileModal(false);
         window.location.reload();
       }, 1200);
     } catch (err) {
-      setProfileAction({ type: 'error', msg: `❌ ${err.message}` });
+      setProfileAction({ type: 'error', msg: `${err.message}` });
     }
   }
 
@@ -352,9 +353,9 @@ function Dashboard({ token, adminEmail, onLogout }) {
       const result = await fetchApi('/email/send-test', {
         method: 'POST', body: JSON.stringify({ to: testEmail }),
       });
-      setSendStatus({ type: 'success', msg: `✅ 발송 성공 (${result.messageId})` });
+      setSendStatus({ type: 'success', msg: `발송 성공 (${result.messageId})` });
     } catch (err) {
-      setSendStatus({ type: 'error', msg: `❌ 발송 실패: ${err.message}` });
+      setSendStatus({ type: 'error', msg: `발송 실패: ${err.message}` });
     }
   }
 
@@ -428,11 +429,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
       }
       await loadTrackStatus();
       if (!finalJob) {
-        window.alert('⏳ 아직 실행 중입니다. 잠시 후 ↻ 새로고침으로 확인하세요.');
+        window.alert('아직 실행 중입니다. 잠시 후 새로고침으로 확인하세요.');
       } else if (finalJob.status === 'succeeded') {
-        window.alert('✅ 생성 완료 — 결과가 반영됐습니다.');
+        window.alert('생성 완료 — 결과가 반영됐습니다.');
       } else {
-        window.alert('❌ 실행 실패\n\n무료 Gemini 일일 할당량(모델당 20회/일) 초과일 수 있습니다.\n할당량은 매일 리셋되며, 매일 06:45 자동 실행만으로도 피드는 갱신됩니다.');
+        window.alert('실행 실패\n\n무료 Gemini 일일 할당량(모델당 20회/일) 초과일 수 있습니다.\n할당량은 매일 리셋되며, 매일 06:45 자동 실행만으로도 피드는 갱신됩니다.');
       }
     } catch (err) {
       window.alert('실행 실패: ' + err.message);
@@ -597,7 +598,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       title: { ko: '', en: '', ja: '' },
       subtitle: { ko: '', en: '', ja: '' },
       description: { ko: '', en: '', ja: '' },
-      date: today, tags: '', accent: '#6D28D9', commits: '[]',
+      date: today, tags: '', accent: 'var(--color-indigo)', commits: '[]',
       markdown: { ko: '', en: '', ja: '' }
     });
     setBuildersLogActiveTab('ko');
@@ -615,7 +616,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       subtitle: parseLocaleField(item.subtitle),
       description: parseLocaleField(item.description),
       date: item.date, tags: (item.tags || []).join(', '),
-      accent: item.accent || '#6D28D9', commits: JSON.stringify(item.commits || [], null, 2),
+      accent: item.accent || 'var(--color-indigo)', commits: JSON.stringify(item.commits || [], null, 2),
       markdown: { ko: '', en: '', ja: '' }
     });
     try {
@@ -678,7 +679,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           ja: res.ja?.markdown || prev.markdown.ja || ''
         }
       }));
-      setBuildersLogAction({ type: 'success', msg: '✨ AI 번역 완료! 각 탭에서 번역된 내용을 확인하실 수 있습니다.' });
+      setBuildersLogAction({ type: 'success', msg: 'AI 번역 완료! 각 탭에서 번역된 내용을 확인하실 수 있습니다.' });
     } catch (err) {
       setBuildersLogAction({ type: 'error', msg: `AI 완역 실패: ${err.message}` });
     }
@@ -718,7 +719,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
           ja: res.ja?.title || prev.title.ja || ''
         }
       }));
-      setPoolAction({ type: 'success', msg: '✨ AI 번역 완료! 각 탭에서 번역된 내용을 확인하실 수 있습니다.' });
+      setPoolAction({ type: 'success', msg: 'AI 번역 완료! 각 탭에서 번역된 내용을 확인하실 수 있습니다.' });
     } catch (err) {
       setPoolAction({ type: 'error', msg: `AI 완역 실패: ${err.message}` });
     }
@@ -782,10 +783,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
         await fetchApi('/builderslog/publish', { method: 'POST', body: JSON.stringify(bodyJa) });
       }
 
-      setBuildersLogAction({ type: 'success', msg: '🎉 전 언어 버전 배포 완료!' });
+      setBuildersLogAction({ type: 'success', msg: '전 언어 버전 배포 완료!' });
       setTimeout(() => { setBuildersLogModal(null); loadBuildersLogMeta(); }, 1500);
     } catch (err) {
-      setBuildersLogAction({ type: 'error', msg: `❌ ${err.message}` });
+      setBuildersLogAction({ type: 'error', msg: `${err.message}` });
     }
   }
 
@@ -814,7 +815,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
     try {
       if (adminModal === 'create') {
         await fetchApi('/admins', { method: 'POST', body: JSON.stringify(adminForm) });
-        setAdminAction({ type: 'success', msg: '✅ 관리자가 생성되었습니다' });
+        setAdminAction({ type: 'success', msg: '관리자가 생성되었습니다' });
       } else {
         const body = {};
         if (adminForm.email !== adminModal.admin.email) body.email = adminForm.email;
@@ -822,11 +823,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
         if (adminForm.displayName !== (adminModal.admin.displayName || '')) body.displayName = adminForm.displayName;
         if (adminForm.role !== (adminModal.admin.role || 'admin')) body.role = adminForm.role;
         await fetchApi(`/admins/${adminModal.admin.uid}`, { method: 'PUT', body: JSON.stringify(body) });
-        setAdminAction({ type: 'success', msg: '✅ 관리자 정보가 수정되었습니다' });
+        setAdminAction({ type: 'success', msg: '관리자 정보가 수정되었습니다' });
       }
       setTimeout(() => { setAdminModal(null); loadAdmins(); }, 1000);
     } catch (err) {
-      setAdminAction({ type: 'error', msg: `❌ ${err.message}` });
+      setAdminAction({ type: 'error', msg: `${err.message}` });
     }
   }
 
@@ -864,26 +865,26 @@ function Dashboard({ token, adminEmail, onLogout }) {
       id: 'common',
       label: 'Common',
       items: [
-        { id: 'overview', label: '📊 대시보드' },
-        { id: 'docs', label: '📖 서비스 문서' },
-        ...(isSuperAdmin ? [{ id: 'admins', label: '🔐 관리자' }] : [])
+        { id: 'overview', label: '대시보드' },
+        { id: 'docs', label: '서비스 문서' },
+        ...(isSuperAdmin ? [{ id: 'admins', label: '관리자' }] : [])
       ]
     },
     {
       id: 'builderslog_group',
       label: 'Builder\'s Log',
       items: [
-        { id: 'builderslog', label: '📝 아티클 퍼블리싱' }
+        { id: 'builderslog', label: '아티클 퍼블리싱' }
       ]
     },
     {
       id: 'relearn',
       label: 'ReLearn',
       items: [
-        { id: 'content', label: '📚 배움 콘텐츠' },
-        { id: 'subscribers', label: '📧 구독·발송' },
-        { id: 'pacenotes', label: '⛵ 학습자 현황' },
-        { id: 'pacenote_pool', label: '🎯 AI 추천 풀' },
+        { id: 'content', label: '배움 콘텐츠' },
+        { id: 'subscribers', label: '구독·발송' },
+        { id: 'pacenotes', label: '학습자 현황' },
+        { id: 'pacenote_pool', label: 'AI 추천 풀' },
       ]
     }
   ];
@@ -894,12 +895,12 @@ function Dashboard({ token, adminEmail, onLogout }) {
       <header className="admin-header">
         <div className="admin-header-inner">
           <div className="admin-header-left">
-            <span className="admin-logo">🛡️</span>
+            <span className="admin-logo"><Icon name="shield" /></span>
             <h1>PriSincera Admin</h1>
           </div>
           <div className="admin-header-right">
             <button className="admin-profile-btn btn-secondary" onClick={openProfile} title="마이페이지">
-              <span className={`admin-avatar ${role}`}>👤</span>
+              <span className={`admin-avatar ${role}`}><Icon name="user" /></span>
               <span className="admin-profile-info">
                 <span className="admin-profile-email">{adminEmail}</span>
                 <span className={`admin-role-badge ${role}`}>{ROLE_LABEL[role] || role}</span>
@@ -916,12 +917,18 @@ function Dashboard({ token, adminEmail, onLogout }) {
         <aside className="admin-sidebar">
           {menuGroups.map(group => (
             <div key={group.id} className="admin-sidebar-group">
-              <div 
-                className={`admin-sidebar-header ${group.onClick ? 'clickable' : ''}`} 
-                onClick={group.onClick}
-              >
-                {group.label}
-              </div>
+              {/* 클릭 가능하면 시맨틱 button — div+onClick은 키보드로 도달·실행할 수 없다(P4-3) */}
+              {group.onClick ? (
+                <button
+                  type="button"
+                  className="admin-sidebar-header clickable"
+                  onClick={group.onClick}
+                >
+                  {group.label}
+                </button>
+              ) : (
+                <div className="admin-sidebar-header">{group.label}</div>
+              )}
               {group.items.length > 0 && (
                 <div className="admin-sidebar-items">
                   {group.items.map(item => (
@@ -942,7 +949,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
         <main className="admin-content">
         {activeTab === 'docs' && (
           <div className="admin-subscribers">
-            <div className="admin-section-header"><h2>📖 서비스 문서</h2></div>
+            <div className="admin-section-header"><h2><Icon name="book" /> 서비스 문서</h2></div>
             <Suspense fallback={<div className="admin-empty">문서 불러오는 중…</div>}>
               <ServiceDocs />
             </Suspense>
@@ -952,29 +959,29 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'overview' && stats && (
           <div className="admin-overview">
             <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ margin: 0 }}>📊 통합 대시보드</h2>
+              <h2><Icon name="chart" /> 통합 대시보드</h2>
             </div>
             <div className="admin-stat-grid" style={{ marginBottom: '24px' }}>
-              <StatCard label="활성 구독자" value={stats.subscribers.active} icon="👥" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
-              <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="🚪" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
-              <StatCard label="발송 이력" value={stats.emails.totalSent} icon="📧" color="var(--admin-green)" onClick={() => setActiveTab('subscribers')} />
-              <StatCard label="누적 콘텐츠" value={priStudyStats?.totalContent || 0} icon="📚" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
-              <StatCard label="학습자" value={`${priStudyStats?.totalLearners || 0}명`} icon="⛵" color="var(--admin-blue)" onClick={() => setActiveTab('pacenotes')} />
+              <StatCard label="활성 구독자" value={stats.subscribers.active} icon="users" color="var(--admin-accent)" onClick={() => setActiveTab('subscribers')} />
+              <StatCard label="해지" value={stats.subscribers.unsubscribed} icon="exit" color="var(--admin-orange)" onClick={() => setActiveTab('subscribers')} />
+              <StatCard label="발송 이력" value={stats.emails.totalSent} icon="mail" color="var(--admin-green)" onClick={() => setActiveTab('subscribers')} />
+              <StatCard label="누적 콘텐츠" value={priStudyStats?.totalContent || 0} icon="book" color="var(--admin-blue)" onClick={() => setActiveTab('content')} />
+              <StatCard label="학습자" value={`${priStudyStats?.totalLearners || 0}명`} icon="trail" color="var(--admin-blue)" onClick={() => setActiveTab('pacenotes')} />
               <StatCard 
                 label="방문자 통계" 
                 value="GA4" 
-                icon="📈" 
+                icon="chart" 
                 color="#60A5FA" 
                 onClick={() => window.open('https://analytics.google.com/analytics/web/?utm_source=OGB&utm_medium=app&authuser=0#/a391399503p533055438/reports/intelligenthome', '_blank')} 
               />
               
               {/* Pipeline Status Card (Spans 2 columns) */}
               {pipeline && (
-                <div className="admin-stat-card stat-span-2" style={{ '--card-accent': pipeline.collector.status === 'success' ? '#10B981' : '#F59E0B' }}>
+                <div className="admin-stat-card stat-span-2" style={{ '--card-accent': pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)' }}>
                   <div className="pipeline-header">
-                    <div className="admin-stat-icon" style={{ margin: 0 }}>⚙️</div>
+                    <div className="admin-stat-icon adm-m0" ><Icon name="tools" size={22} /></div>
                     <div className={`admin-pipeline-badge ${pipeline.collector.status}`}>
-                      {pipeline.collector.status === 'success' ? '✅ 오늘 수집 완료' : '⏳ 대기 중'}
+                      {pipeline.collector.status === 'success' ? '오늘 수집 완료' : '대기 중'}
                     </div>
                   </div>
                   <div className="admin-stat-label" style={{ marginBottom: '16px' }}>데이터 수집 상태</div>
@@ -992,9 +999,9 @@ function Dashboard({ token, adminEmail, onLogout }) {
               )}
             </div>
             
-            <div className="admin-overview-section" style={{ marginTop: '2rem' }}>
+            <div className="admin-overview-section adm-mt-xl" >
               <div className="admin-chart-container" style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
-                <h3 style={{ marginTop: 0, marginBottom: '8px', fontSize: '1.1rem', color: '#E9D5FF' }}>Builder's Log 성과</h3>
+                <h3 style={{ marginTop: 0, marginBottom: '8px', fontSize: '1.1rem', color: 'var(--admin-accent-soft)' }}>Builder's Log 성과</h3>
                 <p style={{ color: 'var(--text-muted)', marginBottom: '20px', fontSize: '0.9rem' }}>아티클 누적 및 일일 조회수 현황 (누적 조회수가 높은 순서로 정렬됩니다)</p>
                 <div className="admin-table-wrap">
                   <table className="admin-table">
@@ -1031,12 +1038,13 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
             {/* Chart Area */}
             {emailLogs && emailLogs.length > 0 && (
-              <div className="admin-overview-section" style={{ marginTop: '2rem' }}>
+              <div className="admin-overview-section adm-mt-xl" >
                 <div className="admin-chart-container" style={{ background: 'var(--bg-surface)', padding: '24px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
-                  <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', color: '#E9D5FF' }}>최근 데일리 발송 추이</h3>
+                  <h3 style={{ marginTop: 0, marginBottom: '20px', fontSize: '1.1rem', color: 'var(--admin-accent-soft)' }}>최근 데일리 발송 추이</h3>
                   <div style={{ width: '100%', height: 300 }}>
                     <ResponsiveContainer>
                       <LineChart data={[...emailLogs].reverse().slice(-14)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                        {/* Recharts 축/격자 색은 SVG 프레젠테이션 속성으로 전달되어 var()가 통하지 않는다 — 생값 유지 */}
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                         <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} tickFormatter={str => str.substring(5)} />
                         <YAxis stroke="#9CA3AF" fontSize={12} allowDecimals={false} />
@@ -1058,22 +1066,22 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'subscribers' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>👥 구독자 및 메일링 관리</h2>
-              <button className="admin-btn-secondary" onClick={exportCsv}>📥 구독자 CSV 내보내기</button>
+              <h2><Icon name="users" /> 구독자 및 메일링 관리</h2>
+              <button className="admin-btn-secondary" onClick={exportCsv}><Icon name="download" /> 구독자 CSV 내보내기</button>
             </div>
 
-            <div className="admin-test-send" style={{ marginBottom: '32px' }}>
+            <div className="admin-test-send adm-mb-xl" >
               <h3>수동 이메일 발송 (테스트)</h3>
               <div className="admin-test-send-form">
                 <input id="test-email-input" type="email" placeholder="수신 이메일"
                   value={testEmail} onChange={e => setTestEmail(e.target.value)} />
-                <button className="admin-btn-primary" onClick={sendTestEmail}>📨 발송</button>
+                <button className="admin-btn-primary" onClick={sendTestEmail}><Icon name="mail" /> 발송</button>
               </div>
               {sendStatus && <div className={`admin-send-status ${sendStatus.type}`}>{sendStatus.msg}</div>}
             </div>
 
             <h3>발송 이력</h3>
-            <div className="admin-table-wrap" style={{ marginBottom: '32px' }}>
+            <div className="admin-table-wrap adm-mb-xl" >
               <table className="admin-table">
                 <thead><tr><th>날짜</th><th>제목</th><th>수신</th><th>성공</th><th>발송 시각</th></tr></thead>
                 <tbody>
@@ -1114,8 +1122,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'admins' && isSuperAdmin && (
           <div className="admin-admins">
             <div className="admin-section-header">
-              <h2>🔐 관리자 계정 관리</h2>
-              <button className="admin-btn-primary btn-primary" onClick={openCreateAdmin}>➕ 관리자 추가</button>
+              <h2><Icon name="lock" /> 관리자 계정 관리</h2>
+              <button className="admin-btn-primary btn-primary" onClick={openCreateAdmin}><Icon name="plus" /> 관리자 추가</button>
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
@@ -1134,7 +1142,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       <td className="admin-actions-cell">
                         {admin.uid && (
                           <>
-                            <button className="admin-action-btn edit" onClick={() => openEditAdmin(admin)} title="수정">✏️</button>
+                            <button className="admin-action-btn edit" onClick={() => openEditAdmin(admin)} title="수정"><Icon name="pen" label="수정" /></button>
                             {admin.email !== adminEmail && (
                               deleteConfirm === admin.uid ? (
                                 <span className="admin-delete-confirm">
@@ -1142,7 +1150,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                                   <button className="admin-action-btn confirm-no" onClick={() => setDeleteConfirm(null)}>취소</button>
                                 </span>
                               ) : (
-                                <button className="admin-action-btn delete" onClick={() => setDeleteConfirm(admin.uid)} title="삭제">🗑️</button>
+                                <button className="admin-action-btn delete" onClick={() => setDeleteConfirm(admin.uid)} title="삭제"><Icon name="trash" label="삭제" /></button>
                               )
                             )}
                           </>
@@ -1160,23 +1168,23 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'content' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>📚 배움 콘텐츠</h2>
+              <h2><Icon name="book" /> 배움 콘텐츠</h2>
               {contentSubTab === 'legacy' && (
-                <button className="admin-btn-primary btn-primary" onClick={openCreateContent}>➕ 수동 발행</button>
+                <button className="admin-btn-primary btn-primary" onClick={openCreateContent}><Icon name="plus" /> 수동 발행</button>
               )}
             </div>
 
             {/* 서브탭 토글 — track(자동 생성)이 기본 운영 대상 */}
             <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-              {[{ id: 'track', label: '🛰️ 테크 트랙' }, { id: 'legacy', label: '✍️ 수동 콘텐츠' }, { id: 'pipeline', label: '⚙️ 수집 파이프라인' }].map(st => (
+              {[{ id: 'track', label: '테크 트랙' }, { id: 'legacy', label: '수동 콘텐츠' }, { id: 'pipeline', label: '수집 파이프라인' }].map(st => (
                 <button
                   key={st.id}
                   onClick={() => setContentSubTab(st.id)}
                   style={{
                     padding: '8px 16px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem',
-                    border: contentSubTab === st.id ? '1px solid var(--admin-accent, #A78BFA)' : '1px solid rgba(148,163,184,0.25)',
+                    border: contentSubTab === st.id ? '1px solid var(--admin-accent)' : '1px solid rgba(148,163,184,0.25)',
                     background: contentSubTab === st.id ? 'rgba(167,139,250,0.14)' : 'transparent',
-                    color: contentSubTab === st.id ? 'var(--admin-accent, #A78BFA)' : '#9CA3AF',
+                    color: contentSubTab === st.id ? 'var(--admin-accent)' : 'var(--admin-text-muted)',
                   }}
                 >{st.label}</button>
               ))}
@@ -1187,8 +1195,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
               <div className="admin-pipeline">
                 <div className="admin-stat-grid">
                   <StatCard label="Collector" value={pipeline.collector.status === 'success' ? '정상' : '대기'}
-                    icon="📡" color={pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)'} />
-                  <StatCard label="누적 데일리" value={`${pipeline.totalDates}일`} icon="📅" color="var(--admin-blue)" />
+                    icon="antenna" color={pipeline.collector.status === 'success' ? 'var(--admin-green)' : 'var(--admin-orange)'} />
+                  <StatCard label="누적 데일리" value={`${pipeline.totalDates}일`} icon="calendar" color="var(--admin-blue)" />
                 </div>
                 <h3>최근 7일</h3>
                 <div className="admin-recent-dates">
@@ -1207,10 +1215,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       <tr key={i}>
                         <td>{item.date}</td>
                         <td>{item.signal?.articles?.length || 0}건</td>
-                        <td>{item.study?.prompt_snippet ? '✅' : '❌'}</td>
+                        <td>{item.study?.prompt_snippet ? '' : ''}</td>
                         <td className="admin-subject-cell">{item.study?.sentence_jp || '-'}</td>
                         <td className="admin-actions-cell">
-                          <button className="admin-action-btn edit" onClick={() => openEditContent(item)} title="수정">✏️</button>
+                          <button className="admin-action-btn edit" onClick={() => openEditContent(item)} title="수정"><Icon name="pen" label="수정" /></button>
                         </td>
                       </tr>
                     ))}
@@ -1230,22 +1238,22 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   border: '1px solid rgba(148,163,184,0.2)', background: 'rgba(255,255,255,0.02)',
                 }}>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'center', fontSize: '0.88rem' }}>
-                    <span style={{ color: '#9CA3AF' }}>⏱ 스케줄: <strong style={{ color: '#E9D5FF' }}>{trackStatus?.schedule || '매일 06:45 (Asia/Seoul)'}</strong></span>
-                    <span style={{ color: '#9CA3AF' }}>index v: <strong style={{ color: '#E9D5FF' }}>{trackStatus?.indexVersion ?? '—'}</strong></span>
-                    <span style={{ color: '#9CA3AF' }}>
+                    <span className="adm-muted"><Icon name="timer" /> 스케줄: <strong className="adm-accent">{trackStatus?.schedule || '매일 06:45 (Asia/Seoul)'}</strong></span>
+                    <span className="adm-muted">index v: <strong className="adm-accent">{trackStatus?.indexVersion ?? '—'}</strong></span>
+                    <span className="adm-muted">
                       최근 실행: {trackJobStatus?.exists ? (
-                        <strong style={{ color: trackJobStatus.status === 'succeeded' ? '#10B981' : trackJobStatus.status === 'failed' ? '#EF4444' : '#FBBF24' }}>
-                          {trackJobStatus.status === 'succeeded' ? '✅ 성공' : trackJobStatus.status === 'failed' ? '❌ 실패' : '⏳ 실행중'}
+                        <strong style={{ color: trackJobStatus.status === 'succeeded' ? 'var(--admin-green)' : trackJobStatus.status === 'failed' ? 'var(--admin-red)' : '#FBBF24' }}>
+                          {trackJobStatus.status === 'succeeded' ? '성공' : trackJobStatus.status === 'failed' ? '실패' : '실행중'}
                           {trackJobStatus.completionTime ? ` · ${new Date(trackJobStatus.completionTime).toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}` : ''}
                         </strong>
-                      ) : <strong style={{ color: '#9CA3AF' }}>기록 없음</strong>}
+                      ) : <strong className="adm-muted">기록 없음</strong>}
                     </span>
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button className="admin-btn-primary btn-primary" onClick={loadTrackStatus} disabled={trackLoading}>↻ 새로고침</button>
+                    <button className="admin-btn-primary btn-primary" onClick={loadTrackStatus} disabled={trackLoading}><Icon name="cycle" /> 새로고침</button>
                     <button className="admin-btn-primary btn-primary" onClick={runTechComposer} disabled={trackRunning}
                       style={{ background: trackRunning ? '#6B7280' : undefined }}>
-                      {trackRunning ? '실행 중…' : '▶ 지금 생성'}
+                      {trackRunning ? '실행 중…' : '지금 생성'}
                     </button>
                   </div>
                 </div>
@@ -1257,8 +1265,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       {trackLoading && (<tr><td colSpan={7} className="admin-empty">불러오는 중…</td></tr>)}
                       {!trackLoading && (trackStatus?.rows || []).map((row, i) => {
                         const badge = row.status === 'ok'
-                          ? { t: '✅ 정상', c: '#10B981' }
-                          : row.status === 'partial' ? { t: '⚠️ 부분', c: '#FBBF24' } : { t: '❌ 미생성', c: '#EF4444' };
+                          ? { t: '정상', c: 'var(--admin-green)' }
+                          : row.status === 'partial' ? { t: '부분', c: '#FBBF24' } : { t: '미생성', c: 'var(--admin-red)' };
                         const cell = (tk) => tk.exists
                           ? `${tk.cardCount}카드 · ${tk.generatedAt ? new Date(tk.generatedAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '-'}`
                           : '—';
@@ -1269,11 +1277,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
                             <td><span className="admin-date-chip">{row.date}</span></td>
                             <td>{cell(row.junior)}</td>
                             <td>{cell(row.senior)}</td>
-                            <td style={{ fontSize: '0.8rem', color: '#9CA3AF' }}>{(row.junior.domains || []).join(', ') || '—'}</td>
+                            <td style={{ fontSize: '0.8rem', color: 'var(--admin-text-muted)' }}>{(row.junior.domains || []).join(', ') || '—'}</td>
                             <td>{acTotal ? `${acDone}/${acTotal}` : '—'}</td>
                             <td><strong style={{ color: badge.c }}>{badge.t}</strong></td>
                             <td className="admin-actions-cell">
-                              <button className="admin-action-btn edit" onClick={() => openTrackDetail(row.date)} title="상세 검수">🔍</button>
+                              <button className="admin-action-btn edit" onClick={() => openTrackDetail(row.date)} title="상세 검수"><Icon name="search" label="상세 검수" /></button>
                             </td>
                           </tr>
                         );
@@ -1296,26 +1304,26 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div onClick={e => e.stopPropagation()}
               style={{ width: 'min(820px, 92vw)', maxHeight: '86vh', overflowY: 'auto', background: '#1a1730', borderRadius: 16, padding: 24, border: '1px solid rgba(148,163,184,0.2)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                <h3 style={{ margin: 0 }}>🛰️ 트랙 피드 검수 — {trackDetail.date}</h3>
-                <button className="admin-action-btn" onClick={() => setTrackDetail(null)} style={{ cursor: 'pointer' }}>✕</button>
+                <h3 className="adm-m0"><Icon name="satellite" /> 트랙 피드 검수 — {trackDetail.date}</h3>
+                <button className="admin-action-btn" onClick={() => setTrackDetail(null)} style={{ cursor: 'pointer' }}><Icon name="close" label="닫기" /></button>
               </div>
               {trackDetailLoading ? (
                 <div className="admin-empty">불러오는 중…</div>
               ) : (
                 ['junior', 'senior'].map(tk => (
                   <div key={tk} style={{ marginBottom: 20 }}>
-                    <h4 style={{ color: '#E9D5FF', borderBottom: '1px solid rgba(148,163,184,0.2)', paddingBottom: 6 }}>
-                      {tk === 'junior' ? '🚀 주니어-미드' : '🧭 시니어-리더'} {trackDetail[tk] ? `(${(trackDetail[tk].cards || []).length}카드)` : '(없음)'}
+                    <h4 style={{ color: 'var(--admin-accent-soft)', borderBottom: '1px solid rgba(148,163,184,0.2)', paddingBottom: 6 }}>
+                      {tk === 'junior' ? '주니어-미드' : '시니어-리더'} {trackDetail[tk] ? `(${(trackDetail[tk].cards || []).length}카드)` : '(없음)'}
                     </h4>
-                    {!trackDetail[tk] && <div style={{ color: '#9CA3AF', fontSize: '0.85rem' }}>피드 없음</div>}
+                    {!trackDetail[tk] && <div style={{ color: 'var(--admin-text-muted)', fontSize: '0.85rem' }}>피드 없음</div>}
                     {(trackDetail[tk]?.cards || []).map(card => (
                       <div key={card.id} style={{ padding: '10px 0', borderBottom: '1px dashed rgba(148,163,184,0.15)' }}>
-                        <div style={{ fontSize: '0.75rem', color: '#A78BFA', marginBottom: 2 }}>{card.domain} · {(card.tags || []).map(t => '#' + t).join(' ')}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--admin-accent)', marginBottom: 2 }}>{card.domain} · {(card.tags || []).map(t => '#' + t).join(' ')}</div>
                         <div style={{ fontWeight: 600 }}>{card.title}</div>
-                        <div style={{ fontSize: '0.85rem', color: '#9CA3AF', margin: '2px 0 6px' }}>{card.summary}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--admin-text-muted)', margin: '2px 0 6px' }}>{card.summary}</div>
                         {card.learning && (card.learning.concept || (card.learning.key_points || []).length > 0) && (
-                          <div style={{ fontSize: '0.82rem', background: 'rgba(165,180,252,0.06)', borderLeft: '3px solid #A5B4FC', borderRadius: '0 6px 6px 0', padding: '8px 10px', margin: '0 0 8px' }}>
-                            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#A5B4FC', marginBottom: 4 }}>📚 학습</div>
+                          <div style={{ fontSize: '0.82rem', background: 'rgba(165,180,252,0.06)', borderLeft: '3px solid var(--admin-accent)', borderRadius: '0 6px 6px 0', padding: '8px 10px', margin: '0 0 8px' }}>
+                            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: 'var(--admin-accent)', marginBottom: 4 }}><Icon name="book" /> 학습</div>
                             {card.learning.concept && <div style={{ color: '#E2E8F0', lineHeight: 1.6 }}>{card.learning.concept}</div>}
                             {(card.learning.key_points || []).length > 0 && (
                               <ul style={{ margin: '6px 0 0', paddingLeft: 16, color: '#94A3B8' }}>
@@ -1326,7 +1334,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         )}
                         {card.action_challenge && (
                           <div style={{ fontSize: '0.82rem', color: '#CBD5E1' }}>
-                            🎯 {card.action_challenge.title}
+                            <Icon name="target" /> {card.action_challenge.title}
                             <ol style={{ margin: '4px 0 0', paddingLeft: 18 }}>
                               {(card.action_challenge.tasks || []).map(tsk => (<li key={tsk.seq}>{tsk.text}</li>))}
                             </ol>
@@ -1334,7 +1342,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         )}
                         {card.sourceUrl && (
                           <a href={card.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginTop: 8, fontSize: '0.8rem', color: '#22D3EE', textDecoration: 'none' }}>
-                            🔗 {card.sourceName || '원문'} 읽기 →
+                            <Icon name="link" /> {card.sourceName || '원문'} 읽기 <Icon name="arrowRight" />
                           </a>
                         )}
                       </div>
@@ -1348,8 +1356,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
         {activeTab === 'pacenotes' && (
           <div className="admin-subscribers">
-            <div className="admin-section-header"><h2>⛵ 학습자 현황</h2></div>
-            <div className="admin-table-wrap" style={{ marginBottom: '32px' }}>
+            <div className="admin-section-header"><h2><Icon name="trail" /> 학습자 현황</h2></div>
+            <div className="admin-table-wrap adm-mb-xl" >
               <table className="admin-table">
                 <thead><tr><th>이메일</th><th>최근 활동(일/주)</th><th>현재 미션(개)</th><th>완료(개)</th></tr></thead>
                 <tbody>
@@ -1366,8 +1374,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
               </table>
             </div>
 
-            <h3>💡 유저 커스텀 목표 인사이트</h3>
-            <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
+            <h3><Icon name="insight" /> 유저 커스텀 목표 인사이트</h3>
+            <p style={{ color: 'var(--admin-text-muted)', marginBottom: '24px' }}>
               학습자들이 AI 추천에 의존하지 않고 직접 등록한 목표들을 분석하여, 향후 서비스 및 AI 추천 고도화에 활용할 수 있습니다.
             </p>
             <div className="admin-table-wrap">
@@ -1377,11 +1385,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   {paceInsights.map((insight, i) => (
                     <tr key={i}>
                       <td><span className="admin-date-chip">{insight.period}</span></td>
-                      <td style={{ color: '#E9D5FF' }}>{insight.title}</td>
+                      <td className="adm-accent">{insight.title}</td>
                       <td>
                         {insight.completed
-                          ? <span style={{ color: '#10B981', fontWeight: 'bold' }}>달성 완료</span>
-                          : <span style={{ color: '#9CA3AF' }}>진행 중</span>}
+                          ? <span style={{ color: 'var(--admin-green)', fontWeight: 'bold' }}>달성 완료</span>
+                          : <span className="adm-muted">진행 중</span>}
                       </td>
                     </tr>
                   ))}
@@ -1395,12 +1403,12 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'pacenote_pool' && (
           <div className="admin-subscribers">
             <div className="admin-section-header">
-              <h2>🎯 AI 추천 풀 관리</h2>
-              <button className="admin-btn-primary btn-primary" onClick={openCreatePool}>➕ 항목 수동 추가</button>
+              <h2><Icon name="target" /> AI 추천 풀 관리</h2>
+              <button className="admin-btn-primary btn-primary" onClick={openCreatePool}><Icon name="plus" /> 항목 수동 추가</button>
             </div>
 
-            <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #A78BFA' }}>
-              <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#A78BFA', display: 'flex', alignItems: 'center', gap: '8px' }}>🚀 파이프라인 최근 실행 로그</h3>
+            <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid var(--admin-accent)' }}>
+              <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: 'var(--admin-accent)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icon name="rocket" /> 파이프라인 최근 실행 로그</h3>
               {paceMeta && paceMeta.lastRunTime ? (
                 <>
                   <p style={{ fontSize: '0.9rem', marginBottom: '0.3rem' }}><strong>실행 일시:</strong> {new Date(paceMeta.lastRunTime).toLocaleString()}</p>
@@ -1410,7 +1418,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>아직 파이프라인이 실행되지 않아 기록된 로그가 없습니다.</p>
               )}
             </div>
-            <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>
+            <p style={{ color: 'var(--admin-text-muted)', marginBottom: '24px' }}>
               LLM 파이프라인이 매일 생성하는 목표들이 누적되며, 사용자는 이 풀에서 무작위 3개를 추천받습니다.
             </p>
             <div className="admin-table-wrap">
@@ -1421,11 +1429,11 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <tr key={i}>
                       <td><span className="admin-date-chip" style={{ backgroundColor: item.color || '#60A5FA', color: '#111' }}>{item.category}</span></td>
                       <td className="admin-subject-cell" style={{ opacity: item.isActive === false ? 0.5 : 1 }}>{typeof item.title === 'object' ? item.title.ko : item.title}</td>
-                      <td>{item.isActive !== false ? '✅ 활성' : '❌ 비활성'}</td>
+                      <td>{item.isActive !== false ? '활성' : '비활성'}</td>
                       <td>{item.createdAt ? new Date(item.createdAt).toLocaleDateString('ko') : '-'}</td>
                       <td className="admin-actions-cell">
-                        <button className="admin-action-btn edit" onClick={() => openEditPool(item)} title="수정">✏️</button>
-                        <button className="admin-action-btn delete" onClick={() => handleDeletePool(item.id)} title="삭제">🗑️</button>
+                        <button className="admin-action-btn edit" onClick={() => openEditPool(item)} title="수정"><Icon name="pen" label="수정" /></button>
+                        <button className="admin-action-btn delete" onClick={() => handleDeletePool(item.id)} title="삭제"><Icon name="trash" label="삭제" /></button>
                       </td>
                     </tr>
                   ))}
@@ -1439,8 +1447,8 @@ function Dashboard({ token, adminEmail, onLogout }) {
         {activeTab === 'builderslog' && (
           <div className="admin-builderslog">
             <div className="admin-section-header">
-              <h2>📝 Builder's Log 퍼블리싱</h2>
-              <button className="admin-btn-primary btn-primary" onClick={openCreateBuildersLog}>📝 새 아티클 작성</button>
+              <h2><Icon name="document" /> Builder's Log 퍼블리싱</h2>
+              <button className="admin-btn-primary btn-primary" onClick={openCreateBuildersLog}><Icon name="document" /> 새 아티클 작성</button>
             </div>
             <div className="admin-table-wrap">
               <table className="admin-table">
@@ -1448,12 +1456,12 @@ function Dashboard({ token, adminEmail, onLogout }) {
                 <tbody>
                   {buildersLogMeta.map((item, i) => (
                     <tr key={i}>
-                      <td><span className="admin-date-chip" style={{ backgroundColor: item.accent || '#6D28D9', color: '#fff' }}>EP. {item.chapterNo}</span></td>
-                      <td style={{ color: '#9CA3AF' }}>{item.slug}</td>
+                      <td><span className="admin-date-chip" style={{ backgroundColor: item.accent || 'var(--color-indigo)', color: 'var(--bg-void)' }}>EP. {item.chapterNo}</span></td>
+                      <td className="adm-muted">{item.slug}</td>
                       <td className="admin-subject-cell">{typeof item.title === 'object' ? item.title.ko : item.title}</td>
                       <td>{item.date}</td>
                       <td className="admin-actions-cell">
-                        <button className="admin-action-btn edit" onClick={() => openEditBuildersLog(item)} title="수정/배포">✏️</button>
+                        <button className="admin-action-btn edit" onClick={() => openEditBuildersLog(item)} title="수정/배포"><Icon name="pen" label="수정/배포" /></button>
                       </td>
                     </tr>
                   ))}
@@ -1470,7 +1478,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
               <div className="admin-modal-header">
                 <h3>{poolModal === 'create' ? '추천 항목 추가' : '추천 항목 수정'}</h3>
-                <button className="admin-modal-close" onClick={() => setPoolModal(null)}>✕</button>
+                <button className="admin-modal-close" onClick={() => setPoolModal(null)}><Icon name="close" /></button>
               </div>
               <form onSubmit={handlePoolSubmit}>
                 <div className="admin-modal-body">
@@ -1497,14 +1505,14 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         border: 'none'
                       }}
                     >
-                      ✨ AI 자동 완역 (en / ja)
+                      <Icon name="core" /> AI 자동 완역 (en / ja)
                     </button>
                   </div>
                   <label className="admin-form-label">목표 (Title - {poolFormLocale.toUpperCase()})
                     <input type="text" required value={poolForm.title[poolFormLocale] || ''} onChange={e => setPoolForm({ ...poolForm, title: { ...poolForm.title, [poolFormLocale]: e.target.value } })} />
                   </label>
                   <label className="admin-form-label">카테고리
-                    <select required value={poolForm.category} onChange={e => setPoolForm({ ...poolForm, category: e.target.value })} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--surface-bg)', color: 'var(--text-primary)', marginTop: '6px' }}>
+                    <select required value={poolForm.category} onChange={e => setPoolForm({ ...poolForm, category: e.target.value })} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--glass-border)', background: 'var(--bg-surface)', color: 'var(--text-primary)', marginTop: '6px' }}>
                       <option value="">카테고리 선택</option>
                       {PACENOTE_CATEGORIES.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
@@ -1535,7 +1543,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px', width: '90%' }}>
               <div className="admin-modal-header">
                 <h3>{buildersLogModal === 'create' ? '새 아티클 작성' : '아티클 수정 및 재배포'}</h3>
-                <button className="admin-modal-close" onClick={() => setBuildersLogModal(null)}>✕</button>
+                <button className="admin-modal-close" onClick={() => setBuildersLogModal(null)}><Icon name="close" /></button>
               </div>
               <form onSubmit={handleBuildersLogSubmit}>
                 <div className="admin-modal-body" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr', maxHeight: '70vh', overflowY: 'auto' }}>
@@ -1563,7 +1571,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                         border: 'none'
                       }}
                     >
-                      ✨ AI 자동 완역
+                      <Icon name="core" /> AI 자동 완역
                     </button>
                   </div>
 
@@ -1572,7 +1580,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       본문 Markdown ({buildersLogActiveTab.toUpperCase()} - AI 윤문 및 검열 파이프라인 연동)
                     </label>
                     <label className="admin-btn-secondary btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', padding: '4px 12px', fontSize: '12px' }}>
-                      📁 .md 파일 불러오기
+                      <Icon name="folder" /> .md 파일 불러오기
                       <input 
                         type="file" 
                         accept=".md" 
@@ -1601,9 +1609,9 @@ function Dashboard({ token, adminEmail, onLogout }) {
                                 commits: res.commits && res.commits.length > 0 ? JSON.stringify(res.commits, null, 2) : f.commits
                               }));
                               if (res._warning) {
-                                setBuildersLogAction({ type: 'warning', msg: `⚠️ ${res._warning}` });
+                                setBuildersLogAction({ type: 'warning', msg: `${res._warning}` });
                               } else {
-                                setBuildersLogAction({ type: 'success', msg: '✨ AI 분석 및 자동 작성 완료. 내용을 확인하고 Publish를 눌러주세요.' });
+                                setBuildersLogAction({ type: 'success', msg: 'AI 분석 및 자동 작성 완료. 내용을 확인하고 Publish를 눌러주세요.' });
                               }
                             } catch(err) {
                               setBuildersLogAction({ type: 'error', msg: `AI 분석 실패: ${err.message}` });
@@ -1614,10 +1622,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       />
                     </label>
                   </div>
-                  <textarea required rows={15} value={buildersLogForm.markdown[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: { ...f.markdown, [buildersLogActiveTab]: e.target.value } }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)', color: '#FFF', padding: '12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
+                  <textarea required rows={15} value={buildersLogForm.markdown[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, markdown: { ...f.markdown, [buildersLogActiveTab]: e.target.value } }))} placeholder="# 작성된 마크다운 초고를 여기에 붙여넣거나 파일을 불러오세요..." style={{ gridColumn: 'span 2', fontFamily: 'var(--font-mono)', fontSize: '14px', lineHeight: '1.6', background: 'rgba(255,255,255,0.05)', color: 'var(--admin-text)', padding: '12px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
 
                   {buildersLogAction && (
-                    <div className={`admin-send-status ${buildersLogAction.type}`} style={{ gridColumn: 'span 2' }}>{buildersLogAction.msg}</div>
+                    <div className={`admin-send-status ${buildersLogAction.type} adm-span-2`} >{buildersLogAction.msg}</div>
                   )}
 
                   <hr style={{ gridColumn: 'span 2', borderColor: 'rgba(255,255,255,0.1)', margin: '0.5rem 0' }} />
@@ -1630,19 +1638,19 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     Chapter No (예: 01)
                     <input type="text" required value={buildersLogForm.chapterNo} onChange={e => setBuildersLogForm(f => ({ ...f, chapterNo: e.target.value }))} />
                   </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                  <label className="admin-form-label adm-span-2" >
                     Slug (URL 경로, 영문/하이픈)
                     <input type="text" required value={buildersLogForm.slug} onChange={e => setBuildersLogForm(f => ({ ...f, slug: e.target.value }))} placeholder="my-awesome-update" />
                   </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                  <label className="admin-form-label adm-span-2" >
                     Title (메인 제목 - {buildersLogActiveTab.toUpperCase()})
                     <input type="text" required value={buildersLogForm.title[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, title: { ...f.title, [buildersLogActiveTab]: e.target.value } }))} />
                   </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                  <label className="admin-form-label adm-span-2" >
                     Subtitle (부제목/요약 - {buildersLogActiveTab.toUpperCase()})
                     <input type="text" value={buildersLogForm.subtitle[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, subtitle: { ...f.subtitle, [buildersLogActiveTab]: e.target.value } }))} />
                   </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                  <label className="admin-form-label adm-span-2" >
                     Description (요약 및 SEO 설명 - {buildersLogActiveTab.toUpperCase()})
                     <textarea rows={2} value={buildersLogForm.description[buildersLogActiveTab] || ''} onChange={e => setBuildersLogForm(f => ({ ...f, description: { ...f.description, [buildersLogActiveTab]: e.target.value } }))} placeholder="검색 엔진 및 리스트 카드에서 노출될 요약 정보입니다." />
                   </label>
@@ -1651,18 +1659,25 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <input type="date" required value={buildersLogForm.date} onChange={e => setBuildersLogForm(f => ({ ...f, date: e.target.value }))} />
                   </label>
                   <label className="admin-form-label">
-                    Accent Color (Hex)
-                    <input type="text" value={buildersLogForm.accent} onChange={e => setBuildersLogForm(f => ({ ...f, accent: e.target.value }))} />
+                    Accent (design_system §1-3 브랜드 4색)
+                    {/* 자유 hex 입력이 비브랜드 색 8종을 14개 아티클에 흩뿌린 원인이었다(P0-3b).
+                        §9-10은 카테고리·강조색을 브랜드 4색으로 제한한다 — 입력에서 막는다. */}
+                    <select value={buildersLogForm.accent} onChange={e => setBuildersLogForm(f => ({ ...f, accent: e.target.value }))}>
+                      <option value="var(--color-indigo)">Indigo — 브랜드·디자인·제품 아이덴티티</option>
+                      <option value="var(--color-cyan)">Cyan — 테크 시그널(API·보안·백엔드)</option>
+                      <option value="var(--color-gold)">Gold — 플랫폼 기반·운영</option>
+                      <option value="var(--prism-rose)">Silver — 중립</option>
+                    </select>
                   </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                  <label className="admin-form-label adm-span-2" >
                     Tags (콤마 분리)
                     <input type="text" value={buildersLogForm.tags} onChange={e => setBuildersLogForm(f => ({ ...f, tags: e.target.value }))} placeholder="Design, Architecture, Vercel" />
                   </label>
-                  <label className="admin-form-label" style={{ gridColumn: 'span 2' }}>
+                  <label className="admin-form-label adm-span-2" >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                       <span>관련 커밋 (JSON 배열 - 옵션)</span>
                       <button type="button" onClick={handleFetchRecentCommits} className="admin-btn-secondary btn-secondary" style={{ padding: '4px 8px', fontSize: '0.8rem', height: 'auto' }}>
-                        최근 커밋 10개 불러오기 ⬇️
+                        최근 커밋 10개 불러오기 <Icon name="download" />
                       </button>
                     </div>
                     <textarea rows={3} value={buildersLogForm.commits} onChange={e => setBuildersLogForm(f => ({ ...f, commits: e.target.value }))} placeholder='[{"message": "feat: init", "url": "https..."}]' />
@@ -1695,13 +1710,13 @@ function Dashboard({ token, adminEmail, onLogout }) {
           <div className="admin-modal-overlay" onClick={() => setProfileModal(false)}>
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
               <div className="admin-modal-header">
-                <h3>👤 마이페이지</h3>
-                <button className="admin-modal-close" onClick={() => setProfileModal(false)}>✕</button>
+                <h3><Icon name="user" /> 마이페이지</h3>
+                <button className="admin-modal-close" onClick={() => setProfileModal(false)}><Icon name="close" /></button>
               </div>
               <form onSubmit={handleProfileSubmit}>
                 <div className="admin-modal-body">
                   <div className="admin-profile-card">
-                    <div className="admin-profile-avatar-lg">👤</div>
+                    <div className="admin-profile-avatar-lg"><Icon name="user" size={36} /></div>
                     <div className="admin-profile-detail">
                       <div className="admin-profile-email-lg">{profile?.email}</div>
                       <span className={`admin-role-badge ${profile?.role}`}>{ROLE_LABEL[profile?.role] || profile?.role}</span>
@@ -1741,7 +1756,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
             <div className="admin-modal" style={{ maxWidth: 600 }} onClick={e => e.stopPropagation()}>
               <div className="admin-modal-header">
                 <h3>{contentModal.mode === 'create' ? '콘텐츠 수동 발행' : '콘텐츠 수정'}</h3>
-                <button className="admin-modal-close" onClick={() => setContentModal(null)}>✕</button>
+                <button className="admin-modal-close" onClick={() => setContentModal(null)}><Icon name="close" /></button>
               </div>
               <form onSubmit={handleContentSubmit}>
                 <div className="admin-modal-body">
@@ -1762,10 +1777,10 @@ function Dashboard({ token, adminEmail, onLogout }) {
                   </div>
 
                   <div className="admin-modal-tabs">
-                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'basic' ? 'active' : ''}`} onClick={() => setContentModalTab('basic')}>📅 기본 정보</button>
-                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'signal' ? 'active' : ''}`} onClick={() => setContentModalTab('signal')}>📰 IT Signal</button>
-                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'prompt' ? 'active' : ''}`} onClick={() => setContentModalTab('prompt')}>🤖 AI 프롬프트</button>
-                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'jp' ? 'active' : ''}`} onClick={() => setContentModalTab('jp')}>🇯🇵 일본어</button>
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'basic' ? 'active' : ''}`} onClick={() => setContentModalTab('basic')}><Icon name="calendar" /> 기본 정보</button>
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'signal' ? 'active' : ''}`} onClick={() => setContentModalTab('signal')}><Icon name="news" /> IT Signal</button>
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'prompt' ? 'active' : ''}`} onClick={() => setContentModalTab('prompt')}><Icon name="prompt" /> AI 프롬프트</button>
+                    <button type="button" className={`admin-modal-tab ${contentModalTab === 'jp' ? 'active' : ''}`} onClick={() => setContentModalTab('jp')}>일본어</button>
                   </div>
 
                   {contentModalTab === 'basic' && (
@@ -1785,7 +1800,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <>
                       <label className="admin-form-label">
                         아티클 목록 (JSON 배열 - title, insight, summary, url, og_image, category 등)
-                        <textarea value={contentForm.articles} onChange={e => setContentForm({...contentForm, articles: e.target.value})} rows={10} style={{ fontFamily: 'monospace' }} />
+                        <textarea value={contentForm.articles} onChange={e => setContentForm({...contentForm, articles: e.target.value})} rows={10} className="adm-mono" />
                       </label>
                     </>
                   )}
@@ -1794,7 +1809,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     <>
                       <label className="admin-form-label">
                         프롬프트 스니펫
-                        <textarea value={contentForm.study?.prompt_snippet || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, prompt_snippet: e.target.value}})} rows={4} style={{ fontFamily: 'monospace' }} />
+                        <textarea value={contentForm.study?.prompt_snippet || ''} onChange={e => setContentForm({...contentForm, study: {...contentForm.study, prompt_snippet: e.target.value}})} rows={4} className="adm-mono" />
                       </label>
                       <label className="admin-form-label">
                         상세 설명 ({contentFormLocale.toUpperCase()})
@@ -1802,7 +1817,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       </label>
                       <label className="admin-form-label">
                         파라미터 설정 (JSON 배열 - name, description)
-                        <textarea value={contentForm.parameters} onChange={e => setContentForm({...contentForm, parameters: e.target.value})} rows={4} style={{ fontFamily: 'monospace' }} />
+                        <textarea value={contentForm.parameters} onChange={e => setContentForm({...contentForm, parameters: e.target.value})} rows={4} className="adm-mono" />
                       </label>
                     </>
                   )}
@@ -1827,7 +1842,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
                       </label>
                       <label className="admin-form-label">
                         단어장 (JSON 배열 - word, reading, pronunciation_kr, meaning)
-                        <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={4} style={{ fontFamily: 'monospace' }} />
+                        <textarea value={contentForm.vocabulary} onChange={e => setContentForm({...contentForm, vocabulary: e.target.value})} rows={4} className="adm-mono" />
                       </label>
                       <label className="admin-form-label">
                         실무 활용 팁 (비즈니스 코멘트 - {contentFormLocale.toUpperCase()})
@@ -1860,7 +1875,7 @@ function AdminModal({ mode, form, setForm, action, onSubmit, onClose, showRole }
       <div className="admin-modal" onClick={e => e.stopPropagation()}>
         <div className="admin-modal-header">
           <h3>{mode === 'create' ? '관리자 추가' : '관리자 수정'}</h3>
-          <button className="admin-modal-close" onClick={onClose}>✕</button>
+          <button className="admin-modal-close" onClick={onClose}><Icon name="close" label="닫기" /></button>
         </div>
         <form onSubmit={onSubmit}>
           <div className="admin-modal-body">
@@ -1916,7 +1931,7 @@ function StatCard({ label, value, icon, color, onClick }) {
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
-      <div className="admin-stat-icon">{icon}</div>
+      <div className="admin-stat-icon"><IconOrGlyph value={icon} size={20} /></div>
       <div className="admin-stat-value">{value}</div>
       <div className="admin-stat-label">{label}</div>
     </div>
