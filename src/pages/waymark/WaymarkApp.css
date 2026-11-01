@@ -44,7 +44,7 @@
 }
 .wma-logout {
   font-family: var(--font-body); font-size: var(--fs-sm); color: var(--text-muted);
-  background: transparent; border: 1px solid var(--glass-border); border-radius: var(--radius-pill);
+  background: transparent; border: 1px solid var(--glass-border); /* §4-4 v6.2 — 클릭 버튼은 사각 단일(2026-11-01 알약 일괄 교체) */ border-radius: var(--radius-sm);
   padding: 6px 14px; cursor: pointer; transition: color var(--duration-fast), border-color var(--duration-fast);
 }
 .wma-logout:hover { color: var(--text-secondary); border-color: var(--glass-border-hover); }

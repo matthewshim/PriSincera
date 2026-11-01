@@ -136,7 +136,7 @@ transition: background 0.15s, box-shadow 0.15s;
 /* CTA 문법 통일(리디자인 P4): 트랙 카드의 track-orbit-btn과 동일 비주얼 */
 .rl-mini-orbit {
   display: inline-flex; align-items: center; gap: var(--space-sm);
-  margin-top: 14px; padding: 8px 16px; border-radius: var(--radius-pill);
+  margin-top: 14px; padding: 8px 16px; /* §4-4 v6.2 — 클릭 버튼은 사각 단일(2026-11-01 알약 일괄 교체) */ border-radius: var(--radius-sm);
   border: 1px solid transparent; background: var(--gradient-brand);
   color: var(--bg-surface); font-weight: 600; font-size: var(--fs-sm);
   box-shadow: 0 4px 18px rgba(165, 180, 252, 0.18);

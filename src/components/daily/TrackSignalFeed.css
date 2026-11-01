@@ -39,7 +39,7 @@
 
 .track-chip {
   padding: 6px 13px;
-  border-radius: var(--radius-pill);
+  /* §4-4 v6.2 — 클릭 버튼은 사각 단일(2026-11-01 알약 일괄 교체) */ border-radius: var(--radius-sm);
   border: 1px solid var(--glass-border);
   background: transparent;
   color: var(--text-muted);

@@ -441,7 +441,7 @@
   background: rgba(241, 245, 249, 0.05);
   border: 1px solid rgba(241, 245, 249, 0.15);
   color: var(--prism-rose);
-  border-radius: var(--radius-pill);
+  /* §4-4 v6.2 — 클릭 버튼은 사각 단일(2026-11-01 알약 일괄 교체) */ border-radius: var(--radius-sm);
   padding: 8px 16px;
   cursor: pointer;
   font-size: var(--fs-sm);
