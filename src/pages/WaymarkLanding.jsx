@@ -37,20 +37,15 @@ export default function WaymarkLanding() {
     return () => document.body.classList.remove('hero-ready');
   }, []);
 
-  const heroSub = t('waymark.hero.sub').split('\n');
-
   return (
     <div className="wm-page">
 
-      {/* HERO — 중앙(§9-1): 아이콘 → 타이틀(그라디언트 클립) → 서브카피(1행 로케일 + 2행 고정 EN) → CTA → 기대 칩 */}
+      {/* HERO — 중앙(§9-1): 아이콘 → 타이틀(그라디언트 클립) → 서브카피(1행 로케일 + 2행 고정 EN — 형제 히어로와 동일 활자) → CTA → 기대 칩 */}
       <header className="wm-hero">
         <h1 className="wm-hero-title">Waymark</h1>
-        <p className="wm-hero-sub">
-          {heroSub[0]}
-          {heroSub[1] && <span className="en">{heroSub[1]}</span>}
-        </p>
+        <p className="wm-hero-sub">{t('waymark.hero.sub')}</p>
         <div className="wm-hero-cta">
-          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.hero.ctaPrimary')} <span aria-hidden="true">→</span></Link>
+          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.hero.ctaPrimary')}<Icon name="arrowRight" size={15} /></Link>
           <a href="#wmLoop" className="wm-btn wm-btn-ghost">{t('waymark.hero.ctaGhost')}</a>
         </div>
         <div className="wm-chip"><span className="wm-chip-dot" aria-hidden="true"></span> {t('waymark.hero.chip')}</div>
@@ -124,7 +119,7 @@ export default function WaymarkLanding() {
         <div className="wm-cta">
           <h2>{t('waymark.cta.title')}</h2>
           <p>{t('waymark.cta.desc')}</p>
-          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.cta.btn')} <span aria-hidden="true">→</span></Link>
+          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.cta.btn')}<Icon name="arrowRight" size={15} /></Link>
           <p className="wm-cta-soon">{t('waymark.cta.soon')}</p>
         </div>
       </section>

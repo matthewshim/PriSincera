@@ -57,12 +57,20 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
   background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
 }
+/* 히어로 서브카피 — 형제 히어로(`.hero-paragraph`·`.pvl-hero-copy`)와 **동일 패턴**.
+   구 구조는 2행 영문 태그라인만 `<span class="en">`으로 떼어 `--font-mono`·`--fs-sm`·
+   `--tracking-wider`를 걸었다. 그런데 이 저장소에서 mono는 **마이크로 라벨·메타·
+   기술 크롬 전용**이다(아이브로우·배지·태그·날짜·터미널 모사·숫자 55곳 전수 확인).
+   태그라인은 **문장**이므로 본문 활자를 쓴다 — 같은 역할의 Builder's Log·Planner's View
+   영문 2행도 분리 없이 한 문단으로 렌더한다(오너 발견 2026-11-01).
+   줄바꿈은 `white-space: pre-line`으로 언어팩에서 그대로 받는다. */
 .wm-hero-sub {
-  font-size: var(--fs-md); color: var(--crystal-light); margin: var(--space-sm) auto 0; max-width: 44ch;
-}
-.wm-hero-sub .en {
-  display: block; color: var(--text-muted); font-family: var(--font-mono);
-  font-size: var(--fs-sm); letter-spacing: var(--tracking-wider); margin-top: 6px;
+  font-size: var(--fs-md);
+  color: var(--crystal-light);
+  line-height: var(--leading-relaxed);
+  white-space: pre-line;
+  margin: var(--space-sm) auto 0;
+  max-width: 44ch;
 }
 .wm-hero-cta { display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap; margin-top: var(--space-xl); }
 .wm-chip {
@@ -173,7 +181,21 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
 }
 .wm-cta h2 { font-size: var(--fs-2xl); color: var(--text-primary); font-weight: 500; margin: 0 0 var(--space-md); line-height: var(--leading-snug); text-wrap: balance; white-space: pre-line; }
 .wm-cta p { font-size: var(--fs-base); color: var(--text-secondary); max-width: var(--measure); margin: 0 auto var(--space-lg);}
-.wm-cta-soon { margin-top: var(--space-lg); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: var(--tracking-wider); color: var(--color-indigo); opacity: 0.9; }
+/* `.wm-cta p`(특이도 0,1,1)가 이 규칙(0,1,0)을 덮어 **margin-top·font-size·color가
+   전부 사문**이었다 — 안내 문구가 버튼에 밀착하고(top 0) 카드 안쪽 아래로 24px가
+   남았으며, 본문 크기·색으로 렌더됐다. 같은 형태(0,2,1)로 올려 역할을 되찾는다.
+   `opacity: 0.9`는 제거 — 텍스트 투명도 중첩은 P2-6에서 AA 미달의 원인이었고,
+   흐림은 색 토큰이 맡는다. */
+.wm-cta p.wm-cta-soon {
+  /* 좌우는 `auto`를 유지해야 한다 — `.wm-cta p`의 `max-width: var(--measure)`(860px)가
+     이 요소에도 적용되므로, 좌우를 0으로 두면 블록이 카드 좌측에 붙고 그 안에서만
+     중앙 정렬돼 버튼 중심과 약 114px 어긋난다(카드 내부 1088px 기준). */
+  margin: var(--space-lg) auto 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-indigo);
+}
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
