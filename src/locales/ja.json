@@ -110,8 +110,18 @@
     "servicesSubtitle": "企画で積んだ20年がAIと出会い、五つの成果になりました。\n作る過程から実務の解決まで — 姿勢の結果です。",
     "serviceBaseCta": "オープンソースとシステムアーキテクチャを見る",
     "serviceBuildersDesc": "Vibe codingとGCPサーバーレスを基盤に設計を進めるPriSinceraの執拗な開発旅路です。\n難易度の高いバックエンドのトラブルシューティング、AIパイプライン拡張記、セキュリティ監査など、生々しい成長の記録をリアルタイムで共有します。",
+    "serviceBuildersOne": "つくる過程をそのまま残した開発の記録。",
+    "serviceBuildersTags": [
+      "Architecture",
+      "Troubleshooting"
+    ],
     "serviceBuildersCta": "開発の記録を読む",
     "serviceSylphioDesc": "画面上のすべての音声とマイク入力をリアルタイムでキャプチャし、オンデバイスで遅延なく字幕を表示するAIリアルタイム通訳アプリです。\nGeminiとGPTの強力な多言語インテリジェンスをMacネイティブ環境で完璧に体験してください。",
+    "serviceSylphioOne": "画面のすべての音をリアルタイム字幕へ — Macネイティブ通訳。",
+    "serviceSylphioTags": [
+      "On-Device AI",
+      "macOS Native"
+    ],
     "serviceSylphioCta": "Sylphio に出会う",
     "connectTitle": "一緒に",
     "connectTitleAccent": "話しましょう。",
@@ -119,6 +129,11 @@
     "seoDescription": "PriSincera公式ホームページ。複雑なビジネスに真心を込めて優先順位を設計します。",
     "seoKeywords": "PriSincera, ビジネス, 戦略, 優先順位, 誠実さ, ITトレンド",
     "serviceReLearnDesc": "毎日の学び(Daily Digest)と週間の実行・振り返り(Pace Note)を\n一つの成長ループに統合。\n学び、実行し、振り返る一日が明日のレコメンドを変えます。",
+    "serviceReLearnOne": "学び、実行し、振り返る一日が明日のおすすめを変えます。",
+    "serviceReLearnTags": [
+      "Daily Curation",
+      "AI Reflection"
+    ],
     "heroRole": "20年の企画センスにAIを掛け合わせ、毎日新しく創ります。",
     "serviceBuildersTag": "作る過程の記録",
     "serviceReLearnTag": "20年のキャリアの製品化",
@@ -126,12 +141,22 @@
     "makerNote": "このサイトの全ソースとアーキテクチャは、オープンソースで公開されています。",
     "servicePlannerTag": "技術と企画のあいだで",
     "servicePlannerDesc": "プロダクトを作る前段 — 何を、誰のために、なぜ今つくるのか。\n20年以上さまざまなサービスを作りながら学んだ、企画と技術の関係を書き残します。",
+    "servicePlannerOne": "何を、誰のために、なぜ今つくるのか — 企画者の視点。",
+    "servicePlannerTags": [
+      "Planning",
+      "Leadership"
+    ],
     "servicePlannerCta": "企画者の視点を読む",
     "serviceReLearnCta": "成長ループを見る",
     "latestNote": "最新記事",
     "latestPart": "全{n}回の最新",
     "serviceWaymarkTag": "決断の伴走者",
     "serviceWaymarkDesc": "大きな決断ほど、そばにいる人が必要です。\nWaymarkはあなたの決断を覚え、揺れる瞬間に自ら歩み寄るAIの伴走者です。",
+    "serviceWaymarkOne": "決断を記憶し、揺れる瞬間に先に訪れる同伴者。",
+    "serviceWaymarkTags": [
+      "Decision Journal",
+      "Proactive AI"
+    ],
     "serviceWaymarkCta": "Waymarkに出会う"
   },
   "relearn": {

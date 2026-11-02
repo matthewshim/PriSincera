@@ -110,8 +110,18 @@
     "servicesSubtitle": "Twenty years of planning met AI and became five things.\nFrom the making to solving real work — the results of an attitude.",
     "serviceBaseCta": "Explore Open Source & System Architecture",
     "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
+    "serviceBuildersOne": "The build, recorded as it happened.",
+    "serviceBuildersTags": [
+      "Architecture",
+      "Troubleshooting"
+    ],
     "serviceBuildersCta": "Read the Builder's Log",
     "serviceSylphioDesc": "An AI real-time translation app that captures all screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nFlawlessly experience the powerful multilingual intelligence of Gemini and GPT in a native Mac environment.",
+    "serviceSylphioOne": "Every sound on screen, live-captioned — native on Mac.",
+    "serviceSylphioTags": [
+      "On-Device AI",
+      "macOS Native"
+    ],
     "serviceSylphioCta": "Meet Sylphio",
     "connectTitle": "Let's ",
     "connectTitleAccent": "talk.",
@@ -119,6 +129,11 @@
     "seoDescription": "PriSincera Official Website. Designing priorities with sincerity for complex business.",
     "seoKeywords": "PriSincera, Business, Strategy, Priority, Sincerity, IT Trends",
     "serviceReLearnDesc": "Daily learning (Daily Digest) and weekly action & reflection (Pace Note),\nunified into one growth loop.\nLearn, run, reflect — each day tunes tomorrow's recommendations.",
+    "serviceReLearnOne": "Learn, run, reflect — today reshapes tomorrow’s picks.",
+    "serviceReLearnTags": [
+      "Daily Curation",
+      "AI Reflection"
+    ],
     "heroRole": "Twenty years of product instinct, now building anew every day with AI.",
     "serviceBuildersTag": "The record of making",
     "serviceReLearnTag": "Two decades, productized",
@@ -126,12 +141,22 @@
     "makerNote": "This site's full source and architecture are open source.",
     "servicePlannerTag": "Between engineering and planning",
     "servicePlannerDesc": "The upstream of building a product — what to build, for whom, and why now.\nNotes on the relationship between planning and engineering, learned across twenty years of building services.",
+    "servicePlannerOne": "What to build, for whom, and why now — a planner’s view.",
+    "servicePlannerTags": [
+      "Planning",
+      "Leadership"
+    ],
     "servicePlannerCta": "Read the Planner's View",
     "serviceReLearnCta": "Explore ReLearn",
     "latestNote": "Latest",
     "latestPart": "Latest of {n}",
     "serviceWaymarkTag": "Companion for decisions",
     "serviceWaymarkDesc": "The bigger the decision, the more you need someone beside you.\nWaymark remembers your decisions and reaches out first when you waver — an AI companion.",
+    "serviceWaymarkOne": "Remembers your decisions, and reaches out when you waver.",
+    "serviceWaymarkTags": [
+      "Decision Journal",
+      "Proactive AI"
+    ],
     "serviceWaymarkCta": "Meet Waymark"
   },
   "relearn": {

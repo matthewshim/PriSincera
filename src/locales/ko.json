@@ -110,8 +110,18 @@
     "servicesSubtitle": "기획으로 쌓은 20년이 AI를 만나, 다섯 가지 결과물이 되었습니다.\n만드는 과정부터 실무의 해결까지 — 태도의 결과물입니다.",
     "serviceBaseCta": "오픈 소스 및 시스템 아키텍처 살펴보기",
     "serviceBuildersDesc": "Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.\n어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.",
+    "serviceBuildersOne": "만드는 과정을 그대로 남긴 개발 여정기.",
+    "serviceBuildersTags": [
+      "Architecture",
+      "Troubleshooting"
+    ],
     "serviceBuildersCta": "개발 여정 읽기",
     "serviceSylphioDesc": "화면의 모든 소리와 마이크를 실시간 캡처하여 온디바이스에서 지체 없이 자막으로 구현하는 AI 실시간 통역 앱입니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
+    "serviceSylphioOne": "화면의 모든 소리를 실시간 자막으로 — Mac 네이티브 통역.",
+    "serviceSylphioTags": [
+      "On-Device AI",
+      "macOS Native"
+    ],
     "serviceSylphioCta": "Sylphio 만나보기",
     "connectTitle": "함께 ",
     "connectTitleAccent": "이야기합시다.",
@@ -119,6 +129,11 @@
     "seoDescription": "PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.",
     "seoKeywords": "PriSincera, 비즈니스, 전략, 우선순위, 진정성, IT 트렌드",
     "serviceReLearnDesc": "매일의 배움(Daily Digest)과 주간 실행·복기(Pace Note)를\n하나의 성장 루프로 통합했습니다.\n배우고, 실행하고, 복기하는 하루가 내일의 추천을 바꿉니다.",
+    "serviceReLearnOne": "배우고 실행하고 복기하는 하루가 내일의 추천을 바꿉니다.",
+    "serviceReLearnTags": [
+      "Daily Curation",
+      "AI Reflection"
+    ],
     "heroRole": "20년의 기획 감각에 AI를 더해, 매일 새로 만듭니다.",
     "serviceBuildersTag": "만드는 과정의 기록",
     "serviceReLearnTag": "20년 경력의 제품화",
@@ -126,12 +141,22 @@
     "makerNote": "이 사이트의 전체 소스와 아키텍처는 오픈소스로 공개되어 있습니다.",
     "servicePlannerTag": "기술과 기획 사이에서",
     "servicePlannerDesc": "제품을 만드는 일의 앞단 — 무엇을, 누구를 위해, 왜 지금 만들 것인가.\n20년 넘게 여러 서비스를 만들며 배운 기획과 기술의 관계를 글로 남깁니다.",
+    "servicePlannerOne": "무엇을, 누구를 위해, 왜 지금 만드는가 — 기획자의 시선.",
+    "servicePlannerTags": [
+      "Planning",
+      "Leadership"
+    ],
     "servicePlannerCta": "기획자의 시선 읽기",
     "serviceReLearnCta": "성장 루프 살펴보기",
     "latestNote": "최신 글",
     "latestPart": "{n}편 중 최신",
     "serviceWaymarkTag": "결정의 동반자",
     "serviceWaymarkDesc": "큰 결정일수록 곁에 있어 줄 사람이 필요합니다.\nWaymark은 당신의 결정을 기억하고, 흔들리는 순간 먼저 찾아오는 AI 동반자입니다.",
+    "serviceWaymarkOne": "결정을 기억하고, 흔들리는 순간 먼저 찾아오는 동반자.",
+    "serviceWaymarkTags": [
+      "Decision Journal",
+      "Proactive AI"
+    ],
     "serviceWaymarkCta": "Waymark 만나보기"
   },
   "relearn": {

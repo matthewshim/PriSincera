@@ -5,109 +5,88 @@ import useScrollReveal from '../../hooks/useScrollReveal';
 import './WorkSection.css';
 import Icon from '../common/Icon';
 
+/**
+ * WorkSection (홈 `Proof of Work`) — 균일 압축 2열 그리드.
+ *
+ * [2026-11-02 재편 — 안 B] 구 구조는 제품 1개당 전폭 카드 1장(약 404px)이 세로로 쌓여
+ * 5개에서 섹션이 **2,216px(900px 뷰포트 2.5화면)** 였고, 제품이 늘면 그대로 비례해 자랐다.
+ * 카드마다 정보가 7단위(서술태그·영문라벨·제목·설명 2~3행·태그 3~4개·CTA·CSS 아트+캡션)
+ * 였고 같은 위계로 5번 반복돼 무엇을 먼저 볼지 신호가 없었다.
+ *
+ * 재편 원칙 — **모든 제품을 동등하게 둔다**(서비스 간 우선순위를 매길 수 없다는 오너 결정).
+ *   · 정보 3단위 고정: 제품명 / 한 줄 요약 / 태그 2개 — **카드 자체가 링크**이고
+ *     어포던스는 우측 하단 화살표가 맡는다(별도 CTA 버튼을 두지 않는다)
+ *   · 액센트는 아이콘 1개 — 기존 51종 세트에서 고른다(제품당 전용 CSS 아트 918줄 폐지)
+ *   · 데스크톱 2열 · 모바일 1열. 제품 추가 비용은 아래 PRODUCTS 배열에 1항목이다.
+ *
+ * [모바일] 구 구조는 `scroll-snap-type: x mandatory` 가로 캐러셀이었는데 스크롤바를
+ * 양쪽 다 숨겨 스와이프 표식이 없었고, `column-reverse`로 카드가 뷰포트보다 높아
+ * **CTA를 보려면 세로로 내려야 하는데 컨테이너는 가로로 스냅**했다(오너 "기이현상" 제보).
+ * 압축 카드는 한 화면에 들어오므로 캐러셀이 필요 없다 — 순수 세로 1축으로 되돌렸다.
+ * 가로 거리로 활성 카드를 고르던 스크롤 스포트라이트도 함께 제거했다(비활성 카드를
+ * `opacity: .45` + `blur()`로 흐려 비교를 방해했다).
+ *
+ * 규범: design_system.md §9-14 제품 카드 규격.
+ */
+
+/* 제품 5종 — 추가 시 이 배열에 1항목만 넣는다(아이콘 1개 + 요약 1행 + 태그 2개).
+   `icon`은 `components/common/Icon` 세트의 이름이고, `accent`는 제품 액센트 토큰이다. */
+const PRODUCTS = [
+  { key: 'Planner',  name: "Planner's View", to: '/planners-view', icon: 'compass',  accent: 'var(--accent-planner)' },
+  { key: 'Builders', name: "Builder's Log",  to: '/builders-log',  icon: 'document', accent: 'var(--accent-log)' },
+  { key: 'ReLearn',  name: 'ReLearn',        to: '/relearn',       icon: 'cycle',    accent: 'var(--accent-relearn)' },
+  { key: 'Waymark',  name: 'Waymark',        to: '/waymark',       icon: 'trail',    accent: 'var(--accent-waymark)' },
+  { key: 'Sylphio',  name: 'Sylphio',        to: '/sylphio',       icon: 'mic',      accent: 'var(--accent-sylphio)' },
+];
+
+function ProductCard({ product, index }) {
+  const { t } = useTranslation();
+  const tags = t(`home.service${product.key}Tags`);
+  const cta = t(`home.service${product.key}Cta`);
+  /* CTA가 이미 제품명을 품은 경우(예: "Waymark 만나보기") 접두를 붙이면 이름이 두 번 읽힌다.
+     어느 쪽이든 보이는 제품명이 접근명에 포함되므로 WCAG 2.5.3을 충족한다. */
+  const label = cta.includes(product.name) ? cta : `${product.name} — ${cta}`;
+
+  return (
+    /* 카드 자체가 링크다(오너 결정 2026-11-02) — 카드 안에 별도 CTA 버튼을 두면
+       클릭 대상이 둘이 되고 정보 단위가 하나 늘어난다. 어포던스는 우측 하단 화살표가 맡는다.
+       `aria-label`에 **제품명을 포함**해야 한다 — 보이는 텍스트가 접근명에 들어가지 않으면
+       WCAG 2.5.3(Label in Name) 위반이다. 기존 CTA 문구는 여기서 계속 쓰인다. */
+    <Link
+      to={product.to}
+      className="work-card reveal-item"
+      aria-label={label}
+      /* 인스턴스별 데이터(액센트·리빌 지연)는 커스텀 프로퍼티로 넘긴다 —
+         클래스로 빼면 제품 수만큼 단일 사용 클래스가 생긴다(P3-13 판단). */
+      style={{ '--card-accent': product.accent, '--reveal-delay': `${0.1 + index * 0.06}s` }}
+    >
+      <div className="work-card-head">
+        <span className="work-card-mark" aria-hidden="true">
+          <Icon name={product.icon} size={16} />
+        </span>
+        <h3 className="work-card-name">{product.name}</h3>
+      </div>
+
+      <p className="work-card-line">{t(`home.service${product.key}One`)}</p>
+
+      <div className="work-card-foot">
+        <div className="work-card-tags">
+          {(Array.isArray(tags) ? tags : []).map((tag) => (
+            <span className="work-tag" key={tag}>{tag}</span>
+          ))}
+        </div>
+        {/* 어포던스 전용 — 의미는 카드의 aria-label이 담당하므로 보조기술에서 숨긴다 */}
+        <span className="work-card-arrow" aria-hidden="true">
+          <Icon name="arrowRight" size={16} />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 export default function WorkSection() {
   const { t } = useTranslation();
   const [sectionRef, revealed] = useScrollReveal({ threshold: 0.08 });
-  const [activeCardIndex, setActiveCardIndex] = React.useState(-1);
-  const activeIndexRef = React.useRef(-1);
-
-  React.useEffect(() => {
-    activeIndexRef.current = activeCardIndex;
-  }, [activeCardIndex]);
-
-  React.useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const grid = section.querySelector('.work-grid');
-    let rafId = null;
-
-    const handleScroll = () => {
-      if (rafId) return;
-
-      rafId = requestAnimationFrame(() => {
-        const cards = section.querySelectorAll('.flagship-card');
-        const isMobile = window.innerWidth <= 768;
-        const viewCenterY = window.innerHeight / 2;
-        const viewCenterX = window.innerWidth / 2;
-
-        let absoluteClosestIndex = -1;
-        let minDistance = Infinity;
-        const cardDistances = [];
-
-        cards.forEach((card, idx) => {
-          const rect = card.getBoundingClientRect();
-          let distance;
-
-          if (isMobile) {
-            // Horizontal distance on mobile
-            const cardCenterX = rect.left + rect.width / 2;
-            distance = Math.abs(viewCenterX - cardCenterX);
-          } else {
-            // Vertical distance on desktop/tablet
-            const cardCenterY = rect.top + rect.height / 2;
-            distance = Math.abs(viewCenterY - cardCenterY);
-          }
-
-          cardDistances.push(distance);
-
-          const isInViewport = isMobile
-            ? (rect.left < window.innerWidth && rect.right > 0)
-            : (rect.top < window.innerHeight && rect.bottom > 0);
-
-          if (isInViewport && distance < minDistance) {
-            minDistance = distance;
-            absoluteClosestIndex = idx;
-          }
-        });
-
-        const currentActive = activeIndexRef.current;
-        let nextIndex = currentActive;
-
-        // Reset focus if section is scrolled way out of view (desktop threshold: 500px)
-        if (absoluteClosestIndex === -1 || (!isMobile && minDistance > 500)) {
-          nextIndex = -1;
-        } else {
-          if (currentActive === -1) {
-            nextIndex = absoluteClosestIndex;
-          } else {
-            // Hysteresis buffer to make transitions steady (desktop: 200px, mobile: 60px)
-            const currentActiveDistance = cardDistances[currentActive] ?? Infinity;
-            const candidateDistance = cardDistances[absoluteClosestIndex];
-            const buffer = isMobile ? 60 : 200;
-
-            if (candidateDistance < currentActiveDistance - buffer) {
-              nextIndex = absoluteClosestIndex;
-            }
-          }
-        }
-
-        if (nextIndex !== currentActive) {
-          setActiveCardIndex(nextIndex);
-        }
-        rafId = null;
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    if (grid) {
-      grid.addEventListener('scroll', handleScroll, { passive: true });
-    }
-
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-      if (grid) {
-        grid.removeEventListener('scroll', handleScroll);
-      }
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [sectionRef]);
-
-
 
   return (
     <section className={`work reveal-section${revealed ? ' revealed' : ''}`} id="work" ref={sectionRef}>
@@ -130,282 +109,11 @@ export default function WorkSection() {
           </p>
         </div>
 
-        <div className={`work-grid${activeCardIndex !== -1 ? ' has-active-focus' : ''}`}>
-        {/* 1. Planner's View — 기획자의 시선 (GNB 1순위와 동일 위상) */}
-        <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 0 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.2s', '--card-accent': 'var(--accent-planner)' }}
-          data-accent-color="199,210,254"
-        >
-          <div className="flagship-content">
-            <div className="flagship-narrative">{t('home.servicePlannerTag')}</div>
-            <div className="flagship-label">Product Planning · Perspective</div>
-            <h3 className="flagship-title">Planner's View</h3>
-            <p className="flagship-desc">
-              {t('home.servicePlannerDesc').split('\n').map((line, idx, arr) => (
-                <React.Fragment key={idx}>
-                  {line}
-                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
-                  {idx < arr.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </p>
-            <div className="work-card-tags">
-              <span className="work-tag">Product Planning</span>
-              <span className="work-tag">Leadership</span>
-              <span className="work-tag">Organization</span>
-            </div>
-            <div className="flagship-cta-wrap">
-              <Link to="/planners-view" className="btn-primary flagship-cta-btn">
-                {t('home.servicePlannerCta')}
-                <Icon name="arrowRight" size={15} />
-              </Link>
-            </div>
-          </div>
-          <div className="flagship-visual">
-            <div className="dynamic-mockup plannersview-mockup">
-              <div className="pvm-stack">
-                <span className="pvm-sheet s3"></span>
-                <span className="pvm-sheet s2"></span>
-                <span className="pvm-sheet s1">
-                  <i className="pvm-line l1"></i><i className="pvm-line l2"></i><i className="pvm-line l3"></i>
-                </span>
-              </div>
-              <div className="pvm-caption">A continuing column</div>
-            </div>
-            <div className="visual-blur-orb"></div>
-          </div>
+        <div className="work-grid">
+          {PRODUCTS.map((product, i) => (
+            <ProductCard product={product} index={i} key={product.key} />
+          ))}
         </div>
-
-        {/* 2. Builder's Log — 만드는 과정의 기록 */}
-        <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 1 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.3s', '--card-accent': 'var(--accent-log)' }}
-          data-accent-color="229,178,93"
-        >
-          <div className="flagship-content">
-            <div className="flagship-narrative">{t('home.serviceBuildersTag')}</div>
-            <div className="flagship-label">Engineering & Growth Logs</div>
-            <h3 className="flagship-title">Builder's Log</h3>
-            <p className="flagship-desc">
-              {t('home.serviceBuildersDesc').split('\n').map((line, idx, arr) => (
-                <React.Fragment key={idx}>
-                  {line}
-                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
-                  {idx < arr.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </p>
-            <div className="work-card-tags">
-              <span className="work-tag">Tech Blog</span>
-              <span className="work-tag">Architecture</span>
-              <span className="work-tag">Troubleshooting</span>
-            </div>
-            <div className="flagship-cta-wrap">
-              <Link to="/builders-log" className="btn-primary flagship-cta-btn">
-                {t('home.serviceBuildersCta')}
-                <Icon name="arrowRight" size={15} />
-              </Link>
-            </div>
-          </div>
-          <div className="flagship-visual">
-            <div className="dynamic-mockup builderslog-mockup">
-              <div className="mockup-timeline">
-                <div className="timeline-line"></div>
-                <div className="timeline-node active">
-                  <div className="node-dot"></div>
-                  <div className="node-info">
-                    <div className="node-title">Admin Integration</div>
-                    <div className="node-meta">Chapter 3 · May 20</div>
-                  </div>
-                </div>
-                <div className="timeline-node">
-                  <div className="node-dot"></div>
-                  <div className="node-info">
-                    <div className="node-title">Auth Session Isolation</div>
-                    <div className="node-meta">Chapter 2 · May 18</div>
-                  </div>
-                </div>
-                <div className="timeline-node">
-                  <div className="node-dot"></div>
-                  <div className="node-info">
-                    <div className="node-title">Pace Note Architecture</div>
-                    <div className="node-meta">Chapter 1 · May 15</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="visual-blur-orb"></div>
-          </div>
-        </div>
-
-        {/* 3. ReLearn — 20년 경력의 제품화 (Daily Digest + Pace Note 통합 성장 루프) */}
-        <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 2 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.4s', '--card-accent': 'var(--accent-relearn)' }}
-          data-accent-color="34,211,238"
-        >
-          <div className="flagship-content">
-            <div className="flagship-narrative">{t('home.serviceReLearnTag')}</div>
-            <div className="flagship-label">Unified Growth Loop — Learn · Run · Reflect</div>
-            <h3 className="flagship-title">ReLearn</h3>
-            <p className="flagship-desc">
-              {t('home.serviceReLearnDesc').split('\n').map((line, idx, arr) => (
-                <React.Fragment key={idx}>
-                  {line}
-                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
-                  {idx < arr.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </p>
-            <div className="work-card-tags">
-              <span className="work-tag">Daily Curation</span>
-              <span className="work-tag">Action Tracker</span>
-              <span className="work-tag">AI Reflection</span>
-            </div>
-            <div className="flagship-cta-wrap">
-              <Link to="/relearn" className="btn-primary flagship-cta-btn">
-                {t('home.serviceReLearnCta')}
-                <Icon name="arrowRight" size={15} />
-              </Link>
-            </div>
-          </div>
-          <div className="flagship-visual">
-            <div className="dynamic-mockup relearn-mockup">
-              {/* 상단: 성장 루프 궤도 — 코어(🪐) + 3 스테이지 노드 + 공전 코멧 */}
-              <div className="rlm-orbit-canvas">
-                <div className="rlm-orbit-ring"></div>
-                <div className="rlm-orbit-rotor"><span className="rlm-comet"></span></div>
-                <div className="rlm-core"><Icon name="orbit" size={30} /></div>
-                <div className="rlm-node n1"><span className="rlm-node-ico"><Icon name="book" /></span><span className="rlm-node-tag">Learn</span></div>
-                <div className="rlm-node n2"><span className="rlm-node-ico"><Icon name="compass" /></span><span className="rlm-node-tag">Run</span></div>
-                <div className="rlm-node n3"><span className="rlm-node-ico"><Icon name="document" /></span><span className="rlm-node-tag">Reflect</span></div>
-              </div>
-              {/* 하단: 루프 리포트 미니 터미널 (Base 터미널과 동일 문법) */}
-              <div className="rlm-report">
-                <div className="rlm-report-header">
-                  <span className="rlm-report-title">growth-loop.state</span>
-                  <span className="rlm-report-status">LOOPING</span>
-                </div>
-                <div className="rlm-report-row">
-                  <span className="rlm-report-label">Run</span>
-                  <span className="rlm-report-bar"><i className="rlm-report-fill"></i></span>
-                  <span className="rlm-report-val">68%</span>
-                </div>
-                <div className="rlm-report-meta"><Icon name="flame" /> 6-week streak · Learn → Run → Reflect</div>
-              </div>
-            </div>
-            <div className="visual-blur-orb"></div>
-          </div>
-        </div>
-
-        {/* 4. Waymark — 의사결정 동반 서비스 (ReLearn 다음·Sylphio 앞, Candela 슬롯 피벗) */}
-        <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 3 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.5s', '--card-accent': 'var(--accent-waymark)' }}
-          data-accent-color="165,180,252"
-        >
-          <div className="flagship-content">
-            <div className="flagship-narrative">{t('home.serviceWaymarkTag')}</div>
-            <div className="flagship-label">Decision Companion · Coming Soon</div>
-            <h3 className="flagship-title">Waymark</h3>
-            <p className="flagship-desc">
-              {t('home.serviceWaymarkDesc').split('\n').map((line, idx, arr) => (
-                <React.Fragment key={idx}>
-                  {line}
-                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
-                  {idx < arr.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </p>
-            <div className="work-card-tags">
-              <span className="work-tag">Decision Journal</span>
-              <span className="work-tag">Proactive AI</span>
-              <span className="work-tag">Peer Stories</span>
-            </div>
-            <div className="flagship-cta-wrap">
-              <Link to="/waymark" className="btn-primary flagship-cta-btn">
-                {t('home.serviceWaymarkCta')}
-                <Icon name="arrowRight" size={15} />
-              </Link>
-            </div>
-          </div>
-          <div className="flagship-visual">
-            <div className="dynamic-mockup waymark-mockup">
-              <div className="wkm-compass">
-                <span className="wkm-tick wkm-tick-n"></span>
-                <span className="wkm-tick wkm-tick-e"></span>
-                <span className="wkm-tick wkm-tick-s"></span>
-                <span className="wkm-tick wkm-tick-w"></span>
-                <span className="wkm-needle"></span>
-                <span className="wkm-core"></span>
-              </div>
-              <div className="wkm-caption">Beside every decision</div>
-            </div>
-            <div className="visual-blur-orb"></div>
-          </div>
-        </div>
-
-        {/* 5. Sylphio — 실무 니즈의 해결 */}
-        <div
-          className={`flagship-card reveal-item flagship-glow${activeCardIndex === 4 ? ' active-focus' : ''}`}
-          style={{ '--reveal-delay': '0.6s', '--card-accent': 'var(--accent-sylphio)' }}
-          data-accent-color="135,169,236"
-        >
-          <div className="flagship-content">
-            <div className="flagship-narrative">{t('home.serviceSylphioTag')}</div>
-            <div className="flagship-label">On-Device AI Translation</div>
-            <h3 className="flagship-title">Sylphio</h3>
-            <p className="flagship-desc">
-              {t('home.serviceSylphioDesc').split('\n').map((line, idx, arr) => (
-                <React.Fragment key={idx}>
-                  {line}
-                  {/* 마지막 줄 뒤 <br />는 문단 아래에 빈 줄을 만든다 — CSS margin과 이중으로 벌어졌다 */}
-                  {idx < arr.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </p>
-            <div className="work-card-tags">
-              <span className="work-tag">On-Device AI</span>
-              <span className="work-tag">Real-Time STT</span>
-              <span className="work-tag">macOS Native</span>
-              <span className="work-tag">Secure Keychain</span>
-            </div>
-            <div className="flagship-cta-wrap">
-              <Link to="/sylphio" className="btn-primary flagship-cta-btn">
-                {t('home.serviceSylphioCta')}
-                <Icon name="arrowRight" size={15} />
-              </Link>
-            </div>
-          </div>
-          <div className="flagship-visual">
-            <div className="dynamic-mockup sylphio-mockup">
-              {/* 상단: 오로라 코어(앱 아이콘) + 리스닝 파형 */}
-              <div className="sym-stage">
-                <div className="sym-aurora">
-                  <img src="/sylphio-icon.png?v=3" alt="Sylphio" className="sym-core-img" />
-                  <span className="sym-ring r1"></span>
-                  <span className="sym-ring r2"></span>
-                </div>
-                <div className="sym-wave" aria-hidden="true">
-                  <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                </div>
-              </div>
-              {/* 하단: 실시간 통역 캡션 창 (원문 → 번역 타이핑) */}
-              <div className="sym-caption">
-                <div className="sym-caption-header">
-                  <span className="sym-caption-title">live-interpret.session</span>
-                  <span className="sym-caption-status">ON AIR</span>
-                </div>
-                <div className="sym-line src">"Let's align on the Q3 roadmap."</div>
-                <div className="sym-line dst">Q3 로드맵을 함께 맞춰보시죠.<span className="sym-caret"></span></div>{/* i18n-ok — Sylphio 통역 데모 콘텐츠(원문→번역 시연) */}
-              </div>
-            </div>
-            <div className="visual-blur-orb"></div>
-          </div>
-        </div>
-        </div>
-
       </div>
     </section>
   );

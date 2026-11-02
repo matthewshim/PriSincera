@@ -2,6 +2,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from '../../contexts/LanguageContext';
 import './Header.css';
+/* 벤토 내비 제품 목업의 **기본 기하** — 구 WorkSection.css에서 이전(2026-11-02).
+   홈 Proof of Work가 압축 카드로 재편되며 목업의 유일한 소비처가 여기가 됐다. */
+import './BentoMockups.css';
 import Icon from '../common/Icon';
 
 function Header() {

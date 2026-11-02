@@ -1,0 +1,377 @@
+/* ============================================================
+   BentoMockups — GNB 모바일 벤토 내비의 제품 목업 CSS 아트
+   ============================================================
+   [왜 별 파일인가 — 2026-11-02]
+   이 규칙들은 원래 `components/work/WorkSection.css`에 있었다. 홈
+   `Proof of Work`가 제품마다 전폭 카드 + 전용 CSS 아트를 쓰던 구조의 자산이다.
+   그 섹션을 **균일 압축 2열**로 재편해 아트를 걷어냈는데(design_system §9-14),
+   역방향 검증에서 **`Header.jsx`의 모바일 벤토 내비가 같은 마크업을 렌더**하며
+   기본 기하를 WorkSection.css에서 상속하고 있는 것이 드러났다 — 72종 클래스 중
+   아래 규칙들이 그것이다. 그대로 지우면 GNB 모바일 내비가 깨진다.
+
+   그래서 **삭제가 아니라 이전**이다. 이제 유일한 소비처가 벤토 내비이므로
+   소유도 그쪽으로 옮긴다. `Header.css`에는 이미 `.mobile-bento-nav-item` 스코프
+   오버라이드가 있고, 이 파일은 그 **기본 기하**를 담는다.
+
+   [규칙] 홈이 다시 쓰지 않는다. 이 파일을 홈 CSS에서 import하지 말 것.
+   벤토 내비가 목업을 그만 쓰면 이 파일 전체가 사문이 되므로 함께 삭제한다.
+   ============================================================ */
+
+
+/* 블러 오브 — 색은 카드의 --card-accent에서 온다(P1-A1). 변종 클래스 6종 폐지.
+   변종(.cyan/.emerald)은 구 홈 카드 전용이었으므로 함께 제거했다. */
+.visual-blur-orb {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    z-index: 0;
+    background: var(--card-accent);
+    top: 15%;
+    right: 14%;
+}
+
+
+/* Base Mockup Container */
+.dynamic-mockup {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    transform: rotateY(-8deg) rotateX(4deg);
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+
+/* Builders Log Mockup CSS Art */
+.builderslog-mockup {
+    width: 290px;
+    height: 290px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+
+.mockup-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding-left: 20px;
+}
+
+
+.timeline-line {
+    position: absolute;
+    left: 4px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--card-accent) 0%, color-mix(in srgb, var(--card-accent) 10%, transparent) 100%);
+    opacity: 0.5;
+}
+
+
+.timeline-node {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    position: relative;
+    opacity: 0.65;
+    transition: opacity 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+
+.timeline-node.active {
+    opacity: 1;
+}
+
+
+.node-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--card-accent) 40%, transparent);
+    border: 2px solid color-mix(in srgb, var(--card-accent) 20%, transparent);
+    position: absolute;
+    left: -20px;
+    top: 5px;
+    z-index: 1;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+
+.timeline-node.active .node-dot {
+    background: var(--card-accent);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px var(--card-accent);
+    transform: scale(1.2);
+}
+
+
+.node-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+
+.node-title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+
+.node-meta {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+}
+
+
+/* Section label fade */
+/* .section-label 리빌은 전역 `.reveal-section` 규칙이 담당(중복 선언 제거, 2026-11-01) */
+
+/* --- PriSincera Base Mockup & Engine Visuals --- */
+.base-mockup {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background: rgba(17, 17, 17, 0.7);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+.base-engine-container {
+    height: 120px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 800px;
+    margin-bottom: 12px;
+}
+
+
+.prism-core {
+    width: 36px;
+    height: 36px;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+
+.prism-face {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.45), rgba(244, 63, 94, 0.45));
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    border-radius: var(--radius-sm);
+}
+
+
+.prism-face.front { transform: rotateY(0deg) translateZ(18px); }
+
+.prism-face.back { transform: rotateY(180deg) translateZ(18px); }
+
+.prism-face.left { transform: rotateY(-90deg) translateZ(18px); }
+
+.prism-face.right { transform: rotateY(90deg) translateZ(18px); }
+
+.prism-face.top { transform: rotateX(90deg) translateZ(18px); }
+
+.prism-face.bottom { transform: rotateX(-90deg) translateZ(18px); }
+
+
+.engine-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(245, 158, 11, 0.35);
+}
+
+
+.engine-ring.ring-x {
+    width: 90px;
+    height: 90px;
+    transform: rotateX(70deg);
+    border-color: rgba(245, 158, 11, 0.6);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
+}
+
+
+.engine-ring.ring-y {
+    width: 110px;
+    height: 110px;
+    transform: rotateY(70deg);
+    border-color: rgba(244, 63, 94, 0.6);
+    animation-duration: 7s;
+    animation-direction: reverse;
+}
+
+
+.engine-ring.ring-z {
+    width: 130px;
+    height: 130px;
+    transform: rotateZ(30deg) rotateX(45deg);
+    border-color: color-mix(in srgb, var(--prism-lavender) 40%, transparent);
+    animation-duration: 12s;
+}
+
+
+.base-terminal {
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+    text-align: left;
+}
+
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+}
+
+
+.terminal-title {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+
+.terminal-status.active {
+    color: var(--card-accent);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+
+.terminal-status.active::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--card-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--card-accent);
+    animation: statusBlink 1.5s infinite;
+}
+
+
+.terminal-lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+
+.terminal-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.terminal-line:nth-child(1) { color: rgba(255, 255, 255, 0.8); }
+
+.terminal-line:nth-child(2) { color: var(--color-success); }
+
+.terminal-line:nth-child(3) { color: var(--color-cyan); }
+
+
+/* Sylphio Mockup CSS Art — 실시간 통역 세션 미러 (Base 목업과 동일 규격) */
+.sylphio-mockup {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: 20px;
+    background: rgba(17, 17, 17, 0.7);
+    border: 1px solid rgba(0, 242, 254, 0.25);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* (레거시) 헤더 모바일 벤토가 사용하는 기본형 — 유지 */
+.sylphio-bento-core {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(0, 242, 254, 0.5) 0%, rgba(30, 128, 255, 0.25) 60%, rgba(0,0,0,0) 100%);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 
+        0 0 30px rgba(30, 128, 255, 0.4),
+        0 0 60px rgba(0, 242, 254, 0.2);
+}
+
+.sylphio-bento-pulse {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 1.5px solid rgba(0, 242, 254, 0.4);
+    border-radius: 50%;
+}
+
+
+/* ============================================
+   ReLearn Mockup CSS Art — 성장 루프 궤도 + 리포트 (Base 목업과 동일 규격)
+   ============================================ */
+.relearn-mockup {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: 20px;
+    background: rgba(17, 17, 17, 0.7);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* ── 모바일 목업 일괄 보정: 85vw 카드(내부 ≤288px)에서 300px 고정폭 잘림 방지 ── */
+@media (max-width: 768px) {
+
+    .dynamic-mockup {
+        transform: none;               /* 3D 기울임 해제 — 좁은 폭 클리핑 방지 */
+        width: 100%;
+        max-width: 280px;
+        box-sizing: border-box;
+    }
+
+    .base-mockup, .builderslog-mockup, .relearn-mockup, .sylphio-mockup {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* ── 이 파일의 규칙이 참조하는 키프레임 ── */
+
+
+@keyframes statusBlink {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+}
