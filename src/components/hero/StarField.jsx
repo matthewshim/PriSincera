@@ -998,6 +998,13 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     }
 
     function handleTriggerShootingStar(e) {
+      /* 모션 감쇠 가드 — `index.css`의 전역 `prefers-reduced-motion` 규칙은
+         **CSS 애니메이션·전이만** 덮는다. 이 별똥별은 Canvas에 직접 그리므로
+         그 규칙이 닿지 않아, 감쇠를 설정한 사용자에게도 혜성이 날아가고 있었다
+         (2026-11-03 발각). 카드가 리빌될 때마다 발사되므로 섹션당 3~5개가 겹친다.
+         Journey·Belief·Connect 세 섹션이 이 이벤트를 쓰고 있어 여기 한 곳에서 막는다. */
+      if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+
       const { x, y, width, height, color } = e.detail || {};
       if (typeof x !== 'number' || typeof y !== 'number') return;
 

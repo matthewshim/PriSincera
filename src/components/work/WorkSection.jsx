@@ -8,25 +8,16 @@ import Icon from '../common/Icon';
 /**
  * WorkSection (홈 `Proof of Work`) — 균일 압축 2열 그리드.
  *
- * [2026-11-02 재편 — 안 B] 구 구조는 제품 1개당 전폭 카드 1장(약 404px)이 세로로 쌓여
- * 5개에서 섹션이 **2,216px(900px 뷰포트 2.5화면)** 였고, 제품이 늘면 그대로 비례해 자랐다.
- * 카드마다 정보가 7단위(서술태그·영문라벨·제목·설명 2~3행·태그 3~4개·CTA·CSS 아트+캡션)
- * 였고 같은 위계로 5번 반복돼 무엇을 먼저 볼지 신호가 없었다.
+ * 규범과 결정 경로: design_system.md **§9-14 제품 카드 규격**.
+ * 아래는 코드를 읽을 때 필요한 제약만 적는다 — 근거는 정본이 보관한다.
  *
- * 재편 원칙 — **모든 제품을 동등하게 둔다**(서비스 간 우선순위를 매길 수 없다는 오너 결정).
- *   · 정보 3단위 고정: 제품명 / 한 줄 요약 / 태그 2개 — **카드 자체가 링크**이고
- *     어포던스는 우측 하단 화살표가 맡는다(별도 CTA 버튼을 두지 않는다)
- *   · 액센트는 아이콘 1개 — 기존 51종 세트에서 고른다(제품당 전용 CSS 아트 918줄 폐지)
- *   · 데스크톱 2열 · 모바일 1열. 제품 추가 비용은 아래 PRODUCTS 배열에 1항목이다.
- *
- * [모바일] 구 구조는 `scroll-snap-type: x mandatory` 가로 캐러셀이었는데 스크롤바를
- * 양쪽 다 숨겨 스와이프 표식이 없었고, `column-reverse`로 카드가 뷰포트보다 높아
- * **CTA를 보려면 세로로 내려야 하는데 컨테이너는 가로로 스냅**했다(오너 "기이현상" 제보).
- * 압축 카드는 한 화면에 들어오므로 캐러셀이 필요 없다 — 순수 세로 1축으로 되돌렸다.
- * 가로 거리로 활성 카드를 고르던 스크롤 스포트라이트도 함께 제거했다(비활성 카드를
- * `opacity: .45` + `blur()`로 흐려 비교를 방해했다).
- *
- * 규범: design_system.md §9-14 제품 카드 규격.
+ *   · **모든 제품이 동등하다**(우선순위 부여 불가, 오너 결정). 이게 이 파일의 전제다.
+ *   · 정보 **3단위**: 제품명 / 한 줄 요약 / 태그 2개. 더하려면 §9-14를 개정해야 한다.
+ *   · **카드 자체가 링크**다. 안에 버튼을 두지 않는다 — 클릭 대상이 둘이 된다.
+ *   · **스크롤 연동 모션·등장 스태거를 쓰지 않는다.** 색인은 눈을 끌지 않고 비켜준다.
+ *     간격을 주면 우선순위 없는 집합에 **없는 순서가 생긴다**.
+ *   · 모션 투자는 상호작용(호버·포커스·누름)에 둔다. 누름은 전역 haptic(`a:active`)이 맡는다.
+ *   · 제품 추가 비용은 `PRODUCTS` 배열 1항목 + 로케일 3종이다.
  */
 
 /* 제품 5종 — 추가 시 이 배열에 1항목만 넣는다(아이콘 1개 + 요약 1행 + 태그 2개).
@@ -39,7 +30,37 @@ const PRODUCTS = [
   { key: 'Sylphio',  name: 'Sylphio',        to: '/sylphio',       icon: 'mic',      accent: 'var(--accent-sylphio)' },
 ];
 
-function ProductCard({ product, index }) {
+/**
+ * 카드별 등장 관찰 — 각 카드가 뷰포트에 **도착할 때** 발화한다.
+ * 섹션 단위 1회 발화를 쓰지 않는 이유: 섹션이 756px이라 발화 순간 카드 5장이 이미
+ * 화면에 있어 **시선이 닿기 전에 끝난다**(§9-14).
+ */
+function useCardReveal(count) {
+  const [shown, setShown] = React.useState(() => Array(count).fill(false));
+  const refs = React.useRef([]);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const i = Number(entry.target.dataset.cardIndex);
+          setShown((prev) => (prev[i] ? prev : prev.map((v, j) => (j === i ? true : v))));
+          observer.unobserve(entry.target);   // 한 번만
+        }
+      },
+      /* 발화 시점이 모션 인지의 **가장 큰 변수**다. 뷰포트 하단 22%를 비워,
+         168px 카드가 화면 안쪽에서 발화하게 한다(§9-14). */
+      { threshold: 0.25, rootMargin: '0px 0px -22% 0px' },
+    );
+    for (const el of refs.current) if (el) observer.observe(el);
+    return () => observer.disconnect();
+  }, [count]);
+
+  return [refs, shown];
+}
+
+function ProductCard({ product, index, cardRef, shown }) {
   const { t } = useTranslation();
   const tags = t(`home.service${product.key}Tags`);
   const cta = t(`home.service${product.key}Cta`);
@@ -48,17 +69,17 @@ function ProductCard({ product, index }) {
   const label = cta.includes(product.name) ? cta : `${product.name} — ${cta}`;
 
   return (
-    /* 카드 자체가 링크다(오너 결정 2026-11-02) — 카드 안에 별도 CTA 버튼을 두면
-       클릭 대상이 둘이 되고 정보 단위가 하나 늘어난다. 어포던스는 우측 하단 화살표가 맡는다.
-       `aria-label`에 **제품명을 포함**해야 한다 — 보이는 텍스트가 접근명에 들어가지 않으면
-       WCAG 2.5.3(Label in Name) 위반이다. 기존 CTA 문구는 여기서 계속 쓰인다. */
+    /* 카드 자체가 링크다. `aria-label`에 **보이는 제품명을 포함**해야 한다 —
+       빠지면 WCAG 2.5.3(Label in Name) 위반이다. */
     <Link
       to={product.to}
-      className="work-card reveal-item"
+      ref={cardRef}
+      data-card-index={index}
+      className={`work-card${shown ? ' is-in' : ''}`}
       aria-label={label}
-      /* 인스턴스별 데이터(액센트·리빌 지연)는 커스텀 프로퍼티로 넘긴다 —
-         클래스로 빼면 제품 수만큼 단일 사용 클래스가 생긴다(P3-13 판단). */
-      style={{ '--card-accent': product.accent, '--reveal-delay': `${0.1 + index * 0.06}s` }}
+      /* 인스턴스별 데이터는 커스텀 프로퍼티로 — 클래스로 빼면 제품 수만큼
+         단일 사용 클래스가 생긴다(P3-13). 등장 지연은 두지 않는다(§9-14). */
+      style={{ '--card-accent': product.accent }}
     >
       <div className="work-card-head">
         <span className="work-card-mark" aria-hidden="true">
@@ -86,7 +107,9 @@ function ProductCard({ product, index }) {
 
 export default function WorkSection() {
   const { t } = useTranslation();
+  /* 섹션 단위 리빌은 **헤더에만** 쓴다. 카드는 각자 도착할 때 발화한다. */
   const [sectionRef, revealed] = useScrollReveal({ threshold: 0.08 });
+  const [cardRefs, cardShown] = useCardReveal(PRODUCTS.length);
 
   return (
     <section className={`work reveal-section${revealed ? ' revealed' : ''}`} id="work" ref={sectionRef}>
@@ -111,7 +134,13 @@ export default function WorkSection() {
 
         <div className="work-grid">
           {PRODUCTS.map((product, i) => (
-            <ProductCard product={product} index={i} key={product.key} />
+            <ProductCard
+              product={product}
+              index={i}
+              cardRef={(el) => { cardRefs.current[i] = el; }}
+              shown={cardShown[i]}
+              key={product.key}
+            />
           ))}
         </div>
       </div>

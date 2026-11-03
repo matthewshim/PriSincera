@@ -2,23 +2,11 @@
    WorkSection (홈 `Proof of Work`) — 균일 압축 2열 그리드
    ============================================================
    토큰: src/styles/index.css 정본 사용(:root 재선언 없음).
-   규범: design_system.md §9-14 제품 카드 규격.
+   규범·결정 경로: design_system.md **§9-14 제품 카드 규격**.
 
-   [2026-11-02 재편 — 안 B] 구 구조는 제품 1개당 전폭 2분할 카드였고
-   `.flagship-visual { min-height: 380px }`가 하한을 잡아 5개에서 섹션이
-   **2,216px(900px 뷰포트 2.5화면)** 였다. 제품이 늘면 1개당 404px씩 선형으로 자랐다.
-   카드마다 정보가 7단위로 같은 위계에 놓여 무엇을 먼저 볼지 신호가 없었다.
-
-   재편 원칙 — **모든 제품을 동등하게**(서비스 간 우선순위 부여 불가, 오너 결정).
-     · 정보 4단위: 제품명 / 한 줄 요약 / 태그 2개 / CTA
-     · 액센트는 아이콘 1개. 제품당 전용 CSS 아트(918줄)는 폐지 — 유일한 소비처였던
-       GNB 벤토 내비로 이전했다(`components/layout/BentoMockups.css`).
-     · 데스크톱 2열 · 모바일 1열. 제품 추가 비용은 JSX 배열 1항목이다.
-
-   [모바일] 구 구조는 `scroll-snap-type: x mandatory` 가로 캐러셀이면서
-   스크롤바를 양쪽 다 숨겨 스와이프 표식이 없었고, `column-reverse`로 카드가
-   뷰포트보다 높아 세로·가로가 한 컴포넌트에서 동시에 스크롤됐다(오너 제보).
-   압축 카드는 한 화면에 들어오므로 캐러셀이 필요 없다 — **세로 1축**으로 되돌렸다.
+   이 파일의 전제: **모든 제품이 동등하다**(우선순위 부여 불가, 오너 결정).
+   그래서 스크롤 연동 강약·등장 스태거를 쓰지 않는다 — 없는 순서를 만들기 때문이다.
+   모션은 등장(카드별 도착) + 상호작용(호버·포커스)뿐이다.
    ============================================================ */
 
 .work {
@@ -94,6 +82,13 @@
    **카드 자체가 `<Link>`다**(오너 결정 2026-11-02) — 카드 안에 별도 CTA 버튼을 두면
    클릭 대상이 둘이 되고 정보 단위가 하나 늘어난다. 어포던스는 우측 하단 화살표가 맡는다. */
 .work-card {
+    /* 등장 전 상태 — 카드가 도착할 때 `.is-in`이 붙는다(JSX의 카드별 관찰).
+       진폭 28px(카드 높이의 17%). 체감은 진폭보다 **발화 시점**이 지배한다.
+       등장·호버가 같은 `transform`을 공유하므로 상태별로 `--lift`만 바꾼다 —
+       상태에서 `transition-duration`을 덮으면 등장이 함께 짧아진다(§9-14). */
+    --lift: 28px;
+    opacity: 0;
+    transform: translateY(var(--lift));
     text-decoration: none;
     color: inherit;
     position: relative;
@@ -105,14 +100,26 @@
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-lg);
+    /* 위치는 짧게, 부드러움은 `opacity`가 맡는다. */
     transition:
-        transform var(--duration-fast) var(--ease-spring),
+        opacity var(--duration-normal) var(--ease-out),
+        transform var(--duration-fast) var(--ease-out),
         border-color var(--duration-fast),
         background var(--duration-fast);
 }
 
-/* 상단 액센트 선 — 제품 식별을 색으로 1회만 말한다
-   (구 구조는 라벨·태그·CTA·아트에서 같은 말을 네 번 했다) */
+.work-card.is-in {
+    opacity: 1;
+    --lift: 0px;
+}
+
+/* **등장 스태거를 쓰지 않는다**(§9-14). 우선순위를 매길 수 없는 집합에 0.1초씩 간격을
+   두면 **없는 순서를 모션이 만든다** — 동등함을 말해야 하는 자리에서. 같은 행의 카드는
+   함께 올라오고(관찰기가 거의 동시에 발화), 행은 도착할 때 올라온다(설계된 순서가 아니라
+   스크롤의 결과다). */
+
+/* 상단 액센트 선 — 제품 식별을 색으로 **1회만** 말한다(구 구조는 라벨·태그·CTA·
+   아트에서 네 번 말했다). 정적 표식이다 — 스크롤로 그려지게 하지 않는다(§9-14). */
 .work-card::before {
     content: '';
     position: absolute;
@@ -121,9 +128,15 @@
     background: linear-gradient(90deg, var(--card-accent), transparent 72%);
 }
 
-.work-card:hover,
-.work-card:focus-visible {
-    transform: translateY(var(--lift-hover));
+/* 스크롤 연동 스포트라이트를 쓰지 않는다(§9-14) — '어느 것을 보고 있나'에 답하는 것은
+   스크롤 위치가 아니라 **포인터·포커스**다. 그래서 투자는 아래 호버·포커스에 둔다. */
+
+/* `.is-in`을 포함해 특이도를 올린다 — 등장 상태와 경합하지 않게 한다.
+   누름은 `index.css`의 전역 haptic(`a:active`)이 담당한다(카드가 `<a>`이므로
+   모바일 탭에도 걸린다). 여기서 다시 쓰지 않는다. */
+.work-card.is-in:hover,
+.work-card.is-in:focus-visible {
+    --lift: var(--lift-hover);
     border-color: var(--glass-border-hover);
     background: rgba(26, 26, 26, 0.6);
 }
@@ -211,7 +224,8 @@
         transform var(--duration-fast) var(--ease-spring);
 }
 
-/* -- 리빌 -- */
+/* -- 헤더 리빌 --
+   섹션 단위 1회 발화는 **헤더에만** 쓴다. 카드는 각자 도착할 때 발화한다(위 `.is-in`). */
 .work.reveal-section .reveal-item {
     opacity: 0;
     transform: translateY(18px);
