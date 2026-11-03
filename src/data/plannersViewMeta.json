@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv8",
+    "slug": "speed-is-reversibility",
+    "title": {
+      "ko": "속도는 빨리 만드는 힘이 아니라 되돌리는 힘입니다",
+      "en": "Speed Is Not the Power to Build Fast but the Power to Undo",
+      "ja": "速度とは、速くつくる力ではなく戻す力です"
+    },
+    "subtitle": {
+      "ko": "되돌릴 수 없으면 아무도 과감해지지 않는다 — 속도를 결정하는 것은 생산 능력이 아니라 복구 능력이다",
+      "en": "Without the ability to undo, nobody gets bold — what sets your speed is recovery capacity, not production capacity",
+      "ja": "戻せなければ誰も大胆にならない — 速度を決めるのは生産能力ではなく復旧能力である"
+    },
+    "description": {
+      "ko": "자주 내보내는 조직은 과감해서 그런 것이 아니라, 되돌릴 수 있어서 과감해질 수 있는 것입니다. 되돌릴 수 없으면 배포가 두려워지고, 두려우면 한 번에 많이 담고, 많이 담으면 원인이 분리되지 않아 더 두려워집니다. 다만 되돌림의 난이도는 층마다 다릅니다. 코드는 되돌릴 수 있지만 데이터와 사용자의 기억은 되돌아오지 않습니다.",
+      "en": "Teams that ship often are not bold by nature; they can afford boldness because they can undo. Without that, deploying becomes frightening, fright means packing more into each release, and a packed release hides what broke — which makes the next one more frightening still. But reversibility is not one thing. Code can be rolled back; data and the user's memory do not come back.",
+      "ja": "頻繁に出す組織は大胆だからそうしているのではなく、戻せるから大胆になれるのです。戻せなければデプロイは怖いものになり、怖ければ一度に多く詰め込み、多く詰め込めば原因が切り分けられず、さらに怖くなります。ただし戻しやすさは層ごとに違います。コードは戻せますが、データとユーザーの記憶は戻りません。"
+    },
+    "pullQuote": {
+      "ko": "되돌릴 수 없는 조직은 용기가 없는 것이 아니라 되돌릴 장치가 없는 것입니다.",
+      "en": "An organization that cannot undo is not lacking courage; it is lacking the machinery to undo.",
+      "ja": "戻せない組織は勇気がないのではなく、戻す仕組みがないのです。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "endless-launch",
+      "order": 3
+    },
+    "tags": [
+      "Live Service",
+      "Product Operations",
+      "Reversibility",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-11-03",
+    "readMinutes": 9
+  },
+  {
     "id": "pv7",
     "slug": "automation-common-decomposition-rare",
     "title": {
