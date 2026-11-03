@@ -524,6 +524,37 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
+// ── 번역본 문자 게이트: 로케일 파일에 다른 문자 체계가 섞이는 것을 막는다 ──
+// 두 가지 실제 사고에서 나왔다(2026-11-03):
+//   · 3편 일문 초고에 비일본어 토큰(키릴)이 한 개 섞여 들어갔다. 눈으로는 못 잡는다.
+//   · 5편·3편 영문이 출처 소제목을 `## 출처` 그대로 두어, 영문 독자에게 한글이 노출됐다.
+// 대상은 Planner's View 로케일 파일(_en/_ja)로 한정한다 — Builder's Log 는
+// 한국어 고유명사·코드가 섞이는 성격이라 같은 규칙을 걸면 오탐이 난다.
+(function translationScriptGate() {
+  const DIR = 'public/content/planners-view';
+  const CYRILLIC = /[\u0400-\u04FF]/;        // 어느 로케일에도 들어갈 이유가 없다
+  const HANGUL = /[\uAC00-\uD7A3]/;          // 영문 파일에는 들어갈 이유가 없다
+
+  let files = [];
+  try { files = readdirSync(DIR).filter((f) => /_(en|ja)\.md$/.test(f)); } catch { files = []; }
+
+  for (const f of files) {
+    const isEn = f.endsWith('_en.md');
+    readFileSync(join(DIR, f), 'utf-8').split('\n').forEach((line, i) => {
+      const cyr = line.match(CYRILLIC);
+      if (cyr) {
+        errors.push(`${DIR}/${f}:${i + 1}: 번역본에 키릴 문자 혼입 — "${cyr[0]}" (초고 생성 오류)`);
+      }
+      if (isEn) {
+        const han = line.match(HANGUL);
+        if (han) {
+          errors.push(`${DIR}/${f}:${i + 1}: 영문 파일에 한글 — "${han[0]}" (소제목 로케일화 누락 등, content_guide §6)`);
+        }
+      }
+    });
+  }
+})();
+
 if (warns.length) {
   console.warn(`[design-check] WARN ${warns.length}건 (비차단 — §9-7 스케일 확장 백로그):`);
   for (const w of warns) console.warn('  -', w);

@@ -86,7 +86,7 @@ In the first piece I wrote that the more common technology becomes, the scarcer 
 
 Reduced to a sentence: I think the most expensive mistake of the AI era is not failing to use AI, but changing the organization first on the strength of expectations nobody verified.
 
-## 출처
+## Sources
 
 - [Brynjolfsson, Li, Raymond — Generative AI at Work, NBER Working Paper 31161 (2023)](https://www.nber.org/papers/w31161)
 - [METR — Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity (July 2025)](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/)

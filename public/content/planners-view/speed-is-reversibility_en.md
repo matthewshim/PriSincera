@@ -84,7 +84,7 @@ That said, you cannot make everything reversible. Data and the user's memory nev
 
 In the next piece I want to look into that layer of memory. What do we announce, and how? The argument that an announcement is not a notice but a feature.
 
-## 출처
+## Sources
 
 - [U.S. SEC — In the Matter of Knight Capital Americas LLC, Administrative Proceeding 34-70694 (2013)](https://www.sec.gov/litigation/admin/2013/34-70694.pdf)
 - [GitLab — Postmortem of database outage of January 31 (Feb 2017)](https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/)
