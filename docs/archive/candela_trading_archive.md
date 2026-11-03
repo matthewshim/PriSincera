@@ -9,13 +9,13 @@ target_files:
   - (이관) docs/core/security_spec.md
 ---
 
-# 🗄️ 캔델라 자동매매 아카이브 (Candela — Automated Trading, Archived)
+# 캔델라 자동매매 아카이브 (Candela — Automated Trading, Archived)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-10-17 | AI Agent | **Candela 자동매매 계획 폐기 통합 아카이브** — product_strategy·system_architecture·data_contract·ui_specification·roadmap 5종과 security_spec·incident_response의 **트레이딩 전용** 부분을 요약 수록 후 원본 7종 `git rm`. 레포 전체에 유효한 보안 규범은 [core/security_spec](../core/security_spec.md)로 이관(존치) | docs/candela 전체 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-10-17 | **Candela 자동매매 계획 폐기 통합 아카이브** — product_strategy·system_architecture·data_contract·ui_specification·roadmap 5종과 security_spec·incident_response의 **트레이딩 전용** 부분을 요약 수록 후 원본 7종 `git rm`. 레포 전체에 유효한 보안 규범은 [core/security_spec](../core/security_spec.md)로 이관(존치) | docs/candela 전체 |
 
 ---
 
@@ -70,6 +70,6 @@ M0~M5 단계와 승격 게이트: 백테스트 → 모의투자 → 실계좌 �
 ---
 
 ## 관련 문서
-*   [🗺️ Waymark 재포지셔닝 제안서](../waymark/repositioning_proposal.md) — 피벗 배경·사유
-*   [📜 저장소 보안 규범](../core/security_spec.md) — 레포 전체 보안 규범(이관·존치)
-*   [📚 문서 인덱스 & 거버넌스](../INDEX.md)
+*   [Waymark 재포지셔닝 제안서](../waymark/repositioning_proposal.md) — 피벗 배경·사유
+*   [저장소 보안 규범](../core/security_spec.md) — 레포 전체 보안 규범(이관·존치)
+*   [문서 인덱스 & 거버넌스](../INDEX.md)

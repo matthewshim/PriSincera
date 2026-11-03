@@ -14,7 +14,7 @@ target_files:
   - src/pages/ReLearn.jsx
 ---
 
-# 🔍 보안 취약점 점검 보고서 (Security Audit)
+# 보안 취약점 점검 보고서 (Security Audit)
 
 > **최초 작성일**: 2026-04-23  
 > **최종 조치 및 업데이트**: 2026-08-31 (v1.2 §12 로컬 자격증명 위생)  
@@ -23,7 +23,7 @@ target_files:
 
 ---
 
-## 📋 목차
+## 목차
 
 1. [요약 (Executive Summary)](#1-요약)
 2. [인젝션 (Injection) 분석](#2-인젝션-analysis)
@@ -40,7 +40,7 @@ target_files:
 
 ## 1. 요약
 
-### 🏗️ 아키텍처 진화 (2026-05 기준)
+### 아키텍처 진화 (2026-05 기준)
 
 PriSincera는 과거 정적 SPA와 간단한 GCS JSON 읽기 전용 구조에서 탈피하여, **Express 백엔드 다중 라우터 아키텍처 및 Firestore(GCS Fallback) 상태 저장 시스템**으로 완전히 고도화되었습니다.
 
@@ -68,22 +68,22 @@ study_progress, email_logs)
 - **다중 라우터 라우팅**: `/admin/api`, `/api/study`, `/api/pacenote` 단위로 책임을 분리하고 최적의 미들웨어를 장착함
 - **사용자 관리**: Firebase Client Auth 및 백엔드 Firebase Admin ID 토큰 검증 미들웨어를 통합 구축함
 
-### 🛡️ 취약점 조치 결과 요약
+### 취약점 조치 결과 요약
 
 2026-04 대비 2026-05 최신 업데이트를 거치며 **기존의 모든 취약점과 최근 발견된 신규 보안 위협 요소까지 100% 조치 완료**되었습니다.
 
 | 등급 | 과거 취약점 개수 (04-29) | 현재 취약점 개수 (05-21) | 주요 조치 및 개선 내용 | 상태 |
 |:----:|:-----------------------:|:-----------------------:|------------------------|:----:|
-| 🔴 **Critical** | 1 | **0** | XSS via innerHTML 제거 완료, **공개 디버그 PII 노출 엔드포인트 전면 영구 삭제 완료** | **Resolved** |
-| 🟠 **High** | 3 | **0** | CORS 와일드카드 제한, express-rate-limit 적용 완료, CSP 및 보안 헤더 세팅 완료 | **Resolved** |
-| 🟡 **Medium** | 5 | **0** | Helmet 적용 완료, Body 1kb제한 추가, Docker 비-root 적용, **Study API ReferenceError 해결, Firestore rules 매칭 경로 최적화, PaceNote 입력 검증 구축** | **Resolved** |
-| 🟢 **Low** | 4 | **1** | HSTS/Referrer-Policy 완료. (구독 폼에 개인정보 동의 UI 추가는 장기과제로 유지) | **Progress** |
+| **Critical** | 1 | **0** | XSS via innerHTML 제거 완료, **공개 디버그 PII 노출 엔드포인트 전면 영구 삭제 완료** | **Resolved** |
+| **High** | 3 | **0** | CORS 와일드카드 제한, express-rate-limit 적용 완료, CSP 및 보안 헤더 세팅 완료 | **Resolved** |
+| **Medium** | 5 | **0** | Helmet 적용 완료, Body 1kb제한 추가, Docker 비-root 적용, **Study API ReferenceError 해결, Firestore rules 매칭 경로 최적화, PaceNote 입력 검증 구축** | **Resolved** |
+| **Low** | 4 | **1** | HSTS/Referrer-Policy 완료. (구독 폼에 개인정보 동의 UI 추가는 장기과제로 유지) | **Progress** |
 
 ---
 
 ## 2. 인젝션 (Injection) 분석
 
-### 결론: **안전 (Secure)** ✅
+### 결론: **안전 (Secure)**
 
 | 점검 항목 | 결과 | 상세 조치 사항 |
 |-----------|------|----------------|
@@ -95,35 +95,35 @@ study_progress, email_logs)
 
 ## 3. XSS (Cross-Site Scripting) 방어 성과
 
-### 🔴 HISTORICAL CRITICAL — `dangerouslySetInnerHTML` 관련
+### HISTORICAL CRITICAL — `dangerouslySetInnerHTML` 관련
 - **과거 문제**: 과거 `PriSignalIssue.jsx` 컴포넌트 등에서 Buttondown API 수신 HTML을 별도의 살균 검증 없이 렌더링하는 보안 위협 존재.
 - **조치 사항 (Resolved)**: Daily Digest 서비스 통폐합 개편이 완료됨에 따라 관련 구버전 UI 모듈이 완전히 제거(Archived)되었습니다. 현재 React SPA 프론트엔드는 모든 데이터를 리액트 기본 JSX 바인딩(문자열 자동 이스케이프) 처리하여 XSS 시도가 원천적으로 차단됩니다.
 
-### 🟡 NEW MEDIUM — 입력 데이터 길이 제한 및 인라인 방어
+### NEW MEDIUM — 입력 데이터 길이 제한 및 인라인 방어
 - **조치 사항 (Resolved)**: 사용자가 직접 작성하는 Pace Note의 custom task 추가 API(`POST /api/pacenote/add`)에 **100자 이하 길이 제한**을 강제하여 무분별하게 큰 페이로드가 유입되는 공격을 방제하고 데이터베이스 안전성을 확보했습니다.
 
 ---
 
 ## 4. API 보안 및 데이터 보호
 
-### 🔴 NEW CRITICAL — 임시 디버깅 API를 통한 개인정보(PII) 유출
+### NEW CRITICAL — 임시 디버깅 API를 통한 개인정보(PII) 유출
 - **발견된 위협**: `/api/env-check`, `/api/temp-check-subs`, `/api/temp-logs`가 공개 노출되어 전체 구독자 이메일 목록(PII) 및 SMTP 설정 정보가 누구나 탈취 가능한 상태였음.
 - **조치 사항 (Resolved)**: 해당 디버그 엔드포인트들은 **프로덕션 코드(`server.mjs`)에서 영구히 완전히 삭제**되었습니다. 구독자 관리 및 로그 확인이 필요한 어드민 기능은 엄격히 보호되는 어드민 전용 API(`/admin/api/subscribers`, `/admin/api/email/logs`)에서 Firebase JWT ID 토큰 검증 및 `super_admin`/`admin` 역할 대조 미들웨어를 거쳐서만 제공되도록 이중 보호 장치를 수립했습니다.
 
-### 🟠 HIGH — API 요청 제한 (Rate Limiting)
+### HIGH — API 요청 제한 (Rate Limiting)
 - **조치 사항 (Resolved)**: 전역 API 제한 및 특정 위험 노선에 대한 세부 Rate Limiting 레이아웃을 정밀하게 분리 배치했습니다.
   - 전역 API (`/api/`): 분당 최대 60회 (`apiLimiter`)
   - 구독/해지 API (`/api/subscribe`, `/api/unsubscribe`): 15분당 최대 5회 (`subscribeLimiter`)
   - 어드민 API (`/admin/api`): 15분당 최대 100회 (`adminLimiter`)
 
-### 🟠 HIGH — CORS 와일드카드 설정 해제
+### HIGH — CORS 와일드카드 설정 해제
 - **조치 사항 (Resolved)**: Express 레벨의 `cors` 미들웨어 적용을 완료하여 와일드카드(`*`) 허용 정책을 폐기하고, 오직 지정 오리진(`https://www.prisincera.com`)에서 송신되는 요청에 대해서만 응답하도록 제한했습니다. (구 Nginx 프록시 계층은 Express 단일 컨테이너 전환으로 소멸)
 
 ---
 
 ## 5. 서버 보안 및 보안 헤더 설정
 
-### 🟡 MEDIUM — Helmet 및 CSP 전면 도입
+### MEDIUM — Helmet 및 CSP 전면 도입
 - **조치 사항 (Resolved)**: Express 웹서버에 `helmet` 미들웨어를 정밀 튜닝하여, 구식 및 취약 보안 헤더를 제거하고 모던 브라우저가 제공하는 웹 방벽 메커니즘을 온전히 연동했습니다.
 
 ```javascript
@@ -148,7 +148,7 @@ app.use(helmet({
 }));
 ```
 
-### 🟡 NEW MEDIUM — PriStudy Progress API ReferenceError 조치
+### NEW MEDIUM — PriStudy Progress API ReferenceError 조치
 - **발견된 버그**: `GET /api/study/progress` API 내에서 이메일 필드 유효성 자동 보정 시 `docRef` 변수 선언이 누락되어 `ReferenceError: docRef is not defined`가 발생하고 500 에러를 송출하던 문제.
 - **조치 사항 (Resolved)**: `const docRef = db.collection(COLLECTIONS.STUDY_PROGRESS).doc(uid);` 변수를 정확히 바인딩하고 비동기 조작 코드를 안정적으로 수정 완료하여 API 안정성을 회복했습니다.
 
@@ -156,19 +156,19 @@ app.use(helmet({
 
 ## 6. 인프라 & 컨테이너 배포 보안
 
-### 🟡 MEDIUM — Docker 비-root 사용자 실행 전환
+### MEDIUM — Docker 비-root 사용자 실행 전환
 - **조치 사항 (Resolved)**: 컨테이너 에스케이프 공격 시 호스트의 루트 권한 탈취를 막기 위해, 빌드 파이프라인 전반의 Docker 구동 방식을 비-루트(Non-Root) 계정 실행 구조로 완전히 전환했습니다.
   - **웹 서비스 (`Dockerfile`)**: `prisincera` 전용 시스템 계정(UID 1001) 및 그룹을 할당하고 `USER prisincera`로 Express 웹서버 실행.
   - **파이프라인 (`pipeline/Dockerfile`)**: 경량 Node 이미지 내 내장 계정인 `node`를 사용하여 `USER node`로 프로세스 실행.
 
-### 🟡 MEDIUM — GCP Secret Manager 연동
+### MEDIUM — GCP Secret Manager 연동
 - **조치 사항 (Resolved)**: 민감한 외부 API 토큰(`GEMINI_API_KEY`, `GITHUB_TOKEN`)을 소스 코드나 단순 셸 환경 변수에 텍스트로 보관하지 않고, GCP Secret Manager와 통합하여 배포 시점에 런타임에 동적으로 주입되도록 보안성을 강화했습니다.
 
 ---
 
 ## 7. 데이터 보안 & 개인정보 보호 (PII)
 
-### 🟡 NEW MEDIUM — Firestore Security Rules의 매칭 오류 교정
+### NEW MEDIUM — Firestore Security Rules의 매칭 오류 교정
 - **발견된 문제**: [firestore.rules](file:///d:/prisincera/www/firestore.rules) 파일 내 `study_progress` 컬렉션 보안 매칭 범위 오류.
   - 기존: `match /study_progress/{userId}/{document=**}` (오직 하위 서브컬렉션만 권한 보호)
   - 실제 호출 경로: `/study_progress/{userId}` (유저 본인의 루트 도큐먼트)
@@ -184,7 +184,7 @@ match /study_progress/{userId} {
 }
 ```
 
-### 🟢 LOW — 구독 폼 개인정보 수집 및 처리방침 동의
+### LOW — 구독 폼 개인정보 수집 및 처리방침 동의
 - **현재 상황**: 구독 신청 시 개인정보보호법에 규정된 동의 문구 및 개인정보 처리방침 안내 영역이 보완되는 것이 법률적으로 권장됩니다.
 - **향후 계획**: 차기 스프린트 UI 개선에 맞춰 동의 체크박스 혹은 하단 명시용 안내 링크(Privacy Policy)를 삽입하는 프론트엔드 업데이트를 추진할 예정입니다.
 
@@ -205,13 +205,13 @@ match /study_progress/{userId} {
 
 | 보안 헤더 | 조치 이전 (04-23) | 조치 이후 및 현재 (05-21) | 평가 |
 |:---|:---:|:---:|:---:|
-| `X-Content-Type-Options` | `nosniff` | `nosniff` | ✅ 안전 |
-| `X-Frame-Options` | `DENY` | `SAMEORIGIN` (helmet 기본값) | ✅ 외부 도메인 클릭재킹 방지 (동일 오리진 임베드만 허용) |
-| `X-XSS-Protection` | `1; mode=block` | `false` (Deprecated) | ✅ CSP 최적 적용 및 충돌 배제 |
-| `Content-Security-Policy` | ❌ 미설정 | 🌟 strict CSP 정의 완료 | ✅ 외부 악성 스크립트 실행 불가 |
-| `Strict-Transport-Security` | ❌ 미설정 | 🌟 `max-age=31536000; includeSubDomains; preload` | ✅ HTTPS 연결 보장 |
-| `Referrer-Policy` | ❌ 미설정 | `strict-origin-when-cross-origin` | ✅ 정보 누수 차단 |
-| `Cross-Origin-Opener-Policy` | ❌ 미설정 | `same-origin-allow-popups` | ✅ 연동 팝업 보안 최적화 |
+| `X-Content-Type-Options` | `nosniff` | `nosniff` | 안전 |
+| `X-Frame-Options` | `DENY` | `SAMEORIGIN` (helmet 기본값) | 외부 도메인 클릭재킹 방지 (동일 오리진 임베드만 허용) |
+| `X-XSS-Protection` | `1; mode=block` | `false` (Deprecated) | CSP 최적 적용 및 충돌 배제 |
+| `Content-Security-Policy` | 미설정 | strict CSP 정의 완료 | 외부 악성 스크립트 실행 불가 |
+| `Strict-Transport-Security` | 미설정 | `max-age=31536000; includeSubDomains; preload` | HTTPS 연결 보장 |
+| `Referrer-Policy` | 미설정 | `strict-origin-when-cross-origin` | 정보 누수 차단 |
+| `Cross-Origin-Opener-Policy` | 미설정 | `same-origin-allow-popups` | 연동 팝업 보안 최적화 |
 
 ---
 
@@ -332,7 +332,7 @@ Candela([security_spec](security_spec.md)) 도입 검토 과정에서, **저장�
 ### 11-2. 잔여 항목 (Candela M4 시점 재검토)
 
 *   `.claude/settings.json`의 `Bash(node -e ' *)`·`Bash(npm i *)` — 임의 코드 실행·패키지 설치 허용. git 경로는 닫혔으나 네트워크 경유 유출 경로는 열려 있다. 브로커 키가 로컬에 놓이는 시점에 판단한다.
-*   ~~`nginx.conf`~~ — ✅ **2026-08-19 삭제 완료.** Dockerfile이 COPY하지 않는 미사용 파일이었으나 CSP가 없고 `/api/subscribe`의 "인증 없는 프록시 + API 키 주입" 패턴을 담고 있었다. 코드·빌드 참조 0건 확인 후 제거(git 히스토리에 보존). 해당 **패턴 자체의 금지**는 [security_spec N-2](security_spec.md)로 존치한다.
+*   ~~`nginx.conf`~~ — **2026-08-19 삭제 완료.** Dockerfile이 COPY하지 않는 미사용 파일이었으나 CSP가 없고 `/api/subscribe`의 "인증 없는 프록시 + API 키 주입" 패턴을 담고 있었다. 코드·빌드 참조 0건 확인 후 제거(git 히스토리에 보존). 해당 **패턴 자체의 금지**는 [security_spec N-2](security_spec.md)로 존치한다.
 
 ### 11-3. 재확인된 양호 항목
 
@@ -346,7 +346,7 @@ helmet CSP + HSTS preload · CORS origin 고정 · `router.use(requireAdmin)` �
 
 Planner's View 섹션 배포 중 `git remote -v` 출력에서 발견. **커밋된 시크릿이 아니라 로컬 개발 환경의 시크릿**이라는 점에서 기존 방어선의 사각이다.
 
-### 12-1. `.git/config` 원격 URL에 PAT 평문 노출 — ✅ 조치 완료
+### 12-1. `.git/config` 원격 URL에 PAT 평문 노출 — 조치 완료
 
 | 항목 | 내용 |
 | :--- | :--- |
@@ -358,7 +358,7 @@ Planner's View 섹션 배포 중 `git remote -v` 출력에서 발견. **커밋�
 
 > **교훈**: 자격증명을 URL에 임베드하지 않는다. macOS는 `credential.helper=osxkeychain`이 이미 전역 설정돼 있어 URL에 토큰을 넣을 이유가 없다. 노출된 PAT는 웹 UI 없이도 Credential Revocation API로 즉시 폐기할 수 있다.
 
-### 12-2. `GITHUB_TOKEN` 시크릿 값에 개행 혼입 — ✅ 조치 완료
+### 12-2. `GITHUB_TOKEN` 시크릿 값에 개행 혼입 — 조치 완료
 
 - **발견**: Secret Manager 저장값이 `토큰(40B) + 공백 + CR + LF` = 43바이트. `echo`로 저장할 때 딸려 들어간 것으로 추정.
 - **위험**: Authorization 헤더에 CR/LF는 들어갈 수 없다. Node `http` 모듈이었다면 `ERR_INVALID_CHAR`로 거부됐을 것(실측 확인). 현재는 Octokit v22의 fetch(undici)가 헤더 값 앞뒤 공백을 정규화해준 덕에 동작 중이었다 — **전송 계층 구현에 의존한 우연한 생존**.

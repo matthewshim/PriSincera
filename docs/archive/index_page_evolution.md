@@ -5,7 +5,7 @@ last_updated: 2026-05-21
 version: v1.0
 ---
 
-# 🗄️ 메인 페이지·파이프라인 진화 아카이브
+# 메인 페이지·파이프라인 진화 아카이브
 
 이 문서는 2024년 론칭 당시의 초기 메인 페이지 기획에서 시작하여, 모바일 반응형 네비게이션(GNB Hamburger Menu) 도입, 개별 서브 서비스(PriSignal, PriStudy)의 Daily Digest 통폐합, 서비스 중심의 벤트 박스(Bento Box) 메인 개편, 그리고 백엔드 파이프라인(`composer.mjs`) 기술 부채 청산까지의 모든 역사적 이정표와 설계 결정을 타임라인 순으로 통합하여 수록한 종합 기록 문서입니다.
 
@@ -23,7 +23,7 @@ version: v1.0
 ### 1-2. 디자인 시스템 및 타이포그래피 사양
 * **컬러 팔레트**:
   * 배경: Deep Space (`#0B0B14`), Charcoal Navy (`#12121A`)
-  * 액센트 및 브랜드 그라디언트: Crystal Violet (`#C4B5FD`) ➡️ Amethyst (`#A78BFA`) ➡️ Deep Prism (`#7C3AED`), Orbit Cyan (`#22D3EE`), Amber Glow (`#FDE68A`)
+  * 액센트 및 브랜드 그라디언트: Crystal Violet (`#C4B5FD`) → Amethyst (`#A78BFA`) → Deep Prism (`#7C3AED`), Orbit Cyan (`#22D3EE`), Amber Glow (`#FDE68A`)
 * **타이포그래피**:
   * 영문 헤드라인: **Outfit** (Geometric & Modern, Display/Bold)
   * 영문 본문: **Inter** (Highly Legible)
@@ -32,11 +32,11 @@ version: v1.0
 * **메인 페이지 레이아웃 섹션 흐름**:
   ```
   [Navigation Bar (Fixed, Glassmorphism)] 
-      ➡️ [Hero Section] ("Sincerity, Prioritized.") 
-      ➡️ [Belief Section] (Note A · Priority · Sincera 카드) 
-      ➡️ [Journey Section] (20년 연도별 커리어 수직 타임라인) 
-      ➡️ [Work Section] (Vibe Studio, Noto A 등 프로젝트 쇼케이스) 
-      ➡️ [Connect Section] (LinkedIn & 이메일 대화 초대 CTA)
+      → [Hero Section] ("Sincerity, Prioritized.") 
+      → [Belief Section] (Note A · Priority · Sincera 카드) 
+      → [Journey Section] (20년 연도별 커리어 수직 타임라인) 
+      → [Work Section] (Vibe Studio, Noto A 등 프로젝트 쇼케이스) 
+      → [Connect Section] (LinkedIn & 이메일 대화 초대 CTA)
   ```
 
 ---
@@ -78,10 +78,10 @@ version: v1.0
 ### 4-2. 레이아웃 재구성 및 Bento Box 도입
 * **Hero & Belief (철학 유지)**: 브랜드 고유의 진정성을 나타내는 철학적 영감은 그대로 유지.
 * **Journey (커리어 축약 및 스토리 브릿지화)**: 7개의 연도별 상세 타임라인을 3단계 핵심 스토리텔링으로 요약하여 시선이 자연스레 하단 서비스 소개로 가도록 시각적 화살표 브릿지 설계.
-* **Work (Bento Box 기반 쇼케이스 승격 및 CTA 배치 ⭐️)**:
+* **Work (Bento Box 기반 쇼케이스 승격 및 CTA 배치)**:
   * 3단 단순 프로젝트 카드를 해체하고, Daily Digest와 Pace Note를 와이드 화면으로 분리해 각각의 핵심 앱 목업과 구독 버튼 배치.
-  * **Daily Digest**: `✨ 하루 5분, 다이제스트 무료 구독` CTA 전면화.
-  * **Pace Note**: `✨ 3초 만에 로그인하고 나만의 궤도 만들기` CTA 전면화.
+  * **Daily Digest**: `하루 5분, 다이제스트 무료 구독` CTA 전면화.
+  * **Pace Note**: `3초 만에 로그인하고 나만의 궤도 만들기` CTA 전면화.
   * **PriSincera Base**: 브랜드의 근본을 드러내는 소개 영역은 서브 카드로 톤 다운하여 하단 배치.
 
 ---

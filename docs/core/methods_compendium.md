@@ -10,15 +10,15 @@ target_files:
   - study-api.mjs
 ---
 
-# 📘 메서드 전서 (Methods Compendium)
+# 메서드 전서 (Methods Compendium)
 
 > **PriSincera가 "무엇을 어떻게 하는가"를 세 층위로 일목요연하게 집약한 단일 레퍼런스.** ① 제품·운영 방법론(왜/어떻게 굴리는가) · ② 엔지니어링 기법(기술적으로 어떻게 뚫었나) · ③ API 메서드(HTTP 엔드포인트). 각 항목은 정본 문서로 연결되며, 본 문서는 **집약 뷰**일 뿐 규범의 원본은 링크된 문서·소스다.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-23 | AI Agent | 3층위(제품·운영 방법론 / 엔지니어링 기법 / API 엔드포인트) 최초 집약 정리 | Core |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-07-23 | 3층위(제품·운영 방법론 / 엔지니어링 기법 / API 엔드포인트) 최초 집약 정리 | Core |
 
 ---
 

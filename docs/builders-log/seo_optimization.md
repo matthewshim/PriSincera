@@ -1,5 +1,5 @@
 ---
-nav_title: ✍️ SEO 크롤러 대응 개발기
+nav_title: SEO 크롤러 대응 개발기
 status: active
 domain: BuildersLog
 last_updated: 2026-05-26
@@ -11,17 +11,17 @@ target_files:
   - src/styles/index.css
 ---
 
-# 🛠️ SEO Deep Dive: SPA의 크롤링 맹점 극복 및 동적 사이트맵 연동기
+# SEO Deep Dive: SPA의 크롤링 맹점 극복 및 동적 사이트맵 연동기
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-26 | Antigravity | 최초 SEO 아키텍처 개선 및 빌더스 로그 게시 초안 정의 | server.mjs, DailyCalendar, BuildersLog.css, index.css |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-26 | 최초 SEO 아키텍처 개선 및 빌더스 로그 게시 초안 정의 | server.mjs, DailyCalendar, BuildersLog.css, index.css |
 
 ---
 
-## 1. 💡 도입부: 서비스는 살아있으나, 검색 엔진은 장님이었다
+## 1. 도입부: 서비스는 살아있으나, 검색 엔진은 장님이었다
 PriSincera는 React/Vite 기반의 고성능 Single Page Application(SPA)으로 구축되었으며, 매일 테크 트렌드를 분석하는 **Daily Digest**와 기술 의사결정을 적어 내려가는 **Builders Log**라는 킬러 콘텐츠를 갖고 있습니다.
 
 그러나 열심히 생산한 고밀도 콘텐츠에도 불구하고 **오가닉 방문자 유입이 정체**되어 있었습니다. 
@@ -31,7 +31,7 @@ PriSincera는 React/Vite 기반의 고성능 Single Page Application(SPA)으로 
 
 ---
 
-## 2. 🔍 발견된 3대 SEO 장벽과 파괴적 분석
+## 2. 발견된 3대 SEO 장벽과 파괴적 분석
 
 ### [장벽 1] 정적 파일의 역습: 동적 사이트맵 인트루전 (Sitemap Interception)
 * **발견**: 백엔드 `server.mjs`에는 Firestore와 GCS 데이터를 실시간으로 파싱하여 최신 발행일 리스트를 담아주는 `/sitemap.xml` 라우터가 완벽하게 설계되어 있었습니다.
@@ -58,7 +58,7 @@ PriSincera는 React/Vite 기반의 고성능 Single Page Application(SPA)으로 
 
 ---
 
-## 3. 🛠️ 엔지니어링 솔루션: 장벽 허물기
+## 3. 엔지니어링 솔루션: 장벽 허물기
 
 ### 1) 정적 인터셉터의 물리적 파괴
 가장 먼저 크롤링 로봇을 방해하던 `public/sitemap.xml` 파일을 **물리적으로 삭제**(`git rm`)했습니다. 
@@ -102,7 +102,7 @@ for (const chapter of buildersLog) {
 
 ---
 
-## 4. 📈 결과 및 마케팅 인사이트
+## 4. 결과 및 마케팅 인사이트
 이 사소해 보이지만 핵심적인 아키텍처 개편을 통해 PriSincera는 다음과 같은 비즈니스 무기를 얻었습니다:
 
 1. **자동 성장 동력 (SEO Flywheel)**: 앞으로 추가되는 모든 연재 글과 뉴스레터는 사람이 매번 등록하지 않아도 매일 실시간으로 자동 갱신되는 사이트맵을 통해 구글과 네이버 검색창에 **실시간 자동 색인**됩니다.

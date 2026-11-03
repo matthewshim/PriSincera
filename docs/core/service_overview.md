@@ -11,19 +11,19 @@ target_files:
   - src/pages/SylphioLanding.jsx
 ---
 
-# 🧭 서비스 개요 (Service Overview)
+# 서비스 개요 (Service Overview)
 
 > **5분 안에 "PriSincera가 무엇인가"를 파악하기 위한 최상위 진입 문서.** 신규 합류자(기획·디자인·개발)는 이 문서를 가장 먼저 읽고, 이후 역할별 [온보딩 가이드](onboarding_guide.md)로 이동하세요.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-24 | AI Agent | 서비스 전체 개요·제품 포트폴리오·성장 플라이휠 최초 정의 | Service |
-| v1.1 | 2026-07-15 | AI Agent | **ReLearn 출시 반영** — 통합 성장 루프 서비스(`/relearn`) 포트폴리오 등재. Daily Digest·PaceNote는 전환기 병존 후 리런으로 승계 예정([relearn/product_strategy](../relearn/product_strategy.md) §4·§5-1) | Service, ReLearn |
-| v1.4 | 2026-09-22 | AI Agent | Planner's View IA 전환 반영 — 목록 없는 뷰 중심에서 **시리즈 연재 구조**(루트=목록)로 승격 | Service, PlannersView |
-| v1.3 | 2026-08-31 | AI Agent | **Planner's View 신설 등재** — 기획자 관점 섹션(`/planners-view`, GNB 1순위) 포트폴리오 추가. Builder's Log와의 경계(제작 기록 vs 관점)를 명시하고 잘못 적힌 `/builderslog` 경로를 `/builders-log`로 정정 | Service, PlannersView |
-| v1.2 | 2026-07-22 | AI Agent | **승계 완료 반영** — Daily Digest·PaceNote 독립 웹 UI는 2026-07-20 리런으로 승계·비공개(구 경로 301). 포트폴리오를 3제품 체제(ReLearn·Builder's Log·Sylphio)로 재편, target_files 삭제 파일 정리 | Service 전반 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-24 | 서비스 전체 개요·제품 포트폴리오·성장 플라이휠 최초 정의 | Service |
+| v1.1 | 2026-07-15 | **ReLearn 출시 반영** — 통합 성장 루프 서비스(`/relearn`) 포트폴리오 등재. Daily Digest·PaceNote는 전환기 병존 후 리런으로 승계 예정([relearn/product_strategy](../relearn/product_strategy.md) §4·§5-1) | Service, ReLearn |
+| v1.4 | 2026-09-22 | Planner's View IA 전환 반영 — 목록 없는 뷰 중심에서 **시리즈 연재 구조**(루트=목록)로 승격 | Service, PlannersView |
+| v1.3 | 2026-08-31 | **Planner's View 신설 등재** — 기획자 관점 섹션(`/planners-view`, GNB 1순위) 포트폴리오 추가. Builder's Log와의 경계(제작 기록 vs 관점)를 명시하고 잘못 적힌 `/builderslog` 경로를 `/builders-log`로 정정 | Service, PlannersView |
+| v1.2 | 2026-07-22 | **승계 완료 반영** — Daily Digest·PaceNote 독립 웹 UI는 2026-07-20 리런으로 승계·비공개(구 경로 301). 포트폴리오를 3제품 체제(ReLearn·Builder's Log·Sylphio)로 재편, target_files 삭제 파일 정리 | Service 전반 |
 
 ---
 
@@ -51,7 +51,7 @@ target_files:
 - **AI Prompt / Language Dojo(어학)**: AI 생성 학습 콘텐츠(일/영).
 - **테크 트랙(Tech Track)**: 수준별(주니어/시니어) **하이브리드** — 실제 RSS 근거 위에 `학습(개념) → 실전(액션) → 원문`. 출처 정책은 [content_sourcing_policy](../daily-digest/content_sourcing_policy.md) 참조.
 - 과거 날짜 열람은 리런 날짜 뷰(`/relearn/daily/:date` — 오늘과 동일 교재, 일기장은 열람 모드 — [relearn/ui_specification §8](../relearn/ui_specification.md)).
-- 이메일 채널: 매일 발송 **"📬 ReLearn Daily"** 다이제스트(구독/해지는 리런 화면에서 관리).
+- 이메일 채널: 매일 발송 **"ReLearn Daily"** 다이제스트(구독/해지는 리런 화면에서 관리).
 
 ### 2.2. 실행·복기(Run·Reflect) — 구 PaceNote
 - 주차별 **궤도(Orbit)** 체크리스트 + 한 줄 **회고**(항해 일지) + 주차 아카이브(기록 뷰).

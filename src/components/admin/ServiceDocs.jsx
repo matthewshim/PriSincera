@@ -29,9 +29,9 @@ const FOLDER_LABEL = {
 };
 const FOLDER_ORDER = ['core', 'daily-digest', 'pacenote', 'builders-log', 'planners-view', 'sylphio', 'archive', '_root'];
 
-/* 제목에 선행 글리프가 없는 문서에 부여할 폴더별 fallback **아이콘 이름**.
-   구 구조는 이모지를 `navTitle` 문자열에 구워 넣었다 — 문자열이라 SVG로 바꿀 수 없었고,
-   그래서 어드민만 이모지가 남아 있었다(P1-E 어드민분). 이제 렌더에서 아이콘으로 붙인다. */
+/* 폴더별 사이드바 **아이콘 이름**. 2026-11-03에 docs 전 문서의 제목 선두 글리프를
+   제거했으므로(publishing_guide §6 — docs 예외 철회) 이제 전 항목이 이 아이콘을 쓴다.
+   `ownGlyph` 분기는 콘텐츠에 글리프가 재유입될 때 아이콘과 겹치지 않게 하는 안전망으로 남긴다. */
 const FOLDER_ICON = {
   core: 'book', 'daily-digest': 'news', pacenote: 'trail',
   'builders-log': 'document', 'planners-view': 'compass', sylphio: 'mic', archive: 'folder', _root: 'document',
@@ -87,8 +87,8 @@ export default function ServiceDocs() {
       const t = title || rel;
       // 사이드바 라벨: nav_title frontmatter가 있으면 우선(편집형 개발기의 본문 H1 보존용), 없으면 H1
       const label = fm.nav_title || t;
-      /* 문서 제목 자체의 선행 이모지는 **오너가 쓴 콘텐츠**이므로 그대로 둔다.
-         없는 문서에만 UI가 폴더 아이콘을 붙인다(문자열이 아니라 렌더에서). */
+      /* 제목 선두 글리프는 docs 규범상 금지다(publishing_guide §6). 재유입분이 있으면
+         아이콘과 중복되므로 그 문서만 폴더 아이콘을 생략한다. */
       const folder = rel.includes('/') ? rel.split('/')[0] : '_root';
       const ownGlyph = LEADING_EMOJI_RE.test(label.trim());
       map[rel] = { raw, fm, body, title: t, navTitle: label, ownGlyph, folder };

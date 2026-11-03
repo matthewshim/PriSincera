@@ -13,24 +13,24 @@ target_files:
   - src/components/daily/TrackSignalFeed.jsx
 ---
 
-# 🗺️ 성장 루프 닫기 실행 계획서
+# 성장 루프 닫기 실행 계획서
 
 > **한 줄 요지**: 새 제품·신규 AI 비용 없이, 이미 저장 중인 `completed`·회고 신호를 *읽기 시작*하는 것만으로 **배움 → 실행 → 복기 → (개인화) 배움** 플라이휠을 닫는다. 모방 불가능한 데이터 해자를 만든다.
 >
 > 본 문서는 제품 전략 [product_strategy](product_strategy.md) 및 [ai_recommendation_engine](ai_recommendation_engine.md)의 후속 실행 계획으로, **단계별(Phase) 체크리스트와 완료기준(DoD)** 을 따라 점진 구현한다.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-29 | AI Agent | 성장 루프 닫기 5-Phase 실행 계획 최초 수립 (현황 진단·데이터 모델·되먹임·마일스톤) | PaceNote, DailyDigest |
-| v1.1 | 2026-06-29 | AI Agent | **Phase 0·1 구현 완료** — pacenote-api 신호 적재(recordSignal)·`GET /profile`, pacenote-composer 야간 권위 reconcile | pacenote-api.mjs, pacenote-composer.mjs |
-| v1.2 | 2026-06-29 | AI Agent | **Phase 2 구현 완료** — 완료 가중 velocity·HOF, 고인물 퇴출 v2, affinity 인지형 추천(강점+스트레치) | pacenote-composer.mjs, pacenote-api.mjs |
-| v1.3 | 2026-06-29 | AI Agent | **Phase 3 구현 완료** — 다이제스트 개인화 렌즈(클라이언트측: 도메인 재정렬·'내 궤도' 배지·연결 배너). 소비 비콘은 이연 | TrackSignalFeed.jsx/css |
-| v1.4 | 2026-06-29 | AI Agent | **Phase 4 구현 완료 → 루프 닫힘(status active)** — 주간 루프 리포트(LoopReport) + 추천 사유 라벨(강점/스트레치) | LoopReport.jsx, PaceNoteDashboard.jsx |
-| v1.5 | 2026-07-22 | AI Agent | **리런 승계 반영** — 데이터 층(Phase 0~4)은 현행 유지, UI 표면(다이제스트 렌즈·LoopReport·추천 라벨)은 ReLearn(`/relearn`)으로 승계됨을 명시. 제품 목록·target_files 현행화 | frontmatter, §1 |
-| v1.6 | 2026-07-27 | AI Agent | **streak → practice 전환(일자축 통일 Phase 1)** — 일 기반 꾸준함 통계(누적·빈도·grace day) 권위 계산·노출·카피 개정. streak(주)는 deprecated 병기 | pacenote-composer.mjs, practice-stats.mjs, pacenote-api.mjs, LoopReport.jsx |
-| v1.7 | 2026-07-27 | AI Agent | **reconcile 입력원 이원화(일자축 Phase 3)** — days+weeks 합류·윈도우 70일, 회고 키 일자화. 레거시 주간 streak는 weeks에서만 산출(동결 예정) | pacenote-composer.mjs |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-29 | 성장 루프 닫기 5-Phase 실행 계획 최초 수립 (현황 진단·데이터 모델·되먹임·마일스톤) | PaceNote, DailyDigest |
+| v1.1 | 2026-06-29 | **Phase 0·1 구현 완료** — pacenote-api 신호 적재(recordSignal)·`GET /profile`, pacenote-composer 야간 권위 reconcile | pacenote-api.mjs, pacenote-composer.mjs |
+| v1.2 | 2026-06-29 | **Phase 2 구현 완료** — 완료 가중 velocity·HOF, 고인물 퇴출 v2, affinity 인지형 추천(강점+스트레치) | pacenote-composer.mjs, pacenote-api.mjs |
+| v1.3 | 2026-06-29 | **Phase 3 구현 완료** — 다이제스트 개인화 렌즈(클라이언트측: 도메인 재정렬·'내 궤도' 배지·연결 배너). 소비 비콘은 이연 | TrackSignalFeed.jsx/css |
+| v1.4 | 2026-06-29 | **Phase 4 구현 완료 → 루프 닫힘(status active)** — 주간 루프 리포트(LoopReport) + 추천 사유 라벨(강점/스트레치) | LoopReport.jsx, PaceNoteDashboard.jsx |
+| v1.5 | 2026-07-22 | **리런 승계 반영** — 데이터 층(Phase 0~4)은 현행 유지, UI 표면(다이제스트 렌즈·LoopReport·추천 라벨)은 ReLearn(`/relearn`)으로 승계됨을 명시. 제품 목록·target_files 현행화 | frontmatter, §1 |
+| v1.6 | 2026-07-27 | **streak → practice 전환(일자축 통일 Phase 1)** — 일 기반 꾸준함 통계(누적·빈도·grace day) 권위 계산·노출·카피 개정. streak(주)는 deprecated 병기 | pacenote-composer.mjs, practice-stats.mjs, pacenote-api.mjs, LoopReport.jsx |
+| v1.7 | 2026-07-27 | **reconcile 입력원 이원화(일자축 Phase 3)** — days+weeks 합류·윈도우 70일, 회고 키 일자화. 레거시 주간 streak는 weeks에서만 산출(동결 예정) | pacenote-composer.mjs |
 
 ---
 
@@ -46,17 +46,17 @@ PriSincera는 **프로덕트 우선** 방향으로 진화한다. 계획 수립 �
 
 | 단계 | 현재 상태 | 갭 |
 | :--- | :--- | :--- |
-| 배움 → 실행 | 테크 트랙 `action_challenge` → "실행의 궤도에 추가" | ✅ 연결됨 |
-| 실행 신호 | `currentPace[].completed` **저장은 됨** | ❌ **아무도 안 읽음** |
-| 복기 신호 | `statement` / Voyage Log 회고 저장 | ❌ 분석·환류 0 |
-| 실행/복기 → 배움 | — | ❌ **귀환 경로 자체가 없음** |
-| 다이제스트 개인화 | 전원 동일(글로벌 GCS) | ❌ 개인 궤도와 무관 |
+| 배움 → 실행 | 테크 트랙 `action_challenge` → "실행의 궤도에 추가" | 연결됨 |
+| 실행 신호 | `currentPace[].completed` **저장은 됨** | **아무도 안 읽음** |
+| 복기 신호 | `statement` / Voyage Log 회고 저장 | 분석·환류 0 |
+| 실행/복기 → 배움 | — | **귀환 경로 자체가 없음** |
+| 다이제스트 개인화 | 전원 동일(글로벌 GCS) | 개인 궤도와 무관 |
 
 **핵심 증거**: [pacenote-composer.mjs:27-31](../../pipeline/src/pacenote-composer.mjs#L27-L31)의 추천 풀 통계(`poolStats`)는 **"선택(pick)"만** 신호로 사용하고, 같은 `currentPace` 배열의 **`completed` 필드를 무시**한다. → *고르기만 한 목표*와 *실제 완료한 목표*가 동급. 추천 품질의 근본 한계.
 
 ## 3. 설계 원칙 (비용·정합성 사수)
 
-> ⚠️ **Daily Digest는 글로벌 정적 파일(트래픽 비용 ≈ 0)이 핵심 자산이다. 콘텐츠를 유저별로 재생성하지 않는다.**
+> **Daily Digest는 글로벌 정적 파일(트래픽 비용 ≈ 0)이 핵심 자산이다. 콘텐츠를 유저별로 재생성하지 않는다.**
 
 1. **글로벌 콘텐츠는 글로벌 그대로.** 개인화는 그 위에 얹는 **경량 "렌즈"(재정렬·하이라이트)** 로만 구현.
 2. **신호는 Firestore, 콘텐츠는 GCS** — 분리 유지.
@@ -130,53 +130,53 @@ profile: {
 
 > 각 Phase는 **완료기준(DoD)** 을 충족해야 다음으로 진행. Phase 0→2가 핵심 가치의 80%.
 
-### ✅ Phase 0 — 계측 (Instrumentation) — **완료(2026-06-29)**
+### Phase 0 — 계측 (Instrumentation) — **완료(2026-06-29)**
 *개인화는 아직 없음. 신호 적재만 시작.* 구현: `recordSignal()` ([pacenote-api.mjs](../../pacenote-api.mjs))
 - [x] `pacenotes/{uid}.profile` 스키마 도입 (set+merge, `FieldValue.increment`)
 - [x] 완료 토글(`/toggle`) → `domainAffinity[key] += 2`, `completion.completed ±1` (pick +1과 합산 시 완료=3)
 - [x] add-orbit / add / accept(`pick`) → `domainAffinity[key] += 1`, `completion.picked += n`
 - [x] 회고 저장(`/diary`) → `profile.reflections[weekId] = {text, ts}` (배열 대신 weekId 맵 — 멱등 갱신)
-- **DoD ✅**: 5개 핸들러가 행동을 `profile`에 증분 적재. best-effort(실패가 핵심 기능 미차단).
+- **DoD**: 5개 핸들러가 행동을 `profile`에 증분 적재. best-effort(실패가 핵심 기능 미차단).
 
-> 📌 구현 메모: affinity 키는 정규화 슬러그(`'AI/LLM'→'ai_llm'`)로 테크 도메인 키와 통일. 회고는 `reflections` 맵으로 저장하고 `GET /profile`이 `recentReflections` 배열(최신 5)로 변환.
+> 구현 메모: affinity 키는 정규화 슬러그(`'AI/LLM'→'ai_llm'`)로 테크 도메인 키와 통일. 회고는 `reflections` 맵으로 저장하고 `GET /profile`이 `recentReflections` 배열(최신 5)로 변환.
 
-### ✅ Phase 1 — 프로파일 집계·정합 — **완료(2026-06-29)**
+### Phase 1 — 프로파일 집계·정합 — **완료(2026-06-29)**
 - [x] `pacenote-composer` 야간 `profile` 권위 재계산 1패스(증분 드리프트 보정·자가치유) — **[2026-07-27 개정]** 입력원 weeks → **days(신규)+weeks(레거시 아카이브) 이원 합류**, 순회 윈도우 70일(일자축 Phase 3)
 - [x] `streak` = **연속 완료 주차 수**(current) + 최장 연속(best). affinity는 `완료=3·선택=1` 가중
   - **[2026-07-27 개정]** 일자축 통일 Phase 1: `practice`(일 기반 — 이번 달 실천 일수·최근 7일 빈도·grace 연속)가 streak를 대체. `completedAt`(KST 버킷팅) 기반, [practice-stats.mjs](../../pipeline/src/lib/practice-stats.mjs). streak(주)는 일자축 Phase 4에서 제거([daily_axis_unification_plan §5](../relearn/daily_axis_unification_plan.md))
 - [x] `GET /api/pacenote/profile` — `domainAffinity·completion.rate·streak(deprecated)·practice·recentReflections` 반환
-- **DoD ✅**: 구문 검증 통과, 야간 재계산이 최근 10주 기준 권위 값 산출.
+- **DoD**: 구문 검증 통과, 야간 재계산이 최근 10주 기준 권위 값 산출.
 
-> 📌 reconcile는 기존 유저 스캔 루프(추천 풀 통계)에 1패스를 얹어 **추가 읽기 비용 ≈ 0**. Gemini 호출 증가 0.
+> reconcile는 기존 유저 스캔 루프(추천 풀 통계)에 1패스를 얹어 **추가 읽기 비용 ≈ 0**. Gemini 호출 증가 0.
 
-### ✅ Phase 2 — 추천 환류 (5-A) ★최고 ROI — **완료(2026-06-29)**
+### Phase 2 — 추천 환류 (5-A) ★최고 ROI — **완료(2026-06-29)**
 - [x] poolStats를 **완료 가중**으로 교체: `velocity = (completes*3 + picks)/daysAlive` ([pacenote-composer.mjs](../../pipeline/src/pacenote-composer.mjs))
 - [x] 고인물 퇴출 v2: 완료 가중 velocity 오름차순 퇴출 → **저완료·고선택 궤도가 우선 퇴출**(완료된 궤도는 3배 가중으로 생존)
 - [x] HOF(우수 사례)를 **실제 완료된 궤도 우선**으로(콜드 스타트 시 선택 2회 폴백)
 - [x] `replenishRecommendations` affinity 인지형: **강점 도메인 + 마지막 1개 스트레치**, 콜드 스타트 시 랜덤 폴백
 - [x] 추천 선별을 `pacenote-api` GET·accept에서 **서버측 + 유저 affinity 반영**(`getAffinity`)
-- **DoD ✅**: 완료 신호가 추천 풀 생존·HOF·개인 추천에 반영. 구문 검증 통과.
+- **DoD**: 완료 신호가 추천 풀 생존·HOF·개인 추천에 반영. 구문 검증 통과.
 
-> 📌 affinity 키는 Phase 0와 동일 정규화로 풀 카테고리(`'AI & Future'→'ai_future'`)와 정합. 비용 중립(Gemini 호출 증가 0).
+> affinity 키는 Phase 0와 동일 정규화로 풀 카테고리(`'AI & Future'→'ai_future'`)와 정합. 비용 중립(Gemini 호출 증가 0).
 
-### ✅ Phase 3 — 다이제스트 개인화 렌즈 (5-B) — **완료(2026-06-29)**
-> 🔀 **설계 변경(개선)**: 서버 `?lens=uid` 엔드포인트 대신 **클라이언트측 렌즈**로 구현. 글로벌 콘텐츠/캐시를 그대로 두고 per-user 서버 연산 0 — 원칙(§3)에 더 충실하고 비용 0. affinity는 기존 `GET /api/pacenote/profile` 재사용.
+### Phase 3 — 다이제스트 개인화 렌즈 (5-B) — **완료(2026-06-29)**
+> **설계 변경(개선)**: 서버 `?lens=uid` 엔드포인트 대신 **클라이언트측 렌즈**로 구현. 글로벌 콘텐츠/캐시를 그대로 두고 per-user 서버 연산 0 — 원칙(§3)에 더 충실하고 비용 0. affinity는 기존 `GET /api/pacenote/profile` 재사용.
 - [x] **도메인 재정렬**: '전체' 보기에서 내 궤도 도메인(affinity>0) 카드를 상단으로 정렬 ([TrackSignalFeed.jsx](../../src/components/daily/TrackSignalFeed.jsx))
-- [x] **'🧭 내 궤도' 배지**: 내 affinity 도메인 카드에 표시(도메인=cyan과 구분되는 indigo)
+- [x] **'내 궤도' 배지**: 내 affinity 도메인 카드에 표시(도메인=cyan과 구분되는 indigo)
 - [x] **연결 배너**: "당신의 궤도와 연결된 오늘의 배움 · `<도메인>`" → 클릭 시 해당 도메인 필터
 - [ ] (이연) 옵트인 소비 비콘 → `domainAffinity += 0.5`
-- **DoD ✅**: 로그인 유저의 활성 궤도 도메인이 트랙 피드 상단에 정렬·하이라이트됨. 비로그인/콜드 스타트는 글로벌 정렬 유지.
+- **DoD**: 로그인 유저의 활성 궤도 도메인이 트랙 피드 상단에 정렬·하이라이트됨. 비로그인/콜드 스타트는 글로벌 정렬 유지.
 
-> 📌 **소비 비콘 이연 사유**: 야간 reconcile(Phase 1)가 affinity를 *weeks(실행) 기준으로만* 권위 재계산하므로, 소비 +0.5 증분은 reconcile에 덮어쓰여 사라진다. 정상 지원하려면 `profile.consumption`을 **별도 필드**로 두고 reconcile가 보존+합산해야 함 → 별도 작업으로 분리. 핵심 DoD(궤도 도메인 상단 노출)는 본 렌즈로 충족.
+> **소비 비콘 이연 사유**: 야간 reconcile(Phase 1)가 affinity를 *weeks(실행) 기준으로만* 권위 재계산하므로, 소비 +0.5 증분은 reconcile에 덮어쓰여 사라진다. 정상 지원하려면 `profile.consumption`을 **별도 필드**로 두고 reconcile가 보존+합산해야 함 → 별도 작업으로 분리. 핵심 DoD(궤도 도메인 상단 노출)는 본 렌즈로 충족.
 
-### ✅ Phase 4 — 루프 가시화 UI — **완료(2026-06-29)**
-- [x] **주간 루프 리포트**([LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)): 실행 완료율 · 이번 달 실천 일수(🔥·최근 7일 빈도) · 복기 수 · 집중 도메인(🧭) 한 장 요약. 당시 PaceNote ChronoRibbon 하단 배치 → 현재는 리런([ReLearn.jsx](../../src/pages/ReLearn.jsx)) 두 뷰 공통 상주로 승계, 콜드 스타트 시 숨김
+### Phase 4 — 루프 가시화 UI — **완료(2026-06-29)**
+- [x] **주간 루프 리포트**([LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)): 실행 완료율 · 이번 달 실천 일수(최근 7일 빈도 포함) · 복기 수 · 집중 도메인 한 장 요약. 당시 PaceNote ChronoRibbon 하단 배치 → 현재는 리런([ReLearn.jsx](../../src/pages/ReLearn.jsx)) 두 뷰 공통 상주로 승계, 콜드 스타트 시 숨김
 - [x] **추천 사유 라벨**(구 `PaceNoteDashboard.jsx` 옴니바 → 현 리런 궤도 섹션 [OrbitSection.jsx](../../src/components/relearn/OrbitSection.jsx)): `강점 기반`(indigo) / `새 도전`(gold) — affinity 기반 클라이언트 판정
-- **DoD ✅**: 유저가 배움→실행→복기 루프를 한 장으로 인지. 추천이 *왜* 떴는지 가시화.
+- **DoD**: 유저가 배움→실행→복기 루프를 한 장으로 인지. 추천이 *왜* 떴는지 가시화.
 
 ---
 
-## ✅ 루프 닫힘 (Loop Closed)
+## 루프 닫힘 (Loop Closed)
 ```
 배움(Daily Digest) ──실행의 궤도에 추가──▶ 실행(PaceNote 궤도)
         ▲                                          │

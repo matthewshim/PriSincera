@@ -20,21 +20,21 @@ target_files:
   - docs/data_contract_v2.md
 ---
 
-# 🗓️ 리런 일자축 통일 (Daily-Axis Unification) 추진 계획
+# 리런 일자축 통일 (Daily-Axis Unification) 추진 계획
 
 > **한 줄 요지**: 리런의 모든 것을 **하루(日)라는 단일 시간 축**으로 통일한다. 배움(콘텐츠)은 이미 일 단위이므로, 주(週) 단위로 남아 있던 **활동(실행·복기·기록)만 일 단위로 조정**하고, `/relearn`(오늘)과 `/relearn/daily/:date`(과거)를 **하나의 "날짜 뷰"로 통합**한다. 태그라인 *"매일 제로에서, 다시 배우고 다시 달린다"* 를 데이터·구조 차원에서 실현한다.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-23 | AI Agent | 초안 — 일자축 통일 방향 확정(오너 논의), 원인 진단·IA·데이터 전환·무손실 로드맵 수립 | ReLearn 전반, PaceNote 데이터 모델 |
-| v1.1 | 2026-07-27 | AI Agent | 코드 대조 검토 반영 — ① API 실경로 정정(레포 루트 `pacenote-api.mjs`) ② 전환 대상 엔드포인트 9→10개(`/profile` 포함) ③ Phase 3에 composer 야간 reconcile 전환 명시 ④ streak 초기 프레이밍 가이드. **Phase 0 구현 완료** | §4, §5, §7, §8 |
-| v1.2 | 2026-07-27 | AI Agent | **Phase 1 구현 완료** — streak 순화: `practice`(일 기반 누적·빈도·grace) 권위 계산 + `/profile` 노출 + LoopReport 일 기반 카피. growth_loop_plan v1.6 동반 개정 | composer, API, LoopReport |
-| v1.3 | 2026-07-27 | AI Agent | **Phase 2 구현 완료** — 단일 DailyView 수렴(오늘/과거 동일 골격·시간 네비 상시·기록 탭 시간 오버뷰 재편·오늘 중복 URL 수렴). ui_specification v1.4 동반 개정 | DailyView, TimeOverview, App 라우팅 |
-| v1.4 | 2026-07-27 | AI Agent | **Phase 3 구현 완료** — 활동 그릇 일 문서 전환(API 10개·composer 이원 reconcile·프론트 형상), 이원 스키마 읽기 어댑터, 기본 궤도 정책 변경(빈 시작). data_contract v2.5·growth_loop_plan v1.7 동반 개정 | API, composer, 훅, RecordsView |
-| v1.6 | 2026-08-02 | AI Agent | **코드 리뷰·하드닝** — 8각 리뷰(정확성/재사용/단순화/효율/고도/컨벤션) 후 확정 결함 수정: ① 과거 열람 견고화(`GET /day/:date` 신설, DiaryDock 타임라인 윈도우 의존 제거) ② 회고 정렬 정규화(레거시 주차키 slot#1 고착 버그) ③ fixCategories 모듈화·미사용 dayId 제거·이중 Navigate 통합 ④ 도크 데스크톱 토글 no-op(허위 분석 이벤트·aria 오류) ⑤ 데드 CSS 48+8종·`.rl-ch-sec` 마진 소스 정리. 검증: 신규 테스트 6 + composer 4 + 브라우저 7 통과, design-check·빌드 통과 | pacenote-api, DailyView, DiaryDock, ReLearn.css |
-| v1.5 | 2026-07-27 | AI Agent | **Phase 2 재편(오너 환류)** — 교재/일기장 분리: 본문=배움 콘텐츠(오늘/과거 동일), 실행·복기=DiaryDock 플로팅(오늘 관리·과거 열람·레거시 주 폴백), 기록 탭 폐지·날짜 탐색 일원화. §3 IA 개정 | DailyView, DiaryDock, ui_specification |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-07-23 | 초안 — 일자축 통일 방향 확정(오너 논의), 원인 진단·IA·데이터 전환·무손실 로드맵 수립 | ReLearn 전반, PaceNote 데이터 모델 |
+| v1.1 | 2026-07-27 | 코드 대조 검토 반영 — ① API 실경로 정정(레포 루트 `pacenote-api.mjs`) ② 전환 대상 엔드포인트 9→10개(`/profile` 포함) ③ Phase 3에 composer 야간 reconcile 전환 명시 ④ streak 초기 프레이밍 가이드. **Phase 0 구현 완료** | §4, §5, §7, §8 |
+| v1.2 | 2026-07-27 | **Phase 1 구현 완료** — streak 순화: `practice`(일 기반 누적·빈도·grace) 권위 계산 + `/profile` 노출 + LoopReport 일 기반 카피. growth_loop_plan v1.6 동반 개정 | composer, API, LoopReport |
+| v1.3 | 2026-07-27 | **Phase 2 구현 완료** — 단일 DailyView 수렴(오늘/과거 동일 골격·시간 네비 상시·기록 탭 시간 오버뷰 재편·오늘 중복 URL 수렴). ui_specification v1.4 동반 개정 | DailyView, TimeOverview, App 라우팅 |
+| v1.4 | 2026-07-27 | **Phase 3 구현 완료** — 활동 그릇 일 문서 전환(API 10개·composer 이원 reconcile·프론트 형상), 이원 스키마 읽기 어댑터, 기본 궤도 정책 변경(빈 시작). data_contract v2.5·growth_loop_plan v1.7 동반 개정 | API, composer, 훅, RecordsView |
+| v1.6 | 2026-08-02 | **코드 리뷰·하드닝** — 8각 리뷰(정확성/재사용/단순화/효율/고도/컨벤션) 후 확정 결함 수정: ① 과거 열람 견고화(`GET /day/:date` 신설, DiaryDock 타임라인 윈도우 의존 제거) ② 회고 정렬 정규화(레거시 주차키 slot#1 고착 버그) ③ fixCategories 모듈화·미사용 dayId 제거·이중 Navigate 통합 ④ 도크 데스크톱 토글 no-op(허위 분석 이벤트·aria 오류) ⑤ 데드 CSS 48+8종·`.rl-ch-sec` 마진 소스 정리. 검증: 신규 테스트 6 + composer 4 + 브라우저 7 통과, design-check·빌드 통과 | pacenote-api, DailyView, DiaryDock, ReLearn.css |
+| v1.5 | 2026-07-27 | **Phase 2 재편(오너 환류)** — 교재/일기장 분리: 본문=배움 콘텐츠(오늘/과거 동일), 실행·복기=DiaryDock 플로팅(오늘 관리·과거 열람·레거시 주 폴백), 기록 탭 폐지·날짜 탐색 일원화. §3 IA 개정 | DailyView, DiaryDock, ui_specification |
 
 ---
 
@@ -65,8 +65,8 @@ target_files:
    = 오늘 날짜 뷰                = 특정 날짜 뷰
         └──────── 동일 DailyView 컴포넌트 ────────┘
                           │
-   📖 교재(본문)  : 그 날짜의 배움 4채널 — 상단 가로 책갈피 탭으로 카테고리 구분(세로 레일은 2분할 컬럼 폭 잠식으로 기각), 각 탭 전부 펼침(훑어보기/정독 모드 폐지), 오늘/과거 동일 렌더
-   ✍️ 일기장(도크 — 데스크톱: 본문 2분할 우측 컬럼(§3-3 컨테이너 내 span 8/4, sticky)·모바일: 하단 도크): 실행(궤도)·복기
+   교재(본문)  : 그 날짜의 배움 4채널 — 상단 가로 책갈피 탭으로 카테고리 구분(세로 레일은 2분할 컬럼 폭 잠식으로 기각), 각 탭 전부 펼침(훑어보기/정독 모드 폐지), 오늘/과거 동일 렌더
+   일기장(도크 — 데스크톱: 본문 2분할 우측 컬럼(§3-3 컨테이너 내 span 8/4, sticky)·모바일: 하단 도크): 실행(궤도)·복기
    · 오늘  → 궤도 추가·완료·회고 관리 (+ 루프 리포트·내보내기)
    · 과거  → 기 입력한 실행·복기 열람 (일 해상도, 전환 이전 날짜는 주 해상도 폴백)
    · 비로그인 → 교재 + 로그인 CTA
@@ -96,7 +96,7 @@ target_files:
 
 압박이 아니라 격려로. 세부 옵션(구현 시 택1·병용):
 
-- **누적·빈도 프레이밍**: "🔥 N주 연속" → "이번 달 N일 실천" / "최근 7일 중 N일". 끊김을 0으로 만들지 않고 쌓임을 보여줌. 단, "최근 7일 중 N일"은 `completedAt` 축적(Phase 0 이후)이 전제 — 전환 초기엔 누적 프레이밍("이번 달 N일")을 우선한다.
+- **누적·빈도 프레이밍**: "N주 연속" → "이번 달 N일 실천" / "최근 7일 중 N일". 끊김을 0으로 만들지 않고 쌓임을 보여줌. 단, "최근 7일 중 N일"은 `completedAt` 축적(Phase 0 이후)이 전제 — 전환 초기엔 누적 프레이밍("이번 달 N일")을 우선한다.
 - **grace day**: 하루이틀 걸러도 연속 유지(유예). "부족해도 꾸준히"의 직접 구현.
 - 노출부: [LoopReport.jsx](../../src/components/pacenote/LoopReport.jsx)의 "N주" 카피·계산을 일 기반으로. 성장 루프 문서([growth_loop_plan](../pacenote/growth_loop_plan.md))의 streak 정의 동반 개정.
 
@@ -124,7 +124,7 @@ target_files:
 ### ☑ Phase 1 — streak 재설계 (꾸준함 순화)
 - streak 계산·카피를 §5대로 누적/빈도 + grace day로. LoopReport·composer·growth_loop_plan 정합.
 - DoD: streak이 압박 아닌 격려로 노출, 완료율 낮은 유저의 붕괴감 완화.
-- **[2026-07-27 완료]** composer 야간 reconcile에 `profile.practice` 권위 계산 신설([practice-stats.mjs](../../pipeline/src/lib/practice-stats.mjs) — monthDays·last7Days·grace 연속(유예 2일)·lastActive, KST 버킷팅). `/profile`이 `practice` 노출(레거시 `streak`는 Phase 4까지 병기), LoopReport 카피 "🔥 N주 연속" → "이번 달 N일 실천 · 최근 7일 중 N일". 단위 6종 + 런타임 테스트 11종 통과, vite 빌드 통과.
+- **[2026-07-27 완료]** composer 야간 reconcile에 `profile.practice` 권위 계산 신설([practice-stats.mjs](../../pipeline/src/lib/practice-stats.mjs) — monthDays·last7Days·grace 연속(유예 2일)·lastActive, KST 버킷팅). `/profile`이 `practice` 노출(레거시 `streak`는 Phase 4까지 병기), LoopReport 카피 "N주 연속" → "이번 달 N일 실천 · 최근 7일 중 N일". 단위 6종 + 런타임 테스트 11종 통과, vite 빌드 통과.
 
 ### ☑ Phase 2 — 날짜 뷰 컴포넌트 통합 (구조)
 - `ReLearn.jsx` + `ReLearnDaily.jsx` → 단일 `DailyView`. 오늘/과거가 같은 구조. date param 분기.

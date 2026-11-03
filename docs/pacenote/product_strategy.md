@@ -10,20 +10,20 @@ target_files:
   - pipeline/src/pacenote-composer.mjs
 ---
 
-# 🗺️ PaceNote 제품 전략서 (Product Strategy)
+# PaceNote 제품 전략서 (Product Strategy)
 
-> ⚠️ **위상 안내 (2026-07-22)**: PaceNote 독립 웹 UI(`/pacenote`)는 **2026-07-20 통합 서비스 리런(ReLearn, `/relearn`)으로 승계**되어 비공개입니다(구 경로 301). 본 문서는 리런의 **실행·복기 도메인**을 지배하는 전략·데이터 모델의 근거 문서로 유지되며, 화면 명세는 [relearn/ui_specification](../relearn/ui_specification.md), 승계 경위는 [relearn/product_strategy](../relearn/product_strategy.md)를 보십시오. 본문 중 `PaceNoteDashboard.jsx` 등 구 화면 파일 언급은 작성 당시 기록입니다.
+> **위상 안내 (2026-07-22)**: PaceNote 독립 웹 UI(`/pacenote`)는 **2026-07-20 통합 서비스 리런(ReLearn, `/relearn`)으로 승계**되어 비공개입니다(구 경로 301). 본 문서는 리런의 **실행·복기 도메인**을 지배하는 전략·데이터 모델의 근거 문서로 유지되며, 화면 명세는 [relearn/ui_specification](../relearn/ui_specification.md), 승계 경위는 [relearn/product_strategy](../relearn/product_strategy.md)를 보십시오. 본문 중 `PaceNoteDashboard.jsx` 등 구 화면 파일 언급은 작성 당시 기록입니다.
 
-> 💡 **기획 및 비전 선언 (Pace Note Vision)**
+> **기획 및 비전 선언 (Pace Note Vision)**
 > 남들의 속도에 휩쓸리지 않고, 오직 자신만의 템포와 방향을 추구하며 나아가는 이들을 위해 PriSincera가 AI 기반의 퍼스널 브랜딩 액션 플랫폼, **Pace Note**를 선보입니다.
-> 본 문서는 PriSincera의 3S 파이프라인(Signal ➔ Study ➔ Step)을 완성하는 최종 단계인 Pace Note의 기획 및 기술 명세서입니다.
+> 본 문서는 PriSincera의 3S 파이프라인(Signal → Study → Step)을 완성하는 최종 단계인 Pace Note의 기획 및 기술 명세서입니다.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-29 | AI Agent | PaceNote 제품 전략·MVP 사양·동적 퇴출 알고리즘 정리 | PaceNote |
-| v1.1 | 2026-07-22 | AI Agent | **리런 승계 반영** — 위상 안내 배너 추가, target_files를 현행 파일(ReLearn·usePaceNoteData·pacenote-api)로 교체, §6 구현 서술에 승계 경위 명시 | frontmatter, §6 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-29 | PaceNote 제품 전략·MVP 사양·동적 퇴출 알고리즘 정리 | PaceNote |
+| v1.1 | 2026-07-22 | **리런 승계 반영** — 위상 안내 배너 추가, target_files를 현행 파일(ReLearn·usePaceNoteData·pacenote-api)로 교체, §6 구현 서술에 승계 경위 명시 | frontmatter, §6 |
 
 ---
 
@@ -64,7 +64,7 @@ Pace Note는 단순한 일일 접속이나 맹목적인 '잔디 심기'의 피�
 ### 3.1. AI 기반 초개인화 주간 미션: 나만의 페이스를 찾아주는 지능형 가이드
 Pace Note는 획일적인 미션 목록에서 벗어나, 사용자가 한 주간 소비한 Daily Digest 데이터를 기반으로 현재의 성장 페이스에 가장 적합한 맞춤형 방향성을 제안합니다.
 
-> 🛡️ **Pace Note AI Flywheel**
+> **Pace Note AI Flywheel**
 > 사용자가 클릭한 IT Tech Signal 카테고리와 학습한 AI 프롬프트 데이터를 심층적으로 분석하고, 매주 일요일 밤 PriSincera의 Gemini AI가 다음 주 실무에 즉시 적용해볼 만한 3가지 구체적인 행동 지침(Pace Guide)을 제안합니다.
 
 *   **정교한 데이터 연동**: 사용자가 클릭한 카테고리와 학습 프롬프트를 실시간 통계로 결합합니다.

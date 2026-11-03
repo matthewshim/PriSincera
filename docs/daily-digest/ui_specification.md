@@ -11,16 +11,16 @@ target_files:
   - server.mjs
 ---
 
-# 📐 Daily Digest UI 명세서 (Chrono-Calendar)
+# Daily Digest UI 명세서 (Chrono-Calendar)
 
-> 🗄️ **[ARCHIVED — ReLearn 통합]** 본 문서가 규정하던 /daily 페이지 UI는 2026-07-20 ReLearn으로 통합·비공개되었습니다. 채널 콘텐츠 규격은 공용 컴포넌트(Signal/Prompt/Japanese/Track)로 승계되어 ReLearn이 소비합니다.
+> **[ARCHIVED — ReLearn 통합]** 본 문서가 규정하던 /daily 페이지 UI는 2026-07-20 ReLearn으로 통합·비공개되었습니다. 채널 콘텐츠 규격은 공용 컴포넌트(Signal/Prompt/Japanese/Track)로 승계되어 ReLearn이 소비합니다.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-21 | AI Agent | 42개 셀 고정 렌더링, 150ms 호버 디바운스, 2-Stage 모바일 UX 및 CLS 방지 사양서 작성 | DailyDigest UI |
-| v1.1 | 2026-06-23 | AI Agent | 상세 워크스페이스에 **🛰️ 테크 트랙 탭**(주니어/시니어 트랙 시그널 + 도메인 필터 + Click-to-Orbit) 가산. 트랙 피드 서버 프록시(`GET /api/daily/:date/track/:track`) 및 출처 정책(생성형·URL 없음) 명시 | DailyDigest Tech Track |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-21 | 42개 셀 고정 렌더링, 150ms 호버 디바운스, 2-Stage 모바일 UX 및 CLS 방지 사양서 작성 | DailyDigest UI |
+| v1.1 | 2026-06-23 | 상세 워크스페이스에 **테크 트랙 탭**(주니어/시니어 트랙 시그널 + 도메인 필터 + Click-to-Orbit) 가산. 트랙 피드 서버 프록시(`GET /api/daily/:date/track/:track`) 및 출처 정책(생성형·URL 없음) 명시 | DailyDigest Tech Track |
 
 본 문서는 일자별 다이제스트 목록을 직관적으로 탐색하고 프리미엄한 아카이브 경험을 전달하기 위해 설계된 **Daily Digest 캘린더 그리드(Chrono-Calendar) 및 0-Lag 퀵 피크(Quick Peek) UI/UX**의 최종 구현 사양서입니다.
 
@@ -77,7 +77,7 @@ graph TD
 
 프로덕션에 성공적으로 결합된 `DailyCalendar.jsx` 소스 코드입니다.
 
-### 📂 [DailyCalendar.jsx](file:///d:/prisincera/www/src/components/daily/DailyCalendar.jsx)
+### [DailyCalendar.jsx](file:///d:/prisincera/www/src/components/daily/DailyCalendar.jsx)
 
 ```jsx
 import { useState } from 'react';
@@ -289,7 +289,7 @@ export default function DailyCalendar({ publishedDates = [], onSelectDate, onHov
 
 ## 7. 테크 트랙 탭 (Tech Track) — v1.1
 
-상세 워크스페이스(`/daily/{date}`)의 세그먼트 탭에 기존 `signal` / `prompt` / `japanese`에 더해 **🛰️ 테크 트랙** 탭을 가산한다. 수준별(주니어/시니어) AI 생성 테크 시그널 카드를 노출하는 자립형 컴포넌트(`TrackSignalFeed.jsx`)이다.
+상세 워크스페이스(`/daily/{date}`)의 세그먼트 탭에 기존 `signal` / `prompt` / `japanese`에 더해 **테크 트랙** 탭을 가산한다. 수준별(주니어/시니어) AI 생성 테크 시그널 카드를 노출하는 자립형 컴포넌트(`TrackSignalFeed.jsx`)이다.
 
 ### 1) 데이터 경로
 * 서버 프록시 **`GET /api/daily/:date/track/:track`**(`server.mjs`)가 GCS의 `daily/${track}_${date}.json`을 중계한다(클라이언트는 GCS 직접 접근 안 함).

@@ -17,16 +17,16 @@ target_files:
   - firestore.rules
 ---
 
-# 📜 저장소 보안 규범 (Security Spec)
+# 저장소 보안 규범 (Security Spec)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-08-19 | AI Agent | 최초 정의 — 공개 저장소 전제 위험 분석, 즉시 조치 4건 반영, 절대 금지 규칙 확정 | .gitignore, settings.json, server.mjs, admin-api.mjs |
-| v1.1 | 2026-08-19 | AI Agent | §3-5~3-10 추가 — 스캐너 단일 소스화·3중 훅·훅 이동성(fail-closed)·라인엔딩·권한 정책 이동·알려진 한계·nginx.conf 삭제 | .githooks, ci/, .claude/settings.json, package.json |
-| v1.2 | 2026-08-20 | AI Agent | 퍼블릭 UI 운영 세부(경로·컬렉션·명령 enum·인프라·임계값) 노출 금지 규칙 신설 | 퍼블릭 UI 규범 |
-| v2.0 | 2026-10-17 | AI Agent | **Candela 종속 제거 — 저장소 전체 보안 규범으로 일반화하여 `docs/candela/`→`docs/core/` 이관.** 트레이딩 전용 규칙(브로커 키·전략 커밋·매매 계좌 분리·킬스위치·step-up)은 아카이브로 분리([candela_trading_archive](../archive/candela_trading_archive.md)). 구 사고 대응 런북 §2(퍼블릭 저장소 시크릿 커밋)를 §5로 흡수 | 문서 전반·도메인·ci/secret-scan.mjs 참조 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-08-19 | 최초 정의 — 공개 저장소 전제 위험 분석, 즉시 조치 4건 반영, 절대 금지 규칙 확정 | .gitignore, settings.json, server.mjs, admin-api.mjs |
+| v1.1 | 2026-08-19 | §3-5~3-10 추가 — 스캐너 단일 소스화·3중 훅·훅 이동성(fail-closed)·라인엔딩·권한 정책 이동·알려진 한계·nginx.conf 삭제 | .githooks, ci/, .claude/settings.json, package.json |
+| v1.2 | 2026-08-20 | 퍼블릭 UI 운영 세부(경로·컬렉션·명령 enum·인프라·임계값) 노출 금지 규칙 신설 | 퍼블릭 UI 규범 |
+| v2.0 | 2026-10-17 | **Candela 종속 제거 — 저장소 전체 보안 규범으로 일반화하여 `docs/candela/`→`docs/core/` 이관.** 트레이딩 전용 규칙(브로커 키·전략 커밋·매매 계좌 분리·킬스위치·step-up)은 아카이브로 분리([candela_trading_archive](../archive/candela_trading_archive.md)). 구 사고 대응 런북 §2(퍼블릭 저장소 시크릿 커밋)를 §5로 흡수 | 문서 전반·도메인·ci/secret-scan.mjs 참조 |
 
 ---
 
@@ -158,7 +158,7 @@ prebuild 게이트는 최후 백스톱이다. 저장소를 통해 이동하고 �
 ---
 
 ## 관련 문서
-*   [🔍 보안 취약점 점검 보고서](security_audit.md)
-*   [🏗️ 인증·권한 아키텍처](authentication_architecture.md)
-*   [📘 운영 런북](operations_runbook.md) — 데이터 플레인 장애 대응
-*   [🗄️ Candela 자동매매 아카이브](../archive/candela_trading_archive.md) — 폐기된 트레이딩 계획의 트레이딩 전용 보안·사고 대응 원형
+*   [보안 취약점 점검 보고서](security_audit.md)
+*   [인증·권한 아키텍처](authentication_architecture.md)
+*   [운영 런북](operations_runbook.md) — 데이터 플레인 장애 대응
+*   [Candela 자동매매 아카이브](../archive/candela_trading_archive.md) — 폐기된 트레이딩 계획의 트레이딩 전용 보안·사고 대응 원형

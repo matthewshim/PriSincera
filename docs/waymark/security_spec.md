@@ -1,7 +1,7 @@
 ---
 status: draft
 domain: Waymark
-nav_title: 📜 보안·프라이버시 규범
+nav_title: 보안·프라이버시 규범
 last_updated: 2026-10-24
 version: v0.2
 target_files:
@@ -9,14 +9,14 @@ target_files:
   - (재사용) 기존 PriSincera Firebase 프로젝트 (Firestore Rules·App Check)
 ---
 
-# 📜 Waymark 보안·프라이버시 규범 (Security & Privacy Spec)
+# Waymark 보안·프라이버시 규범 (Security & Privacy Spec)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v0.1 | 2026-10-24 | AI Agent | 최초 작성 — Supabase RLS·서버 LLM 전제 | (구) |
-| v0.2 | 2026-10-24 | AI Agent | **비용 0 재설계 반영** — 스택 Firebase(Firestore Security Rules·App Check), **MVP에 서버 LLM 없음 → LLM 경유 유출·프롬프트 인젝션 위협이 MVP에 부재**(추후 BYOK 도입 시 §6 적용). 테넌트 격리·프라이버시·컴플라이언스·사고 대응·출시 게이트는 유지·현행화 | 보안 전반 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v0.1 | 2026-10-24 | 최초 작성 — Supabase RLS·서버 LLM 전제 | (구) |
+| v0.2 | 2026-10-24 | **비용 0 재설계 반영** — 스택 Firebase(Firestore Security Rules·App Check), **MVP에 서버 LLM 없음 → LLM 경유 유출·프롬프트 인젝션 위협이 MVP에 부재**(추후 BYOK 도입 시 §6 적용). 테넌트 격리·프라이버시·컴플라이언스·사고 대응·출시 게이트는 유지·현행화 | 보안 전반 |
 
 ---
 
@@ -141,6 +141,6 @@ MVP는 AI를 **라이트**하게 쓴다(동반 4톤 체험 + 규칙·템플릿 �
 ---
 
 ## 관련 문서
-*   [🏗️ 시스템 아키텍처](system_architecture.md) · [📋 기능 명세서](functional_spec.md)
-*   [📜 저장소 보안 규범](../core/security_spec.md) — 시크릿 위생(계승)
-*   [🚀 추진계획서](execution_plan.md) · [📚 문서 인덱스](../INDEX.md)
+*   [시스템 아키텍처](system_architecture.md) · [기능 명세서](functional_spec.md)
+*   [저장소 보안 규범](../core/security_spec.md) — 시크릿 위생(계승)
+*   [추진계획서](execution_plan.md) · [문서 인덱스](../INDEX.md)

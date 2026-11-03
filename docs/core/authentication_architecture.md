@@ -11,14 +11,14 @@ target_files:
   - src/pages/AdminDashboard.jsx
 ---
 
-# 🏗️ 인증·권한 아키텍처 (Authentication)
+# 인증·권한 아키텍처 (Authentication)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-29 | AI Agent | 구글 로그인 단일화·AuthContext 중앙화·admin 세션 격리 아키텍처 최초 정리 | AuthContext, AdminDashboard |
-| v1.1 | 2026-07-22 | AI Agent | 코드 실측 정합화 — admin 인스턴스명 `adminApp` 정정, admin Google 로그인 병존 반영, §4를 Firebase ID 토큰 Bearer + `admin_config` 화이트리스트/역할 체계로 재서술, 리런 승계 표기 | §3, §4 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-29 | 구글 로그인 단일화·AuthContext 중앙화·admin 세션 격리 아키텍처 최초 정리 | AuthContext, AdminDashboard |
+| v1.1 | 2026-07-22 | 코드 실측 정합화 — admin 인스턴스명 `adminApp` 정정, admin Google 로그인 병존 반영, §4를 Firebase ID 토큰 Bearer + `admin_config` 화이트리스트/역할 체계로 재서술, 리런 승계 표기 | §3, §4 |
 
 ## 1. 개요 (Overview)
 기존 `PriStudy` 서비스 시절의 이메일/비밀번호 가입 방식을 폐기하고, 전체 `PriSincera` 도메인(ReLearn 등)에 **구글 로그인(Google OAuth) 단일 인증 체계**를 도입하여 적용 중인 아키텍처 명세서입니다.

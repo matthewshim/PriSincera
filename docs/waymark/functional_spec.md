@@ -1,20 +1,20 @@
 ---
 status: draft
 domain: Waymark
-nav_title: 📋 기능 명세서
+nav_title: 기능 명세서
 last_updated: 2026-10-24
 version: v0.1
 target_files:
   - (신규·미구현) waymark-app/ (화면·기능 구현 대상)
 ---
 
-# 📋 Waymark 기능 명세서 (Functional Spec)
+# Waymark 기능 명세서 (Functional Spec)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v0.1 | 2026-10-24 | AI Agent | 최초 작성 — 기능 F-1~F-10 수용 기준, 화면 S-1~S-10 명세, AI 4모드·먼저찾아옴 스케줄·경험담 매칭/검수 규칙, 카피·비기능 요구 정의. 주니어 기획/디자인/개발이 즉시 착수 가능한 수준 | Waymark MVP 전 기능·화면 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v0.1 | 2026-10-24 | 최초 작성 — 기능 F-1~F-10 수용 기준, 화면 S-1~S-10 명세, AI 4모드·먼저찾아옴 스케줄·경험담 매칭/검수 규칙, 카피·비기능 요구 정의. 주니어 기획/디자인/개발이 즉시 착수 가능한 수준 | Waymark MVP 전 기능·화면 |
 
 ---
 
@@ -93,14 +93,14 @@ S-1 온보딩 ─▶ S-2 홈 ─┬─▶ S-3 결정 기록 ─▶ S-4 결정 �
 
 | 필드 | 타입 | 필수 | 비고 |
 | :--- | :--- | :--- | :--- |
-| 제목 | text(≤80) | ✅ | "팀을 옮기기로 했다" |
-| 상황/맥락 | textarea | ✅ | 자유 서술 |
-| 선택지 | string[] | ✕ | 고려한 옵션들(태그 입력) |
-| 내가 내린 결정 | text | ✅ | 하나로 요약 |
-| 감정 태그 | enum multi | ✅ | 불안·후련·설렘·두려움·확신·혼란(6종, §7-감정셋) |
-| 도메인 | enum single | ✅ | 커리어·팀/조직·제품/일·관계·돈·건강·기타(§7-도메인셋) |
-| 중요도 | 1~3 | ✅ | 먼저찾아옴 주기에 영향(§6) |
-| 되돌릴 수 있나 | bool | ✕ | 회고 프레이밍에 활용 |
+| 제목 | text(≤80) | O | "팀을 옮기기로 했다" |
+| 상황/맥락 | textarea | O | 자유 서술 |
+| 선택지 | string[] | X | 고려한 옵션들(태그 입력) |
+| 내가 내린 결정 | text | O | 하나로 요약 |
+| 감정 태그 | enum multi | O | 불안·후련·설렘·두려움·확신·혼란(6종, §7-감정셋) |
+| 도메인 | enum single | O | 커리어·팀/조직·제품/일·관계·돈·건강·기타(§7-도메인셋) |
+| 중요도 | 1~3 | O | 먼저찾아옴 주기에 영향(§6) |
+| 되돌릴 수 있나 | bool | X | 회고 프레이밍에 활용 |
 
 - **흐름**: + 버튼 → 폼(단일 스크롤) → 저장 → S-4 결정 상세로 이동 + **즉시 T+0 지지 메시지(템플릿)** 노출 + `decision_events` 스케줄 생성(§6).
 - **수용 기준**
@@ -323,6 +323,6 @@ S-1 온보딩 ─▶ S-2 홈 ─┬─▶ S-3 결정 기록 ─▶ S-4 결정 �
 ---
 
 ## 관련 문서
-*   [🗺️ 제품 전략서](product_strategy.md) · [🏗️ 시스템 아키텍처](system_architecture.md)
-*   [🎨 디자인 시스템](../core/design_system.md)
-*   [📚 문서 인덱스 & 거버넌스](../INDEX.md)
+*   [제품 전략서](product_strategy.md) · [시스템 아키텍처](system_architecture.md)
+*   [디자인 시스템](../core/design_system.md)
+*   [문서 인덱스 & 거버넌스](../INDEX.md)

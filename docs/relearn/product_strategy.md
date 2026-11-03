@@ -14,28 +14,28 @@ target_files:
   - src/components/layout/Header.jsx
 ---
 
-# 🏃 리런 (ReLearn) — 통합 서비스 리뉴얼 추진 계획
+# 리런 (ReLearn) — 통합 서비스 리뉴얼 추진 계획
 
-> ⚠️ **부분 승계 (2026-08-02)**: 본 문서의 `오늘 | 기록` 뷰·3-stage 흐름(§3, v1.2 결정)은 이후 **교재/일기장 분리 재편**(2026-07-27, 오너 환류)으로 승계됐다. 현행 UI·구조의 정본은 [ui_specification](ui_specification.md)·[daily_axis_unification_plan](daily_axis_unification_plan.md). 이 문서는 통합 전략의 결정 기록으로 보존한다.
+> **부분 승계 (2026-08-02)**: 본 문서의 `오늘 | 기록` 뷰·3-stage 흐름(§3, v1.2 결정)은 이후 **교재/일기장 분리 재편**(2026-07-27, 오너 환류)으로 승계됐다. 현행 UI·구조의 정본은 [ui_specification](ui_specification.md)·[daily_axis_unification_plan](daily_axis_unification_plan.md). 이 문서는 통합 전략의 결정 기록으로 보존한다.
 
 > **한 줄 요지**: 분리된 **Daily Digest(배움)** 와 **Pace Note(실행·복기)** 를 *하나의 여정*으로 묶는 신규 통합 서비스. 명칭 **리런(ReLearn)** 은 "**다시 배우다(Re-Learn) + 다시 달리다(Re-run·러너)**"의 이중 의미로, **"제로부터 다시 배우는 러너"** 뉘앙스를 이름 한 단어로 전달한다.
 >
 > 태그라인: **"매일 제로에서, 다시 배우고 다시 달린다 — Learn from zero, run again."**
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-09 | AI Agent | 통합 서비스(리런) 명칭 확정 + 추가형 리뉴얼 추진 계획 최초 수립 | ReLearn, DailyDigest, PaceNote |
-| v1.1 | 2026-07-15 | AI Agent | **코드 실측 재검토 반영** — Phase B-0(섹션 추출) 신설, SEO SSOT(`seoMeta.mjs`)·i18n(ko/en/ja)·인증 4상태 매트릭스·GA4 퍼널 계측·모바일 축약·Phase E 게이트 기준 보강 | Roadmap, Risks, Metrics |
-| v1.2 | 2026-07-15 | AI Agent | **시안 검토 결정: '기록' 뷰(A안)** — 실행 내역·회고 아카이브를 별도 랜딩이 아닌 리런 내 `오늘 \| 기록` 뷰 전환으로 제공. 루프 리포트 지표 타일 = 기록 뷰 드릴다운 진입점. 데이터는 기존 PaceNote timeline 재사용(신규 API 0) | Concept §3, Phase B |
-| v1.3 | 2026-07-15 | AI Agent | **배움 채널 대통합(시안 누락 보완)** — ①배움 = 다이제스트 **4채널 전체**(시그널·테크 트랙·AI 프롬프트·어학) + **채널별 궤도 연결 매핑**(트랙=add-orbit 기 구현, 나머지 3채널=`/add` 커스텀 궤도 재사용). 아카이브(과거 날짜)는 기존 `/daily` 존치 | Concept §3, Phase B |
-| v1.4 | 2026-07-15 | AI Agent | **§4-1 파이프라인 무영향 검증 명문화** — Phase A~D 잡·cloudbuild·데이터 계약 무접촉 근거(custom- 통계 제외 실측 포함) + 유일한 예외(Phase E 이메일 템플릿) 경계 명시 | §4-1 |
-| v1.5 | 2026-07-15 | AI Agent | **착수 전 확정(Phase A 완료)** — 데이터 방침 = **연속 사용·공유(마이그레이션·리셋 불필요)**. 표기 = **전 언어 공통 영문 `ReLearn`**(UI 타이틀·GNB, 이모지 없음 / '리런'은 국문 커뮤니케이션 병용). 라우트 `/relearn` 확정, **GNB 위치 = Sylphio 좌측**. 디자인 = 기존 시스템 완전 준수(신규 컬러 0) | §2, §4-2, Phase A·C |
-| v1.6 | 2026-07-15 | AI Agent | **포지셔닝 재정의: 병행 → 승계(Successor)** — 리런 안정화 시 Daily Digest·Pace Note는 **노출 종료** 확정. "추가형"은 전환기 전략으로 재규정, Phase E = 확정 일몰(패리티 게이트) + §5-1 기능 패리티 체크리스트 신설. 원칙: **노출 종료 ≠ URL 삭제**(콘텐츠 상세 URL·SEO 자산 영구 보존) | §4, §5-E, §5-1 |
-| v1.7 | 2026-07-15 | AI Agent | **패리티 P2~P5 해소** — P2 구독 해지 자체화·P3 경량 아카이브 구현, P4(캘린더)·P5(옴니/포트폴리오) 폐기·이관 판단 확정 → **일몰 게이트의 기능 항목 전부 해소, 잔여 = P6 + 지표 게이트** | §5-1 |
-| v1.8 | 2026-07-15 | AI Agent | **공존형 GNB 재배치(A안)** — ReLearn을 루프 서비스군 **선두**로 승격(Builder's Log · **ReLearn** · Daily Digest · Pace Note · Sylphio, 데스크톱·모바일 동일). v1.5의 "Sylphio 좌측" 배치 결정을 대체. 일몰 시 뒤의 두 메뉴만 제거하면 완료되는 구조 | §4-3, GNB |
-| v1.9 | 2026-07-22 | AI Agent | frontmatter `target_files` 현행화 — Phase 3에서 삭제된 구 페이지(DailyDigest.jsx·PaceNoteDashboard.jsx)를 리런 실파일(ReLearn.jsx 등)로 교체. **본문 정합**: §3 아카이브 방침을 P3 대체(자체 아카이브 상세)로, §4-3 GNB 배치를 v1.8 결정으로 현행화. Admin 콘솔 재편은 [admin_console_specification](../core/admin_console_specification.md) 참조 | frontmatter, §3, §4-3 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-07-09 | 통합 서비스(리런) 명칭 확정 + 추가형 리뉴얼 추진 계획 최초 수립 | ReLearn, DailyDigest, PaceNote |
+| v1.1 | 2026-07-15 | **코드 실측 재검토 반영** — Phase B-0(섹션 추출) 신설, SEO SSOT(`seoMeta.mjs`)·i18n(ko/en/ja)·인증 4상태 매트릭스·GA4 퍼널 계측·모바일 축약·Phase E 게이트 기준 보강 | Roadmap, Risks, Metrics |
+| v1.2 | 2026-07-15 | **시안 검토 결정: '기록' 뷰(A안)** — 실행 내역·회고 아카이브를 별도 랜딩이 아닌 리런 내 `오늘 \| 기록` 뷰 전환으로 제공. 루프 리포트 지표 타일 = 기록 뷰 드릴다운 진입점. 데이터는 기존 PaceNote timeline 재사용(신규 API 0) | Concept §3, Phase B |
+| v1.3 | 2026-07-15 | **배움 채널 대통합(시안 누락 보완)** — ①배움 = 다이제스트 **4채널 전체**(시그널·테크 트랙·AI 프롬프트·어학) + **채널별 궤도 연결 매핑**(트랙=add-orbit 기 구현, 나머지 3채널=`/add` 커스텀 궤도 재사용). 아카이브(과거 날짜)는 기존 `/daily` 존치 | Concept §3, Phase B |
+| v1.4 | 2026-07-15 | **§4-1 파이프라인 무영향 검증 명문화** — Phase A~D 잡·cloudbuild·데이터 계약 무접촉 근거(custom- 통계 제외 실측 포함) + 유일한 예외(Phase E 이메일 템플릿) 경계 명시 | §4-1 |
+| v1.5 | 2026-07-15 | **착수 전 확정(Phase A 완료)** — 데이터 방침 = **연속 사용·공유(마이그레이션·리셋 불필요)**. 표기 = **전 언어 공통 영문 `ReLearn`**(UI 타이틀·GNB, 이모지 없음 / '리런'은 국문 커뮤니케이션 병용). 라우트 `/relearn` 확정, **GNB 위치 = Sylphio 좌측**. 디자인 = 기존 시스템 완전 준수(신규 컬러 0) | §2, §4-2, Phase A·C |
+| v1.6 | 2026-07-15 | **포지셔닝 재정의: 병행 → 승계(Successor)** — 리런 안정화 시 Daily Digest·Pace Note는 **노출 종료** 확정. "추가형"은 전환기 전략으로 재규정, Phase E = 확정 일몰(패리티 게이트) + §5-1 기능 패리티 체크리스트 신설. 원칙: **노출 종료 ≠ URL 삭제**(콘텐츠 상세 URL·SEO 자산 영구 보존) | §4, §5-E, §5-1 |
+| v1.7 | 2026-07-15 | **패리티 P2~P5 해소** — P2 구독 해지 자체화·P3 경량 아카이브 구현, P4(캘린더)·P5(옴니/포트폴리오) 폐기·이관 판단 확정 → **일몰 게이트의 기능 항목 전부 해소, 잔여 = P6 + 지표 게이트** | §5-1 |
+| v1.8 | 2026-07-15 | **공존형 GNB 재배치(A안)** — ReLearn을 루프 서비스군 **선두**로 승격(Builder's Log · **ReLearn** · Daily Digest · Pace Note · Sylphio, 데스크톱·모바일 동일). v1.5의 "Sylphio 좌측" 배치 결정을 대체. 일몰 시 뒤의 두 메뉴만 제거하면 완료되는 구조 | §4-3, GNB |
+| v1.9 | 2026-07-22 | frontmatter `target_files` 현행화 — Phase 3에서 삭제된 구 페이지(DailyDigest.jsx·PaceNoteDashboard.jsx)를 리런 실파일(ReLearn.jsx 등)로 교체. **본문 정합**: §3 아카이브 방침을 P3 대체(자체 아카이브 상세)로, §4-3 GNB 배치를 v1.8 결정으로 현행화. Admin 콘솔 재편은 [admin_console_specification](../core/admin_console_specification.md) 참조 | frontmatter, §3, §4-3 |
 
 ---
 
@@ -48,7 +48,7 @@ target_files:
 
 | 후보 | 뉘앙스 | 결과 |
 | :--- | :--- | :--- |
-| **리런 (ReLearn)** | Re-Learn(다시 배우다) + Re-run(다시 달리다·러너). 통합을 이름이 상징 | ✅ **채택** |
+| **리런 (ReLearn)** | Re-Learn(다시 배우다) + Re-run(다시 달리다·러너). 통합을 이름이 상징 | **채택** |
 | 제로런 (ZeroRun) | "제로부터 다시"의 직역 — 명확하나 직설 | 후보 |
 | 데이원 (Day One) | 초심/비기너 마인드 — 러너 직접성 약함 | 후보 |
 | 베이스캠프 (Base Camp) | 여정·재정비 — 배움/러너 직접성 약함 | 후보 |
@@ -69,12 +69,12 @@ target_files:
 
 | 채널 | 콘텐츠 (기존 다이제스트 탭) | 실행(궤도) 연결 | 구현 |
 | :--- | :--- | :--- | :--- |
-| 📡 **테크 시그널** | RSS 큐레이션 아티클 + S.I.G.N.A.L. 분석 | "이 아티클 정독하고 메모 남기기" → 궤도 추가 | `/add`(커스텀) 재사용 |
-| 🛰️ **테크 트랙** | 수준별 학습+실전 액션 챌린지 | action_challenge → N개 궤도 | `add-orbit` **기 구현** |
-| 🤖 **AI 프롬프트** | prompt_snippet(복사) + 비즈니스 컨텍스트 | "이 프롬프트 직접 실행해보기" → 궤도 추가 | `/add` 재사용 |
-| 🇯🇵 **어학 (Business JP)** | 오늘의 문장(후리가나·발음·번역·오디오) | "소리 내어 3번 읽기" → 궤도 추가 | `/add` 재사용 |
+| **테크 시그널** | RSS 큐레이션 아티클 + S.I.G.N.A.L. 분석 | "이 아티클 정독하고 메모 남기기" → 궤도 추가 | `/add`(커스텀) 재사용 |
+| **테크 트랙** | 수준별 학습+실전 액션 챌린지 | action_challenge → N개 궤도 | `add-orbit` **기 구현** |
+| **AI 프롬프트** | prompt_snippet(복사) + 비즈니스 컨텍스트 | "이 프롬프트 직접 실행해보기" → 궤도 추가 | `/add` 재사용 |
+| **어학 (Business JP)** | 오늘의 문장(후리가나·발음·번역·오디오) | "소리 내어 3번 읽기" → 궤도 추가 | `/add` 재사용 |
 
-> 💡 **설계 근거**: PaceNote `buildDefaultWeek`의 기본 궤도 5종("AI 스터디 프롬프트 직접 실행해보기"·"비즈니스 일본어 문장 3번 읽기" 등)이 이미 이 매핑의 **하드코딩판**이다. 대통합 = 이를 "오늘의 실제 콘텐츠에서 동적으로 추가"로 승격(제목에 당일 콘텐츠 문맥 포함). 기본 궤도는 콜드 스타트 폴백으로 유지. **신규 API 0** — 트랙 외 3채널은 기존 `/add`(커스텀 궤도)로 충분.
+> **설계 근거**: PaceNote `buildDefaultWeek`의 기본 궤도 5종("AI 스터디 프롬프트 직접 실행해보기"·"비즈니스 일본어 문장 3번 읽기" 등)이 이미 이 매핑의 **하드코딩판**이다. 대통합 = 이를 "오늘의 실제 콘텐츠에서 동적으로 추가"로 승격(제목에 당일 콘텐츠 문맥 포함). 기본 궤도는 콜드 스타트 폴백으로 유지. **신규 API 0** — 트랙 외 3채널은 기존 `/add`(커스텀 궤도)로 충분.
 >
 > **아카이브 방침**: ~~과거 날짜 열람(Chrono-Calendar·Quick Peek)은 기존 `/daily`가 계속 담당~~ → **§5-1 P3에서 대체**(전환기 한정 방침이었음). 현재는 리런 자체 아카이브 상세 `/relearn/daily/:date`(경량 아카이브 + 이전/다음 네비, [ui_specification §8](ui_specification.md))가 담당하며 구 `/daily/:date`는 301. 리런 배움은 **'오늘'만** + "지난 다이제스트 보기 →" 링크. (기록 뷰는 '나의 실행/복기' 아카이브, 콘텐츠 아카이브와 역할 분리)
 **뷰 구조 (v1.2 — 시안 검토 결정, A안):** 리런은 단일 라우트 안에서 **`오늘 | 기록` 두 뷰**를 전환한다.
@@ -92,20 +92,20 @@ target_files:
 | 로그인 · 궤도 있음 | 풀 루프(리포트 + ①②③ + 개인화 렌즈·추천) |
 | 로그인 · **이번 주 미개시** | `add-orbit`의 주차 자동 생성(기 구현)을 그대로 활용 — 별도 안내 없이 첫 추가로 개시 |
 
-> ⚠️ **중복 페치 금지 원칙**: 셸이 배움·실행 stage를 함께 그리므로 `profile`·`orbit-ids`·트랙 피드는 **셸 레벨에서 1회 페치 후 하위로 전달**(또는 [usePaceNoteData](../../src/hooks/usePaceNoteData.js) 등 훅 공유). stage마다 각자 호출하지 않는다.
+> **중복 페치 금지 원칙**: 셸이 배움·실행 stage를 함께 그리므로 `profile`·`orbit-ids`·트랙 피드는 **셸 레벨에서 1회 페치 후 하위로 전달**(또는 [usePaceNoteData](../../src/hooks/usePaceNoteData.js) 등 훅 공유). stage마다 각자 호출하지 않는다.
 
 ## 4. 추진 전략 — 추가형(Additive), 무파괴
 > **핵심 제약**: 기존 카테고리(Daily Digest·Pace Note)는 **그대로 두고**, 신규 버전을 **병렬 추가**한다.
 >
-> 🔀 **v1.6 재정의**: 리런은 두 서비스의 **승계자(Successor)** 다 — 안정화(패리티 게이트 통과) 시 Daily Digest·Pace Note는 **서비스 노출을 종료**한다. 따라서 "추가형"은 영구 병행이 아니라 **전환기(무파괴 이행) 전략**이며, 일몰 조건·범위는 §5-1(패리티 체크리스트)과 Phase E가 규정한다. 단 **노출 종료 ≠ URL 삭제**: `/daily/:date` 등 콘텐츠 상세 URL은 SEO 자산으로 영구 보존(GNB 노출만 제거).
+> **v1.6 재정의**: 리런은 두 서비스의 **승계자(Successor)** 다 — 안정화(패리티 게이트 통과) 시 Daily Digest·Pace Note는 **서비스 노출을 종료**한다. 따라서 "추가형"은 영구 병행이 아니라 **전환기(무파괴 이행) 전략**이며, 일몰 조건·범위는 §5-1(패리티 체크리스트)과 Phase E가 규정한다. 단 **노출 종료 ≠ URL 삭제**: `/daily/:date` 등 콘텐츠 상세 URL은 SEO 자산으로 영구 보존(GNB 노출만 제거).
 - 신규 라우트 **`/relearn`** + 네비 진입점 추가(데스크톱 `nav-links` + **모바일 Bento 오버레이**, 별도 마크업 2곳) — 기존 `/daily`·`/pacenote` **URL·SEO 완전 보존**
 - **재사용 실측 (v1.1 교정)** — "셸만 신규·리라이트 0"은 부분적으로만 성립:
 
   | 조각 | 실태 | 재사용 |
   | :--- | :--- | :--- |
-  | [TrackSignalFeed](../../src/components/daily/TrackSignalFeed.jsx) · [LoopReport](../../src/components/pacenote/LoopReport.jsx) · ChronoRibbon | 독립 컴포넌트 | ✅ 즉시 조합 |
-  | 배움(시그널·어학 카드) | 구 `DailyDigest.jsx`(현재 삭제, Phase 3)에 탭·구독·Quick Peek과 한 덩어리 | ⚠️ **추출 필요(Phase B-0)** — ✅ 이후 `daily/` 섹션 컴포넌트로 추출 완료 |
-  | 실행(궤도 리스트·토글·회고) | PaceNoteDashboard(~1,900줄 모놀리식)에 내장. 데이터 계층은 [usePaceNoteData](../../src/hooks/usePaceNoteData.js) 기존재 | ⚠️ **추출 필요(Phase B-0)** |
+  | [TrackSignalFeed](../../src/components/daily/TrackSignalFeed.jsx) · [LoopReport](../../src/components/pacenote/LoopReport.jsx) · ChronoRibbon | 독립 컴포넌트 | 즉시 조합 |
+  | 배움(시그널·어학 카드) | 구 `DailyDigest.jsx`(현재 삭제, Phase 3)에 탭·구독·Quick Peek과 한 덩어리 | **추출 필요(Phase B-0)** — 이후 `daily/` 섹션 컴포넌트로 추출 완료 |
+  | 실행(궤도 리스트·토글·회고) | PaceNoteDashboard(~1,900줄 모놀리식)에 내장. 데이터 계층은 [usePaceNoteData](../../src/hooks/usePaceNoteData.js) 기존재 | **추출 필요(Phase B-0)** |
 
   → 추출한 섹션 컴포넌트는 **기존 페이지도 함께 사용**하도록 치환(로직 단일화) — 중복이 아니라 부채 감소.
 - 검증 후에만 기존 메뉴 → 신규 점진 유도(전환은 마지막·선택)
@@ -123,7 +123,7 @@ target_files:
 | 트래픽 | 읽기 증가는 웹 서비스 몫(GCS 정적 피드 비용 ≈ 0 + rate limiter) — 잡 실행과 무관 |
 | 데이터 계약 | Data Contract v2 additive 원칙 유지, 스키마 변경 없음 |
 
-> ⚠️ **유일한 예외 — Phase E**: 이메일 다이제스트 CTA(`/daily` 지향)를 `/relearn`으로 바꾸는 경우에만 `pipeline/src/lib`(이메일 템플릿) 수정이 발생한다. 링크 URL 변경뿐이지만 **전 로드맵에서 유일한 파이프라인 코드 접점**이므로, Phase E 착수 시 별도 브랜치·회귀(발송 테스트) 필수.
+> **유일한 예외 — Phase E**: 이메일 다이제스트 CTA(`/daily` 지향)를 `/relearn`으로 바꾸는 경우에만 `pipeline/src/lib`(이메일 템플릿) 수정이 발생한다. 링크 URL 변경뿐이지만 **전 로드맵에서 유일한 파이프라인 코드 접점**이므로, Phase E 착수 시 별도 브랜치·회귀(발송 테스트) 필수.
 
 ### 4-2. 기 확보 데이터 처리 방침 (v1.5 확정)
 
@@ -147,41 +147,41 @@ target_files:
 ## 5. 추진 로드맵 (Phase Gate)
 
 ### ☐ Phase A — 확정·설계
-- [ ] 명칭·태그라인 확정 (✅ 리런 결정) + **다국어 표기 확정**(en: ReLearn / ja 표기·태그라인 번역 — 사이트는 ko/en/ja 완전 다국어)
+- [ ] 명칭·태그라인 확정 (리런 결정) + **다국어 표기 확정**(en: ReLearn / ja 표기·태그라인 번역 — 사이트는 ko/en/ja 완전 다국어)
 - [ ] IA·와이어프레임(3-stage) + **인증 4상태 매트릭스**(§3) 화면 분기 확정
 - [ ] **모바일 축약 스펙**: 3-stage 세로 스택이 길어지므로 stage 아코디언 또는 앵커 탭
 - [ ] **`relearn-theme` 액센트 토큰** 정의 — [Header.jsx](../../src/components/layout/Header.jsx)가 경로별 테마 클래스(`daily-theme`/`pacenote-theme`) 적용 중, 동일 패턴 확장
 - **DoD**: 화면 구조·컴포넌트 매핑표·i18n 키 목록 확정.
 
-### ✅ Phase B-0 — 섹션 컴포넌트 추출 — **완료(2026-07-15)**
+### Phase B-0 — 섹션 컴포넌트 추출 — **완료(2026-07-15)**
 - [x] **배움 3종 추출(1/3·2/3)**: `SignalSection`+`SignalArticleCard`+`categoryStyles`(공유 모듈), `PromptSection`, `JapaneseSection` — DailyDigest 렌더 블록을 마크업·동작 동일하게 컴포넌트화 후 **기존 /daily가 치환 사용**(순수 리팩토링, 빌드·잔여참조 0 검증)
 - [x] **실행·복기 신작(3/3)**: `relearn/OrbitSection`(진행바·완료 토글·추천+사유 라벨) + `relearn/ReflectionSection`(디바운스 자동저장, /diary 제한 1000자 동일) + `ReLearnSections.css`(토큰만 사용)
-- **DoD ✅**: `/daily` 화면·기능 무변화, 신규 컴포넌트 esbuild 구문 검증·빌드 통과.
+- **DoD**: `/daily` 화면·기능 무변화, 신규 컴포넌트 esbuild 구문 검증·빌드 통과.
 
-> 🔀 **설계 수정(3/3)**: 계획의 "PaceNoteDashboard에서 추출" 대신 **[usePaceNoteData](../../src/hooks/usePaceNoteData.js) 위에 리런 전용 프레젠테이션 신작 + PaceNoteDashboard 무접촉**으로 변경. 사유: ① 리런 시안(v4)의 컴팩트 스테이지 레이아웃은 PaceNote 벤토 카드와 **다른 프레젠테이션**이라 마크업 공유가 목적에 안 맞음, ② 공유해야 할 로직(조회·토글·수락·회고 저장·낙관 병합)은 **usePaceNoteData 훅에서 이미 단일화**됨(웹 REST↔데스크톱 IPC 계약 포함), ③ 1,900줄 라이브 페이지 수술 회피 = **기존 서비스 무영향 원칙(§4-1) 강화**.
+> **설계 수정(3/3)**: 계획의 "PaceNoteDashboard에서 추출" 대신 **[usePaceNoteData](../../src/hooks/usePaceNoteData.js) 위에 리런 전용 프레젠테이션 신작 + PaceNoteDashboard 무접촉**으로 변경. 사유: ① 리런 시안(v4)의 컴팩트 스테이지 레이아웃은 PaceNote 벤토 카드와 **다른 프레젠테이션**이라 마크업 공유가 목적에 안 맞음, ② 공유해야 할 로직(조회·토글·수락·회고 저장·낙관 병합)은 **usePaceNoteData 훅에서 이미 단일화**됨(웹 REST↔데스크톱 IPC 계약 포함), ③ 1,900줄 라이브 페이지 수술 회피 = **기존 서비스 무영향 원칙(§4-1) 강화**.
 
-### ✅ Phase B — 통합 셸 구축 — **완료(2026-07-15)**
+### Phase B — 통합 셸 구축 — **완료(2026-07-15)**
 - [x] `/relearn` 라우트(lazy) + [ReLearn.jsx](../../src/pages/ReLearn.jsx) 셸 — 프로파일 **셸 1회 페치 후 주입**(LoopReport·TrackSignalFeed에 옵션 prop 신설, 미제공 시 자체 페치 하위호환)
 - [x] LoopReport(기록 드릴다운 래퍼) + ① 배움 + ② 실행(OrbitSection) + ③ 복기(ReflectionSection) + 루프 레일
 - [x] **`오늘 | 기록` 뷰 전환(A안)**: 기록 뷰 = 현재 주(진행 중 배지)+timeline 주차 카드+회고 인용 — 기존 `GET /` 데이터 그대로(신규 API 0)
 - [x] **배움 4채널(v1.3)**: 트랙(TrackSignalFeed)·시그널·프롬프트·어학 + 채널 필터 칩 + 3채널 '궤도로'(`/add` 재사용, 동일 제목 중복 방지) + "지난 다이제스트 보기 →"
 - [x] **SEO SSOT**: `PAGE_META['/relearn']` 등록 + 동적 사이트맵 staticPages 포함
-- **DoD ✅**: 3-stage 단일 화면 동작, 기존 라우트 무변경(추가만), 빌드에서 ReLearn lazy 청크 분리 확인.
+- **DoD**: 3-stage 단일 화면 동작, 기존 라우트 무변경(추가만), 빌드에서 ReLearn lazy 청크 분리 확인.
 
-> 📌 GNB 진입점(데스크톱·모바일 Bento)·온보딩은 **Phase C**에서 — 그 전까지 `/relearn`은 직접 URL로 접근하는 소프트 런치 상태(기존 사용자 영향 0).
+> GNB 진입점(데스크톱·모바일 Bento)·온보딩은 **Phase C**에서 — 그 전까지 `/relearn`은 직접 URL로 접근하는 소프트 런치 상태(기존 사용자 영향 0).
 
-### ✅ Phase C — 진입점·온보딩 — **완료(2026-07-15)**
+### Phase C — 진입점·온보딩 — **완료(2026-07-15)**
 - [x] 네비 진입점 **2곳**: 데스크톱 `nav-links`(NEW 칩) + **모바일 Bento**(루프 3-dot 비주얼·NEW 칩) — 라벨 `ReLearn`(전 언어 공통·이모지 없음), **Sylphio 좌측**, 기존 메뉴 병존(전환기)
 - [x] `relearn-theme` 헤더 테마(cyan) 추가
 - [x] 온보딩: 첫 방문 1-스텝 배너(루프 개념 안내, localStorage 기억·닫기) — 표기 정책상 서비스명은 영문 공통, 안내문은 국문 우선(다국어 키 확장은 후속)
-- **DoD ✅**: 데스크톱·모바일 양쪽 정식 노출, 기존 진입점 병존, 빌드 통과.
+- **DoD**: 데스크톱·모바일 양쪽 정식 노출, 기존 진입점 병존, 빌드 통과.
 
-### ✅ Phase D — 개인화 표면화·퍼널 계측 — **완료(2026-07-15)**
+### Phase D — 개인화 표면화·퍼널 계측 — **완료(2026-07-15)**
 - [x] 개인화 표면화: 추천 사유 라벨(OrbitSection)·내 궤도 배지/렌즈(TrackSignalFeed)·루프 리포트 — Phase B 셸에서 노출 완료
 - [x] **GA4 퍼널 계측**([funnel.js](../../src/components/relearn/funnel.js)): `relearn_learn_view → relearn_orbit_add{source: track|signal|prompt|jp|custom|recommend} → relearn_complete_toggle → relearn_reflect_save`
 - [x] 보조 이벤트: `relearn_channel_select`·`relearn_view_records`·`relearn_subscribe`·`relearn_login_cta`
 - [x] 계측은 셸 콜백 래핑으로 배선(컴포넌트 순수 유지). TrackSignalFeed만 `onOrbitAdded` 옵션 콜백(미전달 시 /daily 무영향)
-- **DoD ✅**: 로그인 유저의 개인화 루프 한 화면 완주 + 퍼널 수집 개시 → **Phase E 게이트 판정 데이터 축적 시작**.
+- **DoD**: 로그인 유저의 개인화 루프 한 화면 완주 + 퍼널 수집 개시 → **Phase E 게이트 판정 데이터 축적 시작**.
 
 ### ☐ Phase E — 승계 전환·일몰 (v1.6: 선택 → **확정**, 패리티 게이트 후)
 - [ ] **게이트 = §5-1 패리티 체크리스트 전항 통과** + 지표(리런 경유 궤도 추가/완료율 기존 대비 동등 이상, 이탈률 악화 없음, 퍼널 완주율 유의미)
@@ -195,14 +195,14 @@ target_files:
 
 | # | 기존 기능 | 출처 | 상태 / 방침 |
 | :--- | :--- | :--- | :--- |
-| P1 | **커스텀 궤도 자유 입력** | PaceNote | ✅ **완료(2026-07-15)** — OrbitSection에 입력 UI 추가(`onAdd`=addTask, 100자 제한 동일) |
-| P2 | **구독 해지/관리 UI** | Daily Digest | ✅ **완료(2026-07-15)** — 리런 자체화: 구독 중 상태에 절제된 '구독 해지'(confirm → `POST /api/unsubscribe`). `/daily` 위임 제거 |
-| P3 | 과거 날짜 아카이브 탐색 | Daily Digest | ✅ **완료(2026-07-15)** — 리런에 **경량 날짜 리스트**(`GET /api/daily/index` 최근 14일, 펼침형). 상세는 영구 보존 URL `/daily/:date`로 연결 — Chrono-Calendar **이식 불요** 확정 |
-| P4 | 13주 Bento 캘린더·과거 주차 상세 탐색 | PaceNote | ✅ **판단 확정(2026-07-15): 이식하지 않음(폐기)** — 기록 뷰(주차별 완료·회고 타임라인)가 핵심 정보를 전부 제공. 분기 시각화는 장식 가치 대비 이식 비용 과대. 일몰 전 이의 없으면 확정 |
-| P5 | 옴니 검색 모달 / AI 포트폴리오 내보내기 | PaceNote | ✅ **판단 확정(2026-07-15)** — 옴니 검색 = **폐기**(리런의 자유 입력+AI 추천이 동일 잡무 대체). 포트폴리오 내보내기 = **후속 베팅 ②(Growth Profile)로 이관**(공개 성장 기록이 상위 호환) |
+| P1 | **커스텀 궤도 자유 입력** | PaceNote | **완료(2026-07-15)** — OrbitSection에 입력 UI 추가(`onAdd`=addTask, 100자 제한 동일) |
+| P2 | **구독 해지/관리 UI** | Daily Digest | **완료(2026-07-15)** — 리런 자체화: 구독 중 상태에 절제된 '구독 해지'(confirm → `POST /api/unsubscribe`). `/daily` 위임 제거 |
+| P3 | 과거 날짜 아카이브 탐색 | Daily Digest | **완료(2026-07-15)** — 리런에 **경량 날짜 리스트**(`GET /api/daily/index` 최근 14일, 펼침형). 상세는 영구 보존 URL `/daily/:date`로 연결 — Chrono-Calendar **이식 불요** 확정 |
+| P4 | 13주 Bento 캘린더·과거 주차 상세 탐색 | PaceNote | **판단 확정(2026-07-15): 이식하지 않음(폐기)** — 기록 뷰(주차별 완료·회고 타임라인)가 핵심 정보를 전부 제공. 분기 시각화는 장식 가치 대비 이식 비용 과대. 일몰 전 이의 없으면 확정 |
+| P5 | 옴니 검색 모달 / AI 포트폴리오 내보내기 | PaceNote | **판단 확정(2026-07-15)** — 옴니 검색 = **폐기**(리런의 자유 입력+AI 추천이 동일 잡무 대체). 포트폴리오 내보내기 = **후속 베팅 ②(Growth Profile)로 이관**(공개 성장 기록이 상위 호환) |
 | P6 | 서비스 소개(인트로 탭) 콘텐츠 | Daily Digest | ☐ 리런 온보딩(Phase C)으로 흡수 검토 |
-| P7 | macOS 데스크톱 계약(IPC) | PaceNote | ✅ 무영향 — 리런이 `usePaceNoteData`(동일 계약) 사용 |
-| P8 | 회고(항해 일지) 열람 | PaceNote | ✅ 기록 뷰가 커버 |
+| P7 | macOS 데스크톱 계약(IPC) | PaceNote | 무영향 — 리런이 `usePaceNoteData`(동일 계약) 사용 |
+| P8 | 회고(항해 일지) 열람 | PaceNote | 기록 뷰가 커버 |
 
 ## 6. 리스크 & 대응
 | 리스크 | 대응 |
@@ -222,7 +222,7 @@ target_files:
 - 궤도 추가·완료율 ↑, 다이제스트 궤도 연결 카드 CTR ↑
 - Phase E 게이트: 위 수치가 기존 경로 대비 **동등 이상**일 때만 전환 착수(§5-E)
 
-## 8. 후속 문서 동기화 (출시 시점) — ✅ 완료(2026-07-15)
+## 8. 후속 문서 동기화 (출시 시점) — 완료(2026-07-15)
 - [x] [service_overview](../core/service_overview.md) v1.1 — 포트폴리오에 ReLearn(승계자) 등재 + 플라이휠 2층 구현 주석
 - [x] [architecture_overview](../core/architecture_overview.md) 라우트 맵에 `/relearn` 반영
 - [x] [ui_specification](ui_specification.md) 신설(출하 기준 화면 명세) + INDEX 동기화

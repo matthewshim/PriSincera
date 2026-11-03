@@ -1,7 +1,7 @@
 ---
 status: active
 domain: Waymark
-nav_title: 🗺️ 소개 페이지 UI 명세
+nav_title: 소개 페이지 UI 명세
 last_updated: 2026-10-17
 version: v1.0
 target_files:
@@ -17,13 +17,13 @@ target_files:
   - src/data/seoMeta.mjs
 ---
 
-# 🗺️ Waymark 소개 페이지 UI 명세 (UI Specification)
+# Waymark 소개 페이지 UI 명세 (UI Specification)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-10-17 | AI Agent | 선공개(pre-launch) 소개 페이지 최초 구현 — 히어로·문제공감·핵심 루프·AI 4모드·경험담 티저·CTA(미니멀 범위). 형제 랜딩 전개 공식 정합, 브랜드=indigo·lavender/✦ 웨이포인트. `/waymark` 라우트·GNB·모바일 벤토·메인 WorkSection 카드·3개국어·SEO 통합 | Waymark 슬롯 전반 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-10-17 | 선공개(pre-launch) 소개 페이지 최초 구현 — 히어로·문제공감·핵심 루프·AI 4모드·경험담 티저·CTA(미니멀 범위). 형제 랜딩 전개 공식 정합, 브랜드=indigo·lavender/✦ 웨이포인트. `/waymark` 라우트·GNB·모바일 벤토·메인 WorkSection 카드·3개국어·SEO 통합 | Waymark 슬롯 전반 |
 
 ---
 
@@ -58,7 +58,7 @@ target_files:
 | 5 | **경험담 티저** | "곧 함께 쌓인다" — 콘텐츠·수집 없음(미니멀) | `waymark.teaser.*` |
 | 6 | **CTA** | Builder's Log 피벗 챕터로 유도 + 기대 마무리 | `waymark.cta.*` |
 
-> **고정 영문/숫자 라벨**(i18n 비대상, JSX 리터럴): 스텝 번호 `01~04`·아이콘 `✎ ✦ 👣 ↻`, 모드 영문 `Comfort·Counsel·Cheer·Clarify`·아이콘 `🫶 🧩 🔥 🗂️`. 모드 영문 서브라벨은 `locale==='en'`일 때 중복이라 숨긴다.
+> **고정 영문/숫자 라벨**(i18n 비대상, JSX 리터럴): 스텝 번호 `01~04`·아이콘 글리프 4종(연필·사각별·발자국·회전 화살표), 모드 영문 `Comfort·Counsel·Cheer·Clarify`·아이콘 글리프 4종(맞잡은 손·퍼즐·불꽃·분류함). 모드 영문 서브라벨은 `locale==='en'`일 때 중복이라 숨긴다.
 
 ## 3. 브랜드·비주얼
 
@@ -88,6 +88,6 @@ target_files:
 ---
 
 ## 관련 문서
-*   [🗺️ Waymark 재포지셔닝 제안서](repositioning_proposal.md) — 전환 배경·ReLearn 차별화·명칭
-*   [🎨 디자인 시스템](../core/design_system.md) — §9-1 히어로·토큰 정본
-*   [📚 문서 인덱스 & 거버넌스](../INDEX.md)
+*   [Waymark 재포지셔닝 제안서](repositioning_proposal.md) — 전환 배경·ReLearn 차별화·명칭
+*   [디자인 시스템](../core/design_system.md) — §9-1 히어로·토큰 정본
+*   [문서 인덱스 & 거버넌스](../INDEX.md)

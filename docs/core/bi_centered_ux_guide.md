@@ -8,7 +8,7 @@ target_files:
   - src/App.jsx
 ---
 
-# 📘 BI 중심 프리미엄 UX 가이드
+# BI 중심 프리미엄 UX 가이드
 
 ## 1. 뼈아픈 반성과 방향성 재설정
 최근의 3D WebGL 도입 실패와 시각적 품질 저하는 **PriSincera의 본질적인 BI(Brand Identity)와 철학을 무시하고 "구현 기술의 화려함"에만 매몰된 결과**였습니다.

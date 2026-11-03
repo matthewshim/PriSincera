@@ -10,21 +10,21 @@ target_files:
   - index.html
 ---
 
-# 📘 SEO 메타·페이지 타이틀 표준 (SEO Meta Standard)
+# SEO 메타·페이지 타이틀 표준 (SEO Meta Standard)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-14 | AI Agent | 페이지 타이틀·메타 현황 감사 + 카테고리 일관 표준(SEO 최적화 병행) 및 적용 계획 최초 정의 | server.mjs, src/hooks/useSEO.js |
-| v1.1 | 2026-07-14 | AI Agent | 결정(A유지·B아포스트로피·C단일폴백·D공유모듈) 반영 및 구현 완료 — SSOT `src/data/seoMeta.mjs` 신설, server.mjs·useSEO·전 페이지 정합, Sylphio useSEO 편입, canonical/keywords 방출·중복 태그 제거 | src/data/seoMeta.mjs |
-| v1.2 | 2026-07-14 | AI Agent | 후속 완료 — 다국어 hreflang·og:locale SSR 방출 추가. 카테고리 전용 OG 이미지는 디자인 에셋 의존 백로그로 유지(단일 폴백). | src/data/seoMeta.mjs, server.mjs |
-| v1.3 | 2026-07-14 | AI Agent | 별도 에셋 부재로 디자인 시스템 팔레트 기반 공통 대표 OG(1200×630) 생성·적용(레거시 PriSignal 교체) | public/og-image.png, public/daily-og.png |
-| v1.4 | 2026-07-14 | AI Agent | 대표 OG를 메인 히어로 Star Prism Identity(글래스 프리즘·골드 액센트·오빗) 디자인 기반으로 리디자인 | public/og-image.png, public/daily-og.png |
-| v1.5 | 2026-07-21 | AI Agent | 카테고리별 OG 3종(ReLearn·Builder's Log·Sylphio) 생성·PAGE_META 매핑, 제너레이터 ci/ 등재(재현성) | ci/gen_og_images.py, seoMeta.mjs |
-| v1.8 | 2026-09-22 | AI Agent | **§10 개정 — canonical 예외 철회** — Planner's View가 루트=목록 IA로 전환(publishing_guide v2.0)되면서 루트→퍼머링크 canonical 오버라이드와 사이트맵 루트 제외 규칙이 불필요해졌다. 자기참조 canonical로 단순화하고 루트를 사이트맵에 복귀. 아티클 신호(`og:type=article`·발행일·JSON-LD)는 그대로 유효 | §5, §10, server.mjs |
-| v1.7 | 2026-08-31 | AI Agent | **§10 신설 — 뷰 중심 섹션의 canonical·구조화 데이터** — Planner's View(루트=최신 글) 도입에 따라 canonical 오버라이드·사이트맵 등재 정책·`og:type=article`·`article:published_time`·Article JSON-LD(레포 최초) 규정. 정적 `og:type` 미제거로 아티클 경로에서 태그가 2개 방출되던 결함 수정 기록 | §5, §10, server.mjs, seoMeta.mjs |
-| v1.6 | 2026-07-22 | AI Agent | **리런 통합 라우트 정합** — §1.3·§5 표의 `/daily`·`/pacenote`는 감사·이행 당시 기록임을 명시하고 현행 라우트 매핑(`/relearn`·`/relearn/daily/:date`) 추가. 아카이브된 OG 전략 문서 링크 경로 갱신 | §1, §5 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-07-14 | 페이지 타이틀·메타 현황 감사 + 카테고리 일관 표준(SEO 최적화 병행) 및 적용 계획 최초 정의 | server.mjs, src/hooks/useSEO.js |
+| v1.1 | 2026-07-14 | 결정(A유지·B아포스트로피·C단일폴백·D공유모듈) 반영 및 구현 완료 — SSOT `src/data/seoMeta.mjs` 신설, server.mjs·useSEO·전 페이지 정합, Sylphio useSEO 편입, canonical/keywords 방출·중복 태그 제거 | src/data/seoMeta.mjs |
+| v1.2 | 2026-07-14 | 후속 완료 — 다국어 hreflang·og:locale SSR 방출 추가. 카테고리 전용 OG 이미지는 디자인 에셋 의존 백로그로 유지(단일 폴백). | src/data/seoMeta.mjs, server.mjs |
+| v1.3 | 2026-07-14 | 별도 에셋 부재로 디자인 시스템 팔레트 기반 공통 대표 OG(1200×630) 생성·적용(레거시 PriSignal 교체) | public/og-image.png, public/daily-og.png |
+| v1.4 | 2026-07-14 | 대표 OG를 메인 히어로 Star Prism Identity(글래스 프리즘·골드 액센트·오빗) 디자인 기반으로 리디자인 | public/og-image.png, public/daily-og.png |
+| v1.5 | 2026-07-21 | 카테고리별 OG 3종(ReLearn·Builder's Log·Sylphio) 생성·PAGE_META 매핑, 제너레이터 ci/ 등재(재현성) | ci/gen_og_images.py, seoMeta.mjs |
+| v1.8 | 2026-09-22 | **§10 개정 — canonical 예외 철회** — Planner's View가 루트=목록 IA로 전환(publishing_guide v2.0)되면서 루트→퍼머링크 canonical 오버라이드와 사이트맵 루트 제외 규칙이 불필요해졌다. 자기참조 canonical로 단순화하고 루트를 사이트맵에 복귀. 아티클 신호(`og:type=article`·발행일·JSON-LD)는 그대로 유효 | §5, §10, server.mjs |
+| v1.7 | 2026-08-31 | **§10 신설 — 뷰 중심 섹션의 canonical·구조화 데이터** — Planner's View(루트=최신 글) 도입에 따라 canonical 오버라이드·사이트맵 등재 정책·`og:type=article`·`article:published_time`·Article JSON-LD(레포 최초) 규정. 정적 `og:type` 미제거로 아티클 경로에서 태그가 2개 방출되던 결함 수정 기록 | §5, §10, server.mjs, seoMeta.mjs |
+| v1.6 | 2026-07-22 | **리런 통합 라우트 정합** — §1.3·§5 표의 `/daily`·`/pacenote`는 감사·이행 당시 기록임을 명시하고 현행 라우트 매핑(`/relearn`·`/relearn/daily/:date`) 추가. 아카이브된 OG 전략 문서 링크 경로 갱신 | §1, §5 |
 
 ---
 
@@ -143,7 +143,7 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 - Sylphio 3종은 **키워드부를 앞에 유지**(macOS·실시간·AI·통역·회의록 / API Key 연동 / 개인정보)하면서 접미어만 표준화 → SEO 손실 없이 일관화.
 - description은 §4.2 규격으로 카테고리별 재정리(기존 문구 축약·키워드 정렬). 상세 문안은 구현 단계에서 확정.
 
-> **⚠️ 라우트 현행화 (2026-07-20 리런 통합 이후)**: 위 §1.3·§5 표의 `/daily`·`/pacenote`는 감사·이행 당시 기록이다. 현행 `PAGE_META`(seoMeta.mjs) 키는 다음과 같다 — `/daily`·`/pacenote`는 서버 301로 소멸.
+> **라우트 현행화 (2026-07-20 리런 통합 이후)**: 위 §1.3·§5 표의 `/daily`·`/pacenote`는 감사·이행 당시 기록이다. 현행 `PAGE_META`(seoMeta.mjs) 키는 다음과 같다 — `/daily`·`/pacenote`는 서버 301로 소멸.
 >
 > | 현행 라우트 | 표준 타이틀 |
 > | :--- | :--- |
@@ -155,7 +155,7 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 
 ---
 
-## 6. 적용 계획 (단계별) — ✅ 1~6 구현 완료(2026-07-14), 7~8 배포 후 검증 예정
+## 6. 적용 계획 (단계별) — 1~6 구현 완료(2026-07-14), 7~8 배포 후 검증 예정
 
 1. **[표준 승인]** 본 문서(§4 템플릿·§5 매핑) 확정. `status: draft → active`.
 2. **[SSOT 신설]** `src/config/seoMeta.mjs` 작성: route→메타 리졸버 + 카테고리 상수(title/description/keywords/ogImage). (신규 파일)
@@ -164,16 +164,16 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 5. **[Sylphio 편입]** SylphioLanding/ApiKeyGuide/Privacy 3종에 `useSEO` 도입(canonical·og 포함).
 6. **[정적 기본값]** `index.html` 기본 태그를 표준과 정합(폴백 og:image 통일).
 7. **[검증]** 각 route에 대해 (a) SSR HTML의 `<title>`/메타, (b) 브라우저 탭 타이틀이 **동일**한지 확인. `curl -A "facebookexternalhit"` 로 SSR 스냅샷 점검, 배포 후 **OG 캐시 재스크랩**(FB Sharing Debugger 등).
-8. **[다국어 hreflang]** ✅ 완료 — 전 페이지 SSR에 `ko/en/ja` + `x-default` hreflang 대체 링크와 `og:locale`/`og:locale:alternate` 방출(`hreflangLinks()`·`ogLocaleTags()` in seoMeta), canonical은 쿼리 없는 자기참조. ※ SSR 본문 메타는 현재 ko 단일 → 완전한 언어별 색인은 '언어별 SSR'(§9) 후속.
+8. **[다국어 hreflang]** 완료 — 전 페이지 SSR에 `ko/en/ja` + `x-default` hreflang 대체 링크와 `og:locale`/`og:locale:alternate` 방출(`hreflangLinks()`·`ogLocaleTags()` in seoMeta), canonical은 쿼리 없는 자기참조. ※ SSR 본문 메타는 현재 ko 단일 → 완전한 언어별 색인은 '언어별 SSR'(§9) 후속.
 
 ---
 
 ## 7. 결정사항 (2026-07-14 확정·반영 완료)
 
-- **A. 홈 타이틀**: ✅ 현행 `PriSincera — Sincerity, Prioritized.` **유지**.
-- **B. 브랜드 표기**: ✅ **아포스트로피 `Builder's Log`** 표준 채택(전 표기 통일, BuildersLog 상세 접미어 중복도 해소).
-- **C. og:image**: ✅ **단일 폴백 `og-image.png`** 통일 + **디자인 시스템 기반 공통 대표 OG(1200×630 PNG) 생성·적용**(레거시 PriSignal 이미지 교체). 카테고리 전용 이미지는 추후.
-- **D. SSOT 범위**: ✅ **공유 모듈 `src/data/seoMeta.mjs` 신설**(드리프트 근절). server.mjs·useSEO·전 페이지가 이를 소비.
+- **A. 홈 타이틀**: 현행 `PriSincera — Sincerity, Prioritized.` **유지**.
+- **B. 브랜드 표기**: **아포스트로피 `Builder's Log`** 표준 채택(전 표기 통일, BuildersLog 상세 접미어 중복도 해소).
+- **C. og:image**: **단일 폴백 `og-image.png`** 통일 + **디자인 시스템 기반 공통 대표 OG(1200×630 PNG) 생성·적용**(레거시 PriSignal 이미지 교체). 카테고리 전용 이미지는 추후.
+- **D. SSOT 범위**: **공유 모듈 `src/data/seoMeta.mjs` 신설**(드리프트 근절). server.mjs·useSEO·전 페이지가 이를 소비.
 
 ---
 
@@ -185,12 +185,12 @@ resolveMeta(pathname, { locale, dynamic }) → { title, description, keywords, o
 
 ## 9. 잔여 백로그 (에셋/대공사 의존)
 
-- **공통 대표 OG 이미지**: ✅ Star Prism Identity 대표 OG 적용(v1.4). ✅ **카테고리별 변형 3종**(ReLearn 시안·Builder's Log 인디고·Sylphio 실프 블루)을 `ci/gen_og_images.py`(재현 가능)로 생성해 PAGE_META `ogImage`로 매핑(v1.5). 잔여: 없음 — 신규 카테고리는 제너레이터 VARIANTS에 추가.
+- **공통 대표 OG 이미지**: Star Prism Identity 대표 OG 적용(v1.4). **카테고리별 변형 3종**(ReLearn 시안·Builder's Log 인디고·Sylphio 실프 블루)을 `ci/gen_og_images.py`(재현 가능)로 생성해 PAGE_META `ogImage`로 매핑(v1.5). 잔여: 없음 — 신규 카테고리는 제너레이터 VARIANTS에 추가.
 - **언어별 SSR 본문**: 현 SSR은 ko 단일 메타/HTML을 서빙(클라이언트 i18n). 완전한 언어별 검색 색인을 원하면 `?lang`별 서버 렌더가 필요 → 대공사 후속.
 
 ---
 
-## 10. 콘텐츠 섹션의 canonical·구조화 데이터 (v1.8) — 🔒 규범
+## 10. 콘텐츠 섹션의 canonical·구조화 데이터 (v1.8) — 규범
 
 ### 10-1. canonical은 자기참조가 기본
 - 목록(`/{섹션}`)과 글(`/{섹션}/{slug}`)이 **서로 다른 콘텐츠**를 렌더하는 한, 양쪽 모두 자기참조 canonical을 쓰고 사이트맵에 함께 등재한다. 예외를 만들지 않는다.

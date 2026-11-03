@@ -7,16 +7,16 @@ target_files:
   - src/pages/SylphioApiKeyGuide.jsx
 ---
 
-# 📘 Sylphio API Key 연동 가이드
+# Sylphio API Key 연동 가이드
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-02 | Maker | 실피오 Pro 버전 API 키 가이드 매뉴얼 최초 정의 | docs/sylphio/ |
-| v1.1 | 2026-06-16 | Maker | 영어/한국어 무료 지원 범위 현행화 및 API 호출 구조(요약 시 1회 호출) 최신화 | docs/sylphio/ |
-| v1.2 | 2026-07-13 | AI Agent | 무료 일일 쿼터 현실화·정밀 회의록(오디오 업로드) 고지·Gemini 2.5/OpenAI 역할 구분 반영(라이브 정합) | src/pages/SylphioApiKeyGuide.jsx |
-| v1.3 | 2026-08-05 | AI Agent | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·본문 4단 중첩 박스 제거(플랫화). 히어로 태그라인을 랜딩 정본("듣는 순간 자막이 되는…")으로 정본화 | src/pages/SylphioApiKeyGuide.jsx, .css |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-02 | 실피오 Pro 버전 API 키 가이드 매뉴얼 최초 정의 | docs/sylphio/ |
+| v1.1 | 2026-06-16 | 영어/한국어 무료 지원 범위 현행화 및 API 호출 구조(요약 시 1회 호출) 최신화 | docs/sylphio/ |
+| v1.2 | 2026-07-13 | 무료 일일 쿼터 현실화·정밀 회의록(오디오 업로드) 고지·Gemini 2.5/OpenAI 역할 구분 반영(라이브 정합) | src/pages/SylphioApiKeyGuide.jsx |
+| v1.3 | 2026-08-05 | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·본문 4단 중첩 박스 제거(플랫화). 히어로 태그라인을 랜딩 정본("듣는 순간 자막이 되는…")으로 정본화 | src/pages/SylphioApiKeyGuide.jsx, .css |
 
 ---
 
@@ -28,7 +28,7 @@ target_files:
 
 ---
 
-## 🟢 Part 1: Google Gemini API Key 발급 프로세스 (초강력 추천 / 무료 제공 가능)
+## Part 1: Google Gemini API Key 발급 프로세스 (초강력 추천 / 무료 제공 가능)
 
 Google Gemini는 뛰어난 번역 컨텍스트 이해도와 더불어 **압도적인 무료 혜택(Free Tier)**을 제공하여 Sylphio 사용 장벽을 극적으로 낮춰 줍니다.
 
@@ -53,7 +53,7 @@ Google Gemini는 뛰어난 번역 컨텍스트 이해도와 더불어 **압도�
 
 ---
 
-## 🔵 Part 2: OpenAI API Key 발급 프로세스 (고성능 통역 전문가용)
+## Part 2: OpenAI API Key 발급 프로세스 (고성능 통역 전문가용)
 
 OpenAI의 GPT-4o-mini 엔진은 뛰어난 대화 요약 능력과 고속 응답성을 갖추어 회의록 텍스트 요약에 적합합니다. (녹음 오디오를 재분석하는 정밀 회의록은 Google Gemini 멀티모달 전용입니다.)
 
@@ -68,7 +68,7 @@ OpenAI의 GPT-4o-mini 엔진은 뛰어난 대화 요약 능력과 고속 응답�
 4. **키 즉시 저장**:
    - 화면에 표시되는 **`sk-proj-...`**로 시작하는 고유 비밀 키를 즉시 복사하여 안전한 곳에 백업합니다. (구글과 마찬가지로 팝업창을 닫은 이후에는 전체 비밀 키를 다시 볼 수 없습니다.)
 
-### ❖ ⚠️ OpenAI 핵심 유의사항: 결제 크레딧 사전 충전 (Prerequisite)
+### ❖ OpenAI 핵심 유의사항: 결제 크레딧 사전 충전 (Prerequisite)
 * **신규 계정 발급 후 미동작 오류 해결**:
   - OpenAI는 구글과 달리 **무료 체험용 Credit이 만료되었거나 비어있을 경우, API Key를 생성하여 앱에 연동하더라도 인식을 개시하자마자 즉각 번역 에러(`429 You exceeded your current quota`)를 반환**하며 번역이 영구 묵살됩니다.
   - 이를 해결하기 위해 반드시 **크레딧 사전 충전(Pre-paid Billing)**을 완료해야 합니다:
@@ -82,7 +82,7 @@ OpenAI의 GPT-4o-mini 엔진은 뛰어난 대화 요약 능력과 고속 응답�
 
 ---
 
-## ⚙️ Part 3: Sylphio 앱 내 API Key 최종 연동 가이드
+## Part 3: Sylphio 앱 내 API Key 최종 연동 가이드
 
 > [!NOTE]
 > **무료 제공 범위 안내**
@@ -90,19 +90,19 @@ OpenAI의 GPT-4o-mini 엔진은 뛰어난 대화 요약 능력과 고속 응답�
 > * 그 외 다국어(일본어, 중국어 등)를 선택하여 번역을 개시하거나, 세션 종료 후 AI 요약본 생성을 원하실 경우에는 Pro 라이선스를 획득하거나 아래 가이드에 따라 API Key를 연동해야 합니다.
 
 1. macOS에 단독 설치된 **`Sylphio.app`**을 기동합니다.
-2. 대기 화면 우측 상단의 **설정 기어 버튼(⚙️)**을 클릭하여 환경설정 창을 엽니다.
+2. 대기 화면 우측 상단의 **설정 기어 버튼**을 클릭하여 환경설정 창을 엽니다.
 3. 좌측 탭 메뉴에서 **`AI 엔진 (BYOK)`**을 선택합니다.
 4. **`AI PRO 실시간 통역 엔진 활성화`** 스위치를 **ON(켬)** 상태로 전환합니다.
 5. 유저가 선호하는 AI 엔진 플랫폼(Google Gemini 또는 OpenAI)을 선택합니다.
 6. 복사해 두었던 API Key 문자열을 마우스 우클릭하여 붙여넣기(`CMD + V`) 합니다.
 7. **`API Key 연동 성공 및 활성화`** 표시를 확인한 뒤 설정창을 닫습니다.
-8. 이제 대기 화면 상단 출발어 오버레이를 클릭하면 **`🌐 자동 감지 (Auto-Detect)`** 옵션의 제한이 정상 해제되어 선택할 수 있으며, 무료 기반의 실시간 다국어 번역과 연동된 API Key를 활용한 AI 퀄리티의 고품격 회의록 요약 보고서가 완벽 가동됩니다!
+8. 이제 대기 화면 상단 출발어 오버레이를 클릭하면 **`자동 감지 (Auto-Detect)`** 옵션의 제한이 정상 해제되어 선택할 수 있으며, 무료 기반의 실시간 다국어 번역과 연동된 API Key를 활용한 AI 퀄리티의 고품격 회의록 요약 보고서가 완벽 가동됩니다!
 
 ---
 
-## 🚨 Part 4: 긴급 장애 극복 및 트러블슈팅 (Troubleshooting)
+## Part 4: 긴급 장애 극복 및 트러블슈팅 (Troubleshooting)
 
-### Q1. "설정 ⚙️에서 AI 번역을 활성화하세요" 또는 "번역 에러" 가 계속 발생합니다.
+### Q1. "설정에서 AI 번역을 활성화하세요" 또는 "번역 에러" 가 계속 발생합니다.
 * **원인**: 입력하신 API Key 내부에 불필요한 공백 문자나 줄바꿈(`\n`)이 섞여 들어갔거나, 키 자체가 유효하지 않을 때 발생합니다.
 * **해결법**: 키 입력란을 완전히 비운 후, 메모장에 키를 한 번 붙여넣어 공백이 없는지 확인하고 다시 한 번 복사하여 깨끗하게 입력해 주십시오.
 

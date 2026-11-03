@@ -13,16 +13,16 @@ target_files:
   - pipeline/src/lib/storage.mjs
 ---
 
-# 📘 환경변수·시크릿 레퍼런스 (Environment Reference)
+# 환경변수·시크릿 레퍼런스 (Environment Reference)
 
 > 운영자·신규 개발자가 **"이 시스템이 쓰는 모든 환경변수와 그 저장 위치"** 를 한 곳에서 파악하기 위한 단일 레퍼런스. 키 로테이션·새 환경 구성 시 본 문서를 기준으로 점검하세요.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-29 | AI Agent | 웹/파이프라인/로컬 env 전수 정리 최초 정의 (코드 `process.env` 실측 기반) | Operations |
-| v1.1 | 2026-08-31 | AI Agent | **시크릿 저장 규칙 명문화** — 페이로드가 바이트 그대로 주입되므로 `echo` 저장 시 개행이 값에 섞인다(`GITHUB_TOKEN` 실측: 40B 토큰이 `토큰+공백+CRLF` 43B로 저장). `printf '%s'` 저장 지침 + 소비 측 `?.trim()` 방어 기록 | Operations, admin-api.mjs |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-29 | 웹/파이프라인/로컬 env 전수 정리 최초 정의 (코드 `process.env` 실측 기반) | Operations |
+| v1.1 | 2026-08-31 | **시크릿 저장 규칙 명문화** — 페이로드가 바이트 그대로 주입되므로 `echo` 저장 시 개행이 값에 섞인다(`GITHUB_TOKEN` 실측: 40B 토큰이 `토큰+공백+CRLF` 43B로 저장). `printf '%s'` 저장 지침 + 소비 측 `?.trim()` 방어 기록 | Operations, admin-api.mjs |
 
 ---
 
@@ -43,8 +43,8 @@ target_files:
 | :--- | :--- | :--- | :--- |
 | `PORT` | 리슨 포트 | Cloud Run 자동 주입 | 기본 `8080` ([server.mjs:25](../../server.mjs#L25)) |
 | `GCS_BUCKET` | 정적 피드 버킷명 | Cloud Run env | 기본 `prisincera-prisignal-data` |
-| `GEMINI_API_KEY` | Admin AI 커밋 매칭·요약, Builder's Log | **Secret Manager** | cloudbuild `--set-secrets GEMINI_API_KEY=`**`GEMINI_ADMIN_API_KEY`**`:latest` ✅확정 |
-| `GITHUB_TOKEN` | Builder's Log Git-less 원격 커밋(GitHub API) | **Secret Manager** `GITHUB_TOKEN:latest` | cloudbuild `--set-secrets` ✅확정 |
+| `GEMINI_API_KEY` | Admin AI 커밋 매칭·요약, Builder's Log | **Secret Manager** | cloudbuild `--set-secrets GEMINI_API_KEY=`**`GEMINI_ADMIN_API_KEY`**`:latest`확정 |
+| `GITHUB_TOKEN` | Builder's Log Git-less 원격 커밋(GitHub API) | **Secret Manager** `GITHUB_TOKEN:latest` | cloudbuild `--set-secrets`확정 |
 | `UNSUBSCRIBE_SECRET` | 구독 해지 HMAC 토큰 검증 | Cloud Run env/Secret | [server.mjs:630](../../server.mjs#L630) |
 | `GCP_PROJECT_ID` | Firestore·Job 제어 프로젝트 | Cloud Run env | 기본 `prisincera` ([admin-api.mjs:545](../../admin-api.mjs#L545)) |
 | `RUN_REGION` | Admin "지금 생성"이 Job 실행 시 리전 | Cloud Run env | 기본 `asia-northeast3` |
@@ -75,7 +75,7 @@ target_files:
 | :--- | :--- | :--- |
 | `TARGET_DATE` | composer · tech-composer | 특정 날짜(YYYY-MM-DD) 기준으로 재생성 ([composer.mjs:30](../../pipeline/src/composer.mjs#L30)) |
 | `FORCE_SCORE` | composer | 이미 스코어링된 날도 강제 재스코어 |
-| `FORCE_DISPATCH` | composer | 발송 락 무시하고 강제 재발송 ⚠️ 중복 발송 주의 |
+| `FORCE_DISPATCH` | composer | 발송 락 무시하고 강제 재발송 중복 발송 주의 |
 
 > 사용법은 [operations_runbook](operations_runbook.md) §2 참조.
 
@@ -95,14 +95,14 @@ target_files:
 | `GEMINI_ADMIN_API_KEY` | `GEMINI_API_KEY` | 웹(admin AI), 파이프라인(생성) |
 | `GITHUB_TOKEN` | `GITHUB_TOKEN` | 웹(Builder's Log 커밋) |
 
-> ⚠️ **저장 시**: 시크릿 페이로드는 **바이트 그대로** 환경변수에 주입됩니다. `echo`로 값을 넣으면 개행이 딸려 들어가
+> **저장 시**: 시크릿 페이로드는 **바이트 그대로** 환경변수에 주입됩니다. `echo`로 값을 넣으면 개행이 딸려 들어가
 > `GITHUB_TOKEN`이 `토큰+개행`이 됩니다(2026-08-31 점검: 40바이트 토큰이 `토큰+공백+CRLF` 43바이트로 저장돼 있었음).
 > Authorization 헤더에는 CR/LF가 들어갈 수 없으므로 전송 계층에 따라 인증이 깨집니다
 > (Octokit v22의 fetch 계층은 헤더 값 앞뒤 공백을 정규화해 넘어가지만, 그 동작에 기대면 안 됩니다).
 > 반드시 개행 없이 저장하세요: `printf '%s' "$TOKEN" | gcloud secrets versions add GITHUB_TOKEN --data-file=-`
 > 소비 측(`admin-api.mjs`)에도 `?.trim()` 방어를 두었지만, 저장을 바르게 하는 것이 1차 방어선입니다.
 >
-> ⚠️ **로테이션 시**: 새 Secret 버전을 추가(`gcloud secrets versions add`)한 뒤, `--set-secrets`가 `:latest`를 참조하므로 **웹은 다음 배포(또는 새 리비전)부터** 반영됩니다. 즉시 반영하려면 Cloud Run 서비스/잡을 재배포하세요.
+> **로테이션 시**: 새 Secret 버전을 추가(`gcloud secrets versions add`)한 뒤, `--set-secrets`가 `:latest`를 참조하므로 **웹은 다음 배포(또는 새 리비전)부터** 반영됩니다. 즉시 반영하려면 Cloud Run 서비스/잡을 재배포하세요.
 
 ## 5. 더 읽을 것
 - 운영 대응 절차: [operations_runbook](operations_runbook.md)

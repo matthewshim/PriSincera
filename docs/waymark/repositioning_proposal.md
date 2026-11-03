@@ -1,7 +1,7 @@
 ---
 status: active
 domain: Waymark
-nav_title: 🗺️ 재포지셔닝 제안서
+nav_title: 재포지셔닝 제안서
 last_updated: 2026-10-17
 version: v0.4
 target_files:
@@ -13,16 +13,16 @@ target_files:
   - (예정) docs/waymark/product_strategy.md·roadmap.md·ui_specification.md
 ---
 
-# 🗺️ Waymark 재포지셔닝 제안서 (Candela → Waymark)
+# Waymark 재포지셔닝 제안서 (Candela → Waymark)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v0.1 | 2026-10-17 | AI Agent | 최초 작성 — 자동매매/모의투자 → "결정 동반 서비스" 전환 제안. 전환 근거·서비스 개요·ReLearn 차별화 정의(A안)·명칭 검토·전환 범위·결정 대기 항목 | Candela 슬롯 전반 |
-| v0.2 | 2026-10-17 | AI Agent | 명칭 방향 확정(오너 선택: "결정의 순간") 반영 — §4 후보를 Crux·Kairos·Cusp·Resolve 등으로 좁히고 태그라인 예시 추가 | §4 명칭 |
-| v0.3 | 2026-10-17 | AI Agent | **명칭 확정: Waymark** — 문서 전반 "새 서비스"→Waymark 치환, §4 확정 반영, §0·§5 docs/waymark 명시 | 문서 전반·§4·§6 |
-| v0.4 | 2026-10-17 | AI Agent | **라이브 Candela 제거 + docs 이관 완료 반영** — 폴더 `docs/candela/`→`docs/waymark/` 이관, 트레이딩 문서 7종 아카이브([candela_trading_archive](../archive/candela_trading_archive.md)), 레포 보안 규범 core 이관, Builder's Log ch.14 언퍼블리시. status active 승격 | 문서 위치·§0·§5·§6 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v0.1 | 2026-10-17 | 최초 작성 — 자동매매/모의투자 → "결정 동반 서비스" 전환 제안. 전환 근거·서비스 개요·ReLearn 차별화 정의(A안)·명칭 검토·전환 범위·결정 대기 항목 | Candela 슬롯 전반 |
+| v0.2 | 2026-10-17 | 명칭 방향 확정(오너 선택: "결정의 순간") 반영 — §4 후보를 Crux·Kairos·Cusp·Resolve 등으로 좁히고 태그라인 예시 추가 | §4 명칭 |
+| v0.3 | 2026-10-17 | **명칭 확정: Waymark** — 문서 전반 "새 서비스"→Waymark 치환, §4 확정 반영, §0·§5 docs/waymark 명시 | 문서 전반·§4·§6 |
+| v0.4 | 2026-10-17 | **라이브 Candela 제거 + docs 이관 완료 반영** — 폴더 `docs/candela/`→`docs/waymark/` 이관, 트레이딩 문서 7종 아카이브([candela_trading_archive](../archive/candela_trading_archive.md)), 레포 보안 규범 core 이관, Builder's Log ch.14 언퍼블리시. status active 승격 | 문서 위치·§0·§5·§6 |
 
 ---
 
@@ -106,12 +106,12 @@ ReLearn 통합은 **쪼개진 하나의 플라이휠(배움→실행→복기)�
 
 | 영역 | 조치 | 상태 |
 | :--- | :--- | :--- |
-| docs | `docs/waymark/` 도메인 폴더 신설·본 문서 이관. 기존 `docs/candela/*` 아카이브 통합, 보안 규범 core 이관, INDEX 갱신 | ✅ 완료 |
-| docs(정식 세트) | product_strategy·roadmap·ui_specification 신설, 기획서 이관 | ⏳ 예정 |
-| 코드(제거) | `CandelaLanding.*`·라우트·`candela` i18n·GNB·모바일·WorkSection Candela 엔트리·fixture/스키마/게이트 제거 | ✅ 완료 |
-| 코드(신설) | Waymark 소개 페이지·라우트·i18n·GNB·메인 카드 | ⏳ 예정 |
-| 브랜드 | 촛불·골드 Candela 정체성 → **Waymark** 정체성(색·메타포) 재설계 | ⏳ 예정 |
-| Builder's Log | 발행된 ch.14(자동매매 소개) **언퍼블리시**(오너 결정) + "왜 자동매매에서 결정 저널로 피벗했나"를 다음 챕터로(권장) | ✅ 언퍼블리시 완료 / ⏳ 피벗 챕터 예정 |
+| docs | `docs/waymark/` 도메인 폴더 신설·본 문서 이관. 기존 `docs/candela/*` 아카이브 통합, 보안 규범 core 이관, INDEX 갱신 | 완료 |
+| docs(정식 세트) | product_strategy·roadmap·ui_specification 신설, 기획서 이관 | 예정 |
+| 코드(제거) | `CandelaLanding.*`·라우트·`candela` i18n·GNB·모바일·WorkSection Candela 엔트리·fixture/스키마/게이트 제거 | 완료 |
+| 코드(신설) | Waymark 소개 페이지·라우트·i18n·GNB·메인 카드 | 예정 |
+| 브랜드 | 촛불·골드 Candela 정체성 → **Waymark** 정체성(색·메타포) 재설계 | 예정 |
+| Builder's Log | 발행된 ch.14(자동매매 소개) **언퍼블리시**(오너 결정) + "왜 자동매매에서 결정 저널로 피벗했나"를 다음 챕터로(권장) | 언퍼블리시 완료 / 피벗 챕터 예정 |
 
 ## 6. 결정 현황
 
@@ -125,7 +125,7 @@ ReLearn 통합은 **쪼개진 하나의 플라이휠(배움→실행→복기)�
 ---
 
 ## 관련 문서
-*   [📚 문서 인덱스 & 거버넌스](../INDEX.md)
-*   [🗺️ 리런 제품 전략서](../relearn/product_strategy.md) — 차별화 대상
-*   [✍️ Builder's Log 퍼블리싱 가이드](../builders-log/publishing_guide.md)
-*   [🗄️ 캔델라 자동매매 아카이브](../archive/candela_trading_archive.md) — 폐기된 트레이딩 계획
+*   [문서 인덱스 & 거버넌스](../INDEX.md)
+*   [리런 제품 전략서](../relearn/product_strategy.md) — 차별화 대상
+*   [Builder's Log 퍼블리싱 가이드](../builders-log/publishing_guide.md)
+*   [캔델라 자동매매 아카이브](../archive/candela_trading_archive.md) — 폐기된 트레이딩 계획

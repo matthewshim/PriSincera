@@ -6,14 +6,14 @@ version: v1.1
 target_files: []  # 비즈니스 기획 문서 — 특정 코드 미지배
 ---
 
-# 🗺️ 비즈니스 모델 기획서 (Business Model)
+# 비즈니스 모델 기획서 (Business Model)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-29 | AI Agent | 퍼스널 브랜드 정체성·컨설팅 확장 4모델·실행 계획 정리 | BM 전반 |
-| v1.1 | 2026-07-22 | AI Agent | **§6 디지털 제품 포트폴리오 수익 모델 신설** — 리런 통합(3제품 체제) 반영, 제품별 수익 구조·무료 티어 비용 철학 명문화 (기존 본문은 컨설팅·브랜딩 축으로 범위 명시) | §6 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-29 | 퍼스널 브랜드 정체성·컨설팅 확장 4모델·실행 계획 정리 | BM 전반 |
+| v1.1 | 2026-07-22 | **§6 디지털 제품 포트폴리오 수익 모델 신설** — 리런 통합(3제품 체제) 반영, 제품별 수익 구조·무료 티어 비용 철학 명문화 (기존 본문은 컨설팅·브랜딩 축으로 범위 명시) | §6 |
 
 ## 1. 프로젝트 개요 (Identity)
 
@@ -124,7 +124,7 @@ target_files: []  # 비즈니스 기획 문서 — 특정 코드 미지배
 
 | 제품 | 수익 모델 | 역할 |
 | :--- | :--- | :--- |
-| **ReLearn** (`/relearn`) | **무료** — 이메일 구독("📬 ReLearn Daily")·성장 루프 데이터 축적 | 리드 확보·리텐션·데이터 해자. 향후 PRO(개인화 고도화) 여지 |
+| **ReLearn** (`/relearn`) | **무료** — 이메일 구독("ReLearn Daily")·성장 루프 데이터 축적 | 리드 확보·리텐션·데이터 해자. 향후 PRO(개인화 고도화) 여지 |
 | **Builder's Log** (`/builderslog`) | **무료** — 제작 과정 공개 콘텐츠 | 브랜딩·신뢰 자산 → 컨설팅(§3) 유입 경로 |
 | **Sylphio** (macOS) | **Freemium** — 영어·한국어 무제한 무료 + **Pro Lifetime IAP**(다국어·요약). AI 비용은 **BYOK**(사용자 본인 API 키)로 사용자 부담 | 유일한 직접 과금 제품. 정책 상세: [sylphio/landing_modification_plan](../sylphio/landing_modification_plan.md) |
 

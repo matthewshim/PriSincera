@@ -9,13 +9,13 @@ target_files:
   - src/styles/index.css
 ---
 
-# 📘 프런트엔드 안정성 체크리스트 (FE Stability)
+# 프런트엔드 안정성 체크리스트 (FE Stability)
 
 이 문서는 웹 애플리케이션의 자바스크립트 런타임 오류, 리소스 로딩 실패, 스타일 누수 등 비즈니스에 치명적인 영향을 줄 수 있는 **프런트엔드 서비스 장애를 사전에 감지하고 차단하기 위한 기술 진단 표준 체크리스트**입니다.
 
 ---
 
-## 📌 1. 자바스크립트 런타임 및 예외 처리 (Runtime Fault Tolerance)
+## 1. 자바스크립트 런타임 및 예외 처리 (Runtime Fault Tolerance)
 
 자바스크립트 코드는 단 하나의 예외(uncaught error)로도 리액트 렌더링 트리를 붕괴시키고 전체 페이지를 빈 화면(White Screen)으로 만들 수 있습니다.
 
@@ -30,7 +30,7 @@ target_files:
 
 ---
 
-## 📌 2. 자산 로딩 및 외부 의존성 탄력성 (Asset & CDN Resilience)
+## 2. 자산 로딩 및 외부 의존성 탄력성 (Asset & CDN Resilience)
 
 웹폰트, 외부 라이브러리, API 등 외부 네트워크(CDN) 자원은 언제든 지연되거나 차단(CORS 오류 등)될 수 있습니다.
 
@@ -43,7 +43,7 @@ target_files:
 
 ---
 
-## 📌 3. 스타일 격리 및 레이아웃 무결성 (CSS Scoping & Isolation)
+## 3. 스타일 격리 및 레이아웃 무결성 (CSS Scoping & Isolation)
 
 잘못된 전역 선택자(`.btn-primary`, `*` 등) 오버라이드는 페이지 간 예기치 못한 레이아웃 깨짐이나 색상 오염을 유발합니다.
 
@@ -56,7 +56,7 @@ target_files:
 
 ---
 
-## 📌 4. 배포 전 빌드 파이프라인 및 정적 진단 (Build & Pre-flight Diagnostics)
+## 4. 배포 전 빌드 파이프라인 및 정적 진단 (Build & Pre-flight Diagnostics)
 
 배포 직전 빌드 단계에서 장애 유발 코드가 자동으로 필터링되는 안전망이 갖춰져야 합니다.
 

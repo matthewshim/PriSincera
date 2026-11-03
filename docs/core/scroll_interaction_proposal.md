@@ -17,23 +17,23 @@ target_files:
   - src/components/connect/ConnectSection.jsx
 ---
 
-# 🗺️ 스크롤 인터랙션 강화 제안서
+# 스크롤 인터랙션 강화 제안서
 
 본 제안서는 메인 페이지(`Home.jsx`)의 스크롤 및 호버 인터랙션 디자인 품질을 **"실시간 스크롤 연동(Scroll-linked Interactions)"** 및 **"미니멀 프리미엄(Restrained Premium)"** 톤앤매너를 기반으로 고도화하기 위한 구체적인 계획을 제시합니다. 인위적인 카드 레벨의 모션을 배제하고 우주 배경 공간의 천체 물리 현상과 글래스모피즘(Glassmorphism)의 굴절 특성을 활용하여 깊이감 있는 프리미엄 UX를 제공하는 것을 목표로 합니다.
 
-## 📝 개정 이력 (Revision History)
+## 개정 이력 (Revision History)
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-16 | Antigravity | 최초 스크롤 인터랙션 디자인 품질 강화 제안서 작성 (별똥별 모티브) | Home, StarField, Section CSS |
-| v1.1 | 2026-06-16 | Antigravity | 피드백 반영: 미니멀리스트 프리미엄 톤앤매너로 3D 틸트 각도 축소(2.2도) 및 별똥별 글레어 미세 조정, 타임라인 브리딩 전환 | Home, StarField, Section CSS |
-| v1.2 | 2026-06-16 | Antigravity | 피드백 2차 반영: 요란한 카드 3D 효과 및 Sheen 전면 롤백, 배경 캔버스 별똥별 투과 연동, 스크롤 연동형 자기그림 타임라인 및 카드 포커스 스펙 고도화 | Home, StarField, Section CSS, Hooks |
-| v1.3 | 2026-06-16 | Antigravity | 최종 피드백 반영: Hero/Connect의 텍스트 반짝임(Shimmer) 전면 삭제, SERVICES(Work) 카드의 테두리 광원 및 사선 쓸림 효과, 내부 모형 가속 애니메이션 삭제. 오직 카드의 미세한 스케일 업(1.025)과 타 카드 디밍을 활용한 심플 포커스 효과로 최종 정제 | Home, Hero, Connect, Work, CSS |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-16 | 최초 스크롤 인터랙션 디자인 품질 강화 제안서 작성 (별똥별 모티브) | Home, StarField, Section CSS |
+| v1.1 | 2026-06-16 | 피드백 반영: 미니멀리스트 프리미엄 톤앤매너로 3D 틸트 각도 축소(2.2도) 및 별똥별 글레어 미세 조정, 타임라인 브리딩 전환 | Home, StarField, Section CSS |
+| v1.2 | 2026-06-16 | 피드백 2차 반영: 요란한 카드 3D 효과 및 Sheen 전면 롤백, 배경 캔버스 별똥별 투과 연동, 스크롤 연동형 자기그림 타임라인 및 카드 포커스 스펙 고도화 | Home, StarField, Section CSS, Hooks |
+| v1.3 | 2026-06-16 | 최종 피드백 반영: Hero/Connect의 텍스트 반짝임(Shimmer) 전면 삭제, SERVICES(Work) 카드의 테두리 광원 및 사선 쓸림 효과, 내부 모형 가속 애니메이션 삭제. 오직 카드의 미세한 스케일 업(1.025)과 타 카드 디밍을 활용한 심플 포커스 효과로 최종 정제 | Home, Hero, Connect, Work, CSS |
 
 
 ---
 
-## 🔍 사용자 검토 필요 사항
+## 사용자 검토 필요 사항
 
 고품질의 마이크로 인터랙션을 위해 반영된 디자인 핵심 사항입니다.
 
@@ -57,7 +57,7 @@ target_files:
 
 ---
 
-## ❓ 해결 과제 및 의사결정 사항
+## 해결 과제 및 의사결정 사항
 
 > [!WARNING]
 > **1. 별똥별 광원의 색상 규격**
@@ -68,7 +68,7 @@ target_files:
 
 ---
 
-## 🛠️ 컴포넌트별 변경 계획
+## 컴포넌트별 변경 계획
 
 배경 별똥별 및 스크롤 연동 고도화 계획은 다음과 같이 코드 및 스타일시트에 반영되었습니다.
 
@@ -147,7 +147,7 @@ target_files:
 
 ---
 
-## 🧠 메모리 누수 및 성능 최적화 기술 검토 (Memory & Performance Review)
+## 메모리 누수 및 성능 최적화 기술 검토 (Memory & Performance Review)
 
 인터랙션 고도화 과정에서 발생할 수 있는 메모리 누수(Memory Leak)와 가비지 컬렉션(GC) 병목을 예방하기 위해 아래의 기술적 제약 사항을 사전에 검토하고 구현에 반영합니다.
 
@@ -173,7 +173,7 @@ target_files:
 
 ---
 
-## 🌐 크로스 브라우징 및 반응형 대응 검토 (Cross-Browsing & Responsiveness)
+## 크로스 브라우징 및 반응형 대응 검토 (Cross-Browsing & Responsiveness)
 
 모든 브라우저와 디바이스 환경에서 일관되고 끊김 없는 사용자 경험을 보장하기 위해 크로스 브라우징 및 반응형 설계를 사전에 검토하고 설계에 반영합니다.
 
@@ -199,7 +199,7 @@ target_files:
 
 ---
 
-## 🧪 검증 및 성능 평가 계획
+## 검증 및 성능 평가 계획
 
 ### 1. 스크롤 반응성 체크
 * 모든 섹션 및 카드가 뷰포트 진입 시 엇갈림 딜레이(`--reveal-delay`) 규격을 지키며 별똥별이 어색함 없이 백그라운드에서 교차하는지 확인

@@ -9,13 +9,13 @@ target_files:
   - src/pages/SylphioPrivacy.jsx
 ---
 
-# 🔍 Sylphio 랜딩 검토 보고서
+# Sylphio 랜딩 검토 보고서
 
 Sylphio 웹 프로젝트(`www/src/pages/`) 내의 주요 구성 파일들을 검토한 결과, 최신 macOS 데스크톱 앱의 개선 사항(마이크 명칭 통일, UI 스케일업 및 하이브리드 STT 폴백 등)과 비교했을 때 수정이 권장되는 일부 설명 오류 및 보완 사항을 발견했습니다.
 
 ---
 
-## 🔍 파일별 검토 결과 및 수정 제안
+## 파일별 검토 결과 및 수정 제안
 
 ### 1. [SylphioApiKeyGuide.jsx](file:///Users/shimks/Documents/문서 - kwang-sik의 MacBook Pro/PriSincera/www/src/pages/SylphioApiKeyGuide.jsx)
 

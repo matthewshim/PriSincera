@@ -14,10 +14,10 @@ target_files:
   - server.mjs
 ---
 
-# 🗺️ PaceNote macOS 사업계획서
+# PaceNote macOS 사업계획서
 **부제: 제로부터 다시 배우는 러너(Learner & Runner)를 위한 일일 배움 및 주간 복기 통합 플랫폼**
 
-> 🗄️ **[ARCHIVED — 계획 폐기, 2026-07-22]** macOS 데스크톱 앱 제작 계획 자체가 폐기되어 본 문서는 기록 목적으로만 보존됩니다. 단, 본 계획의 Phase 0(웹 선행)에서 태어난 산출물 중 **Data Contract v2, tech-composer 트랙 파이프라인, 어드민 `sync-daily-gcs` 동기화는 웹 ReLearn 트랙 피드가 실사용 중이므로 폐기 대상이 아닙니다.** `composer.mjs`의 GCS 집계 JSON 배포(Phase 5)는 미커밋 상태에서 함께 폐기되었습니다.
+> **[ARCHIVED — 계획 폐기, 2026-07-22]** macOS 데스크톱 앱 제작 계획 자체가 폐기되어 본 문서는 기록 목적으로만 보존됩니다. 단, 본 계획의 Phase 0(웹 선행)에서 태어난 산출물 중 **Data Contract v2, tech-composer 트랙 파이프라인, 어드민 `sync-daily-gcs` 동기화는 웹 ReLearn 트랙 피드가 실사용 중이므로 폐기 대상이 아닙니다.** `composer.mjs`의 GCS 집계 JSON 배포(Phase 5)는 미커밋 상태에서 함께 폐기되었습니다.
 
 본 문서는 웹 서비스로 개별 제공되던 'Daily Digest(데일리 지식/트렌드 시그널)'와 'Pace Note(주간 액션 및 성찰 기록)'를 하나로 결합하고, macOS 네이티브 환경의 특장점을 극대화하여 새로운 독립적 수익 파이프라인을 구축하기 위한 사업 계획 및 제품 정의서입니다.
 
@@ -381,7 +381,7 @@ Pace Note는 사용자의 프라이버시를 최우선 가치로 삼으며, "기
 데스크톱 앱(Tauri/Rust) 착수 전, **데이터 계약(JSON 스키마 + REST 응답 형상)을 웹에서 먼저 동결**하여 이식 리스크를 제거하는 선행 단계입니다. 본 단계는 100% Node/React 영역으로 Rust 학습 리스크가 없으며, 살아있는 웹 서비스를 훼손하지 않는 가산(Additive) 방식으로 진행합니다.
 
 ### 10.1. 최종 산출물 — Data Contract v2 (계약 동결)
-> 📄 명세서 정본: [data_contract_v2.md](data_contract_v2.md) (Phase 0 산출물 1호)
+> 명세서 정본: [data_contract_v2.md](data_contract_v2.md) (Phase 0 산출물 1호)
 
 * **피드 JSON 스키마 (가산 확장)**: 기존 `daily/${date}.json`(`signal` + `study`, **어학 웹 전용으로 보존**)을 유지한 채, 데스크톱용 `daily/junior_${date}.json` · `daily/senior_${date}.json` 을 신규 추가. 각 카드에 `action_challenge`(3 task) 객체 및 관심 도메인 메타, `schemaVersion` 필드 포함.
 * **PaceNote 응답 형상**: `get_pacenote` / `toggle` / `accept` / `add` / `diary`의 입출력 JSON을 TypeScript 인터페이스로 명문화. 이 형상을 웹 REST(`/api/pacenote/*`)와 데스크톱 IPC가 공유.
@@ -417,14 +417,14 @@ Tauri 셋업 · Rust 커맨드 · SQLite/IPC · Keychain BYOK · iCloud 동기�
 ### 10.5. 진행 현황 (2026-06-23 기준)
 | 단계 | 산출물 | 상태 | 비고 |
 |---|---|:--:|---|
-| 계약 동결 | [data_contract_v2.md](data_contract_v2.md) | ✅ v2.1 | 구현 반영 갱신(subtask·자동주차·index version) |
-| A. 콘텐츠 파이프라인 | `tech-composer.mjs` + `tech-prompt.txt` + 스케줄러(06:45 KST) | ✅ **라이브 가동** | Cloud Run Job·스케줄러 등록, 일일 자동 생성 |
-| B. 어드민 동기화 | `sync-daily-gcs.mjs` + `POST /daily/tracks/*` | ✅ **라이브 배포** | 직렬 큐·낙관적 락 (버그 2건 수정) |
-| C. 오빗화 API | `POST /add-orbit`(+자동 주차 생성) · `POST /toggle-subtask` | ✅ **라이브 배포** | 404 제거, subtask 토글 추가 |
-| C. 트랙 UI | `TrackSignalFeed.jsx`(트랙 탭/필터/Click-to-Orbit) + 서버 프록시 | ✅ **라이브 배포** | Daily Digest 🛰️ 테크 트랙 탭 |
-| C. subtask UI | PaceNote 오빗 하위 3단계 체크리스트 | ✅ **라이브 배포** | 표시·토글 |
+| 계약 동결 | [data_contract_v2.md](data_contract_v2.md) | v2.1 | 구현 반영 갱신(subtask·자동주차·index version) |
+| A. 콘텐츠 파이프라인 | `tech-composer.mjs` + `tech-prompt.txt` + 스케줄러(06:45 KST) | **라이브 가동** | Cloud Run Job·스케줄러 등록, 일일 자동 생성 |
+| B. 어드민 동기화 | `sync-daily-gcs.mjs` + `POST /daily/tracks/*` | **라이브 배포** | 직렬 큐·낙관적 락 (버그 2건 수정) |
+| C. 오빗화 API | `POST /add-orbit`(+자동 주차 생성) · `POST /toggle-subtask` | **라이브 배포** | 404 제거, subtask 토글 추가 |
+| C. 트랙 UI | `TrackSignalFeed.jsx`(트랙 탭/필터/Click-to-Orbit) + 서버 프록시 | **라이브 배포** | Daily Digest 테크 트랙 탭 |
+| C. subtask UI | PaceNote 오빗 하위 3단계 체크리스트 | **라이브 배포** | 표시·토글 |
 | C. 데이터 계층 훅 | `usePaceNoteData.js` | ⏸ 미연결 | C2(웹 마이그레이션)는 데스크톱 단계로 이월 |
-| 어드민 모니터링 | `/daily/tracks/status·:date·run·job-status` + 콘텐츠 관리 「테크 트랙」 서브탭 | ✅ **라이브 배포** | 건강도·상세 검수·수동 트리거 |
-| 콘텐츠 출처 정책 | [content_sourcing_policy.md](daily-digest/content_sourcing_policy.md) | ✅ 문서화 | 트랙=AI 생성·출처 없음 명문화 |
+| 어드민 모니터링 | `/daily/tracks/status·:date·run·job-status` + 콘텐츠 관리 「테크 트랙」 서브탭 | **라이브 배포** | 건강도·상세 검수·수동 트리거 |
+| 콘텐츠 출처 정책 | [content_sourcing_policy.md](daily-digest/content_sourcing_policy.md) | 문서화 | 트랙=AI 생성·출처 없음 명문화 |
 
 **남은 작업**: C2 `PaceNoteDashboard.jsx` 훅 마이그레이션(데스크톱 포팅 시점 이월) · 트랙 콘텐츠 출처 거버넌스 결정(A/B/C, 정책 §6) · 데스크톱 단계(Tauri/Rust/IAP 등).

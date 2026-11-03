@@ -1,5 +1,5 @@
 ---
-nav_title: ✍️ Admin 통합 CMS 개발기
+nav_title: Admin 통합 CMS 개발기
 status: active
 domain: BuildersLog
 last_updated: 2026-05-21
@@ -9,13 +9,13 @@ target_files:
   - admin-api.mjs
 ---
 
-# ⚙️ 서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남
+# 서버리스 환경에서 정적 블로그(Static CMS) 완벽 제어하기: GitHub API와 AI의 만남
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-21 | AI Agent | GitHub API Git Data 연동 Git-less 커밋, Regex 시크릿 스캐너, Fallback AI 파이프라인 및 Firestore 조회수 통계 아키텍처 사양서 작성 | Admin Integration |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-21 | GitHub API Git Data 연동 Git-less 커밋, Regex 시크릿 스캐너, Fallback AI 파이프라인 및 Firestore 조회수 통계 아키텍처 사양서 작성 | Admin Integration |
 
 현재 운영 중인 퍼스널 브랜딩 사이트의 **'Builder's Log'**는 데이터베이스(Firestore 등)를 거치지 않고, 로컬 파일 시스템(`.md`, `.json`) 및 Git 커밋을 통해 배포되는 **정적 렌더링(Static Asset) 구조**를 채택하고 있습니다. 
 
@@ -23,13 +23,13 @@ target_files:
 
 ---
 
-## 🏗️ 아키텍처 설계: 서버리스의 한계를 극복하다
+## 아키텍처 설계: 서버리스의 한계를 극복하다
 
 Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 배포된 Admin 백엔드는 디스크가 **읽기 전용(Read-Only)**이거나, 쓰기가 가능하더라도 임시 컨테이너 세션이 종료되면 수정된 로컬 파일이 즉시 휘발됩니다. 즉, 전통적인 CMS처럼 서버 내 로컬 디스크에 직접 `.md` 파일을 영구 생성하는 방식은 불가능합니다.
 
 이 문제를 해결하기 위해 백엔드에 데이터베이스를 도입하는 대신 **GitHub REST API (Octokit)**를 활용하여, Admin 백엔드에서 원격으로 직접 `main` 브랜치에 커밋을 푸시(Git-less Commit)하는 **원격 자동화 파이프라인**을 구축했습니다.
 
-### 🔄 전체 동작 파이프라인 (Data Flow)
+### 전체 동작 파이프라인 (Data Flow)
 
 ```text
 +------------------------+
@@ -65,7 +65,7 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 +------------------------+
 ```
 
-> 💡 **단계별 데이터 흐름 요약 (Data Flow Steps)**
+> **단계별 데이터 흐름 요약 (Data Flow Steps)**
 > *   **Admin Dashboard:** 관리자가 웹 브라우저에서 포스트 발행(`Publish`) 버튼을 클릭하여 파이프라인을 기동합니다.
 > *   **Express Backend:** 입력받은 아티클의 시크릿 정보 마스킹 및 AI 엔진 기반 자동 문맥 교정을 수행합니다.
 > *   **GitHub REST API & Commit/Push:** 로컬 디스크 파일 쓰기를 거치지 않고, 인메모리 상에서 GitHub API를 다이렉트로 연동해 Git-less 원격 커밋을 밀어 넣습니다.
@@ -74,11 +74,11 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 
 ---
 
-## 💻 프론트엔드: 브라우저 속 직관적인 통합 에디터 UI/UX
+## 프론트엔드: 브라우저 속 직관적인 통합 에디터 UI/UX
 
 개발 환경(IDE)을 전혀 켜지 않고도 브라우저에서 모든 정적 아티클을 제어할 수 있도록 기존 관리자 패널(Admin Panel)을 대폭 확장하여 **통합 에디터 모달**을 구현했습니다.
 
-### 🌟 주요 컴포넌트 기능
+### 주요 컴포넌트 기능
 
 *   **메타데이터 통합 뷰어:** 현재 발행된 아티클들의 Chapter 번호, 제목(Title), Slug, 발행일(Date) 정보를 한눈에 관리하고, 직관적으로 추가 및 수정을 처리할 수 있습니다.
 *   **마크다운 초안 자동 분석기 (AI Metadata Extractor):** 로컬에서 작성해둔 마크다운 초안(`.md`) 파일만 드래그 앤 드롭으로 업로드하면, AI(Gemini)가 전체 문맥을 스스로 파악하여 `Title`, `Subtitle`, `Slug`, `Tags` 등의 메타데이터 폼을 **알아서 추출해 자동으로 채워줍니다.**
@@ -87,11 +87,11 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 
 ---
 
-## ⚙️ 백엔드: 안전한 원격 Git-less 커밋 API 명세
+## 백엔드: 안전한 원격 Git-less 커밋 API 명세
 
 관리자 권한 인증 미들웨어(`requireAdmin`)가 강력하게 걸린 백엔드 전용 API 엔드포인트를 설계하여 실질적인 데이터 핸들링을 수행합니다.
 
-### 📌 API 엔드포인트 명세
+### API 엔드포인트 명세
 
 | 엔드포인트 | 메서드 | 설명 |
 | :--- | :--- | :--- |
@@ -102,7 +102,7 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 
 ---
 
-## 🔒 보안 및 품질 관리 (AI & Security Workflow)
+## 보안 및 품질 관리 (AI & Security Workflow)
 
 정적 CMS의 안정성과 소스코드 유출 차단을 위해, 자동화 스캐너와 사람의 직관이 조화롭게 결합된 **Human-in-the-Loop(HITL) 자동 검증 시스템**을 설계했습니다.
 
@@ -115,7 +115,7 @@ Vercel이나 Google Cloud Run과 같은 **서버리스 컨테이너 환경**에 
 3.  **3단계 (정규식 기반 로컬 시크릿 스캐너):** 발행 직전, 백엔드 서버에서 강력한 정규표현식 엔진을 가동하여 API Key, AWS Secret, GitHub Access Token 등의 **치명적인 하드코딩 민감 정보 패턴이 본문에 있는지 2차 검열**합니다. 탐지되는 즉시 퍼블리싱 프로세스를 중단(`Abort`)시킵니다.
 4.  **4단계 (GitHub Advanced Security):** 최종 푸시 직후, GitHub 자체의 보안 비밀 탐지(Secret Scanning) 기능이 3중으로 작동하여 전체 보안 신뢰도를 완벽히 구축합니다.
 
-> 🛡️ **보안 가이드: Regex Secret Scanner의 주요 방어 필터 패턴 예시**
+> **보안 가이드: Regex Secret Scanner의 주요 방어 필터 패턴 예시**
 
 ```javascript
 const secretPatterns = [
@@ -127,7 +127,7 @@ const secretPatterns = [
 
 ---
 
-## 🚀 추가 고도화 및 트러블슈팅 해결 과정
+## 추가 고도화 및 트러블슈팅 해결 과정
 
 기본적인 발행 파이프라인의 완성에 그치지 않고, 프로덕션 트래픽 환경에서 마주한 한계점과 병목 현상들을 집요하게 해결해 나갔습니다.
 
@@ -135,7 +135,7 @@ const secretPatterns = [
 
 특정 고성능 AI 모델의 API 트래픽 한계(Quota Limits)나 임시 장애 상태로 인해 아티클 퍼블리싱이 차단되는 현상을 근본적으로 해결했습니다. AI 핵심 분석 루프에 **점진적 성능 다운그레이드(Graceful Degradation) 폴백 모델**을 탑재했습니다.
 
-> 💡 **AI Fallback 워크플로우 아키텍처**
+> **AI Fallback 워크플로우 아키텍처**
 > 
 > `[gemini-2.5-flash]` ──(실패 시)──► `[gemini-2.0-flash]` ──(실패 시)──► `[gemini-1.5-flash-latest]` ──(완전 장애 시)──► `[수동 복구 모드]`
 
@@ -153,7 +153,7 @@ Cloud Run 등 서버리스 도커 환경은 파일 쓰기가 차단된 **Read-On
 
 이를 물리적 디스크를 전혀 사용하지 않고 **100% 메모리 상에서 처리되는 GitHub REST API의 로우레벨 Git 데이터 워크플로우**로 전면 전환하여 영구 해결했습니다.
 
-> 🛠️ **엔지니어링 팁: 실제 적용된 100% 원격 Git-less 핵심 구현 코드**
+> **엔지니어링 팁: 실제 적용된 100% 원격 Git-less 핵심 구현 코드**
 
 ```javascript
 // 1. 현재 브랜치(main)의 최신 Commit SHA와 Base Tree SHA를 원격으로 조회

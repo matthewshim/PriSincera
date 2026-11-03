@@ -12,20 +12,20 @@ target_files:
   - src/components/daily/TrackSignalFeed.jsx
 ---
 
-# 📐 PaceNote UI 명세서 (Bento Calendar)
+# PaceNote UI 명세서 (Bento Calendar)
 
-> 🗄️ **[ARCHIVED — ReLearn 통합]** 본 문서가 규정하던 /pacenote 페이지 UI는 2026-07-20 ReLearn으로 통합·비공개되었습니다. 궤도·회고 기능은 ReLearn 실행·복기 스테이지가 승계했습니다(usePaceNoteData·Data Contract v2).
+> **[ARCHIVED — ReLearn 통합]** 본 문서가 규정하던 /pacenote 페이지 UI는 2026-07-20 ReLearn으로 통합·비공개되었습니다. 궤도·회고 기능은 ReLearn 실행·복기 스테이지가 승계했습니다(usePaceNoteData·Data Contract v2).
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-20 | AI Agent | 최초 13주 Bento Grid 캘린더 및 Seamless Chrono-Quarterly Segmented Ribbon 사양 정의 | PaceNote UI |
-| v1.1 | 2026-05-21 | AI Agent | Voyage Log(회고) 실시간 자동저장, 옴니 검색 모달, AI 포트폴리오 내보내기 스펙 추가 및 DDD 폴더 이관 | PaceNote Features |
-| v1.2 | 2026-05-21 | AI Agent | 2단 스플릿 워크스테이션 그리드 개편, SVG 원형 글자수 카운터, spring 애니메이션, progress 지표 추가 | PaceNote Layout & SVG |
-| v1.3 | 2026-05-21 | AI Agent | 실행(나의 궤도)과 회고(항해 일지)를 단일 통합 카드(Consolidated Card)로 결합, 통합 헤더, 수직 디바이더 및 반응형 구조 고도화. 피드백 반영: '⚓ 사색의 기록' 뒤의 영문 괄호 (Weekly Voyage Log) 문구 완전 제거 | PaceNote Layout & Responsive |
-| v1.4 | 2026-06-23 | AI Agent | **Click-to-Orbit** 연동(데일리 테크 트랙 카드 → 주간 오빗 주입) 및 오빗 **세부 할 일(subtask) 3단계 중첩 체크리스트** 표시·토글 사양 추가. add-orbit이 주차 미존재 시 기본 주차를 자동 생성. (§Click-to-Orbit 참조) | PaceNote Orbit & Subtasks |
-| v1.5 | 2026-06-24 | AI Agent | 오빗 정책 변경: action 항목을 **항목별 독립 궤도 N개**로 주입(subtask 체크리스트 모델 폐지), **카테고리를 트랙 도메인에 매핑**. 고정 높이 flex 압축 방지(`flex-shrink:0`) | PaceNote Orbit |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-20 | 최초 13주 Bento Grid 캘린더 및 Seamless Chrono-Quarterly Segmented Ribbon 사양 정의 | PaceNote UI |
+| v1.1 | 2026-05-21 | Voyage Log(회고) 실시간 자동저장, 옴니 검색 모달, AI 포트폴리오 내보내기 스펙 추가 및 DDD 폴더 이관 | PaceNote Features |
+| v1.2 | 2026-05-21 | 2단 스플릿 워크스테이션 그리드 개편, SVG 원형 글자수 카운터, spring 애니메이션, progress 지표 추가 | PaceNote Layout & SVG |
+| v1.3 | 2026-05-21 | 실행(나의 궤도)과 회고(항해 일지)를 단일 통합 카드(Consolidated Card)로 결합, 통합 헤더, 수직 디바이더 및 반응형 구조 고도화. 피드백 반영: '사색의 기록' 뒤의 영문 괄호 (Weekly Voyage Log) 문구 완전 제거 | PaceNote Layout & Responsive |
+| v1.4 | 2026-06-23 | **Click-to-Orbit** 연동(데일리 테크 트랙 카드 → 주간 오빗 주입) 및 오빗 **세부 할 일(subtask) 3단계 중첩 체크리스트** 표시·토글 사양 추가. add-orbit이 주차 미존재 시 기본 주차를 자동 생성. (§Click-to-Orbit 참조) | PaceNote Orbit & Subtasks |
+| v1.5 | 2026-06-24 | 오빗 정책 변경: action 항목을 **항목별 독립 궤도 N개**로 주입(subtask 체크리스트 모델 폐지), **카테고리를 트랙 도메인에 매핑**. 고정 높이 flex 압축 방지(`flex-shrink:0`) | PaceNote Orbit |
 
 본 문서는 사용자가 주차별 목표를 수립하고 달성해나가는 **'전략적 마일스톤 관리(나만의 궤도) 플랫폼'**인 PaceNote 서비스(`/pacenote`)의 **주차별 캘린더 & 항해 지평선 UI/UX (Bento Weekly Route & Voyage Horizon)**의 최종 구현 사양서 및 상단 대시보드 내비게이션 영역의 **완전 모달-프리 인라인 분기 탭 크로노 리본(Seamless Chrono-Quarterly Segmented Ribbon) 전면 3차 개편 기획서**입니다.
 
@@ -49,7 +49,7 @@ PaceNote는 일(Day) 단위가 아닌 **주(Week - ISO 8601 기준 `YYYY-Wxx`)**
 
 ## 2. UI/UX 디자인 핵심 콘셉트 (1차 완료)
 
-### 🚀 Concept A. "Chrono-Quarterly Bento Matrix"
+### Concept A. "Chrono-Quarterly Bento Matrix"
 > **"1년 52주를 분기(Q1~Q4) 단위의 Bento 박스로 구조화하여 성장의 매크로 로드맵을 시각화합니다."**
 
 * **구조 및 레이아웃**:
@@ -58,7 +58,7 @@ PaceNote는 일(Day) 단위가 아닌 **주(Week - ISO 8601 기준 `YYYY-Wxx`)**
 * **디자인 & 상태 비주얼 (Weekly Cell States)**:
   1. **과거 완료 주차 (Past Completed)**: 투명도 높은 글래스모피즘 스킨(`background: rgba(0, 0, 0, 0.25)`, `border: 1px solid rgba(255, 255, 255, 0.06)`). 해당 주차의 실시간 Task 달성도(완료 테스크 / 총 테스크)에 비례한 하단 마이크로 게이지바(`.cell-progress-fill`) 탑재.
   2. **현재 개척 주차 (Current Active)**: 사이버 사이언 네온 아우라 테두리(`#22D3EE`). 2초 주기로 테두리가 부드럽게 펄싱되는 외곽 글로우 애니메이션(`pulseAura`)과 우측 상단 중앙의 맥동 도트 인디케이터(`.pulse-indicator`) 연동.
-  3. **미래 대기 주차 (Future Locked)**: 딤드 처리(`opacity: 0.25`), 포인터 및 클릭 차단(`disabled`), 점선 테두리(`border-style: dashed`), 자물쇠 아이콘(`🔒`) 노출.
+  3. **미래 대기 주차 (Future Locked)**: 딤드 처리(`opacity: 0.25`), 포인터 및 클릭 차단(`disabled`), 점선 테두리(`border-style: dashed`), 자물쇠 아이콘 노출.
 
 ---
 
@@ -109,7 +109,7 @@ graph TD
 
 신설되어 프로덕션에 완벽히 정합된 `PaceNoteWeeklyCalendar.jsx` 소스 코드 스니펫입니다.
 
-### 📂 [PaceNoteWeeklyCalendar.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.jsx)
+### [PaceNoteWeeklyCalendar.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteWeeklyCalendar.jsx)
 
 ```jsx
 import { useState, useMemo, useEffect } from 'react';
@@ -230,7 +230,7 @@ export default function PaceNoteWeeklyCalendar({
     <div className="pacenote-weekly-chrono-container">
       {/* ── 상단 통계 헤더 ── */}
       <div className="chrono-weekly-summary">
-        <span className="summary-title">⛵ 전체 항해 진척도</span>
+        <span className="summary-title">전체 항해 진척도</span>
         <div className="summary-bar-wrapper">
           <div className="summary-progress-fill" style={{ width: `${totalStats.percent}%` }}></div>
           <span className="summary-percent">{totalStats.percent}% Completed ({totalStats.completed}/{totalStats.total})</span>
@@ -283,7 +283,7 @@ export default function PaceNoteWeeklyCalendar({
                     >
                       <div className="cell-top">
                         <span className="week-label">{wNum}주차</span>
-                        {isFuture && <span className="lock-icon">🔒</span>}
+                        {isFuture && <span className="lock-icon"><Icon name="lock" /></span>}
                         {isCurrent && <span className="pulse-indicator"></span>}
                       </div>
 
@@ -308,7 +308,7 @@ export default function PaceNoteWeeklyCalendar({
           <div className="peek-panel-content">
             <span className="peek-week-title">{hoveredWeekInfo.wId} 궤도 정보</span>
             {hoveredWeekInfo.isFuture ? (
-              <p className="peek-desc">🔒 미개척 항해 주차입니다. 해당 주간에 궤도가 오픈됩니다.</p>
+              <p className="peek-desc">미개척 항해 주차입니다. 해당 주간에 궤도가 오픈됩니다.</p>
             ) : (
               <div className="peek-metrics">
                 <span className="metric-item">체크리스트 달성률: {hoveredWeekInfo.completed} / {hoveredWeekInfo.total} 완료</span>
@@ -349,14 +349,14 @@ PaceNote 주차별 캘린더는 다수의 글래스 카드가 존재하므로, �
 
 ```
 +----------------------------------------------------------------------------------------------------------------+
-  [ ⛵ VOYAGE HORIZON ]                                                                    
+  [ VOYAGE HORIZON ]                                                                    
                                                                                            
   +── QUARTER SELECTOR (인라인 분기 탭) ───────────────────────────────────────────────────────────────────────+
   |  [ Q1 VOYAGE ]   [ * Q2 ACTIVE * ]   [ Q3 FUTURE ]   [ Q4 LOCKED ]                                           |
   +──────────────────────────────────────────────────────────────────────────────────────────────────────────────+
-  |  <  [ W19 ]       [ W20 ]       +-------------+       [ W22 ]       [ W23 🔒 ]    >                          |
+  |  <  [ W19 ]       [ W20 ]       +-------------+       [ W22 ]       [ W23 Locked ]    >                          |
   |     05/04~05/10   05/11~05/17   |   W21 [★]   |       05/25~05/31   06/01~06/07                              |
-  |     [■■■■░] 80%   [■■■░░] 60%   |  [ACTIVE]   |       [░░░░░] 0%    [🔒 Locked]                                 |
+  |     [■■■■░] 80%   [■■■░░] 60%   |  [ACTIVE]   |       [░░░░░] 0%    [Locked]                                 |
   |                                 |   ( 83% )   |                                                              |
   |                                 +-------------+                                                              |
   +──────────────────────────────────────────────────────────────────────────────────────────────────────────────+
@@ -382,7 +382,7 @@ PaceNote 주차별 캘린더는 다수의 글래스 카드가 존재하므로, �
 
 새로운 기획에 의거해 신설 및 통합될 `PaceNoteChronoRibbon.jsx` 사양입니다.
 
-#### 📂 [NEW] [PaceNoteChronoRibbon.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteChronoRibbon.jsx)
+#### [NEW] [PaceNoteChronoRibbon.jsx](file:///d:/prisincera/www/src/components/pacenote/PaceNoteChronoRibbon.jsx)
 
 ```jsx
 import { useState, useMemo, useRef, useEffect } from 'react';
@@ -505,7 +505,7 @@ export default function PaceNoteChronoRibbon({
               >
                 <div className="ribbon-card-top">
                   <span className="ribbon-card-week-label">{wNum}주차</span>
-                  {isFuture && <span className="ribbon-lock-icon">🔒</span>}
+                  {isFuture && <span className="ribbon-lock-icon"><Icon name="lock" /></span>}
                   {isCurrent && <span className="ribbon-pulse-indicator"></span>}
                 </div>
 
@@ -632,13 +632,13 @@ PaceNote의 목표 실행과 회고/사색의 유기적 흐름을 극대화하�
 ### 11-1. 통합 헤더 레이아웃 사양
 * **구조**: 좌우 Flex Row 형태로 배치하여 여백과 상단 공간을 대폭 정돈합니다.
   * **좌측**: 통합 타이틀(`이번 주 나의 궤도 & 항해 일지`)과 통합 설명글이 위치합니다.
-  * **우측**: 마일스톤 완료율 배지(`🎯 완료율`), 실시간 저장 알림 인디케이터, AI 포트폴리오 내보내기 버튼, 주차 배지(`2026-W21`)를 인라인 배치하여 가로 방향 복잡성을 최소화합니다.
+  * **우측**: 마일스톤 완료율 배지(`완료율`), 실시간 저장 알림 인디케이터, AI 포트폴리오 내보내기 버튼, 주차 배지(`2026-W21`)를 인라인 배치하여 가로 방향 복잡성을 최소화합니다.
 * **디바이더 수평 진행 바**: 헤더 하단에 단일 수평 진행도 게이지 바(`.pacenote-progress-track-header`)를 배치하여, 한 주간의 실행 진척도를 시각적 디바이더로 기능시킵니다.
 
 ### 11-2. 스플릿 인테리어 사양 (Split Workstation)
-* **좌측 패널 (`.consolidated-left-panel`)**: '🏃 실행의 궤도' 서브타이틀 아래에 목표 체크리스트 및 옴니바 트리거를 배치합니다.
+* **좌측 패널 (`.consolidated-left-panel`)**: '실행의 궤도' 서브타이틀 아래에 목표 체크리스트 및 옴니바 트리거를 배치합니다.
 * **수직 디바이더 (`.consolidated-vertical-divider`)**: 좌/우 패널 사이에 `1px` 너비의 그라데이션 라인을 삽입하여 공간을 명확하고 미려하게 구분합니다.
-* **우측 패널 (`.consolidated-right-panel`)**: '⚓ 사색의 기록' 서브타이틀 아래에 일지 작성용 에디터 및 글자 수 카운터 SVG, 혹은 read-only blockquote 뷰어를 배치합니다. (피드백 반영: 기존에 존재하던 가독성 저해 요소인 영문 괄호 `(Weekly Voyage Log)` 명칭 완전 제거 및 디자인 정돈)
+* **우측 패널 (`.consolidated-right-panel`)**: '사색의 기록' 서브타이틀 아래에 일지 작성용 에디터 및 글자 수 카운터 SVG, 혹은 read-only blockquote 뷰어를 배치합니다. (피드백 반영: 기존에 존재하던 가독성 저해 요소인 영문 괄호 `(Weekly Voyage Log)` 명칭 완전 제거 및 디자인 정돈)
 
 ### 11-3. 반응형 디바이스 리플로우 규격
 * **데스크톱 해상도 (`width > 1024px`)**: 가로형 그리드 분할 `1.2fr auto 1fr` 및 수직 그라데이션 디바이더가 온전히 렌더링됩니다.

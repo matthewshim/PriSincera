@@ -16,7 +16,7 @@ target_files:
 nav_title: 메인 정체성 리뉴얼
 ---
 
-# 🎯 메인 페이지 정체성 리뉴얼 설계안 (Home Identity Renewal)
+# 메인 페이지 정체성 리뉴얼 설계안 (Home Identity Renewal)
 
 > **상태: approved (구현 착수)** — 방향·카피 전건 오너 확정(2026-08-12). 경력 20년 유지, 역할 문구 D안 채택.
 

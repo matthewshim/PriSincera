@@ -9,16 +9,16 @@ target_files:
   - docs/INDEX.md
 ---
 
-# 🧭 온보딩 가이드 (Onboarding)
+# 온보딩 가이드 (Onboarding)
 
 > 신규 합류자가 **"어디부터 읽고, 어떻게 환경을 세팅할지"** 를 한 번에 해결하는 문서. 역할별 필독 경로 + 개발 환경 셋업 체크리스트.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-24 | AI Agent | 역할별 필독 경로 + dev 셋업 체크리스트 최초 정의 | Onboarding |
-| v1.1 | 2026-07-22 | AI Agent | **리런 통합 반영** — 기획자 경로에 relearn 전략·UI 명세 편입(구 PaceNote 전략서는 근거 문서로 격하), admin 재편 정본 안내, 유령 `builderslog-api.mjs` 참조 제거 | §1, §4 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-24 | 역할별 필독 경로 + dev 셋업 체크리스트 최초 정의 | Onboarding |
+| v1.1 | 2026-07-22 | **리런 통합 반영** — 기획자 경로에 relearn 전략·UI 명세 편입(구 PaceNote 전략서는 근거 문서로 격하), admin 재편 정본 안내, 유령 `builderslog-api.mjs` 참조 제거 | §1, §4 |
 
 ---
 
@@ -32,7 +32,7 @@ target_files:
 
 ## 1. 역할별 필독 경로
 
-### 🧭 기획자 (Product / Planner)
+### 기획자 (Product / Planner)
 | 순서 | 문서 | 목적 |
 | :--- | :--- | :--- |
 | 1 | [business_model](business_model.md) | 수익 모델·타깃·비용 철학 |
@@ -42,7 +42,7 @@ target_files:
 | 5 | [pacenote/product_strategy](../pacenote/product_strategy.md) · [growth_loop_plan](../pacenote/growth_loop_plan.md) | 실행·복기 도메인 근거 전략(리런에 승계) + 성장 루프 데이터층 |
 | 6 | [admin_console_specification](admin_console_specification.md) | 운영 콘솔 메뉴·기능 구조 |
 
-### 🎨 디자이너 (Design)
+### 디자이너 (Design)
 | 순서 | 문서 | 목적 |
 | :--- | :--- | :--- |
 | 1 | [design_system](design_system.md) | 컬러·타이포·글래스·인터랙션 토큰 |
@@ -50,7 +50,7 @@ target_files:
 | 3 | [bi_centered_ux_guide](bi_centered_ux_guide.md) | 하이엔드 다크 UX 수칙 |
 | 4 | 각 도메인 `ui_specification.md` | 화면별 구현 스펙 |
 
-### 💻 개발자 (Engineering)
+### 개발자 (Engineering)
 | 순서 | 문서 | 목적 |
 | :--- | :--- | :--- |
 | 1 | [development_guide](development_guide.md) | 로컬 셋업·Git·배포·장애 대응 |
@@ -85,7 +85,7 @@ npm run tech:compose        # 테크 트랙 피드 생성 (node src/tech-compose
 
 ### 배포 흐름
 - **`main` 푸시 → Cloud Build(`cloudbuild.yaml`) 자동 트리거 → Cloud Run(web) + Cloud Run Jobs 갱신.**
-- ⚠️ 잡 이미지 갱신(`jobs update`)은 빌드 **후반** 단계 — 배포가 끝나기 전에 잡을 수동 실행하면 옛 이미지로 돌 수 있음.
+- 잡 이미지 갱신(`jobs update`)은 빌드 **후반** 단계 — 배포가 끝나기 전에 잡을 수동 실행하면 옛 이미지로 돌 수 있음.
 - 브랜치 전략·긴급 대응: [development_guide](development_guide.md).
 
 ## 3. 문서 작성 거버넌스 (기여 시 필독)

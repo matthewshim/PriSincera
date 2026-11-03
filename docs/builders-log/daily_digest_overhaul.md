@@ -1,5 +1,5 @@
 ---
-nav_title: ✍️ 데일리 다이제스트 v4.0 개편기
+nav_title: 데일리 다이제스트 v4.0 개편기
 status: active
 domain: BuildersLog
 last_updated: 2026-05-29
@@ -10,9 +10,9 @@ target_files:
   - pipeline/src/tests/test-email-template.mjs
 ---
 
-# 📬 노이즈 속의 나침반: 데일리 다이제스트(Daily Digest) 이메일 엔진 v4.0 개편기
+# 노이즈 속의 나침반: 데일리 다이제스트(Daily Digest) 이메일 엔진 v4.0 개편기
 
-> ℹ️ **개발기 시점 안내 (2026-07-22 추기)**: 본 문서는 2026-05 시점의 개발 로그입니다. 이후 Daily Digest 웹 UI는 통합 서비스 **ReLearn**으로 승계되었고(2026-07-20), 발송 메일도 제목 **"📬 ReLearn Daily"**·CTA `/relearn/daily/:date`로 리브랜딩되었습니다(2026-07-22). 본문에 기술된 이메일 엔진(`email-template.mjs`·`MailService`) 자체는 현행 가동 중입니다.
+> **개발기 시점 안내 (2026-07-22 추기)**: 본 문서는 2026-05 시점의 개발 로그입니다. 이후 Daily Digest 웹 UI는 통합 서비스 **ReLearn**으로 승계되었고(2026-07-20), 발송 메일도 제목 **"ReLearn Daily"**·CTA `/relearn/daily/:date`로 리브랜딩되었습니다(2026-07-22). 본문에 기술된 이메일 엔진(`email-template.mjs`·`MailService`) 자체는 현행 가동 중입니다.
 
 > **"Sincerity, Prioritized. 노이즈를 걷어내고 저마다의 궤도를 발견하도록."**
 > 매일 아침 수많은 정보의 소음 속에서, 오직 가치 있는 배움과 나침반 같은 방향을 선사하고자 하는 메이커들의 의지.
@@ -91,7 +91,7 @@ if (doc.exists && doc.data().pool) {
 
 메이커로서 지니는 가장 큰 진정성은 **"매일 제품을 더 낫게 만들고, 그 과정을 솔직하게 공유하는 것"**에 있습니다. 우리는 Daily Digest 하단 영역에 최신 배포 포스트 1건을 요약하여 상시 노출하는 **Builder's Log 섹션**을 영구 통합했습니다.
 
-### 🚀 4.1 실시간 `[NEW]` 배지 다이내믹 렌더링
+### 4.1 실시간 `[NEW]` 배지 다이내믹 렌더링
 구독자가 메일을 수신했을 때, 빌더스 로그의 발행 날짜를 기준으로 최근 7일 이내의 뜨거운 새 글인 경우, 우측 상단에 강렬한 로즈 오렌지 그라디언트(`linear-gradient(135deg,#EC4899,#F43F5E)`) 스판 배지인 `[NEW]`를 조건부로 피워냅니다.
 
 ```javascript
@@ -104,7 +104,7 @@ const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 const isNew = diffDays <= 7;
 ```
 
-### 🚀 4.2 개발 투명성(Git Shipments)의 터미널 모사 UI
+### 4.2 개발 투명성(Git Shipments)의 터미널 모사 UI
 제품 개발의 흔적을 투명하게 입증하기 위해, 빌더스 로그 카드 하단에 마치 Unix 터미널 창을 들여다보는 듯한 칠흑의 미니 로그 뷰어를 삽입했습니다. 이 뷰어는 실제 릴리즈와 연동된 Git 커밋 메시지, 커밋 타입(`[feat]`, `[fix]`, `[design]`), 그리고 커밋 해시를 `JetBrains Mono` 서체 스택으로 투명하게 뿌려줍니다. 이는 가공된 광고성 멘트가 아니라, **실제 코드로 매일 밤하늘을 수놓고 있는 메이커의 투명한 노동과 낭만**을 독자에게 날것 그대로 전달하는 특별한 시각 장치입니다.
 
 ---
@@ -147,25 +147,25 @@ const isNew = diffDays <= 7;
 node pipeline/src/tests/test-email-template.mjs
 
 ═══ Phase 2: email-template.mjs 단위 테스트 ═══
-🔧 Helper 함수:
-  ✅ HTML 이스케이프: <script>
+Helper 함수:
+  [PASS] HTML 이스케이프: <script>
   ...
-📧 이메일 렌더링:
-  ✅ PriSincera 헤더 포함
-  ✅ 브랜드 컬러 스판
-  ✅ Pace Note 섹션 헤더 포함
-  ✅ 페이스노트 미션 타이틀 포함
-  ✅ 빌더스 로그 섹션 헤더 포함
-  ✅ 빌더스 로그 타이틀 포함
-  ✅ 최신 빌드 로그 NEW 배지 포함
-  ✅ Git 커밋 터미널 포함
+이메일 렌더링:
+  [PASS] PriSincera 헤더 포함
+  [PASS] 브랜드 컬러 스판
+  [PASS] Pace Note 섹션 헤더 포함
+  [PASS] 페이스노트 미션 타이틀 포함
+  [PASS] 빌더스 로그 섹션 헤더 포함
+  [PASS] 빌더스 로그 타이틀 포함
+  [PASS] 최신 빌드 로그 NEW 배지 포함
+  [PASS] Git 커밋 터미널 포함
   ...
-🛡️ XSS 방지:
-  ✅ script 태그 이스케이프됨
+XSS 방지:
+  [PASS] script 태그 이스케이프됨
 
-📄 시각 검증용 HTML 출력: docs/prisignal-email-test-output.html
+시각 검증용 HTML 출력: docs/prisignal-email-test-output.html
 ───────────────────────────
-결과: 44 통과 / 0 실패 -> SUCCESS 🎉
+결과: 44 통과 / 0 실패 -> SUCCESS
 ───────────────────────────
 ```
 

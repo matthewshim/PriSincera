@@ -19,9 +19,9 @@ target_files:
 
 ## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-11-01 | AI Agent | v6.1(AI 패턴 개선 8계층 58항목) 직후 **코드가 아닌 눈으로 보는 QA** 계획 최초 수립 — 위험 지도·범위 티어링·2트랙 방법론·판정 렌즈 10종·이슈 분류 3종(R/P/N) | 전 프런트엔드, design_system |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-11-01 | v6.1(AI 패턴 개선 8계층 58항목) 직후 **코드가 아닌 눈으로 보는 QA** 계획 최초 수립 — 위험 지도·범위 티어링·2트랙 방법론·판정 렌즈 10종·이슈 분류 3종(R/P/N) | 전 프런트엔드, design_system |
 
 > **본 문서의 성격**: 실행 계획서입니다. 실행 결과(적발 이슈 로그)는 §7 템플릿에 누적하거나, 분량이 커지면 `visual_qa_log_YYYY-MM-DD.md`로 분리합니다.
 > **전제**: `design-check` 12차원 + `pattern-budget` 28지표가 **기계로 잡는 것**은 본 QA의 대상이 아닙니다. 본 QA는 **토큰은 통과하는데 눈에는 틀린 것**만 봅니다.

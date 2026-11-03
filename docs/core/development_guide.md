@@ -10,23 +10,23 @@ target_files:
   - package.json
 ---
 
-# 📘 개발·운영 가이드 (Development Guide)
+# 개발·운영 가이드 (Development Guide)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-04-30 | Developer | GCP Cloud Run 배포, CI/CD 및 DNS 관리 가이드 최초 구축 | Infrastructure |
-| v1.1 | 2026-05-21 | AI Agent | 도메인 중심(DDD) 폴더 구조 개편에 따른 표준 프론트매터 및 개정 내역 주입 | Documentation |
-| v1.2 | 2026-06-09 | Antigravity | Cloud Run Jobs 관리 및 CI/CD IAM 권한 위임(actAs) 설정 가이드 추가 | cloudbuild.yaml, Infrastructure |
-| v1.3 | 2026-06-10 | Antigravity | PriStudy Composer 스케줄 시간 변경(04:00 -> 07:30 KST) 및 재시도 옵션 반영 | Infrastructure, scheduler |
-| **v2.0** | **2026-06-29** | **AI Agent** | **아키텍처 현행화: Nginx 정적 서빙 → Node(Express) `server.mjs` 컨테이너 전환 반영. 디렉토리맵·Dockerfile·API 라우트·Cloud Build 11스텝·잡 6종(tech-composer 포함) 전면 갱신. 운영 런북/환경변수 레퍼런스 분리** | server.mjs, Dockerfile, cloudbuild.yaml |
-| v2.1 | 2026-07-22 | AI Agent | **리런 통합·실측 정합** — 디렉토리맵을 ReLearn 페이지 체제로 갱신, 유령 `builderslog-api.mjs` 참조 제거(server.mjs 인라인+admin-api로 정정), §7-4/7-5를 nginx.conf → server.mjs(express.static·helmet) 실값으로 교체, 잔여 Nginx 표기 정리 | §2, §3, §7 |
-| v2.2 | 2026-08-19 | AI Agent | §4-7 신설 — 머신 이동 시 시크릿 훅 활성화(진입점 4중화: SessionStart·PreToolUse·prepare·post-merge) + `git pull`로 따라오지 않는 항목 표 | package.json, .githooks, .claude/settings.json |
-| v2.3 | 2026-08-19 | AI Agent | 레거시 `nginx.conf` 삭제 반영 — 디렉토리맵을 `.githooks`·`ci`·`.gitattributes` 체제로 갱신, §7-3 표기 정리 | §3, §7 |
-| v2.4 | 2026-08-31 | AI Agent | **디렉터리 구조 현행화** — `src/lib/`(toc.js) 신설, `styles/markdown-body.css`(문서형 본문 조판 공용) 등재, `PlannersView.jsx`·`plannersViewMeta.json` 추가 | §디렉터리 구조 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-04-30 | GCP Cloud Run 배포, CI/CD 및 DNS 관리 가이드 최초 구축 | Infrastructure |
+| v1.1 | 2026-05-21 | 도메인 중심(DDD) 폴더 구조 개편에 따른 표준 프론트매터 및 개정 내역 주입 | Documentation |
+| v1.2 | 2026-06-09 | Cloud Run Jobs 관리 및 CI/CD IAM 권한 위임(actAs) 설정 가이드 추가 | cloudbuild.yaml, Infrastructure |
+| v1.3 | 2026-06-10 | PriStudy Composer 스케줄 시간 변경(04:00 -> 07:30 KST) 및 재시도 옵션 반영 | Infrastructure, scheduler |
+| **v2.0** | **2026-06-29** | **아키텍처 현행화: Nginx 정적 서빙 → Node(Express) `server.mjs` 컨테이너 전환 반영. 디렉토리맵·Dockerfile·API 라우트·Cloud Build 11스텝·잡 6종(tech-composer 포함) 전면 갱신. 운영 런북/환경변수 레퍼런스 분리** | server.mjs, Dockerfile, cloudbuild.yaml |
+| v2.1 | 2026-07-22 | **리런 통합·실측 정합** — 디렉토리맵을 ReLearn 페이지 체제로 갱신, 유령 `builderslog-api.mjs` 참조 제거(server.mjs 인라인+admin-api로 정정), §7-4/7-5를 nginx.conf → server.mjs(express.static·helmet) 실값으로 교체, 잔여 Nginx 표기 정리 | §2, §3, §7 |
+| v2.2 | 2026-08-19 | §4-7 신설 — 머신 이동 시 시크릿 훅 활성화(진입점 4중화: SessionStart·PreToolUse·prepare·post-merge) + `git pull`로 따라오지 않는 항목 표 | package.json, .githooks, .claude/settings.json |
+| v2.3 | 2026-08-19 | 레거시 `nginx.conf` 삭제 반영 — 디렉토리맵을 `.githooks`·`ci`·`.gitattributes` 체제로 갱신, §7-3 표기 정리 | §3, §7 |
+| v2.4 | 2026-08-31 | **디렉터리 구조 현행화** — `src/lib/`(toc.js) 신설, `styles/markdown-body.css`(문서형 본문 조판 공용) 등재, `PlannersView.jsx`·`plannersViewMeta.json` 추가 | §디렉터리 구조 |
 
-> ⚠️ **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리에 남아 있던 레거시 `nginx.conf`는 **2026-08-19 삭제**되었습니다(미사용 + CSP 부재 + 인증 없는 프록시 키 주입 패턴 보유 — [security_spec §3-9](security_spec.md)).
+> **v2.0 중요 변경**: 프로덕션 Cloud Run 컨테이너는 더 이상 **Nginx 정적 서버가 아니라 Node.js(Express) `server.mjs`** 입니다. 정적 `dist/` 서빙 + API 라우터 마운트(`/api/*`, `/admin/api/*`)를 한 프로세스가 담당합니다. 리포지토리에 남아 있던 레거시 `nginx.conf`는 **2026-08-19 삭제**되었습니다(미사용 + CSP 부재 + 인증 없는 프록시 키 주입 패턴 보유 — [security_spec §3-9](security_spec.md)).
 
 > **최종 업데이트**: 2026-06-29  
 > **작성 배경**: PriSincera 웹사이트의 소스 버전 관리(Git/GitHub), GCP Cloud Run 배포,  
@@ -34,7 +34,7 @@ target_files:
 
 ---
 
-## 📋 목차
+## 목차
 
 1. [프로젝트 개요](#1-프로젝트-개요)
 2. [기술 스택](#2-기술-스택)
@@ -115,14 +115,14 @@ prisincera.com / www.prisincera.com (커스텀 도메인 · 사용자 진입)
 ```
 d:\prisincera\www\
 │
-├── 📁 src/                     # ── React 소스 코드 ──
+├── src/                        # ── React 소스 코드 ──
 │   ├── App.jsx                 # 루트 컴포넌트 (React Router — lazy 라우트)
 │   ├── main.jsx                # 엔트리 포인트
-│   ├── 📁 components/          # 재사용 UI (layout, daily, admin, pacenote, relearn …)
-│   ├── 📁 hooks/               # 커스텀 React 훅 (usePaceNoteData 등)
-│   ├── 📁 data/                # 빌드 시 번들되는 정적 데이터 (buildersLogMeta.json, plannersViewMeta.json, seoMeta.mjs 등)
-│   ├── 📁 lib/                 # 프레임워크 비의존 순수 유틸 (toc.js — 문서형 페이지 공용 목차 생성)
-│   ├── 📁 pages/               # 페이지 컴포넌트
+│   ├── components/             # 재사용 UI (layout, daily, admin, pacenote, relearn …)
+│   ├── hooks/                  # 커스텀 React 훅 (usePaceNoteData 등)
+│   ├── data/                   # 빌드 시 번들되는 정적 데이터 (buildersLogMeta.json, plannersViewMeta.json, seoMeta.mjs 등)
+│   ├── lib/                    # 프레임워크 비의존 순수 유틸 (toc.js — 문서형 페이지 공용 목차 생성)
+│   ├── pages/                  # 페이지 컴포넌트
 │   │   ├── Home.jsx            #   메인 랜딩
 │   │   ├── ReLearn.jsx         #   /relearn (배움·실행·복기 통합 루프 — 구 /daily·/pacenote 승계)
 │   │   ├── ReLearnDaily.jsx    #   /relearn/daily/:date (다이제스트 아카이브 상세)
@@ -130,37 +130,37 @@ d:\prisincera\www\
 │   │   ├── PlannersView.jsx    #   /planners-view (뷰 중심 — 루트=최신 글, :slug=퍼머링크, 목록 없음)
 │   │   ├── AdminDashboard.jsx  #   /admin (콘텐츠·구독·서비스 문서 등)
 │   │   └── Sylphio*.jsx        #   /sylphio 랜딩·API 키 가이드
-│   └── 📁 styles/              # 글로벌 CSS (+ markdown-body.css — 문서형 페이지 본문 조판 공용)
+│   └── styles/                 # 글로벌 CSS (+ markdown-body.css — 문서형 페이지 본문 조판 공용)
 │
-├── 📄 server.mjs               # ★ 프로덕션 웹 서버(Express): dist 서빙 + API 마운트 + GCS 프록시
+├── server.mjs                  # ★ 프로덕션 웹 서버(Express): dist 서빙 + API 마운트 + GCS 프록시
 │                               #   (+ /api/builderslog/:slug/view 조회수 인라인, 구 /daily·/pacenote 301)
-├── 📄 pacenote-api.mjs         # /api/pacenote/* 라우터 (Firebase Auth)
-├── 📄 admin-api.mjs            # /admin/api/* 라우터 (관리자 — Builder's Log 발행 포함)
-├── 📄 study-api.mjs            # /api/study/* 어학(Language Dojo) 라우터
+├── pacenote-api.mjs            # /api/pacenote/* 라우터 (Firebase Auth)
+├── admin-api.mjs               # /admin/api/* 라우터 (관리자 — Builder's Log 발행 포함)
+├── study-api.mjs               # /api/study/* 어학(Language Dojo) 라우터
 │
-├── 📁 pipeline/                # ── 배치 파이프라인 (Cloud Run Jobs) ──
-│   ├── 📁 src/                 #   잡 진입점: collector·composer·study-composer·
+├── pipeline/                   # ── 배치 파이프라인 (Cloud Run Jobs) ──
+│   ├── src/                    #   잡 진입점: collector·composer·study-composer·
 │   │   │                       #              tech-composer·pacenote-composer·monitor
-│   │   ├── 📁 lib/             #   코어 (rss, gemini, storage, firestore, mailer, subscribers)
-│   │   ├── 📁 templates/       #   AI 프롬프트 템플릿 (tech-prompt.txt 등)
-│   │   └── 📁 tests/           #   단위/통합 테스트
-│   ├── 📁 config/              #   소스 설정 (sources.json, tech-sources.json)
+│   │   ├── lib/                #   코어 (rss, gemini, storage, firestore, mailer, subscribers)
+│   │   ├── templates/          #   AI 프롬프트 템플릿 (tech-prompt.txt 등)
+│   │   └── tests/              #   단위/통합 테스트
+│   ├── config/                 #   소스 설정 (sources.json, tech-sources.json)
 │   ├── Dockerfile              #   파이프라인 이미지 빌드
 │   └── setup-infra.sh          #   인프라 셋업 스크립트
 │
-├── 📁 docs/                    # ── 프로젝트 문서 허브 (Admin > 서비스 문서) ──
-├── 📁 public/                  # ── 정적 에셋 (content/logs 마크다운 포함) ──
-├── 📁 dist/                    # ── Vite 빌드 출력 (gitignore) ──
+├── docs/                       # ── 프로젝트 문서 허브 (Admin > 서비스 문서) ──
+├── public/                     # ── 정적 에셋 (content/logs 마크다운 포함) ──
+├── dist/                       # ── Vite 빌드 출력 (gitignore) ──
 │
-├── 📄 index.html               # Vite 진입 HTML
-├── 📄 vite.config.js           # Vite 설정
-├── 📄 package.json             # 의존성 + scripts(dev/build/preview/start)
-├── 📄 Dockerfile               # 멀티스테이지 빌드 (Node 빌드 → Node 서버 `server.mjs`)
-├── 📁 .githooks/               # git 훅 (pre-commit·commit-msg·pre-push·post-merge) — core.hooksPath로 활성
-├── 📁 ci/                      # 빌드 게이트·시크릿 스캐너·훅 설치 스크립트
-├── 📄 .gitattributes           # 라인 엔딩 정규화 (훅은 eol=lf 강제)
-├── 📄 cloudbuild.yaml          # Cloud Build CI/CD (web + 파이프라인 잡 11스텝)
-└── 📄 .dockerignore            # Docker 빌드 컨텍스트 제외 (docs/*.md는 예외 포함)
+├── index.html                  # Vite 진입 HTML
+├── vite.config.js              # Vite 설정
+├── package.json                # 의존성 + scripts(dev/build/preview/start)
+├── Dockerfile                  # 멀티스테이지 빌드 (Node 빌드 → Node 서버 `server.mjs`)
+├── .githooks/                  # git 훅 (pre-commit·commit-msg·pre-push·post-merge) — core.hooksPath로 활성
+├── ci/                         # 빌드 게이트·시크릿 스캐너·훅 설치 스크립트
+├── .gitattributes              # 라인 엔딩 정규화 (훅은 eol=lf 강제)
+├── cloudbuild.yaml             # Cloud Build CI/CD (web + 파이프라인 잡 11스텝)
+└── .dockerignore               # Docker 빌드 컨텍스트 제외 (docs/*.md는 예외 포함)
 ```
 
 ---
@@ -282,7 +282,7 @@ git push origin main
 # 마지막 커밋 취소 (변경 내용은 유지)
 git reset --soft HEAD~1
 
-# 마지막 커밋 취소 (변경 내용도 되돌림) ⚠️ 주의
+# 마지막 커밋 취소 (변경 내용도 되돌림) 주의
 git reset --hard HEAD~1
 
 # 특정 파일 변경 취소
@@ -412,7 +412,7 @@ npm run dev
                                        └──────────────────────────────────────┘
 ```
 
-> **💡 핵심 변경**: `git push origin main` 한 번으로 **자동 빌드 & 배포**가 완료됩니다.  
+> **핵심 변경**: `git push origin main` 한 번으로 **자동 빌드 & 배포**가 완료됩니다.  
 > 별도의 `npm run build`나 `firebase deploy`가 필요 없습니다.
 
 ### 6-2. 표준 작업 순서
@@ -461,9 +461,9 @@ gcloud run deploy prisincera-web \
 | **Cloud Build 트리거** | `deploy-to-cloud-run` | GitHub main 푸시 시 웹 서비스 자동 빌드 |
 | **Cloud Build 트리거** | `deploy-pipeline` | GitHub main 푸시 시 파이프라인 이미지 빌드 |
 | **호스팅 진입** | Firebase Hosting (사이트 `prisincera`) | rewrite `**` → Cloud Run + 커스텀 도메인/자동 SSL (2026-09 LB 대체) |
-| **Network Endpoint Group** | `prisincera-neg` | ⚠️ LB 삭제로 미연결 상태(비용 없음, 정리 무방) |
+| **Network Endpoint Group** | `prisincera-neg` | LB 삭제로 미연결 상태(비용 없음, 정리 무방) |
 
-> ⚠️ **2026-09-03 LB 방식 폐지**: `prisincera-backend`·`prisincera-urlmap`·`prisincera-https-proxy`·고정 IP `prisincera-ip`(136.110.131.58)·SSL 인증서 `prisincera-cert`/`-cert-v2`는 **모두 삭제**되었습니다. 재생성·재참조 금지 — [infrastructure_2026-09 §3](infrastructure_2026-09.md).
+> **2026-09-03 LB 방식 폐지**: `prisincera-backend`·`prisincera-urlmap`·`prisincera-https-proxy`·고정 IP `prisincera-ip`(136.110.131.58)·SSL 인증서 `prisincera-cert`/`-cert-v2`는 **모두 삭제**되었습니다. 재생성·재참조 금지 — [infrastructure_2026-09 §3](infrastructure_2026-09.md).
 
 ### 7-2. Dockerfile (멀티스테이지 빌드)
 
@@ -498,7 +498,7 @@ CMD ["node", "server.mjs"]      # ← Nginx 아님: Express 서버가 dist 서�
 
 ### 7-3. SPA 서빙 (server.mjs)
 
-> ⚠️ 과거에는 Nginx가 정적 서빙을 담당했으나, **현재는 `server.mjs`(Express)가 SPA 폴백·압축·API를 모두 처리**합니다. 레거시 `nginx.conf`는 2026-08-19 삭제되었습니다(git 히스토리에 보존).
+> 과거에는 Nginx가 정적 서빙을 담당했으나, **현재는 `server.mjs`(Express)가 SPA 폴백·압축·API를 모두 처리**합니다. 레거시 `nginx.conf`는 2026-08-19 삭제되었습니다(git 히스토리에 보존).
 
 | 책임 | 구현 (server.mjs) | 설명 |
 |------|------|------|
@@ -556,7 +556,7 @@ git push main → Cloud Build 트리거 (cloudbuild.yaml, 총 11스텝)
         pristudy-composer · pacenote-composer · tech-composer
 ```
 
-> ⚠️ **잡 갱신(Step 6~11)은 빌드 후반** — 코드 변경 후 잡을 수동 실행하려면 **Cloud Build SUCCESS를 먼저 확인**하세요(옛 이미지로 돌 수 있음). 잡 운영은 [operations_runbook](operations_runbook.md).
+> **잡 갱신(Step 6~11)은 빌드 후반** — 코드 변경 후 잡을 수동 실행하려면 **Cloud Build SUCCESS를 먼저 확인**하세요(옛 이미지로 돌 수 있음). 잡 운영은 [operations_runbook](operations_runbook.md).
 
 Cloud Run 배포 설정:
 
@@ -684,7 +684,7 @@ prisincera.com (A 199.36.158.100 = Firebase Hosting)
 ```
 
 - Firebase Hosting 설정은 Cloud Shell `~/fbhosting/`에서 `firebase deploy --only hosting --project prisincera`로 배포. `firebase.json`의 rewrite(`** → prisincera-web`)를 반드시 유지하고, `public/`은 **비워 둡니다**(정적 파일 투입 시 Cloud Run 앱이 가려짐).
-- ⚠️ www는 **직접 서빙(리디렉션 아님)**. Firebase에서 www를 apex로 리디렉션하면 앱의 canonical(→www)과 충돌해 **무한 루프**가 됩니다(§infrastructure 4.3).
+- www는 **직접 서빙(리디렉션 아님)**. Firebase에서 www를 apex로 리디렉션하면 앱의 canonical(→www)과 충돌해 **무한 루프**가 됩니다(§infrastructure 4.3).
 
 ### 9-3. DNS 레코드 설정
 
@@ -701,9 +701,9 @@ prisincera.com (A 199.36.158.100 = Firebase Hosting)
 |:----:|--------|-----|:---:|
 | CNAME | `www` | `prisincera.web.app.` | 300 |
 
-> ⚠️ A 레코드를 `136.110.131.58`(해제된 옛 LB IP)로 되돌리지 말 것. TXT `hosting-site=prisincera`는 Firebase 소유권 확인용 — 삭제 금지.
+> A 레코드를 `136.110.131.58`(해제된 옛 LB IP)로 되돌리지 말 것. TXT `hosting-site=prisincera`는 Firebase 소유권 확인용 — 삭제 금지.
 
-> ⚠️ DNS는 **Google Cloud DNS** (`prisincera-zone`)에서 관리됩니다.  
+> DNS는 **Google Cloud DNS** (`prisincera-zone`)에서 관리됩니다.  
 > Squarespace DNS UI가 아닌 `gcloud dns record-sets` 명령어로 변경해야 합니다.
 
 #### Google 레코드
@@ -802,7 +802,7 @@ npm install react@latest react-dom@latest
 
 ## 13. 긴급 상황 대응
 
-### 🚨 사이트 접속 불가
+### 사이트 접속 불가
 
 ```
 1. 계층별 분기 진단
@@ -817,7 +817,7 @@ npm install react@latest react-dom@latest
       └─ 불가 → Cloud Run 로그 확인 → gcloud run deploy 재시도
 ```
 
-### 🚨 잘못된 코드 배포
+### 잘못된 코드 배포
 
 ```bash
 # 방법 1: Cloud Run 콘솔에서 이전 리비전으로 롤백
@@ -832,7 +832,7 @@ git revert <commit-hash>
 git push origin main    # 자동 재배포 트리거
 ```
 
-### 🚨 Git 푸시 충돌
+### Git 푸시 충돌
 
 ```bash
 git pull --rebase origin main
@@ -842,7 +842,7 @@ git rebase --continue
 git push origin main
 ```
 
-### 🚨 도메인 만료 방지
+### 도메인 만료 방지
 
 - Squarespace 대시보드에서 **자동 갱신** 활성화
 - 결제 수단 유효성 주기적 확인
@@ -902,7 +902,7 @@ git push origin main
 
 ---
 
-> 💡 **이 문서는 프로젝트의 개발 환경 또는 인프라 변경 시 업데이트해야 합니다.**  
+> **이 문서는 프로젝트의 개발 환경 또는 인프라 변경 시 업데이트해야 합니다.**  
 > Git 브랜치 전략 변경, GCP 설정 변경, 도메인 이전, 빌드 도구 변경 등이 발생하면 이 문서에 반영하세요.
 
 *최종 업데이트: 2026-06-10*

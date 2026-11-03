@@ -10,22 +10,21 @@ target_files:
   - src/pages/BuildersLogDetail.css
 ---
 
-# 📐 Builder's Log UI 명세서
+# Builder's Log UI 명세서
 
 본 명세서는 `Builder's Log` 콘텐츠 목록이 가지는 탐색 편의성과 시각적 밀도를 최상으로 끌어올리기 위한 프론트엔드 UI/UX 설계 지침입니다. 최신 포스트의 시인성 확보와 하위 포스트의 높은 인지 효율을 동시에 달성하기 위한 레이아웃, 반응형 중단점, 그리고 정교한 마이크로 인터랙션 사양을 규정합니다.
 
 ---
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-21 | AI Agent | Builder's Log 목록 카드 UI/UX 및 반응형 그리드 명세 정의 | BuildersLog.jsx, BuildersLog.css |
-| v1.1 | 2026-07-22 | AI Agent | §5 인터랙션 현행화 — v4.5 JS 3D Tilt 이관 반영, `prefers-reduced-motion` 가드·`:focus-visible` 키보드 패리티 규정, 폐기된 호버 커밋 패널 잔재 CSS 정리 | BuildersLog.jsx, BuildersLog.css |
-| v1.2 | 2026-07-22 | AI Agent | 상세 헤더 뒤로가기 `← Builder's Log` → 위치 경로 브레드크럼 `Builder's Log › 아티클`(로케일 대응, [design_system §9-9](../core/design_system.md)) — 리런 아카이브와 상세 내비 문법 통일 | BuildersLogDetail.jsx, BuildersLogDetail.css |
-| v1.3 | 2026-08-05 | AI Agent | **§6 상세 페이지 2단 레이아웃 신설** — 브레드크럼 전폭(1200)·본문 860 좌측·사이드바 300(TOC 스크롤스파이 主 + 다른 챕터 副, sticky)·1100px 이하 붕괴. §5 호버 물리 v5.14 절제(3D 틸트 제거·CSS 부유) 현행화 (오너 "상세 뷰 좁음" QA 환류) | BuildersLogDetail.jsx, BuildersLogDetail.css, 언어팩 3종 |
-
-| v1.4 | 2026-08-31 | AI Agent | **§6 상세 히어로 §9-1 정합** — 상세(뷰) 화면이 목록 카드식 헤더(배지→제목→부제, 좌측 정렬·아이콘 없음)를 쓰던 것을 표준 히어로(아이콘 → h1 → 서브카피, 중앙, 셸 전폭)로 교체. 제목 선두 이모지를 히어로 아이콘으로 승격(중복 방지), 메타·태그는 서브카피 아래로 이동. 리런 아카이브 상세와 동일 규격 (오너 "뷰에 히어로가 없다·리스트와 혼용" QA 환류) | BuildersLogDetail.jsx/.css |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-21 | Builder's Log 목록 카드 UI/UX 및 반응형 그리드 명세 정의 | BuildersLog.jsx, BuildersLog.css |
+| v1.1 | 2026-07-22 | §5 인터랙션 현행화 — v4.5 JS 3D Tilt 이관 반영, `prefers-reduced-motion` 가드·`:focus-visible` 키보드 패리티 규정, 폐기된 호버 커밋 패널 잔재 CSS 정리 | BuildersLog.jsx, BuildersLog.css |
+| v1.2 | 2026-07-22 | 상세 헤더 뒤로가기 `← Builder's Log` → 위치 경로 브레드크럼 `Builder's Log › 아티클`(로케일 대응, [design_system §9-9](../core/design_system.md)) — 리런 아카이브와 상세 내비 문법 통일 | BuildersLogDetail.jsx, BuildersLogDetail.css |
+| v1.3 | 2026-08-05 | **§6 상세 페이지 2단 레이아웃 신설** — 브레드크럼 전폭(1200)·본문 860 좌측·사이드바 300(TOC 스크롤스파이 主 + 다른 챕터 副, sticky)·1100px 이하 붕괴. §5 호버 물리 v5.14 절제(3D 틸트 제거·CSS 부유) 현행화 (오너 "상세 뷰 좁음" QA 환류) | BuildersLogDetail.jsx, BuildersLogDetail.css, 언어팩 3종 |
+| v1.4 | 2026-08-31 | **§6 상세 히어로 §9-1 정합** — 상세(뷰) 화면이 목록 카드식 헤더(배지→제목→부제, 좌측 정렬·아이콘 없음)를 쓰던 것을 표준 히어로(아이콘 → h1 → 서브카피, 중앙, 셸 전폭)로 교체. 제목 선두 이모지를 히어로 아이콘으로 승격(중복 방지), 메타·태그는 서브카피 아래로 이동. 리런 아카이브 상세와 동일 규격 (오너 "뷰에 히어로가 없다·리스트와 혼용" QA 환류) | BuildersLogDetail.jsx/.css |
 
 ---
 

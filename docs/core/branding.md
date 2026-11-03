@@ -8,7 +8,7 @@ target_files:
   - src/components/layout/Footer.jsx
 ---
 
-# 📘 브랜드 아이덴티티 가이드 (Branding)
+# 브랜드 아이덴티티 가이드 (Branding)
 
 ## 1. 브랜드 아이덴티티 (Brand Identity)
 

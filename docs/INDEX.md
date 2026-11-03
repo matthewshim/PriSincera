@@ -1,63 +1,63 @@
-# 📚 문서 인덱스 & 거버넌스 가이드
+# 문서 인덱스 & 거버넌스 가이드
 
 PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 본 인덱스를 통해 체계적으로 탐색할 수 있습니다. 
 새로 합류한 개발자나 AI 에이전트는 프로젝트 구조 및 비즈니스 철학을 파악할 때 이 가이드를 가장 먼저 정독하고, 문서의 추가/변경 시 최하단의 **지속 가능한 문서 생성 및 버전 관리 규칙(Index Concept)**을 엄격하게 준수해 주세요.
 
 ---
 
-## 📁 core/ (글로벌 공통 규격 & 가이드라인)
+## core/ (글로벌 공통 규격 & 가이드라인)
 전체 플랫폼에 글로벌하게 적용되는 핵심 기획, 공통 디자인 토큰, 인프라 및 보안 아키텍처에 관한 표준 명세서입니다.
-*   **⭐ [서비스 개요 (Service Overview)](core/service_overview.md)** (`service_overview.md`): "PriSincera가 무엇인가"를 5분에 파악하는 최상위 진입 문서 — 제품 포트폴리오(Daily Digest·테크 트랙·PaceNote·Builder's Log·Sylphio)와 배움–실행–복기 성장 플라이휠. **신규자 1순위 필독.**
-*   **🆕 [메서드 전서 (Methods Compendium)](core/methods_compendium.md)** (`methods_compendium.md`): PriSincera가 "무엇을 어떻게 하는가"를 3층위로 집약한 단일 레퍼런스 — ① 제품·운영 방법론(성장 플라이휠·가변비 0 운영) · ② 엔지니어링 기법(Git-less 커밋·동적 사이트맵·SSR 메타 SSOT 등) · ③ API 메서드(HTTP 엔드포인트 일람). 각 항목은 정본 문서·소스로 연결되는 **집약 뷰**.
-*   **⭐ [전체 아키텍처 개요 (Architecture Overview)](core/architecture_overview.md)** (`architecture_overview.md`): 웹·서버·API·Firestore·GCS·파이프라인(Cloud Run Jobs)·Gemini·배포를 한 장으로 조망하는 시스템 구조도 및 데이터 흐름 맵.
-*   **🆕 [인프라 현황 (Infrastructure SSOT)](core/infrastructure_2026-09.md)** (`infrastructure_2026-09.md`): 웹 서빙 아키텍처 정본 — 2026-09 **LB 방식 → Firebase Hosting rewrite** 전환(비용 97%↓), 삭제 리소스(고정 IP 136.110.131.58·LB·SSL 인증서) **재참조 금지** 목록, 새 DNS/도메인/SSL 구성. **인프라 작업 시 필독.**
-*   **⭐ [온보딩 가이드 (Onboarding)](core/onboarding_guide.md)** (`onboarding_guide.md`): 기획·디자인·개발 **역할별 필독 경로** + 신규 개발자 환경 셋업 체크리스트 + 문서 작성 거버넌스.
+*   **[서비스 개요 (Service Overview)](core/service_overview.md)** (`service_overview.md`): "PriSincera가 무엇인가"를 5분에 파악하는 최상위 진입 문서 — 제품 포트폴리오(Daily Digest·테크 트랙·PaceNote·Builder's Log·Sylphio)와 배움–실행–복기 성장 플라이휠. **신규자 1순위 필독.**
+*   **[메서드 전서 (Methods Compendium)](core/methods_compendium.md)** (`methods_compendium.md`): PriSincera가 "무엇을 어떻게 하는가"를 3층위로 집약한 단일 레퍼런스 — ① 제품·운영 방법론(성장 플라이휠·가변비 0 운영) · ② 엔지니어링 기법(Git-less 커밋·동적 사이트맵·SSR 메타 SSOT 등) · ③ API 메서드(HTTP 엔드포인트 일람). 각 항목은 정본 문서·소스로 연결되는 **집약 뷰**.
+*   **[전체 아키텍처 개요 (Architecture Overview)](core/architecture_overview.md)** (`architecture_overview.md`): 웹·서버·API·Firestore·GCS·파이프라인(Cloud Run Jobs)·Gemini·배포를 한 장으로 조망하는 시스템 구조도 및 데이터 흐름 맵.
+*   **[인프라 현황 (Infrastructure SSOT)](core/infrastructure_2026-09.md)** (`infrastructure_2026-09.md`): 웹 서빙 아키텍처 정본 — 2026-09 **LB 방식 → Firebase Hosting rewrite** 전환(비용 97%↓), 삭제 리소스(고정 IP 136.110.131.58·LB·SSL 인증서) **재참조 금지** 목록, 새 DNS/도메인/SSL 구성. **인프라 작업 시 필독.**
+*   **[온보딩 가이드 (Onboarding)](core/onboarding_guide.md)** (`onboarding_guide.md`): 기획·디자인·개발 **역할별 필독 경로** + 신규 개발자 환경 셋업 체크리스트 + 문서 작성 거버넌스.
 *   **[개발·운영 가이드 (Development Guide)](core/development_guide.md)** (`development_guide.md`): 로컬 환경 구축, 깃 브랜치 전략, **Node(Express) `server.mjs` 컨테이너** 기반 GCP Cloud Run 배포 및 긴급 대응 장애 극복 시나리오.
-*   **🆕 [운영 런북 (Operations Runbook)](core/operations_runbook.md)** (`operations_runbook.md`): 배치 파이프라인·GCS·Firestore·Gemini **데이터 플레인 장애 대응** — 잡 수동 재실행, 당일 피드 누락 복구, Gemini 할당량 소진, Admin "지금 생성" 진단, 백업 수칙. **운영자 필독.**
-*   **🆕 [환경변수·시크릿 레퍼런스 (Environment Reference)](core/environment_reference.md)** (`environment_reference.md`): 웹/파이프라인/로컬이 사용하는 **전체 env·시크릿과 저장 위치**(Secret Manager 매핑·로테이션 포함) 단일 레퍼런스.
+*   **[운영 런북 (Operations Runbook)](core/operations_runbook.md)** (`operations_runbook.md`): 배치 파이프라인·GCS·Firestore·Gemini **데이터 플레인 장애 대응** — 잡 수동 재실행, 당일 피드 누락 복구, Gemini 할당량 소진, Admin "지금 생성" 진단, 백업 수칙. **운영자 필독.**
+*   **[환경변수·시크릿 레퍼런스 (Environment Reference)](core/environment_reference.md)** (`environment_reference.md`): 웹/파이프라인/로컬이 사용하는 **전체 env·시크릿과 저장 위치**(Secret Manager 매핑·로테이션 포함) 단일 레퍼런스.
 *   **[프런트엔드 안정성 체크리스트 (FE Stability)](core/front_end_stability_checklist.md)** (`front_end_stability_checklist.md`): 배포 전후 프런트엔드 장애를 예방하기 위한 렌더링·번들·런타임 진단 점검표.
 *   **[데이터 계약 v2 — 웹↔macOS (Data Contract)](data_contract_v2.md)** (`data_contract_v2.md`, *루트*): PaceNote 웹 REST와 데스크톱 IPC가 공유하는 데이터 형상 계약 — 가산적(additive) 설계 원칙.
 *   **[디자인 시스템 (Design System)](core/design_system.md)** (`design_system.md`): 8pt 그리드·OLED 흑백 컬러 토큰·**역할 기반 타입 스케일 11단**(구 0.05rem 균일 격자 35단에서 압축)·자간/행간/라운드/버튼 기하 토큰·컴포넌트 규범(§9)과 prebuild 자동 집행 게이트(`design-check` 12차원 + `pattern-budget` 28지표 래칫)를 아우르는 표준 가이드라인 (v6.1).
-*   **🆕 [AI 생성 디자인 패턴 감사 (AI Pattern Audit)](core/ai_pattern_audit.md)** (`ai_pattern_audit.md`): 바이브코딩이 수렴하는 디자인 패턴 **8계층(A~H) 분류 체계**와 전 CSS 31개·JSX 49개 **전수 실측 진단** 정본 — 재질·구성·타이포·모션·카피·구조 부채 + **버튼 기하(G)·텍스트 배치(H)**. 핵심 명제: *"v5.0은 AI 티를 색에서 지웠으나, 본체는 재질·구성 공식·장식 밀도·컨트롤 기하다."* 메타 진단: **디자인 12차원 중 CI 집행은 `font-size` 1개뿐.** **active(진단 정본).**
-*   **🆕 [AI 패턴 개선 계획서 (AI Pattern Remediation Plan)](core/ai_pattern_remediation_plan.md)** (`ai_pattern_remediation_plan.md`): 위 감사에 대응하는 **5단계(P0~P4) 실행 정본** — 투두 **58건 전건 완료(2026-11-01)** + 지표 진척 대시보드 + 재현용 측정 스크립트(`ci/pattern-metrics.mjs`) + 결정 D-1~D-10 전건 확정. 원칙: **조항 추가가 아니라 예산(budget) 집행**(장식 개수를 CI가 센다) · 토큰 **압축** · 전역 메트릭(G·H) **선행**. 착수·완료 시 본 문서를 갱신. **active.**
+*   **[AI 생성 디자인 패턴 감사 (AI Pattern Audit)](core/ai_pattern_audit.md)** (`ai_pattern_audit.md`): 바이브코딩이 수렴하는 디자인 패턴 **8계층(A~H) 분류 체계**와 전 CSS 31개·JSX 49개 **전수 실측 진단** 정본 — 재질·구성·타이포·모션·카피·구조 부채 + **버튼 기하(G)·텍스트 배치(H)**. 핵심 명제: *"v5.0은 AI 티를 색에서 지웠으나, 본체는 재질·구성 공식·장식 밀도·컨트롤 기하다."* 메타 진단: **디자인 12차원 중 CI 집행은 `font-size` 1개뿐.** **active(진단 정본).**
+*   **[AI 패턴 개선 계획서 (AI Pattern Remediation Plan)](core/ai_pattern_remediation_plan.md)** (`ai_pattern_remediation_plan.md`): 위 감사에 대응하는 **5단계(P0~P4) 실행 정본** — 투두 **58건 전건 완료(2026-11-01)** + 지표 진척 대시보드 + 재현용 측정 스크립트(`ci/pattern-metrics.mjs`) + 결정 D-1~D-10 전건 확정. 원칙: **조항 추가가 아니라 예산(budget) 집행**(장식 개수를 CI가 센다) · 토큰 **압축** · 전역 메트릭(G·H) **선행**. 착수·완료 시 본 문서를 갱신. **active.**
 *   **[스크롤 인터랙션 강화 제안서](core/scroll_interaction_proposal.md)** (`scroll_interaction_proposal.md`): 별똥별(Shooting Star) 모티브 기반 메인 페이지 카드 및 오브젝트 스크롤/호버 인터랙션 강화 계획서.
 *   **[보안 취약점 점검 보고서 (Security Audit)](core/security_audit.md)** (`security_audit.md`): XSS 방어, CORS 정책, Rate Limiter 적용 등 실질적 라이브 보안 조치 이력 및 권장 수칙.
-*   **🆕 [저장소 보안 규범 (Security Spec)](core/security_spec.md)** (`security_spec.md`): public 저장소 전제의 절대 금지 규칙(N-1~N-6)·적용 완료 하드닝(.claude gitignore·에이전트 push 권한 회수·trust proxy·시크릿 스캐너 3중 훅·훅 이동성 fail-closed)·퍼블릭 시크릿 커밋 사고 대응·기존 방어 현행 유지. **active.** (2026-10 Candela→core 일반화 이관)
-*   **🆕 [SEO 메타·페이지 타이틀 표준 (SEO Meta Standard)](core/seo_meta_standard.md)** (`seo_meta_standard.md`): 전 카테고리 페이지 타이틀/메타를 일관 표준으로 통일하되 카테고리별 SEO를 유지하는 규격 — SSR(`server.mjs`)·CSR(`useSEO.js`) 이중 소스 정합(SSOT) 공유 모듈 `src/data/seoMeta.mjs`. **active(구현 완료).**
-*   **🆕 [잔여 작업 백로그 (Task Backlog)](core/task_backlog.md)** (`task_backlog.md`): 리런 통폐합 완료 시점 기준 잔여 작업의 **단일 정본** — 검증·리팩터·디자인/SEO 백로그·결정 대기 항목. 착수·완료 시 본 문서를 갱신.
+*   **[저장소 보안 규범 (Security Spec)](core/security_spec.md)** (`security_spec.md`): public 저장소 전제의 절대 금지 규칙(N-1~N-6)·적용 완료 하드닝(.claude gitignore·에이전트 push 권한 회수·trust proxy·시크릿 스캐너 3중 훅·훅 이동성 fail-closed)·퍼블릭 시크릿 커밋 사고 대응·기존 방어 현행 유지. **active.** (2026-10 Candela→core 일반화 이관)
+*   **[SEO 메타·페이지 타이틀 표준 (SEO Meta Standard)](core/seo_meta_standard.md)** (`seo_meta_standard.md`): 전 카테고리 페이지 타이틀/메타를 일관 표준으로 통일하되 카테고리별 SEO를 유지하는 규격 — SSR(`server.mjs`)·CSR(`useSEO.js`) 이중 소스 정합(SSOT) 공유 모듈 `src/data/seoMeta.mjs`. **active(구현 완료).**
+*   **[잔여 작업 백로그 (Task Backlog)](core/task_backlog.md)** (`task_backlog.md`): 리런 통폐합 완료 시점 기준 잔여 작업의 **단일 정본** — 검증·리팩터·디자인/SEO 백로그·결정 대기 항목. 착수·완료 시 본 문서를 갱신.
 *   **[BI 중심 프리미엄 UX 가이드](core/bi_centered_ux_guide.md)** (`bi_centered_ux_guide.md`): 네온 컬러를 절제하고 명독성과 심미성을 극한으로 끌어올린 하이엔드 다크 테마 디자인 수칙.
 *   **[브랜드 아이덴티티 가이드 (Branding)](core/branding.md)** (`branding.md`): Star Prism Identity의 기하학적 철학과 슬로건, 핵심 심볼 활용 규격서.
 *   **[비즈니스 모델 기획서 (Business Model)](core/business_model.md)** (`business_model.md`): 퍼스널 브랜드·컨설팅 확장 4모델 + 디지털 제품 3종(ReLearn·Builder's Log·Sylphio)의 수익 구조와 무료 티어 비용 철학(§6) 정의서.
 *   **[API 사용량·과금 분석 (API Usage & Cost)](core/api_usage_analysis.md)** (`api_usage_analysis.md`): AI 커밋 매칭 API 호출에 따른 토큰 한도 분석 및 과금 안정성 분석 리포트.
 *   **[인증·권한 아키텍처 (Authentication)](core/authentication_architecture.md)** (`authentication_architecture.md`): Google OAuth 단일 인증 + Firebase ID 토큰 Bearer 검증 + Firestore `admin_config` 화이트리스트/역할(super_admin·admin) 인가, admin 전용 `adminApp` 세션 격리 아키텍처.
-*   **🆕 [Admin 콘솔 메뉴·기능 명세서 (Admin Console Spec)](core/admin_console_specification.md)** (`admin_console_specification.md`): 리런 통합 반영 Admin 사이드바 재편(그룹 4→3·탭 10→8) 정본 — Common·Builder's Log·ReLearn 그룹 구조, 탭별 기능·API 매핑, 파이프라인 탭 흡수·학습자 현황 통합 및 부채 정리 내역. **active(구현 완료).**
+*   **[Admin 콘솔 메뉴·기능 명세서 (Admin Console Spec)](core/admin_console_specification.md)** (`admin_console_specification.md`): 리런 통합 반영 Admin 사이드바 재편(그룹 4→3·탭 10→8) 정본 — Common·Builder's Log·ReLearn 그룹 구조, 탭별 기능·API 매핑, 파이프라인 탭 흡수·학습자 현황 통합 및 부채 정리 내역. **active(구현 완료).**
 *   **[다국어 지원(i18n) 확장 계획서](core/internationalization_plan.md)** (`internationalization_plan.md`): 프론트엔드 다국어 바인딩, Firestore 스키마 다국어화, 글로벌 SEO 전략 및 점진적 3단계 로드맵 계획서.
-*   **🆕 [언어별 SSR 확장 계획서 (i18n SSR Plan)](core/i18n_ssr_plan.md)** (`i18n_ssr_plan.md`): 백로그 4-2 상세 계획 — URL 전략(경로 프리픽스 권장)·5단계 로드맵(메타 로케일화→로케일 경로→셸 정합→프리렌더→번역 파이프라인)·리스크·결정 요청. **draft(승인 대기).**
-*   **🆕 [메인 정체성 리뉴얼 설계안 (Home Identity Renewal)](core/home_identity_renewal_plan.md)** (`home_identity_renewal_plan.md`): 메인 페이지가 퍼스널 브랜딩→제품군 확장으로 모호해진 정체성을 진단하고, 'PriSincera = Matthew Shim의 퍼스널 브랜드'로 주어를 통일 — 서비스 3종을 태도가 낳은 산출물로 종속·Base 강등·히어로 개인 정체성 명시. **draft(카피 확인 2건 후 구현).**
+*   **[언어별 SSR 확장 계획서 (i18n SSR Plan)](core/i18n_ssr_plan.md)** (`i18n_ssr_plan.md`): 백로그 4-2 상세 계획 — URL 전략(경로 프리픽스 권장)·5단계 로드맵(메타 로케일화→로케일 경로→셸 정합→프리렌더→번역 파이프라인)·리스크·결정 요청. **draft(승인 대기).**
+*   **[메인 정체성 리뉴얼 설계안 (Home Identity Renewal)](core/home_identity_renewal_plan.md)** (`home_identity_renewal_plan.md`): 메인 페이지가 퍼스널 브랜딩→제품군 확장으로 모호해진 정체성을 진단하고, 'PriSincera = Matthew Shim의 퍼스널 브랜드'로 주어를 통일 — 서비스 3종을 태도가 낳은 산출물로 종속·Base 강등·히어로 개인 정체성 명시. **draft(카피 확인 2건 후 구현).**
 *   **[모바일 최적화 제안서 (Mobile Optimization)](core/mobile_optimization_proposal.md)** (`mobile_optimization_proposal.md`): 모바일 퍼스트 시대 사용성 극대화를 위한 터치 타겟 접근성, iOS 화면 줌 배제, 마우스 추적 생략 및 콘텐츠 가로 넘침 방지 전면 개선안.
 
 ---
 
-## 📁 relearn/ (리런 — 통합 서비스 도메인)
+## relearn/ (리런 — 통합 서비스 도메인)
 **Daily Digest(배움)** 와 **Pace Note(실행·복기)** 를 하나의 여정으로 묶는 신규 통합 서비스 **리런(ReLearn)** 관련 명세서입니다.
-*   **🆕 [리런 통합 서비스 추진 계획서 (Product Strategy)](relearn/product_strategy.md)** (`product_strategy.md`): "제로부터 다시 배우는 러너" — 명칭 확정(리런=Re-Learn+Re-run) + 배움·실행·복기 3-stage 통합 UX + 전환기 무파괴 이행 후 **기존 두 서비스 승계(일몰 게이트 §5-1)** 로드맵. 성장 루프([growth_loop_plan](pacenote/growth_loop_plan.md)) 백엔드 연결의 표면화.
-*   **🆕 [배움 스테이지 리디자인 제안서 (Learn Stage Redesign)](relearn/learn_stage_redesign_proposal.md)** (`learn_stage_redesign_proposal.md`): STAGE 01 배움 4채널의 지면 효율·채널 존(Zoning) 구획·정보 생략을 전방위 진단한 리디자인 제안 — Compact-first + Progressive Disclosure. **active(구현 완료).**
-*   **🆕 [ReLearn UI 구현 명세서 (UI Specification)](relearn/ui_specification.md)** (`ui_specification.md`): `/relearn` 출하 기준 화면 명세 — 3-stage 루프·오늘|기록 뷰·좌측 레일 2뎁스 채널 앵커·배움 4채널·상태 매트릭스·GA4 퍼널·반응형. §8 아카이브 상세(`/relearn/daily/:date`) UI 재편 — 훑어보기 기본·브리핑 히어로·스티키 채널 내비.
-*   **🆕 [리런 일자축 통일 추진 계획 (Daily-Axis Unification)](relearn/daily_axis_unification_plan.md)** (`daily_axis_unification_plan.md`): "이게 진짜 통합인가" 오너 리뷰 환류 — 배움(일)/활동(주) **리듬 불일치**를 진단하고, 주 단위 활동(실행·복기·기록)을 **일 단위로 통일** + `/relearn`·`/relearn/daily/:date`를 **하나의 날짜 뷰로 통합**하는 추진 계획. `completedAt` 가산·streak 순화(꾸준함)·이원 스키마·무손실 5단계 로드맵. **draft(승인 대기).**
+*   **[리런 통합 서비스 추진 계획서 (Product Strategy)](relearn/product_strategy.md)** (`product_strategy.md`): "제로부터 다시 배우는 러너" — 명칭 확정(리런=Re-Learn+Re-run) + 배움·실행·복기 3-stage 통합 UX + 전환기 무파괴 이행 후 **기존 두 서비스 승계(일몰 게이트 §5-1)** 로드맵. 성장 루프([growth_loop_plan](pacenote/growth_loop_plan.md)) 백엔드 연결의 표면화.
+*   **[배움 스테이지 리디자인 제안서 (Learn Stage Redesign)](relearn/learn_stage_redesign_proposal.md)** (`learn_stage_redesign_proposal.md`): STAGE 01 배움 4채널의 지면 효율·채널 존(Zoning) 구획·정보 생략을 전방위 진단한 리디자인 제안 — Compact-first + Progressive Disclosure. **active(구현 완료).**
+*   **[ReLearn UI 구현 명세서 (UI Specification)](relearn/ui_specification.md)** (`ui_specification.md`): `/relearn` 출하 기준 화면 명세 — 3-stage 루프·오늘|기록 뷰·좌측 레일 2뎁스 채널 앵커·배움 4채널·상태 매트릭스·GA4 퍼널·반응형. §8 아카이브 상세(`/relearn/daily/:date`) UI 재편 — 훑어보기 기본·브리핑 히어로·스티키 채널 내비.
+*   **[리런 일자축 통일 추진 계획 (Daily-Axis Unification)](relearn/daily_axis_unification_plan.md)** (`daily_axis_unification_plan.md`): "이게 진짜 통합인가" 오너 리뷰 환류 — 배움(일)/활동(주) **리듬 불일치**를 진단하고, 주 단위 활동(실행·복기·기록)을 **일 단위로 통일** + `/relearn`·`/relearn/daily/:date`를 **하나의 날짜 뷰로 통합**하는 추진 계획. `completedAt` 가산·streak 순화(꾸준함)·이원 스키마·무손실 5단계 로드맵. **draft(승인 대기).**
 
 ---
 
-## 📁 pacenote/ (PaceNote 도메인 — 웹 UI는 ReLearn으로 통합)
+## pacenote/ (PaceNote 도메인 — 웹 UI는 ReLearn으로 통합)
 주간 궤도·회고 데이터 계층과 추천 엔진 명세입니다. **독립 웹 UI(/pacenote)는 2026-07-20 ReLearn으로 통합·비공개**되었으며, API·추천 엔진·macOS 계획은 현행 유지됩니다.
 *   **[PaceNote 제품 전략서 (Product Strategy)](pacenote/product_strategy.md)** (`product_strategy.md`): 마이크로 트래커 기반 액션 플랫폼의 기획 의도, MVP 사양 및 비즈니스 비전.
-*   🗄️ **[PaceNote UI 명세서 (Bento Calendar)](pacenote/ui_specification.md)** (`ui_specification.md`): *(archived — ReLearn 통합)* 구 /pacenote 페이지의 13주 Bento 캘린더·옴니 검색·포트폴리오 내보내기 사양.
+*   **[PaceNote UI 명세서 (Bento Calendar)](pacenote/ui_specification.md)** (`ui_specification.md`): *(archived — ReLearn 통합)* 구 /pacenote 페이지의 13주 Bento 캘린더·옴니 검색·포트폴리오 내보내기 사양.
 *   **[PaceNote AI 추천 엔진 명세서](pacenote/ai_recommendation_engine.md)** (`ai_recommendation_engine.md`): Firestore 풀 분리, 고인물 방지 동적 퇴출(Eviction) 알고리즘 및 스스로 진화하는 AI 프롬프트 피드백 루프 사양서.
-*   **🆕 [성장 루프 닫기 실행 계획서](pacenote/growth_loop_plan.md)** (`growth_loop_plan.md`): 배움→실행→복기→개인화 플라이휠을 닫는 5-Phase 실행 계획 — `completed`/회고 신호를 추천 엔진·다이제스트로 환류(신규 AI 비용 0). **프로덕트 우선 확장 1순위 베팅.**
-*   🗄️ **[PaceNote macOS 사업계획서](archive/mac_app_business_plan.md)** (`archive/mac_app_business_plan.md`): *(archived — 계획 폐기 2026-07-22)* PaceNote를 통합 macOS 데스크톱 앱으로 확장하려던 사업계획. Phase 0 산출물(Data Contract v2·트랙 파이프라인·sync-daily-gcs)은 웹이 실사용 중이므로 존치.
+*   **[성장 루프 닫기 실행 계획서](pacenote/growth_loop_plan.md)** (`growth_loop_plan.md`): 배움→실행→복기→개인화 플라이휠을 닫는 5-Phase 실행 계획 — `completed`/회고 신호를 추천 엔진·다이제스트로 환류(신규 AI 비용 0). **프로덕트 우선 확장 1순위 베팅.**
+*   **[PaceNote macOS 사업계획서](archive/mac_app_business_plan.md)** (`archive/mac_app_business_plan.md`): *(archived — 계획 폐기 2026-07-22)* PaceNote를 통합 macOS 데스크톱 앱으로 확장하려던 사업계획. Phase 0 산출물(Data Contract v2·트랙 파이프라인·sync-daily-gcs)은 웹이 실사용 중이므로 존치.
 
 ---
 
-## 📁 builders-log/ (Builders' Log 서비스 도메인)
+## builders-log/ (Builders' Log 서비스 도메인)
 프로덕션 제품의 생생한 기획 및 엔지니어링 제작 과정을 투명하게 공개하는 **Builder's Log** 관련 명세서입니다.
 *   **[Builder's Log 퍼블리싱 가이드](builders-log/publishing_guide.md)** (`publishing_guide.md`): 빌더스 로그 연재 시나리오, 작성 톤앤매너 가이드라인 및 관리자 발행 워크플로우. **§6 이모지 금지 규범**(발행 본문·메타 전 로케일, 3겹 자동 집행)과 §5 Revision History 제외 정책이 여기에 있다.
 *   **[Admin 통합 CMS 개발기](builders-log/admin_integration.md)** (`admin_integration.md`): Read-Only 서버리스 환경 극복을 위한 GitHub API 연동 Git-less 원격 커밋 기술, 3중 보안 시크릿 스캐너, Firestore 기반 일별/누적 조회수 정밀 통계 시스템.
@@ -68,38 +68,39 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 
 ---
 
-## 📁 daily-digest/ (Daily Digest 도메인 — 웹 UI는 ReLearn으로 통합)
+## daily-digest/ (Daily Digest 도메인 — 웹 UI는 ReLearn으로 통합)
 일일 콘텐츠 파이프라인·소싱 정책 명세입니다. **독립 웹 UI(/daily)는 2026-07-20 ReLearn으로 통합·비공개**되었으며(아카이브 상세는 /relearn/daily/:date), 파이프라인·정책은 현행 유지됩니다.
-*   🗄️ **[Daily Digest UI 명세서 (Chrono-Calendar)](daily-digest/ui_specification.md)** (`ui_specification.md`): *(archived — ReLearn 통합)* 구 /daily 페이지의 Bento Chrono-Calendar·Quick Peek UX 사양.
+*   **[Daily Digest UI 명세서 (Chrono-Calendar)](daily-digest/ui_specification.md)** (`ui_specification.md`): *(archived — ReLearn 통합)* 구 /daily 페이지의 Bento Chrono-Calendar·Quick Peek UX 사양.
 *   **[콘텐츠 출처·프로비넌스 정책 (Sourcing Policy)](daily-digest/content_sourcing_policy.md)** (`content_sourcing_policy.md`): 콘텐츠 유형별 출처/원문 URL 부여 기준 — IT Tech Signal(실제 RSS 수집·원문 링크) vs Tech Track·어학(AI 생성·출처 없음) 구분, 사실성 고지 의무 및 향후 수집 연동(하이브리드) 거버넌스 결정 정책서.
 
 ---
 
-## 📁 waymark/ (Waymark — 의사결정 동반 서비스)
+## waymark/ (Waymark — 의사결정 동반 서비스)
 Candela(자동매매) 슬롯을 **의사결정 동반 서비스 Waymark**로 전환한 신규 도메인입니다. 결정을 많이 내리는 사람(기획·PO·PM·리더)을 위한 **결정 저널 + 먼저 찾아오는 AI 동반자 + 경험담**. 기존 자동매매 계획은 폐기되어 [아카이브](archive/candela_trading_archive.md)로 통합, 레포 전체 보안 규범은 [core/security_spec](core/security_spec.md)로 이관되었습니다.
-*   **🆕 [Waymark 재포지셔닝 제안서 (Repositioning Proposal)](waymark/repositioning_proposal.md)** (`repositioning_proposal.md`): Candela(자동매매) → Waymark(의사결정 동반) 전환의 근거·서비스 개요·**ReLearn 차별화(경계: 성장을 돕는다/결정을 지킨다)**·명칭 확정(Waymark)·전환 범위·진행 현황. **active(차별화 경계 승인·정식 문서 세트 대기).**
-*   **🆕 [Waymark 소개 페이지 UI 명세 (UI Specification)](waymark/ui_specification.md)** (`ui_specification.md`): `/waymark` 선공개 소개 페이지 구현 명세 — 형제 랜딩 전개 공식(단일 컨테이너+섹션 리듬·eyebrow→타이틀→리드·좌측 리딩·CTA 닫는 카드), 섹션 6종(히어로·문제공감·핵심 루프·AI 4모드·경험담 티저·CTA), 브랜드(indigo·lavender/✦ 웨이포인트), 라우트·GNB·모바일·메인 카드·3개국어·SEO 통합. **active(구현 완료).**
-*   **🆕 [Waymark 추진계획서 (Execution Plan)](waymark/execution_plan.md)** (`execution_plan.md`): **경영진 보고용** — 경영 요약·기회·전략 적합성·추진 범위/마일스톤(M0~M4·GA '27.3)·자원/비용(가변비 0 지향)·KPI·**의사결정 요청(스택·예산·베타 시드)**·리스크·타임라인. **draft.**
-*   **🆕 [Waymark 제품 전략서 (Product Strategy)](waymark/product_strategy.md)** (`product_strategy.md`): **서비스(운영 제품) 빌드 전략 정본** — 문제·페르소나(결정 피로 실무 리더), 핵심 가치·ReLearn 경계, 핵심 루프, **MVP 범위(풀 루프·경험담 커뮤니티 소싱·시간 규칙 먼저찾아옴)**, 성공 지표(North Star·KPI), 로드맵(M0~M4 · GA '27.3), 리스크. **draft.**
-*   **🆕 [Waymark 기능 명세서 (Functional Spec)](waymark/functional_spec.md)** (`functional_spec.md`): 주니어 즉시 착수 수준 — 기능 F-1~F-10 수용 기준(AC), 화면 S-1~S-10, IA/내비, AI 4모드 톤·프롬프트 가이드·하드룰, 먼저찾아옴 스케줄 규칙(중요도·조용시간·감쇠), 경험담 매칭/검수 체크리스트, 분류셋, 카피·보이스, 비기능 요구. **draft.**
-*   **🆕 [Waymark 보안·프라이버시 규범 (Security & Privacy)](waymark/security_spec.md)** (`security_spec.md`): C1~C4 데이터 분류, 위협 모델(IDOR·LLM 유출·프롬프트 인젝션·내부자), 인증/인가/RLS 테넌트 격리, 암호화·시크릿, **AI 보안(최소 전송·무학습/무보존·레드액션·인젝션 방어·출력 가드레일)**, 경험담 3중 관문·익명성, 프라이버시/컴플라이언스(PIPA/GDPR·삭제/내보내기), 로깅·백업·사고 대응, **출시 전 보안 게이트**. **draft.**
-*   **🆕 [Waymark 시스템 아키텍처 (System Architecture)](waymark/system_architecture.md)** (`system_architecture.md`): 스택(Next.js PWA·Supabase·Claude·Web Push), **데이터 모델(테이블·컬럼·타입·RLS 정책)**, 먼저찾아옴 스케줄러(pg_cron·멱등), AI 통합·가드레일, 웹푸시, 경험담 파이프라인(pgvector 매칭), 인증·프라이버시·배포, 미결 결정(스택 확정 등). **draft.**
+*   **[Waymark 재포지셔닝 제안서 (Repositioning Proposal)](waymark/repositioning_proposal.md)** (`repositioning_proposal.md`): Candela(자동매매) → Waymark(의사결정 동반) 전환의 근거·서비스 개요·**ReLearn 차별화(경계: 성장을 돕는다/결정을 지킨다)**·명칭 확정(Waymark)·전환 범위·진행 현황. **active(차별화 경계 승인·정식 문서 세트 대기).**
+*   **[Waymark 소개 페이지 UI 명세 (UI Specification)](waymark/ui_specification.md)** (`ui_specification.md`): `/waymark` 선공개 소개 페이지 구현 명세 — 형제 랜딩 전개 공식(단일 컨테이너+섹션 리듬·eyebrow→타이틀→리드·좌측 리딩·CTA 닫는 카드), 섹션 6종(히어로·문제공감·핵심 루프·AI 4모드·경험담 티저·CTA), 브랜드(indigo·lavender/✦ 웨이포인트), 라우트·GNB·모바일·메인 카드·3개국어·SEO 통합. **active(구현 완료).**
+*   **[Waymark 추진계획서 (Execution Plan)](waymark/execution_plan.md)** (`execution_plan.md`): **경영진 보고용** — 경영 요약·기회·전략 적합성·추진 범위/마일스톤(M0~M4·GA '27.3)·자원/비용(가변비 0 지향)·KPI·**의사결정 요청(스택·예산·베타 시드)**·리스크·타임라인. **draft.**
+*   **[Waymark 제품 전략서 (Product Strategy)](waymark/product_strategy.md)** (`product_strategy.md`): **서비스(운영 제품) 빌드 전략 정본** — 문제·페르소나(결정 피로 실무 리더), 핵심 가치·ReLearn 경계, 핵심 루프, **MVP 범위(풀 루프·경험담 커뮤니티 소싱·시간 규칙 먼저찾아옴)**, 성공 지표(North Star·KPI), 로드맵(M0~M4 · GA '27.3), 리스크. **draft.**
+*   **[Waymark 기능 명세서 (Functional Spec)](waymark/functional_spec.md)** (`functional_spec.md`): 주니어 즉시 착수 수준 — 기능 F-1~F-10 수용 기준(AC), 화면 S-1~S-10, IA/내비, AI 4모드 톤·프롬프트 가이드·하드룰, 먼저찾아옴 스케줄 규칙(중요도·조용시간·감쇠), 경험담 매칭/검수 체크리스트, 분류셋, 카피·보이스, 비기능 요구. **draft.**
+*   **[Waymark 보안·프라이버시 규범 (Security & Privacy)](waymark/security_spec.md)** (`security_spec.md`): C1~C4 데이터 분류, 위협 모델(IDOR·LLM 유출·프롬프트 인젝션·내부자), 인증/인가/RLS 테넌트 격리, 암호화·시크릿, **AI 보안(최소 전송·무학습/무보존·레드액션·인젝션 방어·출력 가드레일)**, 경험담 3중 관문·익명성, 프라이버시/컴플라이언스(PIPA/GDPR·삭제/내보내기), 로깅·백업·사고 대응, **출시 전 보안 게이트**. **draft.**
+*   **[Waymark 시스템 아키텍처 (System Architecture)](waymark/system_architecture.md)** (`system_architecture.md`): 스택(Next.js PWA·Supabase·Claude·Web Push), **데이터 모델(테이블·컬럼·타입·RLS 정책)**, 먼저찾아옴 스케줄러(pg_cron·멱등), AI 통합·가드레일, 웹푸시, 경험담 파이프라인(pgvector 매칭), 인증·프라이버시·배포, 미결 결정(스택 확정 등). **draft.**
 
 ---
 
-## 📁 sylphio/ (Sylphio 서비스 도메인)
+## sylphio/ (Sylphio 서비스 도메인)
 실시간 온디바이스 AI 동시통역 비서 에이전트 **Sylphio** 관련 명세서입니다.
 *   **[Sylphio 웹 랜딩 기획 명세서](sylphio/web_landing_plan.md)** (`web_landing_plan.md`): 오로라 에너지 코어 및 실시간 타이핑 번역 시뮬레이터가 결합된 통합 랜딩 페이지 UI/UX 기술 기획서.
 *   **[Sylphio API Key 연동 가이드](sylphio/api_key_guide.md)** (`api_key_guide.md`): 구글 제미나이 및 오픈AI API Key 발급부터 Pro 모드 Secure Keychain 연동을 돕는 유저용 상세 매뉴얼.
 *   **[Sylphio 개인정보 처리방침 (Privacy)](sylphio/privacy_policy.md)** (`privacy_policy.md`): App Store 심사 무결성 보장을 위한 100% 로컬 데이터 무수집 개인정보 서약서.
+*   **[Sylphio 지면 디자인 시스템 정합 점검](sylphio/design_system_audit.md)** (`design_system_audit.md`): 4지면(서비스 소개·API Key 가이드·개인정보 처리방침·서브탭 내비) 전수 실측 — **게이트가 PASS인 상태에서 게이트가 보지 못하는 것만** 다룬다. 결함 10건 + **오탐 2건 판정 기록**(JSX 조건부 렌더는 CSS 셀렉터 기반 지표에 보이지 않는다 · 헤딩 순서는 파일 순서가 아니라 렌더 순서다). **2026-11-03 — 8건 완결**(`design_system.md` v7.0 §9-15 섹션 헤더 공식·§9-16 섹션 리듬 신설 후 적용), 잔여는 A(i18n 342키)와 전역으로 옮긴 H·G뿐이다. **§6-1에 이 보고서 자체의 오류 3건을 교정 기록**으로 남겼다 — 헤딩 교정 건수 6→7, 생hex 대상 8→13, 생px 간격은 Sylphio 항목이 아니라 전역 165건 중 38건. **active.**
 *   **[Sylphio 랜딩 검토 보고서](sylphio/landing_review.md)** (`landing_review.md`): macOS 앱 최신 정책 대비 웹 랜딩·API 키 가이드 문구/팩트 정합성 검토 및 수정 제안.
 *   **[Sylphio 랜딩 수정 계획서 (v2.1)](sylphio/landing_modification_plan.md)** (`landing_modification_plan.md`): 영어·한국어 무제한 무료 + Pro Lifetime(다국어·요약) 정책을 랜딩/시뮬레이터에 반영하는 수정 계획.
 
 ---
 
-## 📁 archive/ (역사적 참고용 통합 아카이브)
+## archive/ (역사적 참고용 통합 아카이브)
 서비스 고도화 및 통폐합 마일스톤이 완전히 완수됨에 따라, 과거의 개발 파편들을 고맥락 중심으로 고밀도 병합하여 보관 중인 참고서입니다.
-*   **🆕 [캔델라 자동매매 아카이브 (Candela — Automated Trading)](archive/candela_trading_archive.md)** (`candela_trading_archive.md`): *(2026-10-17 archived — Waymark 피벗)* 폐기된 개인 자동매매·공개 사례 연구 계획 7종(전략·3계층 아키텍처·데이터 계약·UI 게이트·로드맵 + 트레이딩 전용 보안·사고 대응)의 고밀도 요약. 레포 보안 규범은 [core/security_spec](core/security_spec.md)로 존치.
+*   **[캔델라 자동매매 아카이브 (Candela — Automated Trading)](archive/candela_trading_archive.md)** (`candela_trading_archive.md`): *(2026-10-17 archived — Waymark 피벗)* 폐기된 개인 자동매매·공개 사례 연구 계획 7종(전략·3계층 아키텍처·데이터 계약·UI 게이트·로드맵 + 트레이딩 전용 보안·사고 대응)의 고밀도 요약. 레포 보안 규범은 [core/security_spec](core/security_spec.md)로 존치.
 *   **[이메일 발송 엔진 전환 아카이브](archive/email_migration_history.md)** (`email_migration_history.md`): 외부 SaaS(Buttondown) 의존성을 완전 탈피하고 Gmail SMTP 자체 엔진 전환 및 중복 발송 차단용 Firestore 선행 락(Pending Lock) 해결사.
 *   **[PriSignal 레거시 아카이브](archive/prisignal_legacy_archive.md)** (`prisignal_legacy_archive.md`): 과거 독립형 IT 큐레이션 웹 시절의 탭 리디자인, 카드 진입 스태거 효과, 구독 CTA 및 소셜 프루프 컴포넌트 변천사.
 *   **[PriStudy 레거시 아카이브](archive/pristudy_legacy_archive.md)** (`pristudy_legacy_archive.md`): 과거 어학 마이크로러닝 앱 시절의 초기 MVP 데이터베이스 스키마 및 비즈니스 일어/프롬프트 3단계 확장 기획 기록.
@@ -109,7 +110,7 @@ Candela(자동매매) 슬롯을 **의사결정 동반 서비스 Waymark**로 전
 
 ---
 
-# 📌 지속 가능한 문서 생성 및 버전 관리 규칙 (Index Concept)
+# 지속 가능한 문서 생성 및 버전 관리 규칙 (Index Concept)
 
 PriSincera 프로젝트는 서비스 고도화와 새로운 도메인 확장이 끊임없이 이루어집니다. 본 프로젝트에 참여하는 모든 기획자, 개발자, 그리고 **AI 에이전트**는 문서 생성, 수정, 폴더 배치 시 아래 명시된 **인덱스 콘셉트(Index Concept) 거버넌스 규칙**을 상시 참조하고 100% 준수해야 합니다.
 
@@ -137,7 +138,7 @@ PriSincera 프로젝트는 서비스 고도화와 새로운 도메인 확장이 
 
 ### 2. 파일명 명명 표준 (Naming Conventions)
 *   **`PriSincera_` 접두사 영구 배제**: 저장소 전체가 PriSincera 프로젝트이므로 파일명의 중복 접두사는 불필요한 노이즈(Redundancy)입니다. 과감히 배제하십시오.
-*   **소문자 스네이크 케이스(`snake_case`) 사용**: 모든 마크다운 파일명은 공백 없이 영문 소문자와 언더스코어(`_`)로만 구성합니다. (예: `ui_specification.md` 🟢, `UI-Specification.md` 🔴, `PriSincera_UISpec.md` 🔴)
+*   **소문자 스네이크 케이스(`snake_case`) 사용**: 모든 마크다운 파일명은 공백 없이 영문 소문자와 언더스코어(`_`)로만 구성합니다. (예: `ui_specification.md`, `UI-Specification.md`, `PriSincera_UISpec.md`)
 *   **역할 정의형 파일명 매칭**:
     *   `product_strategy.md` : 비즈니스 기획, 로드맵, 목표 타겟 기획서 전용
     *   `ui_specification.md` : 프론트엔드 UI 구성 요소, 애니메이션, 스크롤 인터랙션, 반응형 스펙 전용
@@ -147,14 +148,12 @@ PriSincera 프로젝트는 서비스 고도화와 새로운 도메인 확장이 
 ### 2.5 문서 제목(H1)·사이드바 라벨 표기 표준 (Title Convention)
 admin **「서비스 문서」 사이드바 라벨은 각 문서의 첫 H1(`# …`)에서 자동 추출**됩니다(편집형은 `nav_title` frontmatter 우선). 목록의 스캔성과 인지성을 위해 모든 문서 H1은 아래 단일 포맷을 100% 준수하십시오.
 
-*   **포맷**: `{타입이모지} {한글 제목} ({English, 선택})`
-    *   예) `# 🏗️ 전체 아키텍처 개요 (Architecture Overview)`, `# 📘 운영 런북 (Operations Runbook)`
-*   **접두사 "PriSincera" 배제**: 파일명과 동일 논리로 제목에도 중복 브랜드 접두사를 넣지 마십시오. (`PriSincera 전체 아키텍처` 🔴 → `전체 아키텍처 개요` 🟢)
+*   **포맷**: `{한글 제목} ({English, 선택})` — **선두 글리프를 붙이지 않습니다.**
+    *   예) `# 전체 아키텍처 개요 (Architecture Overview)`, `# 운영 런북 (Operations Runbook)`
+*   **접두사 "PriSincera" 배제**: 파일명과 동일 논리로 제목에도 중복 브랜드 접두사를 넣지 마십시오. (`PriSincera 전체 아키텍처` → `전체 아키텍처 개요`)
 *   **한글 主 + 영문 병기**: 한글 제목을 기본으로 하고, 정식 기술 명칭이 있으면 `( )`로 영문을 병기합니다. `[사업계획서]`·`[기획서]` 같은 브라켓 태그는 금지하고 표준 접미어(개요/아키텍처/명세서/계획서/가이드/보고서/정책/런북/레퍼런스/체크리스트)로 표현합니다.
-*   **타입 이모지 체계(선행 1개 고정)** — 폴더 그룹이 이미 도메인을 나타내므로 이모지는 **문서 타입**을 인코딩합니다:
-    *   🧭 개요·온보딩 · 🏗️ 아키텍처·인프라·데이터계약 · 📐 UI·기능 명세서 · 🗺️ 전략·계획·제안서
-    *   📘 가이드·레퍼런스·런북·체크리스트 · 🔍 분석·검토·감사 보고서 · 📜 정책 · ✍️ 빌더스로그 개발기 · 🗄️ 아카이브 · 📚 인덱스
-*   **길이**: 사이드바 가독을 위해 이모지 포함 40자 이내 권장. 장문 편집형(개발기)은 본문 H1에 마케팅 톤을 유지하되 `nav_title:` frontmatter로 짧은 라벨(예: `✍️ SEO 크롤러 대응 개발기`)을 별도 부여합니다.
+*   **선두 글리프 금지(2026-11-03)** — 구 규칙은 문서 타입을 이모지 1개로 인코딩했습니다. **폐지합니다.** 폴더 그룹이 이미 도메인을 말하고, 타입은 표준 접미어(위 항목)가 말합니다. 사이드바 아이콘은 문자열이 아니라 `ServiceDocs`가 폴더별로 렌더하므로 제목에 글리프를 넣을 이유가 없습니다. 적용 범위·사유는 [publishing_guide §6](builders-log/publishing_guide.md)·[content_guide §2-6](planners-view/content_guide.md).
+*   **길이**: 사이드바 가독을 위해 40자 이내 권장. 장문 편집형(개발기)은 본문 H1에 마케팅 톤을 유지하되 `nav_title:` frontmatter로 짧은 라벨(예: `SEO 크롤러 대응 개발기`)을 별도 부여합니다.
 
 ### 3. 활성 스펙의 표준 메타데이터(YAML Frontmatter) 강제화
 모든 **활성(Active/Draft)** 문서의 극최상단(1라인)에는 반드시 아래 규격의 YAML Frontmatter 블록을 수록해 문서의 생동성과 영향받는 코드를 명확히 매핑하십시오.
@@ -163,7 +162,7 @@ admin **「서비스 문서」 사이드바 라벨은 각 문서의 첫 H1(`# �
 ---
 status: active | draft | archived  # active: 현재 가동 스펙, draft: 기획 중, archived: 레거시 아카이브
 domain: Core | ReLearn | PaceNote | BuildersLog | DailyDigest | Sylphio | Candela | Waymark  # 서비스 도메인
-nav_title: ✍️ 짧은 사이드바 라벨  # (선택) 편집형 개발기 등 본문 H1과 사이드바 라벨을 분리할 때만
+nav_title: 짧은 사이드바 라벨    # (선택) 편집형 개발기 등 본문 H1과 사이드바 라벨을 분리할 때만
 last_updated: YYYY-MM-DD  # 최신 업데이트 날짜
 version: vX.Y  # 문서 버전 정보
 target_files:  # 이 사양이 지배 및 규제하고 있는 실제 코드 파일 목록 (Clickable Link 권장)
@@ -174,14 +173,15 @@ target_files:  # 이 사양이 지배 및 규제하고 있는 실제 코드 파�
 
 ### 4. 개정 내역 테이블 (Revision History) 표준화
 YAML 블록이 끝난 직후 헤더 아래에 단순 덮어쓰기를 지양하고 변경 사항을 기록하는 Revision History 테이블을 의무적으로 삽입하십시오.
+**열은 `Version`·`Date`·`Description`·`Impact Area` 4열로 고정합니다.** 구 `Author` 열은 2026-11-03에 폐지했습니다 — 전 행이 `AI Agent`/`Designer`로 사실상 단일값이어서 가로 폭만 먹고 아무것도 구분하지 못했습니다(편집자는 커밋 이력과 어드민 수정 이력이 기록합니다). `design-check`의 `docsEmojiGate`가 재유입을 빌드에서 차단합니다.
 
 ```markdown
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-20 | AI Agent | 최초 13주 Bento Grid 캘린더 사양 정의 | PaceNoteWeeklyCalendar |
-| v1.1 | 2026-05-21 | AI Agent | Voyage Log(회고) 실시간 자동저장 및 옴니 모달 스펙 추가 | PaceNoteDashboard |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-20 | 최초 13주 Bento Grid 캘린더 사양 정의 | PaceNoteWeeklyCalendar |
+| v1.1 | 2026-05-21 | Voyage Log(회고) 실시간 자동저장 및 옴니 모달 스펙 추가 | PaceNoteDashboard |
 ```
 
 ### 5. 아카이브(Archive) 보존 수칙

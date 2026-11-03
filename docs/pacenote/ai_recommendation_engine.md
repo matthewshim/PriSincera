@@ -9,14 +9,14 @@ target_files:
   - admin-api.mjs
 ---
 
-# 🏗️ PaceNote AI 추천 엔진 명세서
+# PaceNote AI 추천 엔진 명세서
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-05-21 | AI Agent | Firestore Decoupling, Dynamic Ejection 및 AI Feedback Loop를 포함한 추천 엔진 설계서 작성 | AI Recommendation Engine |
-| v1.1 | 2026-06-29 | AI Agent | 성장 루프 Phase 2 반영 — Velocity를 **완료 가중**으로, HOF를 **완료 우선**으로, 추천을 **affinity 인지형(강점+스트레치)**으로 갱신. 로드맵 ①(초개인화) 구현 완료 처리. [[growth-loop-plan]] 크로스링크 | pacenote-composer.mjs, pacenote-api.mjs |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-05-21 | Firestore Decoupling, Dynamic Ejection 및 AI Feedback Loop를 포함한 추천 엔진 설계서 작성 | AI Recommendation Engine |
+| v1.1 | 2026-06-29 | 성장 루프 Phase 2 반영 — Velocity를 **완료 가중**으로, HOF를 **완료 우선**으로, 추천을 **affinity 인지형(강점+스트레치)**으로 갱신. 로드맵 ①(초개인화) 구현 완료 처리. [[growth-loop-plan]] 크로스링크 | pacenote-composer.mjs, pacenote-api.mjs |
 
 ## 1. 개요 및 목표 (Overview & Objectives)
 초기 `PaceNoteDashboard`의 'AI 추천 가이드'는 `pacenote-api.mjs` 내부에 하드코딩된 15개의 `AI_RECOMMENDATION_POOL` 배열에 의존하고 있었습니다. 
@@ -59,9 +59,9 @@ DB 용량 및 성능 최적화를 위해 추천 풀은 **최대 150개**로 제�
 ---
 
 ## 4. 향후 로드맵 (Next Steps & Future Roadmap)
-- [x] **초개인화 하이브리드 추천 — ✅ 구현 완료(2026-06-29, 성장 루프 Phase 0~2):** 유저의 완료/회고 신호를 `pacenotes/{uid}.profile.domainAffinity`로 집계(완료=3·선택=1 가중)하고, 추천을 **강점 도메인 2 + 스트레치 1**로 배합. 상세 설계·구현은 [[growth-loop-plan]].
+- [x] **초개인화 하이브리드 추천 — 구현 완료(2026-06-29, 성장 루프 Phase 0~2):** 유저의 완료/회고 신호를 `pacenotes/{uid}.profile.domainAffinity`로 집계(완료=3·선택=1 가중)하고, 추천을 **강점 도메인 2 + 스트레치 1**로 배합. 상세 설계·구현은 [[growth-loop-plan]].
 - [ ] **계절성(Seasonality) 메타데이터:** 주말/연말/연초 등 특정 시기에만 등장하는 궤도(예: "연말 회고록 작성하기")를 위한 Time-based Active 룰 추가.
 - [ ] **소비 신호 반영(`profile.consumption`):** Daily Digest 트랙 열람을 affinity에 합산(야간 reconcile 보존 필요). [[growth-loop-plan]] Phase 3 이연 항목.
 - [ ] **AI 성장 코치:** `recentReflections`(회고)를 종합해 주간 맞춤 가이드 생성(후속 베팅 ③).
 
-> 📌 본 추천 엔진의 데이터 기반 고도화는 [[growth-loop-plan]](배움→실행→복기→개인화 루프)의 핵심 환류로(5-A)로 통합되었습니다.
+> 본 추천 엔진의 데이터 기반 고도화는 [[growth-loop-plan]](배움→실행→복기→개인화 루프)의 핵심 환류로(5-A)로 통합되었습니다.

@@ -1,20 +1,20 @@
 ---
 status: draft
 domain: Waymark
-nav_title: 🚀 추진계획서
+nav_title: 추진계획서
 last_updated: 2026-10-24
 version: v0.1
 target_files:
   - (경영 보고용 — 산출물 없음)
 ---
 
-# 🚀 Waymark 추진계획서 (Execution Plan)
+# Waymark 추진계획서 (Execution Plan)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v0.1 | 2026-10-24 | AI Agent | 최초 작성 — 경영진 보고용 추진계획서. 경영 요약·기회·전략 적합성·범위/단계·자원/비용·지표·리스크·의사결정 요청. 상세는 product_strategy·functional_spec·system_architecture 참조 | Waymark 사업 추진 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v0.1 | 2026-10-24 | 최초 작성 — 경영진 보고용 추진계획서. 경영 요약·기회·전략 적합성·범위/단계·자원/비용·지표·리스크·의사결정 요청. 상세는 product_strategy·functional_spec·system_architecture 참조 | Waymark 사업 추진 |
 
 ---
 
@@ -114,10 +114,10 @@ Waymark은 사용자의 **가장 사적인 데이터**(결정·감정·대화)�
 
 | # | 결정 사항 | 왜 필요한가 | 기본 제안 |
 | :--- | :--- | :--- | :--- |
-| D-1 | ~~기술 스택 확정~~ ✅ | 개발 착수 전제 | **기존 Firebase 재사용 확정**(2026-10-24) |
+| D-1 | ~~기술 스택 확정~~ | 개발 착수 전제 | **기존 Firebase 재사용 확정**(2026-10-24) |
 | D-2 | **예산 승인** | **MVP 운영비 ≈ 0원**(무료 티어). 무료 한도 초과 시에만 소액 종량 | 무료 티어 내 ≈0 승인, 초과 시 재확인 |
 | D-3 | **베타 사용자·시드 확보** | 경험담 콜드스타트 해소 | 오너+초대 얼리어답터 |
-| D-4 | ~~앱 코드 위치~~ ✅ | 통합 여부 | **통합 — 기존 Cloud Run 웹앱에 편입**(2026-10-24) |
+| D-4 | ~~앱 코드 위치~~ | 통합 여부 | **통합 — 기존 Cloud Run 웹앱에 편입**(2026-10-24) |
 | D-5 | **GA 일정 확정** | 2027-03 목표 고정 여부 | 유지 |
 | D-6 | **보안·컴플라이언스·AI 공급자** | 법규(PIPA/GDPR)·침투 점검 + **체험 AI 공급자 확정**(Groq 권장·무학습·ZDR)·BYOK 프라이버시 고지 | [security_spec §6·§12](security_spec.md) |
 
@@ -148,6 +148,6 @@ Waymark은 사용자의 **가장 사적인 데이터**(결정·감정·대화)�
 ---
 
 ## 관련 문서
-*   [🗺️ 제품 전략서](product_strategy.md) · [📋 기능 명세서](functional_spec.md) · [🏗️ 시스템 아키텍처](system_architecture.md) · [📜 보안·프라이버시 규범](security_spec.md)
-*   [🗺️ 재포지셔닝 제안서](repositioning_proposal.md) — 피벗 배경
-*   [📚 문서 인덱스 & 거버넌스](../INDEX.md)
+*   [제품 전략서](product_strategy.md) · [기능 명세서](functional_spec.md) · [시스템 아키텍처](system_architecture.md) · [보안·프라이버시 규범](security_spec.md)
+*   [재포지셔닝 제안서](repositioning_proposal.md) — 피벗 배경
+*   [문서 인덱스 & 거버넌스](../INDEX.md)

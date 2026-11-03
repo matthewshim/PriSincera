@@ -15,11 +15,11 @@ target_files:
   - pipeline/src/*.mjs
 ---
 
-# 🚚 인프라 이관 추진계획서 — GCP → Cloudflare Pages + Supabase + GitHub Actions
+# 인프라 이관 추진계획서 — GCP → Cloudflare Pages + Supabase + GitHub Actions
 
 > **한 줄 요지**: 종량제 GCP(Cloud Run·Firestore·GCS·Firebase Auth·Cloud Scheduler)에서 **billing 폭탄이 원리적으로 불가능한**(초과 시 과금이 아닌 정지/스로틀) **상업용 허용 무료 티어** 스택 — **Cloudflare Pages + Supabase + GitHub Actions** — 로 전면 이관한다. 기존 데이터는 **포기(클린 슬레이트)** 하므로 ETL·듀얼라이트·데이터 동기화가 **전혀 없다**(최대 단순화).
 
-## ⛳ 결정 (2026-08-02) — 이관 보류, GCP 유지
+## 결정 (2026-08-02) — 이관 보류, GCP 유지
 
 **이 이관은 실행하지 않기로 결정했다.** 검토 결과 목표(≈₩0 + 폭탄 방지)는 이전 없이 **GCP 수술**로 달성했다:
 - `prisincera-web` **min-instances 0** → 저트래픽 상시비용 ≈₩0 (터무니없던 비용의 주범 제거)
@@ -29,12 +29,12 @@ target_files:
 
 > 이 문서는 **폐기가 아니라 보존**한다 — 향후 완전한 하드캡이 필요하거나 GCP를 떠날 다른 이유가 생기면 이 설계를 꺼내 쓴다.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description |
-| :-- | :-- | :-- | :-- |
-| v1.0 | 2026-08-02 | AI Agent | 초안 — 조정안(Cloudflare+Supabase) 상세 이관 계획, 7-Phase 체크리스트 로드맵 |
-| v1.1 | 2026-08-02 | AI Agent | **status → deferred(보류)** — GCP 수술+킬스위치로 목표 달성, 이전·GH Actions 이관 모두 보류. 참조용 보존 |
+| Version | Date | Description |
+| :-- | :-- | :-- |
+| v1.0 | 2026-08-02 | 초안 — 조정안(Cloudflare+Supabase) 상세 이관 계획, 7-Phase 체크리스트 로드맵 |
+| v1.1 | 2026-08-02 | **status → deferred(보류)** — GCP 수술+킬스위치로 목표 달성, 이전·GH Actions 이관 모두 보류. 참조용 보존 |
 
 ---
 
@@ -52,14 +52,14 @@ target_files:
 
 | 계층 | 현재 (GCP) | 목표 | 상업용 무료 |
 | :-- | :-- | :-- | :--: |
-| 프론트(SPA) | React/Vite @ Cloud Run(Express 정적 서빙) | **Cloudflare Pages** | ✅ |
-| API/서버로직 | Express (`server.mjs`·`pacenote-api.mjs` 등) | **Supabase Edge Functions**(Deno) + 클라이언트 직결(RLS) | ✅ |
-| 인증 | Firebase Auth (Google) | **Supabase Auth** (Google OAuth) | ✅ |
-| DB | Firestore (NoSQL) | **Supabase Postgres** | ✅ |
-| 스토리지 | GCS `prisincera-prisignal-data` | **Supabase Storage** | ✅ |
-| 배치 Job | Cloud Scheduler + Cloud Run Jobs | **GitHub Actions cron** (초안 작성 완료) | ✅ |
-| 이메일 | nodemailer SMTP + Buttondown | **SMTP 유지** (또는 Resend 무료) | ✅ |
-| AI | Gemini(`generativelanguage`) | **Gemini 유지** — 단, AI Studio **무료 티어 신규 키** | ✅ |
+| 프론트(SPA) | React/Vite @ Cloud Run(Express 정적 서빙) | **Cloudflare Pages** | O |
+| API/서버로직 | Express (`server.mjs`·`pacenote-api.mjs` 등) | **Supabase Edge Functions**(Deno) + 클라이언트 직결(RLS) | O |
+| 인증 | Firebase Auth (Google) | **Supabase Auth** (Google OAuth) | O |
+| DB | Firestore (NoSQL) | **Supabase Postgres** | O |
+| 스토리지 | GCS `prisincera-prisignal-data` | **Supabase Storage** | O |
+| 배치 Job | Cloud Scheduler + Cloud Run Jobs | **GitHub Actions cron** (초안 작성 완료) | O |
+| 이메일 | nodemailer SMTP + Buttondown | **SMTP 유지** (또는 Resend 무료) | O |
+| AI | Gemini(`generativelanguage`) | **Gemini 유지** — 단, AI Studio **무료 티어 신규 키** | O |
 | 시크릿 | Secret Manager | GitHub Secrets · Supabase env · CF Pages env | — |
 
 ## 3. 핵심 결정 · 전제

@@ -5,17 +5,17 @@ last_updated: 2026-05-21
 version: v1.0
 ---
 
-# 🗄️ 이메일 발송 엔진 전환 아카이브
+# 이메일 발송 엔진 전환 아카이브
 
 이 문서는 외부 뉴스레터 SaaS(Buttondown) 의존성을 제거하고, Google Workspace Gmail SMTP 기반의 자체 이메일 발송 엔진 구축 및 IT Signal & Study 콘텐츠 파이프라인 리뉴얼의 모든 설계 결정과 해결 이력을 통합한 역사적 기록 문서입니다.
 
 ---
 
-## 1. Buttondown ➡️ Gmail SMTP 자체 엔진 전환 (2026-04-29)
+## 1. Buttondown → Gmail SMTP 자체 엔진 전환 (2026-04-29)
 
 ### 1-1. 전환 배경 및 의존성 제약
 기존에는 외부 SaaS인 Buttondown API에 이메일 발송과 구독자 데이터베이스를 의존하고 있었습니다. 그러나 다음과 같은 제약으로 인해 자체 발송 시스템으로의 전환을 결정했습니다.
-* **디자인 제약**: Markdown ➡️ HTML 자동 변환으로 인해 아티클별 개별 카드 스타일링과 세밀한 반응형 그리드 제어가 불가했습니다.
+* **디자인 제약**: Markdown → HTML 자동 변환으로 인해 아티클별 개별 카드 스타일링과 세밀한 반응형 그리드 제어가 불가했습니다.
 * **비용 절감**: 유료 Workspace 계정의 일 2,000건 무료 한도(Gmail SMTP)를 활용하여 외부 구독 서비스를 무료화했습니다.
 * **데이터 주권**: 구독자 데이터를 외부 플랫폼에 위탁하지 않고 자체 GCS/Firestore에 보관하여 보안성과 커스터마이징 자유도를 확보했습니다.
 
@@ -58,8 +58,8 @@ version: v1.0
 
 ### 2-1. 브랜드 리뉴얼
 기존의 IT 큐레이션 단일 명칭인 `PriSignal`에서 어학 학습 모델 `Study`가 통합됨에 따라, 전체 통합 서비스명인 **`PriSincera`**로 메일링 브랜드를 전환했습니다.
-* **AS-IS**: `📡 PriSignal Daily — MM/DD`
-* **TO-BE**: `📬 PriSincera Daily — MM/DD`
+* **AS-IS**: `PriSignal Daily — MM/DD`
+* **TO-BE**: `PriSincera Daily — MM/DD`
 
 ### 2-2. 템플릿 레이아웃 분리 및 가독성 개선
 `juice` 라이브러리를 사용해 컴파일 단계에서 CSS 속성을 HTML 내에 완전 인라인화하여 아웃룩, 지메일 등 파편화된 이메일 뷰어 환경에서 스타일이 깨지는 문제를 해결했습니다.

@@ -1,7 +1,7 @@
 ---
 status: draft
 domain: Waymark
-nav_title: 🏗️ 시스템 아키텍처
+nav_title: 시스템 아키텍처
 last_updated: 2026-10-24
 version: v0.3
 target_files:
@@ -9,15 +9,15 @@ target_files:
   - (재사용) Firestore · Firebase Auth · Firebase Hosting · Cloud Scheduler → Cloud Run Job · nodemailer(Gmail SMTP) 이메일 엔진
 ---
 
-# 🏗️ Waymark 시스템 아키텍처 & 데이터 모델 (System Architecture)
+# Waymark 시스템 아키텍처 & 데이터 모델 (System Architecture)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v0.1 | 2026-10-24 | AI Agent | 최초 — Supabase·Edge·pgvector·서버 AI | (구) |
-| v0.2 | 2026-10-24 | AI Agent | 비용 0 재설계 — Firebase·서버 LLM 제거(규칙·템플릿)·RLS→Firestore Rules | (구) |
-| v0.3 | 2026-10-24 | AI Agent | **최종 계획 반영(실측 확인)** — ① **통합**: 별도 앱이 아니라 기존 **Cloud Run 웹앱에 편입**(D-4 통합 확정) ② 인프라 정본 실측 반영: **Firebase Functions 아님 → 기존 Cloud Run + Cloud Scheduler→Cloud Run Job + nodemailer 이메일 엔진 재사용**(GCP 빌링 이미 활성) ③ **먼저 찾아옴 = 이메일 + 웹푸시 이중 채널** ④ **AI 2-경로**: 체험=Groq 무료(ZDR·서버·캡), 지속=BYOK(클라이언트·공급자 직접) ⑤ BYOK 키 관리 규범 ⑥ 비용 "기존 인프라 위 **추가 ≈ ₩0**" | 전반 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v0.1 | 2026-10-24 | 최초 — Supabase·Edge·pgvector·서버 AI | (구) |
+| v0.2 | 2026-10-24 | 비용 0 재설계 — Firebase·서버 LLM 제거(규칙·템플릿)·RLS→Firestore Rules | (구) |
+| v0.3 | 2026-10-24 | **최종 계획 반영(실측 확인)** — ① **통합**: 별도 앱이 아니라 기존 **Cloud Run 웹앱에 편입**(D-4 통합 확정) ② 인프라 정본 실측 반영: **Firebase Functions 아님 → 기존 Cloud Run + Cloud Scheduler→Cloud Run Job + nodemailer 이메일 엔진 재사용**(GCP 빌링 이미 활성) ③ **먼저 찾아옴 = 이메일 + 웹푸시 이중 채널** ④ **AI 2-경로**: 체험=Groq 무료(ZDR·서버·캡), 지속=BYOK(클라이언트·공급자 직접) ⑤ BYOK 키 관리 규범 ⑥ 비용 "기존 인프라 위 **추가 ≈ ₩0**" | 전반 |
 
 ---
 
@@ -141,5 +141,5 @@ Firebase Auth + **App Check**. 모든 C1/C2 문서 `request.auth.uid == resource
 ---
 
 ## 관련 문서
-*   [🗺️ 제품 전략서](product_strategy.md) · [📋 기능 명세서](functional_spec.md) · [📜 보안·프라이버시 규범](security_spec.md)
-*   [🚀 추진계획서](execution_plan.md) · [🏗️ 인프라 현황(정본)](../core/infrastructure_2026-09.md) · [📚 인덱스](../INDEX.md)
+*   [제품 전략서](product_strategy.md) · [기능 명세서](functional_spec.md) · [보안·프라이버시 규범](security_spec.md)
+*   [추진계획서](execution_plan.md) · [인프라 현황(정본)](../core/infrastructure_2026-09.md) · [인덱스](../INDEX.md)

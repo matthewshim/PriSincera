@@ -10,14 +10,14 @@ target_files:
   - src/contexts/LanguageContext.jsx
 ---
 
-# 🗺️ 언어별 SSR 확장 계획서 (i18n SSR Plan)
+# 언어별 SSR 확장 계획서 (i18n SSR Plan)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-21 | AI Agent | 백로그 4-2 상세 계획 최초 수립 — URL 전략·5단계 로드맵·리스크·결정 요청 | SSR·라우팅·SEO |
-| v1.2 | 2026-08-31 | AI Agent | **§1 현황 진단 정정(중요)** — '로케일 감지 ✅ 재사용'은 사실이 아님. 로케일 파싱 미들웨어가 `app.use(['/api','/admin'], …)`로 **API·어드민 경로에만 마운트**되어 SPA 폴백(SSR 메타 프록시)에서는 `req.locale`이 `undefined`다. Phase A가 전제로 삼던 토대가 실제로는 동작하지 않으므로 **Phase A 첫 작업으로 미들웨어 스코프 교정**이 선행돼야 한다 | §1, §3 Phase A, server.mjs |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-07-21 | 백로그 4-2 상세 계획 최초 수립 — URL 전략·5단계 로드맵·리스크·결정 요청 | SSR·라우팅·SEO |
+| v1.2 | 2026-08-31 | **§1 현황 진단 정정(중요)** — '로케일 감지 재사용'은 사실이 아님. 로케일 파싱 미들웨어가 `app.use(['/api','/admin'], …)`로 **API·어드민 경로에만 마운트**되어 SPA 폴백(SSR 메타 프록시)에서는 `req.locale`이 `undefined`다. Phase A가 전제로 삼던 토대가 실제로는 동작하지 않으므로 **Phase A 첫 작업으로 미들웨어 스코프 교정**이 선행돼야 한다 | §1, §3 Phase A, server.mjs |
 
 > 연관: [다국어 지원(i18n) 확장 계획서](internationalization_plan.md)(FE 사전·BE 평탄화·번역 파이프라인 — 상당 부분 기구현) · [SEO 메타·페이지 타이틀 표준](seo_meta_standard.md)(SSOT·hreflang 기반) · [잔여 작업 백로그](task_backlog.md) 4-2
 
@@ -31,21 +31,21 @@ target_files:
 
 | 층 | 상태 | 판정 |
 | :--- | :--- | :--- |
-| 로케일 감지 | `req.locale` = `?lang` > `Accept-Language` > ko (`server.mjs`) — **단 미들웨어가 `['/api','/admin']`에만 마운트되어 SPA 폴백에서는 `undefined`** (2026-08-31 실측) | ⚠ **Phase A 선행 교정 필요** |
+| 로케일 감지 | `req.locale` = `?lang` > `Accept-Language` > ko (`server.mjs`) — **단 미들웨어가 `['/api','/admin']`에만 마운트되어 SPA 폴백에서는 `undefined`** (2026-08-31 실측) | **Phase A 선행 교정 필요** |
 | SSR 메타 | `PAGE_META` **ko 단일 문자열** → 전 로케일 동일 방출 | ✗ Phase A 대상 |
 | `<html lang>` | `"ko"` 하드코딩 | ✗ Phase A 대상 |
-| hreflang | `?lang=` 쿼리 변형으로 방출 — 쿼리 URL은 색인 신뢰도 낮음 | ⚠ Phase B에서 경로 기반 재작성 |
-| 동적 콘텐츠 API | `localizeObject(req.locale)` 서버측 평탄화 **기구현** | ✅ 재사용 |
-| Builder's Log·Planner's View 메타 | title/subtitle/description **ko·en·ja 완비** — 다만 SSR의 `getLocaleVal(req.locale)`이 위 결함으로 **항상 ko 폴백**, `ogLocaleTags`도 `ko_KR` 고정 | ✅ 데이터는 재사용 / ⚠ 방출은 미동작 |
+| hreflang | `?lang=` 쿼리 변형으로 방출 — 쿼리 URL은 색인 신뢰도 낮음 | Phase B에서 경로 기반 재작성 |
+| 동적 콘텐츠 API | `localizeObject(req.locale)` 서버측 평탄화 **기구현** | 재사용 |
+| Builder's Log·Planner's View 메타 | title/subtitle/description **ko·en·ja 완비** — 다만 SSR의 `getLocaleVal(req.locale)`이 위 결함으로 **항상 ko 폴백**, `ogLocaleTags`도 `ko_KR` 고정 | 데이터는 재사용 / 방출은 미동작 |
 | Daily 콘텐츠 | 원문 ko 단일(시그널·트랙 카드) — 번역 파이프라인 없음 | ✗ Phase E 전제 |
-| 클라이언트 i18n | LanguageContext + 사전 3종 완비 | ✅ 재사용 |
+| 클라이언트 i18n | LanguageContext + 사전 3종 완비 | 재사용 |
 
 ## 2. 선행 결정 — URL 전략 (Phase B의 전제)
 
 | 안 | 방식 | 판정 |
 | :--- | :--- | :--- |
 | A. 쿼리 유지 | `?lang=en` (현행) | ✗ 캐노니컬 충돌·색인 취약 — 언어별 SSR의 목적 달성 불가 |
-| **B. 경로 프리픽스 (권장)** | `/en/relearn`, `/ja/sylphio` — **ko는 무프리픽스 루트(x-default)** | ✅ 구글 권장 구조·hreflang 클러스터 명확 |
+| **B. 경로 프리픽스 (권장)** | `/en/relearn`, `/ja/sylphio` — **ko는 무프리픽스 루트(x-default)** | 구글 권장 구조·hreflang 클러스터 명확 |
 | C. 서브도메인 | `en.prisincera.com` | ✗ 인증·인프라·쿠키 분리 과잉 |
 
 > **자동 언어 리다이렉트 금지 원칙**: Accept-Language 기반 강제 리다이렉트는 봇(대부분 en 헤더)에게 ko 루트를 감춰 **기존 ko 색인을 훼손**한다. 언어 전환은 링크(GNB 스위처)와 hreflang에 위임한다.

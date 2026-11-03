@@ -1,28 +1,29 @@
 ---
 status: active
 domain: PlannersView
-last_updated: 2026-11-01
-version: v1.7
+last_updated: 2026-11-03
+version: v1.8
 target_files:
   - public/content/planners-view/
   - src/data/plannersViewMeta.json
   - src/data/plannersViewSeries.json
 ---
 
-# ✍️ Planner's View 콘텐츠 규격 (Content Guide)
+# Planner's View 콘텐츠 규격 (Content Guide)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.7 | 2026-11-01 | AI Agent | **§2-6 Builder's Log 예외 철회 + 히어로 아이콘 행 정정** — "이 규범은 Planner's View에만 적용된다"를 폐기하고 **발행물 전 섹션 공통**으로 격상(로그 378건 전수 제거, [publishing_guide §6](../builders-log/publishing_guide.md) 신설). 게이트를 `plannersViewEmojiGate` → `articleEmojiGate`로 일반화. 히어로 아이콘을 "이모지 필수(§9-1 규격)"로 적어 둔 행은 §9-1 v5.24가 마크를 전면 폐지해 **이미 낡은 조항을 가리키고 있었으므로** 정정 | PlannersView, BuildersLog, ci/ |
-| v1.6 | 2026-11-01 | AI Agent | **§2-6 이모지 금지 규범 신설** — 발행 본문·메타·시리즈 정본에 이모지를 쓰지 않는다(1인칭 에세이에서 이모지가 문장의 어조를 대신해 논지를 약화시킨다). 히어로 아이콘(§9-1 규격)·내부 문서·SNS 피드는 적용 밖임을 명시. Builder's Log는 실사용 44건으로 성격이 달라 제외. `design-check`의 `plannersViewEmojiGate`로 자동 집행하고 역검증(본문·메타·태그 차단 / logs 오탐 0) 완료. 전수 조사 결과 실사용 0건이라 소급 위반 없음 | PlannersView 콘텐츠, ci/ |
-| v1.5 | 2026-10-29 | AI Agent | **§2-4 단독 하이라이트 문단 허용 + 플러그인 버그 수정** — `remarkHighlight`가 문단 전체가 하이라이트 하나인 경우(앞뒤 텍스트 없음) 교체를 건너뛰어 `==…==`를 그대로 노출하던 결함을 `parts.some(emphasis)` 판정으로 수정. 전 발행분 전수 조사 결과 피해 1건(5편)이며 기존 1~4편은 앞뒤 텍스트가 있어 영향 없음 | src/lib/remarkHighlight.js, PlannersView 콘텐츠 |
-| v1.4 | 2026-10-29 | AI Agent | **§2-5 출처 표기 규범 신설** — 외부 연구·타사 사례를 근거로 쓰는 글은 `## 출처`를 최종 섹션으로 둔다. H2 카운트·분량·readMinutes 산정에서 제외, 본문 인라인 링크 금지, **1차 출처 우선**(2차 보도가 IBM 수치를 왜곡한 사례 환류), **후속 정정·철회 확인 의무**(METR이 2026-02 자체 유보를 발표한 사례 환류), URL 응답 코드 사전 검증, 3개 국어 동일 적용. 외부 링크 새 탭 렌더 구현 | PlannersView 콘텐츠, PlannersViewDetail |
-| v1.3 | 2026-10-04 | AI Agent | §2-4 하이라이트 제약 명문화 — 내부 인라인 마크업 금지(노드가 쪼개져 조용히 렌더 실패). `design-check` 게이트로 자동 차단. 1~3편 소급 적용(각 3곳) | PlannersView, ci/ |
-| v1.2 | 2026-10-01 | AI Agent | §2-4 **강조 3층 체계 정립** — `==문장==` 하이라이트 문법 신설(의존성 없는 remark 플러그인)과 층별 상한(pullQuote 1 / 하이라이트 2~3 / 볼드 문단당 1) 명문화. 수단만 늘리고 상한을 두지 않으면 몇 편 안에 강조가 사라진다 | PlannersView, BuildersLog 본문 |
-| v1.1 | 2026-09-24 | AI Agent | §2-2 **열거형 예외 신설** — `N가지`를 병렬로 다루는 글은 소제목에 문장형 대신 병렬 라벨을 허용(형식 혼용은 금지). 3편(다섯 가지 '왜') 집필 환류 | PlannersView 콘텐츠 |
-| v1.0 | 2026-09-22 | AI Agent | 최초 정의 — 글 구조·분량·메타 문안 작성법·시리즈 운영 규칙·발행 전 체크리스트. 발행 메커니즘은 [publishing_guide](publishing_guide.md)가 담당 | PlannersView 콘텐츠 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.8 | 2026-11-03 | **§2-6 적용 범위 — 내부 문서(`docs/`) 예외 철회** — [publishing_guide §6](../builders-log/publishing_guide.md)과 동시 개정. docs 전 문서 이모지 전수 제거에 맞춰 '허용' 행을 '금지'로 바꾸고, SNS 피드 행의 글리프 예시를 이름으로 승계 | docs/ 전역, content_guide §2-6 |
+| v1.7 | 2026-11-01 | **§2-6 Builder's Log 예외 철회 + 히어로 아이콘 행 정정** — "이 규범은 Planner's View에만 적용된다"를 폐기하고 **발행물 전 섹션 공통**으로 격상(로그 378건 전수 제거, [publishing_guide §6](../builders-log/publishing_guide.md) 신설). 게이트를 `plannersViewEmojiGate` → `articleEmojiGate`로 일반화. 히어로 아이콘을 "이모지 필수(§9-1 규격)"로 적어 둔 행은 §9-1 v5.24가 마크를 전면 폐지해 **이미 낡은 조항을 가리키고 있었으므로** 정정 | PlannersView, BuildersLog, ci/ |
+| v1.6 | 2026-11-01 | **§2-6 이모지 금지 규범 신설** — 발행 본문·메타·시리즈 정본에 이모지를 쓰지 않는다(1인칭 에세이에서 이모지가 문장의 어조를 대신해 논지를 약화시킨다). 히어로 아이콘(§9-1 규격)·내부 문서·SNS 피드는 적용 밖임을 명시. Builder's Log는 실사용 44건으로 성격이 달라 제외. `design-check`의 `plannersViewEmojiGate`로 자동 집행하고 역검증(본문·메타·태그 차단 / logs 오탐 0) 완료. 전수 조사 결과 실사용 0건이라 소급 위반 없음 | PlannersView 콘텐츠, ci/ |
+| v1.5 | 2026-10-29 | **§2-4 단독 하이라이트 문단 허용 + 플러그인 버그 수정** — `remarkHighlight`가 문단 전체가 하이라이트 하나인 경우(앞뒤 텍스트 없음) 교체를 건너뛰어 `==…==`를 그대로 노출하던 결함을 `parts.some(emphasis)` 판정으로 수정. 전 발행분 전수 조사 결과 피해 1건(5편)이며 기존 1~4편은 앞뒤 텍스트가 있어 영향 없음 | src/lib/remarkHighlight.js, PlannersView 콘텐츠 |
+| v1.4 | 2026-10-29 | **§2-5 출처 표기 규범 신설** — 외부 연구·타사 사례를 근거로 쓰는 글은 `## 출처`를 최종 섹션으로 둔다. H2 카운트·분량·readMinutes 산정에서 제외, 본문 인라인 링크 금지, **1차 출처 우선**(2차 보도가 IBM 수치를 왜곡한 사례 환류), **후속 정정·철회 확인 의무**(METR이 2026-02 자체 유보를 발표한 사례 환류), URL 응답 코드 사전 검증, 3개 국어 동일 적용. 외부 링크 새 탭 렌더 구현 | PlannersView 콘텐츠, PlannersViewDetail |
+| v1.3 | 2026-10-04 | §2-4 하이라이트 제약 명문화 — 내부 인라인 마크업 금지(노드가 쪼개져 조용히 렌더 실패). `design-check` 게이트로 자동 차단. 1~3편 소급 적용(각 3곳) | PlannersView, ci/ |
+| v1.2 | 2026-10-01 | §2-4 **강조 3층 체계 정립** — `==문장==` 하이라이트 문법 신설(의존성 없는 remark 플러그인)과 층별 상한(pullQuote 1 / 하이라이트 2~3 / 볼드 문단당 1) 명문화. 수단만 늘리고 상한을 두지 않으면 몇 편 안에 강조가 사라진다 | PlannersView, BuildersLog 본문 |
+| v1.1 | 2026-09-24 | §2-2 **열거형 예외 신설** — `N가지`를 병렬로 다루는 글은 소제목에 문장형 대신 병렬 라벨을 허용(형식 혼용은 금지). 3편(다섯 가지 '왜') 집필 환류 | PlannersView 콘텐츠 |
+| v1.0 | 2026-09-22 | 최초 정의 — 글 구조·분량·메타 문안 작성법·시리즈 운영 규칙·발행 전 체크리스트. 발행 메커니즘은 [publishing_guide](publishing_guide.md)가 담당 | PlannersView 콘텐츠 |
 
 ---
 
@@ -30,7 +31,7 @@ target_files:
 
 ---
 
-## 1. 이 섹션의 글은 무엇인가 (🔒 규범)
+## 1. 이 섹션의 글은 무엇인가 (규범)
 
 **만드는 일에 대한 관점과 판단**을 기록합니다. 제작 기록이 아닙니다.
 
@@ -44,7 +45,7 @@ target_files:
 
 ---
 
-## 2. 글 구조 규격 (🔒 규범)
+## 2. 글 구조 규격 (규범)
 
 ### 2-1. 마크다운 골격
 
@@ -108,7 +109,7 @@ target_files:
 
 ---
 
-### 2-5. 출처 표기 (🔒 규범)
+### 2-5. 출처 표기 (규범)
 
 **경험과 논지로 서는 글에는 출처가 필요 없다.** 그러나 외부 연구·조사·타사 사례를 근거로 쓴 글이라면 **본문 맨 끝에 `## 출처` 섹션**을 둔다. 검증 가능성이 그 글의 신뢰를 만들기 때문이다.
 
@@ -125,7 +126,7 @@ target_files:
 
 ---
 
-### 2-6. 이모지 (🔒 규범)
+### 2-6. 이모지 (규범)
 
 **발행 아티클에 이모지를 쓰지 않는다.**
 
@@ -139,8 +140,8 @@ target_files:
 | 메타 `title`·`subtitle`·`description`·`pullQuote`·`tags` | **금지** |
 | 시리즈 정본 `title`·`description` | **금지** |
 | 히어로 아이콘 | **없음** — [design_system §9-1 v5.24](../core/design_system.md)가 히어로 마크를 전면 폐지했다(이모지·자작 SVG·제품 이미지 전부). 구 문안의 "이모지가 §9-1 규격"은 폐지된 조항을 가리키던 것이라 바로잡았다 |
-| 내부 문서(`docs/`) | 허용 — 이 가이드 자체가 `📝`·`🔒`를 쓴다. 규범은 **독자에게 발행되는 텍스트**에만 적용된다 |
-| SNS 피드 | 본 규범 밖 — 첫 댓글의 `👉` 등은 [publishing_guide §5](publishing_guide.md)가 담당한다 |
+| 내부 문서(`docs/`) | **금지** — 2026-11-03 예외 철회. docs 전 문서의 이모지를 전수 제거하고 집행 2겹을 세웠다(어드민 저장 거부 + `design-check` `docsEmojiGate`). 어드민 「서비스 문서」가 docs를 그대로 렌더하므로 발행 텍스트와 규범이 갈릴 이유가 없다. 상세는 [publishing_guide §6](../builders-log/publishing_guide.md) |
+| SNS 피드 | 본 규범 밖 — 첫 댓글의 손가락 글리프 등은 [publishing_guide §5](publishing_guide.md)가 담당한다 |
 
 **다른 섹션과의 경계 — 예외 철회(2026-11-01)**: 처음에는 Builder's Log를 "제작 기록이라 성격이 다르다"는 이유로 제외했다. **철회한다.** 섹션의 성격 차이는 작성자 사정이고, 독자에게는 같은 사이트의 두 글이 서로 다른 활자 규범을 쓰는 것으로만 읽힌다. 로그도 378건을 전수 제거하고 동일 규범을 세웠다([publishing_guide §6](../builders-log/publishing_guide.md)). **발행물에는 예외를 두지 않는다.**
 
@@ -148,7 +149,7 @@ target_files:
 
 ---
 
-## 3. 시리즈 운영 (🔒 규범)
+## 3. 시리즈 운영 (규범)
 
 이 섹션의 글은 **시리즈에 속하거나, 단독 글**이다.
 
@@ -211,7 +212,7 @@ en 단어수 ÷ 220
 
 ---
 
-## 5. 필자 표기와 고지 (🔒 규범)
+## 5. 필자 표기와 고지 (규범)
 
 - **실명 바이라인**을 쓴다. 1인칭 관점 글이므로 화자가 드러나야 한다.
 - `author.role`에 **소속 조직명을 넣지 않는다.** 현직을 특정하면 글이 회사 공식 입장으로 오독될 위험이 커진다. 직무 성격만 표기한다(예: `웹서비스 총괄 · 프로덕트 리더`).
@@ -220,7 +221,7 @@ en 단어수 ÷ 220
 
 ---
 
-## 6. 다국어 (🔒 규범)
+## 6. 다국어 (규범)
 
 - **ko 원문 + en·ja 동시 발행.** 로케일 파일이 없으면 한국어로 폴백되지만, 그 상태를 정상으로 두지 않는다.
 - 세 벌의 **H2 개수와 문단 수가 일치**해야 한다. 번역에서 문단을 합치거나 쪼개지 않는다 — 목차가 언어별로 갈라진다.

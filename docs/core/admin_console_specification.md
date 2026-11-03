@@ -10,13 +10,13 @@ target_files:
   - server.mjs
 ---
 
-# 📐 Admin 콘솔 메뉴·기능 명세서 (Admin Console Spec)
+# Admin 콘솔 메뉴·기능 명세서 (Admin Console Spec)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-07-22 | AI Agent | 리런 통합 반영 메뉴 재편 명세 최초 작성 — 그룹 4→3(Common·Builder's Log·ReLearn)·탭 10→8, 파이프라인 탭 흡수·학습자 현황 통합, 죽은 API 제거·이메일 브랜딩 리런 전환 | AdminDashboard, admin-api, server |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-07-22 | 리런 통합 반영 메뉴 재편 명세 최초 작성 — 그룹 4→3(Common·Builder's Log·ReLearn)·탭 10→8, 파이프라인 탭 흡수·학습자 현황 통합, 죽은 API 제거·이메일 브랜딩 리런 전환 | AdminDashboard, admin-api, server |
 
 ---
 
@@ -36,14 +36,14 @@ target_files:
 
 | 그룹 | 탭 id | 라벨 | 기능 요약 | 주요 API (`/admin/api`) |
 | :--- | :--- | :--- | :--- | :--- |
-| Common | `overview` | 📊 대시보드 | 통계 카드·발송 추이·Builder's Log Top10 | `/stats` `/pipeline/status` `/pristudy/stats` `/builderslog/stats` `/email/logs` |
-| Common | `docs` | 📖 서비스 문서 | docs 허브 — md 인라인 편집·GitHub 커밋 | `/docs/history` `/docs/save` |
-| Common | `admins` | 🔐 관리자 (super_admin 전용) | 관리자 계정 CRUD | `/admins` CRUD |
-| Builder's Log | `builderslog` | 📝 아티클 퍼블리싱 | AI 윤문·번역·GitHub 발행 | `/builderslog/*` |
-| ReLearn | `content` | 📚 배움 콘텐츠 | 서브탭 3종 — 아래 §3-1 | `/daily/*` |
-| ReLearn | `subscribers` | 📧 구독·발송 | 구독자·발송 이력·테스트 발송·CSV | `/subscribers*` `/email/*` |
-| ReLearn | `pacenotes` | ⛵ 학습자 현황 | Pacer 테이블 + 목표 인사이트(통합) — §3-2 | `/pacenotes/users` `/pacenotes/insights` |
-| ReLearn | `pacenote_pool` | 🎯 AI 추천 풀 | 추천 궤도 풀 CRUD·파이프라인 실행 로그 | `/pacenotes/pool` |
+| Common | `overview` | 대시보드 | 통계 카드·발송 추이·Builder's Log Top10 | `/stats` `/pipeline/status` `/pristudy/stats` `/builderslog/stats` `/email/logs` |
+| Common | `docs` | 서비스 문서 | docs 허브 — md 인라인 편집·GitHub 커밋 | `/docs/history` `/docs/save` |
+| Common | `admins` | 관리자 (super_admin 전용) | 관리자 계정 CRUD | `/admins` CRUD |
+| Builder's Log | `builderslog` | 아티클 퍼블리싱 | AI 윤문·번역·GitHub 발행 | `/builderslog/*` |
+| ReLearn | `content` | 배움 콘텐츠 | 서브탭 3종 — 아래 §3-1 | `/daily/*` |
+| ReLearn | `subscribers` | 구독·발송 | 구독자·발송 이력·테스트 발송·CSV | `/subscribers*` `/email/*` |
+| ReLearn | `pacenotes` | 학습자 현황 | Pacer 테이블 + 목표 인사이트(통합) — §3-2 | `/pacenotes/users` `/pacenotes/insights` |
+| ReLearn | `pacenote_pool` | AI 추천 풀 | 추천 궤도 풀 CRUD·파이프라인 실행 로그 | `/pacenotes/pool` |
 
 ## 3. 통폐합 상세
 
@@ -53,9 +53,9 @@ target_files:
 
 | 서브탭 id | 라벨 | 내용 | 저장소 |
 | :--- | :--- | :--- | :--- |
-| `track` | 🛰️ 테크 트랙 | tech-composer 산출물 모니터링·수동 생성 트리거·검수 | GCS `daily/junior_·senior_*.json` |
-| `legacy` | ✍️ 수동 콘텐츠 | IT 시그널·AI 프롬프트·어학 문장 CRUD (이메일 발송 소스 겸용) | Firestore `daily_signals` `study_content` |
-| `pipeline` | ⚙️ 수집 파이프라인 | Collector 상태·최근 7일 수집 현황 (읽기 전용) | GCS `daily/index.json` |
+| `track` | 테크 트랙 | tech-composer 산출물 모니터링·수동 생성 트리거·검수 | GCS `daily/junior_·senior_*.json` |
+| `legacy` | 수동 콘텐츠 | IT 시그널·AI 프롬프트·어학 문장 CRUD (이메일 발송 소스 겸용) | Firestore `daily_signals` `study_content` |
+| `pipeline` | 수집 파이프라인 | Collector 상태·최근 7일 수집 현황 (읽기 전용) | GCS `daily/index.json` |
 
 > 구 독립 탭 `pipeline`은 추가 API 없이 overview의 `/pipeline/status` 응답을 재표시하던 화면이므로 서브탭으로 흡수했다. 장기적으로 이 서브탭을 컴포저 4종(collector·composer·study·tech·pacenote) 통합 모니터로 확장할 수 있다.
 
@@ -67,12 +67,12 @@ target_files:
 
 | 구 (그룹 / 탭) | 신 (그룹 / 탭) |
 | :--- | :--- |
-| Daily Digest / 구독 및 이메일 발송 | ReLearn / 📧 구독·발송 |
-| Daily Digest / 콘텐츠 관리 (legacy 기본) | ReLearn / 📚 배움 콘텐츠 (track 기본) |
-| Daily Digest / 파이프라인 (독립 탭) | ReLearn / 배움 콘텐츠 › ⚙️ 수집 파이프라인 서브탭 |
-| Pace Note / Pacer 현황 | ReLearn / ⛵ 학습자 현황 (상단) |
-| Pace Note / 유저 목표 인사이트 | ReLearn / ⛵ 학습자 현황 (하단 통합) |
-| Pace Note / AI 추천 풀 관리 | ReLearn / 🎯 AI 추천 풀 |
+| Daily Digest / 구독 및 이메일 발송 | ReLearn / 구독·발송 |
+| Daily Digest / 콘텐츠 관리 (legacy 기본) | ReLearn / 배움 콘텐츠 (track 기본) |
+| Daily Digest / 파이프라인 (독립 탭) | ReLearn / 배움 콘텐츠 › 수집 파이프라인 서브탭 |
+| Pace Note / Pacer 현황 | ReLearn / 학습자 현황 (상단) |
+| Pace Note / 유저 목표 인사이트 | ReLearn / 학습자 현황 (하단 통합) |
+| Pace Note / AI 추천 풀 관리 | ReLearn / AI 추천 풀 |
 
 ## 4. 함께 정리한 부채
 

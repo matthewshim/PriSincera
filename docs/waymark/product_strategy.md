@@ -1,20 +1,20 @@
 ---
 status: draft
 domain: Waymark
-nav_title: 🗺️ 제품 전략서
+nav_title: 제품 전략서
 last_updated: 2026-10-24
 version: v0.1
 target_files:
   - (신규·미구현) waymark-app/ (별도 Next.js PWA 프로젝트 — system_architecture.md §2)
 ---
 
-# 🗺️ Waymark 제품 전략서 (Product Strategy)
+# Waymark 제품 전략서 (Product Strategy)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v0.1 | 2026-10-24 | AI Agent | 최초 작성 — 오너 확정 3대 결정(풀 루프·경험담 커뮤니티 소싱·시간 규칙 먼저찾아옴) 반영. 페르소나·핵심 루프·MVP 범위·성공 지표·로드맵·리스크 정의. 세부 기능/화면은 [functional_spec](functional_spec.md), 기술은 [system_architecture](system_architecture.md) | Waymark 서비스 전반 |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v0.1 | 2026-10-24 | 최초 작성 — 오너 확정 3대 결정(풀 루프·경험담 커뮤니티 소싱·시간 규칙 먼저찾아옴) 반영. 페르소나·핵심 루프·MVP 범위·성공 지표·로드맵·리스크 정의. 세부 기능/화면은 [functional_spec](functional_spec.md), 기술은 [system_architecture](system_architecture.md) | Waymark 서비스 전반 |
 
 ---
 
@@ -161,7 +161,7 @@ MVP는 **무료**로 관계·리텐션 검증 — **운영비 ≈ 0원(서버 AI
 ---
 
 ## 관련 문서
-*   [📋 기능 명세서](functional_spec.md) · [🏗️ 시스템 아키텍처](system_architecture.md)
-*   [🗺️ 재포지셔닝 제안서](repositioning_proposal.md) — 피벗 배경·ReLearn 차별화 원안
-*   [🎨 디자인 시스템](../core/design_system.md) — 앱 UI 토큰·규범 정본
-*   [📚 문서 인덱스 & 거버넌스](../INDEX.md)
+*   [기능 명세서](functional_spec.md) · [시스템 아키텍처](system_architecture.md)
+*   [재포지셔닝 제안서](repositioning_proposal.md) — 피벗 배경·ReLearn 차별화 원안
+*   [디자인 시스템](../core/design_system.md) — 앱 UI 토큰·규범 정본
+*   [문서 인덱스 & 거버넌스](../INDEX.md)

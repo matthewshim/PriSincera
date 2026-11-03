@@ -8,7 +8,7 @@ target_files:
 nav_title: 인프라 현황
 ---
 
-# 🏗️ 인프라 현황 — 웹 서빙 아키텍처 (Infrastructure SSOT)
+# 인프라 현황 — 웹 서빙 아키텍처 (Infrastructure SSOT)
 
 > **이 문서의 목적**: GCP 프로젝트 `prisincera`의 웹 서빙 아키텍처가 2026-09-02~03 비용 최적화로 **로드밸런서(LB) 방식 → Firebase Hosting rewrite 방식**으로 전환되었다. 이후 AI 도구·개발자가 인프라를 다룰 때 **반드시 이 문서를 정본(SSOT)으로 참조**하여, 삭제된 리소스를 재참조·재생성하거나 도메인/DNS/SSL 설정을 되돌리는 실수를 하지 않도록 한다. 상세 배포·트러블슈팅 절차는 [development_guide §9~§13](development_guide.md), 데이터플레인 장애는 [operations_runbook](operations_runbook.md).
 
@@ -38,7 +38,7 @@ nav_title: 인프라 현황
 
 > 참고: Cloud Run의 무료 "도메인 매핑(Domain Mapping)"은 `asia-northeast3`(서울) 리전에서 미지원(2026-09 기준)이라 사용할 수 없어, Firebase Hosting 방식을 채택했다.
 
-## 3. 삭제된 리소스 — ⚠️ 절대 참조/재생성 금지
+## 3. 삭제된 리소스 — 절대 참조/재생성 금지
 
 아래는 **2026-09-03 완전 삭제**되었다. 코드·IaC·문서·스크립트에서 참조가 발견되면 **제거 대상**이다.
 
@@ -73,7 +73,7 @@ nav_title: 인프라 현황
 
 Cloud Shell `~/fbhosting/`에서 배포. `firebase.json`은 `rewrites: [{ source: "**", run: { serviceId: "prisincera-web", region: "asia-northeast3" } }]`, `.firebaserc`는 default 프로젝트 `prisincera`.
 
-- ⚠️ `public/`은 **비어 있어야 한다**. `index.html` 등 정적 파일을 넣으면 rewrite보다 우선 적용되어 **Cloud Run 앱이 가려진다**. 넣지 말 것.
+- `public/`은 **비어 있어야 한다**. `index.html` 등 정적 파일을 넣으면 rewrite보다 우선 적용되어 **Cloud Run 앱이 가려진다**. 넣지 말 것.
 - 배포: rewrite 유지한 채 `firebase deploy --only hosting --project prisincera`.
 
 ### 4.3 커스텀 도메인 (2026-09-03 최종)
@@ -84,9 +84,9 @@ Cloud Shell `~/fbhosting/`에서 배포. `firebase.json`은 `rewrites: [{ source
 | **prisincera.com** | 커스텀(직접 서빙) | 연결·SSL 정상 |
 | **www.prisincera.com** | 커스텀(**직접 서빙 — 리디렉션 아님**) | 연결·SSL 정상 |
 
-⚠️ **www를 "리디렉션"으로 바꾸지 말 것**: Cloud Run 앱이 `prisincera.com → www` canonical 리다이렉트를 수행하므로, Firebase에서 www를 apex로 리디렉션하면 `apex→www→apex…` **무한 루프**(ERR_TOO_MANY_REDIRECTS)가 발생한다. 앱의 canonical 방향을 바꾸려면 Firebase 도메인 설정도 반드시 함께 검토.
+**www를 "리디렉션"으로 바꾸지 말 것**: Cloud Run 앱이 `prisincera.com → www` canonical 리다이렉트를 수행하므로, Firebase에서 www를 apex로 리디렉션하면 `apex→www→apex…` **무한 루프**(ERR_TOO_MANY_REDIRECTS)가 발생한다. 앱의 canonical 방향을 바꾸려면 Firebase 도메인 설정도 반드시 함께 검토.
 
-### 4.4 Cloud DNS (`prisincera-zone`) — ⚠️ 변경 금지
+### 4.4 Cloud DNS (`prisincera-zone`) — 변경 금지
 
 | 이름 | 유형 | TTL | 값 |
 |---|---|---|---|
@@ -94,7 +94,7 @@ Cloud Shell `~/fbhosting/`에서 배포. `firebase.json`은 `rewrites: [{ source
 | www.prisincera.com. | CNAME | 300 | `prisincera.web.app.` |
 | prisincera.com. | TXT | 300 | `hosting-site=prisincera` (Firebase 소유권 확인 — **삭제 금지**) |
 
-⚠️ **A 레코드를 `136.110.131.58`로 되돌리지 말 것**(해제된 IP, 우리 소유 아님). TXT 삭제 금지.
+**A 레코드를 `136.110.131.58`로 되돌리지 말 것**(해제된 IP, 우리 소유 아님). TXT 삭제 금지.
 
 ## 5. Artifact Registry 정리 정책
 
@@ -103,22 +103,22 @@ Cloud Shell `~/fbhosting/`에서 배포. `firebase.json`은 `rewrites: [{ source
 1. `delete-older-than-7d` — 업로드 7일 초과 버전 삭제
 2. `keep-recent-3` — 패키지별 최신 3개 버전 보호
 
-⚠️ **롤백은 최근 3개 버전까지만 보장**된다. 장기 보존이 필요한 특정 버전이 있으면 별도 태그가 아니라 **정리 정책 자체를 조정**(keep 값 증가 등)해야 한다. 이미지 푸시/배포 플로우 자체는 변경 없으며, 신규 푸시마다 구 버전이 정리되어 저장 비용이 누적되지 않는다.
+**롤백은 최근 3개 버전까지만 보장**된다. 장기 보존이 필요한 특정 버전이 있으면 별도 태그가 아니라 **정리 정책 자체를 조정**(keep 값 증가 등)해야 한다. 이미지 푸시/배포 플로우 자체는 변경 없으며, 신규 푸시마다 구 버전이 정리되어 저장 비용이 누적되지 않는다.
 
 ## 6. 운영/개발 시 체크리스트
 
 **하지 말 것**:
-- ❌ 로드밸런서·전달 규칙·백엔드 서비스·고정 IP 재생성(비용 왕복). HTTPS·도메인은 Firebase Hosting이 담당.
-- ❌ DNS A 레코드를 `136.110.131.58` 등으로 변경. TXT `hosting-site=prisincera` 삭제.
-- ❌ Firebase에서 www를 "리디렉션"으로 변경(§4.3 루프).
-- ❌ `~/fbhosting/public/`에 정적 파일 투입(Cloud Run 앱 가려짐).
-- ❌ `firebase.json`의 rewrite(`** → prisincera-web`) 제거 후 배포.
-- ❌ "옛 이미지로 롤백" 시나리오를 최근 3개 버전 밖으로 설계.
+- 로드밸런서·전달 규칙·백엔드 서비스·고정 IP 재생성(비용 왕복). HTTPS·도메인은 Firebase Hosting이 담당.
+- DNS A 레코드를 `136.110.131.58` 등으로 변경. TXT `hosting-site=prisincera` 삭제.
+- Firebase에서 www를 "리디렉션"으로 변경(§4.3 루프).
+- `~/fbhosting/public/`에 정적 파일 투입(Cloud Run 앱 가려짐).
+- `firebase.json`의 rewrite(`** → prisincera-web`) 제거 후 배포.
+- "옛 이미지로 롤백" 시나리오를 최근 3개 버전 밖으로 설계.
 
 **유지되는 것**:
-- ✅ 웹 배포는 기존과 동일: 이미지 빌드 → `prisincera-images` 푸시 → Cloud Run `prisincera-web` 릴리비전 배포. Firebase는 건드릴 필요 없음.
-- ✅ 도메인/SSL 장애 확인 위치: **Firebase Console → Hosting → 사이트 `prisincera` → 도메인 목록**.
-- ✅ 장애 분기: `prisincera.web.app`은 정상인데 커스텀 도메인만 안 되면 DNS/도메인 설정 문제, 둘 다 안 되면 Cloud Run 문제.
+- 웹 배포는 기존과 동일: 이미지 빌드 → `prisincera-images` 푸시 → Cloud Run `prisincera-web` 릴리비전 배포. Firebase는 건드릴 필요 없음.
+- 도메인/SSL 장애 확인 위치: **Firebase Console → Hosting → 사이트 `prisincera` → 도메인 목록**.
+- 장애 분기: `prisincera.web.app`은 정상인데 커스텀 도메인만 안 되면 DNS/도메인 설정 문제, 둘 다 안 되면 Cloud Run 문제.
 
 ## 7. 비용 요약
 

@@ -16,16 +16,16 @@ target_files:
   - admin-api.mjs
 ---
 
-# 📜 콘텐츠 출처·프로비넌스 정책 (Sourcing Policy)
+# 콘텐츠 출처·프로비넌스 정책 (Sourcing Policy)
 
 Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 URL 부여 기준, 사실성 책임 및 고지(Disclaimer) 정책**을 규정한다. 콘텐츠 유형마다 "실제 수집(Collected)"인지 "AI 생성(Generated)"인지가 다르며, 이 차이는 신뢰성·법적 책임·UX 표기에 직접적인 영향을 미치므로 본 정책으로 명문화한다.
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-23 | AI Agent | 콘텐츠 유형별 출처/URL 정책 최초 정의 — IT Tech Signal(RSS 수집) vs Tech Track·Language Dojo(AI 생성) 구분, 사실성 고지 의무화, 향후 거버넌스 결정 항목 등록 | tech-composer, collector, TrackSignalFeed |
-| v1.1 | 2026-06-24 | AI Agent | **거버넌스 §6 결정 = 경로 C(하이브리드) 채택.** Tech Track이 도메인별 RSS(`tech-sources.json`) 근거 위에 **학습 레이어(`learning`) + 실제 원문 `sourceUrl`**을 갖도록 전환 → "출처 없는 AI 생성"에서 "근거 기반 학습+실전+원문"으로 격상 | tech-composer, tech-sources.json, rss.mjs, TrackSignalFeed |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-23 | 콘텐츠 유형별 출처/URL 정책 최초 정의 — IT Tech Signal(RSS 수집) vs Tech Track·Language Dojo(AI 생성) 구분, 사실성 고지 의무화, 향후 거버넌스 결정 항목 등록 | tech-composer, collector, TrackSignalFeed |
+| v1.1 | 2026-06-24 | **거버넌스 §6 결정 = 경로 C(하이브리드) 채택.** Tech Track이 도메인별 RSS(`tech-sources.json`) 근거 위에 **학습 레이어(`learning`) + 실제 원문 `sourceUrl`**을 갖도록 전환 → "출처 없는 AI 생성"에서 "근거 기반 학습+실전+원문"으로 격상 | tech-composer, tech-sources.json, rss.mjs, TrackSignalFeed |
 
 ---
 
@@ -39,10 +39,10 @@ Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 UR
 
 | 콘텐츠 유형 | 생성 방식 | 실제 출처 | 원문(랜딩) URL | 사실성 책임 |
 | :--- | :--- | :--- | :--- | :--- |
-| **IT Tech Signal** | **실제 RSS 수집** 후 AI 스코어링/큐레이션 | ✅ 실제 매체 (HBR, First Round Review 등) | ✅ **있음** (`article.url`, "원문 읽기 →") | 원 매체 |
-| **Tech Track** (주니어/시니어) | **하이브리드** — 도메인별 RSS 근거 위에 AI가 학습+실전 생성 (v1.1~) | ✅ 실제 매체 (`tech-sources.json`) | ✅ **있음** (`sourceUrl`, "🔗 원문 읽기") *근거 없는 도메인은 생략* | 원 매체 + 개발사 |
-| **AI Prompt / Language Dojo(어학)** | **AI 생성(Gemini)** | ❌ 없음 | ❌ 없음 | 개발사(AI 생성물) |
-| **PaceNote 추천 궤도** | AI 생성 + 익명 UGC(승인 후) | UGC는 익명 사용자 | ❌ 없음 | 개발사/검수 |
+| **IT Tech Signal** | **실제 RSS 수집** 후 AI 스코어링/큐레이션 | 실제 매체 (HBR, First Round Review 등) | **있음** (`article.url`, "원문 읽기 →") | 원 매체 |
+| **Tech Track** (주니어/시니어) | **하이브리드** — 도메인별 RSS 근거 위에 AI가 학습+실전 생성 (v1.1~) | 실제 매체 (`tech-sources.json`) | **있음** (`sourceUrl`, "원문 읽기") *근거 없는 도메인은 생략* | 원 매체 + 개발사 |
+| **AI Prompt / Language Dojo(어학)** | **AI 생성(Gemini)** | 없음 | 없음 | 개발사(AI 생성물) |
+| **PaceNote 추천 궤도** | AI 생성 + 익명 UGC(승인 후) | UGC는 익명 사용자 | 없음 | 개발사/검수 |
 
 > 한 줄 요약: **IT Tech Signal·Tech Track은 실제 출처·원문 링크를 가진 콘텐츠이고(Tech Track은 하이브리드: 근거+학습+실전), 어학·AI 프롬프트는 순수 생성형이다.**
 
@@ -57,7 +57,7 @@ Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 UR
 - **`tech-composer.mjs`**: ① `config/tech-sources.json`의 도메인별 RSS에서 `rss.mjs`(`fetchFeed`, `maxAgeDays`)로 최신 **근거 기사(seed)**를 도메인당 1개 수집 → ② Gemini가 그 근거 위에서 카드를 생성(**`learning`** 개념·핵심포인트 + `action_challenge`).
 - **`templates/tech-prompt.txt`**: [학습(개념 이해) → 실전(적용 액션)] 흐름을 강제. 근거 기사가 주어진 도메인은 그 내용에 충실하게, 없는 도메인은 보편 지식으로 작성.
 - **URL은 코드에서 주입**: `buildCard`가 seed 기사의 실제 `sourceUrl`/`sourceName`을 채운다(LLM이 생성한 URL은 환각 위험이라 사용 금지). 근거가 없는 도메인은 `sourceUrl`을 생략한다.
-- 유저 UI/관리자 모달은 `📚 학습 → 🎯 실전 → 🔗 원문 읽기` 순으로 렌더.
+- 유저 UI/관리자 모달은 `학습 → 실전 → 원문 읽기` 순으로 렌더.
 - **잔여 리스크**: 학습 텍스트(concept/key_points)는 여전히 AI 생성이므로 근거 기사를 벗어난 추론·환각 가능성이 0은 아니다 → §5 고지·검수 정책 유지.
 
 ### 3.3. 생성형(Generated) — Language Dojo / AI Prompt
@@ -87,7 +87,7 @@ Daily Digest가 노출하는 모든 콘텐츠의 **출처(Provenance), 원문 UR
 | :--- | :--- | :--- |
 | A. 현행 유지 + 명시 | 생성형 라벨링만 | 미채택 |
 | B. 실제 수집 연동 | RSS 근거 + sourceUrl | (C에 포함) |
-| **C. 하이브리드** | **근거 기사 + 학습+실전 + 원문 링크** | ✅ **채택·구현** |
+| **C. 하이브리드** | **근거 기사 + 학습+실전 + 원문 링크** | **채택·구현** |
 
 **구현 요지**: `tech-sources.json`(도메인별 큐레이션 RSS) + `tech-composer` seed 수집 + `learning` 스키마 + `sourceUrl` 코드 주입 + UI(학습→실전→원문). 상세 §3.2.
 

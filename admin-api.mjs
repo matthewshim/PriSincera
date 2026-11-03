@@ -1380,6 +1380,11 @@ router.post('/builderslog/publish', async (req, res) => {
    아니라 타이포그래피다. 규범: docs/builders-log/publishing_guide.md §6 */
 const ARTICLE_EMOJI = /[\u{1F300}-\u{1FAFF}\u{1F000}-\u{1F2FF}\u{2600}-\u{27BF}\u{1F1E6}-\u{1F1FF}]/gu;
 
+/* 내부 문서(docs/)용 — 발행물보다 좁다. 명세표가 판정 기호로 쓰는 단색 조판 기호
+   (`★ ❖ ✦ ✓ ✗ ☐ ☑`)와 화살표는 통과시키고 컬러 이모지만 막는다.
+   규범: docs/builders-log/publishing_guide.md §6 (2026-11-03 docs 예외 철회) */
+const DOCS_EMOJI = /\p{Extended_Pictographic}️|\p{Emoji_Presentation}|[\u{1F300}-\u{1FAFF}]|[\u{1F1E6}-\u{1F1FF}]/u;
+
 // 시크릿 패턴은 src/data/secretPatterns.mjs가 단일 소스(SSOT)다.
 // 로컬 git 훅(ci/secret-scan.mjs)과 동일 집합을 공유해야 탐지 강도가 갈리지 않는다.
 // 배치 근거: src/data/ 는 Dockerfile이 컨테이너로 복사하는 경로다(ci/ 는 아니다).
@@ -1410,6 +1415,14 @@ router.post('/docs/save', async (req, res) => {
 
     for (const re of DOC_SECRET_PATTERNS) {
       if (re.test(content)) return res.status(400).json({ error: '보안 위반: 민감 정보(Secret) 패턴이 발견되어 저장이 차단되었습니다.' });
+    }
+
+    /* 이모지 금지 — 시크릿 스캐너와 같은 자리에서 본다. 커밋된 뒤 빌드(design-check
+       docsEmojiGate)가 깨지는 것보다 여기서 막고 글리프를 알려주는 것이 싸다. */
+    const emojiHit = content.match(DOCS_EMOJI);
+    if (emojiHit) {
+      const line = content.slice(0, content.indexOf(emojiHit[0])).split('\n').length;
+      return res.status(400).json({ error: `규범 위반: 내부 문서에 이모지를 쓰지 않습니다 — ${line}행 "${emojiHit[0]}". 의미를 지닌 글리프는 단어로 바꿔 주세요 (publishing_guide §6).` });
     }
 
     const editor = req.adminUser?.email || 'unknown';

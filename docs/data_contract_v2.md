@@ -10,10 +10,10 @@ target_files:
   - pipeline/src/study-composer.mjs
 ---
 
-# 🏗️ 데이터 계약 v2 — 웹↔macOS (Data Contract)
+# 데이터 계약 v2 — 웹↔macOS (Data Contract)
 
 > **목적**: 웹 트랙 피드(ReLearn `TrackSignalFeed`)·파이프라인·어드민 동기화가 공유하는 단일 데이터 계약. (원래 macOS 데스크톱 앱 이식을 전제로 동결했으나, **앱 계획은 2026-07-22 폐기** — 계약 자체는 웹이 실사용 중이므로 유효)
-> **상태**: ✅ **v2.3** (2026-06-24, 오빗화 정책 변경: action 항목 N개 → 독립 궤도 N개, 도메인 카테고리, subtask 폐지) · **정본 위치**: `docs/data_contract_v2.md`
+> **상태**: **v2.3** (2026-06-24, 오빗화 정책 변경: action 항목 N개 → 독립 궤도 N개, 도메인 카테고리, subtask 폐지) · **정본 위치**: `docs/data_contract_v2.md`
 > **관련**: [archive/mac_app_business_plan.md](archive/mac_app_business_plan.md) 6장 / 10장(Phase 0) *(archived)*
 
 ---
@@ -91,11 +91,11 @@ target_files:
 **필드 규약**
 | 필드 | 타입 | 필수 | 비고 |
 |---|---|:--:|---|
-| `schemaVersion` | int | ✅ | 현재 `2` |
-| `track` | `"junior"\|"senior"` | ✅ | |
-| `domain` | string | ✅ | 관심사 필터 칩 키(아래 §1.3) |
-| `tags` | string[] | ✅ | 로컬 `keyword_weights` 조인용. 빈 배열 허용 |
-| `action_challenge.tasks` | Task[] | ✅ | **정확히 3개** |
+| `schemaVersion` | int | O | 현재 `2` |
+| `track` | `"junior"\|"senior"` | O | |
+| `domain` | string | O | 관심사 필터 칩 키(아래 §1.3) |
+| `tags` | string[] | O | 로컬 `keyword_weights` 조인용. 빈 배열 허용 |
+| `action_challenge.tasks` | Task[] | O | **정확히 3개** |
 
 ### 1.3. 관심 도메인 키(고정 enum)
 `ai_llm` · `system_design` · `devops` · `tech_lead` (= PM/리더십). 추가 시 본 계약을 개정한다.
@@ -126,7 +126,7 @@ type LocalizedText = string | { ko?: string; en?: string; ja?: string };
 
 interface Task {
   id: string;            // 'default-*' | 'custom-<ts>' | 'rec-*' | 'ac-*'(오빗화)
-  title: string;         // ⚠️ API/IPC 응답에서는 locale 평탄화된 string
+  title: string;         // 주의: API/IPC 응답에서는 locale 평탄화된 string
   category: string;      // 'Learning' | 'Productivity' | 'Mindset' | ...
   color: string;         // hex
   completed: boolean;

@@ -7,15 +7,15 @@ target_files:
   - src/pages/SylphioPrivacy.jsx
 ---
 
-# 📜 Sylphio 개인정보 처리방침 (Privacy)
+# Sylphio 개인정보 처리방침 (Privacy)
 
-## 📝 Revision History
+## Revision History
 
-| Version | Date | Author | Description | Impact Area |
-| :--- | :--- | :--- | :--- | :--- |
-| v1.0 | 2026-06-02 | Maker | 실피오 App Store 심사 및 신뢰 보장을 위한 Zero-Data 개인정보 처리방침 정의 | docs/sylphio/ |
-| v1.1 | 2026-07-13 | AI Agent | 하이브리드 STT·정밀 회의록 오디오 업로드·로컬 녹음(.m4a) 저장/동의/삭제·화면 녹화 권한 고지 반영(라이브 정합) | src/pages/SylphioPrivacy.jsx |
-| v1.2 | 2026-08-05 | AI Agent | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·외곽 글래스 박스 제거(플랫 프로스). 히어로 태그라인을 랜딩 정본으로 정본화 | src/pages/SylphioPrivacy.jsx, .css |
+| Version | Date | Description | Impact Area |
+| :--- | :--- | :--- | :--- |
+| v1.0 | 2026-06-02 | 실피오 App Store 심사 및 신뢰 보장을 위한 Zero-Data 개인정보 처리방침 정의 | docs/sylphio/ |
+| v1.1 | 2026-07-13 | 하이브리드 STT·정밀 회의록 오디오 업로드·로컬 녹음(.m4a) 저장/동의/삭제·화면 녹화 권한 고지 반영(라이브 정합) | src/pages/SylphioPrivacy.jsx |
+| v1.2 | 2026-08-05 | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·외곽 글래스 박스 제거(플랫 프로스). 히어로 태그라인을 랜딩 정본으로 정본화 | src/pages/SylphioPrivacy.jsx, .css |
 
 ---
 
@@ -25,7 +25,7 @@ PriSincera ("we", "us", or "our") operates the **Sylphio** Mac application (the 
 
 ---
 
-## 🇺🇸 English Version
+## English Version
 
 ### 1. Zero Data Collection
 Sylphio is a utility application designed with privacy at its core. **We do not collect, store, or transmit any personal data, audio recordings, or transcribed texts to our own servers.**
@@ -46,7 +46,7 @@ If you have any questions about this Privacy Policy, please contact us at: **sup
 
 ---
 
-## 🇰🇷 한국어 버전 (Korean Version)
+## 한국어 버전 (Korean Version)
 
 ### 1. 데이터 무수집 원칙 (Zero Data Collection)
 Sylphio는 사용자의 프라이버시를 최우선으로 설계된 유틸리티 앱입니다. **당사는 어떠한 개인 정보, 오디오 녹음 파일, 또는 번역된 텍스트 데이터도 당사의 서버로 수집, 저장, 전송하지 않습니다.**

@@ -9,6 +9,9 @@
  *
  * 근거: docs/core/design_system.md v5.1+ — "font-size는 --fs-* 토큰만, 임의 값 금지"
  *
+ * docs 게이트(2026-11-03): 내부 문서(docs/**.md)의 이모지 ERROR + Revision History
+ *   'Author' 열 ERROR. 발행물 게이트와 달리 단색 조판 기호는 허용한다(아래 docsEmojiGate 주석).
+ *
  * i18n 게이트(2026-08-04): src JSX/JS 소스의 한국어 하드코딩 ERROR.
  *   UI 문자열은 언어팩(src/locales/{ko,en,ja}.json) + t()만 허용 — 조용한 ko 폴백 탓에
  *   누락이 화면에서 안 보이는 문제의 재발 방지책. 예외는 I18N_EXCLUDE(파일 단위) 또는
@@ -479,6 +482,45 @@ for (const file of srcFiles(ROOT)) {
         }
       }
     }
+  }
+})();
+
+// ── 내부 문서 게이트: docs/ 이모지 금지 + Revision History 열 규격 ──
+// 정본: [publishing_guide §6] · [content_guide §2-6] — 2026-11-03에 'docs는 허용'
+// 예외를 철회했다. 어드민 「서비스 문서」가 docs를 그대로 렌더하므로 독자가 보는
+// 텍스트가 두 규범으로 갈려 있었다(70편 1,315건 전수 제거).
+//
+// 위 articleEmojiGate와 **정규식이 다르다.** 발행물은 넓게 금지하지만 내부 문서는
+// 단색 조판 기호(`★ ❖ ✦ ✓ ✗ ☐ ☑`, U+2600~27BF)를 명세표에서 판정 기호로 쓴다 —
+// 이쪽은 **컬러 이모지만** 본다: Emoji_Presentation 기본값이 이모지인 글자,
+// 변이선택자(U+FE0F)로 이모지 표현을 요구한 글자, 그림문자 블록, 국기(지역 지시자).
+// 화살표(`→ ← ↔ ▶ ◀`)·원문자(`①②③`)는 §6대로 타이포그래피이므로 대상이 아니다.
+(function docsEmojiGate() {
+  const EMOJI = /\p{Extended_Pictographic}️|\p{Emoji_Presentation}|[\u{1F300}-\u{1FAFF}]|[\u{1F1E6}-\u{1F1FF}]/u;
+
+  function* docsFiles(dir) {
+    let names = [];
+    try { names = readdirSync(dir); } catch { return; }
+    for (const name of names) {
+      const p = join(dir, name);
+      if (statSync(p).isDirectory()) yield* docsFiles(p);
+      else if (p.endsWith('.md')) yield p;
+    }
+  }
+
+  for (const f of docsFiles('docs')) {
+    readFileSync(f, 'utf-8').split('\n').forEach((line, i) => {
+      const m = line.match(EMOJI);
+      if (m) {
+        errors.push(`${f}:${i + 1}: 내부 문서에 이모지 금지 — "${m[0]}" (publishing_guide §6 — 의미를 지닌 글리프는 텍스트로 승계)`);
+      }
+      /* Revision History 는 4열(Version·Date·Description·Impact Area)이다.
+         Author 열은 2026-11-03에 폐지했다 — 전 행이 'AI Agent'/'Designer'로
+         사실상 단일값이어서 가로 폭만 먹고 아무것도 구분하지 못했다. */
+      if (/^\|\s*Version\s*\|/.test(line) && /\|\s*Author\s*\|/.test(line)) {
+        errors.push(`${f}:${i + 1}: Revision History 에 'Author' 열 금지 — Version·Date·Description·Impact Area 4열 (INDEX.md §4)`);
+      }
+    });
   }
 })();
 
