@@ -1,17 +1,17 @@
 /* LoopReport — 성장 루프 주간 리포트 (Phase 4) */
 .loop-report {
-  margin: 0 0 20px;
-  padding: 18px 20px;
+  margin: 0 0 var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(165, 180, 252, 0.16);
-  background: linear-gradient(135deg, rgba(165, 180, 252, 0.06), rgba(34, 211, 238, 0.045));
+  border: 1px solid color-mix(in srgb, var(--color-indigo) 16%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-indigo) 6%, transparent), color-mix(in srgb, var(--color-cyan) 4.5%, transparent));
 }
 
 .loop-report-head {
   display: flex;
   align-items: baseline;
   gap: var(--space-sm);
-  margin-bottom: 14px;
+  margin-bottom: var(--space-md);
 }
 .loop-report-icon { font-size: var(--fs-base); }
 .loop-report-title { font-size: var(--fs-base); font-weight: 600; color: var(--text-primary); }
@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  padding: 12px 14px;
+  padding: var(--space-12) var(--space-md);
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -37,7 +37,7 @@
 .loop-stat-unit { font-size: var(--fs-sm); font-weight: 600; color: var(--text-secondary); margin-left: 2px; }
 .loop-stat-sub { font-size: var(--fs-xs); color: var(--text-muted); }
 
-.loop-stat-domain { border-color: rgba(165, 180, 252, 0.16); background: rgba(165, 180, 252, 0.06); }
+.loop-stat-domain { border-color: color-mix(in srgb, var(--color-indigo) 16%, transparent); background: color-mix(in srgb, var(--color-indigo) 6%, transparent); }
 .loop-stat-domain-name { font-size: var(--fs-md); color: var(--color-indigo); }
 
 @media (max-width: 768px) {

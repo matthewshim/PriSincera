@@ -35,8 +35,8 @@
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(circle,
-        rgba(253,230,138,0.06) 0%,
-        rgba(245,158,11,0.02) 40%,
+        color-mix(in srgb, var(--color-gold-light) 6%, transparent) 0%,
+        color-mix(in srgb, var(--color-gold) 2%, transparent) 40%,
         transparent 70%);
     pointer-events: none;
     transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -50,7 +50,7 @@
     transform: translateX(-50%);
     font-family: var(--font-mono);
     font-size: var(--fs-micro);
-    color: rgba(253, 230, 138, 0.65);
+    color: color-mix(in srgb, var(--color-gold-light) 65%, transparent);
     letter-spacing: var(--tracking-widest);
     white-space: nowrap;
     opacity: 0;
@@ -67,7 +67,7 @@
     width: 24px;
     height: 24px;
     opacity: 0.9;
-    background: radial-gradient(circle, rgba(253,230,138,0.25), transparent 70%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-gold-light) 25%, transparent), transparent 70%);
 }
 
 /* --- Near star: intensify --- */
@@ -75,8 +75,8 @@
     width: 80px;
     height: 80px;
     background: radial-gradient(circle,
-        rgba(253,230,138,0.1) 0%,
-        rgba(245,158,11,0.04) 40%,
+        color-mix(in srgb, var(--color-gold-light) 10%, transparent) 0%,
+        color-mix(in srgb, var(--color-gold) 4%, transparent) 40%,
         transparent 70%);
 }
 
@@ -88,7 +88,7 @@
 }
 
 .telescope-cursor.hovering-magnetic .telescope-ring circle {
-    stroke: rgba(253, 230, 138, 0.15);
+    stroke: color-mix(in srgb, var(--color-gold-light) 15%, transparent);
 }
 
 .telescope-cursor.hovering-magnetic .telescope-ring line {
@@ -103,7 +103,7 @@
     width: 90px;
     height: 90px;
     opacity: 0.85;
-    background: radial-gradient(circle, rgba(253, 230, 138, 0.08) 0%, rgba(245, 158, 11, 0.03) 50%, transparent 80%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-gold-light) 8%, transparent) 0%, color-mix(in srgb, var(--color-gold) 3%, transparent) 50%, transparent 80%);
 }
 
 .telescope-label {
@@ -114,14 +114,14 @@
     font-family: var(--font-mono);
     font-size: var(--fs-micro);
     font-weight: 600;
-    color: rgba(253, 230, 138, 0.95);
+    color: color-mix(in srgb, var(--color-gold-light) 95%, transparent);
     letter-spacing: var(--tracking-ultra);
     text-transform: uppercase;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    text-shadow: 0 0 8px rgba(253, 230, 138, 0.2);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--color-gold-light) 20%, transparent);
 }
 
 .telescope-cursor.hovering-magnetic .telescope-label {

@@ -13,8 +13,8 @@
     /* Principle 1: Restrained Authority & Focus in Chaos. Deep OLED black with precision lighting */
     background: #000000;
     background-image: 
-        radial-gradient(circle at 50% 40%, rgba(165, 180, 252, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 50% 60%, rgba(34, 211, 238, 0.05) 0%, transparent 55%);
+        radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--color-indigo) 8%, transparent) 0%, transparent 45%),
+        radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--color-cyan) 5%, transparent) 0%, transparent 55%);
 }
 
 /* --- Center Container --- */
@@ -54,8 +54,8 @@
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: radial-gradient(circle,
-        rgba(199, 210, 254, 0.15) 0%,
-        rgba(165, 180, 252, 0.08) 25%,
+        color-mix(in srgb, var(--prism-lavender) 15%, transparent) 0%,
+        color-mix(in srgb, var(--color-indigo) 8%, transparent) 25%,
         transparent 65%);
     opacity: 0;
     transition: opacity 3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -133,7 +133,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 30px rgba(229, 178, 93, 0.15);
+    text-shadow: 0 0 30px color-mix(in srgb, var(--color-gold) 15%, transparent);
 }
 
 .hero-role {
@@ -243,15 +243,15 @@
     width: 48px;
     height: 48px;
     background: var(--glass-bg);
-    border: 1px solid rgba(165, 180, 252, 0.08);
+    border: 1px solid color-mix(in srgb, var(--color-indigo) 8%, transparent);
     display: flex;
     transition: background-color 0.4s var(--ease-out), border-color 0.4s var(--ease-out), transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
     outline: none;
 }
 
 .celestial-btn:hover {
-    background: rgba(22, 22, 41, 0.75);
-    border-color: rgba(165, 180, 252, 0.2);
+    background: color-mix(in srgb, var(--bg-elevated) 75%, transparent);
+    border-color: color-mix(in srgb, var(--color-indigo) 20%, transparent);
     transform: scale(1.08);
 }
 
@@ -266,7 +266,7 @@
     inset: -4px;
     /* 버튼 본체와 같은 라운드여야 한다 — 어긋나면 클릭 리플 테두리가 겹쳐 보인다(§4-4 v6.2) */
     border-radius: var(--radius-sm);
-    border: 1px solid rgba(165, 180, 252, 0.3);
+    border: 1px solid color-mix(in srgb, var(--color-indigo) 30%, transparent);
     opacity: 0;
     transition: background-color 0.5s var(--ease-out), border-color 0.5s var(--ease-out), transform 0.5s var(--ease-out), opacity 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
     pointer-events: none;
@@ -323,13 +323,13 @@
 /* OFF state — flat, dim */
 .waveform-bars.off .waveform-bar {
     height: 3px;
-    background: rgba(165, 180, 252, 0.35);
+    background: color-mix(in srgb, var(--color-indigo) 35%, transparent);
 }
 
 /* ON state — animated individual bars */
 .waveform-bars.on .waveform-bar {
     background: linear-gradient(to top, var(--color-indigo), var(--prism-lavender));
-    box-shadow: 0 0 6px rgba(165, 180, 252, 0.4);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-indigo) 40%, transparent);
 }
 
 .waveform-bars.on .waveform-bar:nth-child(1) {
@@ -371,10 +371,10 @@
 
 /* Glow halo behind the bars when active */
 .celestial-btn.waveform-btn.active {
-    border-color: rgba(165, 180, 252, 0.25);
+    border-color: color-mix(in srgb, var(--color-indigo) 25%, transparent);
     box-shadow:
-        0 0 12px rgba(165, 180, 252, 0.12),
-        inset 0 0 12px rgba(165, 180, 252, 0.06);
+        0 0 12px color-mix(in srgb, var(--color-indigo) 12%, transparent),
+        inset 0 0 12px color-mix(in srgb, var(--color-indigo) 6%, transparent);
 }
 
 /* ============================================
@@ -398,7 +398,7 @@
 }
 
 .atlas-icon.off .atlas-ring {
-    stroke: rgba(165, 180, 252, 0.3);
+    stroke: color-mix(in srgb, var(--color-indigo) 30%, transparent);
     stroke-width: 1;
     stroke-dasharray: 4 3;
 }
@@ -428,12 +428,12 @@
 /* Star dots */
 .atlas-star {
     transition: background-color 0.5s var(--ease-out), border-color 0.5s var(--ease-out), color 0.5s var(--ease-out), transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out), opacity 0.5s var(--ease-out);
-    fill: rgba(165, 180, 252, 0.3);
+    fill: color-mix(in srgb, var(--color-indigo) 30%, transparent);
 }
 
 .atlas-icon.on .atlas-star {
     fill: var(--prism-lavender);
-    filter: drop-shadow(0 0 2px rgba(199, 210, 254, 0.6));
+    filter: drop-shadow(0 0 2px color-mix(in srgb, var(--prism-lavender) 60%, transparent));
 }
 
 /* Constellation lines */
@@ -444,7 +444,7 @@
 }
 
 .atlas-icon.on .atlas-line {
-    stroke: rgba(199, 210, 254, 0.4);
+    stroke: color-mix(in srgb, var(--prism-lavender) 40%, transparent);
     stroke-width: 0.6;
 }
 
@@ -452,7 +452,7 @@
 .atlas-tick {
     transition: background-color 0.5s var(--ease-out), border-color 0.5s var(--ease-out), color 0.5s var(--ease-out), transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out), opacity 0.5s var(--ease-out);
     opacity: 0;
-    stroke: rgba(103, 232, 249, 0.3);
+    stroke: color-mix(in srgb, var(--orbit-cyan-light) 30%, transparent);
 }
 
 .atlas-icon.on .atlas-tick {
@@ -461,15 +461,15 @@
 
 /* Active glow */
 .celestial-btn.atlas-btn.active {
-    border-color: rgba(34, 211, 238, 0.2);
+    border-color: color-mix(in srgb, var(--color-cyan) 20%, transparent);
     box-shadow:
-        0 0 12px rgba(34, 211, 238, 0.1),
-        inset 0 0 12px rgba(34, 211, 238, 0.04);
+        0 0 12px color-mix(in srgb, var(--color-cyan) 10%, transparent),
+        inset 0 0 12px color-mix(in srgb, var(--color-cyan) 4%, transparent);
 }
 
 /* Focus lens effect on click */
 .celestial-btn.atlas-btn.active::after {
-    border-color: rgba(34, 211, 238, 0.25);
+    border-color: color-mix(in srgb, var(--color-cyan) 25%, transparent);
 }
 
 /* ============================================

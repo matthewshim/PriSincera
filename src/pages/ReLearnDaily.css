@@ -1,5 +1,5 @@
 /* ReLearnDaily — 아카이브 상세 헤더 (§9-1 표준 히어로 = ReLearn.css .rl-hero 재사용) */
-.rl-daily-head { position: relative; padding: 0 0 24px; }
+.rl-daily-head { position: relative; padding: 0 0 var(--space-lg); }
 /* 브레드크럼(ReLearn › 아카이브) — 절대 배치로 플로우에서 제외해 §9-1 상단 보정(110+30=140px) 유지 */
 .rl-daily-crumb {
   position: absolute; top: 6px; left: 0;
@@ -13,14 +13,14 @@
 .rl-daily-crumb-link:hover { color: var(--color-cyan); }
 .rl-daily-crumb-sep { color: var(--text-muted); opacity: 0.5; }
 .rl-daily-crumb-cur { color: var(--text-secondary); }
-.rl-daily-hero { padding-bottom: 24px; }
+.rl-daily-hero { padding-bottom: var(--space-lg); }
 .rl-daily-htitle { font-variant-numeric: tabular-nums; }
 
 /* ── 주간 달력 스트립 (PaceNote Bento Weekly 선례 계승) ── */
 .rl-week { max-width: 560px; margin: 0 auto; }
 .rl-week-head {
   display: flex; justify-content: space-between; align-items: center;
-  gap: var(--space-12); margin-bottom: 8px;
+  gap: var(--space-12); margin-bottom: var(--space-sm);
 }
 .rl-week-label {
   font-size: var(--fs-xs); color: var(--text-muted);
@@ -37,11 +37,11 @@
 .rl-week-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-sm); }
 .rl-week-day {
   display: flex; flex-direction: column; align-items: center; gap: var(--space-xs);
-  padding: 7px 0 8px; border-radius: var(--radius-md);
+  padding: var(--space-sm) 0 var(--space-sm); border-radius: var(--radius-md);
   border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.02);
   text-decoration: none; transition: border-color 0.15s, background 0.15s;
 }
-.rl-week-day:hover { border-color: rgba(34, 211, 238, 0.4); }
+.rl-week-day:hover { border-color: color-mix(in srgb, var(--color-cyan) 40%, transparent); }
 .rl-week-dow { font-size: var(--fs-micro); color: var(--text-muted); }
 .rl-week-num {
   font-size: var(--fs-sm); font-weight: 600; color: var(--text-secondary);
@@ -49,7 +49,7 @@
 }
 .rl-week-day:hover .rl-week-num { color: var(--color-cyan); }
 .rl-week-day.on {
-  border-color: rgba(34, 211, 238, 0.4); background: rgba(34, 211, 238, 0.08);
+  border-color: color-mix(in srgb, var(--color-cyan) 40%, transparent); background: color-mix(in srgb, var(--color-cyan) 8%, transparent);
 }
 .rl-week-day.on .rl-week-num { color: var(--color-cyan); }
 .rl-week-day.on .rl-week-dow { color: var(--color-cyan); opacity: 0.75; }

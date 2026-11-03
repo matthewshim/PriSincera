@@ -23,7 +23,7 @@
 /* --- Hero Section (Matched with Daily Digest) --- */
 .log-hero-section {
   text-align: center;
-  padding: 160px 24px 48px; /* GNB 높이(80px)를 보정한 웅장한 히어로 패딩 */
+  padding: 160px var(--space-lg) var(--space-xl); /* GNB 높이(80px)를 보정한 웅장한 히어로 패딩 */
   position: relative;
   opacity: 0;
   transform: translateY(30px) scale(0.98);
@@ -92,7 +92,7 @@
 
 .featured-chapter-container {
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-lg);
 }
 
 .builder-card {
@@ -102,7 +102,7 @@
   display: inline-block;
   width: 100%;
   break-inside: avoid;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-lg);
 }
 
 .builder-card.revealed {
@@ -268,7 +268,7 @@
   color: var(--text-muted);
   margin-bottom: var(--space-sm);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 6px;
+  padding-bottom: var(--space-sm);
 }
 
 .visual-meta-commits {
@@ -301,7 +301,7 @@
 .visual-commit-more {
   font-size: var(--fs-xs);
   color: var(--text-muted);
-  margin-top: 4px;
+  margin-top: var(--space-xs);
   font-style: italic;
 }
 
@@ -335,7 +335,7 @@
   color: var(--accent-color);
   background: color-mix(in srgb, var(--accent-color) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
-  padding: 3px 8px;
+  padding: 3px var(--space-sm);
   border-radius: var(--radius-pill);
   margin-bottom: var(--space-xs);
 }  /* P2-3: 배지에 blur(4px)는 지각 불가한 비용이었다 */
@@ -408,7 +408,7 @@
   color: var(--text-muted);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 2px 8px;
+  padding: 2px var(--space-sm);
   border-radius: var(--radius-sm);
   transition: background-color var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
 }
@@ -425,7 +425,7 @@
   background: rgba(255, 255, 255, 0.015);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: var(--radius-md);
-  padding: 12px 14px;
+  padding: var(--space-12) var(--space-md);
   position: relative;
   overflow: hidden;
   transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease;
@@ -441,9 +441,9 @@
   align-items: center;
   gap: var(--space-sm);
   color: var(--text-muted);
-  margin-bottom: 10px;
+  margin-bottom: var(--space-12);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  padding-bottom: 6px;
+  padding-bottom: var(--space-sm);
 }
 
 .shipments-icon {
@@ -469,7 +469,7 @@
   font-size: var(--fs-micro);
   font-weight: 600;
   text-transform: uppercase;
-  padding: 1px 5px;
+  padding: 1px var(--space-xs);
   border-radius: var(--radius-sm);
   letter-spacing: var(--tracking-wide);
   flex-shrink: 0;

@@ -91,17 +91,17 @@
     height: 2px;
     background: linear-gradient(
         to right,
-        rgba(229, 178, 93, 0.8),
-        rgba(199, 210, 254, 0.95) 50%,
-        rgba(165, 180, 252, 0.8)
+        color-mix(in srgb, var(--color-gold) 80%, transparent),
+        color-mix(in srgb, var(--prism-lavender) 95%, transparent) 50%,
+        color-mix(in srgb, var(--color-indigo) 80%, transparent)
     );
     width: clamp(0%, calc(90% * (var(--scroll-progress, 0) / 0.60)), 90%);
     transform: translateY(-50%);
     z-index: 0;
     transition: width 0.12s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 
-        0 0 8px rgba(199, 210, 254, 0.35),
-        0 0 2px rgba(229, 178, 93, 0.4);
+        0 0 8px color-mix(in srgb, var(--prism-lavender) 35%, transparent),
+        0 0 2px color-mix(in srgb, var(--color-gold) 40%, transparent);
 }
 
 /* --- Milestone Card --- */
@@ -242,7 +242,7 @@
     border-radius: 50%;
     background: var(--bg-void);
     border: 3px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 24px;
+    margin-bottom: var(--space-lg);
     transition: border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     z-index: 2;
@@ -277,7 +277,7 @@
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-ultra);
     color: var(--milestone-accent);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
     text-transform: uppercase;
     transition: color 0.4s ease;
 }
@@ -287,14 +287,14 @@
     font-size: var(--fs-lg);
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-sm);
 }
 
 .milestone-industry {
     font-family: var(--font-mono);
     font-size: var(--fs-micro);
     color: rgba(255,255,255,0.5);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-12);
     letter-spacing: var(--tracking-wider);
 }
 
@@ -302,7 +302,7 @@
     font-size: var(--fs-base);
     color: var(--text-muted);
     line-height: var(--leading-relaxed);
-    margin-bottom: 16px;
+    margin-bottom: var(--space-md);
 }
 
 .milestone-keyword {
@@ -310,7 +310,7 @@
     color: var(--milestone-accent);
     /* 역할 동일 칩 — `.work-tag`(Proof of Work)와 짝이다. 구 구조는 padding 3↔4px,
        radius xs↔sm로 1~2px 어긋나 있었다(2026-11-01 통일). */
-    padding: var(--space-xs) 10px;
+    padding: var(--space-xs) var(--space-12);
     border: 1px solid color-mix(in srgb, var(--milestone-accent) 20%, transparent);
     background: color-mix(in srgb, var(--milestone-accent) 5%, transparent);
     border-radius: var(--radius-xs);
@@ -342,7 +342,7 @@
     font-weight: 600;
     color: var(--text-primary);
     line-height: var(--leading-none);
-    margin-bottom: 4px;
+    margin-bottom: var(--space-xs);
 }
 
 .stat-number .stat-plus {
@@ -389,15 +389,15 @@
         height: clamp(0%, calc(100% * (var(--scroll-progress, 0) / 0.60)), 100%);
         background: linear-gradient(
             to bottom,
-            rgba(229, 178, 93, 0.8),
-            rgba(199, 210, 254, 0.95) 50%,
-            rgba(165, 180, 252, 0.8)
+            color-mix(in srgb, var(--color-gold) 80%, transparent),
+            color-mix(in srgb, var(--prism-lavender) 95%, transparent) 50%,
+            color-mix(in srgb, var(--color-indigo) 80%, transparent)
         );
         transform: translateX(-50%);
         transition: height 0.12s cubic-bezier(0.16, 1, 0.3, 1);
         box-shadow: 
-            0 0 8px rgba(199, 210, 254, 0.35),
-            0 0 2px rgba(229, 178, 93, 0.4);
+            0 0 8px color-mix(in srgb, var(--prism-lavender) 35%, transparent),
+            0 0 2px color-mix(in srgb, var(--color-gold) 40%, transparent);
     }
 
     .journey-stats {
@@ -435,11 +435,11 @@
     /* §4-4 v6.2 — CTA·클릭 버튼은 사각 단일. 셀렉터에 btn/cta/button이 없어
        게이트가 놓쳤다(오너 발견 2026-11-01). 같은 사각지대의 나머지는 WARN으로 노출한다. */
     border-radius: var(--radius-sm);
-    box-shadow: inset 0 0 0 1px rgba(229, 178, 93, 0.24);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gold) 24%, transparent);
     transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
 }
 .maker-note-link:hover,
 .maker-note-link:focus-visible {
     transform: translateY(var(--lift-hover));
-    box-shadow: inset 0 0 0 1px rgba(229, 178, 93, 0.5);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gold) 50%, transparent);
 }

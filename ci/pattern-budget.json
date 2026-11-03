@@ -2,14 +2,16 @@
   "$schema": "ci/pattern-budget.mjs가 읽는 장식 예산 정본",
   "doc": "래칫(단조 감소) 게이트. 현재값 > max → 빌드 차단. 현재값 < max → --update로 조이기. 상세: ci/pattern-budget.mjs 헤더",
   "baselineCommit": "e1524bf (감사 v1.0 기준선)",
-  "updatedAt": "2026-11-02",
+  "updatedAt": "2026-11-03",
   "zeroRules": {
     "keyframes-duplicate": "키프레임 이름 중복 선언 금지 — 전역 스코프라 마지막 선언이 전역을 덮는다(P0-6)",
     "maxwidth-band-violation": "대역[880,2000]px max-width 리터럴 금지 — --container/--measure 또는 스코프 토큰만(§3-3, P0-4)",
     "phantom-font": "index.html이 요청하지 않는 웹폰트 참조 금지 — 로드 후 폐기/조용한 폴백(P0-1·P0-2)",
     "undeclared-token-ref": "미선언 토큰 참조 금지 — 폴백 없이 참조하면 **선언 전체가 무효화**된다. 실제 피해: Footer 브랜드 폰트가 브라우저 기본으로 떨어짐(--font-sans), BuildersLog 카드 전이 미동작(--duration-medium) (P1 발견)",
     "dead-var-fallback": "index.css :root에 선언된 토큰에 var() 폴백 금지 — 폴백이 영원히 쓰이지 않으면서 **오해를 유발하는 문서**가 된다. 실측 117건이 토큰 실제값과 모순이었다(예: var(--space-xl, 40px) ← 실제 32px). 런타임 주입 변수(--card-accent·--accent-color·--reveal-delay 등)는 대상 아님",
-    "emoji-article": "아티클 본문·메타 이모지 금지 — 빌더스 로그 38편(국/영/일)과 카드 메타를 2026-11-01에 전수 정리했다(378건). **여기서는 총량만 센다** — 위치를 지목하는 차단은 `ci/design-check.mjs`의 `articleEmojiGate`가 하고(파일:행 + 규범 조항 참조), 규범 정본은 [publishing_guide §6](../docs/builders-log/publishing_guide.md)·[content_guide §2-6](../docs/planners-view/content_guide.md)다. 래칫이 아니라 0 고정 — 작성 경로가 어드민 에디터(AI 초안)라 재유입이 가장 쉬운 자리다. 본문의 `→`는 타이포그래피이므로 대상 아님"
+    "emoji-article": "아티클 본문·메타 이모지 금지 — 빌더스 로그 38편(국/영/일)과 카드 메타를 2026-11-01에 전수 정리했다(378건). **여기서는 총량만 센다** — 위치를 지목하는 차단은 `ci/design-check.mjs`의 `articleEmojiGate`가 하고(파일:행 + 규범 조항 참조), 규범 정본은 [publishing_guide §6](../docs/builders-log/publishing_guide.md)·[content_guide §2-6](../docs/planners-view/content_guide.md)다. 래칫이 아니라 0 고정 — 작성 경로가 어드민 에디터(AI 초안)라 재유입이 가장 쉬운 자리다. 본문의 `→`는 타이포그래피이므로 대상 아님",
+    "raw-rgba-token-dup": "토큰과 값이 같은 유채색을 rgba 숫자로 베끼기 금지 — 토큰을 바꿔도 전파되지 않는다. `color-mix(in srgb, var(--token) N%, transparent)`가 무손실 치환형이다(2026-11-03 신설, 351건 전환 후 0). **흰/검 오버레이는 세지 않는다**(대응 토큰이 없어 바꿔도 얻는 게 없다 — 표면 토큰 체계는 task_backlog §3-5). **alpha 0도 세지 않는다** — `rgba(165,180,252,0)`은 색상 채널을 보존한 투명이라 애니메이션이 그 색 쪽으로 보간되는데 `color-mix(... 0%, transparent)`는 투명 검정이 되어 보간 중 회색이 낀다(자가 발각).",
+    "spacing-px-literal": "`--space-*` 단계와 **값이 같은** px를 간격 선언에 직접 쓰기 금지 — 토큰을 바꿔도 전파되지 않고, 스냅 뒤에는 `padding: var(--space-lg) 24px`처럼 한 선언에 두 문법이 섞인다(2026-11-03 신설, 198건 전환 후 0). 격자 **밖** 값은 `spacing-offgrid`가 담당한다."
   },
   "metrics": {
     "gradient-text": {
@@ -98,7 +100,7 @@
       "note": "`text-transform: uppercase` 선언 수. **목표 1은 오추정이었다**(P1-H2a 정정) — 전수 분석 결과 단일 패턴이 아니라 **3역할**(아이브로우 mono·배지 display+600·사이드바 라벨)이고, 하나로 합치면 역할이 섞인다. 역할별 그룹 규칙으로 메트릭을 index.css에 모아 36→17로 줄였다(중복 선언 83건 제거). 17은 역할 3 + 그룹에 넣기 부적합한 개별 케이스"
     },
     "raw-hex-css": {
-      "max": 37,
+      "max": 24,
       "target": 40,
       "note": "index.css 토큰 정의부 외에는 var(--token) 사용. Tailwind 스와치 재유입 차단 **측정기 교정(2026-11-01)**: 토큰 선언(`--x: #hex`)을 제외한다 — 색의 정의는 `:root`에서 생값이어야 하고, 제외 없이 세면 토큰을 선언할수록 지표가 나빠져 목표가 구조적으로 도달 불가가 됐다(`index.css` 20건이 전부 선언이었다)."
     },
@@ -151,6 +153,11 @@
       "max": 11,
       "target": 12,
       "note": "유휴 시 **보이는** 글로우 — 장식 밀도의 실제 지표. `radial-gradient` 총량은 지표가 아니다(상태 게이트 안이거나 base `opacity: 0`인 호버 공개형은 비용 0). 현재 15의 구성: 지면 상단 앰비언트 5(각 지면 1개 — 정당) · 망원경 커서 3(한 요소의 상태 변종, 홈 전용) · 제품 목업 정적 배경 3 · 달력 발행일 아우라 1(상태 표시) · Waymark 스텝 노드 1 · 기타 2. '화면당 1개' 원칙은 **지면 단위**로 읽는다"
+    },
+    "spacing-offgrid": {
+      "max": 4,
+      "target": 0,
+      "note": "`margin`·`padding`·`gap` 안의 px 중 --space-* 단계에 없는 값(2026-11-03 신설, 221건 스냅 후 4). 스냅 규칙: 최근접 단계, 동점은 24px 이상 내림(압축 방향)·미만 올림(조임 방지). **세지 않는 것** — ① 4px 미만·소수(광학 보정·일러스트 기하: `margin-top: 2px`는 줄바꿈 텍스트 상단 정렬, 목업 `2.5px`는 그림 치수) ② 80px 이상(GNB 높이 보정 계열 — 지면마다 80·92·110·120·140·160으로 갈려 있고 토큰 문제가 아니라 보정값 통일 문제다, task_backlog §3-7) ③ 음수(위치 보정). **잔존 4건은 §9-1 표준 보정의 산술 성분**이라 스냅하면 표준이 깨진다: ReLearn `.rl-hero` 상단 30px(110+30=140 데스크톱) · 모바일 28px(92+28=120) · `.rl-bm-tabs` 15px(53+15=68 sticky · 16+15=31 pill) · `.rl-split-side` 31px. **1차 스냅이 이 4건을 토큰으로 바꿔 140→142·120→116·68→69로 어긋났고**, 산술이 적힌 주석을 전수 훑어 자가 발각·되돌렸다. §9-1 보정값이 통일되면 target 0에 도달한다."
     }
   },
   "informational": {

@@ -7,154 +7,6 @@ import useSEO from '../hooks/useSEO';
 import { PAGE_META } from '../data/seoMeta.mjs';
 import Icon from '../components/common/Icon';
 
-// Local Translation Dict for Premium UX
-const TRANSLATIONS = {
-  ko: {
-    heroTitle: "Sylphio",
-    heroTagline: "듣는 순간 자막이 되는, 온디바이스 통역 정령.\nHear it once, read it instantly.",
-    heroCtaDownload: "Mac App Store에서 무료 다운로드",
-    heroSysReq: "시스템 요구사항: macOS 13.0 (Ventura) 이상",
-    title: "Sylphio API Key 연동 가이드",
-    subtitle: "개인용 AI API Key를 실피오에 연동하여 월 고정 구독료 없이 최고 품질의 AI 회의록 요약 및 Action Items(AI Executive Summary) 기능을 한계 없이 누려보세요.",
-    byokTitle: "BYOK (Bring Your Own Key) 아키텍처의 장점",
-    byokDesc: "Sylphio는 사용자 개인이 소유한 API Key를 직접 입력하는 안전한 방식(BYOK)을 사용합니다. 모든 AI 처리는 개발사의 중개 서버를 전혀 거치지 않고 사용자의 기기와 AI 제공사의 보안 엔드포인트 간에만 다이렉트로 이뤄지며, 저장된 키는 macOS의 최고 보안 금고 Secure Keychain(키체인)에 암호화 보존됩니다. 실시간 자막 요약 시에는 대화 텍스트가 전송되고, '정밀 회의록' 기능을 사용하면 녹음된 오디오 파일(.m4a)이 사용자의 API Key로 Google Gemini 등 제공사에 직접 업로드되어 전사·요약에 사용됩니다.",
-    geminiTitle: "1. Google Gemini API Key 발급 프로세스 (무료 추천)",
-    geminiIntro: "Google Gemini는 대단히 뛰어난 번역 텍스트 이해도와 더불어 압도적인 무료 혜택(Free Tier)을 제공하여 실피오 사용 장벽을 극적으로 낮춰 줍니다.",
-    geminiStep1: "웹 브라우저를 열고 aistudio.google.com에 접속하여 개인 구글 계정으로 로그인합니다.",  // i18n-ok: 사전의 ko 블록 외부이지만 가이드 본문 콘텐츠(링크 포함)
-    geminiStep2: "좌측 상단 사이드바 메뉴의 Get API key 버튼을 클릭합니다.",
-    geminiStep3: "화면 중앙의 Create API key 버튼을 클릭한 뒤, 나타나는 팝업에서 Create API key in new project를 클릭하여 키를 생성합니다.",
-    geminiStep4: "생성 완료 즉시 제공되는 복사 버튼을 눌러 AIzaSy...로 시작하는 고유 API Key 문자열을 메모장 등에 안전하게 복사하여 보관합니다.",
-    geminiPriceHeader: "Gemini 요금제 및 무료 등급 가이드",
-    geminiFreeTitle: "무료 버전 (Free Tier)",
-    geminiFreeDesc: "비용: 100% 무료\n지원 한도: 모델별 분당 요청 수(RPM)와 함께, 무료 등급에는 일일 요청 한도(대략 하루 수십 회 수준)가 적용됩니다.\n실시간 자막 번역은 API Key 쿼터를 소모하지 않도록 무료 Google 번역 및 온디바이스 로컬 엔진으로 고정 작동합니다. 사용자 API Key는 ① 세션 종료 후 실시간 회의록 요약 생성, ② '정밀 회의록'(녹음 오디오 재분석) 실행 시 호출됩니다. 특히 정밀 회의록은 오디오를 업로드하는 큰 호출이므로, 무료 등급에서 하루에 여러 번 반복하면 일일 한도에 도달할 수 있습니다. 이 경우 한도가 회복된 뒤 '정밀 재생성'으로 다시 시도할 수 있습니다.",
-    geminiPayTitle: "유료 버전 (Pay-as-you-go)",
-    geminiPayDesc: "제한 없는 초고속 통역을 원할 경우 종량제를 선택 등록할 수 있습니다. 요금은 100만 토큰당 약 0.075달러(한화 약 100원) 수준으로 상상을 초월할 만큼 저렴합니다.",
-    
-    openaiTitle: "2. OpenAI API Key 발급 프로세스 (고성능 전문가용)",
-    openaiIntro: "OpenAI의 GPT-4o-mini 엔진은 뛰어난 언어 스위칭 정확성과 대화 요약 능력을 보장하며, 고속 응답성에 특화되어 있습니다.",
-    openaiWarningTitle: "OpenAI 필수 유의사항: 결제 크레딧 사전 충전 (Prerequisite)",
-    openaiWarningDesc: "OpenAI는 구글과 달리 무료 체험용 Credit이 비어있을 경우, Key를 생성하여 연동하더라도 인식을 개시하자마자 번역 에러(Quota Exceeded)를 반환하며 작동하지 않습니다. 반드시 발급 전 최저 5달러($5)를 선충전해주셔야 작동합니다.",
-    openaiStep1: "platform.openai.com에 접속하여 가입 후 로그인합니다.",  // i18n-ok: 사전의 ko 블록 외부이지만 가이드 본문 콘텐츠(링크 포함)
-    openaiStep2: "좌측 내비게이션 바에서 열쇠 모양 아이콘인 API keys 메뉴를 선택합니다.",
-    openaiStep3: "화면 우측 상단의 + Create new secret key 버튼을 클릭하고, 키의 이름을 입력한 뒤 생성합니다.",
-    openaiStep4: "생성된 sk-proj-... 비밀 키를 즉시 복사하여 보관합니다. (창을 닫은 후에는 키를 다시 확인할 수 없습니다.)",
-    openaiStep5: "좌측 메뉴의 Settings > Billing으로 이동해 Add to balance를 클릭하여 최소 5달러의 해외결제 크레딧을 사전 결제 충전합니다.",
-    openaiPriceHeader: "OpenAI (GPT-4o-mini) 요금제 정보",
-    openaiPriceDesc: "- 입력 토큰당 비용: $0.150 / 1M tokens (100만 토큰당 약 200원)\n- 출력 토큰당 비용: $0.600 / 1M tokens (100만 토큰당 약 800원)\n- 실시간 자막 통역은 무료/온디바이스 번역으로 진행되어 비용이 발생하지 않으며, OpenAI API Key는 세션 종료 후 회의록 텍스트 요약 생성 시 호출됩니다.\n- 참고: 녹음 오디오를 재분석하는 '정밀 회의록'은 Google Gemini 멀티모달 전용이며, OpenAI 키는 텍스트 요약에 사용됩니다.",
-    
-    appSetupTitle: "3. Sylphio 앱 내 API Key 최종 연동 가이드",
-    appStep1: "macOS에 단독 설치된 Sylphio.app을 기동합니다.",
-    appStep2: "대기 화면 우측 상단의 설정 기어 버튼(⚙️)을 클릭하여 환경설정 창을 엽니다.",
-    appStep3: "좌측 탭 메뉴에서 AI 엔진 (BYOK)을 선택합니다.",
-    appStep4: "AI PRO 실시간 통역 엔진 활성화 스위치를 ON(켬) 상태로 전환합니다.",
-    appStep5: "유저가 선호하는 AI 엔진 플랫폼(Google Gemini 또는 OpenAI)을 선택합니다.",
-    appStep6: "복사해 두었던 API Key 문자열을 붙여넣기(CMD + V) 합니다.",
-    appStep7: "API Key 연동 성공 및 활성화 표시를 확인한 뒤 설정창을 닫으면 다국어 자동 감지 및 실시간 번역 통역 기능의 잠금이 해제되어 완벽 가동됩니다!",
-    
-    faqHeader: "긴급 장애 극복 및 트러블슈팅 (Troubleshooting)",
-    faq1Q: "Q1. \"설정 ⚙️에서 AI 번역을 활성화하세요\" 또는 \"번역 에러\" 가 계속 발생합니다.",
-    faq1A: "- 원인: 입력하신 API Key 내부에 불필요한 공백 문자나 줄바꿈(\\n)이 섞여 들어갔거나, 키 자체가 유효하지 않을 때 발생합니다.\n- 해결법: 키 입력란을 완전히 비운 후, 메모장에 키를 붙여넣어 공백이 없는지 확인하고 다시 복사하여 깨끗하게 입력해 주십시오.",
-    faq2Q: "Q2. OpenAI Key를 넣었는데 계속 \"Quota Exceeded\" 에러가 뜹니다.",
-    faq2A: "- 원인: 사용 중인 OpenAI 플랫폼 계정에 사전 충전된 Balance(달러 크레딧)가 0인 상태이거나, 등록했던 카드 결제 정보가 만료되어 계정이 일시 잠금 상태일 때 발생합니다.\n- 해결법: platform.openai.com으로 이동하셔서 충전 잔액이 남아 있는지 재차 확인하시고 최소 5달러를 결제/충전해 두셔야 정상 가동됩니다."  // i18n-ok: 사전의 ko 블록 외부이지만 가이드 본문 콘텐츠(링크 포함)
-  },
-  en: {
-    heroTitle: "Sylphio",
-    heroTagline: "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
-    heroCtaDownload: "Free Download on Mac App Store",
-    heroSysReq: "Requires macOS 13.0 (Ventura) or later",
-    title: "Sylphio API Key Integration Guide",
-    subtitle: "Integrate your personal AI API Key with Sylphio to enjoy the ultimate AI minutes summary and Action Items (AI Executive Summary) features without limits and without monthly subscription fees.",
-    byokTitle: "Advantages of BYOK (Bring Your Own Key) Architecture",
-    byokDesc: "Sylphio uses a secure BYOK approach where you enter your own API Key. All AI processing bypasses developer servers entirely and flows directly between your device and the AI provider's secure endpoint; saved keys are kept encrypted in macOS's Secure Keychain. Real-time summary sends the transcribed text, and when you use 'Enhanced Minutes' the recorded audio file (.m4a) is uploaded directly to your chosen provider (e.g., Google Gemini) via your own key for transcription and summary.",
-    geminiTitle: "1. Google Gemini API Key Issuance Process (Recommended / Free)",
-    geminiIntro: "Google Gemini delivers exceptional comprehension and translation accuracy, combined with an incredibly generous Free Tier that lowers the barrier to using Sylphio to zero.",
-    geminiStep1: "Open a browser, go to aistudio.google.com, and log in with your Google account.",
-    geminiStep2: "Click the Get API key button in the top left sidebar menu.",
-    geminiStep3: "Click Create API key in the center, and choose Create API key in new project in the popup to generate your key.",
-    geminiStep4: "Instantly copy the unique key string (starting with AIzaSy...) using the provided button and save it securely.",
-    geminiPriceHeader: "Gemini Pricing & Free Tier Guide",
-    geminiFreeTitle: "Free Tier",
-    geminiFreeDesc: "Cost: 100% Free\nLimits: The free tier applies per-model requests-per-minute (RPM) plus a daily request cap (roughly a few dozen requests per day).\nReal-time subtitle translation runs on free Google Translate / on-device engines so it never consumes your API Key quota. Your key is used (1) to generate the real-time minutes summary after a session, and (2) when you run 'Enhanced Minutes' (recording re-analysis). Enhanced Minutes uploads audio, which is a large call — repeating it many times a day on the free tier may hit the daily cap. If that happens, simply 'Regenerate' once your quota resets.",
-    geminiPayTitle: "Pay-as-you-go Tier",
-    geminiPayDesc: "If you desire limitless high-speed translation, you can opt to register billing. The cost is incredibly low at approximately $0.075 per 1 million input tokens (around 100 KRW).",
-    
-    openaiTitle: "2. OpenAI API Key Issuance Process (Pro & High-Performance)",
-    openaiIntro: "OpenAI's GPT-4o-mini engine ensures brilliant language switching accuracy, swift response times, and exceptional conversation summary capabilities.",
-    openaiWarningTitle: "Prerequisite: Pre-charge Billing Balance",
-    openaiWarningDesc: "Unlike Google, OpenAI keys will return a quota error immediately if your account balance is $0, even if the key itself is successfully generated. You must pre-charge at least $5 to activate API operations.",
-    openaiStep1: "Visit platform.openai.com, register, and log in.",
-    openaiStep2: "Select the key-shaped API keys menu in the left navigation bar.",
-    openaiStep3: "Click + Create new secret key in the top right, name the key, and generate it.",
-    openaiStep4: "Copy the sk-proj-... secret key immediately. (It cannot be viewed again once you close the popup.)",
-    openaiStep5: "Navigate to Settings > Billing on the left menu, click Add to balance, and pre-charge at least $5.",
-    openaiPriceHeader: "OpenAI (GPT-4o-mini) Pricing Info",
-    openaiPriceDesc: "- Input cost: $0.150 / 1M tokens\n- Output cost: $0.600 / 1M tokens\n- Real-time subtitle translation is powered by local/free engines and incurs no cost. Your OpenAI key is called after a session to generate the text summary, costing well under a cent per session.\n- Note: 'Enhanced Minutes' (audio re-analysis) uses Google Gemini's multimodal model only; your OpenAI key is used for text summaries.",
-    
-    appSetupTitle: "3. How to Integrate API Key Inside Sylphio App",
-    appStep1: "Launch Sylphio.app on your Mac.",
-    appStep2: "Click the Settings gear icon (⚙️) in the top-right of the standby screen.",
-    appStep3: "Select the AI Engine (BYOK) tab in the left-side settings menu.",
-    appStep4: "Turn the Activate AI PRO Real-Time Translation Switch to ON.",
-    appStep5: "Choose your preferred AI platform (Google Gemini or OpenAI).",
-    appStep6: "Paste (CMD + V) your copied API Key string into the field.",
-    appStep7: "Verify the key activation display. Once done, close settings to unlock the AI Executive summary and multi-language auto-detection features immediately!",
-    
-    faqHeader: "Troubleshooting & Emergency FAQ",
-    faq1Q: "Q1. It keeps showing \"Activate AI Translation in Settings ⚙️\" or \"Translation Error.\"",
-    faq1A: "- Cause: Unwanted whitespace, trailing newlines (\\n), or an invalid character is mixed into your API Key input.\n- Solution: Completely clear the input box, paste your key into a plain text editor to make sure there are no spaces, and copy-paste it cleanly again.",
-    faq2Q: "Q2. I connected my OpenAI key, but it keeps returning a \"Quota Exceeded\" error.",
-    faq2A: "- Cause: Your OpenAI API account balance is $0, or your registered card billing information has expired, causing a temporary account hold.\n- Solution: Go to platform.openai.com, check your balance, and pre-charge a minimum of $5 to restore service."
-  },
-  ja: {
-    heroTitle: "Sylphio",
-    heroTagline: "聞いた瞬間、字幕になる — オンデバイス翻訳の精霊。\nHear it once, read it instantly.",
-    heroCtaDownload: "Mac App Storeで無料ダウンロード",
-    heroSysReq: "動作環境: macOS 13.0 (Ventura) 以降",
-    title: "Sylphio APIキー連携ガイド",
-    subtitle: "個人用のAI APIキーをSylphioに連携し、月々の定額サブスク料金なしで、最高精度の議事録要約とアクションアイテム生成（AI Executive Summary）を制限なく体験してください。",
-    byokTitle: "BYOK (Bring Your Own Key) アーキテクチャのメリット",
-    byokDesc: "Sylphioは、ユーザーが所有するAPIキーを直接入力する安全な方式（BYOK）を採用しています。すべてのAI処理は開発元のサーバーを一切仲介せず、端末とAIプロバイダのセキュアなエンドポイント間で直接行われ、保存されたキーはmacOSのSecure Keychain（キーチェーン）に暗号化保存されます。リアルタイム要約時は対話テキストが送信され、「精密議事録」機能を使用すると、録音した音声ファイル（.m4a）がご自身のAPIキーでGoogle Geminiなどのプロバイダへ直接アップロードされ、文字起こし・要約に使用されます。",
-    geminiTitle: "1. Google Gemini APIキー発行プロセス (推奨・無料)",
-    geminiIntro: "Google Geminiは、驚異的な翻訳理解力に加え、非常に強力な無料枠（Free Tier）を提供しており、Sylphioの 導入障壁をゼロに抑えることができます。",
-    geminiStep1: "ブラウザを開き、aistudio.google.comにアクセスしてGoogleアカウントでログインします。",
-    geminiStep2: "左側のサイドバーメニューにある Get API key ボタンをクリックします。",
-    geminiStep3: "画面中央の Create API key ボタンをクリックし、ポップアップで Create API key in new project を選択してキーを生成します。",
-    geminiStep4: "生成された固有のキー文字列（AIzaSy...で始まる）をコピーし、安全に保管してください。",
-    geminiPriceHeader: "Gemini 料金プラン＆無料枠ガイド",
-    geminiFreeTitle: "無料枠 (Free Tier)",
-    geminiFreeDesc: "料金：100% 無料\n制限：無料枠ではモデルごとの毎分リクエスト数（RPM）に加え、1日あたりのリクエスト上限（おおむね1日数十回程度）が適用されます。\nリアルタイム字幕翻訳はAPIキーのクォータを消費しないよう、無料のGoogle翻訳およびオンデバイスエンジンで固定動作します。APIキーは①セッション終了後のリアルタイム議事録要約の生成、②「精密議事録」（録音音声の再分析）の実行時に呼び出されます。特に精密議事録は音声をアップロードする大きな呼び出しのため、無料枠で1日に何度も繰り返すと日次上限に達することがあります。その場合はクォータ回復後に「精密再生成」で再試行できます。",
-    geminiPayTitle: "従量課金プラン (Pay-as-you-go)",
-    geminiPayDesc: "制限のない超高速通訳が必要な場合、課金登録が可能です。料金は100万トークンあたり約0.075ドル（約10円）と、圧倒的にリーズナブルです。",
-    
-    openaiTitle: "2. OpenAI APIキー発行プロセス (プロ・高精度向け)",
-    openaiIntro: "OpenAIの GPT-4o-mini エンジンは、高度な言語切り替え精度、高速応答、優れた会話要約力を備えています。",
-    openaiWarningTitle: "必須事項：クレジットの事前チャージ（残高チャージ）",
-    openaiWarningDesc: "OpenAIはGoogleとは異なり、アカウント残高が$0の場合、キー自体が生成されていても通信時にエラー（Quota Exceeded）を返します。利用前に必ず最低5ドル（$5）を事前チャージしてください。",
-    openaiStep1: "platform.openai.com にアクセスし、登録およびログインします。",
-    openaiStep2: "左メニューにある鍵アイコンの API keys を選択します。",
-    openaiStep3: "右上の + Create new secret key ボタンをクリックし、キーに名前をつけて生成します。",
-    openaiStep4: "生成された sk-proj-... キーを即座にコピーします。（ポップアップを閉じると二度と確認できません。）",
-    openaiStep5: "左メニューの Settings > Billing に移動し、Add to balance をクリックして最低5ドルをチャージします。",
-    openaiPriceHeader: "OpenAI (GPT-4o-mini) 料金情報",
-    openaiPriceDesc: "- 入力料金: $0.150 / 1M tokens\n- 出力料金: $0.600 / 1M tokens\n- リアルタイム字幕翻訳は無料のローカル/Web翻訳で行われるため費用は発生せず、OpenAIキーはセッション終了後の議事録テキスト要約生成時に呼び出されます。\n- 補足：録音音声を再分析する「精密議事録」はGoogle Geminiのマルチモーダル専用で、OpenAIキーはテキスト要約に使用されます。",
-    
-    appSetupTitle: "3. SylphioアプリへのAPIキー設定手順",
-    appStep1: "Mac上の Sylphio.app を起動します。",
-    appStep2: "待機画面の右上にある設定歯車アイコン（⚙️）をクリックして環境設定を開きます。",
-    appStep3: "左メニューの AI Engine (BYOK) タブを選択します。",
-    appStep4: "AI PRO リアルタイム翻訳エンジンの有効化スイッチを ON に切り替えます。",
-    appStep5: "使用するAIプラットフォーム（Google Gemini または OpenAI）を選択します。",
-    appStep6: "コピーしたAPIキー文字列を入力欄に貼り付け（CMD + V）します。",
-    appStep7: "連携成功のマークを確認し、設定画面を閉じれば、AI議事録要約と自動多言語検知機能が即座にアンロックされます！",
-    
-    faqHeader: "トラブルシューティング＆緊急FAQ",
-    faq1Q: "Q1. 「設定 ⚙️でAI翻訳を有効にしてください」または「翻訳エラー」が続きます。",
-    faq1A: "- 原因：入力されたAPIキーに不要な空白スペースや改行（\\n）が含まれているか、キー自体が無効な場合に発生します。\n- 解決策：入力欄を一度完全に空にし、メモ帳等でスペースがないことを確認してから、きれいに再度コピー＆ペーストしてください。",
-    faq2Q: "Q2. OpenAIキーを連携したのに「Quota Exceeded」エラーが解消されません。",
-    faq2A: "- 原因：OpenAIのAPIアカウント残高が$0であるか、登録クレジットカードが失効してアカウントが一時停止している可能性があります。\n- 解決策：platform.openai.com にてチャージ残高を確認し、最低5ドルを事前チャージしてください。"
-  }
-};
-
 export default function SylphioApiKeyGuide() {
   const { locale, t } = useTranslation();
 
@@ -164,9 +16,9 @@ export default function SylphioApiKeyGuide() {
     keywords: PAGE_META['/sylphio/guide'].keywords,
     ogUrl: 'https://www.prisincera.com/sylphio/guide'
   });
-  const d = TRANSLATIONS[locale] || TRANSLATIONS['ko'];
+  const d = t('sylphio.guide');
   const [activeId, setActiveId] = useState('');
-  const tocLabel = locale === 'ja' ? '目次' : locale === 'en' ? 'On this page' : '이 문서의 목차';  // i18n-ok: 3로케일 완비 목차 라벨(레이아웃 상수 — 콘텐츠 사전 d와 역할이 다름)
+  const tocLabel = t('sylphio.guide.tocLabel');
   const toc = [
     { id: 'section-gemini', label: d.geminiTitle },
     { id: 'section-openai', label: d.openaiTitle },
@@ -237,7 +89,7 @@ export default function SylphioApiKeyGuide() {
         <div className="sylphio-guide-byok-note">
           <div className="sylphio-guide-byok-icon"><Icon name="shield" size={28} /></div>
           <div className="sylphio-guide-byok-content">
-            <h4>{d.byokTitle}</h4>
+            <h2>{d.byokTitle}</h2>
             <p>{d.byokDesc}</p>
           </div>
         </div>
@@ -289,11 +141,11 @@ export default function SylphioApiKeyGuide() {
             <div className="sylphio-guide-pricing-header">{d.geminiPriceHeader}</div>
             <div className="sylphio-guide-pricing-list">
               <div className="sylphio-guide-pricing-item free">
-                <h5>{d.geminiFreeTitle}</h5>
+                <h3>{d.geminiFreeTitle}</h3>
                 <p className="u-prewrap">{d.geminiFreeDesc}</p>
               </div>
               <div className="sylphio-guide-pricing-item pay">
-                <h5>{d.geminiPayTitle}</h5>
+                <h3>{d.geminiPayTitle}</h3>
                 <p>{d.geminiPayDesc}</p>
               </div>
             </div>
@@ -313,7 +165,7 @@ export default function SylphioApiKeyGuide() {
           <div className="sylphio-guide-warning-box">
             <span className="sylphio-guide-warning-icon"><Icon name="warning" /></span>
             <div className="sylphio-guide-warning-content">
-              <h5>{d.openaiWarningTitle}</h5>
+              <h3>{d.openaiWarningTitle}</h3>
               <p>{d.openaiWarningDesc}</p>
             </div>
           </div>
@@ -404,15 +256,15 @@ export default function SylphioApiKeyGuide() {
 
         {/* --- FAQ & Troubleshooting --- */}
         <section className="sylphio-guide-faq" id="section-faq">
-          <h3>{d.faqHeader}</h3>
+          <h2>{d.faqHeader}</h2>
           
           <div className="sylphio-guide-faq-item">
-            <h5>{d.faq1Q}</h5>
+            <h3>{d.faq1Q}</h3>
             <p className="u-prewrap">{d.faq1A}</p>
           </div>
 
           <div className="sylphio-guide-faq-item">
-            <h5>{d.faq2Q}</h5>
+            <h3>{d.faq2Q}</h3>
             <p className="u-prewrap">{d.faq2A}</p>
           </div>
         </section>

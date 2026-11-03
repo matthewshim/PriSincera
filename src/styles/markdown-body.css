@@ -88,7 +88,7 @@
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: var(--fs-sm);
   background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
+  padding: 2px var(--space-sm);
   border-radius: var(--radius-sm);
 }
 
@@ -115,7 +115,7 @@
 
 .markdown-body th,
 .markdown-body td {
-  padding: 12px 16px;
+  padding: var(--space-12) var(--space-md);
   text-align: left;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -184,8 +184,8 @@
   background-color: transparent; /* UA 기본 노란 배경 제거 */
   color: var(--crystal-white);
   background-image:
-    linear-gradient(rgba(229, 178, 93, 0.62), rgba(229, 178, 93, 0.62)),
-    linear-gradient(rgba(229, 178, 93, 0.26), rgba(229, 178, 93, 0.26));
+    linear-gradient(color-mix(in srgb, var(--color-gold) 62%, transparent), color-mix(in srgb, var(--color-gold) 62%, transparent)),
+    linear-gradient(color-mix(in srgb, var(--color-gold) 26%, transparent), color-mix(in srgb, var(--color-gold) 26%, transparent));
   background-repeat: no-repeat, no-repeat;
   background-position: 0 94%, 0 88%;
   background-size: 100% 2px, 100% 0.58em;

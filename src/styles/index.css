@@ -61,24 +61,24 @@
     --color-star: #FCD34D;      /* 별점·스코어 강조 */
 
     /* Glassmorphism 3.0 (Precision & Soft Depth) */
-    --glass-bg: rgba(14, 14, 26, 0.75);
+    --glass-bg: color-mix(in srgb, var(--bg-surface) 75%, transparent);
     --glass-border: rgba(255, 255, 255, 0.05);
-    --glass-border-hover: rgba(165, 180, 252, 0.20); /* Subtle indigo highlight on hover */
+    --glass-border-hover: color-mix(in srgb, var(--color-indigo) 20%, transparent); /* Subtle indigo highlight on hover */
 
     /* Premium Gradients */
     --gradient-brand: linear-gradient(135deg, var(--color-indigo) 0%, var(--prism-lavender) 50%, var(--color-gold) 100%); /* Celestial Indigo to Gold */
     --gradient-subtle: linear-gradient(135deg, #161B2E, #475569);
-    --gradient-cta: linear-gradient(135deg, rgba(229, 178, 93, 0.08), rgba(255, 255, 255, 0.03));
+    --gradient-cta: linear-gradient(135deg, color-mix(in srgb, var(--color-gold) 8%, transparent), rgba(255, 255, 255, 0.03));
 
     /* Semantic CTA Button Tokens (v4.0) */
     --btn-primary-bg: var(--gradient-cta);
-    --btn-primary-border: rgba(229, 178, 93, 0.20);
-    --btn-primary-border-hover: rgba(229, 178, 93, 0.45);
-    --btn-primary-glow: rgba(229, 178, 93, 0.02);
-    --btn-primary-glow-hover: rgba(229, 178, 93, 0.06);
-    --btn-primary-hover-bg: linear-gradient(135deg, rgba(229, 178, 93, 0.18), rgba(255, 255, 255, 0.06));
+    --btn-primary-border: color-mix(in srgb, var(--color-gold) 20%, transparent);
+    --btn-primary-border-hover: color-mix(in srgb, var(--color-gold) 45%, transparent);
+    --btn-primary-glow: color-mix(in srgb, var(--color-gold) 2%, transparent);
+    --btn-primary-glow-hover: color-mix(in srgb, var(--color-gold) 6%, transparent);
+    --btn-primary-hover-bg: linear-gradient(135deg, color-mix(in srgb, var(--color-gold) 18%, transparent), rgba(255, 255, 255, 0.06));
     
-    --btn-secondary-bg: rgba(22, 22, 41, 0.65);
+    --btn-secondary-bg: color-mix(in srgb, var(--bg-elevated) 65%, transparent);
     --btn-secondary-bg-hover: rgba(30, 30, 56, 0.85);
 
     /* Typography Stack */
@@ -300,8 +300,8 @@ button { background: none; border: none; font: inherit; color: inherit; }
 
 .premium-card:hover {
     background: rgba(26, 26, 26, 0.65);
-    border-color: rgba(229, 178, 93, 0.25); /* Subtle starlight gold edge on hover */
-    box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.7), 0 0 15px rgba(229, 178, 93, 0.03);
+    border-color: color-mix(in srgb, var(--color-gold) 25%, transparent); /* Subtle starlight gold edge on hover */
+    box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.7), 0 0 15px color-mix(in srgb, var(--color-gold) 3%, transparent);
     transform: translateY(var(--lift-hover));
 }
 
@@ -520,22 +520,22 @@ button:active,
 /* 1. Builder's Log (Celestial Gold-Slate Theme) */
 .builders-log-wrapper,
 .builders-log-detail-wrapper {
-    --btn-primary-bg: linear-gradient(135deg, rgba(229, 178, 93, 0.12), rgba(226, 226, 231, 0.04));
-    --btn-primary-border: rgba(229, 178, 93, 0.25);
-    --btn-primary-border-hover: rgba(229, 178, 93, 0.45);
-    --btn-primary-glow: rgba(229, 178, 93, 0.02);
-    --btn-primary-glow-hover: rgba(229, 178, 93, 0.06);
-    --btn-primary-hover-bg: linear-gradient(135deg, rgba(229, 178, 93, 0.20), rgba(226, 226, 231, 0.08));
+    --btn-primary-bg: linear-gradient(135deg, color-mix(in srgb, var(--color-gold) 12%, transparent), rgba(226, 226, 231, 0.04));
+    --btn-primary-border: color-mix(in srgb, var(--color-gold) 25%, transparent);
+    --btn-primary-border-hover: color-mix(in srgb, var(--color-gold) 45%, transparent);
+    --btn-primary-glow: color-mix(in srgb, var(--color-gold) 2%, transparent);
+    --btn-primary-glow-hover: color-mix(in srgb, var(--color-gold) 6%, transparent);
+    --btn-primary-hover-bg: linear-gradient(135deg, color-mix(in srgb, var(--color-gold) 20%, transparent), rgba(226, 226, 231, 0.08));
 }/* 4. Sylphio (Deep Sapphire-Starlight Blue Theme) */
 .sylphio-landing,
 .sylphio-guide,
 .sylphio-privacy {
-    --btn-primary-bg: linear-gradient(135deg, rgba(30, 60, 114, 0.15), rgba(135, 169, 236, 0.08));
-    --btn-primary-border: rgba(135, 169, 236, 0.25);
-    --btn-primary-border-hover: rgba(135, 169, 236, 0.45);
+    --btn-primary-bg: linear-gradient(135deg, rgba(30, 60, 114, 0.15), color-mix(in srgb, var(--accent-sylphio) 8%, transparent));
+    --btn-primary-border: color-mix(in srgb, var(--accent-sylphio) 25%, transparent);
+    --btn-primary-border-hover: color-mix(in srgb, var(--accent-sylphio) 45%, transparent);
     --btn-primary-glow: rgba(30, 60, 114, 0.02);
     --btn-primary-glow-hover: rgba(30, 60, 114, 0.05);
-    --btn-primary-hover-bg: linear-gradient(135deg, rgba(30, 60, 114, 0.25), rgba(135, 169, 236, 0.15));
+    --btn-primary-hover-bg: linear-gradient(135deg, rgba(30, 60, 114, 0.25), color-mix(in srgb, var(--accent-sylphio) 15%, transparent));
 }
 
 
@@ -658,6 +658,7 @@ button:active,
 .u-eyebrow,
 .section-label,
 .wm-eyebrow,
+.sylphio-eyebrow,
 .pvl-series-eyebrow,
 .flagship-label,
 .work-card-label,

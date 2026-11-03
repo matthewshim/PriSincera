@@ -323,6 +323,76 @@ export function collect({ noAdmin = false, root = 'src' } = {}) {
       const stripped = css.replace(/--[\w-]+\s*:[^;}]*/g, '');
       return (stripped.match(/#[0-9A-Fa-f]{3,8}\b/g) || []).length;
     })(),
+    /* 생rgba — **토큰과 값이 같은 유채색만** 센다. 세 부류로 갈리고 책임이 다르다(2026-11-03 신설):
+         ① 토큰 값 복제(유채색) — `rgba(165,180,252,.2)`는 `--color-indigo`를 숫자로 베낀 것이다.
+            토큰을 바꿔도 전파되지 않으므로 **결함이고, 이 지표가 세는 대상이다**.
+            무손실 치환형은 `color-mix(in srgb, var(--token) 20%, transparent)`다.
+         ② 흰/검 오버레이 — `rgba(255,255,255,.08)`는 '유리 표면을 N% 밝힌다'는 뜻이고
+            대응 토큰이 없다. `color-mix(... white 8%, transparent)`로 바꿔도 얻는 게 없어 **세지 않는다**
+            (표면 토큰 체계는 별건 결정이다 — task_backlog §3-5).
+         ③ 토큰 없는 유채색 — 오프시스템 색이다. `raw-hex-css`와 같은 성격이라 그쪽 판단을 따른다.
+       `alpha: 0`은 예외로 둔다 — `rgba(165,180,252,0)`은 **색상 채널을 보존한 투명**이라
+       애니메이션이 그 색 쪽으로 보간되는데, `color-mix(... 0%, transparent)`는 투명 **검정**이 되어
+       보간 중 회색이 낀다(2026-11-03 자가 발각). 치환이 틀린 자리이므로 결함으로 세지 않는다. */
+    'raw-rgba-token-dup': (() => {
+      const decl = /--[\w-]+\s*:\s*(#[0-9A-Fa-f]{6})\b/g;
+      const seen = new Map();
+      for (const m of css.matchAll(decl)) {
+        const hx = m[1].toUpperCase();
+        seen.set(hx, (seen.get(hx) || 0) + 1);
+      }
+      const triplets = new Set();
+      for (const [hx, n] of seen) {
+        if (n > 1) continue;            // 값이 겹치는 토큰은 어느 쪽을 뜻했는지 알 수 없다
+        triplets.add([1, 3, 5].map((i) => parseInt(hx.slice(i, i + 2), 16)).join(','));
+      }
+      const stripped = css.replace(/--[\w-]+\s*:[^;}]*/g, '');
+      let n = 0;
+      for (const m of stripped.matchAll(/\brgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([0-9.]+)\s*)?\)/g)) {
+        if (m[4] !== undefined && Number(m[4]) === 0) continue;   // 색상 보존 투명은 정당
+        if (triplets.has(`${+m[1]},${+m[2]},${+m[3]}`)) n++;
+      }
+      return n;
+    })(),
+    /* 비토큰 간격값 — `margin`·`padding`·`gap` 선언 안의 px 중 `--space-*` 단계에 없는 값.
+       두 부류를 **세지 않는다**(2026-11-03 신설, 175건 스냅 후 0):
+         ① **4px 미만과 소수** — 광학 보정과 일러스트 기하다. `margin-top: 2px`는
+            '줄바꿈 텍스트 상단에 정확히 맞춘' 값이고 목업 내부 `2.5px`는 그림의 치수다.
+            4pt 격자가 지배하는 레이아웃 간격이 아니므로 스냅하면 의도가 깨진다.
+         ② **80px 이상** — GNB 높이 보정 계열이다. 지면마다 80·92·110·120·140·160px으로
+            갈려 있는데(§9-1 공백, task_backlog §3-7) 토큰 스케일 문제가 아니라
+            **보정값 자체가 통일돼야 하는** 별건이다. 여기서 스냅하면 그 결함을 덮는다.
+       스냅 규칙: 최근접 단계. 동점은 24px 이상 내림(압축 방향)·미만 올림(조임 방지). */
+    /* 격자 **위에** 있는데 px로 적힌 간격값 — `padding: 16px`은 `var(--space-md)`와 값이 같다.
+       같은 값을 두 문법으로 쓰면 토큰을 바꿔도 전파되지 않고, 스냅 작업 뒤에는
+       `padding: var(--space-lg) 24px`처럼 한 선언에 둘이 섞인다(2026-11-03, 198건 전환 후 0).
+       제외는 `spacing-offgrid`와 같다(음수·소수). */
+    'spacing-px-literal': (() => {
+      const steps = new Set([4, 8, 12, 16, 24, 32, 64, 128]);
+      let n = 0;
+      for (const m of css.matchAll(/(?:^|[;{\s])(?:margin|padding|gap|row-gap|column-gap)(?:-top|-right|-bottom|-left)?\s*:\s*([^;}]+)/g)) {
+        for (const px of m[1].matchAll(/(-?)(\d+(?:\.\d+)?)px\b/g)) {
+          if (px[1] === '-' || px[2].includes('.')) continue;
+          if (steps.has(Number(px[2]))) n++;
+        }
+      }
+      return n;
+    })(),
+    'spacing-offgrid': (() => {
+      const steps = new Set([4, 8, 12, 16, 24, 32, 64, 128]);
+      let n = 0;
+      for (const m of css.matchAll(/(?:^|[;{\s])(?:margin|padding|gap|row-gap|column-gap)(?:-top|-right|-bottom|-left)?\s*:\s*([^;}]+)/g)) {
+        /* 음수는 세지 않는다 — `margin: -34px 0 0 -1.5px`는 간격이 아니라 **위치 보정**이다
+           (Header 시계 바늘의 회전 원점 오프셋). 4pt 단계로 스냅할 대상이 아니다. */
+        for (const px of m[1].matchAll(/(-?)(\d+(?:\.\d+)?)px\b/g)) {
+          if (px[1] === '-' || px[2].includes('.')) continue;
+          const v = Number(px[2]);
+          if (v < 4 || v >= 80 || steps.has(v)) continue;
+          n++;
+        }
+      }
+      return n;
+    })(),
     'breakpoint-unique': new Set([...css.matchAll(/@media[^{]*?\b(?:max|min)-width:\s*(\d+)px/g)].map((m) => m[1])).size,
     'inline-style-jsx': (jsx.match(/style=\{\{/g) || []).length,
     /* 이모지. **로케일 JSON까지 센다** — UI 라벨의 선두 이모지가 `src/locales/*.json`에

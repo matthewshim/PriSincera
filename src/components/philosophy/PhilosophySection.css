@@ -33,7 +33,7 @@
     font-size: var(--fs-micro);
     color: var(--text-muted);
     margin-bottom: var(--space-2xl);
-    padding-left: 28px;
+    padding-left: var(--space-lg);
     position: relative;
     /* P2-6: opacity 제거 — --text-muted에 0.5~0.6을 곱하면 실효 대비 ≈4.1:1로
        소형 텍스트 AA(4.5:1) 미달이었다. 제거 시 7.3:1 + 대비 측정 가능 */
@@ -108,7 +108,7 @@
 /* --- Base & Surfaces (OLED Black & Slate) --- */
 .concept-card {
     position: relative;
-    padding: 20px 24px; /* Compacted from 24px 32px */
+    padding: var(--space-lg) var(--space-lg); /* Compacted from 24px 32px */
     background: 
         linear-gradient(rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.75)) padding-box,
         linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)) border-box;
@@ -200,9 +200,9 @@
     flex-shrink: 0;
     width: 48px;
     height: 48px;
-    padding: 6px;
+    padding: var(--space-sm);
     border-radius: var(--radius-md);
-    background: rgba(165, 180, 252, 0.06);
+    background: color-mix(in srgb, var(--color-indigo) 6%, transparent);
     border: 1px solid var(--glass-border);
     transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
@@ -417,7 +417,7 @@ color: var(--color-gold);  /* P2-1: 본문 inline 강조 — strong에 그라디
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         gap: var(--space-md);
-        padding: 10px 4px 20px 4px;
+        padding: var(--space-12) var(--space-xs) var(--space-lg) var(--space-xs);
         scrollbar-width: none;
         width: 100%;
         box-sizing: border-box;
