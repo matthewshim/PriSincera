@@ -530,6 +530,31 @@ for (const file of srcFiles(ROOT)) {
 //   · 5편·3편 영문이 출처 소제목을 `## 출처` 그대로 두어, 영문 독자에게 한글이 노출됐다.
 // 대상은 Planner's View 로케일 파일(_en/_ja)로 한정한다 — Builder's Log 는
 // 한국어 고유명사·코드가 섞이는 성격이라 같은 규칙을 걸면 오탐이 난다.
+// ── 구분선 폭 게이트: 구분선을 읽기 폭에 가두지 않는다 ──
+// 정본: [design_system §3-6]. 구분선은 **구조 경계**이고 `--measure`는 **읽기 폭**이다.
+// 한 규칙에 둘을 얹으면 선이 본문 폭을 물려받아, 컨테이너 콘텐츠 폭(1136px)에서
+// 276px 모자란 채 끊긴 것처럼 보인다 — 특히 위 형제가 컨테이너를 꽉 쓸 때 단차가 드러난다.
+// 2026-11-03 오너가 홈 Journey 하단에서 발견("상단 라인이 끊어진 것 같은데").
+// 전역 실측은 컨테이너 폭 22건 : 읽기 폭 2건이었다 — 지배 패턴에서의 이탈이다.
+//
+// 폭을 **가운데로** 묶은 경우는 통과시킨다(`margin: ... auto`) — 선과 내용이 동심이라
+// 끊겨 보이지 않는다(ReLearn `.rl-account-footer`는 480px 중앙 띠로 정당하다).
+(function dividerMeasureGate() {
+  for (const f of cssFiles(ROOT)) {
+    const src = readFileSync(f, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const m of src.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      const sel = m[1].trim();
+      const body = m[2];
+      if (sel.startsWith('@') || sel.includes('::')) continue;
+      if (!/border-(?:top|bottom):\s*[\d.]+px\s+(?:solid|dashed)/.test(body)) continue;
+      if (!/max-width:\s*var\(--measure\)/.test(body)) continue;
+      if (/margin:[^;]*\bauto\b|margin-(?:left|right):\s*auto/.test(body)) continue;  // 중앙 띠는 정당
+      const line = src.slice(0, m.index).split('\n').length;
+      errors.push(`${f}:${line} 구분선이 읽기 폭에 갇혔다 — ${sel.split('\n').pop().trim()} (§3-6 — border는 컨테이너 폭, --measure는 본문 요소에)`);
+    }
+  }
+})();
+
 (function translationScriptGate() {
   const DIR = 'public/content/planners-view';
   const CYRILLIC = /[\u0400-\u04FF]/;        // 어느 로케일에도 들어갈 이유가 없다

@@ -407,15 +407,19 @@
 }
 
 /* --- Base 강등 착지: 메이커십 각주 (오픈소스 증거) --- */
+/* 구분선은 **구조 경계**라 컨테이너 폭을 쓴다 — 읽기 폭은 본문에만 건다.
+   둘을 한 요소에 얹으면 선이 `--measure`(860px)를 물려받아 컨테이너 콘텐츠 폭
+   1136px에서 **276px 모자란 채 끊긴다**. 바로 위 `.timeline`이 1136px을 꽉 쓰므로
+   단차가 그대로 보인다(2026-11-03 오너 발견: "상단 라인이 끊어진 것 같은데"). */
 .journey-maker-note {
-    max-width: var(--measure);
     margin: var(--space-2xl) 0 0;
     padding-top: var(--space-lg);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    /* P1-H1: center 해제 — measure(860px) 폭 다행 산문을 중앙 정렬하면
-       왼쪽 눈 복귀점이 사라져 가독이 떨어진다. 중앙정렬의 가장 명백한 오용 사례였다 */
 }
 .maker-note-text {
+    /* P1-H1: center 해제 — measure 폭 다행 산문을 중앙 정렬하면 왼쪽 눈 복귀점이
+       사라져 가독이 떨어진다. `auto` 없이 폭만 건다(§9-15). */
+    max-width: var(--measure);
     font-size: var(--fs-base);
     color: var(--text-muted);
     line-height: var(--leading-loose);

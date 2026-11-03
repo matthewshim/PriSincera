@@ -160,14 +160,16 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
 }
 
 /* 결 목록 — 이름 → 뜻. 그리드 카드가 아니라 정의 목록 */
+/* 구분선은 컨테이너 폭, 읽기 폭은 뜻풀이(dd)에만 — 같은 요소에 얹으면 선이 끊긴다
+   (2026-11-03, Journey `.journey-maker-note`와 동일 결함) */
 .wm-tones {
   display: grid; grid-template-columns: max-content 1fr;
-  gap: var(--space-md); max-width: var(--measure);
+  gap: var(--space-md);
   margin: var(--space-xl) 0 0; padding-top: var(--space-lg);
   border-top: 1px solid var(--glass-border);
 }
 .wm-tones dt { font-size: var(--fs-base); font-weight: 600; color: var(--text-primary); }
-.wm-tones dd { margin: 0; font-size: var(--fs-base); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+.wm-tones dd { margin: 0; max-width: var(--measure); font-size: var(--fs-base); color: var(--text-secondary); line-height: var(--leading-relaxed); }
 .wm-reassure {
   margin-top: var(--space-lg); padding: var(--space-lg); border-radius: var(--radius-md);
   border: 1px solid color-mix(in srgb, var(--color-indigo) 22%, transparent); background: color-mix(in srgb, var(--color-indigo) 4.5%, transparent);
