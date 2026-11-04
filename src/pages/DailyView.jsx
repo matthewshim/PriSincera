@@ -126,7 +126,8 @@ export default function DailyView() {
   useEffect(() => {
     if (!isToday || !user?.email) { setSubState('unknown'); return; }
     let cancelled = false;
-    fetch(`/api/subscribe/check?email=${encodeURIComponent(user.email)}`)
+    user.getIdToken()
+      .then(idToken => fetch('/api/subscribe/check', { headers: { Authorization: `Bearer ${idToken}` } }))
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (!cancelled && d) setSubState(d.subscribed ? 'subscribed' : 'unsubscribed'); })
       .catch(() => {});
@@ -138,10 +139,10 @@ export default function DailyView() {
     if (!window.confirm(t('relearn.sub.confirmUnsub'))) return;
     setSubState('loading');
     try {
+      const idToken = await user.getIdToken();
       const res = await fetch('/api/unsubscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email_address: user.email }),
+        headers: { Authorization: `Bearer ${idToken}` },
       });
       setSubState(res.ok ? 'unsubscribed' : 'error');
     } catch {

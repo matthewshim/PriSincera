@@ -256,14 +256,31 @@ app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), asy
   }
 });
 
-// Check Subscription Status
-app.get('/api/subscribe/check', async (req, res) => {
+// 로그인 사용자 본인 확인 — 이메일은 요청 값이 아니라 검증된 토큰에서만 읽는다
+async function requireTokenEmail(req, res, next) {
+  const header = req.headers.authorization || '';
+  if (!header.startsWith('Bearer ')) {
+    return res.status(401).json({ code: 'unauthorized', error: 'Unauthorized' });
+  }
   try {
-    const { email } = req.query;
-    if (!email) return res.json({ subscribed: false });
+    const { auth } = await import('./pipeline/src/lib/firestore.mjs');
+    const decoded = await auth.verifyIdToken(header.slice('Bearer '.length));
+    if (!decoded.email) {
+      return res.status(403).json({ code: 'email_required', error: 'Token has no email' });
+    }
+    req.tokenEmail = decoded.email;
+    next();
+  } catch {
+    res.status(401).json({ code: 'unauthorized', error: 'Invalid or expired token' });
+  }
+}
+
+// Check Subscription Status — 본인 이메일만 조회
+app.get('/api/subscribe/check', requireTokenEmail, async (req, res) => {
+  try {
     const { db, COLLECTIONS } = await import('./pipeline/src/lib/firestore.mjs');
     const { createHash } = await import('crypto');
-    const hash = createHash('sha256').update(email.toLowerCase().trim()).digest('hex').slice(0, 16);
+    const hash = createHash('sha256').update(req.tokenEmail.toLowerCase().trim()).digest('hex').slice(0, 16);
     const doc = await db.collection(COLLECTIONS.SUBSCRIBERS).doc(hash).get();
     res.json({ subscribed: doc.exists && doc.data().status === 'active' });
   } catch (err) {
@@ -299,15 +316,11 @@ app.get('/api/unsubscribe', async (req, res) => {
   }
 });
 
-// Unsubscribe — Frontend (POST without Token)
-app.post('/api/unsubscribe', subscribeLimiter, express.json({ limit: '1kb' }), async (req, res) => {
+// Unsubscribe — Frontend. 로그인 사용자 본인 구독만 해지 (메일 링크는 위 GET의 HMAC 토큰 경로)
+app.post('/api/unsubscribe', subscribeLimiter, requireTokenEmail, async (req, res) => {
   try {
-    const { email_address } = req.body || {};
-    if (typeof email_address !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
-      return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
-    }
     const { removeSubscriber } = await import('./pipeline/src/lib/subscribers.mjs');
-    const result = await removeSubscriber(email_address);
+    const result = await removeSubscriber(req.tokenEmail);
     if (result.code === 'unsubscribed') {
       return res.status(200).json({ code: 'unsubscribed' });
     }
