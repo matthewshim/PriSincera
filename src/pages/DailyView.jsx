@@ -154,10 +154,10 @@ export default function DailyView() {
     if (!user?.email || subState === 'loading') return;
     setSubState('loading');
     try {
+      const idToken = await user.getIdToken();
       const res = await fetch('/api/subscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email_address: user.email }),
+        headers: { Authorization: `Bearer ${idToken}` },
       });
       const d = await res.json();
       if (res.ok) trackRelearn('relearn_subscribe');

@@ -19,7 +19,7 @@ target_files:
 | Version | Date | Description | Impact Area |
 | :--- | :--- | :--- | :--- |
 | v1.0 | 2026-07-23 | 3층위(제품·운영 방법론 / 엔지니어링 기법 / API 엔드포인트) 최초 집약 정리 | Core |
-| v1.1 | 2026-11-04 | 구독 조회·해지 API의 인증 요구 사항 반영 | API |
+| v1.1 | 2026-11-04 | 구독 등록·조회·해지 API의 인증 요구 사항 반영 | API |
 
 ---
 
@@ -83,7 +83,7 @@ target_files:
 | :--- | :--- | :--- |
 | GET | `/api/daily/index`, `/api/daily/:date`, `/api/daily/:date/track/:track` | 다이제스트 조회 |
 | GET | `/api/archive`, `/api/archive/:id` | 아카이브 |
-| GET/POST | `/api/subscribe`, `/api/subscribe/check`, `/api/unsubscribe` | 구독 관리. `GET /api/subscribe/check`·`POST /api/unsubscribe`는 Bearer 토큰 필수(본인만), `GET /api/unsubscribe`는 메일 링크의 HMAC 토큰 |
+| GET/POST | `/api/subscribe`, `/api/subscribe/check`, `/api/unsubscribe` | 구독 관리. `POST /api/subscribe`·`GET /api/subscribe/check`·`POST /api/unsubscribe`는 Bearer 토큰 필수(본인만), `GET /api/unsubscribe`는 메일 링크의 HMAC 토큰 |
 | POST | `/api/builderslog/:slug/view` | 조회수 집계 |
 | GET | `/sitemap.xml` | 동적 사이트맵 |
 

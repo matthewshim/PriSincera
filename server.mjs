@@ -225,37 +225,6 @@ app.post('/api/builderslog/:slug/view', apiLimiter, express.json(), async (req, 
 
 // --- Subscriber Management (GCS JSON / Firestore) ---
 
-// Subscribe — GCS 직접 저장
-app.post('/api/subscribe', subscribeLimiter, express.json({ limit: '1kb' }), async (req, res) => {
-  try {
-    const { email_address } = req.body || {};
-
-    // Server-side email validation (Type check against NoSQL Injection)
-    if (typeof email_address !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
-      return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
-    }
-
-    // GCS 구독자 관리 모듈 dynamic import (서버 시작 시 로드 실패 방지)
-    const { addSubscriber } = await import('./pipeline/src/lib/subscribers.mjs');
-    const result = await addSubscriber(email_address, 'website');
-
-    switch (result.code) {
-      case 'subscribed':
-      case 'resubscribed':
-        return res.status(201).json({ code: 'subscribed', email: result.email });
-      case 'already_subscribed':
-        return res.status(200).json({ code: 'already_subscribed' });
-      case 'invalid_email':
-        return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
-      default:
-        return res.status(500).json({ code: 'error', error: 'Unknown result' });
-    }
-  } catch (err) {
-    console.error('[Subscribe] Error:', err.message);
-    res.status(500).json({ code: 'server_error', error: '구독 처리 중 오류가 발생했습니다.' });
-  }
-});
-
 // 로그인 사용자 본인 확인 — 이메일은 요청 값이 아니라 검증된 토큰에서만 읽는다
 async function requireTokenEmail(req, res, next) {
   const header = req.headers.authorization || '';
@@ -274,6 +243,30 @@ async function requireTokenEmail(req, res, next) {
     res.status(401).json({ code: 'unauthorized', error: 'Invalid or expired token' });
   }
 }
+
+// Subscribe — 로그인 사용자 본인 이메일만 등록
+app.post('/api/subscribe', subscribeLimiter, requireTokenEmail, async (req, res) => {
+  try {
+    // GCS 구독자 관리 모듈 dynamic import (서버 시작 시 로드 실패 방지)
+    const { addSubscriber } = await import('./pipeline/src/lib/subscribers.mjs');
+    const result = await addSubscriber(req.tokenEmail, 'website');
+
+    switch (result.code) {
+      case 'subscribed':
+      case 'resubscribed':
+        return res.status(201).json({ code: 'subscribed', email: result.email });
+      case 'already_subscribed':
+        return res.status(200).json({ code: 'already_subscribed' });
+      case 'invalid_email':
+        return res.status(400).json({ code: 'invalid_email', error: 'Invalid email address' });
+      default:
+        return res.status(500).json({ code: 'error', error: 'Unknown result' });
+    }
+  } catch (err) {
+    console.error('[Subscribe] Error:', err.message);
+    res.status(500).json({ code: 'server_error', error: '구독 처리 중 오류가 발생했습니다.' });
+  }
+});
 
 // Check Subscription Status — 본인 이메일만 조회
 app.get('/api/subscribe/check', requireTokenEmail, async (req, res) => {
