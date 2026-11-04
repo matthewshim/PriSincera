@@ -32,8 +32,14 @@ export default function EnergyCirculation({ rawMouseRef, active }) {
 
     function resize() {
       const rect = stage.getBoundingClientRect();
-      cw = canvas.width = rect.width * 1.2;
-      ch = canvas.height = rect.height * 1.2;
+      /* 고해상도 대응 — StarField와 같은 처리. CSS가 width/height를 120%로 잡고 있으므로
+         버퍼만 dpr배로 키우고 그리기 좌표는 CSS 픽셀에 둔다. */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = rect.width * 1.2;
+      ch = rect.height * 1.2;
+      canvas.width = Math.round(cw * dpr);
+      canvas.height = Math.round(ch * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       offsetX = cw * (0.1 / 1.2);
       offsetY = ch * (0.1 / 1.2);
     }

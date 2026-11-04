@@ -86,7 +86,7 @@
     },
     "conceptCard3": {
       "title": "真心",
-      "subtitle": "Sincera",
+      "subtitle": "Sincerity",
       "quote": "真心は最終的に伝わる",
       "desc": "透明性を持って本質に集中すれば、信頼は必ずついてきます。"
     },
@@ -154,8 +154,8 @@
     "serviceWaymarkDesc": "大きな決断ほど、そばにいる人が必要です。\nWaymarkはあなたの決断を覚え、揺れる瞬間に自ら歩み寄るAIの伴走者です。",
     "serviceWaymarkOne": "決断を記憶し、揺れる瞬間に先に訪れる同伴者。",
     "serviceWaymarkTags": [
-      "Decision Journal",
-      "Proactive AI"
+      "Coming Soon",
+      "Decision Journal"
     ],
     "serviceWaymarkCta": "Waymarkに出会う"
   },

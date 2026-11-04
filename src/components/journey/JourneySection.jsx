@@ -10,8 +10,11 @@ import './JourneySection.css';
  * Company names replaced with industry/sector labels per user request.
  */
 
+/* `Years`에는 `+`를 붙이지 않는다 — 2007.03 시작이라 현재 19년 8개월이고,
+   19.67은 20으로 반올림되는 값이지만 '20을 넘는다'는 주장은 아직 사실이 아니다.
+   2027.03에 만 20년이 된다(main_page_revision_plan.md §12-7). */
 const STATS = [
-  { target: 20, suffix: '+', label: 'Years' },
+  { target: 20, suffix: '', label: 'Years' },
   { target: 50, suffix: '+', label: 'Projects' },
   { target: 5, suffix: '+', label: 'Countries' },
 ];
@@ -20,10 +23,14 @@ const STATS = [
  * Animates a number from 0 to target over duration.
  */
 function useCountUp(target, started, duration = 1800) {
-  const [value, setValue] = useState(0);
+  /* 감쇠 설정이면 처음부터 최종값을 들고 있는다. 전역 CSS 규칙은 CSS 애니메이션만 덮으므로
+     `requestAnimationFrame` 카운트업은 여기서 직접 확인해야 한다(2026-11-03 StarField와 같은 교훈). */
+  const reduced = typeof window !== 'undefined'
+    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const [value, setValue] = useState(reduced ? target : 0);
 
   useEffect(() => {
-    if (!started) return;
+    if (!started || reduced) return;
     let startTime = null;
     let raf;
 
@@ -38,7 +45,7 @@ function useCountUp(target, started, duration = 1800) {
 
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [target, started, duration]);
+  }, [target, started, duration, reduced]);
 
   return value;
 }
@@ -47,8 +54,11 @@ function StatItem({ target, suffix, label, started }) {
   const count = useCountUp(target, started);
   return (
     <div className="stat-item">
+      {/* 애니메이션 숫자는 기계에서 감추고 최종값을 따로 읽힌다 —
+          구 구조는 DOM 초기값이 0이라 크롤러와 스크린리더에 "0+ YEARS"로 읽혔다. */}
       <div className="stat-number">
-        {count}<span className="stat-plus">{suffix}</span>
+        <span aria-hidden="true">{count}<span className="stat-plus">{suffix}</span></span>
+        <span className="u-sr-only">{target}{suffix} {label}</span>
       </div>
       <div className="stat-label">{label}</div>
     </div>

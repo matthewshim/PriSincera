@@ -11,6 +11,7 @@ const ZODIACS = [
     name: 'Aries', sub: 'The Ram', symbol: '♈',
     cx: 0.10, cy: 0.18,
     stars: [[16,12],[15,7],[4,-3],[-35,-17]],
+      bayers: ['41','α','β','γ'],
     lines: [[3,2],[2,1],[1,0]],
   },
   {
@@ -18,6 +19,7 @@ const ZODIACS = [
     name: 'Taurus', sub: 'The Bull', symbol: '♉',
     cx: 0.30, cy: 0.16,
     stars: [[26,16],[14,8],[12,3],[8,-1],[4,6],[-28,-25],[-35,-6]],
+      bayers: ['λ','γ','δ','ε','α','β','ζ'],
     lines: [[0,1],[1,2],[2,4],[4,3],[3,5],[3,6]],
   },
   {
@@ -25,6 +27,7 @@ const ZODIACS = [
     name: 'Gemini', sub: 'The Twins', symbol: '♊',
     cx: 0.52, cy: 0.15,
     stars: [[-27,-24],[-35,-13],[-16,5],[15,21],[10,-4],[26,3],[32,3],[-5,9]],
+      bayers: ['α','β','δ','γ','ε','μ','η','ξ'],
     lines: [[0,4],[4,5],[5,6],[0,2],[2,1],[2,7],[7,3]],
   },
   {
@@ -32,6 +35,7 @@ const ZODIACS = [
     name: 'Cancer', sub: 'The Crab', symbol: '♋',
     cx: 0.88, cy: 0.17,
     stars: [[-13,19],[20,28],[-1,-12],[-2,-1],[-4,-35]],
+      bayers: ['α','β','γ','δ','ι'],
     lines: [[1,3],[3,0],[3,2],[2,4]],
   },
   {
@@ -39,6 +43,7 @@ const ZODIACS = [
     name: 'Leo', sub: 'The Lion', symbol: '♌',
     cx: 0.06, cy: 0.42,
     stars: [[11,13],[-35,8],[5,-1],[-19,-3],[21,-8],[11,4],[-19,7],[18,-12],[7,-8]],
+      bayers: ['α','β','γ','δ','ε','η','θ','μ','ζ'],
     lines: [[0,5],[5,2],[2,8],[8,4],[4,7],[2,3],[3,1],[3,6],[6,0]],
   },
   {
@@ -46,6 +51,7 @@ const ZODIACS = [
     name: 'Virgo', sub: 'The Maiden', symbol: '♍',
     cx: 0.92, cy: 0.35,
     stars: [[-19,24],[35,-5],[6,2],[-2,-9],[-5,-26],[18,1],[-24,0],[-10,12]],
+      bayers: ['α','β','γ','δ','ε','η','ζ','θ'],
     lines: [[4,3],[3,2],[2,5],[5,1],[2,7],[7,0],[2,6]],
   },
   {
@@ -53,6 +59,7 @@ const ZODIACS = [
     name: 'Libra', sub: 'The Scales', symbol: '♎',
     cx: 0.08, cy: 0.72,
     stars: [[24,-10],[0,-35],[-17,-15],[12,24],[-19,35]],
+      bayers: ['α','β','γ','σ','υ'],
     lines: [[0,1],[1,2],[2,4],[0,3]],
   },
   {
@@ -60,6 +67,7 @@ const ZODIACS = [
     name: 'Scorpius', sub: 'The Scorpion', symbol: '♏',
     cx: 0.92, cy: 0.68,
     stars: [[24,-19],[21,-26],[25,-11],[12,-12],[7,-10],[4,-6],[-5,8],[-6,16],[-17,28],[-30,14],[-35,19]],
+      bayers: ['δ','β','π','σ','α','τ','ε','μ','η','λ','κ'],
     lines: [[1,0],[0,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10]],
   },
   {
@@ -67,6 +75,7 @@ const ZODIACS = [
     name: 'Sagittarius', sub: 'The Archer', symbol: '♐',
     cx: 0.14, cy: 0.90,
     stars: [[35,7],[19,4],[15,24],[11,-15],[-7,-8],[-18,-11],[-25,4],[-30,-5]],
+      bayers: ['γ','δ','ε','λ','φ','σ','ζ',null],
     lines: [[0,2],[2,1],[1,3],[3,4],[4,5],[5,6],[6,2],[3,5]],
   },
   {
@@ -74,6 +83,7 @@ const ZODIACS = [
     name: 'Capricornus', sub: 'The Sea-Goat', symbol: '♑',
     cx: 0.36, cy: 0.92,
     stars: [[35,-20],[32,-13],[12,20],[8,25],[-3,-5],[-19,11],[-30,-7],[-35,-9]],
+      bayers: ['α','β','ψ','ω','θ','ζ','γ','δ'],
     lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0]],
   },
   {
@@ -81,6 +91,7 @@ const ZODIACS = [
     name: 'Aquarius', sub: 'The Water-Bearer', symbol: '♒',
     cx: 0.60, cy: 0.92,
     stars: [[35,7],[17,0],[3,-8],[-4,-6],[-7,-9],[-9,-9],[-2,4],[-16,4],[-17,17]],
+      bayers: ['ε','β','α','γ','ζ','η','θ','λ','δ'],
     lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],
   },
   {
@@ -88,6 +99,7 @@ const ZODIACS = [
     name: 'Pisces', sub: 'The Fish', symbol: '♓',
     cx: 0.84, cy: 0.88,
     stars: [[35,11],[31,6],[26,7],[19,6],[-6,4],[-17,7],[-21,8],[-29,12],[-17,-8],[-10,-22],[-10,-31]],
+      bayers: ['γ','θ','ι','ω','ε','μ','ν','α','η','φ','τ'],
     lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10]],
   },
 ];
@@ -127,8 +139,15 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     }
 
     function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+      /* 고해상도 대응 — 구 구조는 버퍼를 CSS 픽셀 크기로만 잡아 배율 2 화면에서 별이 번졌다.
+         버퍼를 dpr배로 키우고 `setTransform`으로 그리기 좌표는 CSS 픽셀에 둔다 —
+         아래 모든 드로잉 코드가 w/h를 그대로 쓸 수 있다. dpr은 2에서 자른다(그 이상은 비용 대비 이득이 적다). */
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       scale = Math.min(w, h) / 900; // 공용 scale 계산 추가
       smoothMx = w / 2;
       smoothMy = h / 2;
@@ -337,9 +356,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       constellations = ZODIACS.map(z => {
         const centerX = z.cx * w;
         const centerY = z.cy * h;
-        const starPositions = z.stars.map(([ox, oy]) => ({
+        const starPositions = z.stars.map(([ox, oy], i) => ({
           x: centerX + ox * scale * 1.8,
           y: centerY + oy * scale * 1.8,
+          bayer: z.bayers?.[i] ?? null,   // 데이터에서 읽는다 — 배열 순번으로 만들지 않는다
         }));
         return {
           ...z,
@@ -833,7 +853,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         ctx.setLineDash([]);
 
         // --- Constellation stars (with lens magnification & Bayer designations) ---
-        const GREEK_DESIGNATIONS = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ'];
+          /* 바이어 문자는 **데이터에서 읽는다**. 구 구조는 `GREEK[starIndex % 12]`로 배열 순번에
+             그리스 문자를 차례로 붙였는데, `stars`의 순서는 밝기 순이 아니라 **선을 잇기 좋은 순서**다.
+             그래서 별자리마다 우연히 맞거나 틀렸고, Aries는 α가 가장 어두운 41 Ari에 붙어 완전히
+             역순이었다(2026-11-04 교정). 부호는 주석의 별 사슬과 `lines` 연결 순서를 대조해 도출했다. */
         for (const sp of c.starPositions) {
           const lsp = lensTransform(sp.x, sp.y);
           const baseR = 1.20;
@@ -852,15 +875,13 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR, 0, Math.PI * 2); ctx.fill();
 
           // Bayer designations (Smart Focused details: only draw inside lens focusing for clean UX)
-          if ((reveal > 0.35 || pulse > 0.25) && isFocused) {
-            const starIndex = c.starPositions.indexOf(sp);
-            const bayerLetter = GREEK_DESIGNATIONS[starIndex % GREEK_DESIGNATIONS.length];
+          if ((reveal > 0.35 || pulse > 0.25) && isFocused && sp.bayer) {
             ctx.save();
             ctx.globalAlpha = Math.max(0.1, Math.max(reveal * 0.40, pulse * 0.30)) * zodiacFade * shield;
             ctx.font = `italic ${Math.round(7.5 * lsp.sizeScale)}px 'Inter', serif`;
             ctx.fillStyle = '#ACD4FF'; // 차분하고 선명한 성도 실버
             ctx.textAlign = 'left';
-            ctx.fillText(`${bayerLetter}`, lsp.x + (starR + 4) * lsp.sizeScale, lsp.y - 2);
+            ctx.fillText(sp.bayer, lsp.x + (starR + 4) * lsp.sizeScale, lsp.y - 2);
             ctx.restore();
           }
         }
@@ -893,16 +914,15 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
             ctx.fillStyle = '#B0C4DE'; // 앤티크 실버 스틸 블루
             ctx.fillText(c.sub, lCenter.x, lCenter.y + 56 * labelScale);
 
-            // Technical Astronomical Coordinates (RA / DEC / Dist / Mag)
-            const raHours = Math.floor(ci * 2).toString().padStart(2, '0');
-            const decDegs = (ci * 7 - 35 >= 0 ? '+' : '') + (ci * 7 - 35);
-            const distLy = 350 + ci * 85;
-            const appMag = (1.1 + ci * 0.15).toFixed(1);
-            
-            ctx.globalAlpha = revealAlpha * 0.30 * zodiacFade * shield;
-            ctx.font = `${Math.round(7.5 * labelScale)}px 'Inter', sans-serif`;
-            ctx.fillStyle = '#94A3B8';
-            ctx.fillText(`RA ${raHours}h 15m / DEC ${decDegs}° | Dist: ~${distLy} ly | Mag: ${appMag}`, lCenter.x, lCenter.y + 68 * labelScale);
+              /* [2026-11-04] RA/DEC/거리/등급 표시를 제거했다. 네 값이 모두 배열 순번 `ci`로
+                 만들어진 **공식 생성값**이었다 — `RA ci*2h 15m`(분은 고정) · `DEC ci*7-35°`
+                 · `350+ci*85 ly` · `1.1+ci*0.15`. 열두 별자리가 2시간·7도·85광년·0.15등급
+                 간격으로 가지런히 늘어서는 숫자였고, "Sincerity, Prioritized."를 내건 지면에
+                 그럴듯한 가짜 수치를 두는 일이었다.
+                 실제 값으로 되살릴 때는 `ZODIACS`에 `ra`·`dec`·`alpha{bayer,name,mag,distLy}`를
+                 **데이터로** 넣고 여기서 읽는다. 단일 출처로 검수하기 전에는 **표시하지 않는다** —
+                 거리값은 출처마다 크게 엇갈린다(예: Antares 330 ly vs 550 ly).
+                 정본: docs/core/main_page_revision_plan.md §3. */
           }
 
           // Symbol (Smart Focused Symbol: only show under lens focusing)
@@ -1056,6 +1076,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
       style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}
     />
   );

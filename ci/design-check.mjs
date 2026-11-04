@@ -555,6 +555,43 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
+// ── 천문 데이터 게이트: 수치를 공식으로 만들지 않는다 ──
+// 정본: [main_page_revision_plan.md §3]. 2026-11-04까지 별자리 RA/DEC/거리/등급이
+// 배열 순번 `ci`로 생성됐고(`350 + ci * 85` 등), 바이어 문자도 `GREEK[starIndex % 12]`로
+// 붙어 Aries는 α가 가장 어두운 41 Ari에 달렸다. "Sincerity, Prioritized."를 내건 지면에서
+// 그럴듯한 가짜 수치는 브랜드 주장과 직접 부딪힌다. 공식 복귀를 차단한다.
+(function astronomyDataGate() {
+  const f = 'src/components/hero/StarField.jsx';
+  let raw;
+  try { raw = readFileSync(f, 'utf-8'); } catch { return; }
+  /* 주석을 걷어낸 뒤 본다 — 교정 경위를 적은 주석에 금지 패턴이 인용돼 있어
+     그대로 보면 설명문이 위반으로 잡힌다(2026-11-04 자가 발각). 줄 수는 보존한다. */
+  const src = raw
+    .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '))
+    .replace(/(^|[^:])\/\/[^\n]*/g, (m, p1) => p1 + ' '.repeat(m.length - p1.length));
+
+  // ① 순번으로 그리스 문자를 배정하지 않는다
+  if (/GREEK[_A-Z]*\s*\[\s*\w*[Ii]ndex/.test(src) || /const GREEK_DESIGNATIONS/.test(src)) {
+    errors.push(`${f}: 바이어 문자를 배열 순번으로 배정 금지 — 별 순서는 밝기 순이 아니다. ZODIACS의 \`bayers\`에서 읽으십시오(§3-2)`);
+  }
+
+  // ② 순번 산술로 천문 수치를 만들지 않는다
+  for (const m of src.matchAll(/\b(ra|dec|dist|distLy|mag|appMag|raHours|decDegs)\w*\s*=\s*[^;\n]*\bci\b[^;\n]*[-+*/][^;\n]*/gi)) {
+    const line = src.slice(0, m.index).split('\n').length;
+    errors.push(`${f}:${line} 천문 수치를 순번 산술로 생성 금지 — "${m[0].trim().slice(0, 48)}" (§3-1)`);
+  }
+
+  // ③ bayers 배열은 stars와 길이가 같아야 한다
+  const entries = [...src.matchAll(/name: '([A-Za-z]+)',[\s\S]{0,400}?stars: (\[[^\n]*\]),\n\s*bayers: (\[[^\n]*\]),/g)];
+  for (const e of entries) {
+    const nStars = (e[2].match(/\[-?\d/g) || []).length;
+    const nBayer = e[3].split(',').length;
+    if (nStars !== nBayer) {
+      errors.push(`${f}: ${e[1]} — stars ${nStars}개 vs bayers ${nBayer}개로 길이 불일치(§3-2)`);
+    }
+  }
+})();
+
 (function translationScriptGate() {
   const DIR = 'public/content/planners-view';
   const CYRILLIC = /[\u0400-\u04FF]/;        // 어느 로케일에도 들어갈 이유가 없다

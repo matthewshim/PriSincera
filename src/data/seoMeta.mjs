@@ -17,8 +17,8 @@ export const DEFAULT_KEYWORDS = "PriSincera, 프리싱케라, Daily Digest, Pace
 export const PAGE_META = {
   '/': {
     pageTitle: null,
-    description: 'PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.',
-    keywords: "PriSincera, 프리싱케라, ReLearn, 성장 루프, Builder's Log, Sylphio, Daily Digest, Pace Note, AI Curation",
+    description: "20년 가까이 웹서비스를 만들어 온 Matthew Shim이 AI와 함께 직접 설계하고 만드는 기록. Planner's View · Builder's Log · ReLearn · Waymark · Sylphio.",
+    keywords: "PriSincera, 프리싱케라, Matthew Shim, 서비스 기획, 프로덕트 리더, 바이브 코딩, AI 서비스, Planner's View, Builder's Log, ReLearn, Waymark, Sylphio",
   },
   '/relearn': {
     ogImage: `${BASE_URL}/og-relearn.png`,

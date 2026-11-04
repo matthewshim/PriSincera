@@ -533,7 +533,7 @@ export default function ConstellationAssembly({ rawMouseRef, onAssemblyComplete 
         <g className="assembly-edges" ref={edgesRef}></g>
         <g className="assembly-nodes" ref={nodesRef}></g>
       </svg>
-      <canvas className="energy-canvas" id="energyCanvas"></canvas>
+      <canvas className="energy-canvas" id="energyCanvas" aria-hidden="true"></canvas>
     </div>
   );
 }

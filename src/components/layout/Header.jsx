@@ -258,6 +258,7 @@ function Header() {
               className={`gnb-bgm-btn ${musicPlaying ? 'active' : ''}`}
               onClick={toggleMusic}
               aria-label="Toggle music"
+              aria-pressed={musicPlaying}
               id="bgmToggle"
             >
               <div className={`waveform-bars ${musicPlaying ? 'on' : 'off'}`}>
@@ -291,7 +292,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label">Platform Foundation</div>
-              <h3 className="bento-card-title">PriSincera Base</h3>
+              <p className="bento-card-title">PriSincera Base</p>
               <div className="bento-card-arrow"><Icon name="orbit" /> Explore GitHub <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
@@ -332,7 +333,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label">Product Planning</div>
-              <h3 className="bento-card-title">Planner&apos;s View</h3>
+              <p className="bento-card-title">Planner&apos;s View</p>
               <div className="bento-card-arrow"><Icon name="book" /> Read the View <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
@@ -357,7 +358,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label">Engineering & Growth</div>
-              <h3 className="bento-card-title">Builder's Log</h3>
+              <p className="bento-card-title">Builder's Log</p>
               <div className="bento-card-arrow"><Icon name="tools" /> Read Logs <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
@@ -392,7 +393,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label">Unified Growth Loop</div>
-              <h3 className="bento-card-title">ReLearn</h3>
+              <p className="bento-card-title">ReLearn</p>
               <div className="bento-card-arrow"><Icon name="loop" /> Learn · Run · Reflect <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
@@ -415,7 +416,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label">Decision Companion</div>
-              <h3 className="bento-card-title">Waymark</h3>
+              <p className="bento-card-title">Waymark</p>
               <div className="bento-card-arrow"><Icon name="compass" /> Coming soon <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">
@@ -440,7 +441,7 @@ function Header() {
           >
             <div className="bento-card-content">
               <div className="bento-card-label">On-Device AI Translation</div>
-              <h3 className="bento-card-title">Sylphio</h3>
+              <p className="bento-card-title">Sylphio</p>
               <div className="bento-card-arrow"><Icon name="mic" /> Meet the Spirit <Icon name="arrowRight" /></div>
             </div>
             <div className="bento-card-visual">

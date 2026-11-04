@@ -86,7 +86,7 @@
     },
     "conceptCard3": {
       "title": "진심",
-      "subtitle": "Sincera",
+      "subtitle": "Sincerity",
       "quote": "진심은 결국 도달한다",
       "desc": "투명하게 본질에 집중하면, 신뢰는 반드시 따라옵니다."
     },
@@ -154,8 +154,8 @@
     "serviceWaymarkDesc": "큰 결정일수록 곁에 있어 줄 사람이 필요합니다.\nWaymark은 당신의 결정을 기억하고, 흔들리는 순간 먼저 찾아오는 AI 동반자입니다.",
     "serviceWaymarkOne": "결정을 기억하고, 흔들리는 순간 먼저 찾아오는 동반자.",
     "serviceWaymarkTags": [
-      "Decision Journal",
-      "Proactive AI"
+      "Coming Soon",
+      "Decision Journal"
     ],
     "serviceWaymarkCta": "Waymark 만나보기"
   },
