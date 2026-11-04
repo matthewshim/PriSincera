@@ -299,7 +299,7 @@ export default function JourneySection() {
             className="maker-note-link"
           >
             {t('home.serviceBaseCta')}
-            <Icon name="arrowRight" size={14} />
+            <Icon name="external" size={13} />
           </a>
         </div>
       </div>

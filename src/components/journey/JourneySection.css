@@ -62,7 +62,7 @@
 /* --- Timeline (Horizontal Layout) --- */
 /* 경험 5단과 연대기 카드의 경계 — 구 구조는 이 지점만 간격이 32px로
    섹션 안에서 **가장 큰 전환점에 가장 좁은 간격**이 걸려 있었다(헤더→경험 64 · 타임라인→각주 64).
-   `.journey-maker-note`가 이미 쓰는 헤어라인 패턴을 그대로 가져와 리듬을 맞춘다.
+   섹션의 **유일한** 전체 폭 헤어라인으로 둔다 — 각주 쪽 선은 걷었다(§20-4).
    `.timeline`에 `max-width`가 없어 선이 컨테이너 폭을 쓴다(§3-6). */
 .timeline {
     margin-top: var(--space-2xl);
@@ -519,22 +519,9 @@
     line-height: var(--leading-relaxed);
 }
 
+/* 공통 형태는 아래 `.exp-more, .maker-note-link` 그룹이 담당한다 — 여기선 위치만 */
 .exp-more {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
     margin-top: var(--space-lg);
-    font-family: var(--font-mono);
-    font-size: var(--fs-xs);
-    letter-spacing: var(--tracking-wider);
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color var(--duration-fast);
-}
-
-.exp-more:hover,
-.exp-more:focus-visible {
-    color: var(--color-gold);
 }
 
 @media (max-width: 768px) {
@@ -551,9 +538,10 @@
 }
 
 .journey-maker-note {
+    /* 상단 선을 걷었다 — 섹션에 전체 폭 헤어라인이 둘이면 과하고(연대기 경계에 하나로 충분),
+       각주는 커리어가 아니라 **지면 자신에 대한 메모**라 조용히 흘러야 한다.
+       간격 64px로 충분히 떨어진다(2026-11-04 오너 지적). */
     margin: var(--space-2xl) 0 0;
-    padding-top: var(--space-lg);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .maker-note-text {
     /* P1-H1: center 해제 — measure 폭 다행 산문을 중앙 정렬하면 왼쪽 눈 복귀점이
@@ -564,6 +552,11 @@
     line-height: var(--leading-loose);
     margin-bottom: var(--space-md);
 }
+/* 블록 끝의 외부 링크 — 경험 5단의 "전체 경력은 LinkedIn에서"와 각주의 오픈소스 링크는
+   **같은 역할·같은 형태**다. 구 구조는 각주만 사각 버튼이어서 두 링크가 다른 물건처럼 보였고,
+   7개 선언이 그대로 중복돼 있었다. 한 규칙으로 합친다(2026-11-04 오너 지적).
+   박스를 걷으면서 §4-4 게이트 사각지대 1건도 함께 사라진다 — 더 이상 버튼이 아니다. */
+.exp-more,
 .maker-note-link {
     display: inline-flex;
     align-items: center;
@@ -571,18 +564,14 @@
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wider);
-    color: var(--color-gold);
+    color: var(--text-muted);
     text-decoration: none;
-    padding: var(--btn-pad-sm);
-    min-height: var(--btn-h-sm);
-    /* §4-4 v6.2 — CTA·클릭 버튼은 사각 단일. 셀렉터에 btn/cta/button이 없어
-       게이트가 놓쳤다(오너 발견 2026-11-01). 같은 사각지대의 나머지는 WARN으로 노출한다. */
-    border-radius: var(--radius-sm);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gold) 24%, transparent);
-    transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+    transition: color var(--duration-fast);
 }
+
+.exp-more:hover,
+.exp-more:focus-visible,
 .maker-note-link:hover,
 .maker-note-link:focus-visible {
-    transform: translateY(var(--lift-hover));
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gold) 50%, transparent);
+    color: var(--color-gold);
 }
