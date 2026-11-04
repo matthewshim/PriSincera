@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "node ci/install-hooks.mjs || exit 0",
     "dev": "vite",
-    "prebuild": "node ci/design-check.mjs && node ci/pattern-budget.mjs",
+    "prebuild": "node ci/design-check.mjs && node ci/pattern-budget.mjs && node ci/doc-staleness.mjs",
     "metrics": "node ci/pattern-metrics.mjs",
     "budget": "node ci/pattern-budget.mjs --report",
     "budget:tighten": "node ci/pattern-budget.mjs --update",
@@ -14,6 +14,8 @@
     "preview": "vite preview",
     "start": "node server.mjs",
     "test:secrets": "node --test ci/secretPatterns.test.mjs",
+    "test:docs": "node --test ci/docStaleness.test.mjs",
+    "docs:staleness": "node ci/doc-staleness.mjs --verbose",
     "scan:staged": "node ci/secret-scan.mjs --staged",
     "postbuild": "node ci/prerender-fallback.mjs"
   },

@@ -10,6 +10,8 @@ PriSincera 프로젝트의 모든 기획, 디자인, 엔지니어링 문서는 �
 *   **[서비스 개요 (Service Overview)](core/service_overview.md)** (`service_overview.md`): "PriSincera가 무엇인가"를 5분에 파악하는 최상위 진입 문서 — 제품 포트폴리오(Daily Digest·테크 트랙·PaceNote·Builder's Log·Sylphio)와 배움–실행–복기 성장 플라이휠. **신규자 1순위 필독.**
 *   **[메서드 전서 (Methods Compendium)](core/methods_compendium.md)** (`methods_compendium.md`): PriSincera가 "무엇을 어떻게 하는가"를 3층위로 집약한 단일 레퍼런스 — ① 제품·운영 방법론(성장 플라이휠·가변비 0 운영) · ② 엔지니어링 기법(Git-less 커밋·동적 사이트맵·SSR 메타 SSOT 등) · ③ API 메서드(HTTP 엔드포인트 일람). 각 항목은 정본 문서·소스로 연결되는 **집약 뷰**.
 *   **[전체 아키텍처 개요 (Architecture Overview)](core/architecture_overview.md)** (`architecture_overview.md`): 웹·서버·API·Firestore·GCS·파이프라인(Cloud Run Jobs)·Gemini·배포를 한 장으로 조망하는 시스템 구조도 및 데이터 흐름 맵.
+*   **[데이터 모델 ERD (Data Model ERD)](core/data_model_erd.md)** (`data_model_erd.md`): Firestore 컬렉션과 관계를 코드에서 복원한 ERD — 운영 서비스 12개 컬렉션 일람, 클라이언트 접근 규칙, 미구현 Waymark 설계, 알려진 불일치. 운영 DB 대조 전 기준. **active.**
+*   **[개인정보·데이터 수명주기 정책 (Privacy & Data Lifecycle)](core/privacy_data_lifecycle.md)** (`privacy_data_lifecycle.md`): 웹 서비스의 개인정보 보유 현황·외부 처리자·운영자 접근 범위를 코드 기준으로 정리하고, 공백 10건(1건 해결)과 보존 기간·삭제 절차 제안을 담은 문서. **draft(오너 결정·법률 검토 대기).**
 *   **[인프라 현황 (Infrastructure SSOT)](core/infrastructure_2026-09.md)** (`infrastructure_2026-09.md`): 웹 서빙 아키텍처 정본 — 2026-09 **LB 방식 → Firebase Hosting rewrite** 전환(비용 97%↓), 삭제 리소스(고정 IP 136.110.131.58·LB·SSL 인증서) **재참조 금지** 목록, 새 DNS/도메인/SSL 구성. **인프라 작업 시 필독.**
 *   **[온보딩 가이드 (Onboarding)](core/onboarding_guide.md)** (`onboarding_guide.md`): 기획·디자인·개발 **역할별 필독 경로** + 신규 개발자 환경 셋업 체크리스트 + 문서 작성 거버넌스.
 *   **[개발·운영 가이드 (Development Guide)](core/development_guide.md)** (`development_guide.md`): 로컬 환경 구축, 깃 브랜치 전략, **Node(Express) `server.mjs` 컨테이너** 기반 GCP Cloud Run 배포 및 긴급 대응 장애 극복 시나리오.
@@ -191,4 +193,5 @@ YAML 블록이 끝난 직후 헤더 아래에 단순 덮어쓰기를 지양하�
 
 ### 6. 인덱스 앵커 및 동기화 (Strict Index Syncing)
 *   **원클릭 동기화**: 신규 문서를 생성하거나 기존 문서를 `archived` 처리하여 위치를 바꿀 때는, **반드시 이 `docs/INDEX.md` 파일을 동시에 편집**하여 새로운 상대 경로로 링크를 현행화하십시오.
+*   **최신성 경고**: `prebuild`의 `ci/doc-staleness.mjs`가 active 문서의 `target_files`가 `last_updated`보다 나중에 커밋되었는지 검사해 경고합니다(비차단). 전체 목록은 `npm run docs:staleness`로 봅니다.
 *   **깨진 링크(Dead Link) 원천 차단**: 문서 내부의 파일 상대 경로(예: `[디자인 시스템 (Design System)](core/design_system.md)`) 및 소스 코드 링크(예: `[Header.jsx](../../src/components/layout/Header.jsx)`)가 브라우저 및 에디터에서 클릭 시 실제로 열리는지 반드시 3중 검증해야 합니다.
