@@ -64,19 +64,17 @@
   "home": {
     "heroLabel": "Matthew Shim · PriSincera",
     "heroTitle": "Sincerity, Prioritized.",
-    "heroSubStrong": "「足元の花、遠くの星」",
-    "heroSubText": "遠くで輝く星（目標）を目指しながらも、\n今自分の前に咲いた本質（花）に充実する態度。\nそれこそが最も正しい道であると確信しています。",
     "philosophyTitleLine1": "足元の花、",
     "philosophyTitleLine2": "遠くの星。",
     "philosophyLead1": "遠くの星を追い求めるあまり、\n今自分の足元に咲いた美しい花を見逃さないように。",
-    "philosophyLead2": "数々の課題やツールの変化の中でも、\n現在の問題に没頭する堅実な態度が\n結局のところ、正しい未来の方向性を完成させます。",
-    "philosophyLead3": "20年の歩みの中で見出した、変わらない本質。",
+    "philosophyLead2": "数々の課題やツールの変化の中でも、\n目の前の問題に没頭する姿勢が\n結局のところ、正しい未来の方向性を完成させます。",
+    "philosophyLead3": "長い歩みの中で見出した、変わらない本質。",
     "philosophyDeclaration": "真心を最優先に —\n私がPriSinceraという名で働く流儀です。",
     "conceptCard1": {
       "title": "態度",
       "subtitle": "Attitude",
       "quote": "技術は変わっても態度は残る",
-      "desc": "20年を支えてきた力はツールではなく、生業に対する揺るぎない態度でした。"
+      "desc": "道具は変わり続けましたが、仕事に向き合う方法は変わりませんでした。"
     },
     "conceptCard2": {
       "title": "優先順位",
@@ -90,12 +88,12 @@
       "quote": "真心は最終的に伝わる",
       "desc": "透明性を持って本質に集中すれば、信頼は必ずついてきます。"
     },
-    "journeyTitle": "技術は変わっても、",
-    "journeyTitleAccent": "態度は残ります。",
-    "journeySubtitle": "20年のIT経験がAI技術と出会い、\nあなたの成長を支援するツールとして誕生しました。",
+    "journeyTitle": "企画する人から、",
+    "journeyTitleAccent": "つくる人になるまで。",
+    "journeySubtitle": "20年のIT経験がAI技術と出会い、\n自らつくるサービスと記録になりました。",
     "milestone1": {
       "headline": "経験の蓄積",
-      "desc": "Webディレクションからグローバルサービスの統括まで。数々のプロジェクトを通じて「変わらない本질과 태도(本質と態度)」の重要性を学びました。"
+      "desc": "Web企画からグローバルサービスのリードまで。数多くのプロジェクトの中で「変わらない本質」の大切さを学びました。"
     },
     "milestone2": {
       "headline": "AIとの遭遇",
@@ -103,20 +101,18 @@
     },
     "milestone3": {
       "headline": "成長を支えるツールへ",
-      "desc": "20年の経験とAI技術が融合し、あなたの日常と成長を直接的にサポートする実用的なWebサービスとして生まれ変わりました。"
+      "desc": "その経験とAI技術が結びつき、いまは日常と成長を直接支えるWebサービスになりました。"
     },
     "servicesTitle": "その姿勢が生んだもの —",
     "servicesTitleAccent": "自ら創った五つの証。",
-    "servicesSubtitle": "企画で積んだ20年がAIと出会い、五つの成果になりました。\n作る過程から実務の解決まで — 姿勢の結果です。",
+    "servicesSubtitle": "企画で積んだ経験がAIと出会い、五つの成果になりました。\n作る過程から実務の解決まで。",
     "serviceBaseCta": "オープンソースとシステムアーキテクチャを見る",
-    "serviceBuildersDesc": "Vibe codingとGCPサーバーレスを基盤に設計を進めるPriSinceraの執拗な開発旅路です。\n難易度の高いバックエンドのトラブルシューティング、AIパイプライン拡張記、セキュリティ監査など、生々しい成長の記録をリアルタイムで共有します。",
     "serviceBuildersOne": "つくる過程をそのまま残した開発の記録。",
     "serviceBuildersTags": [
       "Architecture",
       "Troubleshooting"
     ],
     "serviceBuildersCta": "開発の記録を読む",
-    "serviceSylphioDesc": "画面上のすべての音声とマイク入力をリアルタイムでキャプチャし、オンデバイスで遅延なく字幕を表示するAIリアルタイム通訳アプリです。\nGeminiとGPTの強力な多言語インテリジェンスをMacネイティブ環境で完璧に体験してください。",
     "serviceSylphioOne": "画面のすべての音をリアルタイム字幕へ — Macネイティブ通訳。",
     "serviceSylphioTags": [
       "On-Device AI",
@@ -126,21 +122,13 @@
     "connectTitle": "一緒に",
     "connectTitleAccent": "話しましょう。",
     "connectSubtitle": "ビジネス、キャリア、あるいは仕事への態度についてでも —\nお気軽にご連絡ください。",
-    "seoDescription": "PriSincera公式ホームページ。複雑なビジネスに真心を込めて優先順位を設計します。",
-    "seoKeywords": "PriSincera, ビジネス, 戦略, 優先順位, 誠実さ, ITトレンド",
-    "serviceReLearnDesc": "毎日の学び(Daily Digest)と週間の実行・振り返り(Pace Note)を\n一つの成長ループに統合。\n学び、実行し、振り返る一日が明日のレコメンドを変えます。",
     "serviceReLearnOne": "学び、実行し、振り返る一日が明日のおすすめを変えます。",
     "serviceReLearnTags": [
       "Daily Curation",
       "AI Reflection"
     ],
-    "heroRole": "20年の企画センスにAIを掛け合わせ、毎日新しく創ります。",
-    "serviceBuildersTag": "作る過程の記録",
-    "serviceReLearnTag": "20年のキャリアの製品化",
-    "serviceSylphioTag": "実務ニーズの解決",
+    "heroRole": "会社ではグローバルサービスが立つ舞台をつくり、ここでは自分のものを一からつくります。",
     "makerNote": "このサイトの全ソースとアーキテクチャは、オープンソースで公開されています。",
-    "servicePlannerTag": "技術と企画のあいだで",
-    "servicePlannerDesc": "プロダクトを作る前段 — 何を、誰のために、なぜ今つくるのか。\n20年以上さまざまなサービスを作りながら学んだ、企画と技術の関係を書き残します。",
     "servicePlannerOne": "何を、誰のために、なぜ今つくるのか — 企画者の視点。",
     "servicePlannerTags": [
       "Planning",
@@ -150,14 +138,47 @@
     "serviceReLearnCta": "成長ループを見る",
     "latestNote": "最新記事",
     "latestPart": "全{n}回の最新",
-    "serviceWaymarkTag": "決断の伴走者",
-    "serviceWaymarkDesc": "大きな決断ほど、そばにいる人が必要です。\nWaymarkはあなたの決断を覚え、揺れる瞬間に自ら歩み寄るAIの伴走者です。",
     "serviceWaymarkOne": "決断を記憶し、揺れる瞬間に先に訪れる同伴者。",
     "serviceWaymarkTags": [
       "Coming Soon",
       "Decision Journal"
     ],
-    "serviceWaymarkCta": "Waymarkに出会う"
+    "serviceWaymarkCta": "Waymarkに出会う",
+    "heroCtaWork": "つくったものを見る",
+    "heroCtaNote": "最新の記事を読む",
+    "experience": [
+      {
+        "years": "2007 — 2009",
+        "title": "コマースから始めました",
+        "did": "ショッピングモールの画面と管理システムを設計し、オフラインの現像品質まで自ら検品しました。",
+        "learned": "デジタルサービスの終点は結局、顧客が手にする実物だと、そこで学びました。"
+      },
+      {
+        "years": "2009 — 2013",
+        "title": "ゲームプラットフォームでPMになりました",
+        "did": "ゲームポータルを再設計し、セキュリティセンターを立ち上げ、法が求める利用時間規制をサービス方針に落とし込みました。",
+        "learned": "画面設計を超えて日程と品質まで担うことで、企画者からPMへ移りました。"
+      },
+      {
+        "years": "2013 — 2014",
+        "title": "エージェンシーで説得を学びました",
+        "did": "金融・公共クライアントの曖昧な要望を、明確なサービス仕様に変えました。",
+        "learned": "提案と落選を繰り返す中で、良い案と通る案は別だと知りました。"
+      },
+      {
+        "years": "2014 — 2022",
+        "title": "採用プラットフォームで経営陣と働きました",
+        "did": "7年間、C-Levelの言葉をプロダクトの言葉に移し、マッチングアルゴリズムを高度化しました。",
+        "learned": "事業の本質を掴まなければ、機能はどれだけ作り込んでも噛み合わないと学びました。"
+      },
+      {
+        "years": "2022 — 現在",
+        "title": "ふたたびゲームへ、今度はグローバルで",
+        "did": "グローバルIP初のPC統合サービスを8言語で三地域に同時ローンチし、決済手段31種と国ごとに異なる規制を満たす会員体系をウェブが支えるようにしました。",
+        "learned": "いまはウェブサービスが会社の売上にどう貢献できるかを設計しています。"
+      }
+    ],
+    "experienceMore": "経歴の全体はLinkedInで"
   },
   "relearn": {
     "status": {

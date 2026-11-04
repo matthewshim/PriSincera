@@ -64,19 +64,17 @@
   "home": {
     "heroLabel": "Matthew Shim · PriSincera",
     "heroTitle": "Sincerity, Prioritized.",
-    "heroSubStrong": "\"Flowers at your feet, Stars in the distance\"",
-    "heroSubText": "Moving toward a shining goal in the distance,\nwhile remaining faithful to the essence blooming right before us.\nWe are certain that this is the most rightful path.",
     "philosophyTitleLine1": "Flowers at your feet,",
     "philosophyTitleLine2": "Stars in the distance.",
     "philosophyLead1": "Chasing a star in the distance,\nwe hope you do not miss the beautiful flower blooming at your feet.",
-    "philosophyLead2": "In a world of constant shifts in tasks and tools,\na solid attitude of immersing oneself in the present problem\nultimately completes the correct direction for the future.",
-    "philosophyLead3": "The unchanging essence discovered in a 20-year journey,",
+    "philosophyLead2": "In a world of constant shifts in tasks and tools,\nstaying immersed in the problem in front of you\nis what shapes the right direction.",
+    "philosophyLead3": "The unchanging essence discovered along the way,",
     "philosophyDeclaration": "Sincerity, as the top priority —\nthis is how I work under the name PriSincera.",
     "conceptCard1": {
       "title": "Attitude",
       "subtitle": "Attitude",
       "quote": "Tools change, but attitude remains",
-      "desc": "The power that sustained us for 20 years was not the tools, but a solid attitude toward our craft."
+      "desc": "The tools kept changing. The way of facing the work did not."
     },
     "conceptCard2": {
       "title": "Priority",
@@ -90,12 +88,12 @@
       "quote": "Sincerity eventually reaches out",
       "desc": "Focusing transparently on the essence makes trust follow inevitably."
     },
-    "journeyTitle": "Tools change, ",
-    "journeyTitleAccent": "but attitude remains.",
-    "journeySubtitle": "20 years of IT experience meets AI technology,\nborn as a tool to help you grow.",
+    "journeyTitle": "From planning them, ",
+    "journeyTitleAccent": "to building them.",
+    "journeySubtitle": "20 years of IT experience met AI technology,\nand became services and records I build myself.",
     "milestone1": {
       "headline": "Accumulation of Experience",
-      "desc": "From web planning to leading global services. Through countless projects, I learned the importance of \"unchanging essence and attitude.\""
+      "desc": "From web planning to leading global services. Across many projects I learned what the unchanging essentials are."
     },
     "milestone2": {
       "headline": "Encounter with AI",
@@ -103,20 +101,18 @@
     },
     "milestone3": {
       "headline": "A Tool Supporting Growth",
-      "desc": "Combining 20 years of experience with AI technology, now born as a practical web service that directly assists your daily life and growth."
+      "desc": "That experience met AI, and became web services that help daily life and growth directly."
     },
     "servicesTitle": "What that attitude built —",
     "servicesTitleAccent": "five things I made myself.",
-    "servicesSubtitle": "Twenty years of planning met AI and became five things.\nFrom the making to solving real work — the results of an attitude.",
+    "servicesSubtitle": "Experience from planning met AI and became five things.\nFrom the making to solving real work.",
     "serviceBaseCta": "Explore Open Source & System Architecture",
-    "serviceBuildersDesc": "PriSincera's relentless development journey, designed with Vibe coding and GCP serverless.\nWe vividly share raw growth stories: challenging backend troubleshooting, AI pipeline expansions, security audits, and more.",
     "serviceBuildersOne": "The build, recorded as it happened.",
     "serviceBuildersTags": [
       "Architecture",
       "Troubleshooting"
     ],
     "serviceBuildersCta": "Read the Builder's Log",
-    "serviceSylphioDesc": "An AI real-time translation app that captures all screen audio and microphone input in real-time, instantly rendering subtitles on-device.\nFlawlessly experience the powerful multilingual intelligence of Gemini and GPT in a native Mac environment.",
     "serviceSylphioOne": "Every sound on screen, live-captioned — native on Mac.",
     "serviceSylphioTags": [
       "On-Device AI",
@@ -126,21 +122,13 @@
     "connectTitle": "Let's ",
     "connectTitleAccent": "talk.",
     "connectSubtitle": "Whether it's business, career, or about attitude —\nfeel free to connect.",
-    "seoDescription": "PriSincera Official Website. Designing priorities with sincerity for complex business.",
-    "seoKeywords": "PriSincera, Business, Strategy, Priority, Sincerity, IT Trends",
-    "serviceReLearnDesc": "Daily learning (Daily Digest) and weekly action & reflection (Pace Note),\nunified into one growth loop.\nLearn, run, reflect — each day tunes tomorrow's recommendations.",
     "serviceReLearnOne": "Learn, run, reflect — today reshapes tomorrow’s picks.",
     "serviceReLearnTags": [
       "Daily Curation",
       "AI Reflection"
     ],
-    "heroRole": "Twenty years of product instinct, now building anew every day with AI.",
-    "serviceBuildersTag": "The record of making",
-    "serviceReLearnTag": "Two decades, productized",
-    "serviceSylphioTag": "Solving a real need",
+    "heroRole": "At work, I build the stage global services stand on. Here, I build my own.",
     "makerNote": "This site's full source and architecture are open source.",
-    "servicePlannerTag": "Between engineering and planning",
-    "servicePlannerDesc": "The upstream of building a product — what to build, for whom, and why now.\nNotes on the relationship between planning and engineering, learned across twenty years of building services.",
     "servicePlannerOne": "What to build, for whom, and why now — a planner’s view.",
     "servicePlannerTags": [
       "Planning",
@@ -150,14 +138,47 @@
     "serviceReLearnCta": "Explore ReLearn",
     "latestNote": "Latest",
     "latestPart": "Latest of {n}",
-    "serviceWaymarkTag": "Companion for decisions",
-    "serviceWaymarkDesc": "The bigger the decision, the more you need someone beside you.\nWaymark remembers your decisions and reaches out first when you waver — an AI companion.",
     "serviceWaymarkOne": "Remembers your decisions, and reaches out when you waver.",
     "serviceWaymarkTags": [
       "Coming Soon",
       "Decision Journal"
     ],
-    "serviceWaymarkCta": "Meet Waymark"
+    "serviceWaymarkCta": "Meet Waymark",
+    "heroCtaWork": "See what I build",
+    "heroCtaNote": "Read the latest",
+    "experience": [
+      {
+        "years": "2007 — 2009",
+        "title": "I started in commerce",
+        "did": "Designed the storefront and the admin system, and inspected the quality of printed photos offline myself.",
+        "learned": "That is where I learned a digital service ends in something the customer actually holds."
+      },
+      {
+        "years": "2009 — 2013",
+        "title": "I became a PM on a game platform",
+        "did": "Rebuilt the game portal, stood up a security center, and turned a play-time regulation into service policy.",
+        "learned": "Owning schedule and quality, not just screens, is what moved me from planner to PM."
+      },
+      {
+        "years": "2013 — 2014",
+        "title": "At an agency, I learned persuasion",
+        "did": "Turned vague requests from finance and public-sector clients into clear service specs.",
+        "learned": "Through pitches won and lost, I learned the best idea and the idea that passes are not the same."
+      },
+      {
+        "years": "2014 — 2022",
+        "title": "At a recruiting platform, I worked with the C-suite",
+        "did": "For seven years I translated executive language into product, and improved the matching algorithm.",
+        "learned": "Without grasping the business, even well-built features never quite land."
+      },
+      {
+        "years": "2022 — Now",
+        "title": "Back to games, this time global",
+        "did": "Launched the first unified PC service for a global IP across three regions in eight languages, with 31 payment methods and a membership system that meets each country’s rules.",
+        "learned": "Now I am designing how web services contribute to company revenue."
+      }
+    ],
+    "experienceMore": "Full history on LinkedIn"
   },
   "relearn": {
     "status": {

@@ -169,6 +169,12 @@ const localizeObject = (obj, locale) => {
 
 // --- Static files with caching ---
 app.use(express.static(DIST_DIR, {
+  /* 홈(`/`)의 자동 index 제공을 끈다 — 켜져 있으면 `/`가 여기서 바로 응답되어
+     **SSR 메타 파이프라인을 타지 않는다.** 그 결과 홈만 `index.html`의 정적 메타를 쓰고,
+     다른 경로는 `seoMeta.mjs`를 써서 출처가 둘로 갈려 있었다(2026-11-04 발견).
+     끄면 `/`도 catch-all로 내려가 같은 처리를 받는다. `dist`의 index.html은 하나뿐이라
+     다른 디렉터리 자동 제공이 깨질 일이 없다. */
+  index: false,
   maxAge: '1d',
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('index.html')) {
@@ -676,9 +682,37 @@ app.use(async (req, res) => {
   // 크롤러가 앞의 값을 취해 article 신호가 무력화된다.
   html = html.replace(/<meta property="og:(title|description|image|url|type)"[^>]*>/gis, '');
   html = html.replace(/<meta name="twitter:(title|description|image)"[^>]*>/gis, '');
-  // 구조화 데이터(Article) — '<'를 이스케이프해 스크립트 조기 종료를 차단
-  const ldTag = articleLd
-    ? `\n    <script type="application/ld+json">${JSON.stringify(articleLd).replace(/</g, '\\u003c')}</script>`
+  /* 구조화 데이터 — '<'를 이스케이프해 스크립트 조기 종료를 차단한다.
+     홈에는 Person + WebSite를, 아티클 지면에는 Article을 넣는다. 둘은 **배타적**이다 —
+     `index.html`에 정적으로 박으면 아티클 경로에서 이중 주입된다(2026-11-04 신설).
+     이름으로 검색했을 때 사이트·LinkedIn·GitHub를 같은 사람으로 묶을 근거가 없었다. */
+  const isHome = req.originalUrl.split('?')[0].replace(/\/+$/, '') === '';
+  const homeLd = isHome ? {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Person',
+        '@id': `${baseUrl}/#person`,
+        name: 'Matthew Shim',
+        jobTitle: 'Platform Director',
+        description: '20년 가까이 웹서비스를 만들어 온 플랫폼·프로덕트 리더. 글로벌 게임 서비스의 웹 기반을 총괄하며, PriSincera에서 AI와 함께 제품을 직접 설계하고 만든다.',
+        url: `${baseUrl}/`,
+        email: 'mailto:matthew.shim@prisincera.com',
+        sameAs: ['https://www.linkedin.com/in/shimks', 'https://github.com/matthewshim'],
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${baseUrl}/#website`,
+        name: 'PriSincera',
+        url: `${baseUrl}/`,
+        inLanguage: ['ko', 'en', 'ja'],
+        publisher: { '@id': `${baseUrl}/#person` },
+      },
+    ],
+  } : null;
+  const ld = articleLd || homeLd;
+  const ldTag = ld
+    ? `\n    <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`
     : '';
 
   html = html.replace('</head>', `${metaTags}${ldTag}\n</head>`);

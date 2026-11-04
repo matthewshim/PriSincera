@@ -13,10 +13,17 @@ import './JourneySection.css';
 /* `Years`에는 `+`를 붙이지 않는다 — 2007.03 시작이라 현재 19년 8개월이고,
    19.67은 20으로 반올림되는 값이지만 '20을 넘는다'는 주장은 아직 사실이 아니다.
    2027.03에 만 20년이 된다(main_page_revision_plan.md §12-7). */
+/* 경력 수치 — 셋 다 정확한 값이라 `+`를 붙이지 않는다.
+   `20`: 2007.03 시작, 현재 19년 8개월(2027.03에 만 20년). `20+`는 아직 사실이 아니다.
+   `4`: 아시아(동남아)·유럽·오세아니아·남미.
+   `31`: 한 권역 스토어프론트에 연동한 결제 수단. 화면 타일은 34개지만 아그리게이터별로
+        중복 노출되는 3건을 뺀 값이다 — 34는 같은 수단을 두 번 센다.
+   구 `50+ Projects`는 근거 없는 임의 수치여서 폐기했다.
+   정본: docs/core/main_page_revision_plan.md §15-5. */
 const STATS = [
   { target: 20, suffix: '', label: 'Years' },
-  { target: 50, suffix: '+', label: 'Projects' },
-  { target: 5, suffix: '+', label: 'Countries' },
+  { target: 4, suffix: '', label: 'Continents' },
+  { target: 31, suffix: '', label: 'Payment Methods' },
 ];
 
 /**
@@ -67,6 +74,7 @@ function StatItem({ target, suffix, label, started }) {
 
 export default function JourneySection() {
   const { t } = useTranslation();
+  const exp = t('home.experience');
   const [sectionRef, progress] = useScrollProgress();
   const milestonesRef = useRef([]);
   const statsRef = useRef(null);
@@ -192,6 +200,31 @@ export default function JourneySection() {
             ))}
           </div>
         </div>
+
+        {/* 경험 5단 — 회사가 아니라 **경험**이 단위다(오너 결정 2026-11-04).
+            6개 회사를 도메인으로 묶으니 5단이 됐고, 회사명·직책을 쓰지 않아도 문장이 성립한다.
+            검증이 필요한 사람은 끝의 LinkedIn 링크로 간다. 정본: main_page_revision_plan §12-4. */}
+        <ol className="journey-exp">
+          {(Array.isArray(exp) ? exp : []).map((e) => (
+            <li className="exp-item" key={e.years}>
+              <div className="exp-years u-eyebrow">{e.years}</div>
+              <div className="exp-body">
+                <h3 className="exp-title">{e.title}</h3>
+                <p className="exp-did">{e.did}</p>
+                <p className="exp-learned">{e.learned}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <a
+          className="exp-more"
+          href="https://www.linkedin.com/in/shimks"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('home.experienceMore')}
+          <Icon name="external" size={13} />
+        </a>
 
         <div className="timeline" ref={sectionRef} style={{ '--scroll-progress': progress }}>
           {MILESTONES.map((m, i) => {

@@ -87,6 +87,7 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
             className={`celestial-btn atlas-btn ${constellationsActive ? 'active' : ''}`}
             onClick={toggleConstellations}
             aria-label="Toggle constellations"
+            aria-pressed={constellationsActive}
             id="atlasToggle"
           >
             <div className={`atlas-icon ${constellationsActive ? 'on' : 'off'}`}>

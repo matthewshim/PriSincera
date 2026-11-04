@@ -411,6 +411,83 @@
    둘을 한 요소에 얹으면 선이 `--measure`(860px)를 물려받아 컨테이너 콘텐츠 폭
    1136px에서 **276px 모자란 채 끊긴다**. 바로 위 `.timeline`이 1136px을 꽉 쓰므로
    단차가 그대로 보인다(2026-11-03 오너 발견: "상단 라인이 끊어진 것 같은데"). */
+/* ── 경험 5단 ──
+   회사가 아니라 경험이 단위다. 연도는 `.u-eyebrow` 그룹이 메트릭을 담당하므로
+   여기선 폭·색만 둔다(§9 대문자 마이크로 라벨). 간격은 `--space-*`만 쓴다(§3-4). */
+.journey-exp {
+    list-style: none;
+    margin: var(--space-2xl) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.exp-item {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: var(--space-lg);
+    align-items: baseline;
+}
+
+/* 메트릭(mono·대문자·자간)은 index.css `.u-eyebrow` 그룹이 담당한다 — 여기선 치수·색만 */
+.exp-years {
+    font-size: var(--fs-micro);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.exp-title {
+    margin: 0 0 var(--space-sm);
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+}
+
+.exp-did {
+    margin: 0 0 var(--space-xs);
+    max-width: var(--measure);
+    font-size: var(--fs-base);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
+
+/* 배운 것 — 한 일보다 한 단계 낮춰 '덧붙인 말'로 읽히게 한다 */
+.exp-learned {
+    margin: 0;
+    max-width: var(--measure);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    line-height: var(--leading-relaxed);
+}
+
+.exp-more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast);
+}
+
+.exp-more:hover,
+.exp-more:focus-visible {
+    color: var(--color-gold);
+}
+
+@media (max-width: 768px) {
+    .exp-item {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+    }
+}
+
 .journey-maker-note {
     margin: var(--space-2xl) 0 0;
     padding-top: var(--space-lg);

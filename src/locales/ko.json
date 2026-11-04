@@ -64,19 +64,17 @@
   "home": {
     "heroLabel": "Matthew Shim · PriSincera",
     "heroTitle": "Sincerity, Prioritized.",
-    "heroSubStrong": "\"발 아래 꽃, 먼 곳의 별\"",
-    "heroSubText": "멀리 빛나는 목표를 향해 나아가면서도,\n지금 내 앞의 피어난 본질에 충실하는 태도.\n그것이 가장 올바른 길이라 확신합니다.",
     "philosophyTitleLine1": "발 아래 꽃,",
     "philosophyTitleLine2": "먼 곳의 별.",
     "philosophyLead1": "먼 곳의 별을 좇느라,\n지금 내 발 아래 피어난 아름다운 꽃을 놓치지 않기를.",
-    "philosophyLead2": "수많은 과제와 도구의 변화 속에서도,\n현재의 문제에 몰입하는 단단한 태도가\n결국 올바른 미래의 방향을 완성합니다.",
-    "philosophyLead3": "20년의 여정에서 발견한 변하지 않는 본질,",
+    "philosophyLead2": "수많은 과제와 도구의 변화 속에서도,\n현재의 문제에 몰입하는 자세가\n결국 올바른 미래의 방향을 완성합니다.",
+    "philosophyLead3": "오랜 여정에서 발견한 변하지 않는 본질,",
     "philosophyDeclaration": "진심을 가장 우선순위에 둔다 —\n제가 PriSincera라는 이름으로 일하는 방식입니다.",
     "conceptCard1": {
       "title": "태도",
       "subtitle": "Attitude",
       "quote": "기술은 변해도 태도는 남는다",
-      "desc": "20년을 지탱해 온 힘은 도구가 아니라, 업(業)을 대하는 단단한 태도였습니다."
+      "desc": "도구는 계속 바뀌었지만, 업(業)을 대하는 방식은 바뀌지 않았습니다."
     },
     "conceptCard2": {
       "title": "우선순위",
@@ -90,12 +88,12 @@
       "quote": "진심은 결국 도달한다",
       "desc": "투명하게 본질에 집중하면, 신뢰는 반드시 따라옵니다."
     },
-    "journeyTitle": "기술은 변해도, ",
-    "journeyTitleAccent": "태도는 남습니다.",
-    "journeySubtitle": "20년의 IT 경험이 AI 기술을 만나,\n당신의 성장을 돕는 도구로 탄생했습니다.",
+    "journeyTitle": "기획하던 사람이, ",
+    "journeyTitleAccent": "만드는 사람이 되기까지.",
+    "journeySubtitle": "20년의 IT 경험이 AI 기술을 만나,\n직접 만든 서비스와 기록이 되었습니다.",
     "milestone1": {
       "headline": "경험의 축적",
-      "desc": "웹 기획부터 글로벌 서비스 리딩까지. 수많은 프로젝트 속에서 \"변하지 않는 본질과 태도\"의 중요성을 배웠습니다."
+      "desc": "웹 기획부터 글로벌 서비스 리딩까지. 수많은 프로젝트 속에서 \"변하지 않는 본질\"의 중요성을 배웠습니다."
     },
     "milestone2": {
       "headline": "AI와의 조우",
@@ -103,20 +101,18 @@
     },
     "milestone3": {
       "headline": "성장을 돕는 도구로",
-      "desc": "20년의 경험과 AI 기술이 결합되어, 이제는 당신의 일상과 성장을 직접적으로 돕는 실질적인 웹 서비스로 탄생했습니다."
+      "desc": "그 경험과 AI 기술이 결합되어, 이제는 일상과 성장을 직접 돕는 웹 서비스로 탄생했습니다."
     },
     "servicesTitle": "태도가 낳은 것들 —",
     "servicesTitleAccent": "직접 만든 다섯 가지 증거.",
-    "servicesSubtitle": "기획으로 쌓은 20년이 AI를 만나, 다섯 가지 결과물이 되었습니다.\n만드는 과정부터 실무의 해결까지 — 태도의 결과물입니다.",
+    "servicesSubtitle": "기획으로 쌓은 경험이 AI를 만나, 다섯 가지 결과물이 되었습니다.\n만드는 과정부터 실무의 해결까지.",
     "serviceBaseCta": "오픈 소스 및 시스템 아키텍처 살펴보기",
-    "serviceBuildersDesc": "Vibe coding과 GCP 서버리스 기반으로 설계해 나가는 PriSincera의 집요한 개발 여정기입니다.\n어려운 백엔드 트러블슈팅, AI 파이프라인 확장기, 보안 감사 등 날것의 성장 기록들을 생생히 공유합니다.",
     "serviceBuildersOne": "만드는 과정을 그대로 남긴 개발 여정기.",
     "serviceBuildersTags": [
       "Architecture",
       "Troubleshooting"
     ],
     "serviceBuildersCta": "개발 여정 읽기",
-    "serviceSylphioDesc": "화면의 모든 소리와 마이크를 실시간 캡처하여 온디바이스에서 지체 없이 자막으로 구현하는 AI 실시간 통역 앱입니다.\nGemini와 GPT의 강력한 다국어 지능을 Mac 네이티브 환경에서 완벽하게 경험해보세요.",
     "serviceSylphioOne": "화면의 모든 소리를 실시간 자막으로 — Mac 네이티브 통역.",
     "serviceSylphioTags": [
       "On-Device AI",
@@ -126,21 +122,13 @@
     "connectTitle": "함께 ",
     "connectTitleAccent": "이야기합시다.",
     "connectSubtitle": "비즈니스든, 커리어든, 태도에 대한 것이든 —\n편하게 연결해 주세요.",
-    "seoDescription": "PriSincera 공식 홈페이지. 복잡한 비즈니스에 진심을 담아 우선순위를 설계합니다.",
-    "seoKeywords": "PriSincera, 비즈니스, 전략, 우선순위, 진정성, IT 트렌드",
-    "serviceReLearnDesc": "매일의 배움(Daily Digest)과 주간 실행·복기(Pace Note)를\n하나의 성장 루프로 통합했습니다.\n배우고, 실행하고, 복기하는 하루가 내일의 추천을 바꿉니다.",
     "serviceReLearnOne": "배우고 실행하고 복기하는 하루가 내일의 추천을 바꿉니다.",
     "serviceReLearnTags": [
       "Daily Curation",
       "AI Reflection"
     ],
-    "heroRole": "20년의 기획 감각에 AI를 더해, 매일 새로 만듭니다.",
-    "serviceBuildersTag": "만드는 과정의 기록",
-    "serviceReLearnTag": "20년 경력의 제품화",
-    "serviceSylphioTag": "실무 니즈의 해결",
+    "heroRole": "회사에서는 글로벌 서비스가 설 무대를 만들고, 여기서는 제 것을 처음부터 만듭니다.",
     "makerNote": "이 사이트의 전체 소스와 아키텍처는 오픈소스로 공개되어 있습니다.",
-    "servicePlannerTag": "기술과 기획 사이에서",
-    "servicePlannerDesc": "제품을 만드는 일의 앞단 — 무엇을, 누구를 위해, 왜 지금 만들 것인가.\n20년 넘게 여러 서비스를 만들며 배운 기획과 기술의 관계를 글로 남깁니다.",
     "servicePlannerOne": "무엇을, 누구를 위해, 왜 지금 만드는가 — 기획자의 시선.",
     "servicePlannerTags": [
       "Planning",
@@ -150,14 +138,47 @@
     "serviceReLearnCta": "성장 루프 살펴보기",
     "latestNote": "최신 글",
     "latestPart": "{n}편 중 최신",
-    "serviceWaymarkTag": "결정의 동반자",
-    "serviceWaymarkDesc": "큰 결정일수록 곁에 있어 줄 사람이 필요합니다.\nWaymark은 당신의 결정을 기억하고, 흔들리는 순간 먼저 찾아오는 AI 동반자입니다.",
     "serviceWaymarkOne": "결정을 기억하고, 흔들리는 순간 먼저 찾아오는 동반자.",
     "serviceWaymarkTags": [
       "Coming Soon",
       "Decision Journal"
     ],
-    "serviceWaymarkCta": "Waymark 만나보기"
+    "serviceWaymarkCta": "Waymark 만나보기",
+    "heroCtaWork": "만든 것 보기",
+    "heroCtaNote": "최신 글 읽기",
+    "experience": [
+      {
+        "years": "2007 — 2009",
+        "title": "커머스에서 시작했습니다",
+        "did": "쇼핑몰의 사용자 화면과 관리자 시스템을 설계하고, 오프라인 인화물 품질까지 직접 검수했습니다.",
+        "learned": "디지털 서비스의 끝은 결국 고객의 실물 경험이라는 걸 그때 배웠습니다."
+      },
+      {
+        "years": "2009 — 2013",
+        "title": "게임 플랫폼에서 PM이 됐습니다",
+        "did": "게임 포털을 재설계하고 보안 센터를 세웠으며, 법이 요구하는 이용 시간 규제를 서비스 정책으로 옮겨 심었습니다.",
+        "learned": "화면 설계를 넘어 일정과 품질까지 책임지면서 기획자에서 PM으로 넘어갔습니다."
+      },
+      {
+        "years": "2013 — 2014",
+        "title": "에이전시에서 설득을 배웠습니다",
+        "did": "금융·공공 클라이언트의 모호한 요구를 명확한 서비스 스펙으로 바꿨습니다.",
+        "learned": "제안과 탈락을 반복하며, 좋은 안보다 통과되는 안이 따로 있다는 걸 알았습니다."
+      },
+      {
+        "years": "2014 — 2022",
+        "title": "채용 플랫폼에서 경영진과 일했습니다",
+        "did": "7년간 C-Level의 언어를 제품의 언어로 옮기고, 매칭 알고리즘을 고도화했습니다.",
+        "learned": "사업의 본질을 모르면 기능은 아무리 잘 만들어도 겉돈다는 걸 배웠습니다."
+      },
+      {
+        "years": "2022 — 현재",
+        "title": "다시 게임으로, 이번엔 글로벌입니다",
+        "did": "글로벌 IP 최초의 PC 통합 서비스를 8개 언어로 세 권역에 동시 런칭하고, 결제 수단 31종과 나라마다 다른 규제를 지키는 회원 체계를 웹이 떠받치게 만들었습니다.",
+        "learned": "지금은 웹서비스가 회사의 매출에 어떻게 기여할지를 설계하고 있습니다."
+      }
+    ],
+    "experienceMore": "전체 경력은 LinkedIn에서"
   },
   "relearn": {
     "status": {

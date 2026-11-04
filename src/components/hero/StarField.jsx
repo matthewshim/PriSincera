@@ -201,25 +201,22 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       
       // 1. 일반 주요 항성들 생성 (대기 깜빡임, 회절 스파이크, glow가 풍부한 주성들 - 정예화)
       const starDensity = Math.floor((w * h) / (isMobile ? 8000 : 4000));
-      const colorsByDepth = {
-        far:  ['#E2ECFF', '#C9DFFE', '#A3C9FF'],
-        mid:  ['#F8F9FA', '#F0F4F8', '#E6ECF5'],
-        near: ['#FFFEE8', '#FFFAC7', '#FFE1C2', '#FFCFA3'],
-      };
+      /* 별 색은 **깊이와 분리한다**. 구 구조는 near(가까운 별)에 난색만 몰아
+         `#FFE1C2`·`#FFCFA3` 같은 주황이 앞쪽을 덮어 밤하늘보다 따뜻했다.
+         실제 분포에 가깝게 흰색 우세로 재배분하고, 색은 깊이와 무관하게 뽑는다.
+         골드는 브랜드 포인트(별똥별 꼬리·강조 별)에만 남긴다. */
+      const STAR_COLORS = [
+        ...Array(12).fill('#FFFFFF'), ...Array(6).fill('#F5F7FF'),   // 흰색 약 60%
+        ...Array(5).fill('#DCE6FF'), ...Array(3).fill('#C9D8FF'),    // 청백색 약 25%
+        ...Array(4).fill('#FFF4E0'),                                  // 연노랑 약 12%
+        '#FFD2A8',                                                    // 주황·적색 약 3%
+      ];
 
       for (let i = 0; i < starDensity; i++) {
         const rawDepth = Math.random();
         const depth = rawDepth * rawDepth * rawDepth; // 0~1, skewed toward 0
 
-        let palette;
-        if (depth < 0.15) {
-          palette = colorsByDepth.far;
-        } else if (depth < 0.55) {
-          palette = colorsByDepth.mid;
-        } else {
-          palette = colorsByDepth.near;
-        }
-        const color = palette[Math.floor(Math.random() * palette.length)];
+        const color = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
 
         stars.push({
           x: Math.random() * w,
@@ -910,7 +907,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           if (showByReveal && isFocused) {
             // Subtitle
             ctx.globalAlpha = revealAlpha * 0.40;
-            ctx.font = `400 ${Math.round(8.5 * labelScale)}px 'Inter', sans-serif`;
+            ctx.font = `400 ${Math.round(9.5 * labelScale)}px 'Inter', sans-serif`;
             ctx.fillStyle = '#B0C4DE'; // 앤티크 실버 스틸 블루
             ctx.fillText(c.sub, lCenter.x, lCenter.y + 56 * labelScale);
 
@@ -991,7 +988,20 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       cancelAnimationFrame(frameId);
     }
 
+    /* 모션 감쇠 — `prefers-reduced-motion: reduce`면 **한 프레임만 그리고 멈춘다**.
+       아무것도 그리지 않으면 배경이 검게 비어 지면의 세계관이 사라지고, 현행 유지는 규범 위반이다
+       (전역 CSS 규칙은 CSS 애니메이션만 덮는다). 별과 별자리는 보이되 움직이지 않는다.
+       설정이 바뀌면 `change`로 재개한다. 정본: main_page_revision_plan.md §13-4. */
+    const reduceMq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     function draw(now) {
+      if (reduceMq?.matches) {
+        drawFrame();
+        isLooping = false;
+        /* 루프가 한 번만 돌므로 웹폰트가 늦게 오면 캔버스 글자가 **폴백 글꼴로 굳는다**.
+           움직이는 모드에서는 다음 프레임이 고쳐 주지만 여기서는 기회가 없다. */
+        document.fonts?.ready?.then(() => drawFrame());
+        return;
+      }
       if (!isLooping) return;
       frameId = requestAnimationFrame(draw);
       const currentInterval = isAmbientMode ? 83.33 : FPS_INTERVAL; // ~12fps cap in ambient mode
@@ -1061,11 +1071,15 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     }
 
     window.addEventListener('resize', handleResize);
+    /* 설정이 바뀌면 멈춘 루프를 되살린다 — 감쇠를 끈 사용자가 새로고침해야 하는 일이 없게 한다 */
+    const onReduceChange = () => { if (!reduceMq?.matches) startLoop(); };
+    reduceMq?.addEventListener?.('change', onReduceChange);
     window.addEventListener('trigger-shooting-star', handleTriggerShootingStar);
     resize();
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      reduceMq?.removeEventListener?.('change', onReduceChange);
       window.removeEventListener('trigger-shooting-star', handleTriggerShootingStar);
       clearTimeout(resizeTimeout);
       observer.disconnect();

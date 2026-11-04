@@ -150,26 +150,31 @@
     transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
 }
 
-.hero-role.visible {
+/* 히어로 CTA — 구 `.hero-sub`(인용 블록) 자리를 이어받는다. 등장 시퀀스의 같은 단계다.
+   골격은 index.css의 버튼 스캐폴드가 담당하고(라운드 --radius-sm 포함, §4-4), 여기선 배치만 둔다. */
+.hero-ctas {
+    display: flex;
+    gap: var(--space-12);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-lg);
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+
+.hero-ctas.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-.hero-sub {
-    font-size: clamp(var(--fs-sm), 1.5vw, var(--fs-base));
-    color: var(--text-muted);
-    line-height: var(--leading-loose);
-    max-width: 520px;
-    margin: 0 auto var(--space-lg);
-    opacity: 0;
-    filter: blur(8px);
-    transform: translateY(15px);
-    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, filter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+.hero-cta {
+    text-decoration: none;
+    white-space: nowrap;
 }
 
-.hero-sub.visible {
+.hero-role.visible {
     opacity: 1;
-    filter: blur(0px);
     transform: translateY(0);
 }
 
