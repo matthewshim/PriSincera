@@ -148,33 +148,33 @@
     "experience": [
       {
         "years": "2007 — 2009",
-        "title": "I started in commerce",
-        "did": "Designed the storefront and the admin system, and inspected the quality of printed photos offline myself.",
-        "learned": "That is where I learned a digital service ends in something the customer actually holds."
+        "title": "Started in commerce",
+        "did": "Storefront and admin system design; offline print-quality inspection.",
+        "learned": "A digital service ends in something the customer actually holds."
       },
       {
         "years": "2009 — 2013",
-        "title": "I became a PM on a game platform",
-        "did": "Rebuilt the game portal, stood up a security center, and turned a play-time regulation into service policy.",
-        "learned": "Owning schedule and quality, not just screens, is what moved me from planner to PM."
+        "title": "From planner to PM, on a game platform",
+        "did": "Game portal redesign, a new security center, play-time regulation turned into service policy.",
+        "learned": "Not just screens — schedule and quality too."
       },
       {
         "years": "2013 — 2014",
-        "title": "At an agency, I learned persuasion",
-        "did": "Turned vague requests from finance and public-sector clients into clear service specs.",
-        "learned": "Through pitches won and lost, I learned the best idea and the idea that passes are not the same."
+        "title": "Persuasion, learned at an agency",
+        "did": "Vague requests from finance and public-sector clients, turned into clear service specs.",
+        "learned": "The best idea and the idea that passes: not the same thing."
       },
       {
         "years": "2014 — 2022",
-        "title": "At a recruiting platform, I worked with the C-suite",
-        "did": "For seven years I translated executive language into product, and improved the matching algorithm.",
-        "learned": "Without grasping the business, even well-built features never quite land."
+        "title": "Beside the C-suite at a recruiting platform",
+        "did": "Seven years translating executive language into product. Matching algorithm improved.",
+        "learned": "Without grasping the business, even well-built features never land."
       },
       {
         "years": "2022 — Now",
         "title": "Back to games, this time global",
-        "did": "Launched the first unified PC service for a global IP across three regions in eight languages, with 31 payment methods and a membership system that meets each country’s rules.",
-        "learned": "Now I am designing how web services contribute to company revenue."
+        "did": "First unified PC service for a global IP — eight languages, three regions, same day. 31 payment methods and a membership system meeting each country's rules, all carried by the web.",
+        "learned": "Now: designing how web services contribute to revenue."
       }
     ],
     "experienceMore": "Full history on LinkedIn"
