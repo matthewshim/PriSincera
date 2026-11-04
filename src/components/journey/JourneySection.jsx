@@ -291,7 +291,8 @@ export default function JourneySection() {
 
         {/* Base 강등 착지 — 메이커십 각주(오픈소스 증거): 이 사이트조차 기획자가 AI로 직접 빌드 */}
         <div className="journey-maker-note">
-          <p className="maker-note-text">{t('home.makerNote')}</p>
+            {/* 설명 문단을 걷었다 — "소스가 공개돼 있다"는 링크 문구가 이미 말하는 것이라
+                한 줄을 더 읽히게 할 이유가 없었다(2026-11-04 오너 판단). */}
           <a
             href="https://github.com/matthewshim/PriSincera"
             target="_blank"

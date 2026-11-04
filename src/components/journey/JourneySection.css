@@ -420,7 +420,15 @@
 /* ── 경험 5단 ──
    회사가 아니라 경험이 단위다. 연도는 `.u-eyebrow` 그룹이 메트릭을 담당하므로
    여기선 폭·색만 둔다(§9 대문자 마이크로 라벨). 간격은 `--space-*`만 쓴다(§3-4). */
+/* 연도 칼럼 폭 — 축 좌우 여백을 맞추는 단일 출처다. 선·점·격자가 모두 이 값을 쓴다.
+   구 값 7.5rem(120px)은 연도 문자열 실폭(약 86px)보다 **34px 넓어** 좌측 공백이 46px,
+   우측 여백이 12px로 **3.8배** 벌어졌다(2026-11-04 오너 지적).
+   mono 11진폭 = 11.2px × (진폭 0.6em + 자간 0.1em) ≈ 86px이므로 5.5rem(88px)이면 꼭 맞고,
+   간격을 --space-md로 좁혀 축을 중앙에 두면 **좌 10px / 우 8px**가 된다.
+   연도를 우측 정렬하면 좌우가 8:8로 완전히 같아지지만 글자 시작이 34px 들어가
+   섹션 좌단(제목·부제)과 어긋난다 — 좌측 정렬을 지키는 쪽을 택했다. */
 .journey-exp {
+    --exp-axis: 5.5rem;
     position: relative;   /* 연도 축(::before)의 기준 */
     list-style: none;
     margin: var(--space-2xl) 0 0;
@@ -438,7 +446,7 @@
     position: absolute;
     top: 0.5rem;
     bottom: 0.5rem;
-    left: calc(7.5rem + var(--space-lg) / 2);
+    left: calc(var(--exp-axis) + var(--space-md) / 2);
     width: 1px;
     background: var(--glass-border);
 }
@@ -446,8 +454,8 @@
 .exp-item {
     position: relative;
     display: grid;
-    grid-template-columns: 7.5rem 1fr;
-    gap: var(--space-lg);
+    grid-template-columns: var(--exp-axis) 1fr;
+    gap: var(--space-md);
     align-items: baseline;
     /* 등장 리빌 — 바로 아래 타임라인이 이미 스크롤 연동이다. 여기도 연동하면
        한 섹션에 진행 막대가 둘이 되어 경쟁한다. 장치를 달리해 두 블록을 구분한다. */
@@ -467,7 +475,7 @@
     content: '';
     position: absolute;
     top: 0.42rem;
-    left: calc(7.5rem + var(--space-lg) / 2);
+    left: calc(var(--exp-axis) + var(--space-md) / 2);
     width: 5px;
     height: 5px;
     margin-left: -2px;
@@ -537,20 +545,12 @@
     }
 }
 
+/* 섹션 끝의 오픈소스 링크. 설명 문단("…오픈소스로 공개되어 있습니다")은 링크 문구가
+   이미 말하는 것이라 걷었고, 상단 헤어라인도 걷었다 — 전체 폭 선은 연대기 경계 하나로 충분하다.
+   이제 경험 5단 끝의 LinkedIn 링크와 **같은 형태·같은 역할**로 섹션을 닫는다.
+   클래스 이름의 'note'는 그 문단의 흔적이다(2026-11-04). */
 .journey-maker-note {
-    /* 상단 선을 걷었다 — 섹션에 전체 폭 헤어라인이 둘이면 과하고(연대기 경계에 하나로 충분),
-       각주는 커리어가 아니라 **지면 자신에 대한 메모**라 조용히 흘러야 한다.
-       간격 64px로 충분히 떨어진다(2026-11-04 오너 지적). */
     margin: var(--space-2xl) 0 0;
-}
-.maker-note-text {
-    /* P1-H1: center 해제 — measure 폭 다행 산문을 중앙 정렬하면 왼쪽 눈 복귀점이
-       사라져 가독이 떨어진다. `auto` 없이 폭만 건다(§9-15). */
-    max-width: var(--measure);
-    font-size: var(--fs-base);
-    color: var(--text-muted);
-    line-height: var(--leading-loose);
-    margin-bottom: var(--space-md);
 }
 /* 블록 끝의 외부 링크 — 경험 5단의 "전체 경력은 LinkedIn에서"와 각주의 오픈소스 링크는
    **같은 역할·같은 형태**다. 구 구조는 각주만 사각 버튼이어서 두 링크가 다른 물건처럼 보였고,
