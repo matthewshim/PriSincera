@@ -101,7 +101,7 @@
     },
     "milestone3": {
       "headline": "성장을 돕는 도구로",
-      "desc": "그 경험과 AI 기술이 결합되어, 이제는 일상과 성장을 직접 돕는 웹 서비스로 탄생했습니다."
+      "desc": "그 경험과 AI 기술이 만나, 이제는 쓰는 사람의 일상과 성장을 직접 돕는 실제 웹 서비스로 이어지고 있습니다."
     },
     "servicesTitle": "태도가 낳은 것들 —",
     "servicesTitleAccent": "직접 만든 다섯 가지 증거.",
@@ -177,7 +177,12 @@
         "learned": "지금은 웹서비스가 회사 매출에 어떻게 기여할지를 설계하는 중."
       }
     ],
-    "experienceMore": "전체 경력은 LinkedIn에서"
+    "experienceMore": "전체 경력은 LinkedIn에서",
+    "statCaption": {
+      "years": "2007년부터",
+      "continents": "아시아·유럽·오세아니아·남미",
+      "payments": "한 권역 스토어프론트 기준"
+    }
   },
   "relearn": {
     "status": {

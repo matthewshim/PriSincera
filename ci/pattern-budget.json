@@ -2,7 +2,7 @@
   "$schema": "ci/pattern-budget.mjs가 읽는 장식 예산 정본",
   "doc": "래칫(단조 감소) 게이트. 현재값 > max → 빌드 차단. 현재값 < max → --update로 조이기. 상세: ci/pattern-budget.mjs 헤더",
   "baselineCommit": "e1524bf (감사 v1.0 기준선)",
-  "updatedAt": "2026-11-03",
+  "updatedAt": "2026-11-04",
   "zeroRules": {
     "keyframes-duplicate": "키프레임 이름 중복 선언 금지 — 전역 스코프라 마지막 선언이 전역을 덮는다(P0-6)",
     "maxwidth-band-violation": "대역[880,2000]px max-width 리터럴 금지 — --container/--measure 또는 스코프 토큰만(§3-3, P0-4)",
@@ -50,7 +50,7 @@
       "note": "특정도 전쟁을 선언으로 해결하지 않는다"
     },
     "opacity-text": {
-      "max": 34,
+      "max": 33,
       "target": 42,
       "note": "opacity 0.1~0.6 총량 — **참고치**. 잔존 42건을 전수 분류하니 ① 리빌 애니메이션 종단값 ② 구분자 글리프(·/) ③ :disabled 상태 ④ 장식 요소로 전부 정당했다. 실제 병리는 '본문 텍스트에 색 토큰 + opacity 중첩'(5건, 실효 대비 4.1:1로 AA 미달)이었고 해소됐다. 목표 10은 오추정 — 42가 실측 하한"
     },

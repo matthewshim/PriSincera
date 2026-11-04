@@ -21,30 +21,37 @@ import './JourneySection.css';
    구 `50+ Projects`는 근거 없는 임의 수치여서 폐기했다.
    정본: docs/core/main_page_revision_plan.md §15-5. */
 const STATS = [
-  { target: 20, suffix: '', label: 'Years' },
-  { target: 4, suffix: '', label: 'Continents' },
-  { target: 31, suffix: '', label: 'Payment Methods' },
+  { key: 'years',      target: 20, label: 'Years' },
+  { key: 'continents', target: 4,  label: 'Continents' },
+  { key: 'payments',   target: 31, label: 'Payment Methods' },
 ];
 
 /**
  * Animates a number from 0 to target over duration.
  */
-function useCountUp(target, started, duration = 1800) {
-  /* 감쇠 설정이면 처음부터 최종값을 들고 있는다. 전역 CSS 규칙은 CSS 애니메이션만 덮으므로
-     `requestAnimationFrame` 카운트업은 여기서 직접 확인해야 한다(2026-11-03 StarField와 같은 교훈). */
+function useCountUp(target, started, index = 0) {
+  /* 감쇠 설정이면 처음부터 최종값을 들고 있는다 — 전역 CSS 규칙은 CSS 애니메이션만 덮는다. */
   const reduced = typeof window !== 'undefined'
     && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const [value, setValue] = useState(reduced ? target : 0);
 
   useEffect(() => {
-    if (!started || reduced) return;
-    let startTime = null;
-    let raf;
+    if (!started || reduced) return undefined;
 
-    const step = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      // ease-out cubic
+    /* 지속 시간을 **값에 비례**시킨다. 구 구조는 1800ms 고정이라 `4`가 ease-out으로
+       약 1,080ms에 끝나고 720ms를 멈춰 있었다 — 다섯 값만 지나가 글리치로 읽혔다
+       (2026-11-04 오너 지적). 이제 어느 숫자든 스텝 간격이 비슷하다.
+       칸별 100ms 스태거로 좌→우로 차오른다 — 통계는 읽는 순서가 실재하는 한 줄이다. */
+    const duration = Math.min(1400, Math.max(600, target * 45));
+    const delay = index * 100;
+    let raf;
+    let startTime = null;
+
+    const step = (ts) => {
+      if (startTime === null) startTime = ts;
+      const elapsed = ts - startTime - delay;
+      if (elapsed < 0) { raf = requestAnimationFrame(step); return; }
+      const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.round(eased * target));
       if (progress < 1) raf = requestAnimationFrame(step);
@@ -52,22 +59,21 @@ function useCountUp(target, started, duration = 1800) {
 
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [target, started, duration, reduced]);
+  }, [target, started, reduced, index]);
 
   return value;
 }
 
-function StatItem({ target, suffix, label, started }) {
-  const count = useCountUp(target, started);
+function StatItem({ target, label, caption, started, index }) {
+  const count = useCountUp(target, started, index);
   return (
     <div className="stat-item">
-      {/* 애니메이션 숫자는 기계에서 감추고 최종값을 따로 읽힌다 —
-          구 구조는 DOM 초기값이 0이라 크롤러와 스크린리더에 "0+ YEARS"로 읽혔다. */}
-      <div className="stat-number">
-        <span aria-hidden="true">{count}<span className="stat-plus">{suffix}</span></span>
-        <span className="u-sr-only">{target}{suffix} {label}</span>
-      </div>
-      <div className="stat-label">{label}</div>
+      {/* 보이는 요소는 전부 기계에서 감추고 아래 한 줄로만 읽힌다 — 구 구조는 `.u-sr-only`와
+          `.stat-label`이 겹쳐 **"20 Years, Years"**로 들렸다(2026-11-04 자가 발각). */}
+      <div className="stat-label" aria-hidden="true">{label}</div>
+      <div className="stat-number" aria-hidden="true">{count}</div>
+      <div className="stat-caption" aria-hidden="true">{caption}</div>
+      <span className="u-sr-only">{label} {target}, {caption}</span>
     </div>
   );
 }
@@ -227,8 +233,14 @@ export default function JourneySection() {
             ))}
           </p>
           <div className="journey-stats" ref={statsRef}>
-            {STATS.map((s) => (
-              <StatItem key={s.label} {...s} started={statsVisible} />
+            {STATS.map((stat, i) => (
+              <StatItem
+                key={stat.key}
+                {...stat}
+                caption={t(`home.statCaption.${stat.key}`)}
+                index={i}
+                started={statsVisible}
+              />
             ))}
           </div>
         </div>

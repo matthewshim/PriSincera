@@ -101,7 +101,7 @@
     },
     "milestone3": {
       "headline": "成長を支えるツールへ",
-      "desc": "その経験とAI技術が結びつき、いまは日常と成長を直接支えるWebサービスになりました。"
+      "desc": "その経験とAI技術が出会い、いまは使う人の日常と成長を直接支える実際のWebサービスへとつながっています。"
     },
     "servicesTitle": "その姿勢が生んだもの —",
     "servicesTitleAccent": "自ら創った五つの証。",
@@ -177,7 +177,12 @@
         "learned": "いまはウェブサービスが会社の売上にどう貢献するかを設計中。"
       }
     ],
-    "experienceMore": "経歴の全体はLinkedInで"
+    "experienceMore": "経歴の全体はLinkedInで",
+    "statCaption": {
+      "years": "2007年から",
+      "continents": "アジア・ヨーロッパ・オセアニア・南米",
+      "payments": "一地域のストアフロント基準"
+    }
   },
   "relearn": {
     "status": {

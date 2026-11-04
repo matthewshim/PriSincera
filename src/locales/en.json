@@ -101,7 +101,7 @@
     },
     "milestone3": {
       "headline": "A Tool Supporting Growth",
-      "desc": "That experience met AI, and became web services that help daily life and growth directly."
+      "desc": "That experience met AI, and now it carries through into real web services that help the people using them live and grow."
     },
     "servicesTitle": "What that attitude built —",
     "servicesTitleAccent": "five things I made myself.",
@@ -177,7 +177,12 @@
         "learned": "Now: designing how web services contribute to revenue."
       }
     ],
-    "experienceMore": "Full history on LinkedIn"
+    "experienceMore": "Full history on LinkedIn",
+    "statCaption": {
+      "years": "Since 2007",
+      "continents": "Asia · Europe · Oceania · South America",
+      "payments": "In one regional storefront"
+    }
   },
   "relearn": {
     "status": {
