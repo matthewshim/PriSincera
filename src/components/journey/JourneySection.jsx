@@ -75,6 +75,38 @@ function StatItem({ target, suffix, label, started }) {
 export default function JourneySection() {
   const { t } = useTranslation();
   const exp = t('home.experience');
+
+  /* 경험 5단 등장 리빌 — 항목별로 관찰한다. 바로 아래 연대기 카드가 이미 스크롤 연동이라,
+     여기까지 연동하면 한 섹션에 진행 막대가 둘이 되어 경쟁한다(§9-14 v6.9의 교훈).
+     감쇠 설정이면 처음부터 최종 상태로 둔다 — 전역 CSS 규칙은 CSS 애니메이션만 덮는다. */
+  const expRefs = useRef([]);
+  const expReduced = typeof window !== 'undefined'
+    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const [expShown, setExpShown] = useState([]);
+
+  useEffect(() => {
+    const n = Array.isArray(exp) ? exp.length : 0;
+    if (!n) return undefined;
+    if (expReduced) { setExpShown(Array(n).fill(true)); return undefined; }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const idx = Number(entry.target.dataset.expIndex);
+          setExpShown((prev) => {
+            if (prev[idx]) return prev;
+            const next = prev.length ? [...prev] : Array(n).fill(false);
+            next[idx] = true;
+            return next;
+          });
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -15% 0px' },
+    );
+    for (const el of expRefs.current) if (el) observer.observe(el);
+    return () => observer.disconnect();
+  }, [exp, expReduced]);
   const [sectionRef, progress] = useScrollProgress();
   const milestonesRef = useRef([]);
   const statsRef = useRef(null);
@@ -205,8 +237,13 @@ export default function JourneySection() {
             6개 회사를 도메인으로 묶으니 5단이 됐고, 회사명·직책을 쓰지 않아도 문장이 성립한다.
             검증이 필요한 사람은 끝의 LinkedIn 링크로 간다. 정본: main_page_revision_plan §12-4. */}
         <ol className="journey-exp">
-          {(Array.isArray(exp) ? exp : []).map((e) => (
-            <li className="exp-item" key={e.years}>
+          {(Array.isArray(exp) ? exp : []).map((e, i) => (
+            <li
+              className={`exp-item${expShown[i] ? ' is-in' : ''}`}
+              key={e.years}
+              data-exp-index={i}
+              ref={(el) => { expRefs.current[i] = el; }}
+            >
               <div className="exp-years u-eyebrow">{e.years}</div>
               <div className="exp-body">
                 <h3 className="exp-title">{e.title}</h3>
