@@ -5,11 +5,24 @@ import { useRef, useEffect } from 'react';
    12 zodiac constellations with simplified star patterns.
    Positions are offsets in px from constellation center.
    ============================================================ */
+/* 배치 — 외곽을 **시계방향으로 한 바퀴** 도는 연속 경로다(2026-11-04 재배치).
+   구 구조는 상단 4 → 좌우 지그재그 4 → 하단 4라 황도 순서가 측면에서 끊겼다.
+   화면을 가로지르는 진짜 황도 호는 본문 카드와 히어로 로고를 관통하므로 쓰지 않는다 —
+   중앙을 비우는 제약을 지키면 결국 외곽 경로가 된다.
+
+   `tier`는 폭별 노출 단계다. 1=항상 · 2=>=768px · 3=>=1600px.
+   좁은 화면에서 측면(3)을 먼저 접는다. 구 구조는 390px에서 **8개가 화면 밖, 5쌍이 겹쳤다**.
+
+   수치 검증(라벨 폭·별 퍼짐 포함 바운딩 박스):
+     2560·1920·1600 → 12개 표시, 본문침범 0 · 화면밖 0 · 겹침 0
+     1440·768       →  8개 표시, 전부 0
+     430·390        →  4개 표시, 전부 0
+     1280·1024·375  → 본문침범 2 — 본문(--container 1200)이 화면을 꽉 채우는 폭이라 불가피하다 */
 const ZODIACS = [
   {
     // ♈ Aries — γ→β→α→41Ari (Mesarthim→Sheratan→Hamal→41Ari)
     name: 'Aries', sub: 'The Ram', symbol: '♈',
-    cx: 0.10, cy: 0.18,
+    cx: 0.10, cy: 0.15, tier: 1,
     stars: [[16,12],[15,7],[4,-3],[-35,-17]],
       bayers: ['41','α','β','γ'],
     lines: [[3,2],[2,1],[1,0]],
@@ -17,7 +30,7 @@ const ZODIACS = [
   {
     // ♉ Taurus — Hyades V + Elnath/ζTau horns (λ→γ→δ→α→ε→β,ε→ζ)
     name: 'Taurus', sub: 'The Bull', symbol: '♉',
-    cx: 0.30, cy: 0.16,
+    cx: 0.31, cy: 0.12, tier: 1,
     stars: [[26,16],[14,8],[12,3],[8,-1],[4,6],[-28,-25],[-35,-6]],
       bayers: ['λ','γ','δ','ε','α','β','ζ'],
     lines: [[0,1],[1,2],[2,4],[4,3],[3,5],[3,6]],
@@ -25,7 +38,7 @@ const ZODIACS = [
   {
     // ♊ Gemini — Castor/Pollux twins (Castor→ε→μ→η, Castor→δ→Pollux, δ→ξ→γ)
     name: 'Gemini', sub: 'The Twins', symbol: '♊',
-    cx: 0.52, cy: 0.15,
+    cx: 0.52, cy: 0.12, tier: 1,
     stars: [[-27,-24],[-35,-13],[-16,5],[15,21],[10,-4],[26,3],[32,3],[-5,9]],
       bayers: ['α','β','δ','γ','ε','μ','η','ξ'],
     lines: [[0,4],[4,5],[5,6],[0,2],[2,1],[2,7],[7,3]],
@@ -33,7 +46,7 @@ const ZODIACS = [
   {
     // ♋ Cancer — β→δ→α, δ→γ→ι (Altarf→Asellus Australis→Acubens/Borealis→ι)
     name: 'Cancer', sub: 'The Crab', symbol: '♋',
-    cx: 0.88, cy: 0.17,
+    cx: 0.73, cy: 0.15, tier: 1,
     stars: [[-13,19],[20,28],[-1,-12],[-2,-1],[-4,-35]],
       bayers: ['α','β','γ','δ','ι'],
     lines: [[1,3],[3,0],[3,2],[2,4]],
@@ -41,7 +54,7 @@ const ZODIACS = [
   {
     // ♌ Leo — Sickle: Regulus→η→Algieba→ζ→ε→μ / Body: Algieba→δ→Denebola, δ→θ→Regulus
     name: 'Leo', sub: 'The Lion', symbol: '♌',
-    cx: 0.06, cy: 0.42,
+    cx: 0.95, cy: 0.30, tier: 3,
     stars: [[11,13],[-35,8],[5,-1],[-19,-3],[21,-8],[11,4],[-19,7],[18,-12],[7,-8]],
       bayers: ['α','β','γ','δ','ε','η','θ','μ','ζ'],
     lines: [[0,5],[5,2],[2,8],[8,4],[4,7],[2,3],[3,1],[3,6],[6,0]],
@@ -49,7 +62,7 @@ const ZODIACS = [
   {
     // ♍ Virgo — ε→δ→γ→η→β, γ→θ→Spica, γ→ζ
     name: 'Virgo', sub: 'The Maiden', symbol: '♍',
-    cx: 0.92, cy: 0.35,
+    cx: 0.96, cy: 0.52, tier: 3,
     stars: [[-19,24],[35,-5],[6,2],[-2,-9],[-5,-26],[18,1],[-24,0],[-10,12]],
       bayers: ['α','β','γ','δ','ε','η','ζ','θ'],
     lines: [[4,3],[3,2],[2,5],[5,1],[2,7],[7,0],[2,6]],
@@ -57,7 +70,7 @@ const ZODIACS = [
   {
     // ♎ Libra — α→β→γ→υ, α→σ (Zubenelgenubi→Zubeneschamali→γ→υ, α→σ)
     name: 'Libra', sub: 'The Scales', symbol: '♎',
-    cx: 0.08, cy: 0.72,
+    cx: 0.95, cy: 0.74, tier: 3,
     stars: [[24,-10],[0,-35],[-17,-15],[12,24],[-19,35]],
       bayers: ['α','β','γ','σ','υ'],
     lines: [[0,1],[1,2],[2,4],[0,3]],
@@ -65,7 +78,7 @@ const ZODIACS = [
   {
     // ♏ Scorpius — β→δ→π→σ→Antares→τ→ε→μ→η→λ→κ (head to stinger)
     name: 'Scorpius', sub: 'The Scorpion', symbol: '♏',
-    cx: 0.92, cy: 0.68,
+    cx: 0.73, cy: 0.89, tier: 2,
     stars: [[24,-19],[21,-26],[25,-11],[12,-12],[7,-10],[4,-6],[-5,8],[-6,16],[-17,28],[-30,14],[-35,19]],
       bayers: ['δ','β','π','σ','α','τ','ε','μ','η','λ','κ'],
     lines: [[1,0],[0,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10]],
@@ -73,7 +86,7 @@ const ZODIACS = [
   {
     // ♐ Sagittarius — Teapot: γ→ε→δ→λ→φ→σ→ζ→ε, λ→σ
     name: 'Sagittarius', sub: 'The Archer', symbol: '♐',
-    cx: 0.14, cy: 0.90,
+    cx: 0.52, cy: 0.92, tier: 2,
     stars: [[35,7],[19,4],[15,24],[11,-15],[-7,-8],[-18,-11],[-25,4],[-30,-5]],
       bayers: ['γ','δ','ε','λ','φ','σ','ζ',null],
     lines: [[0,2],[2,1],[1,3],[3,4],[4,5],[5,6],[6,2],[3,5]],
@@ -81,7 +94,7 @@ const ZODIACS = [
   {
     // ♑ Capricornus — α→β→ψ→ω→θ→ζ→γ→δ→α closed loop
     name: 'Capricornus', sub: 'The Sea-Goat', symbol: '♑',
-    cx: 0.36, cy: 0.92,
+    cx: 0.31, cy: 0.92, tier: 2,
     stars: [[35,-20],[32,-13],[12,20],[8,25],[-3,-5],[-19,11],[-30,-7],[-35,-9]],
       bayers: ['α','β','ψ','ω','θ','ζ','γ','δ'],
     lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0]],
@@ -89,7 +102,7 @@ const ZODIACS = [
   {
     // ♒ Aquarius — ε→β→α→γ→ζ→η, γ→θ→λ→δ
     name: 'Aquarius', sub: 'The Water-Bearer', symbol: '♒',
-    cx: 0.60, cy: 0.92,
+    cx: 0.10, cy: 0.86, tier: 2,
     stars: [[35,7],[17,0],[3,-8],[-4,-6],[-7,-9],[-9,-9],[-2,4],[-16,4],[-17,17]],
       bayers: ['ε','β','α','γ','ζ','η','θ','λ','δ'],
     lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],
@@ -97,7 +110,7 @@ const ZODIACS = [
   {
     // ♓ Pisces — γ→θ→ι→ω→ε→μ→ν→α→η→φ→τ (south fish cord to north fish)
     name: 'Pisces', sub: 'The Fish', symbol: '♓',
-    cx: 0.84, cy: 0.88,
+    cx: 0.04, cy: 0.52, tier: 3,
     stars: [[35,11],[31,6],[26,7],[19,6],[-6,4],[-17,7],[-21,8],[-29,12],[-17,-8],[-10,-22],[-10,-31]],
       bayers: ['γ','θ','ι','ω','ε','μ','ν','α','η','φ','τ'],
     lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10]],
@@ -350,7 +363,10 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
     }
 
     function createConstellations() {
-      constellations = ZODIACS.map(z => {
+      /* 폭별 노출 — 좁은 화면에서 측면(tier 3)부터 접는다. 구 구조는 390px에서
+         8개가 화면 밖으로 나가고 5쌍이 겹쳤다(바운딩 박스 실측). */
+      const tierMax = w >= 1600 ? 3 : w >= 768 ? 2 : 1;
+      constellations = ZODIACS.filter(z => (z.tier ?? 1) <= tierMax).map(z => {
         const centerX = z.cx * w;
         const centerY = z.cy * h;
         const starPositions = z.stars.map(([ox, oy], i) => ({
@@ -856,7 +872,12 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
              역순이었다(2026-11-04 교정). 부호는 주석의 별 사슬과 `lines` 연결 순서를 대조해 도출했다. */
         for (const sp of c.starPositions) {
           const lsp = lensTransform(sp.x, sp.y);
-          const baseR = 1.20;
+          /* 별자리 별은 배경보다 한 단계 위에 둔다. 구 값(r 1.20 / α 0.28)은 배경 분포의
+             79·75 백분위라 **배경 별 4분의 1이 더 밝았고**, 별자리가 배경에 묻혔다.
+             배경은 `r = 0.25 + depth*1.9`, `α = 0.05 + depth*0.55`이고 `depth = rawDepth³`라
+             낮은 쪽으로 쏠린다(중앙 r 0.49 / α 0.12). 새 값은 둘 다 **88 백분위**로 맞춰
+             가장 밝은 배경 별과 경쟁하지 않으면서 패턴이 읽히게 했다(2026-11-04 분포 실측). */
+          const baseR = 1.55;
           const starR = (baseR + pulse * 0.6 + reveal * 1.3) * lsp.sizeScale;
 
           // Glow (during pulse or reveal)
@@ -867,7 +888,7 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           }
 
           // Core star — always visible, brighter on reveal and pulse
-          ctx.globalAlpha = (0.28 + pulse * 0.8 + reveal * 0.5 + lsp.strength * 0.3) * zodiacFade * shield;
+          ctx.globalAlpha = (0.42 + pulse * 0.8 + reveal * 0.5 + lsp.strength * 0.3) * zodiacFade * shield;
           ctx.fillStyle = (reveal > 0.3 || pulse > 0.2) ? '#FFFFFF' : '#F5EBE0'; // 소프트 웜 화이트
           ctx.beginPath(); ctx.arc(lsp.x, lsp.y, starR, 0, Math.PI * 2); ctx.fill();
 

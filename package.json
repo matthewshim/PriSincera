@@ -14,7 +14,8 @@
     "preview": "vite preview",
     "start": "node server.mjs",
     "test:secrets": "node --test ci/secretPatterns.test.mjs",
-    "scan:staged": "node ci/secret-scan.mjs --staged"
+    "scan:staged": "node ci/secret-scan.mjs --staged",
+    "postbuild": "node ci/prerender-fallback.mjs"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.14.0",

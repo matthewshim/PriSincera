@@ -527,6 +527,7 @@ app.get('/sitemap.xml', async (req, res) => {
 
 // --- SPA fallback & Dynamic SEO Proxy ---
 let cachedIndexHtml = null;
+let cachedHomeFallback = null;
 
 // ── ReLearn 통합: 구 독립 서비스 경로 301 (SEO 자산·과거 발송 메일 링크 보전) ──
 app.get(/^\/daily\/(\d{4}-\d{2}-\d{2})$/, (req, res) => res.redirect(301, `/relearn/daily/${req.params[0]}`));
@@ -687,6 +688,19 @@ app.use(async (req, res) => {
      `index.html`에 정적으로 박으면 아티클 경로에서 이중 주입된다(2026-11-04 신설).
      이름으로 검색했을 때 사이트·LinkedIn·GitHub를 같은 사람으로 묶을 근거가 없었다. */
   const isHome = req.originalUrl.split('?')[0].replace(/\/+$/, '') === '';
+  /* 홈 정적 폴백 — `#root`가 비어 있어 처음 받는 HTML에 본문이 없었다.
+     조각은 `ci/prerender-fallback.mjs`가 빌드 후 생성한다(출처는 로케일·PAGE_META 하나).
+     **홈에만** 끼운다 — `dist/index.html`에 직접 박으면 SPA 특성상 모든 경로의 원본
+     HTML에 홈 본문이 실려 중복 콘텐츠 신호가 된다. React가 마운트하며 교체한다. */
+  if (isHome) {
+    if (cachedHomeFallback === null) {
+      const fbPath = join(DIST_DIR, 'home-fallback.html');
+      cachedHomeFallback = existsSync(fbPath) ? readFileSync(fbPath, 'utf-8') : '';
+    }
+    if (cachedHomeFallback) {
+      html = html.replace('<div id="root"></div>', `<div id="root">${cachedHomeFallback}</div>`);
+    }
+  }
   const homeLd = isHome ? {
     '@context': 'https://schema.org',
     '@graph': [
