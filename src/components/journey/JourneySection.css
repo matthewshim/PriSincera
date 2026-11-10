@@ -77,40 +77,18 @@
     align-items: stretch;
 }
 
-/* Horizontal background track line */
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 5%;
-    right: 5%;
-    top: 50%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.06);
-    transform: translateY(-50%);
-    z-index: 0;
-}
+/* 카드 뒤 바탕선은 걷었다(오너 지적 2026-11-10). 카드가 반투명 유리라 선이 **카드를
+   통과해 비쳤고**, 유리 표면 위에 회색 줄이 하나 더 겹친 것처럼 읽혔다.
+   진행선(아래 ::after)만 남긴다 — 그건 움직이는 동안만 뜻을 갖는다. */
 
-/* Active drawing progress line */
-.timeline::after {
-    content: '';
-    position: absolute;
-    left: 5%;
-    top: 50%;
-    height: 2px;
-    background: linear-gradient(
-        to right,
-        color-mix(in srgb, var(--color-gold) 80%, transparent),
-        color-mix(in srgb, var(--prism-lavender) 95%, transparent) 50%,
-        color-mix(in srgb, var(--color-indigo) 80%, transparent)
-    );
-    width: clamp(0%, calc(90% * (var(--scroll-progress, 0) / 0.60)), 90%);
-    transform: translateY(-50%);
-    z-index: 0;
-    transition: width 0.12s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 
-        0 0 8px color-mix(in srgb, var(--prism-lavender) 35%, transparent),
-        0 0 2px color-mix(in srgb, var(--color-gold) 40%, transparent);
-}
+/* 카드 뒤를 지나던 선 **두 줄을 모두** 걷었다(오너 지적 2026-11-10): 바탕선과
+   스크롤 진행선이 같은 자리(top 50%)를 지나고 있었다. 카드가 반투명 유리라 둘 다
+   카드를 **통과해 비쳤고**, 유리 표면 위에 줄이 겹쳐 보였다.
+   진행 단계는 선이 아니라 **카드 자신**이 말한다 — 점·라벨·칩에 색이 들어오고 카드가
+   떠오른다. 선은 그 말을 한 번 더 하면서 표면만 흐렸다.
+   `--scroll-progress` 인라인 style도 이 선이 유일한 소비자였으므로 함께 걷었다
+   (`inline-style-jsx` 113 → 112). `useScrollProgress`의 `progress`는 카드 활성
+   판정에 계속 쓰인다. */
 
 /* --- Milestone Card --- */
 .milestone {
@@ -388,34 +366,6 @@
         gap: var(--space-xl);
     }
 
-    .timeline::before {
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 1px;
-        height: auto;
-        background: rgba(255, 255, 255, 0.06);
-        transform: translateX(-50%);
-    }
-
-    .timeline::after {
-        left: 50%;
-        top: 0;
-        width: 2px;
-        height: clamp(0%, calc(100% * (var(--scroll-progress, 0) / 0.60)), 100%);
-        background: linear-gradient(
-            to bottom,
-            color-mix(in srgb, var(--color-gold) 80%, transparent),
-            color-mix(in srgb, var(--prism-lavender) 95%, transparent) 50%,
-            color-mix(in srgb, var(--color-indigo) 80%, transparent)
-        );
-        transform: translateX(-50%);
-        transition: height 0.12s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 
-            0 0 8px color-mix(in srgb, var(--prism-lavender) 35%, transparent),
-            0 0 2px color-mix(in srgb, var(--color-gold) 40%, transparent);
-    }
-
     .journey-stats {
         flex-wrap: wrap;
         gap: var(--space-xl);
@@ -427,128 +377,197 @@
    둘을 한 요소에 얹으면 선이 `--measure`(860px)를 물려받아 컨테이너 콘텐츠 폭
    1136px에서 **276px 모자란 채 끊긴다**. 바로 위 `.timeline`이 1136px을 꽉 쓰므로
    단차가 그대로 보인다(2026-11-03 오너 발견: "상단 라인이 끊어진 것 같은데"). */
-/* ── 경험 5단 ──
-   회사가 아니라 경험이 단위다. 연도는 `.u-eyebrow` 그룹이 메트릭을 담당하므로
-   여기선 폭·색만 둔다(§9 대문자 마이크로 라벨). 간격은 `--space-*`만 쓴다(§3-4). */
-/* 연도 칼럼 폭 — 축 좌우 여백을 맞추는 단일 출처다. 선·점·격자가 모두 이 값을 쓴다.
-   구 값 7.5rem(120px)은 연도 문자열 실폭(약 86px)보다 **34px 넓어** 좌측 공백이 46px,
-   우측 여백이 12px로 **3.8배** 벌어졌다(2026-11-04 오너 지적).
-   mono 11진폭 = 11.2px × (진폭 0.6em + 자간 0.1em) ≈ 86px이므로 5.5rem(88px)이면 꼭 맞는다.
-   연도를 **우측 정렬**해 축에 붙이면 문자열 길이와 무관하게 좌우가 같아진다 — 칼럼과 글자 폭
-   차이가 2px뿐이라 섹션 좌단과도 사실상 그대로다(칼럼이 120px이던 때 우측 정렬을 반려한
-   근거는 더 이상 성립하지 않는다, 2026-11-04 재판단). */
-.journey-exp {
-    --exp-axis: 5.5rem;
-    position: relative;   /* 연도 축(::before)의 기준 */
-    list-style: none;
-    margin: var(--space-2xl) 0 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
+/* ── 경험 5단 = 가로 5정거장 (오너 결정 2026-11-10, A안) ──
+   구 구조는 세로 목록이었다. 제목 1줄 + 한 일 1줄 + 배운 것 1줄이 **다섯 번 똑같이** 반복돼
+   항목 간 변주가 0이었고, 그래서 단조롭게 읽혔다(2026-11-10 오너 지적).
+   글은 한 자도 버리지 않고 **동시 노출만** 15줄 → 5줄 + 본문 1개로 줄인다.
+   다섯 본문은 전부 DOM에 남긴다 — 크롤러와 SSR 폴백이 경력 483자를 그대로 읽는다.
+
+   [활성화는 스크롤이 쥔다] 막대·점·본문이 전부 `--stops-fill`(0~1) 하나에서 나온다.
+   그 값은 JSX가 `useScrollProgress`로 계산한다 — **아래 연대기 카드와 같은 훅**이다.
+   진입 1회 스윕은 폐기했다(오너 결정 2026-11-10): 지면의 다른 활성화가 전부
+   스크롤 위치에 묶여 있어 올라가면 되돌아가는데, 정거장만 한 번 재생하고 머물렀다. */
+.journey-stops {
+    --stops-span: 80%;   /* 레일이 좌우 10%를 비우므로 막대가 끝까지 찬 폭 */
+    margin-top: var(--space-2xl);
 }
 
-/* 연도 축 — **이 블록은 진짜 연대기라 선이 뜻을 갖는다.**
-   §9-14 v6.9가 Work 섹션에 연대기 장치 복제를 금한 근거는 "동등한 5개를 훑는 색인이라
-   시간 순서가 뜻이 없다"였고, 여기는 정반대다. 같은 섹션 안 같은 의미의 장치라 복제가 아니다. */
-.exp-item {
-    /* 점 중심 y — **제목 첫 줄 박스의 절반**. 구 값 `0.42rem`은 글자 크기와 무관한 고정값이라
-       실제 중심(14.6px)보다 5.3px 위로 떠 있었다(2026-11-04 오너 발견).
-       축 x도 선·점이 각각 적던 것을 한 변수로 모은다 — 같은 숫자를 두 곳에 적으면 또 갈린다. */
-    --exp-dot-y: calc(var(--fs-lg) * var(--leading-snug) / 2);
-    --exp-axis-x: calc(var(--exp-axis) + var(--space-xl) / 2);
+/* 점 중심 y = 레일 패딩(4px) + 점 반지름(7px) = 11px. 선·막대가 이 값을 공유한다. */
+.journey-stops-rail {
     position: relative;
+    padding-top: var(--space-xs);
+}
+
+.journey-stops-rail::before {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 11px;
+    height: 1px;
+    background: var(--glass-border);
+}
+
+/* 차오르는 막대 — 폭은 **점 단위**(0 / 0.25 / 0.5 / 0.75 / 1)로만 바뀐다.
+   전이가 점과 점 사이를 건너는 동작을 그린다. 구 값 0.12초는 폭이 스크롤을 연속으로
+   따라가던 시절 프레임을 메우려던 값이라, 이산으로 바뀐 지금은 건너뛰듯 끊긴다. */
+.journey-stops-prog {
+    position: absolute;
+    left: 10%;
+    top: 10px;
+    height: 2px;
+    border-radius: var(--radius-xs);
+    background: linear-gradient(
+        to right,
+        var(--color-gold),
+        var(--prism-lavender) 55%,
+        var(--color-indigo)
+    );
+    box-shadow:
+        0 0 8px color-mix(in srgb, var(--prism-lavender) 35%, transparent),
+        0 0 2px color-mix(in srgb, var(--color-gold) 40%, transparent);
+    width: calc(var(--stops-span) * var(--stops-fill, 0));
+    transition: width var(--duration-fast) var(--ease-out);
+}
+
+/* 칸 수를 CSS에 박지 않는다 — 로케일이 단을 늘리면 그대로 따라간다 */
+.journey-stops-track {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: var(--exp-axis) 1fr;
-    /* 축 좌우 여백 — 구 --space-md(16px)는 점 반지름 2.5px를 빼면 글자까지 5.5px밖에 안 남아
-       답답했다(2026-11-04 오너 지적). --space-xl이면 양쪽 13.5px로 숨통이 트인다. */
-    gap: var(--space-xl);
-    align-items: start;
-    /* 등장 리빌 — 바로 아래 타임라인이 이미 스크롤 연동이다. 여기도 연동하면
-       한 섹션에 진행 막대가 둘이 되어 경쟁한다. 장치를 달리해 두 블록을 구분한다. */
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: var(--space-12);
+}
+
+/* 골격(cursor·글꼴·정렬·radius)은 index.css `버튼 공통 골격` 그룹이 담당한다 —
+   그룹 주석이 "새 버튼은 셀렉터를 추가할 것, 골격을 또 적지 말 것"이라고 못박고 있다.
+   여기선 **다른 점만**: 세로 쌓기와 칸 안쪽 여백. */
+.journey-stop {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding: 0 var(--space-sm);
+    text-align: center;
+}
+
+.journey-stop-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg-void);
+    border: 2px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
+    transition:
+        border-color var(--duration-normal) var(--ease-out),
+        background-color var(--duration-normal) var(--ease-out),
+        transform var(--duration-normal) var(--ease-out),
+        box-shadow var(--duration-normal) var(--ease-out);
+}
+
+/* 지나간 칸 — 꺼지지 않는다. 다 차면 다섯 칸이 모두 이 상태로 남아 "읽을 수 있음"을 말한다 */
+.journey-stop[data-state="done"] .journey-stop-dot {
+    border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
+    background: color-mix(in srgb, var(--color-gold) 45%, transparent);
+}
+
+.journey-stop[data-state="on"] .journey-stop-dot {
+    border-color: var(--color-gold);
+    background: var(--color-gold);
+    transform: scale(1.28);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--color-gold) 55%, transparent);
+}
+
+/* 마지막 정거장 = 현재. 연대기 카드의 NOW와 **같은 색**을 써서 "지금"이 한 색으로 읽히게
+   한다(§9-14 "색으로 1회만 말한다"). 구 구조의 `.exp-item:last-child::after`가 하던 일이다. */
+.journey-stop:last-child .journey-stop-dot {
+    border-color: color-mix(in srgb, var(--color-indigo) 50%, transparent);
+}
+
+.journey-stop:last-child[data-state="done"] .journey-stop-dot {
+    border-color: color-mix(in srgb, var(--color-indigo) 50%, transparent);
+    background: color-mix(in srgb, var(--color-indigo) 45%, transparent);
+}
+
+.journey-stop:last-child[data-state="on"] .journey-stop-dot {
+    border-color: var(--color-indigo);
+    background: var(--color-indigo);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--color-indigo) 55%, transparent);
+}
+
+/* 메트릭(mono·대문자·자간)은 index.css `.u-eyebrow` 그룹이 담당한다 — 여기선 치수·색만 */
+.journey-stop-years {
+    font-size: var(--fs-micro);
+    line-height: var(--leading-none);
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    transition: color var(--duration-fast);
+}
+
+.journey-stop[data-state="on"] .journey-stop-years {
+    color: var(--color-gold);
+}
+
+.journey-stop:last-child[data-state="on"] .journey-stop-years {
+    color: var(--color-indigo);
+}
+
+/* 세 단계 전부 토큰이다 — muted 7.8:1 / secondary 16.2:1 / primary 19.2:1.
+   알파를 곱해 단계를 만들면 소형 텍스트가 AA(4.5:1) 아래로 떨어진다(P2-6에서 이미 겪었다).
+   두 줄까지 자리를 미리 잡아 칸마다 높이가 어긋나지 않게 한다. */
+.journey-stop-title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    color: var(--text-muted);
+    min-height: calc(var(--fs-sm) * var(--leading-snug) * 2);
+    text-wrap: balance;
+    transition: color var(--duration-fast);
+}
+
+.journey-stop[data-state="done"] .journey-stop-title {
+    color: var(--text-secondary);
+}
+
+.journey-stop[data-state="on"] .journey-stop-title {
+    color: var(--text-primary);
+}
+
+/* 다섯 본문을 한 칸에 겹쳐 쌓는다 — 컨테이너 높이가 **가장 긴 본문**으로 고정되므로
+   칸을 바꿔도 아래 지면이 밀리지 않고, 스윕 중에도 자리가 미리 비워져 있다. */
+.journey-stop-panels {
+    display: grid;
+    margin-top: var(--space-xl);
+    padding-left: var(--space-lg);
+    border-left: 2px solid transparent;
+    transition: border-color var(--duration-normal);
+}
+
+.journey-stops.is-live .journey-stop-panels {
+    border-left-color: color-mix(in srgb, var(--color-gold) 50%, transparent);
+}
+
+.journey-stops.is-live .journey-stop-panels[data-last="true"] {
+    border-left-color: color-mix(in srgb, var(--color-indigo) 60%, transparent);
+}
+
+.journey-stop-panel {
+    grid-area: 1 / 1;
     opacity: 0;
-    transform: translateY(16px);
+    visibility: hidden;
+    transform: translateY(6px);
     transition:
         opacity var(--duration-normal) var(--ease-out),
         transform var(--duration-normal) var(--ease-out);
 }
 
-.exp-item.is-in {
+.journey-stop-panel.is-on {
     opacity: 1;
+    visibility: visible;
     transform: none;
 }
 
-/* 축 선 — **이 항목의 점에서 다음 항목의 점까지만** 긋는다.
-   길이가 `항목 높이 + 행 간격`으로 정확히 떨어진다(두 점의 y 오프셋이 상쇄된다).
-   구 구조는 컨테이너에 `top/bottom: 0.5rem` 고정값을 줘서, 본문이 3행인 마지막 항목에서
-   **점보다 한참 아래까지 선이 내려갔다**(2026-11-04 오너 발견). */
-.exp-item::before {
-    content: '';
-    position: absolute;
-    top: var(--exp-dot-y);
-    left: var(--exp-axis-x);
-    width: 1px;
-    height: calc(100% + var(--space-xl));
-    transform: translateX(-50%);
-    background: var(--glass-border);
-}
-
-.exp-item:last-child::before {
-    display: none;
-}
-
-/* 점 — 선과 같은 x·y를 쓰고 `translate(-50%, -50%)`로 중심을 맞춘다 */
-.exp-item::after {
-    content: '';
-    position: absolute;
-    top: var(--exp-dot-y);
-    left: var(--exp-axis-x);
-    width: 5px;
-    height: 5px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: var(--text-muted);
-}
-
-/* 현재 단 — 연대기 카드의 NOW 마일스톤과 **같은 색**을 써서 "지금"이 한 색으로 읽히게 한다.
-   색은 여기 한 곳에만 쓴다(§9-14 "색으로 1회만 말한다"). */
-.exp-item:last-child::after {
-    background: var(--color-indigo);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-indigo) 18%, transparent);
-}
-
-.exp-item:last-child .exp-years {
-    color: var(--color-indigo);
-}
-
-/* 메트릭(mono·대문자·자간)은 index.css `.u-eyebrow` 그룹이 담당한다 — 여기선 치수·색만 */
-.exp-years {
-    font-size: var(--fs-micro);
-    color: var(--text-muted);
-    white-space: nowrap;
-    /* 연도 중심을 점·제목 중심에 맞춘다. `line-height`로 줄 박스를 키우는 쪽이 간단하지만
-       §4-2 P1-H4가 `var(--leading-*)`만 허용하므로(게이트가 잡았다) 패딩으로 내린다.
-       내릴 양 = 점 y − 연도 줄 박스의 절반. */
-    line-height: var(--leading-normal);
-    padding-top: calc(var(--exp-dot-y) - var(--fs-micro) * var(--leading-normal) / 2);
-    /* 축에 붙인다. 칼럼(88px)과 글자 폭(약 86px) 차이가 2px뿐이라 좌단은 거의 그대로이고,
-       좌측 정렬일 때 7.8 : 5.0으로 벌어지던 점 좌우 여백이 8 : 8로 맞는다.
-       끝 글자 뒤의 자간 1칸이 남으므로 그만큼 당겨 광학적으로 정렬한다. */
-    text-align: right;
-    margin-right: calc(-1 * var(--tracking-widest));
-}
-
-.exp-title {
+.journey-stop-did {
     margin: 0 0 var(--space-sm);
-    font-size: var(--fs-lg);
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: var(--leading-snug);
-    letter-spacing: var(--tracking-tight);
-}
-
-.exp-did {
-    margin: 0 0 var(--space-xs);
     max-width: var(--measure);
     font-size: var(--fs-base);
     color: var(--text-secondary);
@@ -556,7 +575,7 @@
 }
 
 /* 배운 것 — 한 일보다 한 단계 낮춰 '덧붙인 말'로 읽히게 한다 */
-.exp-learned {
+.journey-stop-learned {
     margin: 0;
     max-width: var(--measure);
     font-size: var(--fs-sm);
@@ -564,28 +583,38 @@
     line-height: var(--leading-relaxed);
 }
 
-/* 공통 형태는 아래 `.exp-more, .maker-note-link` 그룹이 담당한다 — 여기선 위치만 */
-.exp-more {
-    margin-top: var(--space-lg);
-}
-
 @media (max-width: 768px) {
-    .exp-item {
-        grid-template-columns: 1fr;
-        gap: var(--space-sm);
-    }
-
-    /* 단일 칼럼에서는 연도 축이 놓일 자리가 없다 */
-    .exp-item::before,
-    .exp-item::after {
+    /* 5칸은 가로로 들어가지 않는다. 세로 목록으로 접고 레일·막대를 끈다 —
+       가리킬 레일이 없으면 진행 막대도 뜻이 없다. 본문은 그대로 한 칸만 열린다. */
+    .journey-stops-rail::before,
+    .journey-stops-prog {
         display: none;
     }
 
-    .exp-years {
-        text-align: left;
-        margin-right: 0;
-        line-height: var(--leading-normal);
+    .journey-stops-track {
+        grid-auto-flow: row;
+        gap: var(--space-xs);
     }
+
+    .journey-stop {
+        flex-direction: row;
+        gap: var(--space-12);
+        padding: var(--space-sm) 0;
+        text-align: left;
+    }
+
+    .journey-stop-years {
+        white-space: nowrap;
+    }
+
+    .journey-stop-title {
+        min-height: 0;
+    }
+}
+
+/* 공통 형태는 아래 `.exp-more, .maker-note-link` 그룹이 담당한다 — 여기선 위치만 */
+.exp-more {
+    margin-top: var(--space-lg);
 }
 
 /* 섹션 끝의 오픈소스 링크. 설명 문단("…오픈소스로 공개되어 있습니다")은 링크 문구가

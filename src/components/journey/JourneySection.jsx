@@ -20,6 +20,30 @@ import './JourneySection.css';
         중복 노출되는 3건을 뺀 값이다 — 34는 같은 수단을 두 번 센다.
    구 `50+ Projects`는 근거 없는 임의 수치여서 폐기했다.
    정본: docs/core/main_page_revision_plan.md §15-5. */
+/* 정거장 다섯 → 카드 셋. **순서대로, 겹치지 않게.**
+
+   [왜 진입 1회 스윕을 버렸나] 지면의 활성화 규칙은 둘뿐이고 둘 다 **스크롤 위치가 곧
+   상태**다 — 상단 Belief 카드는 뷰포트 중앙에 가장 가까운 카드가 켜지고 멀어지면 꺼지며,
+   연대기 카드는 임계 대역을 오르내린다. 둘 다 올라가면 그대로 되돌아간다.
+   정거장만 1회 재생 + 완료 상태 유지였다 — 한 지면에 규칙이 둘이었다(오너 결정 2026-11-10).
+   되감기·재생 트리거를 따로 맞추느라 들였던 공(관찰자 둘, 띠, 타이머)은 전부 사라진다:
+   스크롤 값 하나면 활성화와 리셋이 **같은 식에서 저절로 나온다.** */
+/* 정거장 다섯과 카드 셋이 **하나의 진행값을 구간으로 나눠 쓴다.** 기준 요소는 `.timeline`.
+
+   [왜 기준을 합쳤나] 구 구조는 정거장이 `.journey-stops`를, 카드가 `.timeline`을 각각
+   쟀다. `useScrollProgress`는 **요소 자신의 높이와 위치**로 값을 내므로, 같은 임계값이
+   두 블록에서 서로 다른 스크롤 지점을 가리킨다. 실측(2026-11-10 오너 지적 "겹치는 지점이 있다"):
+
+     차이 = 두 블록 간격 + C1·(vh+Ht) − S5·(vh+Hs)   ← **뷰포트 높이에 선형으로 의존**
+     vh  600 → 카드1이 정거장5보다  64px 먼저
+     vh  900 →                    208px 먼저
+     vh 1400 →                    448px 먼저 (카드1이 정거장 3번 앞으로 끼어든다)
+
+   숫자만 맞추면 다른 화면 높이에서 다시 어긋난다. 한 요소를 기준으로 쓰면 순서가
+   **산술로 보장된다** — 간격이나 높이가 바뀌어도 구간의 대소 관계는 그대로다. */
+const STOP_AT = [0.02, 0.10, 0.18, 0.26, 0.34];
+const CARD_AT = [0.38, 0.55, 0.72];
+
 const STATS = [
   { key: 'years',      target: 20, label: 'Years' },
   { key: 'continents', target: 4,  label: 'Continents' },
@@ -82,38 +106,51 @@ export default function JourneySection() {
   const { t } = useTranslation();
   const exp = t('home.experience');
 
-  /* 경험 5단 등장 리빌 — 항목별로 관찰한다. 바로 아래 연대기 카드가 이미 스크롤 연동이라,
-     여기까지 연동하면 한 섹션에 진행 막대가 둘이 되어 경쟁한다(§9-14 v6.9의 교훈).
-     감쇠 설정이면 처음부터 최종 상태로 둔다 — 전역 CSS 규칙은 CSS 애니메이션만 덮는다. */
-  const expRefs = useRef([]);
-  const expReduced = typeof window !== 'undefined'
-    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const [expShown, setExpShown] = useState([]);
-
-  useEffect(() => {
-    const n = Array.isArray(exp) ? exp.length : 0;
-    if (!n) return undefined;
-    if (expReduced) { setExpShown(Array(n).fill(true)); return undefined; }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const idx = Number(entry.target.dataset.expIndex);
-          setExpShown((prev) => {
-            if (prev[idx]) return prev;
-            const next = prev.length ? [...prev] : Array(n).fill(false);
-            next[idx] = true;
-            return next;
-          });
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -15% 0px' },
-    );
-    for (const el of expRefs.current) if (el) observer.observe(el);
-    return () => observer.disconnect();
-  }, [exp, expReduced]);
+  /* ── 경험 5단 = 가로 5정거장 (오너 결정 2026-11-10) ──
+     활성화는 **스크롤 위치가 쥔다.** 막대·점·본문이 전부 `stopFill`(0~1) 하나에서 나오고,
+     올라가면 같은 식이 거꾸로 돌아 저절로 되감긴다 — 되감기용 장치가 따로 없다.
+     [왜 이 방식인가] 지면의 활성화 규칙이 둘 다 이것이다: 상단 Belief 개념 카드는
+     뷰포트 중앙에 가장 가까운 카드가 켜지고 멀어지면 꺼지며, 바로 아래 연대기 카드는
+     `useScrollProgress` 임계 0.12/0.36/0.60을 오르내린다. 정거장만 "진입 1회 재생 후
+     완료 유지"면 한 지면에 규칙이 둘이 된다(오너 지적).
+     카드와 **같은 훅·같은 대역**을 쓴다 — 1·3·5번째 정거장이 카드 1·2·3번과 같은 지점에서
+     켜진다. 구 구조(관찰자 둘·재생 띠·타이머 10여 개·linear() 이징)는 전부 사라졌다. */
+  const expList = Array.isArray(exp) ? exp : [];
+  const stopLast = expList.length - 1;
+  /* 카드와 **같은 측정값**을 쓴다 — 기준이 하나라 두 블록이 어긋날 수 없다 */
   const [sectionRef, progress] = useScrollProgress();
+  /* 호버는 스크롤을 **일시적으로** 덮는다. 손을 떼면 스크롤이 다시 가져간다. */
+  const [hoverStop, setHoverStop] = useState(null);
+
+  /* 막대 폭과 점 점등을 **한 배열에서** 낸다. 구 구조는 막대가 선형 보간,
+     점이 `floor(fill * stopLast)`로 각각 계산해서 STOP_AT이 고르지 않게 바뀌는 순간
+     조용히 어긋났다 — 지금은 고르지만, 어긋나는 쪽으로 고칠 수 있는 코드를 남기지 않는다. */
+  const stopEnd = Math.min(stopLast, STOP_AT.length - 1);
+  let stopReached = -1;
+  for (let i = 0; i <= stopEnd; i += 1) {
+    if (progress >= STOP_AT[i]) stopReached = i;
+  }
+  /* 막대는 **점 단위로만** 선다. 구 구조는 정거장 사이를 선형으로 메워서, 스크롤 중간이면
+     막대 끝이 점과 점 사이 허공에 떠 있었다 — 점·제목·본문은 전부 이산인데 막대만 연속이라
+     "어디까지 켜진 건지" 모호했다(2026-11-10 오너 지적).
+     이제 폭이 0 / 0.25 / 0.5 / 0.75 / 1 다섯 값만 갖고, 사이는 CSS 전이가 메운다 —
+     막대가 **다음 점까지 건너가는 동작**이 되고, 멈춘 자리는 항상 점 위다. */
+  const stopFill = stopEnd > 0 && stopReached > 0 ? stopReached / stopEnd : 0;
+  const stopActive = hoverStop !== null ? hoverStop : Math.max(stopReached, 0);
+  const stopsLive = stopReached >= 0 || hoverStop !== null;
+
+  const onStopKey = useCallback((e) => {
+    if (stopLast < 1) return;
+    const n = stopLast + 1;
+    let next = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (stopActive + 1) % n;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (stopActive - 1 + n) % n;
+    if (next === null) return;
+    e.preventDefault();
+    setHoverStop(next);
+    document.getElementById(`journey-stop-${next}`)?.focus();
+  }, [stopActive, stopLast]);
+
   const milestonesRef = useRef([]);
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
@@ -247,24 +284,63 @@ export default function JourneySection() {
 
         {/* 경험 5단 — 회사가 아니라 **경험**이 단위다(오너 결정 2026-11-04).
             6개 회사를 도메인으로 묶으니 5단이 됐고, 회사명·직책을 쓰지 않아도 문장이 성립한다.
-            검증이 필요한 사람은 끝의 LinkedIn 링크로 간다. 정본: main_page_revision_plan §12-4. */}
-        <ol className="journey-exp">
-          {(Array.isArray(exp) ? exp : []).map((e, i) => (
-            <li
-              className={`exp-item${expShown[i] ? ' is-in' : ''}`}
-              key={e.years}
-              data-exp-index={i}
-              ref={(el) => { expRefs.current[i] = el; }}
+            검증이 필요한 사람은 끝의 LinkedIn 링크로 간다. 정본: main_page_revision_plan §12-4.
+            다섯 본문을 **전부 DOM에 남긴다** — 크롤러와 SSR 폴백이 경력 483자를 그대로 읽는다. */}
+        <div
+          className={`journey-stops${stopsLive ? ' is-live' : ''}`}
+          style={{ '--stops-fill': stopFill }}
+        >
+          <div className="journey-stops-rail">
+            <span className="journey-stops-prog" aria-hidden="true" />
+            {/* 섹션 아이브로우와 같은 말을 쓴다 — eyebrow는 번역하지 않는 분류 신호다(§9-15).
+                  '전체 경력은 LinkedIn에서'를 라벨로 쓰면 스크린리더에 링크처럼 들린다. */}
+            <div
+              className="journey-stops-track"
+              role="tablist"
+              aria-label="Journey"
+              onMouseLeave={() => setHoverStop(null)}
             >
-              <div className="exp-years u-eyebrow">{e.years}</div>
-              <div className="exp-body">
-                <h3 className="exp-title">{e.title}</h3>
-                <p className="exp-did">{e.did}</p>
-                <p className="exp-learned">{e.learned}</p>
+              {expList.map((e, i) => (
+                <button
+                  type="button"
+                  className="journey-stop"
+                  key={e.years}
+                  id={`journey-stop-${i}`}
+                  role="tab"
+                  aria-selected={stopActive === i}
+                  aria-controls={`journey-stop-panel-${i}`}
+                  tabIndex={stopActive === i ? 0 : -1}
+                  data-state={stopsLive && stopActive === i ? 'on' : (i <= stopReached ? 'done' : 'off')}
+                  onMouseEnter={() => setHoverStop(i)}
+                  onClick={() => setHoverStop(i)}
+                  onKeyDown={onStopKey}
+                >
+                  <span className="journey-stop-dot" aria-hidden="true" />
+                  <span className="journey-stop-years">{e.years}</span>
+                  <span className="journey-stop-title">{e.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div
+            className="journey-stop-panels"
+            data-last={stopActive === stopLast ? 'true' : 'false'}
+          >
+            {expList.map((e, i) => (
+              <div
+                className={`journey-stop-panel${stopsLive && stopActive === i ? ' is-on' : ''}`}
+                key={e.years}
+                id={`journey-stop-panel-${i}`}
+                role="tabpanel"
+                aria-labelledby={`journey-stop-${i}`}
+                aria-hidden={stopActive === i ? undefined : 'true'}
+              >
+                <p className="journey-stop-did">{e.did}</p>
+                <p className="journey-stop-learned">{e.learned}</p>
               </div>
-            </li>
-          ))}
-        </ol>
+            ))}
+          </div>
+        </div>
         <a
           className="exp-more"
           href="https://www.linkedin.com/in/shimks"
@@ -275,9 +351,12 @@ export default function JourneySection() {
           <Icon name="external" size={13} />
         </a>
 
-        <div className="timeline" ref={sectionRef} style={{ '--scroll-progress': progress }}>
+        {/* `--scroll-progress` 인라인 style은 걷었다 — 유일한 소비자였던 진행선을
+            지웠다(위 CSS 주석). `progress`는 아래 `isActive` 판정에 그대로 쓰인다. */}
+        <div className="timeline" ref={sectionRef}>
           {MILESTONES.map((m, i) => {
-            const isActive = i === 0 ? progress >= 0.12 : i === 1 ? progress >= 0.36 : progress >= 0.60;
+            /* 정거장이 모두 켜진 뒤(STOP_AT의 끝 0.34)에 시작한다 — 같은 진행값이라 어긋날 수 없다 */
+            const isActive = progress >= (CARD_AT[i] ?? 1);
             const isRevealed = revealedMilestones[i];
             return (
               <div

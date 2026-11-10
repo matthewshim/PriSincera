@@ -581,7 +581,8 @@ button:active,
 .admin-logout-btn,
 .admin-profile-btn,
 .mobile-locale-btn,
-.gnb-bgm-btn {
+.gnb-bgm-btn,
+.journey-stop {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -659,7 +660,7 @@ button:active,
 .section-label,
 .wm-eyebrow,
 .sylphio-eyebrow,
-.exp-years,
+.journey-stop-years,
 .pvl-series-eyebrow,
 .flagship-label,
 .work-card-label,
