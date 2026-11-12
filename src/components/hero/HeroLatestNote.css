@@ -210,7 +210,14 @@
   .hero-latest.is-docked .hero-latest-meta { max-width: none; }
 }
 
-/* 세로 여유가 없는 뷰포트에서는 히어로 중앙 카피와 경쟁하지 않도록 물러난다 */
-@media (max-height: 640px) {
+/* 물러나는 조건 — 둘 다 "화면이 좁아 상시 떠 있을 값을 못 한다"는 같은 판단이다.
+   · 세로 여유 없음: 히어로 중앙 카피와 경쟁한다(기존)
+   · 모바일 폭: `position: fixed`로 **화면 하단 중앙을 68vw 차지한 채 끝까지 따라다닌다.**
+     데스크톱은 우하단 여백에 비켜서지만 모바일엔 비켜설 여백이 없어, 모든 스크롤 지점에서
+     본문 위에 겹친다. 연재로 가는 길은 GNB와 Proof of Work의 Planner's View 카드가
+     이미 갖고 있다(오너 제안 2026-11-12).
+   위 `max-width: 768px` 블록의 2줄 레이아웃 규칙은 **일부러 남겨둔다** — 되살리는 결정이
+   이 한 줄로 끝나도록. 노출하지 않기로 확정되면 그때 함께 걷는다. */
+@media (max-height: 640px), (max-width: 768px) {
   .hero-latest { display: none; }
 }

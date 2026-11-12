@@ -494,7 +494,8 @@ button:active,
     .rl-af-btn,
     .daily-nav-btn,
     .workspace-tab-btn,
-    .rl-dock-tab {
+    .rl-dock-tab,
+    .journey-stop {
         min-height: 44px;
     }
 }

@@ -316,10 +316,17 @@
    2026-11-01에 잡았던 "서브카피만 가운데로 떠서 타이틀 좌단과 어긋난" 사고와 같은 유형이다(§9-15).
    좌측으로 돌리면 카운트 중 자릿수가 늘 때 중심이 재계산돼 좌우로 튀던 것도 함께 사라진다.
    `.stat-plus`는 suffix를 세 칸 모두 비운 뒤 빈 요소만 남아 함께 걷었다. */
+/* 3등분 밴드. 구 구조는 `flex` + `flex-start`라 세 칸이 왼쪽에 몰려 **실폭 510px /
+   콘텐츠 1136px — 오른쪽 55%가 비었다.** 디자인된 밴드가 아니라 왼쪽 조각으로 읽혔고,
+   그게 "밋밋하다"의 실제 원인이었다(2026-11-12 실측).
+   가운데 정렬도 후보였지만 섹션에 가운데 축이 하나 더 생긴다 — 이 섹션은 그 문제로
+   이미 두 번 고쳤다(§9-15, 2026-11-01 서브카피 / 2026-11-04 이 블록 자신).
+   **좌단 축은 그대로 두고 시작점만 고르게** 떨어뜨리면 밴드가 된다.
+   폭은 `--measure` — 바로 위 리드가 쓰는 폭이라, 헤더가 한 덩어리로 읽힌다. */
 .journey-stats {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: var(--measure);
     gap: var(--space-2xl);
     margin-top: var(--space-xl);
 }
@@ -328,12 +335,19 @@
     text-align: left;
 }
 
+/* 숫자는 이 블록의 주인공인데 28~33.6px이라 캡션·라벨에 묻혔다(2026-11-12 오너 지적
+   "굉장히 밋밋하다"). 한 단 올려 33.6~38.4px로 둔다 — 섹션 타이틀(--fs-3xl)보다 크고
+   히어로(--fs-display)보다 작아, 지면에서 **두 번째로 큰 글자**가 된다.
+   카운트업은 이미 돌고 있다(useCountUp, 값에 비례한 600~1400ms + 칸별 100ms 스태거).
+   `tabular-nums`를 더해 세는 동안 자릿수가 바뀌어도 폭이 흔들리지 않는다 —
+   2026-11-04에 좌측 정렬로 피했던 흔들림의 **직접적인 해법**이다. */
 .stat-number {
     font-family: var(--font-mono);
-    font-size: clamp(var(--fs-2xl), 3vw, var(--fs-3xl));
+    font-size: clamp(var(--fs-3xl), 4.5vw, var(--fs-4xl));
     font-weight: 600;
     color: var(--text-primary);
     line-height: var(--leading-none);
+    font-variant-numeric: tabular-nums;
     /* 구 값 --space-xs(4px)는 숫자와 라벨이 붙어 위계가 안 보였다 */
     margin: var(--space-sm) 0;
 }
@@ -361,14 +375,49 @@
         min-height: auto;
     }
 
+    /* 세로 나열 → **가로 스와이프.** 세 장을 쌓으면 모바일에서 1,191px — 화면 1.7개를
+       쓰는데, 그 내용이 리드 한 문장(44자)을 214자로 늘린 것이다. 스와이프면 430px이다
+       (오너 제안 2026-11-12). 데스크톱이 이미 좌→우 한 줄이라, 세로 전치 쪽이 예외였다.
+       구현은 Belief 개념 카드와 **같은 패턴**이다 — 한 지면에 캐러셀을 둘로 만들지 않는다.
+       `80vw`가 핵심: 다음 장이 엿보여야 스와이프가 발견된다. */
     .timeline {
-        flex-direction: column;
-        gap: var(--space-xl);
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: var(--space-md);
+        padding: var(--space-xl) var(--space-xs) var(--space-12);
+        scrollbar-width: none;
+        width: 100%;
+        box-sizing: border-box;
     }
 
+    .timeline::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* 본문 줄 수가 달라 카드 높이가 348 / 374 / 374px로 갈린다. 가로로 세우면 그 차가
+       바로 보이므로 `align-items: stretch`(위)로 가장 긴 장에 맞춘다. */
+    .milestone {
+        flex: 0 0 auto;
+        width: 80vw;
+        max-width: 290px;
+        scroll-snap-align: center;
+    }
+
+    /* 칸이 87px까지 좁아진다. 구 구조는 `flex-wrap`이라 **2칸 + 1칸**으로 접혀
+       어느 쪽도 아닌 모양이 됐다(2026-11-12 오너: "모바일에서도 살짝 애매하다").
+       3등분은 그대로 두고 간격만 줄여 **밴드 모양을 두 폭에서 같게** 유지한다. */
     .journey-stats {
-        flex-wrap: wrap;
-        gap: var(--space-xl);
+        gap: var(--space-md);
+    }
+
+    /* 라벨이 칸마다 1줄 / 1줄 / 2줄로 갈려(`PAYMENT METHODS`가 87px에서 접힌다)
+       **숫자의 y가 칸마다 어긋난다.** 두 줄 자리를 미리 잡아 세 숫자를 한 선에 세운다. */
+    .stat-label {
+        min-height: calc(var(--fs-micro) * var(--leading-relaxed) * 2);
     }
 }
 
@@ -596,14 +645,49 @@
         gap: var(--space-xs);
     }
 
+    /* `justify-content: center`는 버튼 공통 골격이 준 값이라 세로 방향일 때는 무해했는데,
+       가로로 눕히는 순간 **칸 내용이 전부 가운데로 몰린다.** 칸마다 제목 길이가 달라
+       점의 x좌표가 제각각이 되고, 섹션의 나머지가 전부 좌측 정렬인데 이 목록만 가운데로
+       떠 보였다(2026-11-12 오너 지적 "모바일 디자인이 이상하다").
+       §9-15가 기록한 "서브카피만 가운데로 떠서 타이틀 좌단과 어긋난" 사고와 같은 유형이다. */
     .journey-stop {
+        position: relative;
         flex-direction: row;
+        justify-content: flex-start;
         gap: var(--space-12);
         padding: var(--space-sm) 0;
         text-align: left;
     }
 
+    /* 세로 목록에서는 **칸과 칸을 잇는 선**이 곧 레일이다. 가로 레일과 막대는 가리킬 축이
+       없어 꺼두면서 선까지 통째로 없앴는데, 그럴 이유는 없었다 — 점만 다섯 개 떠 있으면
+       연대기로 읽히지 않는다(2026-11-12 오너 지적 "왜 모바일엔 라인이 없을까").
+       구 경험 5단의 `.exp-item::before`가 쓰던 방식 그대로다: 자기 점에서 다음 점까지만 긋고,
+       지나온 구간은 색이 들어와 **진행 막대 노릇을 겸한다.** */
+    .journey-stop::before {
+        content: '';
+        position: absolute;
+        left: 7px;      /* 점 지름 14px의 중심 */
+        top: 50%;
+        width: 1px;
+        height: calc(100% + var(--space-xs));
+        transform: translateX(-50%);
+        background: var(--glass-border);
+        transition: background-color var(--duration-fast) var(--ease-out);
+    }
+
+    .journey-stop:last-child::before {
+        display: none;
+    }
+
+    .journey-stop[data-passed="1"]::before {
+        background: color-mix(in srgb, var(--color-gold) 45%, transparent);
+    }
+
+    /* 연도 폭을 묶어 제목 좌단을 맞춘다 — 가장 긴 `2007 — 2009`가 약 74px(mono 11진폭
+       + 자간)이라 5rem이면 세 로케일 모두 들어가고 6px 여유가 남는다. */
     .journey-stop-years {
+        min-width: 5rem;
         white-space: nowrap;
     }
 

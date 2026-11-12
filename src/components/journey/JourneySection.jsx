@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Icon from '../common/Icon';
 import { useTranslation } from '../../contexts/LanguageContext';
-import useScrollProgress from '../../hooks/useScrollProgress';
 import './JourneySection.css';
 
 /**
@@ -28,21 +27,25 @@ import './JourneySection.css';
    정거장만 1회 재생 + 완료 상태 유지였다 — 한 지면에 규칙이 둘이었다(오너 결정 2026-11-10).
    되감기·재생 트리거를 따로 맞추느라 들였던 공(관찰자 둘, 띠, 타이머)은 전부 사라진다:
    스크롤 값 하나면 활성화와 리셋이 **같은 식에서 저절로 나온다.** */
-/* 정거장 다섯과 카드 셋이 **하나의 진행값을 구간으로 나눠 쓴다.** 기준 요소는 `.timeline`.
+/* 점등 기준 = **요소 윗변이 화면의 몇 %에 왔는가.**
 
-   [왜 기준을 합쳤나] 구 구조는 정거장이 `.journey-stops`를, 카드가 `.timeline`을 각각
-   쟀다. `useScrollProgress`는 **요소 자신의 높이와 위치**로 값을 내므로, 같은 임계값이
-   두 블록에서 서로 다른 스크롤 지점을 가리킨다. 실측(2026-11-10 오너 지적 "겹치는 지점이 있다"):
+   [왜 `useScrollProgress`를 버렸나] 그 훅은 `(vh − top) / (vh + 요소높이)`라서 값이
+   **요소 자신의 높이로 정규화**된다. 같은 0.30이 요소가 커지면 전혀 다른 화면 위치를 가리킨다.
+   `.timeline`은 데스크톱 354px인데 모바일에서 카드가 세로로 쌓여 **1191px(3.4배)** 가 되고,
+   그 결과 모바일에서 정거장 2~5번과 카드 1~3번이 **전부 화면 위로 사라진 뒤에** 켜졌다
+   (2026-11-12 오너 지적 "마지막 불 들어오는 타이밍이 애매하다" — 실측은 더 나빴다:
+   정거장5가 블록 윗변 −451px, 즉 블록이 거의 다 지나간 뒤였다).
 
-     차이 = 두 블록 간격 + C1·(vh+Ht) − S5·(vh+Hs)   ← **뷰포트 높이에 선형으로 의존**
-     vh  600 → 카드1이 정거장5보다  64px 먼저
-     vh  900 →                    208px 먼저
-     vh 1400 →                    448px 먼저 (카드1이 정거장 3번 앞으로 끼어든다)
-
-   숫자만 맞추면 다른 화면 높이에서 다시 어긋난다. 한 요소를 기준으로 쓰면 순서가
-   **산술로 보장된다** — 간격이나 높이가 바뀌어도 구간의 대소 관계는 그대로다. */
-const STOP_AT = [0.02, 0.10, 0.18, 0.26, 0.34];
-const CARD_AT = [0.38, 0.55, 0.72];
+   비율 선은 **vh에만 의존**한다. 요소가 커지든 작아지든 "화면 28% 지점"은 그대로다.
+   순서(정거장 5칸 → 카드 3장)는 문서 순서 + 두 블록 간 거리로 담보된다:
+   여유 = (정거장블록높이 + 간격 + 32) − (카드선 − 정거장끝선)·vh
+   vh 600→220px · 900→169px · 1400→84px · 1600→50px 로 전 구간 양수다. */
+const STOP_LINE_FROM = 0.78;   /* 첫 칸이 켜지는 선 */
+const STOP_LINE_TO = 0.28;     /* 마지막 칸이 켜지는 선 */
+const CARD_LINES = [0.45, 0.30, 0.15];
+/* 모바일 스와이프에서 활성 카드가 경계에서 떨리는 것을 막는 완충 거리.
+   Belief 개념 카드가 쓰는 값과 같다 — 같은 상호작용이니 같은 수를 쓴다. */
+const CARD_SWIPE_BUFFER = 50;
 
 const STATS = [
   { key: 'years',      target: 20, label: 'Years' },
@@ -111,33 +114,94 @@ export default function JourneySection() {
      올라가면 같은 식이 거꾸로 돌아 저절로 되감긴다 — 되감기용 장치가 따로 없다.
      [왜 이 방식인가] 지면의 활성화 규칙이 둘 다 이것이다: 상단 Belief 개념 카드는
      뷰포트 중앙에 가장 가까운 카드가 켜지고 멀어지면 꺼지며, 바로 아래 연대기 카드는
-     `useScrollProgress` 임계 0.12/0.36/0.60을 오르내린다. 정거장만 "진입 1회 재생 후
-     완료 유지"면 한 지면에 규칙이 둘이 된다(오너 지적).
-     카드와 **같은 훅·같은 대역**을 쓴다 — 1·3·5번째 정거장이 카드 1·2·3번과 같은 지점에서
-     켜진다. 구 구조(관찰자 둘·재생 띠·타이머 10여 개·linear() 이징)는 전부 사라졌다. */
+     스크롤을 따라 오르내린다. 정거장만 "진입 1회 재생 후 완료 유지"면 한 지면에
+     규칙이 둘이 된다(오너 지적). 정거장도 같은 성질을 갖되, 점등 기준은 화면 비율 선이다
+     (위 STOP_LINE_* 주석). 구 구조(관찰자 둘·재생 띠·타이머 10여 개)는 전부 사라졌다. */
   const expList = Array.isArray(exp) ? exp : [];
   const stopLast = expList.length - 1;
-  /* 카드와 **같은 측정값**을 쓴다 — 기준이 하나라 두 블록이 어긋날 수 없다 */
-  const [sectionRef, progress] = useScrollProgress();
+  const stopsRef = useRef(null);
+  const timelineRef = useRef(null);
+  const milestonesRef = useRef([]);
+  /* 스와이프 중 활성 카드 — 완충 비교의 기준이라 상태가 아니라 ref다(리렌더를 부르지 않는다) */
+  const activeCardRef = useRef(-1);
   /* 호버는 스크롤을 **일시적으로** 덮는다. 손을 떼면 스크롤이 다시 가져간다. */
   const [hoverStop, setHoverStop] = useState(null);
+  const [stopReached, setStopReached] = useState(-1);
+  const [cardsOn, setCardsOn] = useState([false, false, false]);
 
-  /* 막대 폭과 점 점등을 **한 배열에서** 낸다. 구 구조는 막대가 선형 보간,
-     점이 `floor(fill * stopLast)`로 각각 계산해서 STOP_AT이 고르지 않게 바뀌는 순간
-     조용히 어긋났다 — 지금은 고르지만, 어긋나는 쪽으로 고칠 수 있는 코드를 남기지 않는다. */
-  const stopEnd = Math.min(stopLast, STOP_AT.length - 1);
-  let stopReached = -1;
-  for (let i = 0; i <= stopEnd; i += 1) {
-    if (progress >= STOP_AT[i]) stopReached = i;
-  }
-  /* 막대는 **점 단위로만** 선다. 구 구조는 정거장 사이를 선형으로 메워서, 스크롤 중간이면
-     막대 끝이 점과 점 사이 허공에 떠 있었다 — 점·제목·본문은 전부 이산인데 막대만 연속이라
-     "어디까지 켜진 건지" 모호했다(2026-11-10 오너 지적).
-     이제 폭이 0 / 0.25 / 0.5 / 0.75 / 1 다섯 값만 갖고, 사이는 CSS 전이가 메운다 —
-     막대가 **다음 점까지 건너가는 동작**이 되고, 멈춘 자리는 항상 점 위다. */
-  const stopFill = stopEnd > 0 && stopReached > 0 ? stopReached / stopEnd : 0;
+  /* 막대는 **점 단위로만** 선다 — 폭이 0 / 0.25 / 0.5 / 0.75 / 1 다섯 값만 갖고
+     사이는 CSS 전이가 메운다. 멈춘 자리는 항상 점 위다(2026-11-10 오너 결정).
+     점 점등과 **같은 값**에서 나오므로 둘이 어긋날 수 없다. */
+  const stopFill = stopLast > 0 && stopReached > 0 ? stopReached / stopLast : 0;
   const stopActive = hoverStop !== null ? hoverStop : Math.max(stopReached, 0);
   const stopsLive = stopReached >= 0 || hoverStop !== null;
+
+  /* 한 핸들러가 정거장과 카드를 함께 읽는다 — 두 측정이 갈라지면 또 어긋난다.
+     값이 **바뀔 때만** setState 한다: 구 구조는 `useScrollProgress`가 프레임마다
+     상태를 갱신해 스크롤 내내 리렌더가 돌았다. */
+  useEffect(() => {
+    let raf = 0;
+    const read = () => {
+      raf = 0;
+      const vh = window.innerHeight || 1;
+      const el = stopsRef.current;
+      if (el && stopLast > 0) {
+        const frac = el.getBoundingClientRect().top / vh;
+        const t = (STOP_LINE_FROM - frac) / (STOP_LINE_FROM - STOP_LINE_TO);
+        const reached = frac > STOP_LINE_FROM
+          ? -1
+          : Math.min(stopLast, Math.floor(Math.min(Math.max(t, 0), 1) * stopLast + 1e-6));
+        setStopReached((prev) => (prev === reached ? prev : reached));
+      }
+      /* 카드 — 모바일은 가로 스와이프라 **세로 선이 뜻을 잃는다.** Belief 개념 카드와
+         같은 규칙으로 바꾼다: 뷰포트 가로 중앙에 가장 가까운 한 장만 켜고, 완충 거리로
+         경계에서 떨리는 것을 막는다. 데스크톱은 가로 한 줄이라 세로 선을 그대로 쓴다. */
+      const swipe = window.matchMedia('(max-width: 768px)').matches;
+      let next;
+      if (swipe) {
+        const centerX = (window.innerWidth || 1) / 2;
+        const dists = milestonesRef.current.map((node) => {
+          if (!node) return Infinity;
+          const r = node.getBoundingClientRect();
+          /* 세로로 화면 밖이면 후보에서 뺀다 — 안 보이는 카드가 켜지면 안 된다 */
+          if (r.top >= vh || r.bottom <= 0) return Infinity;
+          return Math.abs(centerX - (r.left + r.width / 2));
+        });
+        let best = -1;
+        for (let i = 0; i < dists.length; i += 1) {
+          if (dists[i] !== Infinity && (best === -1 || dists[i] < dists[best])) best = i;
+        }
+        const cur = activeCardRef.current;
+        let idx;
+        if (best === -1) idx = -1;
+        else if (cur === -1 || dists[cur] === undefined || dists[cur] === Infinity) idx = best;
+        else idx = dists[best] < dists[cur] - CARD_SWIPE_BUFFER ? best : cur;
+        activeCardRef.current = idx;
+        next = milestonesRef.current.map((node, i) => i === idx);
+      } else {
+        activeCardRef.current = -1;
+        next = milestonesRef.current.map(
+          (node, i) => !!node && node.getBoundingClientRect().top / vh <= (CARD_LINES[i] ?? 0),
+        );
+      }
+      setCardsOn((prev) => (
+        prev.length === next.length && prev.every((v, i) => v === next[i]) ? prev : next
+      ));
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(read); };
+    const tl = timelineRef.current;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    /* 스와이프는 **컨테이너 자신의 스크롤**이라 window 이벤트로는 안 잡힌다 */
+    if (tl) tl.addEventListener('scroll', onScroll, { passive: true });
+    read();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (tl) tl.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [stopLast]);
 
   const onStopKey = useCallback((e) => {
     if (stopLast < 1) return;
@@ -151,7 +215,6 @@ export default function JourneySection() {
     document.getElementById(`journey-stop-${next}`)?.focus();
   }, [stopActive, stopLast]);
 
-  const milestonesRef = useRef([]);
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
   const [revealedMilestones, setRevealedMilestones] = useState([false, false, false]);
@@ -288,6 +351,7 @@ export default function JourneySection() {
             다섯 본문을 **전부 DOM에 남긴다** — 크롤러와 SSR 폴백이 경력 483자를 그대로 읽는다. */}
         <div
           className={`journey-stops${stopsLive ? ' is-live' : ''}`}
+          ref={stopsRef}
           style={{ '--stops-fill': stopFill }}
         >
           <div className="journey-stops-rail">
@@ -311,6 +375,9 @@ export default function JourneySection() {
                   aria-controls={`journey-stop-panel-${i}`}
                   tabIndex={stopActive === i ? 0 : -1}
                   data-state={stopsLive && stopActive === i ? 'on' : (i <= stopReached ? 'done' : 'off')}
+                  /* 모바일 세로 레일에서 **이 칸 아래 구간이 지나간 구간인가**.
+                     호버로 바뀌는 `data-state`와 달리 스크롤 진행만 본다. */
+                  data-passed={i < stopReached ? '1' : undefined}
                   onMouseEnter={() => setHoverStop(i)}
                   onClick={() => setHoverStop(i)}
                   onKeyDown={onStopKey}
@@ -351,12 +418,9 @@ export default function JourneySection() {
           <Icon name="external" size={13} />
         </a>
 
-        {/* `--scroll-progress` 인라인 style은 걷었다 — 유일한 소비자였던 진행선을
-            지웠다(위 CSS 주석). `progress`는 아래 `isActive` 판정에 그대로 쓰인다. */}
-        <div className="timeline" ref={sectionRef}>
+        <div className="timeline" ref={timelineRef}>
           {MILESTONES.map((m, i) => {
-            /* 정거장이 모두 켜진 뒤(STOP_AT의 끝 0.34)에 시작한다 — 같은 진행값이라 어긋날 수 없다 */
-            const isActive = progress >= (CARD_AT[i] ?? 1);
+            const isActive = cardsOn[i] === true;
             const isRevealed = revealedMilestones[i];
             return (
               <div
