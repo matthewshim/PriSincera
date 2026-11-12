@@ -617,6 +617,52 @@ for (const file of srcFiles(ROOT)) {
   }
 })();
 
+// ── 분량·어투 게이트: 발행 아티클 (publishing_guide §7 · §8) ──
+// 둘 다 **결함이 아니라 판정**이므로 warn으로만 보고하고 빌드를 막지 않는다.
+//
+// 두 지표를 한 함수에 둔 이유는 실측에서 **같은 원인을 가리켰기** 때문이다.
+// 14편 중 한다체 2편(ch.04·07)이 분량 상한을 넘은 2편과 정확히 일치했고, 둘 다
+// 내부 설계 문서를 발행 경로로 그대로 옮긴 편이었다. 분량과 어투는 함께 넘어온다.
+//
+// **소급 적용하지 않는다** — 규범 시행일 이전 발행분은 당시 기준으로 쓰인 기록이므로
+// 지금 기준으로 경고하지 않는다. 날짜는 메타의 date를 쓴다.
+(function articleLengthAndToneGate() {
+  const NORM_DATE = '2026-11-04';   // publishing_guide v1.5 시행일
+  const MIN = 2500;                 // §7 하한
+  const SPLIT = 5000;               // §7 분할 검토선
+
+  let meta;
+  try { meta = JSON.parse(readFileSync('src/data/buildersLogMeta.json', 'utf-8')); } catch { return; }
+
+  /* 본문만 센다 — 제목 줄·코드 블록·표·인용은 분량과 어투 판정에서 제외한다.
+     §8이 "표·코드 블록은 어투 예외"로 둔 것과 같은 범위다. */
+  const bodyOf = (md) => md
+    .replace(/^#.*$/gm, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/^\|.*$/gm, '')
+    .replace(/^>.*$/gm, '');
+
+  for (const a of meta) {
+    if (!a.date || a.date < NORM_DATE) continue;
+    let md;
+    try { md = readFileSync(join('public/content/logs', `${a.slug}.md`), 'utf-8'); } catch { continue; }
+    const body = bodyOf(md);
+
+    const chars = [...body.replace(/\s/g, '')].length;
+    if (chars < MIN) {
+      warns.push(`ch.${a.chapterNo} ${a.slug}: 본문 ${chars}자 — 하한 ${MIN}자 미달 (publishing_guide §7)`);
+    } else if (chars > SPLIT) {
+      warns.push(`ch.${a.chapterNo} ${a.slug}: 본문 ${chars}자 — 분할 검토선 ${SPLIT}자 초과. 한 편에 논지가 둘 이상인지 보십시오 (§7)`);
+    }
+
+    const polite = (body.match(/(습니다|입니다)[.!?]/g) || []).length;
+    const plain = (body.match(/(?:었다|했다|이다|한다|된다|있다|없다)\.(?=\s|$)/g) || []).length;
+    if (plain > polite) {
+      warns.push(`ch.${a.chapterNo} ${a.slug}: 한다체 ${plain} > 합니다체 ${polite} — 발행 본문은 합니다체입니다. docs를 그대로 옮긴 원고인지 보십시오 (§8)`);
+    }
+  }
+})();
+
 if (warns.length) {
   console.warn(`[design-check] WARN ${warns.length}건 (비차단 — §9-7 스케일 확장 백로그):`);
   for (const w of warns) console.warn('  -', w);
