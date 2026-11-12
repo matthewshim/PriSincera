@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-10-17
-version: v2.0
+last_updated: 2026-11-12
+version: v2.1
 target_files:
   - .gitignore
   - .gitattributes
@@ -26,6 +26,7 @@ target_files:
 | v1.0 | 2026-08-19 | 최초 정의 — 공개 저장소 전제 위험 분석, 즉시 조치 4건 반영, 절대 금지 규칙 확정 | .gitignore, settings.json, server.mjs, admin-api.mjs |
 | v1.1 | 2026-08-19 | §3-5~3-10 추가 — 스캐너 단일 소스화·3중 훅·훅 이동성(fail-closed)·라인엔딩·권한 정책 이동·알려진 한계·nginx.conf 삭제 | .githooks, ci/, .claude/settings.json, package.json |
 | v1.2 | 2026-08-20 | 퍼블릭 UI 운영 세부(경로·컬렉션·명령 enum·인프라·임계값) 노출 금지 규칙 신설 | 퍼블릭 UI 규범 |
+| v2.1 | 2026-11-12 | **§3-2 정정 — 적혀 있던 통제가 실재한 적이 없었다.** "자동 허용에서 `git push` 전량 제거 → 사람 확인을 거친다"와 "`deny`에 `git push *` 등재"는 **작성 시점부터 사실과 달랐다.** 같은 커밋(`be455a2`)이 `.claude/settings.json`을 저장소에 추가했고 그 파일은 **allow에 `git push origin main`·`git push`, deny에는 `--no-verify`·`--force`만** 담고 있었다(현행과 동일). 실제 통제는 '사람 게이트'가 아니라 **훅 전수 검사 + 우회 경로 deny**다. 이 오기 위에 세워져 있던 잔여 위험 판단("push가 막혀 git 경로는 닫혔다")도 함께 정정 | §3-2, INDEX |
 | v2.0 | 2026-10-17 | **Candela 종속 제거 — 저장소 전체 보안 규범으로 일반화하여 `docs/candela/`→`docs/core/` 이관.** 트레이딩 전용 규칙(브로커 키·전략 커밋·매매 계좌 분리·킬스위치·step-up)은 아카이브로 분리([candela_trading_archive](../archive/candela_trading_archive.md)). 구 사고 대응 런북 §2(퍼블릭 저장소 시크릿 커밋)를 §5로 흡수 | 문서 전반·도메인·ci/secret-scan.mjs 참조 |
 
 ---
@@ -55,13 +56,26 @@ target_files:
 ### 3-1. `.claude/` gitignore 등재 + 시크릿 패턴 확장
 `.claude/`는 untracked였을 뿐 차단되지 않아 `git add -A` 한 번이면 커밋될 수 있었다(내부 경로·GCP 빌드 ID·트리거 UUID 노출). [.gitignore](../../.gitignore)에 등재하고(→ §3-8에서 `.claude/*` + `!settings.json` 분할로 재조정), `.env` 단일 항목을 `.env.*` 와일드카드로 확장해 파생 파일명까지 차단했다. `*.key`·`*.pem`·`*secret*.json`·`serviceAccount*.json`도 추가했다.
 
-### 3-2. AI 에이전트 자동 push 권한 회수
-`.claude/settings.json`에 `PowerShell(git push origin main)`과 포괄적 `Bash(git commit *)`이 사전 허용되어 있었다. 로컬에 민감 값이 존재하는 상태에서는 에이전트가 시크릿을 커밋·푸시하는 경로에 **사람 게이트가 없다**는 뜻이다.
+### 3-2. AI 에이전트 git 경로 — 게이트는 사람이 아니라 훅이다
 
-*   자동 허용에서 `git commit`·`git push` 규칙 전량 제거 → 이제 사람 확인을 거친다
-*   `permissions.deny`에 `git push *`·`git remote set-url *` 등재 — deny는 allow보다 우선하므로 광범위 규칙으로 되살아나지 않는다
+**[v2.1 정정]** 이 절은 "자동 허용에서 `git push` 전량 제거 → 이제 사람 확인을 거친다"와 "`permissions.deny`에 `git push *` 등재"로 적혀 있었다. **그 통제는 실재한 적이 없다.** 이 문서를 처음 커밋한 `be455a2`(2026-08-19)가 같은 커밋에서 `.claude/settings.json`을 저장소에 추가했는데, 그 파일은 그때부터 지금까지 **allow에 `Bash(git push origin main)`·`Bash(git push)`** 를 담고 있고 deny에 `git push *`는 없다. 하드닝 작업 중의 중간 상태를 적고, 최종 상태를 적지 않은 것이다. 같은 절의 "(gitignore 대상이라 저장소에는 없다)"도 같은 커밋이 `!settings.json` 예외로 추적을 시작하면서 함께 무효가 됐다.
 
-> **잔여 항목**: `Bash(node -e ' *)`·`Bash(npm i *)`는 임의 코드 실행·패키지 설치를 허용한다. push가 막혀 git 경로는 닫혔으나 네트워크 경로는 열려 있다. 민감 키가 로컬 머신에 놓이는 작업을 시작하는 시점에 재검토한다.
+**실제 구조** — 에이전트의 git 경로는 열려 있고, 게이트는 사람 확인이 아니라 **기계 검사**다.
+
+| 층 | 수단 | 막는 것 |
+| :--- | :--- | :--- |
+| 내용 | `.githooks/` 3중 훅(`pre-commit`·`commit-msg`·`pre-push`) + `ci/secret-scan.mjs` | 시크릿이 담긴 커밋·푸시 자체 |
+| 우회 | deny: `--no-verify`/`-n`, `git config core.hooksPath` | 훅 무력화 |
+| 범위 | deny: `git add -A`/`-u`/`.`/`--all`, `git commit -a` | 무관한 변경·예상 못한 신규 파일 쓸어담기(경로 지정 add만 허용) |
+| 복구 불가 | deny: `git push --force`/`-f`, `git remote set-url` | 히스토리 파괴·원격 바꿔치기 |
+
+allow는 `git push origin main`·`git push`처럼 **정확한 형태만** 열려 있고, 위험한 변형은 deny가 받는다. deny가 allow보다 우선하므로 광범위 allow 규칙이 생겨도 되살아나지 않는다.
+
+**이 설계가 타당한 이유** — 사람 확인은 매 커밋마다 요구하면 실제로는 통과 의례가 되고, 검사하는 것은 사람의 눈이 아니라 패턴 스캐너다. 반면 훅은 피로하지 않는다. 따라서 통제는 "푸시 전에 사람이 본다"가 아니라 "푸시되는 내용을 기계가 전수 검사하고, 그 검사를 끄는 경로를 막는다"로 두는 편이 강하다.
+
+> **잔여 항목**: `Bash(node -e ' *)`·`Bash(npm i *)`는 임의 코드 실행·패키지 설치를 허용한다. **git 경로도 열려 있으므로**(훅이 내용을 검사할 뿐 경로를 닫지는 않는다) 남은 방어는 전적으로 스캐너의 패턴 적중률에 달려 있다 — 패턴이 못 잡는 형태의 시크릿은 커밋·푸시된다. 민감 키가 로컬 머신에 놓이는 작업을 시작하는 시점에 `src/data/secretPatterns.mjs` 적중 범위부터 재검토한다.
+
+> **교훈**: 보안 문서가 **실재하지 않는 통제를 적으면 실제보다 안전하다고 믿게 된다.** 이 오기는 3개월 가까이 남아 있었고, 2026-11-12에 에이전트가 "push가 막혀 있다"고 보고하면서 드러났다. 조치 문서를 쓸 때는 *하려던 것*이 아니라 *커밋된 최종 상태*를 적고, 권한은 문서가 아니라 `.claude/settings.json`의 allow/deny로 확인한다.
 
 ### 3-3. `trust proxy` 설정
 Cloud Run은 모든 요청이 프런트엔드 프록시를 거치므로, `trust proxy` 없이는 `req.ip`가 전부 프록시 IP로 잡혀 **rate limit이 IP별이 아닌 전역 단일 버킷**으로 동작했다. [server.mjs](../../server.mjs)에 `app.set('trust proxy', 1)`을 추가했다(`true`가 아닌 홉 수 1 고정 — `X-Forwarded-For` 위조 우회 차단).
