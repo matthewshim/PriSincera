@@ -1,5 +1,70 @@
 [
   {
+    "id": "ep15",
+    "slug": "design-gates-and-what-only-eyes-catch",
+    "chapterNo": "15",
+    "title": {
+      "ko": "게이트를 세운 주에, 눈이 더 많이 찾았습니다",
+      "en": "The week we built the gates, our eyes found more",
+      "ja": "ゲートを立てた週に、目のほうが多く見つけました"
+    },
+    "subtitle": {
+      "ko": "디자인 12차원을 전부 게이트로 잠근 주에, 그 게이트를 통과한 지면에서 눈이 더 많이 찾았습니다.",
+      "en": "In the week we locked all 12 design dimensions behind gates, our eyes found more on the pages that passed them.",
+      "ja": "デザイン12次元をすべてゲートで固めた週に、そのゲートを通過した画面で目のほうが多く見つけました。"
+    },
+    "tags": [
+      "Design System",
+      "QA",
+      "Refactoring"
+    ],
+    "description": {
+      "ko": "조항을 늘리는 대신 세는 장치를 만들었습니다 — 집행 차원 1/12 → 12/12, 타입 스케일 35단 → 11단, 죽은 CSS 194규칙 → 0. 그런데 게이트를 전부 통과한 지면에서 눈이 더 많이 찾았습니다. 두 값의 합이 만든 96px 여백, 엉뚱한 폭을 물려받은 구분선, 순번으로 만든 가짜 수치. 게이트와 눈은 대체재가 아니라 순서입니다.",
+      "en": "Instead of adding more clauses, we built something that counts — enforced dimensions 1/12 → 12/12, type scale 35 → 11 steps, dead CSS rules 194 → 0. Yet our eyes found more on pages that passed every gate: a 96px gap that was the sum of two correct tokens, a divider inheriting the wrong width, numbers that were sequence indexes posing as data. Gates and eyes are not substitutes — they are an order.",
+      "ja": "条項を増やす代わりに、数える仕組みを作りました — 執行次元 1/12 → 12/12、タイプスケール35段 → 11段、死んだCSS 194規則 → 0。それでも、すべてのゲートを通過した画面で目のほうが多く見つけました。二つの正しい値の和が生んだ96pxの余白、誤った幅を継いだ区切り線、連番がデータのふりをした数値。ゲートと目は代替ではなく、順序です。"
+    },
+    "accent": "var(--color-gold)",
+    "date": "2026-11-12",
+    "commits": [
+      {
+        "hash": "6fc7bc7",
+        "type": "feat",
+        "msg": {
+          "ko": "AI 생성 패턴 전면 개선 — 8계층 58항목 완결 + 래칫 게이트 도입",
+          "en": "Overhaul AI-generated design patterns — 58 items across 8 layers + ratchet gates",
+          "ja": "AI生成デザインパターンの全面改善 — 8階層58項目完結＋ラチェットゲート導入"
+        }
+      },
+      {
+        "hash": "8312e09",
+        "type": "feat",
+        "msg": {
+          "ko": "Proof of Work 균일 압축 2열 재편 — 섹션 2,216px → 756px",
+          "en": "Compress Proof of Work into a uniform 2-column grid — 2,216px → 756px",
+          "ja": "Proof of Workを均一2列に再編 — セクション2,216px → 756px"
+        }
+      },
+      {
+        "hash": "a76efd0",
+        "type": "fix",
+        "msg": {
+          "ko": "끊겨 보이던 구분선 교정 — 선은 컨테이너 폭, --measure는 본문에",
+          "en": "Fix dividers that looked cut off — border on the container, --measure on the body",
+          "ja": "途切れて見えた区切り線を修正 — 線はコンテナ幅、--measureは本文へ"
+        }
+      },
+      {
+        "hash": "7a71bf3",
+        "type": "fix",
+        "msg": {
+          "ko": "축 여백 확대 · 5단 문구 축약 · 카드 아래 간격 96→32px",
+          "en": "Widen axis padding, shorten 5-stage copy, card bottom gap 96→32px",
+          "ja": "軸の余白拡大・5段の文言短縮・カード下の間隔96→32px"
+        }
+      }
+    ]
+  },
+  {
     "id": "ep14",
     "slug": "introducing-waymark",
     "chapterNo": "14",
