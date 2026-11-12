@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv9",
+    "slug": "notice-is-a-feature",
+    "title": {
+      "ko": "공지는 안내가 아니라 기능입니다",
+      "en": "An Announcement Is Not a Notice but a Feature",
+      "ja": "告知は案内ではなく機能です"
+    },
+    "subtitle": {
+      "ko": "같은 변경이라도 공지가 달라지면 사용자가 겪는 제품이 달라진다 — 공지는 되돌릴 수 없는 층에 쓰는 유일한 수단이다",
+      "en": "The same change becomes a different product when the announcement changes — an announcement is the only way we write to the layer we cannot undo",
+      "ja": "同じ変更でも告知が変わればユーザーが体験する製品が変わる — 告知は戻せない層に書く唯一の手段である"
+    },
+    "description": {
+      "ko": "배포는 되돌릴 수 있지만 한번 알린 것은 읽힌 뒤에 취소되지 않습니다. 더 비가역인 쪽에 더 적은 절차가 붙어 있는 셈입니다. 2012년 인스타그램은 코드를 한 줄도 바꾸지 않고 약관 문장만으로 제품을 나빠지게 했고, 2011년 넷플릭스는 퀵스터를 철회했지만 이미 만들어진 기억은 철회하지 못했습니다.",
+      "en": "A deploy can be rolled back, but what has been announced cannot be unread. The more irreversible side carries the lighter process. In 2012 Instagram made its product worse without changing a line of code, through wording alone; in 2011 Netflix withdrew Qwikster but could not withdraw the memory it had already created.",
+      "ja": "デプロイは戻せますが、一度告知したものは読まれたあとに取り消せません。より非可逆な側に、より軽い手続きが付いているのです。2012年のInstagramはコードを一行も変えずに規約の文章だけで製品を悪くし、2011年のNetflixはQwiksterを撤回しましたが、すでにできた記憶は撤回できませんでした。"
+    },
+    "pullQuote": {
+      "ko": "설명할 수 없는 변경은 대개 설계가 덜 된 변경입니다.",
+      "en": "A change you cannot explain is usually a change that was not finished being designed.",
+      "ja": "説明できない変更は、たいてい設計が足りていない変更です。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "endless-launch",
+      "order": 4
+    },
+    "tags": [
+      "Live Service",
+      "Product Operations",
+      "Communication",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-11-12",
+    "readMinutes": 8
+  },
+  {
     "id": "pv8",
     "slug": "speed-is-reversibility",
     "title": {
