@@ -96,10 +96,14 @@ function StatItem({ target, label, caption, started, index }) {
   return (
     <div className="stat-item">
       {/* 보이는 요소는 전부 기계에서 감추고 아래 한 줄로만 읽힌다 — 구 구조는 `.u-sr-only`와
-          `.stat-label`이 겹쳐 **"20 Years, Years"**로 들렸다(2026-11-04 자가 발각). */}
-      <div className="stat-label" aria-hidden="true">{label}</div>
+          `.stat-label`이 겹쳐 **"20 Years, Years"**로 들렸다(2026-11-04 자가 발각).
+          **숫자 왼쪽 · 라벨과 설명은 그 오른쪽 두 줄.** 구 3단 세로는 항목이 67~165px로 좁아
+          1136px 중 34%만 채웠고, 그게 "밋밋하다"의 원인이었다(오너 결정 2026-11-12). */}
       <div className="stat-number" aria-hidden="true">{count}</div>
-      <div className="stat-caption" aria-hidden="true">{caption}</div>
+      <div className="stat-text" aria-hidden="true">
+        <div className="stat-label">{label}</div>
+        <div className="stat-caption">{caption}</div>
+      </div>
       <span className="u-sr-only">{label} {target}, {caption}</span>
     </div>
   );
