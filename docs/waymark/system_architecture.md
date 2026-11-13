@@ -2,8 +2,8 @@
 status: draft
 domain: Waymark
 nav_title: 시스템 아키텍처
-last_updated: 2026-10-24
-version: v0.3
+last_updated: 2026-11-13
+version: v0.4
 target_files:
   - (통합) 기존 PriSincera Cloud Run 웹앱 `prisincera-web`(server.mjs + SPA)에 Waymark 라우트·엔드포인트 편입
   - (재사용) Firestore · Firebase Auth · Firebase Hosting · Cloud Scheduler → Cloud Run Job · nodemailer(Gmail SMTP) 이메일 엔진
@@ -18,6 +18,7 @@ target_files:
 | v0.1 | 2026-10-24 | 최초 — Supabase·Edge·pgvector·서버 AI | (구) |
 | v0.2 | 2026-10-24 | 비용 0 재설계 — Firebase·서버 LLM 제거(규칙·템플릿)·RLS→Firestore Rules | (구) |
 | v0.3 | 2026-10-24 | **최종 계획 반영(실측 확인)** — ① **통합**: 별도 앱이 아니라 기존 **Cloud Run 웹앱에 편입**(D-4 통합 확정) ② 인프라 정본 실측 반영: **Firebase Functions 아님 → 기존 Cloud Run + Cloud Scheduler→Cloud Run Job + nodemailer 이메일 엔진 재사용**(GCP 빌링 이미 활성) ③ **먼저 찾아옴 = 이메일 + 웹푸시 이중 채널** ④ **AI 2-경로**: 체험=Groq 무료(ZDR·서버·캡), 지속=BYOK(클라이언트·공급자 직접) ⑤ BYOK 키 관리 규범 ⑥ 비용 "기존 인프라 위 **추가 ≈ ₩0**" | 전반 |
+| v0.4 | 2026-11-13 | **공통 인증·회원 반영** — 인증·세션은 사이트 공통(단일 Firebase Auth·전역 `AuthContext`, ReLearn·Waymark 공유, Waymark 재사용). `users/{uid}`=공통 정체성 / `waymark_users/{uid}`=제품 설정으로 분리. §1 다이어그램 '클라 직접 R/W'→'서버 REST' 정정 예정 | §3-1·인증 |
 
 ---
 
@@ -77,8 +78,11 @@ target_files:
 
 > 문서 소유자 `uid`. 모든 접근은 Security Rules(§8). 타임스탬프 `serverTimestamp()`.
 
-### 3-1. `users/{uid}`
-`displayName, locale, timezone, quietStart, quietEnd, cadence, pushEnabled, emailOptIn, role('user'|'moderator'|'admin'), onboardedAt, fcmTokens[]`
+### 3-1. `users/{uid}` (공통 정체성) + `waymark_users/{uid}` (제품 설정) ★
+**인증·세션은 사이트 공통** — 단일 Firebase Auth + 전역 `AuthContext`(`useAuth`)를 ReLearn·Waymark가 공유한다. Waymark는 재사용(자체 인증 없음). 로그인 UX(게이트·버튼)도 공통 컴포넌트로 추출.
+- **공통 `users/{uid}`**(정체성): `displayName, email, locale, timezone, onboardedAt` — 전 제품 공유, uid 조인키.
+- **Waymark 전용 `waymark_users/{uid}`**(설정): `quietStart, quietEnd, cadence, pushEnabled, emailOptIn, role('user'|'moderator'|'admin'), fcmTokens[]`.
+- 제품 설정까지 공통화하지 않는다(ReLearn 통합 전철 방지). 근거 [mvp_build_plan §1-3](mvp_build_plan.md).
 
 ### 3-2. `decisions/{decisionId}`
 `uid, title(≤80), context(≤4000), options[], chosen, emotionTags[], domain, importance(1~3), reversible, status('open'|'revisited'|'closed'), outcome, outcomeNote, emotionNow[], tagsKeywords[], decidedAt, createdAt, updatedAt`
