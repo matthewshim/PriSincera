@@ -18,6 +18,7 @@ import rateLimit from 'express-rate-limit';
 import adminRouter from './admin-api.mjs';
 import studyRouter from './study-api.mjs';
 import pacenoteRouter from './pacenote-api.mjs';
+import waymarkRouter from './waymark-api.mjs';
 import { resolveMeta, PAGE_META, hreflangLinks, ogLocaleTags } from './src/data/seoMeta.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -199,6 +200,7 @@ app.use('/api/pristudy', apiLimiter, express.json({ limit: '5kb' }), studyRouter
 
 // --- Pace Note API ---
 app.use('/api/pacenote', apiLimiter, express.json({ limit: '5kb' }), pacenoteRouter);
+app.use('/api/waymark', apiLimiter, express.json({ limit: '32kb' }), waymarkRouter);
 
 // --- BuildersLog API ---
 app.post('/api/builderslog/:slug/view', apiLimiter, express.json(), async (req, res) => {

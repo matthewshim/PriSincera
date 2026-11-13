@@ -483,7 +483,112 @@
       "logout": "ログアウト",
       "emptyTitle": "まだ記録した決断がありません",
       "emptyDesc": "最初の決断を残してみましょう。小さな選択でも大丈夫です。",
-      "newDecision": "決断を記録する"
+      "newDecision": "決断を記録する",
+      "back": "戻る",
+      "notifications": "通知",
+      "brand": "Waymark",
+      "tabHome": "ホーム",
+      "tabNew": "記録",
+      "tabMe": "マイ",
+      "today": "今日",
+      "daysAgo": "{n}日前",
+      "upcoming": "そっと届いた声",
+      "myDecisions": "わたしの決断",
+      "emptyTimeline": "まだ決断がありません。最初の一つを記録しましょう。",
+      "loading": "読み込み中…",
+      "saving": "保存中…",
+      "notFound": "見つかりません。",
+      "newTitle": "新しい決断",
+      "settingsSoon": "設定は近日公開します。",
+      "sharedAccount": "ReLearn・Waymark共通アカウント — 一度のログインで両方。",
+      "welcome": "左から決断を選ぶか、新しく記録してみましょう。"
+    },
+    "enum": {
+      "status": {
+        "open": "進行中",
+        "revisited": "見直し",
+        "closed": "完了"
+      },
+      "domain": {
+        "career": "キャリア",
+        "team": "チーム",
+        "product": "仕事",
+        "relationship": "関係",
+        "money": "お金",
+        "health": "健康",
+        "other": "その他"
+      },
+      "emotion": {
+        "anxiety": "不安",
+        "relief": "すっきり",
+        "excitement": "わくわく",
+        "fear": "こわさ",
+        "confidence": "確信",
+        "confusion": "混乱"
+      },
+      "tone": {
+        "comfort": "なぐさめ",
+        "counsel": "助言",
+        "cheer": "応援",
+        "clarify": "整理"
+      },
+      "importance": {
+        "1": "軽い",
+        "2": "ふつう",
+        "3": "重い"
+      }
+    },
+    "home": {
+      "ask": {
+        "checkin": "あの決断、その後どうですか？",
+        "midterm": "半ばまで来ました。今はどうですか？",
+        "retro": "一ヶ月ほど経ちました。今振り返ってどうですか？"
+      }
+    },
+    "detail": {
+      "lead": {
+        "nudge": "そばに",
+        "checkin": "そっと一声",
+        "midterm": "中間のふり返り",
+        "retro": "もう一度見る"
+      },
+      "aiTitle": "AIでさらに深く",
+      "aiSoon": "近日",
+      "principle": "AIは代わりに決めません。分かれ道を照らすだけ。",
+      "notePlaceholder": "返信を書く…",
+      "send": "送信"
+    },
+    "new": {
+      "qTitle": "どんな決断をしましたか？ 気軽にどうぞ。",
+      "qContext": "どんな状況でしたか？",
+      "qOptions": "どんな選択肢がありましたか？（任意）",
+      "qChosen": "それで、どう決めましたか？",
+      "qEmotion": "今の気持ちは？（1つ以上）",
+      "qDomain": "どんな領域の決断ですか？",
+      "qImportance": "どれくらい重い決断ですか？",
+      "phTitle": "例：チームを移ることにした",
+      "phContext": "その時の状況と気持ちを書いてください。",
+      "phOptions": "カンマ区切り（例：残る, 移る）",
+      "phChosen": "例：移る",
+      "save": "このまま記録"
+    },
+    "companion": {
+      "comfort": {
+        "msg": "{title}、簡単ではなかったですね。今、心が複雑でも大丈夫です。",
+        "close": "今はこの気持ちに気づいてあげるだけで十分です。"
+      },
+      "counsel": {
+        "msg": "選択肢の中で一番引っかかるのは？ 見落とした視点はありませんか？",
+        "close": "どちらが正しいか、結局あなたが一番わかっています。"
+      },
+      "cheer": {
+        "msg": "{title}、あなたらしい決断です。まずは軽く一歩だけ。",
+        "close": "その決断、進めてみましょう。そばにいます。"
+      },
+      "clarify": {
+        "msg": "頭の中を、選択肢／基準／気持ちの三つに分けてみましょうか？",
+        "close": "整理は手伝いましたが、決断はあなたのものです。"
+      }
     }
   },
   "sylphio": {

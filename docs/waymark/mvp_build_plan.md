@@ -3,7 +3,7 @@ status: draft
 domain: Waymark
 nav_title: MVP 상세 구축 계획
 last_updated: 2026-11-13
-version: v0.2
+version: v0.3
 target_files:
   - server.mjs (Waymark 라우터 마운트)
   - (신규) src/server/waymark/ (라우터·검증·AI 프록시·먼저찾아옴 Job)
@@ -21,6 +21,7 @@ target_files:
 | :--- | :--- | :--- | :--- |
 | v0.1 | 2026-11-13 | 최초 — [mvp_rescope_plan](mvp_rescope_plan.md)(얇은 루프 + F-5 전체) 범위의 구축 상세. 아키텍처 결정(서버 REST+admin)·API 목록·F-5 3경로·먼저찾아옴 Job·보안·선행검증·작업 분해(M1-A~E)·일정 정의. 기존 server.mjs 패턴(`/api/study`·Bearer verifyIdToken·Cloud Run Job) 정합 확인 | Waymark M1 구축 전반 |
 | v0.2 | 2026-11-13 | **§1-3 신설** — 공통 인증 재사용(단일 Firebase Auth·`useAuth` ReLearn/Waymark 공유) + 로그인 UX 컴포넌트·얇은 공통 프로필 `users/{uid}` 분리(uid 조인), 제품 설정은 `waymark_users` 유지. 온보딩 최초 가입자 한정. §2 정체성/제품설정 분리 | 인증·회원 |
+| v0.3 | 2026-11-13 | **M1-0 선행검증 반영** — BYOK CORS(Anthropic 직접 / OpenAI·Gemini 패스스루)·Sylphio BYOK 선례 재사용·체험 캡 제안·FCM 그린필드·Groq 정책 확인. §4-b/c·§8 갱신 | F-5·BYOK·M1-0 |
 
 ---
 
@@ -59,7 +60,7 @@ target_files:
 - **분리 유지(얽지 않음)**: 제품 설정은 각자 문서로 — ReLearn 학습 선호 / **Waymark 전용 `waymark_users`**(quietStart·quietEnd·cadence·pushEnabled·emailOptIn·fcmTokens·role). 정체성까지 제품별로 중복하지 않고, 설정까지 공통화하지도 않는다(ReLearn 통합 전철 방지).
 - **금지(오버엔지니어링)**: 거창한 통합 계정·멤버십 서비스 신설. 유료 플랜 없음(비용0) → uid 조인으로 충분.
 - **온보딩**: 로그인 단계는 **최초 사이트 가입자에게만**. 이미 로그인된 사용자는 Waymark 진입 시 바로 홈(S-2).
-- ⚠️ ②③은 **ReLearn까지 건드리는 공통 리팩터** — 병렬 세션과 순서를 조율해 진행.
+- **주의** — ②③은 **ReLearn까지 건드리는 공통 리팩터**이므로 병렬 세션과 순서를 조율해 진행한다.
 
 ## 2. 데이터 모델 (MVP 사용분 · M0 재사용)
 
@@ -97,16 +98,16 @@ target_files:
 
 ### 4-b. 체험 AI (Groq · 서버 프록시 · 캡)
 - 경로: 클라 → `POST /api/waymark/ai/companion` → 서버가 **우리 Groq 키**로 호출(키 클라 노출 금지).
-- **per-user 캡**(`aiUsage` 원자적 증가) + 전역 레이트리밋. 소진 시 **템플릿 폴백**.
-- **무학습·ZDR ON**(Groq Services Agreement §4.2) — **M1-0에서 검증**(블로킹).
+- **per-user 캡**(`aiUsage` 원자적 증가) + 전역 레이트리밋. 소진 시 **템플릿 폴백**. **제안 수치**: 체험 평생 15회(또는 월 20회)·호출당 입력 맥락 ≤1,500자·전역 레이트리밋으로 무료 쿼터 내 유지.
+- **무학습·ZDR ON**(Groq 공식 Your Data *“All customers may enable ZDR”* · 무학습 Services Agreement). 오너 콘솔 2분 확인만 잔여(§8).
 - **최소 전송**: 해당 결정의 필요한 최소 맥락만, 식별자·타 결정 금지, **PII 레드액션**.
 - **출력 가드레일**: "대신 결정" 금지 후처리 + 위기신호 감지 → 전문도움 템플릿으로 치환.
 
 ### 4-c. BYOK (사용자 키 · 지속·심화)
-- 사용자가 자기 키 연결 → **브라우저에서 공급자 직접 호출**(CORS 허용 공급자 = OpenAI/Anthropic 1순위). **우리 서버·Firestore 미경유·무로그.**
+- 사용자가 자기 키 연결 → 경로는 공급자별로 다름(2026-11-13 CORS 조사): **Anthropic = 브라우저 직접**(헤더 `anthropic-dangerous-direct-browser-access: true`, 2024-08~) → **우리 서버·Firestore 미경유·무로그**. **OpenAI·Gemini = 브라우저 직접 불가**(CORS 미허용) → 무상태 패스스루(아래).
 - 키 보관: **IndexedDB + WebCrypto 암호화**, 원클릭 삭제. 동기화·전송 없음.
 - 입력 시 **공급자/티어 경고**(Gemini 무료=학습) + *"프라이버시는 당신 키의 공급자·티어에 달려 있다"* 고지([security_spec §6-2](security_spec.md)).
-- CORS 막는 공급자는 **무상태 패스스루**(서버가 키를 메모리에서만 받아 즉시 전달·저장/로그 금지) — 2순위.
+- CORS 막는 공급자(OpenAI·Gemini)는 **무상태 패스스루**(서버가 키를 메모리에서만 받아 즉시 전달·저장/로그 금지). **브라우저 직접 1순위 = Anthropic.** **[재사용] Sylphio가 이미 OpenAI/Gemini BYOK**(키 발급 가이드·충전 안내 i18n 존재) → 기존 BYOK 키 처리 패턴 재사용 검토.
 
 ### 4-d. 전환 UX
 기본 **템플릿** → "AI로 더 깊이"(체험 캡) → 캡 소진·지속 원하면 **BYOK 유도**. 세 경로 모두 같은 하드룰·가드레일 통과.
@@ -142,10 +143,12 @@ target_files:
 **F-5 전체가 MVP에 들어오므로 아래 확인 전엔 M1 코드 미착수.**
 
 - [x] **Groq ZDR 정책 조사 완료(2026-11-13)** — 공식 Your Data 문서 *“All customers may enable ZDR in Data Controls”*(엔터프라이즈 전용 아님) · 기본 무보존(*“By default, Groq does not retain customer data for inference requests”*) · 무학습(Services Agreement). **잔여(오너 콘솔 2분, 블로킹 아님)**: ① 무료 계정에 Data Controls>ZDR 설정이 실제 보이는지(계약서 “Eligible Customer” 미정의라 확인) ② 사용할 chat completions 엔드포인트가 “ZDR Eligible”인지
-- [ ] **체험 캡 수치**(per-user 일/월 호출·토큰, 전역 레이트리밋) 확정
-- [ ] **BYOK 공급자 CORS 매트릭스**(OpenAI/Anthropic 브라우저 직접 호출 가능 확인)
-- [ ] **FCM 웹푸시 설정**(프로젝트 웹푸시 키·VAPID) 준비
-- [ ] **무료 쿼터 초과 기준 + killswitch 연동** 임계치
+- [x] **체험 캡 수치 제안(2026-11-13)** — 평생 15회(또는 월 20회)·호출당 맥락 ≤1,500자·전역 레이트리밋으로 무료 쿼터 내·소진 시 템플릿 폴백. **오너 확정 대기**
+- [x] **BYOK CORS 조사 완료(2026-11-13)** — **Anthropic만** 브라우저 직접(헤더 `anthropic-dangerous-direct-browser-access`), **OpenAI·Gemini는 CORS 불가 → 무상태 패스스루**. **레포에 BYOK 선례(Sylphio) 존재 → 패턴 재사용**
+- [ ] **FCM 웹푸시 — 그린필드**(레포에 messaging/VAPID 흔적 0, `firebase.js`=Auth 전용): config에 `messagingSenderId·appId` + **VAPID 키(오너 Firebase 콘솔)** + `firebase-messaging-sw.js` + `getToken`. **M1-B에서 구축**(오너 VAPID만 의존)
+- [ ] **쿼터 초과·killswitch** — Groq 캡은 앱 레벨(`aiUsage`) 집행(소진→폴백). 기존 `billing-killswitch` 연동은 M1-C에서
+
+> **M1-A(결정 코어)는 AI·FCM 미사용 → 선행검증에 막히지 않음.** Groq 콘솔 확인은 M1-C 착수 전, VAPID는 M1-B 착수 전 오너 확인이면 됨.
 
 ## 9. 구축 작업 분해 (M1 — 단계별 독립 검증)
 

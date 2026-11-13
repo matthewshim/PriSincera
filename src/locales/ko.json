@@ -483,7 +483,112 @@
       "logout": "로그아웃",
       "emptyTitle": "아직 기록한 결정이 없어요",
       "emptyDesc": "첫 결정을 남겨보세요. 작은 선택이어도 괜찮아요.",
-      "newDecision": "결정 기록하기"
+      "newDecision": "결정 기록하기",
+      "back": "뒤로",
+      "notifications": "알림",
+      "brand": "Waymark",
+      "tabHome": "홈",
+      "tabNew": "기록하기",
+      "tabMe": "나",
+      "today": "오늘",
+      "daysAgo": "{n}일 전",
+      "upcoming": "다가온 먼저찾아옴",
+      "myDecisions": "내 결정",
+      "emptyTimeline": "아직 기록한 결정이 없어요. 첫 결정을 남겨보세요.",
+      "loading": "불러오는 중…",
+      "saving": "저장 중…",
+      "notFound": "찾을 수 없어요.",
+      "newTitle": "새 결정",
+      "settingsSoon": "설정은 곧 열립니다.",
+      "sharedAccount": "ReLearn·Waymark 공통 계정 — 한 번 로그인하면 모두 사용",
+      "welcome": "왼쪽에서 결정을 고르거나, 새로 기록해보세요."
+    },
+    "enum": {
+      "status": {
+        "open": "진행 중",
+        "revisited": "다시 봄",
+        "closed": "마무리"
+      },
+      "domain": {
+        "career": "커리어",
+        "team": "팀/조직",
+        "product": "제품/일",
+        "relationship": "관계",
+        "money": "돈",
+        "health": "건강",
+        "other": "기타"
+      },
+      "emotion": {
+        "anxiety": "불안",
+        "relief": "후련",
+        "excitement": "설렘",
+        "fear": "두려움",
+        "confidence": "확신",
+        "confusion": "혼란"
+      },
+      "tone": {
+        "comfort": "위로",
+        "counsel": "조언",
+        "cheer": "응원",
+        "clarify": "정리"
+      },
+      "importance": {
+        "1": "가벼움",
+        "2": "보통",
+        "3": "무거움"
+      }
+    },
+    "home": {
+      "ask": {
+        "checkin": "그 결정, 어떻게 지내고 있어요?",
+        "midterm": "그 결정, 중간쯤 왔어요. 지금은 어때요?",
+        "retro": "한 달쯤 지났어요. 지금 돌아보면 어때요?"
+      }
+    },
+    "detail": {
+      "lead": {
+        "nudge": "곁에서",
+        "checkin": "먼저 찾아옴 · 안부",
+        "midterm": "먼저 찾아옴 · 중간 회고",
+        "retro": "먼저 찾아옴 · 다시 보기"
+      },
+      "aiTitle": "AI로 더 깊이",
+      "aiSoon": "곧",
+      "principle": "AI는 대신 결정하지 않아요. 갈림길을 비출 뿐.",
+      "notePlaceholder": "답장을 적어보세요…",
+      "send": "보내기"
+    },
+    "new": {
+      "qTitle": "무슨 결정을 내렸어요? 편하게 말해주세요.",
+      "qContext": "어떤 상황이었어요?",
+      "qOptions": "어떤 선택지들이 있었죠? (선택)",
+      "qChosen": "그래서, 어떻게 결정했어요?",
+      "qEmotion": "지금 마음은 어때요? (하나 이상 골라주세요)",
+      "qDomain": "어떤 영역의 결정이에요?",
+      "qImportance": "얼마나 무거운 결정이에요?",
+      "phTitle": "예: 팀을 옮기기로 했다",
+      "phContext": "그때의 상황과 마음을 적어보세요.",
+      "phOptions": "쉼표로 구분 (예: 남는다, 옮긴다)",
+      "phChosen": "예: 옮긴다",
+      "save": "이대로 기록"
+    },
+    "companion": {
+      "comfort": {
+        "msg": "{title}, 쉽지 않은 결정이었죠. 지금 마음이 복잡해도 괜찮아요.",
+        "close": "지금은 이 마음을 알아주는 걸로 충분해요."
+      },
+      "counsel": {
+        "msg": "선택지 중 가장 걸리는 건 무엇인가요? 혹시 놓친 관점은 없을까요?",
+        "close": "어느 쪽이 더 맞을지, 결국 당신이 더 잘 알아요."
+      },
+      "cheer": {
+        "msg": "{title}, 당신답게 내린 결정이에요. 첫 한 걸음만 가볍게.",
+        "close": "그 결정, 밀고 나가봐요. 곁에 있을게요."
+      },
+      "clarify": {
+        "msg": "머릿속을 선택지 / 기준 / 마음, 셋으로 나눠볼까요?",
+        "close": "정리는 도왔지만, 결정은 당신 몫으로 남겨둘게요."
+      }
     }
   },
   "sylphio": {

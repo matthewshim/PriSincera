@@ -483,7 +483,112 @@
       "logout": "Sign out",
       "emptyTitle": "No decisions recorded yet",
       "emptyDesc": "Capture your first decision. Even a small one is fine.",
-      "newDecision": "Record a decision"
+      "newDecision": "Record a decision",
+      "back": "Back",
+      "notifications": "Notifications",
+      "brand": "Waymark",
+      "tabHome": "Home",
+      "tabNew": "Record",
+      "tabMe": "Me",
+      "today": "today",
+      "daysAgo": "{n}d ago",
+      "upcoming": "Coming to you",
+      "myDecisions": "My decisions",
+      "emptyTimeline": "No decisions yet. Record your first one.",
+      "loading": "Loading…",
+      "saving": "Saving…",
+      "notFound": "Not found.",
+      "newTitle": "New decision",
+      "settingsSoon": "Settings are coming soon.",
+      "sharedAccount": "One account for ReLearn & Waymark — sign in once.",
+      "welcome": "Pick a decision on the left, or record a new one."
+    },
+    "enum": {
+      "status": {
+        "open": "In progress",
+        "revisited": "Revisited",
+        "closed": "Closed"
+      },
+      "domain": {
+        "career": "Career",
+        "team": "Team",
+        "product": "Work",
+        "relationship": "Relationship",
+        "money": "Money",
+        "health": "Health",
+        "other": "Other"
+      },
+      "emotion": {
+        "anxiety": "Anxious",
+        "relief": "Relieved",
+        "excitement": "Excited",
+        "fear": "Afraid",
+        "confidence": "Confident",
+        "confusion": "Confused"
+      },
+      "tone": {
+        "comfort": "Comfort",
+        "counsel": "Counsel",
+        "cheer": "Cheer",
+        "clarify": "Clarify"
+      },
+      "importance": {
+        "1": "Light",
+        "2": "Normal",
+        "3": "Heavy"
+      }
+    },
+    "home": {
+      "ask": {
+        "checkin": "How are you doing with that decision?",
+        "midterm": "You're about halfway. How does it feel now?",
+        "retro": "It's been about a month. How do you see it now?"
+      }
+    },
+    "detail": {
+      "lead": {
+        "nudge": "Beside you",
+        "checkin": "Check-in",
+        "midterm": "Midway reflection",
+        "retro": "Looking back"
+      },
+      "aiTitle": "Go deeper with AI",
+      "aiSoon": "Soon",
+      "principle": "Waymark never decides for you. It only lights the fork.",
+      "notePlaceholder": "Write a reply…",
+      "send": "Send"
+    },
+    "new": {
+      "qTitle": "What did you decide? Just tell me.",
+      "qContext": "What was the situation?",
+      "qOptions": "What options were you weighing? (optional)",
+      "qChosen": "So, what did you decide?",
+      "qEmotion": "How do you feel right now? (pick one or more)",
+      "qDomain": "What kind of decision is it?",
+      "qImportance": "How heavy is this decision?",
+      "phTitle": "e.g. Decided to switch teams",
+      "phContext": "Describe the situation and how you felt.",
+      "phOptions": "comma-separated (e.g. stay, switch)",
+      "phChosen": "e.g. switch",
+      "save": "Record it"
+    },
+    "companion": {
+      "comfort": {
+        "msg": "{title} — that wasn't an easy call. It's okay if your mind feels tangled right now.",
+        "close": "For now, just acknowledging this feeling is enough."
+      },
+      "counsel": {
+        "msg": "Of the options, which one nags at you most? Any angle you might have missed?",
+        "close": "Which way is right — in the end, you know best."
+      },
+      "cheer": {
+        "msg": "{title} — that's a decision only you could make. Just take the first light step.",
+        "close": "Go with it. I'm right beside you."
+      },
+      "clarify": {
+        "msg": "Shall we split your thoughts into three: options / criteria / feelings?",
+        "close": "I helped you sort it, but the decision stays yours."
+      }
     }
   },
   "sylphio": {
