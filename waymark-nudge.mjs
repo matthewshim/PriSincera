@@ -2,8 +2,7 @@
 // 도래 decisionEvents 조회 → 종료/조용시간 체크 → 동반 메시지+알림 기록 → 이메일 발송 → status=sent.
 // 실행: node waymark-nudge.mjs  (로컬은 ADC 필요: gcloud auth application-default login)
 // 웹푸시(FCM)는 M1-B.2에서 추가. 정본: docs/waymark/mvp_build_plan.md §5
-import { FieldValue } from 'firebase-admin/firestore';
-import { db, auth } from './pipeline/src/lib/firestore.mjs';
+import { db, auth, FieldValue } from './pipeline/src/lib/firestore.mjs';
 import { sendEmail } from './pipeline/src/lib/mailer.mjs';
 import { COLLECTIONS } from './src/data/waymarkModel.mjs';
 

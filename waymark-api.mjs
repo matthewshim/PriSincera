@@ -3,8 +3,7 @@
 // firestore.rules가 waymark_* 클라이언트 직접 접근을 차단하므로 모든 쓰기는 여기로만.
 // 정본: docs/waymark/mvp_build_plan.md §3 · system_architecture.md §3
 import express from 'express';
-import { FieldValue } from 'firebase-admin/firestore';
-import { db, auth } from './pipeline/src/lib/firestore.mjs';
+import { db, auth, FieldValue } from './pipeline/src/lib/firestore.mjs';
 import {
   COLLECTIONS, DOMAINS, EMOTIONS, OUTCOMES, DECISION_STATUS, TONES,
   CADENCE_FACTORS, BASE_SCHEDULE_DAYS, LIMITS,

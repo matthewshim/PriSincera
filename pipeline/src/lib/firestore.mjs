@@ -6,6 +6,7 @@
  */
 import { initializeApp, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+export { FieldValue, Timestamp } from 'firebase-admin/firestore'; // db와 동일 인스턴스로 노출(멀티 node_modules sentinel 불일치 방지)
 import { getAuth } from 'firebase-admin/auth';
 
 // 싱글턴 — 여러 모듈에서 import해도 1회만 초기화
