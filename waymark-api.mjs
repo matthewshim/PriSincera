@@ -325,7 +325,8 @@ router.post("/notifications/:id/read", requireAuth, async (req, res) => {
 });
 
 // ── 체험 AI (Groq 프록시 · per-user 캡 · 가드레일) — M1-C.1 ──
-const AI_CAP = 15;
+const AI_CAP = 20;
+const AI_PERIOD_MS = 30 * 24 * 60 * 60 * 1000; // 체험 캡 롤링 창(30일)
 const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
 const CRISIS_RE = /(자살|목숨을|죽고\s*싶|죽어버리|자해|해치고\s*싶|suicide|kill myself)/i;
 const CRISIS_MSG = '지금 많이 힘드신 것 같아요. 혼자 감당하지 마세요. 자살예방상담전화 109(24시간)로 연락하면 도움을 받을 수 있어요. 당신은 혼자가 아니에요.';
@@ -355,7 +356,10 @@ router.post('/ai/companion', requireAuth, async (req, res) => {
 
     const usageRef = db.collection(COLLECTIONS.aiUsage).doc(req.uid);
     const uSnap = await usageRef.get();
-    const used = uSnap.exists ? (uSnap.data().trialCallsUsed || 0) : 0;
+    const uData = uSnap.exists ? uSnap.data() : null;
+    const psMs = uData && uData.periodStart && uData.periodStart.toMillis ? uData.periodStart.toMillis() : null;
+    const windowActive = psMs !== null && (Date.now() - psMs) < AI_PERIOD_MS;
+    const used = windowActive ? (uData.trialCallsUsed || 0) : 0;
     if (used >= AI_CAP) return res.status(402).json({ code: 'cap_exceeded', remaining: 0 });
 
     const ctx = String(dec.context || '').slice(0, 1500);
@@ -382,7 +386,9 @@ router.post('/ai/companion', requireAuth, async (req, res) => {
 
     const msgRef = owned.ref.collection(COLLECTIONS.decisionMessages).doc();
     await msgRef.set({ type: 'ai', tone, source: 'trial_ai', text, createdAt: FieldValue.serverTimestamp() });
-    await usageRef.set({ trialCallsUsed: used + 1, lastCallAt: FieldValue.serverTimestamp(), periodStart: uSnap.exists ? uSnap.data().periodStart : FieldValue.serverTimestamp() }, { merge: true });
+    const usageWrite = { trialCallsUsed: used + 1, lastCallAt: FieldValue.serverTimestamp() };
+    if (!windowActive) usageWrite.periodStart = FieldValue.serverTimestamp();
+    await usageRef.set(usageWrite, { merge: true });
     res.json({ id: msgRef.id, text, tone, remaining: AI_CAP - (used + 1) });
   } catch (err) {
     console.error('[Waymark] ai companion:', err.message);
@@ -394,10 +400,55 @@ router.post('/ai/companion', requireAuth, async (req, res) => {
 router.get('/ai/usage', requireAuth, async (req, res) => {
   try {
     const uSnap = await db.collection(COLLECTIONS.aiUsage).doc(req.uid).get();
-    const used = uSnap.exists ? (uSnap.data().trialCallsUsed || 0) : 0;
-    res.json({ remaining: Math.max(0, AI_CAP - used), cap: AI_CAP, available: !!process.env.GROQ_API_KEY });
+    const uData = uSnap.exists ? uSnap.data() : null;
+    const psMs = uData && uData.periodStart && uData.periodStart.toMillis ? uData.periodStart.toMillis() : null;
+    const windowActive = psMs !== null && (Date.now() - psMs) < AI_PERIOD_MS;
+    const used = windowActive ? (uData.trialCallsUsed || 0) : 0;
+    res.json({ remaining: Math.max(0, AI_CAP - used), cap: AI_CAP, resetAt: windowActive ? psMs + AI_PERIOD_MS : null, available: !!process.env.GROQ_API_KEY });
   } catch (err) {
     res.status(500).json({ code: 'server_error' });
+  }
+});
+
+// POST /decisions/:id/ai-message — BYOK로 클라가 생성한 AI 텍스트 저장(서버는 AI 미호출)
+router.post("/decisions/:id/ai-message", requireAuth, async (req, res) => {
+  const text = clampStr(req.body && req.body.text, 4000);
+  const tone = TONES.includes(req.body && req.body.tone) ? req.body.tone : "comfort";
+  if (!text) return res.status(400).json({ code: "invalid", errors: ["text"] });
+  try {
+    const owned = await ownDecision(req.uid, req.params.id);
+    if (!owned) return res.status(404).json({ code: "not_found" });
+    const provider = ["anthropic", "gemini"].includes(req.body && req.body.provider) ? req.body.provider : null;
+    const ref = await owned.ref.collection(COLLECTIONS.decisionMessages).add({ type: "ai", tone, source: "byok", provider, text, createdAt: FieldValue.serverTimestamp() });
+    res.status(201).json({ id: ref.id });
+  } catch (err) {
+    console.error("[Waymark] byok message:", err.message);
+    res.status(500).json({ code: "server_error", error: "저장 중 오류가 발생했습니다." });
+  }
+});
+
+// GET /home — 사이드바 통합(결정+도래이벤트+미읽음) 1콜 (요청 수 절감)
+router.get('/home', requireAuth, async (req, res) => {
+  try {
+    const [decSnap, evSnap, notiSnap] = await Promise.all([
+      db.collection(COLLECTIONS.decisions).where('uid', '==', req.uid).get(),
+      db.collection(COLLECTIONS.events).where('uid', '==', req.uid).get(),
+      db.collection(COLLECTIONS.notifications).where('uid', '==', req.uid).get(),
+    ]);
+    const ms = (ts) => (ts && ts.toMillis ? ts.toMillis() : 0);
+    const decisions = decSnap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => ms(b.createdAt) - ms(a.createdAt)).slice(0, 100);
+    const now = Date.now();
+    const titles = {};
+    decisions.forEach((d) => { titles[d.id] = d.title; });
+    const due = evSnap.docs.map((d) => ({ id: d.id, ...d.data() }))
+      .filter((e) => e.status === 'scheduled' && e.scheduledAt && e.scheduledAt.toMillis && e.scheduledAt.toMillis() <= now)
+      .sort((a, b) => a.scheduledAt.toMillis() - b.scheduledAt.toMillis()).slice(0, 20)
+      .map((e) => ({ ...e, decisionTitle: titles[e.decisionId] || null }));
+    const unread = notiSnap.docs.filter((n) => !n.data().read).length;
+    res.json({ decisions, events: due, unread });
+  } catch (err) {
+    console.error('[Waymark] home:', err.message);
+    res.status(500).json({ code: 'server_error', error: '불러오지 못했습니다.' });
   }
 });
 

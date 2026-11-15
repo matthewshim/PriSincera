@@ -170,3 +170,10 @@
 .wma-gate-values { font-size: var(--fs-sm); color: var(--text-muted); letter-spacing: var(--tracking-wide); margin: var(--space-md) 0; }
 .wma-ai-tonesrow { display: flex; flex-direction: column; gap: var(--space-sm); }
 .wma-ai-tonelabel { font-size: var(--fs-xs); color: var(--text-muted); }
+/* M1-C.2 BYOK */
+.wma-byok { margin-top: var(--space-sm); }
+.wma-byok-form { display: flex; flex-direction: column; gap: var(--space-sm); }
+.wma-byok-actions { display: flex; gap: var(--space-sm); }
+.wma-linkbtn { background: none; border: none; color: var(--color-indigo); font-family: var(--font-body); font-size: var(--fs-xs); padding: 0; }
+.wma-linkbtn:hover { color: var(--prism-lavender); }
+.wma-byok-warn { color: var(--text-muted); }

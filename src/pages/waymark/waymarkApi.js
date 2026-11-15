@@ -30,6 +30,7 @@ export function useWaymarkApi() {
   }, [token, user]);
 
   return useMemo(() => ({
+    home: () => call('/home'),
     listDecisions: (query = '') => call(`/decisions${query}`),
     createDecision: (body) => call('/decisions', { method: 'POST', body }),
     getDecision: (id) => call(`/decisions/${id}`),
@@ -41,6 +42,7 @@ export function useWaymarkApi() {
     markNotification: (id) => call(`/notifications/${id}/read`, { method: 'POST' }),
     aiCompanion: (decisionId, tone) => call('/ai/companion', { method: 'POST', body: { decisionId, tone } }),
     aiUsage: () => call('/ai/usage'),
+    aiByokMessage: (id, tone, text, provider) => call(`/decisions/${id}/ai-message`, { method: 'POST', body: { tone, text, provider } }),
     getMe: () => call('/me'),
     patchMe: (body) => call('/me', { method: 'PATCH', body }),
   }), [call]);

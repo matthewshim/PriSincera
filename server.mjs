@@ -100,7 +100,7 @@ app.use('/api/', cors({ origin: 'https://www.prisincera.com' }));
 // --- Rate limiting ---
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60,                  // 60 requests per IP per minute
+  max: 120,                 // 120 requests per IP per minute (SPA 버스트 대응)
   standardHeaders: true,
   legacyHeaders: false,
 });

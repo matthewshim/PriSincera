@@ -5,6 +5,7 @@ import { useTranslation } from '../../contexts/LanguageContext';
 import useSEO from '../../hooks/useSEO';
 import { useWaymarkApi } from './waymarkApi';
 import { DOMAINS, EMOTIONS, IMPORTANCE, TONES, OUTCOMES } from '../../data/waymarkModel.mjs';
+import { saveByok, getByok, byokProvider, clearByok, byokSystem, callByok } from './byok';
 import './WaymarkApp.css';
 
 const RefreshContext = createContext({ version: 0, bump: () => {} });
@@ -60,8 +61,8 @@ function Sidebar() {
 
   useEffect(() => {
     let alive = true;
-    Promise.all([api.listDecisions(), api.upcomingEvents(), api.listNotifications()])
-      .then(([d, e, n]) => { if (alive) setSt({ loading: false, decisions: d.decisions || [], events: e.events || [], unread: n.unread || 0, error: null }); })
+    api.home()
+      .then((r) => { if (alive) setSt({ loading: false, decisions: r.decisions || [], events: r.events || [], unread: r.unread || 0, error: null }); })
       .catch((err) => { if (alive) setSt((s) => ({ ...s, loading: false, error: err.message })); });
     return () => { alive = false; };
   }, [api, refreshVersion]);
@@ -271,7 +272,13 @@ function Detail() {
   const [sending, setSending] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
   const [aiError, setAiError] = useState(null);
+  const [aiNote, setAiNote] = useState(null);
   const [aiRemaining, setAiRemaining] = useState(null);
+  const [byok, setByok] = useState(null);
+  const [byokOpen, setByokOpen] = useState(false);
+  const [byokKey, setByokKey] = useState('');
+  const [byokBusy, setByokBusy] = useState(false);
+  const [byokProv, setByokProv] = useState('anthropic');
 
   const load = useCallback(() => {
     let alive = true;
@@ -282,6 +289,7 @@ function Detail() {
     return () => { alive = false; };
   }, [api, id]);
   useEffect(() => load(), [load]);
+  useEffect(() => { byokProvider().then((p) => setByok(p)).catch(() => {}); }, []);
 
   const sendNote = async () => {
     if (!note.trim() || sending) return;
@@ -299,21 +307,56 @@ function Detail() {
   const last = companion.length ? companion[companion.length - 1] : null;
   const askAi = async () => {
     if (aiBusy) return;
-    setAiBusy(true); setAiError(null);
-    try {
-      const r = await api.aiCompanion(id, tone || (last && last.tone) || 'comfort');
+    setAiBusy(true); setAiError(null); setAiNote(null);
+    const useTone = tone || (last && last.tone) || 'comfort';
+    const ctx = String(d.context || '').slice(0, 1500);
+    const userMsg = '결정: ' + d.title + '\n상황: ' + ctx + '\n지금 감정: ' + (d.emotionTags || []).join(', '); // i18n-ok: AI 입력 메시지(UI 아님)
+    const runTrial = async () => {
+      const r = await api.aiCompanion(id, useTone);
       setAiRemaining(r.remaining);
       load();
+    };
+    try {
+      if (byok) {
+        try {
+          const cred = await getByok();
+          if (!cred) { setByok(null); throw Object.assign(new Error('nokey'), { status: 0 }); }
+          const text = await callByok(cred.provider, cred.key, byokSystem(useTone), userMsg);
+          if (!text) throw Object.assign(new Error('empty'), { status: 502 });
+          await api.aiByokMessage(id, useTone, text, cred.provider);
+          load();
+        } catch (byokErr) {
+          console.error('[Waymark] BYOK 실패, 체험 AI 폴백', byokErr, byokErr && byokErr.body || '');
+          await runTrial();
+          setAiNote(t('waymark.detail.byokFellBack'));
+        }
+      } else {
+        await runTrial();
+      }
     } catch (e) {
+      console.error('[Waymark] askAi error', e, e && e.body || '');
       if (e.status === 402) setAiError(t('waymark.detail.aiCapReached'));
       else if (e.status === 503) setAiError(t('waymark.detail.aiUnavailable'));
+      else if (e.status === 401 || e.status === 403) setAiError(t('waymark.detail.byokBadKey'));
       else setAiError(t('waymark.detail.aiRetry'));
     } finally { setAiBusy(false); }
   };
 
+  const connectByok = async () => {
+    if (!byokKey.trim() || byokBusy) return;
+    setByokBusy(true); setAiError(null);
+    try { await saveByok(byokProv, byokKey.trim()); setByok(byokProv); setByokOpen(false); setByokKey(''); }
+    catch (e) { setAiError(t('waymark.detail.byokSaveFail')); }
+    finally { setByokBusy(false); }
+  };
+  const disconnectByok = async () => { try { await clearByok(); } catch (e) { /* noop */ } setByok(null); };
+
   const renderCompanion = (m) => {
     if (m.type === 'ai') {
-      return (<div className="wma-m them" key={m.id}><span className="u-eyebrow wma-lead">{t('waymark.detail.aiLabel')}</span>{m.text}</div>);
+      const srcLabel = m.source === 'byok'
+        ? t('waymark.detail.srcByok') + ' (' + (m.provider === 'gemini' ? 'Gemini' : 'Anthropic') + ')'
+        : t('waymark.detail.srcTrial');
+      return (<div className="wma-m them" key={m.id}><span className="u-eyebrow wma-lead">{srcLabel}</span>{m.text}</div>);
     }
     if (m.type !== 'nudge') {
       return (
@@ -372,7 +415,32 @@ function Detail() {
             </div>
           </div>
           {aiError && <span className="wma-ai-note wma-err">{aiError}</span>}
+          {aiNote && <span className="wma-ai-note">{aiNote}</span>}
           <button type="button" className="wma-review" disabled={aiBusy} onClick={askAi}>{aiBusy ? t('waymark.app.saving') : t('waymark.detail.aiAsk')}</button>
+        </div>
+        <div className="wma-ai wma-keycard">
+          <div className="wma-ai-h"><span>{t('waymark.detail.byokTitle')}</span></div>
+          <div className="wma-byok">
+            {byok ? (
+              <span className="wma-ai-note">{t('waymark.detail.byokConnected')} · {byok === 'gemini' ? 'Gemini' : 'Anthropic'} <button type="button" className="wma-linkbtn" onClick={disconnectByok}>{t('waymark.detail.byokDisconnect')}</button></span>
+            ) : byokOpen ? (
+              <div className="wma-byok-form">
+                <div className="wma-chips">
+                  <button type="button" className={'wma-chip' + (byokProv === 'anthropic' ? ' on' : '')} onClick={() => setByokProv('anthropic')}>Anthropic</button>
+                  <button type="button" className={'wma-chip' + (byokProv === 'gemini' ? ' on' : '')} onClick={() => setByokProv('gemini')}>Gemini</button>
+                </div>
+                <span className="wma-ai-note">{t('waymark.detail.byokIntro')}</span>
+                <input className="wma-input" type="password" value={byokKey} onChange={(e) => setByokKey(e.target.value)} placeholder={t(byokProv === 'gemini' ? 'waymark.detail.byokPhGemini' : 'waymark.detail.byokPlaceholder')} />
+                <div className="wma-byok-actions">
+                  <button type="button" className="wma-review" disabled={byokBusy || !byokKey.trim()} onClick={connectByok}>{t('waymark.detail.byokConnect')}</button>
+                  <button type="button" className="wma-linkbtn" onClick={() => setByokOpen(false)}>{t('waymark.detail.byokCancel')}</button>
+                </div>
+                <span className="wma-ai-note wma-byok-warn">{t(byokProv === 'gemini' ? 'waymark.detail.byokWarnGemini' : 'waymark.detail.byokWarn')}</span>
+              </div>
+            ) : (
+              <button type="button" className="wma-linkbtn" onClick={() => setByokOpen(true)}>{t('waymark.detail.byokOpen')}</button>
+            )}
+          </div>
         </div>
 
         {st.error && <p className="wma-state wma-err">{st.error}</p>}
