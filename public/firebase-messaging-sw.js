@@ -1,33 +1,26 @@
-/* Waymark FCM 백그라운드 알림 서비스워커 */
-importScripts('https://www.gstatic.com/firebasejs/12.12.1/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/12.12.1/firebase-messaging-compat.js');
-
-firebase.initializeApp({
-  apiKey: 'AIzaSyCu21j7PvDB1j-FBFj9rl3dMrDPvk_Z_pQ', // secret-scan:ignore (Firebase 웹 공개 키)
-  authDomain: 'prisincera.firebaseapp.com',
-  projectId: 'prisincera',
-  messagingSenderId: '1094711522476',
-  appId: '1:1094711522476:web:4f97c95daf528444611b09',
-});
-
-const messaging = firebase.messaging();
-
-messaging.onBackgroundMessage((payload) => {
-  const n = payload.notification || {};
-  const link = (payload.fcmOptions && payload.fcmOptions.link) || (payload.data && payload.data.link) || '/waymark/app';
-  self.registration.showNotification(n.title || 'Waymark', {
-    body: n.body || '',
+/* Waymark 웹푸시 서비스워커 — raw Web Push 처리(전경·배경 공통, data-only 메시지) */
+self.addEventListener('push', (event) => {
+  let p = {};
+  try { p = event.data ? event.data.json() : {}; } catch (e) { p = {}; }
+  const d = p.data || p.notification || {};
+  const title = d.title || 'Waymark';
+  event.waitUntil(self.registration.showNotification(title, {
+    body: d.body || '',
     icon: '/waymark-icon.svg',
     badge: '/waymark-icon.svg',
-    data: { link },
-  });
+    tag: 'waymark-nudge',
+    data: { link: d.link || (p.fcmOptions && p.fcmOptions.link) || '/waymark/app' },
+  }));
 });
 
-self.addEventListener('notificationclick', (e) => {
-  e.notification.close();
-  const link = (e.notification.data && e.notification.data.link) || '/waymark/app';
-  e.waitUntil(clients.matchAll({ type: 'window' }).then((wins) => {
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const link = (event.notification.data && event.notification.data.link) || '/waymark/app';
+  event.waitUntil(clients.matchAll({ type: 'window' }).then((wins) => {
     for (const w of wins) { if (w.url.includes('/waymark') && 'focus' in w) return w.focus(); }
     return clients.openWindow(link);
   }));
 });
+
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));

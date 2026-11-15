@@ -93,9 +93,7 @@ async function run() {
         const LT = (EMAIL[locale] || EMAIL.ko)[ev.type];
         const resp = await messaging.sendEachForMulticast({
           tokens: st.fcmTokens,
-          notification: { title: LT.subject, body: LT.line.replace('{title}', dec.title) },
-          data: { decisionId: String(ev.decisionId), type: String(ev.type) },
-          webpush: { fcmOptions: { link: APP_BASE + '/d/' + ev.decisionId } },
+          data: { decisionId: String(ev.decisionId), type: String(ev.type), title: LT.subject, body: LT.line.replace('{title}', dec.title), link: APP_BASE + '/d/' + ev.decisionId },
         });
         const bad = [];
         resp.responses.forEach((r, i) => { const c = r.success ? null : (r.error && r.error.code); if (c === 'messaging/registration-token-not-registered' || c === 'messaging/invalid-registration-token' || c === 'messaging/invalid-argument') bad.push(st.fcmTokens[i]); });

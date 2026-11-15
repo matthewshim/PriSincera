@@ -480,6 +480,7 @@ function Settings() {
       if (s.pushEnabled) { await disablePush(api); setS((p) => ({ ...p, pushEnabled: false })); }
       else { await enablePush(api); setS((p) => ({ ...p, pushEnabled: true })); setSaved(true); setTimeout(() => setSaved(false), 1400); }
     } catch (e) {
+      console.error('[Waymark] push toggle error', e, e && e.code, e && e.message);
       setErr(e.code === 'denied' ? t('waymark.settings.pushDenied') : e.code === 'unsupported' ? t('waymark.settings.pushUnsupported') : t('waymark.settings.pushFail'));
     } finally { setPushBusy(false); }
   };
