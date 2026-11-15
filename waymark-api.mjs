@@ -280,6 +280,8 @@ router.patch('/me', requireAuth, async (req, res) => {
     if (b.cadence !== undefined && Object.keys(CADENCE_FACTORS).includes(b.cadence)) patch.cadence = b.cadence;
     if (b.pushEnabled !== undefined) patch.pushEnabled = Boolean(b.pushEnabled);
     if (b.emailOptIn !== undefined) patch.emailOptIn = Boolean(b.emailOptIn);
+    if (b.locale !== undefined && ['ko', 'en', 'ja'].includes(b.locale)) patch.locale = b.locale;
+    if (b.onboarded === true) patch.onboardedAt = FieldValue.serverTimestamp();
     await db.collection(COLLECTIONS.users).doc(req.uid).set(patch, { merge: true });
     res.json({ ok: true });
   } catch (err) {

@@ -366,12 +366,90 @@ function Detail() {
 }
 
 function Settings() {
-  const { t } = useTranslation();
+  const { t, locale, setLocale, SUPPORTED_LANGUAGES } = useTranslation();
+  const { logout } = useAuth();
+  const api = useWaymarkApi();
+  const [s, setS] = useState(null);
+  const [err, setErr] = useState(null);
+  const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    let a = true;
+    api.getMe().then((r) => { if (a) setS(r.settings); }).catch((e) => { if (a) setErr(e.message); });
+    return () => { a = false; };
+  }, [api]);
+  const save = async (patch) => {
+    setS((prev) => ({ ...prev, ...patch }));
+    try { await api.patchMe(patch); setSaved(true); setTimeout(() => setSaved(false), 1400); }
+    catch (e) { setErr(e.message); }
+  };
+  const setLang = (code) => { setLocale(code); save({ locale: code }); };
+
+  if (!s) return (
+    <section className="wma-pane">
+      <PaneHeader title={t('waymark.app.tabMe')} />
+      <div className="wma-pane-body"><p className={'wma-state' + (err ? ' wma-err' : '')}>{err || t('waymark.app.loading')}</p></div>
+    </section>
+  );
+  const cad = [['tight', 'cadenceTight'], ['normal', 'cadenceNormal'], ['loose', 'cadenceLoose']];
   return (
     <section className="wma-pane">
       <PaneHeader title={t('waymark.app.tabMe')} />
-      <div className="wma-pane-body"><p className="wma-state">{t('waymark.app.settingsSoon')}</p></div>
+      <div className="wma-pane-body">
+        <div className="u-eyebrow wma-sect">{t('waymark.settings.notify')}</div>
+        <div className="wma-card wma-flat">
+          <div className="wma-setrow">
+            <span className="wma-setk">{t('waymark.settings.quietHours')}</span>
+            <span className="wma-times">
+              <input type="time" className="wma-input wma-time-in" value={s.quietStart || '22:00'} onChange={(e) => save({ quietStart: e.target.value })} />
+              <span className="wma-dmeta">–</span>
+              <input type="time" className="wma-input wma-time-in" value={s.quietEnd || '08:00'} onChange={(e) => save({ quietEnd: e.target.value })} />
+            </span>
+          </div>
+          <div className="wma-setrow">
+            <span className="wma-setk">{t('waymark.settings.email')}</span>
+            <button type="button" aria-label={t('waymark.settings.email')} aria-pressed={s.emailOptIn !== false} className={'wma-toggle' + (s.emailOptIn !== false ? ' on' : '')} onClick={() => save({ emailOptIn: !(s.emailOptIn !== false) })} />
+          </div>
+          <div className="wma-setrow">
+            <span className="wma-setk">{t('waymark.settings.push')}</span>
+            <span className="wma-ai-soon">{t('waymark.detail.aiSoon')}</span>
+          </div>
+        </div>
+
+        <div className="u-eyebrow wma-sect">{t('waymark.settings.cadence')}</div>
+        <div className="wma-seg">{cad.map(([k, l]) => <button type="button" key={k} className={(s.cadence || 'normal') === k ? 'on' : ''} onClick={() => save({ cadence: k })}>{t('waymark.settings.' + l)}</button>)}</div>
+
+        <div className="u-eyebrow wma-sect">{t('waymark.settings.language')}</div>
+        <div className="wma-chips">{SUPPORTED_LANGUAGES.map((lng) => <button type="button" key={lng.code} className={'wma-chip' + (locale === lng.code ? ' on' : '')} onClick={() => setLang(lng.code)}>{lng.nativeLabel}</button>)}</div>
+
+        <div className="u-eyebrow wma-sect">{t('waymark.settings.account')}</div>
+        <button type="button" className="wma-review" onClick={logout}>{t('waymark.settings.logout')}</button>
+
+        {saved && <p className="wma-state">{t('waymark.settings.saved')}</p>}
+        {err && <p className="wma-state wma-err">{err}</p>}
+      </div>
     </section>
+  );
+}
+
+function Onboarding({ onDone }) {
+  const { t } = useTranslation();
+  const api = useWaymarkApi();
+  const [busy, setBusy] = useState(false);
+  const start = async () => {
+    setBusy(true);
+    try { await api.patchMe({ onboarded: true, emailOptIn: true, quietStart: '22:00', quietEnd: '08:00' }); } catch (e) { /* fail-open */ }
+    onDone();
+  };
+  return (
+    <div className="wma-gate">
+      <div className="wma-gate-card">
+        <h1 className="wma-gate-title">Waymark</h1>
+        <p className="wma-gate-sub">{t('waymark.onboard.lead')}</p>
+        <p className="wma-gate-values">{t('waymark.onboard.values')}</p>
+        <button type="button" className="wma-btn" disabled={busy} onClick={start}>{t('waymark.onboard.start')}</button>
+        <p className="wma-gate-note">{t('waymark.onboard.consent')}</p>
+      </div>
+    </div>
   );
 }
 
@@ -380,6 +458,15 @@ function AppShell() {
   const isIndex = /\/waymark\/app\/?$/.test(location.pathname);
   const [version, setVersion] = useState(0);
   const refresh = useMemo(() => ({ version, bump: () => setVersion((v) => v + 1) }), [version]);
+  const api = useWaymarkApi();
+  const [onboarded, setOnboarded] = useState(null);
+  useEffect(() => {
+    let a = true;
+    api.getMe().then((r) => { if (a) setOnboarded(!!r.settings.onboardedAt); }).catch(() => { if (a) setOnboarded(true); });
+    return () => { a = false; };
+  }, [api]);
+  if (onboarded === null) return null;
+  if (!onboarded) return <Onboarding onDone={() => setOnboarded(true)} />;
   return (
     <RefreshContext.Provider value={refresh}>
       <div className={`wma-app${isIndex ? '' : ' wma-app--pane'}`}>
@@ -406,6 +493,17 @@ export default function WaymarkApp() {
   useEffect(() => {
     document.body.classList.add('hero-ready');
     return () => document.body.classList.remove('hero-ready');
+  }, []);
+
+  useEffect(() => {
+    const els = [];
+    const add = (tag, attrs) => { const el = document.createElement(tag); Object.assign(el, attrs); document.head.appendChild(el); els.push(el); };
+    add("link", { rel: "manifest", href: "/waymark-manifest.webmanifest" });
+    add("meta", { name: "theme-color", content: "#020205" });
+    add("meta", { name: "apple-mobile-web-app-capable", content: "yes" });
+    add("meta", { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" });
+    add("link", { rel: "apple-touch-icon", href: "/waymark-icon.svg" });
+    return () => els.forEach((el) => el.remove());
   }, []);
 
   if (!user) {

@@ -1,0 +1,13 @@
+{
+  "name": "Waymark",
+  "short_name": "Waymark",
+  "description": "결정의 갈림길에서, 곁에.",
+  "start_url": "/waymark/app",
+  "scope": "/waymark/app",
+  "display": "standalone",
+  "background_color": "#020205",
+  "theme_color": "#020205",
+  "icons": [
+    { "src": "/waymark-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

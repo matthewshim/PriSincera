@@ -609,6 +609,26 @@
       "emotionQ": "How do you feel now?",
       "notePh": "Write the outcome and how you feel now.",
       "save": "Save reflection"
+    },
+    "settings": {
+      "notify": "Nudges",
+      "quietHours": "Quiet hours",
+      "email": "Email",
+      "push": "Web push",
+      "cadence": "Check-in pace",
+      "cadenceTight": "Tight",
+      "cadenceNormal": "Normal",
+      "cadenceLoose": "Loose",
+      "language": "Language",
+      "account": "Account",
+      "logout": "Sign out",
+      "saved": "Saved"
+    },
+    "onboard": {
+      "lead": "At every fork, beside you. You won’t be alone.",
+      "values": "First · For you · Alive",
+      "start": "Start Waymark",
+      "consent": "We reach out by email. Quiet hours 22:00–08:00 (change in settings)."
     }
   },
   "sylphio": {

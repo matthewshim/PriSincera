@@ -609,6 +609,26 @@
       "emotionQ": "지금 마음은 어때요?",
       "notePh": "결과와 지금 마음을 적어보세요.",
       "save": "회고 저장"
+    },
+    "settings": {
+      "notify": "먼저 찾아옴",
+      "quietHours": "조용시간",
+      "email": "이메일 알림",
+      "push": "웹푸시",
+      "cadence": "체크인 주기",
+      "cadenceTight": "촘촘",
+      "cadenceNormal": "보통",
+      "cadenceLoose": "느슨",
+      "language": "언어",
+      "account": "계정",
+      "logout": "로그아웃",
+      "saved": "저장됨"
+    },
+    "onboard": {
+      "lead": "결정의 갈림길에서, 곁에. 혼자 두지 않을게요.",
+      "values": "먼저 · 내게 맞게 · 살아있게",
+      "start": "Waymark 시작하기",
+      "consent": "이메일로 먼저 안부를 보내요. 조용시간 22:00–08:00(설정에서 변경)."
     }
   },
   "sylphio": {
