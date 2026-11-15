@@ -10,10 +10,12 @@ const firebaseConfig = {
   // Make sure this matches your project ID if needed.
   authDomain: "prisincera.firebaseapp.com",
   projectId: "prisincera",
+  messagingSenderId: "1094711522476",
+  appId: "1:1094711522476:web:4f97c95daf528444611b09",
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);

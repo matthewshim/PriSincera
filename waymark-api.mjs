@@ -451,4 +451,35 @@ router.get('/home', requireAuth, async (req, res) => {
   }
 });
 
+// ── POST /me/push-token — FCM 토큰 등록(웹푸시)
+router.post('/me/push-token', requireAuth, async (req, res) => {
+  const token = clampStr(req.body && req.body.token, 500);
+  if (!token) return res.status(400).json({ code: 'invalid', errors: ['token'] });
+  try {
+    await db.collection(COLLECTIONS.users).doc(req.uid).set(
+      { fcmTokens: FieldValue.arrayUnion(token), pushEnabled: true, updatedAt: FieldValue.serverTimestamp() },
+      { merge: true },
+    );
+    res.status(201).json({ ok: true });
+  } catch (err) {
+    console.error('[Waymark] push-token:', err.message);
+    res.status(500).json({ code: 'server_error' });
+  }
+});
+
+// ── DELETE /me/push-token — 토큰/푸시 해제
+router.delete('/me/push-token', requireAuth, async (req, res) => {
+  const token = clampStr(req.body && req.body.token, 500);
+  try {
+    const patch = { updatedAt: FieldValue.serverTimestamp() };
+    if (token) patch.fcmTokens = FieldValue.arrayRemove(token);
+    else patch.pushEnabled = false;
+    await db.collection(COLLECTIONS.users).doc(req.uid).set(patch, { merge: true });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[Waymark] push-token del:', err.message);
+    res.status(500).json({ code: 'server_error' });
+  }
+});
+
 export default router;

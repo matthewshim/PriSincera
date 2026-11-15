@@ -45,5 +45,7 @@ export function useWaymarkApi() {
     aiByokMessage: (id, tone, text, provider) => call(`/decisions/${id}/ai-message`, { method: 'POST', body: { tone, text, provider } }),
     getMe: () => call('/me'),
     patchMe: (body) => call('/me', { method: 'PATCH', body }),
+    registerPushToken: (token) => call('/me/push-token', { method: 'POST', body: { token } }),
+    unregisterPushToken: (token) => call('/me/push-token', { method: 'DELETE', body: token ? { token } : undefined }),
   }), [call]);
 }

@@ -2,7 +2,7 @@
 // 도래 decisionEvents 조회 → 종료/조용시간 체크 → 동반 메시지+알림 기록 → 이메일 발송 → status=sent.
 // 실행: node waymark-nudge.mjs  (로컬은 ADC 필요: gcloud auth application-default login)
 // 웹푸시(FCM)는 M1-B.2에서 추가. 정본: docs/waymark/mvp_build_plan.md §5
-import { db, auth, FieldValue } from './pipeline/src/lib/firestore.mjs';
+import { db, auth, FieldValue, messaging } from './pipeline/src/lib/firestore.mjs';
 import { sendEmail } from './pipeline/src/lib/mailer.mjs';
 import { COLLECTIONS } from './src/data/waymarkModel.mjs';
 
@@ -86,6 +86,21 @@ async function run() {
           await sendEmail(user.email, L.subject, renderHtml(locale, ev.type, dec.title, `${APP_BASE}/d/${ev.decisionId}`));
         }
       } catch (e) { console.warn(`[waymark-nudge] email fail uid=${ev.uid}: ${e.message}`); }
+    }
+    // 웹푸시(FCM) — 등록 토큰에 발송(이메일과 병행, iOS는 설치 시 수신)
+    if (st.pushEnabled && Array.isArray(st.fcmTokens) && st.fcmTokens.length) {
+      try {
+        const LT = (EMAIL[locale] || EMAIL.ko)[ev.type];
+        const resp = await messaging.sendEachForMulticast({
+          tokens: st.fcmTokens,
+          notification: { title: LT.subject, body: LT.line.replace('{title}', dec.title) },
+          data: { decisionId: String(ev.decisionId), type: String(ev.type) },
+          webpush: { fcmOptions: { link: APP_BASE + '/d/' + ev.decisionId } },
+        });
+        const bad = [];
+        resp.responses.forEach((r, i) => { const c = r.success ? null : (r.error && r.error.code); if (c === 'messaging/registration-token-not-registered' || c === 'messaging/invalid-registration-token' || c === 'messaging/invalid-argument') bad.push(st.fcmTokens[i]); });
+        if (bad.length) await db.collection(COLLECTIONS.users).doc(ev.uid).update({ fcmTokens: FieldValue.arrayRemove(...bad) });
+      } catch (e) { console.warn('[waymark-nudge] push fail uid=' + ev.uid + ': ' + e.message); }
     }
     sent++;
   }

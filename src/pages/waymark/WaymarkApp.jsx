@@ -6,6 +6,7 @@ import useSEO from '../../hooks/useSEO';
 import { useWaymarkApi } from './waymarkApi';
 import { DOMAINS, EMOTIONS, IMPORTANCE, TONES, OUTCOMES } from '../../data/waymarkModel.mjs';
 import { saveByok, getByok, byokProvider, clearByok, byokSystem, callByok } from './byok';
+import { enablePush, disablePush } from './push';
 import './WaymarkApp.css';
 
 const RefreshContext = createContext({ version: 0, bump: () => {} });
@@ -460,6 +461,7 @@ function Settings() {
   const [s, setS] = useState(null);
   const [err, setErr] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [pushBusy, setPushBusy] = useState(false);
   useEffect(() => {
     let a = true;
     api.getMe().then((r) => { if (a) setS(r.settings); }).catch((e) => { if (a) setErr(e.message); });
@@ -471,6 +473,16 @@ function Settings() {
     catch (e) { setErr(e.message); }
   };
   const setLang = (code) => { setLocale(code); save({ locale: code }); };
+  const togglePush = async () => {
+    if (pushBusy) return;
+    setPushBusy(true); setErr(null);
+    try {
+      if (s.pushEnabled) { await disablePush(api); setS((p) => ({ ...p, pushEnabled: false })); }
+      else { await enablePush(api); setS((p) => ({ ...p, pushEnabled: true })); setSaved(true); setTimeout(() => setSaved(false), 1400); }
+    } catch (e) {
+      setErr(e.code === 'denied' ? t('waymark.settings.pushDenied') : e.code === 'unsupported' ? t('waymark.settings.pushUnsupported') : t('waymark.settings.pushFail'));
+    } finally { setPushBusy(false); }
+  };
 
   if (!s) return (
     <section className="wma-pane">
@@ -499,7 +511,7 @@ function Settings() {
           </div>
           <div className="wma-setrow">
             <span className="wma-setk">{t('waymark.settings.push')}</span>
-            <span className="wma-ai-soon">{t('waymark.detail.aiSoon')}</span>
+            <button type="button" aria-label={t('waymark.settings.push')} aria-pressed={!!s.pushEnabled} disabled={pushBusy} className={'wma-toggle' + (s.pushEnabled ? ' on' : '')} onClick={togglePush} />
           </div>
         </div>
 

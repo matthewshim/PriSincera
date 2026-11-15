@@ -645,7 +645,10 @@
       "language": "Language",
       "account": "Account",
       "logout": "Sign out",
-      "saved": "Saved"
+      "saved": "Saved",
+      "pushDenied": "Notifications are blocked in your browser. Please allow notification permission.",
+      "pushUnsupported": "This browser/device does not support web push. (On iOS, install to the home screen first.)",
+      "pushFail": "Something went wrong enabling notifications. Please try again later."
     },
     "onboard": {
       "lead": "At every fork, beside you. You won’t be alone.",
