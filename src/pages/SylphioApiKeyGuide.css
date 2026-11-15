@@ -1,17 +1,23 @@
 /* ==========================================================================
-   PriSincera Design System v4.0 (Aura-Neutral)
-   Sylphio API Key Guide Page Premium Style Sheet
+   Sylphio API Key 가이드 — 본문 스타일
+   2단 셸·목차는 components/layout/SylphioDocShell.css가 담당한다. 히어로 영역은 수정 금지 — 원본 그대로 둔다.
+
+   [2026-11-15 개정 — docs/sylphio/guide_design_revision_plan.md]
+   - 콜아웃 3종(BYOK·요금·경고)이 여백·radius·아이콘 크기가 제각각 → 단일 규격(.sylphio-guide-callout)
+   - 섹션 배지 3색(초록·사파이어·라벤더)이 정보 없이 색만 달랐다 → 아이브로우 1종, '추천'만 gold(§9-10)
+   - '유료' 제목이 --color-danger(오류색)였다 → 무채색. 위험색은 경고 콜아웃에만
+   - FAQ 제목(28px)이 섹션 제목(24px)보다 컸다 → 같은 섹션 규격
+   - 리드가 본문보다 흐렸다(P1-H5 역전) · 요금/FAQ 본문이 14.4px로 한 단계 작았다 → 본문과 같은 크기·색
    ========================================================================== */
 
 .sylphio-guide {
   min-height: 100vh;
-  background: var(--bg-void); /* OLED Void Black */
+  background: var(--bg-void);
   color: var(--text-secondary);
-  padding: 0 0 var(--space-2xl); /* GNB 뒤쪽 배경 오라 유입을 위해 최상단 패딩 제거 */
+  padding: 0 0 var(--space-2xl);
   font-family: var(--font-body);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
 }
 
@@ -71,86 +77,68 @@
   flex-wrap: wrap;
 }
 
-/* 1200 셸 = 본문 860 프로스(좌) + 목차 사이드바 300(우).
-   외곽 글래스 박스 제거 — 플랫 프로스로 단순화(중첩 박스 답답함 해소, 개인정보·Builder's Log 상세와 정합) */
-.sylphio-doc-layout {
-  max-width: var(--container);
-  width: calc(100% - 48px);
-  margin: var(--space-xl) auto 0;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--doc-gutter);
-}
 
-.sylphio-guide-main {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: var(--measure); /* 860 가독 단 */
-}
-
-/* 목차 사이드바 (sticky) — 메인 GNB(52) + SylphioNav 아래 고정 */
-.sylphio-doc-aside {
-  flex: 0 0 300px;
-  position: sticky;
-  top: 108px;
-  align-self: flex-start;
-  max-height: calc(100vh - 128px);
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
-
-.sylphio-doc-toc-label {
-  margin-bottom: var(--space-sm);
-}
-.sylphio-doc-toc ul { list-style: none; margin: 0; padding: 0; }
-.sylphio-toc-item a {
-  display: block;
-  padding: var(--space-xs) 0 var(--space-xs) var(--space-12);
+/* 최종 확인일 — 외부 서비스 화면·요금은 바뀌므로 독자가 시점을 알아야 한다 */
+.sylphio-guide-verified {
+  margin: 0 0 var(--space-md);
   font-size: var(--fs-xs);
-  line-height: var(--leading-snug);
   color: var(--text-muted);
-  text-decoration: none;
-  border-left: 2px solid rgba(255, 255, 255, 0.08);
-  transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
 }
-.sylphio-toc-item a:hover { color: var(--text-secondary); }
-.sylphio-toc-item.active a { color: var(--accent-sylphio); border-left-color: var(--accent-sylphio); }
 
-@media (max-width: 1024px) {
-  .sylphio-doc-aside { display: none; }
-  .sylphio-doc-layout { display: block; }
-  .sylphio-guide-main { max-width: var(--measure); margin: 0 auto; }
-}.sylphio-guide-byok-note {
-  background: color-mix(in srgb, var(--accent-sylphio) 4%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent-sylphio) 25%, transparent);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg) var(--space-lg);
-  margin-bottom: var(--space-xl);
+/* --- 콜아웃 단일 규격 (§9-11: 박스는 의미적 콜아웃에 한해 단일 레벨) --- */
+.sylphio-guide-callout {
   display: flex;
   gap: var(--space-md);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sylphio-guide-callout.is-info {
+  background: color-mix(in srgb, var(--accent-sylphio) 4.5%, transparent);
+  border-color: color-mix(in srgb, var(--accent-sylphio) 16%, transparent);
+}
+.sylphio-guide-callout.is-warning {
+  background: color-mix(in srgb, var(--color-danger) 4.5%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger) 16%, transparent);
 }
 
-.sylphio-guide-byok-icon {
-  font-size: var(--fs-2xl);
+/* 아이콘 칸은 줄어들지 않는다 — 이전에는 긴 본문에 밀려 28px 아이콘이 6.8px로 찌그러졌다 */
+.sylphio-guide-callout-icon {
+  flex-shrink: 0;
+  font-size: var(--fs-xl);
+  line-height: var(--leading-none);
 }
+.is-info .sylphio-guide-callout-icon { color: var(--accent-sylphio); }
+.is-warning .sylphio-guide-callout-icon { color: var(--color-danger); }
 
-.sylphio-guide-byok-content h2 {
+.sylphio-guide-callout-title {
   font-family: var(--font-display);
   font-size: var(--fs-md);
-  color: var(--accent-sylphio);
-  margin: 0 0 var(--space-sm) 0;
   font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm);
 }
+.is-info .sylphio-guide-callout-title { color: var(--accent-sylphio); }
+.is-warning .sylphio-guide-callout-title { color: var(--color-danger); }
 
-.sylphio-guide-byok-content p {
+.sylphio-guide-callout p {
+  margin: 0;
   font-size: var(--fs-base);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
-  margin: 0;
 }
 
-/* 섹션 박스 제거 — 플랫 프로스. 섹션 구분은 상단 디바이더 + 여백으로(중첩 박스 답답함 해소) */
+/* Gemini·OpenAI는 순서가 아니라 선택지 — 이전 "1. / 2."는 둘 다 발급해야 하는 순서로 읽혔다 */
+.sylphio-guide-choose {
+  margin: 0 0 var(--space-2xl);
+  font-size: var(--fs-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+/* --- 섹션 (§9-16: 간격은 margin-top, 구분은 디바이더) --- */
 .sylphio-guide-section {
   margin-top: var(--space-2xl);
   padding-top: var(--space-xl);
@@ -161,67 +149,44 @@
   padding-top: 0;
   border-top: 0;
 }
-.sylphio-guide-section,
-.sylphio-guide-faq { scroll-margin-top: 108px; } /* TOC 앵커 점프 시 GNB+Nav 가림 방지 */
 
-.sylphio-guide-section-title {
-  display: flex;
-  align-items: center;
-  gap: var(--space-12);
-  margin-bottom: var(--space-lg);
-}
-
-.sylphio-guide-section-badge {
-  padding: var(--space-xs) var(--space-12);
-  border-radius: var(--radius-pill); /* Pill */
-}
-
-.gemini-badge {
-  background: color-mix(in srgb, var(--color-success) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-success) 20%, transparent);
-  color: var(--color-success);
-}
-
-.openai-badge {
-  background: color-mix(in srgb, var(--accent-sylphio) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent-sylphio) 25%, transparent);
-  color: var(--accent-sylphio);
-}
-
-.app-badge {
-  background: color-mix(in srgb, var(--prism-lavender) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--prism-lavender) 20%, transparent);
-  color: var(--prism-lavender);
-}
-
-.sylphio-guide-section-title h2 {
-  font-family: var(--font-display);
-  font-size: var(--fs-xl);
-  color: var(--text-primary);
-  margin: 0;
-  font-weight: 600;
-}
-
-/* 섹션 리드 — 인라인으로 복제돼 있던 것을 규칙으로(P3-10) */
-.sylphio-guide-lead {
+/* 아이브로우 메트릭(mono·대문자·자간)은 index.css .u-eyebrow 그룹이 담당 — 여기는 크기·색만 */
+.sylphio-guide-eyebrow {
+  font-size: var(--fs-micro);
   color: var(--text-muted);
-  line-height: var(--leading-relaxed);
-  margin-bottom: var(--space-lg);
+  margin: 0 0 var(--space-sm);
+}
+.sylphio-guide-eyebrow.is-recommended { color: var(--color-gold); }
+
+.sylphio-guide-section > h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-lg);
+  word-break: keep-all;
 }
 
+.sylphio-guide-lead {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--fs-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+/* --- 단계 --- */
 .sylphio-guide-steps {
   list-style: none;
   padding: 0;
-  margin: 0 0 var(--space-lg) 0;
+  margin: 0 0 var(--space-xl);
 }
-
 .sylphio-guide-step-item {
   display: flex;
   gap: var(--space-md);
   margin-bottom: var(--space-md);
   line-height: var(--leading-relaxed);
 }
-
 .sylphio-guide-step-number {
   flex-shrink: 0;
   width: 26px;
@@ -237,159 +202,68 @@
   font-size: var(--fs-sm);
   color: var(--text-secondary);
 }
-
 .sylphio-guide-step-text {
   color: var(--text-secondary);
   font-size: var(--fs-base);
-  text-align: left;
-}
-
-.sylphio-guide-step-text strong {
-  color: var(--text-primary);
 }
 
 .sylphio-guide-step-link {
   color: var(--accent-sylphio);
   text-decoration: none;
   border-bottom: 1px dashed color-mix(in srgb, var(--accent-sylphio) 40%, transparent);
-  transition: color 0.2s ease, border-bottom-style 0.2s ease;
+  transition: color var(--duration-fast) ease, border-bottom-style var(--duration-fast) ease;
 }
-
 .sylphio-guide-step-link:hover {
   color: color-mix(in srgb, var(--accent-sylphio) 65%, white);
   border-bottom-style: solid;
 }
 
-.sylphio-guide-pricing-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.sylphio-guide-pricing-header {
-  font-family: var(--font-display);
-  font-size: var(--fs-md);
-  color: var(--text-primary);
-  margin-bottom: var(--space-md);
-  font-weight: 600;
-}
-
-.sylphio-guide-pricing-list {
+/* --- 요금 등급 (콜아웃 안의 텍스트 블록 — 박스 안 박스 금지) --- */
+.sylphio-guide-tiers {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-md);
+  gap: var(--space-lg);
+}
+.sylphio-guide-tiers h4 {
+  font-family: var(--font-display);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm);
+}
+
+/* --- "라벨: 내용" 목록 (요금·FAQ 답) --- */
+.sylphio-guide-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sylphio-guide-facts li {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--fs-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+.sylphio-guide-facts li:last-child { margin-bottom: 0; }
+.sylphio-guide-fact-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: var(--space-xs);
+}
+
+/* --- FAQ --- */
+.sylphio-guide-faq-item { margin-bottom: var(--space-xl); }
+.sylphio-guide-faq-item h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm);
 }
 
 @media (max-width: 768px) {
-  .sylphio-guide-pricing-list {
-    grid-template-columns: 1fr;
-  }
+  .sylphio-guide-tiers { grid-template-columns: 1fr; }
+  .sylphio-guide-callout { padding: var(--space-md); gap: var(--space-12); }
+  .sylphio-guide-section > h2 { font-size: var(--fs-xl); }
 }
-
-/* 내부 박스 제거 — pricing-card(단일 콜아웃) 안의 free/pay는 텍스트 블록으로(2중 박스 해소) */
-.sylphio-guide-pricing-item {
-  padding: 0;
-}
-
-.sylphio-guide-pricing-item h3 {
-  font-family: var(--font-display);
-  font-size: var(--fs-base);
-  margin: 0 0 var(--space-sm) 0;
-  font-weight: 600;
-}
-
-.sylphio-guide-pricing-item.free h3 {
-  color: var(--color-success);
-}
-
-.sylphio-guide-pricing-item.pay h3 {
-  color: var(--color-danger);
-}
-
-.sylphio-guide-pricing-item p {
-  font-size: var(--fs-sm);
-  line-height: var(--leading-normal);
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.sylphio-guide-warning-box {
-  /* 제목이 --color-danger로 바뀌었으므로 같은 쌍인 틴트도 같은 출처에서 파생한다 */
-  background: color-mix(in srgb, var(--color-danger) 2%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-danger) 15%, transparent);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-  margin-bottom: var(--space-lg);
-  display: flex;
-  gap: var(--space-12);
-}
-
-.sylphio-guide-warning-icon {
-  font-size: var(--fs-md);
-  flex-shrink: 0;
-}
-
-.sylphio-guide-warning-content h3 {
-  font-family: var(--font-display);
-  color: var(--color-danger);
-  margin: 0 0 var(--space-sm) 0;
-  font-size: var(--fs-base);
-  font-weight: 600;
-}
-
-.sylphio-guide-warning-content p {
-  font-size: var(--fs-sm);
-  line-height: var(--leading-normal);
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.sylphio-guide-faq {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: var(--space-xl);
-  margin-top: var(--space-xl);
-}
-
-.sylphio-guide-faq > h2 {
-  font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  color: var(--text-primary);
-  margin: 0 0 var(--space-lg) 0;
-  font-weight: 600;
-}
-
-/* FAQ 박스 제거 — Q(볼드) + A(텍스트) 플랫 구조 */
-.sylphio-guide-faq-item {
-  padding: 0;
-  margin-bottom: var(--space-lg);
-  text-align: left;
-}
-
-.sylphio-guide-faq-item h3 {
-  font-family: var(--font-display);
-  font-size: var(--fs-base);
-  color: var(--text-primary);
-  margin: 0 0 var(--space-sm) 0;
-  font-weight: 600;
-}
-
-.sylphio-guide-faq-item p {
-  font-size: var(--fs-sm);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-@media (max-width: 640px) {
-  .sylphio-doc-layout {
-    width: calc(100% - 32px); /* 모바일 초밀착 여백 최적화 */
-  }
-}
-
-/* Custom button styles removed to inherit standard platform button styles */
-
-
-

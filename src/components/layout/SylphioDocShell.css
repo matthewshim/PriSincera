@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Sylphio 문서형 셸 (§9-11) — API Key 가이드·개인정보 공통
+   1200 셸 = 본문 860(좌) + gap + 목차 300(우). 이전에는 두 페이지 CSS에 복제돼 있었다.
+   ========================================================================== */
+
+.sylphio-doc-layout {
+  max-width: var(--container);
+  width: calc(100% - 48px);
+  margin: var(--space-xl) auto 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--doc-gutter);
+}
+
+.sylphio-doc-main {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: var(--measure);
+}
+
+/* 섹션 앵커 점프 시 GNB(52) + SylphioNav(42)에 가리지 않게 */
+.sylphio-doc-main [id] { scroll-margin-top: 108px; }
+
+/* 목차 사이드바 (sticky) — GNB + SylphioNav 아래 고정 */
+.sylphio-doc-aside {
+  flex: 0 0 300px;
+  position: sticky;
+  top: 108px;
+  align-self: flex-start;
+  max-height: calc(100vh - 128px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sylphio-doc-toc-label { margin-bottom: var(--space-sm); }
+.sylphio-doc-toc ul,
+.sylphio-doc-toc-inline ul { list-style: none; margin: 0; padding: 0; }
+
+/* 목차 항목 — Planner's View 목차(.pv-toc-item)와 같은 크기(--fs-sm). 이전 --fs-xs는 한 단계 작았다 */
+.sylphio-toc-item a {
+  display: block;
+  padding: var(--space-xs) 0 var(--space-xs) var(--space-12);
+  font-size: var(--fs-sm);
+  line-height: var(--leading-snug);
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+.sylphio-toc-item a:hover { color: var(--text-secondary); }
+.sylphio-toc-item.active a { color: var(--accent-sylphio); border-left-color: var(--accent-sylphio); }
+
+/* 접이식 목차 — 사이드바가 보이는 폭에서는 숨긴다 */
+.sylphio-doc-toc-inline { display: none; }
+
+@media (max-width: 1024px) {
+  .sylphio-doc-aside { display: none; }
+  .sylphio-doc-layout { display: block; }
+  .sylphio-doc-main { margin: 0 auto; }
+
+  .sylphio-doc-toc-inline {
+    display: block;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .sylphio-doc-toc-inline summary {
+    list-style: none;
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sylphio-doc-toc-inline summary::-webkit-details-marker { display: none; }
+  .sylphio-doc-toc-inline summary::after {
+    content: '+';
+    font-size: var(--fs-md);
+    color: var(--text-muted);
+  }
+  .sylphio-doc-toc-inline[open] summary::after { content: '−'; }
+  .sylphio-doc-toc-inline[open] summary { margin-bottom: var(--space-sm); }
+}
+
+@media (max-width: 640px) {
+  .sylphio-doc-layout { width: calc(100% - 32px); }
+  /* 모바일 GNB(44) + 2행으로 줄바꿈되는 SylphioNav(≈88) */
+  .sylphio-doc-main [id] { scroll-margin-top: 140px; }
+}
