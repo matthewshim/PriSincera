@@ -15,7 +15,7 @@ steps:
     args:
       - 'build'
       - '--build-arg'
-      - 'VITE_FIREBASE_API_KEY=AIzaSyCu21j7PvDB1j-FBFj9rl3dMrDPvk_Z_pQ'
+      - 'VITE_FIREBASE_API_KEY=AIzaSyCu21j7PvDB1j-FBFj9rl3dMrDPvk_Z_pQ'  # secret-scan:ignore (Firebase 웹 공개 키, 클라 번들 포함 비밀 아님)
       - '-t'
       - 'asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:$SHORT_SHA'
       - '-t'
@@ -56,7 +56,7 @@ steps:
       - '--concurrency'
       - '80'
       - '--set-secrets'
-      - 'GEMINI_API_KEY=GEMINI_ADMIN_API_KEY:latest,GITHUB_TOKEN=GITHUB_TOKEN:latest'
+      - 'GEMINI_API_KEY=GEMINI_ADMIN_API_KEY:latest,GITHUB_TOKEN=GITHUB_TOKEN:latest,GROQ_API_KEY=GROQ_API_KEY:latest'  # secret-scan:ignore (시크릿 이름 매핑, 값 아님)
 
   # ==========================================
   # [Part 2] Backend Pipeline (Cloud Run Jobs)
