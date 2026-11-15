@@ -58,7 +58,7 @@ export default function SylphioPrivacy() {
       <SylphioNav />
 
       <SylphioDocShell items={toc} tocLabel={d.tocLabel}>
-        <div className="sylphio-privacy-intro">
+        <div className="sylphio-privacy-intro u-prewrap">
           {d.intro}
         </div>
 

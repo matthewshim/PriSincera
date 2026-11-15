@@ -41,8 +41,8 @@ export const PAGE_META = {
   '/sylphio': {
     ogImage: `${BASE_URL}/og-sylphio.png`,
     pageTitle: 'Sylphio — macOS 실시간 AI 통역·회의록',
-    description: 'macOS 실시간 AI 동시통역·회의록 에이전트. 온디바이스 STT(오프라인, 언어팩 없으면 Apple 서버 폴백)·에어팟 실명 락온·마이크/에어팟/시스템 사운드 3소스 캡처. 종료 후 녹음을 Gemini 2.5로 재분석하는 정밀 회의록과 마크다운(.md) 자동 요약까지.',
-    keywords: '실피오, Sylphio, macOS 동시통역, 실시간 자막, 에어팟 번역, 온디바이스 STT, AI 회의록, 정밀 회의록, Gemini',
+    description: 'macOS 실시간 AI 동시통역·회의록 앱. Apple 음성 인식·온디바이스 번역, 에어팟 실명 락온, 마이크/에어팟/시스템 사운드 3소스 캡처. 녹음을 내 Mac에서 다시 분석하는 무료 로컬 정밀 회의록, Gemini 2.5 고품질 회의록(BYOK)과 마크다운(.md) 정리까지.',
+    keywords: '실피오, Sylphio, macOS 동시통역, 실시간 자막, 에어팟 번역, AI 회의록, 정밀 회의록, 로컬 전사',
   },
   '/sylphio/guide': {
     ogImage: `${BASE_URL}/og-sylphio.png`,
@@ -53,8 +53,8 @@ export const PAGE_META = {
   '/sylphio/privacy': {
     ogImage: `${BASE_URL}/og-sylphio.png`,
     pageTitle: 'Sylphio 개인정보 처리방침',
-    description: '로컬 녹음 저장·BYOK 오디오 전송·화면 녹화 권한·하이브리드 STT를 투명하게 고지하는 Sylphio 개인정보 처리방침(데이터 무수집 원칙).',
-    keywords: 'Sylphio 개인정보, 데이터 무수집, 프라이버시, BYOK, 온디바이스',
+    description: '개발사 서버 없이 기기 중심으로 동작하는 Sylphio의 개인정보 처리방침. 로컬 녹음 저장·삭제, 선택 기능(Google 웹 번역, BYOK)에 따른 외부 전송, Apple 음성 인식, 로컬 모델 다운로드를 투명하게 고지합니다.',
+    keywords: 'Sylphio 개인정보, 프라이버시, 로컬 녹음, BYOK, 온디바이스 번역',
   },
   '/waymark': {
     pageTitle: 'Waymark — 결정의 갈림길에서 곁을 지키는 AI 동반자',

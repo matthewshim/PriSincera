@@ -670,13 +670,13 @@
       "f3Title": "Three-Source Separated Audio Capture",
       "f3Desc": "Uses the next-gen ScreenCaptureKit API to cleanly separate three audio sources — built-in mic, AirPods (Bluetooth), and system sound — without mixing. Captures Zoom, Teams, and YouTube audio losslessly; system-sound capture uses the macOS screen-recording permission.",
       "f4Title": "AI PRO Engine & Secure Keychain",
-      "f4Desc": "Your personal API Key is stored encrypted in the macOS Secure Keychain. AI processing never passes through our servers — data goes straight from your device to your chosen provider such as Google Gemini (2.5 Flash/Pro). Real-time subtitles send text only; Enhanced Minutes upload the recorded audio via your own key.",
+      "f4Desc": "Your personal API key is stored in the macOS Keychain. AI processing never passes through our servers — data goes directly from your device to Google Gemini (2.5 Flash/Pro) or OpenAI. (Only when BYOK is on in Pro: caption text for post-meeting summaries, and the recording for Enhanced Minutes, are sent with your own key. Live captions never use your key.)",
       "f5Title": "AI Meeting Minutes & Two Modes",
-      "f5Desc": "The moment a session ends, Sylphio shows a modern minutes view and generates a local Markdown (.md) report with Action Items and an executive summary. Choose between real-time interpretation mode and a minutes-only mode that transcribes and summarizes without translation.",
+      "f5Desc": "When a meeting ends, Sylphio organizes the full conversation transcript into Markdown (.md) minutes. Connect your own API key in Pro and it also writes a key summary and an Action Items checklist. Supports both real-time interpretation mode and a minutes-only mode that records without translation.",
       "f6Title": "Desktop Native Premium UI",
       "f6Desc": "Features a unified 720x700 spacious layout and dynamic subtitle font scaling controlled via an intuitive slider, offering optimal readability and native macOS experience.",
       "f7Title": "Enhanced Minutes (Recording Re-analysis)",
-      "f7Desc": "After a session ends, your recorded audio (.m4a) is re-analyzed by Google Gemini's multimodal model for far more accurate transcription and summary (plus translation in interpretation mode). Sessions that switched audio sources are merged into one for full analysis and download, and you can 'Regenerate' later once quota recovers. (BYOK Pro · audio is uploaded to Google via your own key.)",
+      "f7Desc": "After a session, Sylphio re-analyzes the recording (.m4a) to produce minutes more accurate than the live captions. By default it transcribes for free and offline with on-device speech recognition (Whisper) on your Mac (one-time ~1.6 GB model download). Connect your own Gemini API key in Pro and Google Gemini 2.5 produces high-quality transcription, summary, and translation (in this case the recording is uploaded to Google). Sessions that switched audio sources are merged into one for analysis and download, and you can 'Regenerate' at any time.",
       "simTitle": "Experience the Virtual Subtitle Bar in Real-Time",
       "simSub": "Get a sneak peek at how the real Sylphio app captures and translates dialogue in real-time through this web simulator.",
       "simPlaceholder": "Click the scenario buttons above to run the AI real-time subtitle simulation.",
@@ -691,7 +691,7 @@
       "paywallEngine": "High-performance AI engine (BYOK)",
       "paywallBuy": "Get Sylphio Pro Lifetime ($9.99)",
       "pricingTitle": "A Fair and Reasonable License Model",
-      "pricingSub": "End heavy monthly subscriptions.\nPay only for what you use down to the penny by connecting your own API key.",
+      "pricingSub": "End heavy monthly subscriptions.\nWith your own API key, you pay each AI provider directly — only for what you use.",
       "priceFreeDesc": "Experience basic on-device speech-to-text and screen audio capture for free, forever.",
       "priceProDesc": "Unlock professional AI translation permanently for the price of two cups of coffee.",
       "freeTitle": "Sylphio Free",
@@ -702,7 +702,7 @@
       "proPricePeriod": "/ One-time purchase",
       "freeFeature1": "Unlimited English & Korean speech-to-text & basic translation",
       "freeFeature2": "Real-time capture from 3 sources: built-in mic, AirPods & system sound",
-      "freeFeature3": "English & Korean real-time offline/hybrid translation subtitles",
+      "freeFeature3": "English & Korean real-time translated subtitles (Apple on-device translation, macOS 15 or later)",
       "freeFeature4": "Real-time glassmorphism subtitle viewer",
       "freeFeature5": "Save & download full-session recordings (.m4a) — free",
       "proFeature1": "10+ global languages (Japanese, Chinese, French, etc.)",
@@ -711,9 +711,11 @@
       "proFeature4": "macOS Secure Keychain encrypted key storage",
       "proFeature5": "AI Executive minutes & summary auto-generation (.md)",
       "proFeature6": "Lifetime free minor/major software updates",
-      "proFeature7": "Enhanced Minutes: recording re-analysis (Google Gemini 2.5 multimodal)",
+      "proFeature7": "High-quality Enhanced Minutes: transcription, summary & translation with Google Gemini 2.5 (your own API key)",
       "btnFreeCta": "Free Download",
-      "btnProCta": "Get Lifetime License"
+      "btnProCta": "Get Lifetime License",
+      "freeFeature6": "Local Enhanced Minutes: full transcription of your recording on your Mac, free (Whisper)",
+      "priceNote": "* The actual price is shown in your local currency on the App Store."
     },
     "guide": {
       "heroTitle": "Sylphio",
@@ -721,15 +723,15 @@
       "heroCtaDownload": "Free Download on Mac App Store",
       "heroSysReq": "Requires macOS 13.0 (Ventura) or later",
       "byokTitle": "Advantages of BYOK (Bring Your Own Key) Architecture",
-      "byokDesc": "Sylphio uses a BYOK (Bring Your Own Key) approach: you enter an API key you own. AI processing never passes through our servers — it flows directly between your device and the AI provider's endpoint, and saved keys are stored encrypted in the macOS Keychain. Real-time summaries send the transcribed text; when you use 'Enhanced Minutes', the recorded audio file (.m4a) is uploaded directly to your chosen provider (e.g., Google Gemini) with your own key for transcription and summary.",
+      "byokDesc": "Sylphio uses a BYOK (Bring Your Own Key) approach: you enter an API key you own. AI processing never passes through our servers — it flows directly between your device and the AI provider's endpoint, and saved keys are stored encrypted in the macOS Keychain. When a summary is created after a meeting, the caption text is sent to the AI provider you selected; when you run 'Enhanced Minutes', the recording (.m4a) is uploaded directly to Google Gemini with your own key. Live caption translation never uses your API key.",
       "geminiTitle": "Get a Google Gemini API Key",
-      "geminiIntro": "Google Gemini understands translation context well and offers a Free Tier, so you can start using Sylphio's AI features at no cost.",
+      "geminiIntro": "Google Gemini understands translation context well and offers a Free Tier, so you can start without any API cost.",
       "geminiStep2": "Click the Get API key button in the top left sidebar menu.",
       "geminiStep3": "Click Create API key in the center, and choose Create API key in new project in the popup to generate your key.",
       "geminiStep4": "Instantly copy the unique key string (starting with AIzaSy...) using the provided button and save it securely.",
       "geminiPriceHeader": "Gemini Pricing & Free Tier",
       "geminiFreeTitle": "Free Tier",
-      "geminiFreeDesc": "Cost: Free\nLimits: Per-model requests per minute (RPM) plus a daily request cap (roughly a few dozen requests per day).\nWhen your key is used: Generating the meeting summary after a session, and running 'Enhanced Minutes' (recording re-analysis). Real-time subtitle translation runs on free Google Translate / on-device engines and never uses your key's quota.\nIf you hit the cap: Enhanced Minutes uploads audio, which is a large call, so repeating it many times a day can reach the daily cap. Try 'Regenerate' once your quota resets.",
+      "geminiFreeDesc": "Cost: Free\nLimits: Per-model requests per minute (RPM) plus a daily request cap (roughly a few dozen requests per day).\nWhen your key is used: Generating the meeting summary after a session, and running 'Enhanced Minutes' (recording re-analysis). Live caption translation doesn't use your API key; it runs on Apple on-device translation (Google web translation is used as a fallback only if you turn it on in Settings).\nIf you hit the cap: Enhanced Minutes uploads audio, which is a large call, so repeating it many times a day can reach the daily cap. Try 'Regenerate' once your quota resets.\nData use: On the free tier, Google may use submitted content to improve its products. For sensitive meetings, use a paid-tier key.",
       "geminiPayTitle": "Pay-as-you-go Tier",
       "geminiPayDesc": "To remove the daily cap, you can register billing. Input costs about $0.075 per 1M tokens.",
       "openaiTitle": "Get an OpenAI API Key",
@@ -741,18 +743,18 @@
       "openaiStep4": "Copy the sk-proj-... secret key immediately. (It cannot be viewed again once you close the popup.)",
       "openaiStep5": "Navigate to Settings > Billing on the left menu, click Add to balance, and pre-charge at least $5.",
       "openaiPriceHeader": "OpenAI (GPT-4o-mini) Pricing",
-      "openaiPriceDesc": "Input: $0.150 / 1M tokens\nOutput: $0.600 / 1M tokens\nWhen your key is used: Generating the meeting text summary after a session. Real-time subtitle translation runs on free / on-device engines and costs nothing.\nNote: 'Enhanced Minutes' (audio re-analysis) is Google Gemini only.",
+      "openaiPriceDesc": "Input: $0.150 / 1M tokens\nOutput: $0.600 / 1M tokens\nWhen your key is used: Generating the meeting text summary after a session. Live caption translation runs on Apple on-device translation, so it incurs no API cost.\nNote: 'Enhanced Minutes' (audio re-analysis) is Google Gemini only.",
       "appSetupTitle": "Connect Your API Key in Sylphio",
       "appStep1": "Launch Sylphio.app on your Mac.",
       "appStep2": "Click the Settings (gear) button in the top-right of the standby screen.",
-      "appStep3": "Select the AI Engine (BYOK) tab in the left-side settings menu.",
-      "appStep4": "Turn on the AI PRO Real-Time Translation switch.",
+      "appStep3": "Select 'Pro License' in the left tab menu. (BYOK settings appear after you purchase Pro.)",
+      "appStep4": "Turn on the 'Use an external AI engine for AI summary reports (BYOK)' switch. Before turning it on, review the on-screen notice about what is sent to your chosen AI provider (caption text for summaries, the recording for Enhanced Minutes).",
       "appStep5": "Choose your AI platform (Google Gemini or OpenAI).",
       "appStep6": "Paste your copied API key into the field (⌘ + V).",
-      "appStep7": "Confirm the key shows as connected, then close Settings. AI meeting summaries and multi-language auto-detection are now enabled.",
+      "appStep7": "Click 'Validate' and confirm 'Connected' to finish. From then on, an AI summary is created when a meeting ends, and running Enhanced Minutes produces high-quality Gemini minutes. (Unlocking all 12 languages comes with the Pro purchase.)",
       "faqHeader": "Troubleshooting",
-      "faq1Q": "Q1. It keeps showing \"Activate AI Translation in Settings\" or \"Translation Error.\"",
-      "faq1A": "Cause: Whitespace or a line break got into the API key you entered, or the key itself is invalid.\nFix: Clear the input completely, paste your key into a plain text editor to check for spaces, then copy and paste it again.",
+      "faq1Q": "Q1. 'Validate' shows 'Connection failed.'",
+      "faq1A": "Cause: Whitespace or a line break got into the API key you entered, or the key itself is invalid.\nFix: Clear the input completely, paste your key into a plain text editor to check for spaces, then copy and paste it again.\nNote: The app verifies your key with the actual provider and shows the reason if it fails.",
       "faq2Q": "Q2. I connected my OpenAI key, but it keeps returning \"Quota Exceeded.\"",
       "faq2A": "Cause: Your OpenAI account balance is $0, or your card on file has expired and the account is on hold.\nFix: Check your balance at platform.openai.com and add at least $5 of credit.",
       "tocLabel": "On this page",
@@ -764,31 +766,68 @@
       "heroTagline": "The on-device translation spirit that turns every sound into subtitles.\nHear it once, read it instantly.",
       "heroCtaDownload": "Free Download on Mac App Store",
       "heroSysReq": "Requires macOS 13.0 (Ventura) or later",
-      "intro": "PriSincera ('we', 'us', or 'our') operates the Sylphio Mac application (the 'Service'). We are committed to protecting your privacy. This policy explains our 'Zero Data Collection' principle.",
+      "intro": "PriSincera (\"we\") provides the macOS app Sylphio (the \"App\"). We do not operate any servers, and we do not collect or access your audio, recordings, captions, meeting notes, or API keys. This policy explains what data the App processes and where, and what data is sent to outside services depending on the features you turn on.\nLast updated: November 15, 2026",
       "sections": [
         {
-          "title": "1. Zero Data Collection",
-          "content": "Sylphio is a utility application designed with privacy at its core. We do not collect, store, or transmit any personal data, audio recordings, or transcribed texts to our own servers."
-        },
-        {
-          "title": "2. Audio & Speech Processing",
+          "title": "1. Key principles",
           "bullets": [
-            "Local Mode (Apple Frameworks): If you use the built-in translation, all audio capture and speech-to-text processing occurs via Apple's native framework (SFSpeechRecognizer). Audio data is processed safely and anonymously on-device or via Apple's secure servers in accordance with Apple's secure speech recognition policy, and the developer (PriSincera) does not collect any data.",
-            "Pro Mode (BYOK - Bring Your Own Key): If you provide your own API Key (e.g., Google Gemini, OpenAI), (1) real-time subtitle translation sends only the recognized text to the AI provider, and (2) when you run the 'Enhanced Minutes' feature, the recorded audio file (.m4a) itself is uploaded directly from your device to the chosen provider (e.g., Google Gemini) after the session for transcription and summary. All transmissions are direct device-to-provider communication that never passes through PriSincera servers, and whether/when data is sent depends entirely on which features you choose to use. PriSincera does not intercept or store your data and operates no server capable of accessing it.",
-            "Meeting audio recording & local storage: To power subtitles, minutes, and Enhanced Minutes, audio is recorded and saved on your device as an .m4a (AAC) file during a session. Recording starts only after your explicit consent (a pre-recording consent modal) and shows a '● Recording' indicator while active; files are stored inside the app's sandbox container. You can delete any recording anytime from 'History', and system-sound capture uses the macOS screen-recording permission (ScreenCaptureKit). These recordings remain solely on your device and are never transmitted unless you run Enhanced Minutes."
+            "We do not operate any servers, and we do not collect or access your audio, recordings, transcripts, meeting notes, or API keys.",
+            "The App contains no advertising, tracking, or third-party analytics SDKs.",
+            "Data leaves your Mac only in the cases described in Sections 3–5, and always goes directly from your device to the named service."
           ]
         },
         {
-          "title": "3. API Key Security",
-          "content": "Your personal API Keys are strictly stored locally on your device using Apple's encrypted Keychain. We do not sync, upload, or have access to your API Keys."
+          "title": "2. Data processed and stored on your device",
+          "bullets": [
+            "Microphone & system audio: Captured to generate live captions. System audio uses the macOS \"Screen & System Audio Recording\" permission (ScreenCaptureKit); screen video is never stored or transmitted. Nothing is stored when recording is off.",
+            "Meeting recordings (.m4a): Recorded only with your consent, for enhanced meeting notes. Stored in the App sandbox container; delete them individually or all at once from the \"History\" tab. They are removed when the App is deleted.",
+            "Captions & notes (.md, .txt): Stored in the App container and deletable from the \"History\" tab. Files you export are saved where you choose.",
+            "Local enhanced notes: Without an API key, recordings are transcribed on-device by a Whisper model and never transmitted.",
+            "API key: Used for the optional BYOK feature and stored in the macOS Keychain.",
+            "Settings & diagnostic log: Stored in the App container. The log does not contain conversation content, is reset on every launch, and is never transmitted."
+          ]
         },
         {
-          "title": "4. Third-Party Analytics",
-          "content": "We do not embed any third-party tracking or analytics SDKs (like Google Analytics or Mixpanel) in the app. We solely rely on the anonymous crash reports and opt-in app usage data provided by Apple's standard App Store Analytics."
+          "title": "3. Data processed by Apple",
+          "bullets": [
+            "Speech recognition: The App uses Apple's Speech framework. If an on-device model is unavailable for the language, speech may be processed on Apple's servers, subject to Apple's Privacy Policy.",
+            "Translation: On macOS 15 or later, translation runs on-device via Apple's Translation framework.",
+            "Purchases: Pro purchases and restores are handled by Apple's In-App Purchase. We never receive payment information."
+          ]
         },
         {
-          "title": "5. Contact Us",
-          "content": "If you have any questions about this Privacy Policy, please contact us at:\nEmail: support@prisincera.com"
+          "title": "4. Optional: Google web translation (off by default)",
+          "content": "Only if you enable \"Use Google web translation when Apple translation is unavailable\" in Settings, recognized caption text is sent to Google for translation when on-device translation is unavailable. Audio is never sent.\nGoogle Privacy Policy: https://policies.google.com/privacy"
+        },
+        {
+          "title": "5. Optional: Pro BYOK (your own API key)",
+          "bullets": [
+            "The transfers below happen only if you are a Pro user, enter your own API key, and turn on BYOK.",
+            "Meeting summaries: caption text is sent to the AI provider you selected (Google Gemini or OpenAI) after a session. Live caption translation never uses your API key.",
+            "Enhanced notes: the meeting recording (.m4a) is uploaded to the Google Gemini API. Large files are temporarily stored by the Gemini Files API and deleted automatically per Google's policy (currently 48 hours).",
+            "Data goes directly from your device to the provider, never through our servers, and is governed by your API account terms and the provider's policies. (Google: https://policies.google.com/privacy, https://ai.google.dev/gemini-api/terms · OpenAI: https://openai.com/policies/privacy-policy)",
+            "Note: On the Gemini API free tier, Google may use submitted content to improve its products. For sensitive meetings, use a paid-tier key."
+          ]
+        },
+        {
+          "title": "6. Local speech model download",
+          "content": "The first time you use local enhanced notes, after your confirmation, the App downloads a speech recognition model (~1.6 GB) from Hugging Face (argmaxinc/whisperkit-coreml). Standard request data (such as your IP address) may be visible to Hugging Face; no audio or captions are sent."
+        },
+        {
+          "title": "7. Children",
+          "content": "The App is not directed to children under 13 (14 in Korea) and does not knowingly process children's personal data."
+        },
+        {
+          "title": "8. Your choices",
+          "content": "All App data stays on your device, so you can view and delete it yourself (\"History\" tab, removing your API key, deleting the App). For data sent to third-party providers, contact those providers."
+        },
+        {
+          "title": "9. Changes",
+          "content": "We will post changes on this page and update the \"Last updated\" date. Material changes will also be announced in the App."
+        },
+        {
+          "title": "10. Contact",
+          "content": "If you have any questions about this policy, please email us.\nEmail: matthew.shim@prisincera.com"
         }
       ],
       "tocLabel": "On this page"

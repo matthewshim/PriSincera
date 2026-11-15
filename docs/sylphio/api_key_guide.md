@@ -2,7 +2,7 @@
 status: active
 domain: Sylphio
 last_updated: 2026-11-15
-version: v1.4
+version: v1.5
 target_files:
   - src/pages/SylphioApiKeyGuide.jsx
   - src/pages/SylphioApiKeyGuide.css
@@ -20,6 +20,7 @@ target_files:
 | v1.2 | 2026-07-13 | 무료 일일 쿼터 현실화·정밀 회의록(오디오 업로드) 고지·Gemini 2.5/OpenAI 역할 구분 반영(라이브 정합) | src/pages/SylphioApiKeyGuide.jsx |
 | v1.3 | 2026-08-05 | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·본문 4단 중첩 박스 제거(플랫화). 히어로 태그라인을 랜딩 정본("듣는 순간 자막이 되는…")으로 정본화 | src/pages/SylphioApiKeyGuide.jsx, .css |
 | v1.4 | 2026-11-15 | **웹 지면 디자인·문구 개정** ([guide_design_revision_plan](guide_design_revision_plan.md)) — 히어로는 그대로 두고 본문만 개정: Gemini·OpenAI를 순서(1·2)가 아닌 **선택지(Option A·B)**로 재구성하고 '하나만 발급하면 된다' 안내 추가, 콘텐츠 최종 확인일 표기, 과장 표현·톱니바퀴 이모지 제거(ko·en·ja). 요금·한도 수치는 **미재확인**(별도 사실 확인 과제) | src/pages/SylphioApiKeyGuide.jsx, .css, src/locales/*.json |
+| v1.5 | 2026-11-15 | **앱 동작 정합(App Store 출시 전)** — 앱 연동 단계를 실제 화면으로 정정: 'AI 엔진 (BYOK)' 탭·실시간 통역 스위치·다국어 자동 감지는 존재하지 않음 → 'Pro 라이선스' 탭, 'AI 요약 보고서에 외부 전문 AI 엔진 사용 (BYOK)' 스위치, '유효성 검사'. 실시간 자막 번역은 API Key를 쓰지 않고 Apple 온디바이스 번역(Google 웹 번역은 옵트인 보조). Gemini 무료 등급 데이터 활용 고지 추가, Gemini 소개의 '비용 없이'를 'API 비용 없이'로(BYOK는 Pro 구매 필요). en·ja의 앱 UI 라벨은 번역 추정치 — 앱 현지화 라벨 확인 필요 | src/locales/*.json |
 
 ---
 

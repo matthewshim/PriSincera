@@ -408,6 +408,7 @@ export default function SylphioLanding() {
               <li>{d.freeFeature3}</li>
               <li>{d.freeFeature4}</li>
               <li>{d.freeFeature5}</li>
+              <li>{d.freeFeature6}</li>
             </ul>
             <a 
               href="#" 
@@ -448,6 +449,8 @@ export default function SylphioLanding() {
             </a>
           </div>
         </div>
+        {/* App Store는 지역별 통화로 표시한다 — 웹의 $ 표기가 실제 결제가와 다를 수 있음을 알린다 */}
+        <p className="u-fineprint">{d.priceNote}</p>
       </section>
     </div>
   );

@@ -9,19 +9,19 @@ const NAV_ITEMS = {
     { type: 'route', icon: 'document', label: '서비스 소개', path: '/sylphio', end: true },
     { type: 'route', icon: 'key', label: 'API Key 발급 가이드', path: '/sylphio/guide' },
     { type: 'route', icon: 'shield', label: '개인정보 처리방침', path: '/sylphio/privacy' },
-    { type: 'link', icon: 'mail', label: '고객지원', path: 'mailto:support@prisincera.com' }
+    { type: 'link', icon: 'mail', label: '고객지원', path: 'mailto:matthew.shim@prisincera.com' }
   ],
   en: [
     { type: 'route', icon: 'document', label: 'Introduction', path: '/sylphio', end: true },
     { type: 'route', icon: 'key', label: 'API Key Guide', path: '/sylphio/guide' },
     { type: 'route', icon: 'shield', label: 'Privacy Policy', path: '/sylphio/privacy' },
-    { type: 'link', icon: 'mail', label: 'Support', path: 'mailto:support@prisincera.com' }
+    { type: 'link', icon: 'mail', label: 'Support', path: 'mailto:matthew.shim@prisincera.com' }
   ],
   ja: [
     { type: 'route', icon: 'document', label: 'サービス紹介', path: '/sylphio', end: true },
     { type: 'route', icon: 'key', label: 'APIキー連携ガイド', path: '/sylphio/guide' },
     { type: 'route', icon: 'shield', label: '個人情報保護方針', path: '/sylphio/privacy' },
-    { type: 'link', icon: 'mail', label: 'サポート', path: 'mailto:support@prisincera.com' }
+    { type: 'link', icon: 'mail', label: 'サポート', path: 'mailto:matthew.shim@prisincera.com' }
   ]
 };
 
