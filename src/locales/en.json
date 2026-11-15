@@ -797,7 +797,7 @@
         },
         {
           "title": "4. Optional: Google web translation (off by default)",
-          "content": "Only if you enable \"Use Google web translation when Apple translation is unavailable\" in Settings, recognized caption text is sent to Google for translation when on-device translation is unavailable. Audio is never sent.\nGoogle Privacy Policy: https://policies.google.com/privacy"
+          "content": "Only if you enable \"Use Google web translation when Apple translation is unavailable\" in Settings, recognized caption text is sent to Google for translation when on-device translation is unavailable or fails (e.g., macOS 14 or earlier, language pack not installed, or a language pair Apple Translation does not support). Audio is never sent.\nGoogle Privacy Policy: https://policies.google.com/privacy"
         },
         {
           "title": "5. Optional: Pro BYOK (your own API key)",

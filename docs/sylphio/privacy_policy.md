@@ -2,7 +2,7 @@
 status: active
 domain: Sylphio
 last_updated: 2026-11-15
-version: v1.3
+version: v1.4
 target_files:
   - src/pages/SylphioPrivacy.jsx
   - src/locales/ko.json
@@ -21,6 +21,7 @@ target_files:
 | v1.1 | 2026-07-13 | 하이브리드 STT·정밀 회의록 오디오 업로드·로컬 녹음(.m4a) 저장/동의/삭제·화면 녹화 권한 고지 반영(라이브 정합) | src/pages/SylphioPrivacy.jsx |
 | v1.2 | 2026-08-05 | **UI 정합(콘텐츠 불변)** — 페이지를 표준 문서형 2단 레이아웃([design_system §9-11](../core/design_system.md))으로 전환: 폭 1200 활용·TOC 사이드바·외곽 글래스 박스 제거(플랫 프로스). 히어로 태그라인을 랜딩 정본으로 정본화 | src/pages/SylphioPrivacy.jsx, .css |
 | v1.3 | 2026-11-15 | **App Store 출시 전 정합화** — 앱 정본(`sylphio_mac/docs/Sylphio_PrivacyPolicy.md`, 2026-11-15 개정판) 10개 섹션 구조로 전면 교체(ko·en·ja). '데이터 무수집' 표현 폐기 → '개발사 서버 무수집'으로 범위 축소. 신규 고지: Google 웹 번역(옵트인), 로컬 Whisper 모델 다운로드, BYOK 3조건·Gemini Files API 48시간, 무료 등급 데이터 활용, 인앱 결제, 아동, 사용자 권리, 방침 변경. 문의처 matthew.shim@prisincera.com. 시행일은 출시일 확정 후 추가 | src/locales/*.json, src/data/seoMeta.mjs |
+| v1.4 | 2026-11-15 | 앱 정본 15:51 갱신 반영 — 4항(Google 웹 번역) 사용 조건을 '온디바이스 번역을 쓸 수 없거나 **실패했을 때**'로, 예시에 'Apple 번역이 지원하지 않는 언어 조합' 추가(ko·en·ja). en은 정본 영문판대로 예시 괄호 신설 | src/locales/*.json |
 
 ---
 

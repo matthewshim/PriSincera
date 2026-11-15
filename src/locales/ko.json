@@ -797,7 +797,7 @@
         },
         {
           "title": "4. 선택 기능: Google 웹 번역 (기본 꺼짐)",
-          "content": "설정에서 'Apple 번역을 쓸 수 없을 때 Google 웹 번역 사용'을 직접 켠 경우에만, 온디바이스 번역을 쓸 수 없을 때(예: macOS 14 이하, 언어팩 미설치) 인식된 자막 텍스트가 번역을 위해 Google 서버로 전송됩니다. 오디오는 전송되지 않습니다.\nGoogle 개인정보처리방침: https://policies.google.com/privacy"
+          "content": "설정에서 'Apple 번역을 쓸 수 없을 때 Google 웹 번역 사용'을 직접 켠 경우에만, 온디바이스 번역을 쓸 수 없거나 실패했을 때(예: macOS 14 이하, 언어팩 미설치, Apple 번역이 지원하지 않는 언어 조합) 인식된 자막 텍스트가 번역을 위해 Google 서버로 전송됩니다. 오디오는 전송되지 않습니다.\nGoogle 개인정보처리방침: https://policies.google.com/privacy"
         },
         {
           "title": "5. 선택 기능: Pro BYOK (본인 API Key 연동)",
