@@ -123,6 +123,8 @@ export default function SylphioApiKeyGuide() {
 
       <SylphioDocShell items={toc} tocLabel={d.tocLabel}>
         <p className="sylphio-guide-verified">{t('sylphio.guide.verified', { date: GUIDE_VERIFIED })}</p>
+        {/* 앱 1.0은 한국어 화면 전용 — en·ja에만 키가 있고, 아래 설정 단계의 화면 이름을 한국어 그대로 쓰는 이유를 알린다 */}
+        {d.uiLangNotice && <p className="sylphio-guide-verified">{d.uiLangNotice}</p>}
 
         <div className="sylphio-guide-callout is-info">
           <span className="sylphio-guide-callout-icon"><Icon name="shield" /></span>

@@ -451,6 +451,9 @@ export default function SylphioLanding() {
         </div>
         {/* App Store는 지역별 통화로 표시한다 — 웹의 $ 표기가 실제 결제가와 다를 수 있음을 알린다 */}
         <p className="u-fineprint">{d.priceNote}</p>
+        {/* 앱 1.0은 한국어 화면 전용 — en·ja에만 키가 있고 ko는 렌더하지 않는다 (히어로는 수정 금지라 다운로드 버튼 인근인 이곳에 둔다) */}
+        {d.uiLangNotice && <p className="u-fineprint">{d.uiLangNotice}</p>}
+        {d.freeScopeNote && <p className="u-fineprint">{d.freeScopeNote}</p>}
       </section>
     </div>
   );
