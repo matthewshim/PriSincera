@@ -8,9 +8,8 @@ import { DOMAINS, EMOTIONS, IMPORTANCE, TONES } from '../../data/waymarkModel.mj
 import './WaymarkApp.css';
 
 /**
- * Waymark 앱 (/waymark/app) — M1-A 결정 코어 · 반응형 마스터-디테일.
- * 데스크톱 2-pane(좌 타임라인 사이드바 + 우 상세·대화), 모바일 단일 컬럼.
- * GNB는 body.hero-ready로 노출(§9-1). 데이터는 server REST(Bearer) → admin Firestore. 전 문자열 i18n.
+ * Waymark 앱 (/waymark/app) — M1-A 결정 코어 + M1-B 알림 센터.
+ * 반응형 마스터-디테일. GNB는 body.hero-ready로 노출(§9-1). 데이터는 server REST(Bearer)→admin Firestore.
  */
 
 const Svg = ({ d, w = 18, sw = 1.5 }) => (
@@ -19,6 +18,7 @@ const Svg = ({ d, w = 18, sw = 1.5 }) => (
 const BackIcon = () => <Svg d={<path d="M15 18l-6-6 6-6" />} w={16} sw={2} />;
 const SendIcon = () => <Svg d={<path d="M12 19V5M5 12l7-7 7 7" />} w={16} sw={2} />;
 const PlusIcon = () => <Svg d={<path d="M12 5v14M5 12h14" />} w={16} sw={2} />;
+const BellIcon = () => <Svg d={<><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.5 21a1.5 1.5 0 0 1-3 0" /></>} w={18} />;
 const GearIcon = () => <Svg d={<><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></>} w={16} />;
 
 const tsToMs = (ts) => {
@@ -50,13 +50,13 @@ function Sidebar() {
   const { t } = useTranslation();
   const location = useLocation();
   const api = useWaymarkApi();
-  const [st, setSt] = useState({ loading: true, decisions: [], events: [], error: null });
+  const [st, setSt] = useState({ loading: true, decisions: [], events: [], unread: 0, error: null });
   const activeId = (location.pathname.match(/\/d\/([^/]+)/) || [])[1];
 
   useEffect(() => {
     let alive = true;
-    Promise.all([api.listDecisions(), api.upcomingEvents()])
-      .then(([d, e]) => { if (alive) setSt({ loading: false, decisions: d.decisions || [], events: e.events || [], error: null }); })
+    Promise.all([api.listDecisions(), api.upcomingEvents(), api.listNotifications()])
+      .then(([d, e, n]) => { if (alive) setSt({ loading: false, decisions: d.decisions || [], events: e.events || [], unread: n.unread || 0, error: null }); })
       .catch((err) => { if (alive) setSt((s) => ({ ...s, loading: false, error: err.message })); });
     return () => { alive = false; };
   }, [api, location.key]);
@@ -65,7 +65,10 @@ function Sidebar() {
     <aside className="wma-side">
       <div className="wma-side-head">
         <span className="wma-brand">Waymark</span>
-        <Link to="/waymark/app/me" className="wma-iconlink" aria-label={t('waymark.app.tabMe')}><GearIcon /></Link>
+        <div className="wma-side-actions">
+          <Link to="/waymark/app/alerts" className="wma-iconlink" aria-label={t('waymark.app.alerts')}><BellIcon />{st.unread > 0 && <span className="wma-dot-badge" aria-hidden="true" />}</Link>
+          <Link to="/waymark/app/me" className="wma-iconlink" aria-label={t('waymark.app.tabMe')}><GearIcon /></Link>
+        </div>
       </div>
       <Link to="/waymark/app/new" className="wma-btn wma-side-new"><PlusIcon /> {t('waymark.app.newDecision')}</Link>
 
@@ -100,6 +103,39 @@ function Sidebar() {
 function Welcome() {
   const { t } = useTranslation();
   return <section className="wma-pane wma-welcome"><p className="wma-state">{t('waymark.app.welcome')}</p></section>;
+}
+
+function Alerts() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const api = useWaymarkApi();
+  const [st, setSt] = useState({ loading: true, items: [], error: null });
+  const refresh = useCallback(() => {
+    api.listNotifications()
+      .then((r) => setSt({ loading: false, items: r.notifications || [], error: null }))
+      .catch((e) => setSt((s) => ({ ...s, loading: false, error: e.message })));
+  }, [api]);
+  useEffect(() => { refresh(); }, [refresh]);
+  const markAll = async () => { try { await api.markNotification('all'); refresh(); } catch (e) { setSt((s) => ({ ...s, error: e.message })); } };
+  const open = async (n) => { try { await api.markNotification(n.id); } catch { /* noop */ } navigate(`/waymark/app/d/${n.decisionId}`); };
+
+  return (
+    <section className="wma-pane">
+      <PaneHeader title={t('waymark.app.alerts')} />
+      <div className="wma-pane-body">
+        {st.error && <p className="wma-state wma-err">{st.error}</p>}
+        {st.loading && <p className="wma-state">{t('waymark.app.loading')}</p>}
+        {!st.loading && st.items.length === 0 && !st.error && <p className="wma-state">{t('waymark.app.alertsEmpty')}</p>}
+        {st.items.length > 0 && <button type="button" className="wma-markall" onClick={markAll}>{t('waymark.app.markAllRead')}</button>}
+        {st.items.map((n) => (
+          <button type="button" key={n.id} className={`wma-card wma-listitem${n.read ? '' : ' wma-active'}`} onClick={() => open(n)}>
+            <span className="u-eyebrow wma-lead">{t(`waymark.detail.lead.${n.type}`)}</span>
+            <div className="wma-dtitle wma-mt">{t(`waymark.home.ask.${n.type}`)}</div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function NewDecision() {
@@ -187,15 +223,22 @@ function Detail() {
 
   const d = st.decision;
   const companion = st.messages.filter((m) => m.type !== 'user_note');
-  const lastId = companion.length ? companion[companion.length - 1].id : null;
-  const lastTone = companion.length ? companion[companion.length - 1].tone : null;
+  const last = companion.length ? companion[companion.length - 1] : null;
+  const lastIsNudge = !!last && last.type === 'nudge';
 
   const renderCompanion = (m) => {
-    const useToneVal = (m.id === lastId && tone) ? tone : m.tone;
-    const lead = m.type === 'nudge' ? t(`waymark.enum.tone.${useToneVal}`) : t(`waymark.detail.lead.${m.type}`);
+    if (m.type !== 'nudge') {
+      return (
+        <div className="wma-m them" key={m.id}>
+          <span className="u-eyebrow wma-lead">{t(`waymark.detail.lead.${m.type}`)}</span>
+          {t(`waymark.home.ask.${m.type}`)}
+        </div>
+      );
+    }
+    const useToneVal = (m.id === last.id && tone) ? tone : m.tone;
     return (
       <div className="wma-m them" key={m.id}>
-        <span className="u-eyebrow wma-lead">{lead}</span>
+        <span className="u-eyebrow wma-lead">{t(`waymark.enum.tone.${useToneVal}`)}</span>
         {t(`waymark.companion.${useToneVal}.msg`, m.vars || {})}
         <span className="wma-close">{t(`waymark.companion.${useToneVal}.close`)}</span>
       </div>
@@ -217,9 +260,9 @@ function Detail() {
             : renderCompanion(m)))}
         </div>
 
-        {lastId && (
+        {lastIsNudge && (
           <div className="wma-tones">
-            {TONES.map((tn) => <button type="button" key={tn} className={`wma-tone${(tone || lastTone) === tn ? ' on' : ''}`} onClick={() => setTone(tn)}>{t(`waymark.enum.tone.${tn}`)}</button>)}
+            {TONES.map((tn) => <button type="button" key={tn} className={`wma-tone${(tone || last.tone) === tn ? ' on' : ''}`} onClick={() => setTone(tn)}>{t(`waymark.enum.tone.${tn}`)}</button>)}
           </div>
         )}
 
@@ -240,7 +283,12 @@ function Detail() {
 
 function Settings() {
   const { t } = useTranslation();
-  return <section className="wma-pane"><PaneHeader title={t('waymark.app.tabMe')} /><div className="wma-pane-body"><p className="wma-state">{t('waymark.app.settingsSoon')}</p></div></section>;
+  return (
+    <section className="wma-pane">
+      <PaneHeader title={t('waymark.app.tabMe')} />
+      <div className="wma-pane-body"><p className="wma-state">{t('waymark.app.settingsSoon')}</p></div>
+    </section>
+  );
 }
 
 function AppShell() {
@@ -253,6 +301,7 @@ function AppShell() {
         <Route index element={<Welcome />} />
         <Route path="new" element={<NewDecision />} />
         <Route path="d/:id" element={<Detail />} />
+        <Route path="alerts" element={<Alerts />} />
         <Route path="me" element={<Settings />} />
         <Route path="*" element={<Navigate to="/waymark/app" replace />} />
       </Routes>

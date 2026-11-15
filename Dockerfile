@@ -20,6 +20,8 @@ COPY server.mjs ./
 COPY admin-api.mjs ./
 COPY study-api.mjs ./
 COPY pacenote-api.mjs ./
+COPY waymark-api.mjs ./
+COPY waymark-nudge.mjs ./
 COPY pipeline/ ./pipeline/
 COPY src/data/ ./src/data/
 COPY public/content/ ./public/content/

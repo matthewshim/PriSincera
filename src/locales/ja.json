@@ -501,7 +501,10 @@
       "newTitle": "新しい決断",
       "settingsSoon": "設定は近日公開します。",
       "sharedAccount": "ReLearn・Waymark共通アカウント — 一度のログインで両方。",
-      "welcome": "左から決断を選ぶか、新しく記録してみましょう。"
+      "welcome": "左から決断を選ぶか、新しく記録してみましょう。",
+      "alerts": "通知",
+      "alertsEmpty": "まだ通知はありません。",
+      "markAllRead": "すべて既読"
     },
     "enum": {
       "status": {

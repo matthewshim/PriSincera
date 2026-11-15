@@ -288,4 +288,38 @@ router.patch('/me', requireAuth, async (req, res) => {
   }
 });
 
+// ── GET /notifications — 알림 센터(최신순) + 미읽음 수
+router.get("/notifications", requireAuth, async (req, res) => {
+  try {
+    const snap = await db.collection(COLLECTIONS.notifications).where("uid", "==", req.uid).get();
+    const ms = (ts) => (ts && ts.toMillis ? ts.toMillis() : 0);
+    const rows = snap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((x, y) => ms(y.createdAt) - ms(x.createdAt));
+    res.json({ notifications: rows.slice(0, 50), unread: rows.filter((r) => !r.read).length });
+  } catch (err) {
+    console.error("[Waymark] list notifications:", err.message);
+    res.status(500).json({ code: "server_error", error: "알림을 불러오지 못했습니다." });
+  }
+});
+
+// ── POST /notifications/:id/read — 읽음(또는 id=all 전체 읽음)
+router.post("/notifications/:id/read", requireAuth, async (req, res) => {
+  try {
+    if (req.params.id === "all") {
+      const snap = await db.collection(COLLECTIONS.notifications).where("uid", "==", req.uid).get();
+      const batch = db.batch(); let n = 0;
+      snap.forEach((d) => { if (!d.data().read) { batch.update(d.ref, { read: true }); n++; } });
+      if (n) await batch.commit();
+      return res.json({ ok: true, updated: n });
+    }
+    const ref = db.collection(COLLECTIONS.notifications).doc(req.params.id);
+    const doc = await ref.get();
+    if (!doc.exists || doc.data().uid !== req.uid) return res.status(404).json({ code: "not_found" });
+    await ref.update({ read: true });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[Waymark] read notification:", err.message);
+    res.status(500).json({ code: "server_error", error: "처리 중 오류가 발생했습니다." });
+  }
+});
+
 export default router;

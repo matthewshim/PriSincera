@@ -65,7 +65,7 @@
 .wma-app { display: flex; max-width: var(--container); margin: 0 auto; min-height: 100vh; padding-top: 80px; } /* GNB(≈68) 보정 */
 .wma-side { width: 340px; flex: none; border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: var(--space-md); gap: var(--space-12); }
 .wma-side-head { display: flex; align-items: center; justify-content: space-between; }
-.wma-iconlink { color: var(--text-muted); display: inline-flex; }
+.wma-iconlink { color: var(--text-muted); display: inline-flex; position: relative; }
 .wma-iconlink:hover { color: var(--text-secondary); }
 .wma-side-new { display: flex; align-items: center; justify-content: center; gap: var(--space-sm); text-decoration: none; }
 .wma-side-scroll { display: flex; flex-direction: column; gap: var(--space-sm); overflow-y: auto; flex: 1; }
@@ -138,3 +138,9 @@
 .wma-err { color: var(--color-danger); }
 .wma-back { background: none; border: none; color: var(--text-muted); font-family: var(--font-body); font-size: var(--fs-sm); display: inline-flex; align-items: center; gap: var(--space-xs); padding: 0; }
 .wma-back:hover { color: var(--text-secondary); }
+
+/* M1-B 알림 센터 */
+.wma-side-actions { display: flex; align-items: center; gap: var(--space-12); }
+.wma-dot-badge { position: absolute; top: -1px; right: -1px; width: 7px; height: 7px; border-radius: 50%; background: var(--color-indigo); }
+.wma-markall { align-self: flex-end; background: none; border: none; color: var(--color-indigo); font-family: var(--font-body); font-size: var(--fs-sm); padding: 0; }
+.wma-markall:hover { color: var(--prism-lavender); }

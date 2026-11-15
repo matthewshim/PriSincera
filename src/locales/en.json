@@ -501,7 +501,10 @@
       "newTitle": "New decision",
       "settingsSoon": "Settings are coming soon.",
       "sharedAccount": "One account for ReLearn & Waymark — sign in once.",
-      "welcome": "Pick a decision on the left, or record a new one."
+      "welcome": "Pick a decision on the left, or record a new one.",
+      "alerts": "Notifications",
+      "alertsEmpty": "No notifications yet.",
+      "markAllRead": "Mark all read"
     },
     "enum": {
       "status": {

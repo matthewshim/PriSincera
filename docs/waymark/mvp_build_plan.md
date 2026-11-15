@@ -124,6 +124,13 @@ target_files:
 - **감쇠/취소**: 2회 연속 미응답→1회 건너뜀, 3회→능동 알림 중단. `closed`→잔여 취소.
 - **도달 보증**: 푸시 미허용/iOS 미설치여도 **이메일로 도달**.
 
+### 5-3. 배포 (M1-B.1 — Job `waymark-nudge.mjs`, **web 이미지** 사용)
+Job은 `src/data`·`pipeline`을 모두 가진 **prisincera-web 이미지**로 실행(파이프라인 이미지엔 `src/data` 없음). **1회 셋업(오너, 배포 시점)**:
+- 잡 생성: `gcloud run jobs create waymark-nudge --image .../prisincera-images/web:latest --command node --args waymark-nudge.mjs --region asia-northeast3 --set-secrets <SMTP_*> --service-account <web SA>`(기존 digest 잡과 동일 SMTP 시크릿·SA)
+- cloudbuild에 갱신 step: `jobs update waymark-nudge --image web:$SHORT_SHA`(잡 생성 뒤 추가 — 미존재 시 빌드 깨지므로 생성 후)
+- 스케줄러: `gcloud scheduler jobs create http waymark-nudge-trigger --schedule "*/15 * * * *"`(15분 간격, Cloud Run Job 실행 트리거)
+- **Dockerfile**: `waymark-api.mjs`·`waymark-nudge.mjs` COPY 추가 완료(waymark-api.mjs 누락은 M1-A 배포 버그였음 → 수정).
+
 ## 6. PWA · 웹푸시
 - `manifest.webmanifest`(설치), Service Worker(오프라인 기록 큐·푸시 수신).
 - iOS는 **홈 화면 설치 시에만** 푸시(16.4+) → 온보딩(S-1)에서 설치 유도.
