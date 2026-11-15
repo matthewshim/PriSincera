@@ -539,6 +539,11 @@
         "1": "Light",
         "2": "Normal",
         "3": "Heavy"
+      },
+      "outcome": {
+        "good": "Good",
+        "mixed": "Mixed",
+        "ongoing": "Ongoing"
       }
     },
     "home": {
@@ -559,7 +564,10 @@
       "aiSoon": "Soon",
       "principle": "Waymark never decides for you. It only lights the fork.",
       "notePlaceholder": "Write a reply…",
-      "send": "Send"
+      "send": "Send",
+      "reviewBtn": "Look back",
+      "reviewEdit": "Edit reflection",
+      "outcomeLabel": "Reflection"
     },
     "new": {
       "qTitle": "What did you decide? Just tell me.",
@@ -592,6 +600,15 @@
         "msg": "Shall we split your thoughts into three: options / criteria / feelings?",
         "close": "I helped you sort it, but the decision stays yours."
       }
+    },
+    "retro": {
+      "title": "Looking back",
+      "then": "Then",
+      "now": "Now",
+      "outcomeQ": "How did it turn out?",
+      "emotionQ": "How do you feel now?",
+      "notePh": "Write the outcome and how you feel now.",
+      "save": "Save reflection"
     }
   },
   "sylphio": {

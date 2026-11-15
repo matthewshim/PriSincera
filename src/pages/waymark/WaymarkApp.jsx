@@ -1,14 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, createContext, useContext, useMemo } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation, Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../contexts/LanguageContext';
 import useSEO from '../../hooks/useSEO';
 import { useWaymarkApi } from './waymarkApi';
-import { DOMAINS, EMOTIONS, IMPORTANCE, TONES } from '../../data/waymarkModel.mjs';
+import { DOMAINS, EMOTIONS, IMPORTANCE, TONES, OUTCOMES } from '../../data/waymarkModel.mjs';
 import './WaymarkApp.css';
 
+const RefreshContext = createContext({ version: 0, bump: () => {} });
+
 /**
- * Waymark 앱 (/waymark/app) — M1-A 결정 코어 + M1-B 알림 센터.
+ * Waymark 앱 (/waymark/app) — M1-A 결정 코어 + M1-B 알림 + M1-D 회고.
  * 반응형 마스터-디테일. GNB는 body.hero-ready로 노출(§9-1). 데이터는 server REST(Bearer)→admin Firestore.
  */
 
@@ -18,6 +20,7 @@ const Svg = ({ d, w = 18, sw = 1.5 }) => (
 const BackIcon = () => <Svg d={<path d="M15 18l-6-6 6-6" />} w={16} sw={2} />;
 const SendIcon = () => <Svg d={<path d="M12 19V5M5 12l7-7 7 7" />} w={16} sw={2} />;
 const PlusIcon = () => <Svg d={<path d="M12 5v14M5 12h14" />} w={16} sw={2} />;
+const ArrowIcon = () => <Svg d={<path d="M5 12h14M13 6l6 6-6 6" />} w={16} sw={2} />;
 const BellIcon = () => <Svg d={<><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.5 21a1.5 1.5 0 0 1-3 0" /></>} w={18} />;
 const GearIcon = () => <Svg d={<><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></>} w={16} />;
 
@@ -34,6 +37,7 @@ const timeAgo = (ts, t) => {
   const days = Math.floor((Date.now() - ms) / 86400000);
   return days <= 0 ? t('waymark.app.today') : t('waymark.app.daysAgo', { n: days });
 };
+const emoList = (t, arr) => (arr && arr.length ? arr.map((e) => t(`waymark.enum.emotion.${e}`)).join('·') : '—');
 
 function PaneHeader({ title }) {
   const { t } = useTranslation();
@@ -50,6 +54,7 @@ function Sidebar() {
   const { t } = useTranslation();
   const location = useLocation();
   const api = useWaymarkApi();
+  const { version: refreshVersion } = useContext(RefreshContext);
   const [st, setSt] = useState({ loading: true, decisions: [], events: [], unread: 0, error: null });
   const activeId = (location.pathname.match(/\/d\/([^/]+)/) || [])[1];
 
@@ -59,7 +64,7 @@ function Sidebar() {
       .then(([d, e, n]) => { if (alive) setSt({ loading: false, decisions: d.decisions || [], events: e.events || [], unread: n.unread || 0, error: null }); })
       .catch((err) => { if (alive) setSt((s) => ({ ...s, loading: false, error: err.message })); });
     return () => { alive = false; };
-  }, [api, location.key]);
+  }, [api, refreshVersion]);
 
   return (
     <aside className="wma-side">
@@ -109,6 +114,7 @@ function Alerts() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const api = useWaymarkApi();
+  const { bump } = useContext(RefreshContext);
   const [st, setSt] = useState({ loading: true, items: [], error: null });
   const refresh = useCallback(() => {
     api.listNotifications()
@@ -116,7 +122,7 @@ function Alerts() {
       .catch((e) => setSt((s) => ({ ...s, loading: false, error: e.message })));
   }, [api]);
   useEffect(() => { refresh(); }, [refresh]);
-  const markAll = async () => { try { await api.markNotification('all'); refresh(); } catch (e) { setSt((s) => ({ ...s, error: e.message })); } };
+  const markAll = async () => { try { await api.markNotification('all'); refresh(); bump(); } catch (e) { setSt((s) => ({ ...s, error: e.message })); } };
   const open = async (n) => { try { await api.markNotification(n.id); } catch { /* noop */ } navigate(`/waymark/app/d/${n.decisionId}`); };
 
   return (
@@ -142,6 +148,7 @@ function NewDecision() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const api = useWaymarkApi();
+  const { bump } = useContext(RefreshContext);
   const [f, setF] = useState({ title: '', context: '', optionsRaw: '', chosen: '', emotionTags: [], domain: '', importance: 2 });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -158,6 +165,7 @@ function NewDecision() {
         options: f.optionsRaw.split(/[,\n]/).map((s) => s.trim()).filter(Boolean),
         emotionTags: f.emotionTags, domain: f.domain, importance: f.importance,
       });
+      bump();
       navigate(`/waymark/app/d/${id}`, { replace: true });
     } catch (err) { setError(err.message); setBusy(false); }
   };
@@ -185,6 +193,68 @@ function NewDecision() {
         </div>
         {error && <p className="wma-state wma-err">{error}</p>}
         <button type="button" className="wma-btn" disabled={!valid || busy} onClick={submit}>{busy ? t('waymark.app.saving') : t('waymark.new.save')}</button>
+      </div>
+    </section>
+  );
+}
+
+function Retro() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const api = useWaymarkApi();
+  const { bump } = useContext(RefreshContext);
+  const [st, setSt] = useState({ loading: true, decision: null, error: null });
+  const [outcome, setOutcome] = useState(null);
+  const [emotionNow, setEmotionNow] = useState([]);
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    api.getDecision(id)
+      .then((r) => { if (alive) { setSt({ loading: false, decision: r.decision, error: null }); setOutcome(r.decision.outcome || null); setEmotionNow(r.decision.emotionNow || []); setNote(r.decision.outcomeNote || ''); } })
+      .catch((e) => { if (alive) setSt((s) => ({ ...s, loading: false, error: e.message })); });
+    return () => { alive = false; };
+  }, [api, id]);
+  const toggleEmotion = (e) => setEmotionNow((p) => p.includes(e) ? p.filter((x) => x !== e) : [...p, e].slice(0, 6));
+
+  const save = async () => {
+    if (!outcome || busy) return;
+    setBusy(true);
+    try {
+      await api.patchDecision(id, { outcome, emotionNow, outcomeNote: note, status: outcome === 'ongoing' ? 'revisited' : 'closed' });
+      bump();
+      navigate(`/waymark/app/d/${id}`, { replace: true });
+    } catch (e) { setSt((s) => ({ ...s, error: e.message })); setBusy(false); }
+  };
+
+  if (st.loading) return <section className="wma-pane"><PaneHeader title={t('waymark.retro.title')} /><div className="wma-pane-body"><p className="wma-state">{t('waymark.app.loading')}</p></div></section>;
+  if (!st.decision) return <section className="wma-pane"><PaneHeader title={t('waymark.retro.title')} /><div className="wma-pane-body"><p className="wma-state wma-err">{st.error || t('waymark.app.notFound')}</p></div></section>;
+  const d = st.decision;
+
+  return (
+    <section className="wma-pane">
+      <PaneHeader title={t('waymark.retro.title')} />
+      <div className="wma-pane-body">
+        <div className="wma-m them">{t('waymark.home.ask.retro')}</div>
+        <div className="wma-card wma-flat"><div className="wma-dtitle">{d.title}</div></div>
+
+        <div className="wma-vs">
+          <div className="wma-vs-col"><span className="u-eyebrow wma-lead">{t('waymark.retro.then')}</span><span className="wma-vs-emo">{emoList(t, d.emotionTags)}</span></div>
+          <span className="wma-vs-arrow" aria-hidden="true"><ArrowIcon /></span>
+          <div className="wma-vs-col"><span className="u-eyebrow wma-lead">{t('waymark.retro.now')}</span><span className="wma-vs-emo">{emoList(t, emotionNow)}</span></div>
+        </div>
+
+        <div className="u-eyebrow wma-sect">{t('waymark.retro.outcomeQ')}</div>
+        <div className="wma-seg">{OUTCOMES.map((o) => <button type="button" key={o} className={outcome === o ? 'on' : ''} onClick={() => setOutcome(o)}>{t(`waymark.enum.outcome.${o}`)}</button>)}</div>
+
+        <div className="u-eyebrow wma-sect">{t('waymark.retro.emotionQ')}</div>
+        <div className="wma-chips">{EMOTIONS.map((e) => <button type="button" key={e} className={`wma-chip${emotionNow.includes(e) ? ' on' : ''}`} onClick={() => toggleEmotion(e)}>{t(`waymark.enum.emotion.${e}`)}</button>)}</div>
+
+        <div className="wma-field"><textarea className="wma-textarea" value={note} maxLength={4000} onChange={(e) => setNote(e.target.value)} placeholder={t('waymark.retro.notePh')} /></div>
+        {st.error && <p className="wma-state wma-err">{st.error}</p>}
+        <button type="button" className="wma-btn" disabled={!outcome || busy} onClick={save}>{busy ? t('waymark.app.saving') : t('waymark.retro.save')}</button>
       </div>
     </section>
   );
@@ -251,8 +321,22 @@ function Detail() {
       <div className="wma-pane-body">
         <div className="wma-card wma-flat">
           <div className="wma-cardrow"><span className="wma-dtitle">{d.title}</span><span className={`wma-badge ${d.status}`}>{t(`waymark.enum.status.${d.status}`)}</span></div>
-          <div className="wma-dmeta wma-mt">{d.emotionTags?.length ? d.emotionTags.map((e) => t(`waymark.enum.emotion.${e}`)).join('·') : ''}</div>
+          <div className="wma-dmeta wma-mt">{emoList(t, d.emotionTags)}</div>
         </div>
+
+        {d.outcome ? (
+          <div className="wma-card wma-flat">
+            <span className="u-eyebrow wma-lead">{t('waymark.detail.outcomeLabel')} · {t(`waymark.enum.outcome.${d.outcome}`)}</span>
+            <div className="wma-vs">
+              <div className="wma-vs-col"><span className="u-eyebrow wma-lead">{t('waymark.retro.then')}</span><span className="wma-vs-emo">{emoList(t, d.emotionTags)}</span></div>
+              <span className="wma-vs-arrow" aria-hidden="true"><ArrowIcon /></span>
+              <div className="wma-vs-col"><span className="u-eyebrow wma-lead">{t('waymark.retro.now')}</span><span className="wma-vs-emo">{emoList(t, d.emotionNow)}</span></div>
+            </div>
+            <button type="button" className="wma-markall" onClick={() => navigate(`/waymark/app/retro/${d.id}`)}>{t('waymark.detail.reviewEdit')}</button>
+          </div>
+        ) : (
+          <button type="button" className="wma-review" onClick={() => navigate(`/waymark/app/retro/${d.id}`)}>{t('waymark.detail.reviewBtn')}</button>
+        )}
 
         <div className="wma-thread">
           {st.messages.map((m) => (m.type === 'user_note'
@@ -294,18 +378,23 @@ function Settings() {
 function AppShell() {
   const location = useLocation();
   const isIndex = /\/waymark\/app\/?$/.test(location.pathname);
+  const [version, setVersion] = useState(0);
+  const refresh = useMemo(() => ({ version, bump: () => setVersion((v) => v + 1) }), [version]);
   return (
-    <div className={`wma-app${isIndex ? '' : ' wma-app--pane'}`}>
+    <RefreshContext.Provider value={refresh}>
+      <div className={`wma-app${isIndex ? '' : ' wma-app--pane'}`}>
       <Sidebar />
       <Routes>
         <Route index element={<Welcome />} />
         <Route path="new" element={<NewDecision />} />
         <Route path="d/:id" element={<Detail />} />
+        <Route path="retro/:id" element={<Retro />} />
         <Route path="alerts" element={<Alerts />} />
         <Route path="me" element={<Settings />} />
         <Route path="*" element={<Navigate to="/waymark/app" replace />} />
       </Routes>
-    </div>
+      </div>
+    </RefreshContext.Provider>
   );
 }
 
