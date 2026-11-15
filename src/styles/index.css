@@ -619,7 +619,6 @@ button:active,
 .dm-pick-badge,
 .signal-article-category,
 .pv-badge,
-.sylphio-guide-section-badge,
 .grid-weekday {
     font-family: var(--font-display);
     font-size: var(--fs-xs);
@@ -661,6 +660,7 @@ button:active,
 .section-label,
 .wm-eyebrow,
 .sylphio-eyebrow,
+.sylphio-guide-eyebrow,
 .journey-stop-years,
 .pvl-series-eyebrow,
 .flagship-label,

@@ -71,56 +71,10 @@
   flex-wrap: wrap;
 }
 
-/* 1200 셸 = 본문 860 프로스(좌) + 목차 사이드바 300(우).
-   외곽 글래스 박스 제거 — 플랫 프로스로 단순화(중첩 박스 답답함 해소, Builder's Log 상세와 정합) */
-.sylphio-doc-layout {
-  max-width: var(--container);
-  width: calc(100% - 48px);
-  margin: var(--space-xl) auto 0;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--doc-gutter);
-}
 
-.sylphio-privacy-main {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: var(--measure); /* 860 가독 단 */
-}
+/* 2단 셸·목차는 components/layout/SylphioDocShell.css가 담당한다(2026-11-15 통합). */
 
-/* 목차 사이드바 (sticky) — 메인 GNB(52) + SylphioNav 아래 고정 */
-.sylphio-doc-aside {
-  flex: 0 0 300px;
-  position: sticky;
-  top: 108px;
-  align-self: flex-start;
-  max-height: calc(100vh - 128px);
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
-
-.sylphio-doc-toc-label {
-  margin-bottom: var(--space-sm);
-}
-.sylphio-doc-toc ul { list-style: none; margin: 0; padding: 0; }
-.sylphio-toc-item a {
-  display: block;
-  padding: var(--space-xs) 0 var(--space-xs) var(--space-12);
-  font-size: var(--fs-xs);
-  line-height: var(--leading-snug);
-  color: var(--text-muted);
-  text-decoration: none;
-  border-left: 2px solid rgba(255, 255, 255, 0.08);
-  transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
-}
-.sylphio-toc-item a:hover { color: var(--text-secondary); }
-.sylphio-toc-item.active a { color: var(--accent-sylphio); border-left-color: var(--accent-sylphio); }
-
-@media (max-width: 1024px) {
-  .sylphio-doc-aside { display: none; }
-  .sylphio-doc-layout { display: block; }
-  .sylphio-privacy-main { max-width: var(--measure); margin: 0 auto; }
-}.sylphio-privacy-intro {
+.sylphio-privacy-intro {
   font-size: var(--fs-md);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
@@ -131,7 +85,6 @@
 .sylphio-privacy-section {
   margin-bottom: var(--space-xl);
   text-align: left;
-  scroll-margin-top: 108px; /* TOC 앵커 점프 시 GNB+Nav 가림 방지 */
 }
 
 .sylphio-privacy-section h2 {
@@ -179,10 +132,6 @@
   margin: var(--space-xl) 0;
 }
 
-@media (max-width: 640px) {
-  .sylphio-doc-layout {
-    width: calc(100% - 32px); /* 모바일 초밀착 여백 최적화 */
-  }}
 
 /* ==========================================================================
    Semantic CTA Button System
