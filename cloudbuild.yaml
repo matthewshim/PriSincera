@@ -58,6 +58,13 @@ steps:
       - '--set-secrets'
       - 'GEMINI_API_KEY=GEMINI_ADMIN_API_KEY:latest,GITHUB_TOKEN=GITHUB_TOKEN:latest,GROQ_API_KEY=GROQ_API_KEY:latest'  # secret-scan:ignore (시크릿 이름 매핑, 값 아님)
 
+  # Step 3b: Update Waymark Nudge Job (먼저찾아옴) — web 이미지 최신 반영 (최초 생성은 수동: docs/waymark/deploy_runbook.md)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'gcloud run jobs update waymark-nudge --image asia-northeast3-docker.pkg.dev/$PROJECT_ID/prisincera-images/web:$SHORT_SHA --region asia-northeast3 --command node --args waymark-nudge.mjs --task-timeout 300s --max-retries 1 || echo "[cloudbuild] waymark-nudge 미생성 — 건너뜀"'
+
   # ==========================================
   # [Part 2] Backend Pipeline (Cloud Run Jobs)
   # ==========================================
