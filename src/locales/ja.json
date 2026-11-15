@@ -567,7 +567,14 @@
       "send": "送信",
       "reviewBtn": "もう一度見る",
       "reviewEdit": "振り返りを編集",
-      "outcomeLabel": "振り返り"
+      "outcomeLabel": "振り返り",
+      "aiLabel": "AI同伴",
+      "aiAsk": "AIでさらに深く",
+      "aiRemaining": "体験 残り{n}回",
+      "aiCapReached": "無料体験を使い切りました。まもなくBYOKが開きます。",
+      "aiUnavailable": "AIは少し休んでいます。",
+      "aiRetry": "今は返事を取得できませんでした。少し後に再試行してください。",
+      "aiToneLabel": "どの結で聞きますか？"
     },
     "new": {
       "qTitle": "どんな決断をしましたか？ 気軽にどうぞ。",

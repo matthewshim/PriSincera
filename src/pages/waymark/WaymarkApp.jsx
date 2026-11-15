@@ -269,6 +269,9 @@ function Detail() {
   const [tone, setTone] = useState(null);
   const [note, setNote] = useState('');
   const [sending, setSending] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiError, setAiError] = useState(null);
+  const [aiRemaining, setAiRemaining] = useState(null);
 
   const load = useCallback(() => {
     let alive = true;
@@ -294,9 +297,24 @@ function Detail() {
   const d = st.decision;
   const companion = st.messages.filter((m) => m.type !== 'user_note');
   const last = companion.length ? companion[companion.length - 1] : null;
-  const lastIsNudge = !!last && last.type === 'nudge';
+  const askAi = async () => {
+    if (aiBusy) return;
+    setAiBusy(true); setAiError(null);
+    try {
+      const r = await api.aiCompanion(id, tone || (last && last.tone) || 'comfort');
+      setAiRemaining(r.remaining);
+      load();
+    } catch (e) {
+      if (e.status === 402) setAiError(t('waymark.detail.aiCapReached'));
+      else if (e.status === 503) setAiError(t('waymark.detail.aiUnavailable'));
+      else setAiError(t('waymark.detail.aiRetry'));
+    } finally { setAiBusy(false); }
+  };
 
   const renderCompanion = (m) => {
+    if (m.type === 'ai') {
+      return (<div className="wma-m them" key={m.id}><span className="u-eyebrow wma-lead">{t('waymark.detail.aiLabel')}</span>{m.text}</div>);
+    }
     if (m.type !== 'nudge') {
       return (
         <div className="wma-m them" key={m.id}>
@@ -344,15 +362,17 @@ function Detail() {
             : renderCompanion(m)))}
         </div>
 
-        {lastIsNudge && (
-          <div className="wma-tones">
-            {TONES.map((tn) => <button type="button" key={tn} className={`wma-tone${(tone || last.tone) === tn ? ' on' : ''}`} onClick={() => setTone(tn)}>{t(`waymark.enum.tone.${tn}`)}</button>)}
-          </div>
-        )}
-
         <div className="wma-ai">
-          <div className="wma-ai-h"><span>{t('waymark.detail.aiTitle')}</span><span className="wma-ai-soon">{t('waymark.detail.aiSoon')}</span></div>
+          <div className="wma-ai-h"><span>{t('waymark.detail.aiTitle')}</span>{aiRemaining != null && <span className="wma-ai-soon">{t('waymark.detail.aiRemaining', { n: aiRemaining })}</span>}</div>
           <span className="wma-ai-note">{t('waymark.detail.principle')}</span>
+          <div className="wma-ai-tonesrow">
+            <span className="wma-ai-tonelabel">{t('waymark.detail.aiToneLabel')}</span>
+            <div className="wma-tones">
+              {TONES.map((tn) => <button type="button" key={tn} className={'wma-tone' + ((tone || (last && last.tone) || 'comfort') === tn ? ' on' : '')} onClick={() => setTone(tn)}>{t('waymark.enum.tone.' + tn)}</button>)}
+            </div>
+          </div>
+          {aiError && <span className="wma-ai-note wma-err">{aiError}</span>}
+          <button type="button" className="wma-review" disabled={aiBusy} onClick={askAi}>{aiBusy ? t('waymark.app.saving') : t('waymark.detail.aiAsk')}</button>
         </div>
 
         {st.error && <p className="wma-state wma-err">{st.error}</p>}

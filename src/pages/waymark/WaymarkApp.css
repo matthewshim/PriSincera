@@ -168,3 +168,5 @@
 .wma-toggle.on { background: linear-gradient(135deg, var(--color-indigo), var(--prism-lavender)); }
 .wma-toggle.on::after { transform: translateX(18px); background: var(--bg-void); }
 .wma-gate-values { font-size: var(--fs-sm); color: var(--text-muted); letter-spacing: var(--tracking-wide); margin: var(--space-md) 0; }
+.wma-ai-tonesrow { display: flex; flex-direction: column; gap: var(--space-sm); }
+.wma-ai-tonelabel { font-size: var(--fs-xs); color: var(--text-muted); }

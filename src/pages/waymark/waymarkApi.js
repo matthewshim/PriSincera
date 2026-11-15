@@ -39,6 +39,8 @@ export function useWaymarkApi() {
     respondEvent: (id) => call(`/events/${id}/respond`, { method: 'POST' }),
     listNotifications: () => call('/notifications'),
     markNotification: (id) => call(`/notifications/${id}/read`, { method: 'POST' }),
+    aiCompanion: (decisionId, tone) => call('/ai/companion', { method: 'POST', body: { decisionId, tone } }),
+    aiUsage: () => call('/ai/usage'),
     getMe: () => call('/me'),
     patchMe: (body) => call('/me', { method: 'PATCH', body }),
   }), [call]);

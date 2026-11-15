@@ -324,4 +324,81 @@ router.post("/notifications/:id/read", requireAuth, async (req, res) => {
   }
 });
 
+// ── 체험 AI (Groq 프록시 · per-user 캡 · 가드레일) — M1-C.1 ──
+const AI_CAP = 15;
+const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
+const CRISIS_RE = /(자살|목숨을|죽고\s*싶|죽어버리|자해|해치고\s*싶|suicide|kill myself)/i;
+const CRISIS_MSG = '지금 많이 힘드신 것 같아요. 혼자 감당하지 마세요. 자살예방상담전화 109(24시간)로 연락하면 도움을 받을 수 있어요. 당신은 혼자가 아니에요.';
+const AI_TONE_GUIDE = {
+  comfort: '마음을 다독인다. 공감하고 안심시킨다.',
+  counsel: '갈래를 짚는 질문을 던진다. 놓친 관점을 함께 본다.',
+  cheer: '밀고 갈 힘을 준다. 응원한다.',
+  clarify: '생각을 선택지/기준/마음으로 구조화하도록 돕는다.',
+};
+function buildAiSystem(tone) {
+  return [
+    '너는 Waymark, 결정의 갈림길에서 곁을 지키는 동반자다.',
+    '규칙: (1) 절대 대신 결정하지 않는다 — 선택은 사용자 몫으로 돌려준다. (2) 3~4문장으로 짧고 담백하게. 과장/클리셰 금지. (3) 한국어로 따뜻하게. (4) 강요하지 않는다.',
+    '이번 결: ' + (AI_TONE_GUIDE[tone] || AI_TONE_GUIDE.comfort),
+    '마지막 문장은 결정을 사용자에게 돌려주는 말로 닫는다.',
+  ].join('\n');
+}
+
+// POST /ai/companion — 체험 AI(Groq)
+router.post('/ai/companion', requireAuth, async (req, res) => {
+  if (!process.env.GROQ_API_KEY) return res.status(503).json({ code: 'ai_unavailable' });
+  const tone = TONES.includes(req.body && req.body.tone) ? req.body.tone : 'comfort';
+  try {
+    const owned = await ownDecision(req.uid, req.body && req.body.decisionId);
+    if (!owned) return res.status(404).json({ code: 'not_found' });
+    const dec = owned.doc.data();
+
+    const usageRef = db.collection(COLLECTIONS.aiUsage).doc(req.uid);
+    const uSnap = await usageRef.get();
+    const used = uSnap.exists ? (uSnap.data().trialCallsUsed || 0) : 0;
+    if (used >= AI_CAP) return res.status(402).json({ code: 'cap_exceeded', remaining: 0 });
+
+    const ctx = String(dec.context || '').slice(0, 1500);
+    if (CRISIS_RE.test(dec.title + ' ' + ctx)) {
+      const cRef = owned.ref.collection(COLLECTIONS.decisionMessages).doc();
+      await cRef.set({ type: 'ai', tone, source: 'trial_ai', text: CRISIS_MSG, crisis: true, createdAt: FieldValue.serverTimestamp() });
+      return res.json({ id: cRef.id, text: CRISIS_MSG, tone, remaining: AI_CAP - used, crisis: true });
+    }
+
+    const userMsg = '결정: ' + dec.title + '\n상황: ' + ctx + '\n지금 감정: ' + (dec.emotionTags || []).join(', ');
+    let gr;
+    try {
+      gr = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.GROQ_API_KEY },
+        body: JSON.stringify({ model: GROQ_MODEL, reasoning_effort: 'low', temperature: 0.7, max_tokens: 500, messages: [{ role: 'system', content: buildAiSystem(tone) }, { role: 'user', content: userMsg }] }),
+      });
+    } catch (e) { console.error('[Waymark] groq fetch:', e.message); return res.status(502).json({ code: 'ai_error' }); }
+    if (!gr.ok) { console.error('[Waymark] groq status ' + gr.status); return res.status(502).json({ code: 'ai_error' }); }
+    const data = await gr.json();
+    let text = ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '').trim();
+    if (!text) return res.status(502).json({ code: 'ai_empty' });
+    if (CRISIS_RE.test(text)) text = CRISIS_MSG;
+
+    const msgRef = owned.ref.collection(COLLECTIONS.decisionMessages).doc();
+    await msgRef.set({ type: 'ai', tone, source: 'trial_ai', text, createdAt: FieldValue.serverTimestamp() });
+    await usageRef.set({ trialCallsUsed: used + 1, lastCallAt: FieldValue.serverTimestamp(), periodStart: uSnap.exists ? uSnap.data().periodStart : FieldValue.serverTimestamp() }, { merge: true });
+    res.json({ id: msgRef.id, text, tone, remaining: AI_CAP - (used + 1) });
+  } catch (err) {
+    console.error('[Waymark] ai companion:', err.message);
+    res.status(500).json({ code: 'server_error', error: 'AI 응답 중 오류가 발생했습니다.' });
+  }
+});
+
+// GET /ai/usage — 체험 남은 횟수
+router.get('/ai/usage', requireAuth, async (req, res) => {
+  try {
+    const uSnap = await db.collection(COLLECTIONS.aiUsage).doc(req.uid).get();
+    const used = uSnap.exists ? (uSnap.data().trialCallsUsed || 0) : 0;
+    res.json({ remaining: Math.max(0, AI_CAP - used), cap: AI_CAP, available: !!process.env.GROQ_API_KEY });
+  } catch (err) {
+    res.status(500).json({ code: 'server_error' });
+  }
+});
+
 export default router;

@@ -567,7 +567,14 @@
       "send": "Send",
       "reviewBtn": "Look back",
       "reviewEdit": "Edit reflection",
-      "outcomeLabel": "Reflection"
+      "outcomeLabel": "Reflection",
+      "aiLabel": "AI companion",
+      "aiAsk": "Go deeper with AI",
+      "aiRemaining": "{n} trial left",
+      "aiCapReached": "You have used all free trials. BYOK is coming soon.",
+      "aiUnavailable": "AI is resting for a moment.",
+      "aiRetry": "Could not get a reply. Please try again shortly.",
+      "aiToneLabel": "Which way to ask?"
     },
     "new": {
       "qTitle": "What did you decide? Just tell me.",
