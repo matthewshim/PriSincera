@@ -1,7 +1,8 @@
 import { Fragment, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import { useTranslation } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import './WaymarkLanding.css';
 import Icon from '../components/common/Icon';
 
@@ -25,6 +26,12 @@ const DEMO_TURNS = [0, 1];
 
 export default function WaymarkLanding() {
   const { t } = useTranslation();
+  const { user, loginWithGoogle } = useAuth();
+  const navigate = useNavigate();
+  const tryBeta = async () => {
+    if (!user) { try { await loginWithGoogle(); } catch (e) { return; } }
+    navigate('/waymark/app');
+  };
 
   useSEO({
     title: t('waymark.seo.title'),
@@ -45,8 +52,8 @@ export default function WaymarkLanding() {
         <h1 className="wm-hero-title">Waymark</h1>
         <p className="wm-hero-sub">{t('waymark.hero.sub')}</p>
         <div className="wm-hero-cta">
-          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.hero.ctaPrimary')}<Icon name="arrowRight" size={15} /></Link>
-          <a href="#wmLoop" className="wm-btn wm-btn-ghost">{t('waymark.hero.ctaGhost')}</a>
+          <button type="button" className="wm-btn wm-btn-primary" onClick={tryBeta}>{t('waymark.hero.ctaTry')}<Icon name="arrowRight" size={15} /></button>
+          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-ghost">{t('waymark.hero.ctaPrimary')}</Link>
         </div>
         <div className="wm-chip"><span className="wm-chip-dot" aria-hidden="true"></span> {t('waymark.hero.chip')}</div>
       </header>
@@ -119,7 +126,7 @@ export default function WaymarkLanding() {
         <div className="wm-cta">
           <h2>{t('waymark.cta.title')}</h2>
           <p>{t('waymark.cta.desc')}</p>
-          <Link to="/builders-log/introducing-waymark" className="wm-btn wm-btn-primary">{t('waymark.cta.btn')}<Icon name="arrowRight" size={15} /></Link>
+          <button type="button" className="wm-btn wm-btn-primary" onClick={tryBeta}>{t('waymark.hero.ctaTry')}<Icon name="arrowRight" size={15} /></button>
           <p className="wm-cta-soon">{t('waymark.cta.soon')}</p>
         </div>
       </section>

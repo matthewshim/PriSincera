@@ -144,6 +144,7 @@ function useAdminApi(token) {
 function Dashboard({ token, adminEmail, onLogout }) {
   const fetchApi = useAdminApi(token);
   const [activeTab, setActiveTab] = useState('overview');
+  const [waymarkUsers, setWaymarkUsers] = useState([]);
   const [stats, setStats] = useState(null);
   const [subscribers, setSubscribers] = useState([]);
   const [emailLogs, setEmailLogs] = useState([]);
@@ -792,6 +793,19 @@ function Dashboard({ token, adminEmail, onLogout }) {
 
   // ─── Admin CRUD ───────────────────────────────
 
+  async function loadWaymarkAccess() {
+    try { const data = await fetchApi('/waymark/access'); setWaymarkUsers(data.users || []); }
+    catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+  async function approveWaymark(uid) {
+    try { await fetchApi('/waymark/access/' + uid + '/approve', { method: 'POST' }); loadWaymarkAccess(); }
+    catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+  async function rejectWaymark(uid) {
+    try { await fetchApi('/waymark/access/' + uid + '/reject', { method: 'POST' }); loadWaymarkAccess(); }
+    catch (err) { if (err.message === 'AUTH_EXPIRED') onLogout(); }
+  }
+
   async function loadAdmins() {
     try {
       const data = await fetchApi('/admins');
@@ -841,6 +855,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   useEffect(() => {
     if (activeTab === 'subscribers') { loadSubscribers(); loadEmailLogs(); }
     if (activeTab === 'admins' && isSuperAdmin) loadAdmins();
+    if (activeTab === 'waymark' && isSuperAdmin) loadWaymarkAccess();
     if (activeTab === 'overview') { loadPriStudyStats(); loadBuildersLogMeta(); loadEmailLogs(); }
     if (activeTab === 'content') loadDailyContent();
     if (activeTab === 'pacenotes') { loadPacers(); loadPaceInsights(); }
@@ -857,6 +872,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
   }
 
   const ROLE_LABEL = { super_admin: '슈퍼 관리자', admin: '관리자' };
+  const WM_STATUS = { pending: '대기', approved: '승인됨', rejected: '거절됨' };
 
   // 1Depth 순서는 프론트 GNB와 동일: Common → Builder's Log → ReLearn
   // (구 Daily Digest·Pace Note 그룹은 리런 승계에 따라 ReLearn 단일 그룹으로 병합 — docs/core/admin_console_specification.md)
@@ -867,7 +883,7 @@ function Dashboard({ token, adminEmail, onLogout }) {
       items: [
         { id: 'overview', label: '대시보드' },
         { id: 'docs', label: '서비스 문서' },
-        ...(isSuperAdmin ? [{ id: 'admins', label: '관리자' }] : [])
+        ...(isSuperAdmin ? [{ id: 'admins', label: '관리자' }, { id: 'waymark', label: 'Waymark 베타' }] : [])
       ]
     },
     {
@@ -1113,6 +1129,42 @@ function Dashboard({ token, adminEmail, onLogout }) {
                     </tr>
                   ))}
                   {subscribers.length === 0 && (<tr><td colSpan={4} className="admin-empty">구독자 데이터가 없습니다</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'waymark' && isSuperAdmin && (
+          <div className="admin-admins">
+            <div className="admin-section-header">
+              <h2><Icon name="users" /> Waymark 초대제 베타</h2>
+              <button className="admin-btn-secondary" onClick={loadWaymarkAccess}>새로고침</button>
+            </div>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>이메일</th><th>상태</th><th>신청일</th><th>초대메일</th><th>관리</th></tr></thead>
+                <tbody>
+                  {waymarkUsers.length === 0 && (<tr><td colSpan={5}>신청 내역이 없습니다.</td></tr>)}
+                  {waymarkUsers.map((u) => (
+                    <tr key={u.uid}>
+                      <td className="admin-email-cell">{u.email || u.uid.slice(0, 8)}</td>
+                      <td>{WM_STATUS[u.accessStatus] || u.accessStatus}</td>
+                      <td>{u.requestedAt ? new Date(u.requestedAt).toLocaleString('ko-KR') : '-'}</td>
+                      <td>{u.inviteSentAt ? '발송됨' : '-'}</td>
+                      <td>
+                        {u.accessStatus === 'approved' ? (
+                          <button className="admin-btn-secondary" onClick={() => rejectWaymark(u.uid)}>해제</button>
+                        ) : (
+                          <>
+                            <button className="admin-btn-primary btn-primary" onClick={() => approveWaymark(u.uid)}>승인</button>
+                            {' '}
+                            <button className="admin-btn-secondary" onClick={() => rejectWaymark(u.uid)}>거절</button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

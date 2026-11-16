@@ -1607,4 +1607,76 @@ router.get('/builderslog/stats', async (req, res) => {
   }
 });
 
+// ─── Waymark 초대제 베타 승인 관리 ───
+function wmInviteHtml(locale) {
+  const ko = { title: 'Waymark 체험이 열렸어요', body: '신청해 주신 Waymark 체험이 승인되었어요. 아래 버튼으로 바로 시작하실 수 있어요.', btn: '체험 시작하기' };
+  const en = { title: 'Your Waymark beta access is open', body: 'Your request to try Waymark has been approved. Start now with the button below.', btn: 'Start the beta' };
+  const ja = { title: 'Waymark 体験が開きました', body: 'お申し込みいただいたWaymark体験が承認されました。下のボタンからすぐに始められます。', btn: '体験を始める' };
+  const L = locale === 'en' ? en : locale === 'ja' ? ja : ko;
+  const url = 'https://www.prisincera.com/waymark/app';
+  return '<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#1a1a1a">'
+    + '<h1 style="font-size:20px;margin:0 0 12px">' + L.title + '</h1>'
+    + '<p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 20px">' + L.body + '</p>'
+    + '<a href="' + url + '" style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-size:15px">' + L.btn + '</a>'
+    + '<p style="font-size:12px;color:#999;margin:24px 0 0">Waymark · PriSincera</p></div>';
+}
+
+// 신청/상태가 있는 waymark 사용자 목록(대기 우선)
+router.get('/waymark/access', async (req, res) => {
+  try {
+    const { db } = await import('./pipeline/src/lib/firestore.mjs');
+    const snap = await db.collection('waymark_users').get();
+    const ms = (ts) => (ts && ts.toMillis ? ts.toMillis() : 0);
+    const users = snap.docs.map((d) => ({ uid: d.id, ...d.data() }))
+      .filter((u) => u.accessStatus)
+      .map((u) => ({ uid: u.uid, email: u.email || null, accessStatus: u.accessStatus, requestedAt: ms(u.requestedAt), approvedAt: ms(u.approvedAt), inviteSentAt: ms(u.inviteSentAt), tosAgreedAt: ms(u.tosAgreedAt) }))
+      .sort((a, b) => (a.accessStatus === 'pending' ? 0 : 1) - (b.accessStatus === 'pending' ? 0 : 1) || b.requestedAt - a.requestedAt);
+    res.json({ users });
+  } catch (err) {
+    console.error('[admin] waymark access list:', err.message);
+    res.status(500).json({ error: '목록을 불러오지 못했습니다.' });
+  }
+});
+
+// 승인(+초대 메일 best-effort) — super_admin
+router.post('/waymark/access/:uid/approve', async (req, res) => {
+  if (req.adminRole !== 'super_admin') return res.status(403).json({ error: '권한이 없습니다.' });
+  try {
+    const { db, FieldValue } = await import('./pipeline/src/lib/firestore.mjs');
+    const ref = db.collection('waymark_users').doc(req.params.uid);
+    const snap = await ref.get();
+    if (!snap.exists) return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+    const u = snap.data();
+    await ref.set({ accessStatus: 'approved', approvedAt: FieldValue.serverTimestamp() }, { merge: true });
+    let emailed = false;
+    if (u.email) {
+      try {
+        const { sendEmail } = await import('./pipeline/src/lib/mailer.mjs');
+        const loc = u.locale || 'ko';
+        const subj = loc === 'en' ? 'Your Waymark beta access is open' : loc === 'ja' ? 'Waymark 体験が開きました' : 'Waymark 체험이 열렸어요';
+        await sendEmail(u.email, subj, wmInviteHtml(loc));
+        await ref.set({ inviteSentAt: FieldValue.serverTimestamp() }, { merge: true });
+        emailed = true;
+      } catch (e) { console.warn('[admin] waymark invite email fail:', e.message); }
+    }
+    res.json({ status: 'approved', emailed });
+  } catch (err) {
+    console.error('[admin] waymark approve:', err.message);
+    res.status(500).json({ error: '승인 중 오류가 발생했습니다.' });
+  }
+});
+
+// 거절 — super_admin
+router.post('/waymark/access/:uid/reject', async (req, res) => {
+  if (req.adminRole !== 'super_admin') return res.status(403).json({ error: '권한이 없습니다.' });
+  try {
+    const { db, FieldValue } = await import('./pipeline/src/lib/firestore.mjs');
+    await db.collection('waymark_users').doc(req.params.uid).set({ accessStatus: 'rejected', rejectedAt: FieldValue.serverTimestamp() }, { merge: true });
+    res.json({ status: 'rejected' });
+  } catch (err) {
+    console.error('[admin] waymark reject:', err.message);
+    res.status(500).json({ error: '거절 중 오류가 발생했습니다.' });
+  }
+});
+
 export default router;

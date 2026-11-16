@@ -89,7 +89,21 @@ function buildEvents(uid, decisionId, importance, cadence) {
 }
 
 // ── POST /decisions — 생성 + T+0 지지 메시지 + 이벤트 스케줄
-router.post('/decisions', requireAuth, async (req, res) => {
+// 승인 게이트 — 핵심 기능은 accessStatus==="approved"만 통과(초대제 베타)
+async function approvedCheck(req, res, next) {
+  try {
+    const snap = await db.collection(COLLECTIONS.users).doc(req.uid).get();
+    const status = snap.exists ? (snap.data().accessStatus || 'none') : 'none';
+    if (status !== 'approved') return res.status(403).json({ code: 'not_approved', status });
+    next();
+  } catch (err) {
+    console.error('[Waymark] approvedCheck:', err.message);
+    res.status(500).json({ code: 'server_error' });
+  }
+}
+const requireApproved = [requireAuth, approvedCheck];
+
+router.post('/decisions', requireApproved, async (req, res) => {
   const { ok, errors, clean } = validateDecision(req.body || {});
   if (!ok) return res.status(400).json({ code: 'invalid', errors });
   try {
@@ -129,7 +143,7 @@ router.post('/decisions', requireAuth, async (req, res) => {
 });
 
 // ── GET /decisions — 타임라인 (최신순, status/domain 필터)
-router.get('/decisions', requireAuth, async (req, res) => {
+router.get('/decisions', requireApproved, async (req, res) => {
   try {
     // 복합 인덱스 회피: uid 단일 필터로 가져와 JS에서 필터·정렬(dogfooding 규모). 프로덕션은 인덱스.
     const snap = await db.collection(COLLECTIONS.decisions).where('uid', '==', req.uid).get();
@@ -154,7 +168,7 @@ async function ownDecision(uid, id) {
 }
 
 // ── GET /decisions/:id — 상세 + 동반 메시지 타임라인
-router.get('/decisions/:id', requireAuth, async (req, res) => {
+router.get('/decisions/:id', requireApproved, async (req, res) => {
   try {
     const owned = await ownDecision(req.uid, req.params.id);
     if (!owned) return res.status(404).json({ code: 'not_found' });
@@ -170,7 +184,7 @@ router.get('/decisions/:id', requireAuth, async (req, res) => {
 });
 
 // ── PATCH /decisions/:id — 회고/결과·상태 전이
-router.patch('/decisions/:id', requireAuth, async (req, res) => {
+router.patch('/decisions/:id', requireApproved, async (req, res) => {
   try {
     const owned = await ownDecision(req.uid, req.params.id);
     if (!owned) return res.status(404).json({ code: 'not_found' });
@@ -202,7 +216,7 @@ router.patch('/decisions/:id', requireAuth, async (req, res) => {
 });
 
 // ── POST /decisions/:id/messages — 사용자 메모
-router.post('/decisions/:id/messages', requireAuth, async (req, res) => {
+router.post('/decisions/:id/messages', requireApproved, async (req, res) => {
   const text = clampStr(req.body?.text, LIMITS.context);
   if (!text) return res.status(400).json({ code: 'invalid', errors: ['text'] });
   try {
@@ -219,7 +233,7 @@ router.post('/decisions/:id/messages', requireAuth, async (req, res) => {
 });
 
 // ── GET /events/upcoming — 홈 '다가온 먼저찾아옴'(도래분)
-router.get('/events/upcoming', requireAuth, async (req, res) => {
+router.get('/events/upcoming', requireApproved, async (req, res) => {
   try {
     // 복합 인덱스 회피: uid 단일 필터 후 JS에서 status·도래 필터·정렬.
     const snap = await db.collection(COLLECTIONS.events).where('uid', '==', req.uid).get();
@@ -243,7 +257,7 @@ router.get('/events/upcoming', requireAuth, async (req, res) => {
 });
 
 // ── POST /events/:id/respond — 응답 처리
-router.post('/events/:id/respond', requireAuth, async (req, res) => {
+router.post('/events/:id/respond', requireApproved, async (req, res) => {
   try {
     const ref = db.collection(COLLECTIONS.events).doc(req.params.id);
     const doc = await ref.get();
@@ -261,7 +275,7 @@ router.get('/me', requireAuth, async (req, res) => {
   try {
     const doc = await db.collection(COLLECTIONS.users).doc(req.uid).get();
     const defaults = { quietStart: '22:00', quietEnd: '08:00', cadence: 'normal', pushEnabled: false, emailOptIn: true };
-    res.json({ settings: doc.exists ? { ...defaults, ...doc.data() } : defaults });
+    res.json({ settings: doc.exists ? { ...defaults, ...doc.data() } : defaults, accessStatus: doc.exists ? (doc.data().accessStatus || 'none') : 'none' });
   } catch (err) {
     console.error('[Waymark] get me:', err.message);
     res.status(500).json({ code: 'server_error', error: '설정을 불러오지 못했습니다.' });
@@ -290,7 +304,7 @@ router.patch('/me', requireAuth, async (req, res) => {
 });
 
 // ── GET /notifications — 알림 센터(최신순) + 미읽음 수
-router.get("/notifications", requireAuth, async (req, res) => {
+router.get("/notifications", requireApproved, async (req, res) => {
   try {
     const snap = await db.collection(COLLECTIONS.notifications).where("uid", "==", req.uid).get();
     const ms = (ts) => (ts && ts.toMillis ? ts.toMillis() : 0);
@@ -303,7 +317,7 @@ router.get("/notifications", requireAuth, async (req, res) => {
 });
 
 // ── POST /notifications/:id/read — 읽음(또는 id=all 전체 읽음)
-router.post("/notifications/:id/read", requireAuth, async (req, res) => {
+router.post("/notifications/:id/read", requireApproved, async (req, res) => {
   try {
     if (req.params.id === "all") {
       const snap = await db.collection(COLLECTIONS.notifications).where("uid", "==", req.uid).get();
@@ -345,7 +359,7 @@ function buildAiSystem(tone) {
 }
 
 // POST /ai/companion — 체험 AI(Groq)
-router.post('/ai/companion', requireAuth, async (req, res) => {
+router.post('/ai/companion', requireApproved, async (req, res) => {
   if (!process.env.GROQ_API_KEY) return res.status(503).json({ code: 'ai_unavailable' });
   const tone = TONES.includes(req.body && req.body.tone) ? req.body.tone : 'comfort';
   try {
@@ -396,7 +410,7 @@ router.post('/ai/companion', requireAuth, async (req, res) => {
 });
 
 // GET /ai/usage — 체험 남은 횟수
-router.get('/ai/usage', requireAuth, async (req, res) => {
+router.get('/ai/usage', requireApproved, async (req, res) => {
   try {
     const uSnap = await db.collection(COLLECTIONS.aiUsage).doc(req.uid).get();
     const uData = uSnap.exists ? uSnap.data() : null;
@@ -410,7 +424,7 @@ router.get('/ai/usage', requireAuth, async (req, res) => {
 });
 
 // POST /decisions/:id/ai-message — BYOK로 클라가 생성한 AI 텍스트 저장(서버는 AI 미호출)
-router.post("/decisions/:id/ai-message", requireAuth, async (req, res) => {
+router.post("/decisions/:id/ai-message", requireApproved, async (req, res) => {
   const text = clampStr(req.body && req.body.text, 4000);
   const tone = TONES.includes(req.body && req.body.tone) ? req.body.tone : "comfort";
   if (!text) return res.status(400).json({ code: "invalid", errors: ["text"] });
@@ -427,7 +441,7 @@ router.post("/decisions/:id/ai-message", requireAuth, async (req, res) => {
 });
 
 // GET /home — 사이드바 통합(결정+도래이벤트+미읽음) 1콜 (요청 수 절감)
-router.get('/home', requireAuth, async (req, res) => {
+router.get('/home', requireApproved, async (req, res) => {
   try {
     const [decSnap, evSnap, notiSnap] = await Promise.all([
       db.collection(COLLECTIONS.decisions).where('uid', '==', req.uid).get(),
@@ -452,7 +466,7 @@ router.get('/home', requireAuth, async (req, res) => {
 });
 
 // ── POST /me/push-token — FCM 토큰 등록(웹푸시)
-router.post('/me/push-token', requireAuth, async (req, res) => {
+router.post('/me/push-token', requireApproved, async (req, res) => {
   const token = clampStr(req.body && req.body.token, 500);
   if (!token) return res.status(400).json({ code: 'invalid', errors: ['token'] });
   try {
@@ -468,7 +482,7 @@ router.post('/me/push-token', requireAuth, async (req, res) => {
 });
 
 // ── DELETE /me/push-token — 토큰/푸시 해제
-router.delete('/me/push-token', requireAuth, async (req, res) => {
+router.delete('/me/push-token', requireApproved, async (req, res) => {
   const token = clampStr(req.body && req.body.token, 500);
   try {
     const patch = { updatedAt: FieldValue.serverTimestamp() };
@@ -478,6 +492,24 @@ router.delete('/me/push-token', requireAuth, async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error('[Waymark] push-token del:', err.message);
+    res.status(500).json({ code: 'server_error' });
+  }
+});
+
+// ── POST /access/request — 체험 신청(pending 생성). 승인 전에도 접근 가능.
+router.post('/access/request', requireAuth, async (req, res) => {
+  try {
+    const ref = db.collection(COLLECTIONS.users).doc(req.uid);
+    const snap = await ref.get();
+    const cur = snap.exists ? (snap.data().accessStatus || 'none') : 'none';
+    if (cur !== 'none') return res.json({ status: cur });
+    const tos = req.body && req.body.tosAgreed === true;
+    const patch = { accessStatus: 'pending', email: req.email || null, requestedAt: FieldValue.serverTimestamp() };
+    if (tos) patch.tosAgreedAt = FieldValue.serverTimestamp();
+    await ref.set(patch, { merge: true });
+    res.status(201).json({ status: 'pending' });
+  } catch (err) {
+    console.error('[Waymark] access request:', err.message);
     res.status(500).json({ code: 'server_error' });
   }
 });

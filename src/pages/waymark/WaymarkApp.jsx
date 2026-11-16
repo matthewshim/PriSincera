@@ -560,12 +560,23 @@ function AppShell() {
   const [version, setVersion] = useState(0);
   const refresh = useMemo(() => ({ version, bump: () => setVersion((v) => v + 1) }), [version]);
   const api = useWaymarkApi();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const [onboarded, setOnboarded] = useState(null);
   useEffect(() => {
     let a = true;
-    api.getMe().then((r) => { if (a) setOnboarded(!!r.settings.onboardedAt); }).catch(() => { if (a) setOnboarded(true); });
+    api.getMe().then(async (r) => {
+      if (!a) return;
+      const status = r.accessStatus || 'none';
+      if (status === 'approved') { setOnboarded(!!r.settings.onboardedAt); return; }
+      let msg;
+      if (status === 'none') { try { await api.requestAccess({ tosAgreed: true }); } catch (e) { /* noop */ } msg = t('waymark.access.requested'); }
+      else if (status === 'pending') msg = t('waymark.access.pending');
+      else msg = t('waymark.access.rejected');
+      if (a) { window.alert(msg); navigate('/waymark', { replace: true }); }
+    }).catch(() => { if (a) { window.alert(t('waymark.access.error')); navigate('/waymark', { replace: true }); } });
     return () => { a = false; };
-  }, [api]);
+  }, [api, navigate, t]);
   if (onboarded === null) return null;
   if (!onboarded) return <Onboarding onDone={() => setOnboarded(true)} />;
   return (
