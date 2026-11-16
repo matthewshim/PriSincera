@@ -177,3 +177,7 @@
 .wma-linkbtn { background: none; border: none; color: var(--color-indigo); font-family: var(--font-body); font-size: var(--fs-xs); padding: 0; }
 .wma-linkbtn:hover { color: var(--prism-lavender); }
 .wma-byok-warn { color: var(--text-muted); }
+
+.wma-consent { display: flex; align-items: flex-start; gap: var(--space-sm); text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); margin: var(--space-lg) 0; }
+.wma-consent input { margin-top: 3px; flex-shrink: 0; }
+.wma-gate-back { margin-top: var(--space-md); }

@@ -661,7 +661,15 @@
       "requested": "Your request has been received. We will email you once approved.",
       "pending": "Your access request is pending. We will email you once approved.",
       "rejected": "Access is not available at this time.",
-      "error": "Something went wrong. Please try again later."
+      "error": "Something went wrong. Please try again later.",
+      "applyTitle": "Request Waymark access",
+      "applyDesc": "So you're not alone at the big forks. Agree below and request access, and we'll email you once approved.",
+      "privacy": "Your decision records are stored encrypted (Firestore) and used only to provide the service. When you use the trial AI, your context is sent to a no-training (ZDR) AI.",
+      "agree": "I agree to the collection/use of personal data and the terms of service.",
+      "apply": "Request access",
+      "backHome": "Back",
+      "requestedTitle": "Your request is in",
+      "requestedDesc": "We'll email you once approved. Thanks for your patience."
     }
   },
   "sylphio": {

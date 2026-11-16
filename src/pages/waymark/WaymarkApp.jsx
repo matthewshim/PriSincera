@@ -554,6 +554,42 @@ function Onboarding({ onDone }) {
   );
 }
 
+// 미승인(none) — 약관 동의 + 체험 신청 화면
+function RequestAccess() {
+  const { t } = useTranslation();
+  const api = useWaymarkApi();
+  const navigate = useNavigate();
+  const [agreed, setAgreed] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
+  const submit = async () => {
+    if (!agreed || busy) return;
+    setBusy(true);
+    try { await api.requestAccess({ tosAgreed: true }); setDone(true); }
+    catch (e) { setBusy(false); }
+  };
+  if (done) {
+    return (
+      <div className="wma-gate"><div className="wma-gate-card">
+        <h1 className="wma-gate-title">Waymark</h1>
+        <p className="wma-gate-sub">{t('waymark.access.requestedTitle')}</p>
+        <p className="wma-gate-values">{t('waymark.access.requestedDesc')}</p>
+        <button type="button" className="wma-btn" onClick={() => navigate('/waymark')}>{t('waymark.access.backHome')}</button>
+      </div></div>
+    );
+  }
+  return (
+    <div className="wma-gate"><div className="wma-gate-card">
+      <h1 className="wma-gate-title">{t('waymark.access.applyTitle')}</h1>
+      <p className="wma-gate-sub">{t('waymark.access.applyDesc')}</p>
+      <p className="wma-gate-values">{t('waymark.access.privacy')}</p>
+      <label className="wma-consent"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span>{t('waymark.access.agree')}</span></label>
+      <button type="button" className="wma-btn" disabled={!agreed || busy} onClick={submit}>{t('waymark.access.apply')}</button>
+      <button type="button" className="wma-linkbtn wma-gate-back" onClick={() => navigate('/waymark')}>{t('waymark.access.backHome')}</button>
+    </div></div>
+  );
+}
+
 function AppShell() {
   const location = useLocation();
   const isIndex = /\/waymark\/app\/?$/.test(location.pathname);
@@ -563,20 +599,22 @@ function AppShell() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [onboarded, setOnboarded] = useState(null);
+  const [access, setAccess] = useState(null);
   useEffect(() => {
     let a = true;
-    api.getMe().then(async (r) => {
+    api.getMe().then((r) => {
       if (!a) return;
       const status = r.accessStatus || 'none';
-      if (status === 'approved') { setOnboarded(!!r.settings.onboardedAt); return; }
-      let msg;
-      if (status === 'none') { try { await api.requestAccess({ tosAgreed: true }); } catch (e) { /* noop */ } msg = t('waymark.access.requested'); }
-      else if (status === 'pending') msg = t('waymark.access.pending');
-      else msg = t('waymark.access.rejected');
-      if (a) { window.alert(msg); navigate('/waymark', { replace: true }); }
-    }).catch(() => { if (a) { window.alert(t('waymark.access.error')); navigate('/waymark', { replace: true }); } });
+      setAccess(status);
+      if (status === 'approved') setOnboarded(!!r.settings.onboardedAt);
+      else if (status === 'pending') { window.alert(t('waymark.access.pending')); navigate('/waymark', { replace: true }); }
+      else if (status === 'rejected') { window.alert(t('waymark.access.rejected')); navigate('/waymark', { replace: true }); }
+    }).catch(() => { if (a) { setAccess('error'); navigate('/waymark', { replace: true }); } });
     return () => { a = false; };
   }, [api, navigate, t]);
+  if (access === null) return null;
+  if (access === 'none') return <RequestAccess />;
+  if (access !== 'approved') return null;
   if (onboarded === null) return null;
   if (!onboarded) return <Onboarding onDone={() => setOnboarded(true)} />;
   return (
