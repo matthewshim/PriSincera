@@ -80,7 +80,7 @@ export async function callAnthropic(key, system, userMsg) {
 
 // Gemini 브라우저 직접 호출 (CORS 허용). 주의: 무료 티어는 입력을 학습에 쓸 수 있음(security_spec §6-2).
 export async function callGemini(key, system, userMsg) {
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=' + encodeURIComponent(key);
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=' + encodeURIComponent(key);
   const opts = {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
