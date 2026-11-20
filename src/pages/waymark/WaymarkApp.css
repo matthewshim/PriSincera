@@ -180,4 +180,4 @@
 
 .wma-consent { display: flex; align-items: flex-start; gap: var(--space-sm); text-align: left; font-size: var(--fs-sm); color: var(--text-secondary); margin: var(--space-lg) 0; }
 .wma-consent input { margin-top: 3px; flex-shrink: 0; }
-.wma-gate-back { margin-top: var(--space-md); }
+.wma-gate-back { display: block; width: fit-content; margin: var(--space-lg) auto 0; }
