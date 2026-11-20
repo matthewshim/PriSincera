@@ -352,9 +352,9 @@ const AI_TONE_GUIDE = {
 function buildAiSystem(tone) {
   return [
     '너는 Waymark, 결정의 갈림길에서 곁을 지키는 동반자다.',
-    '규칙: (1) 절대 대신 결정하지 않는다 — 선택은 사용자 몫으로 돌려준다. (2) 3~4문장으로 짧고 담백하게. 과장/클리셰 금지. (3) 한국어로 따뜻하게. (4) 강요하지 않는다.',
+    '규칙: (1) 먼저 사용자가 방금 한 말을 구체적으로 짚어 반응한다 — 표현과 생각을 받아 이어간다. 일반론·원론 금지. (2) 대신 결정하지 않는다. 생각이나 의견을 물으면 솔직한 관점을 나누되 최종 선택은 사용자 몫으로 남긴다. (3) 3~4문장으로 짧고 담백하게. 과장/클리셰 금지. (4) 한국어로 따뜻하게, 강요하지 않는다.',
     '이번 결: ' + (AI_TONE_GUIDE[tone] || AI_TONE_GUIDE.comfort),
-    '마지막 문장은 결정을 사용자에게 돌려주는 말로 닫는다.',
+    '마지막은 사용자의 선택을 존중하는 말로 자연스럽게 닫되, "당신이 결정하세요" 같은 상투적 문장은 피한다.',
   ].join('\n');
 }
 
@@ -382,13 +382,24 @@ router.post('/ai/companion', requireApproved, async (req, res) => {
       return res.json({ id: cRef.id, text: CRISIS_MSG, tone, remaining: AI_CAP - used, crisis: true });
     }
 
-    const userMsg = '결정: ' + dec.title + '\n상황: ' + ctx + '\n지금 감정: ' + (dec.emotionTags || []).join(', ');
+    const umsg = clampStr(req.body && req.body.message, 2000);
+    const msnap = await owned.ref.collection(COLLECTIONS.decisionMessages).orderBy('createdAt', 'asc').get();
+    let hist = msnap.docs.map((m) => m.data()).filter((m) => m.text && String(m.text).trim());
+    if (hist.length && hist[hist.length - 1].type === 'user_note' && hist[hist.length - 1].text === umsg) hist = hist.slice(0, -1);
+    const emoStr = (dec.emotionTags || []).join(', ');
+    const pLines = ['아래 대화에서 너는 Waymark 동반자다. 맨 아래 "지금 한 말"에 직접, 구체적으로 응답하라. 일반론으로 빠지지 마라.', '', '[배경 — 참고만]', '결정: ' + dec.title];
+    if (ctx) pLines.push('상황: ' + ctx);
+    if (emoStr) pLines.push('처음 감정: ' + emoStr);
+    const pRecent = hist.slice(-8);
+    if (pRecent.length) { pLines.push('', '[지금까지의 대화]'); pRecent.forEach((m) => pLines.push((m.type === 'user_note' ? '사용자' : 'Waymark') + ': ' + m.text)); }
+    pLines.push('', '[지금 한 말 — 여기에 답하라]', umsg || '');
+    const userMsg = pLines.join('\n');
     let gr;
     try {
       gr = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.GROQ_API_KEY },
-        body: JSON.stringify({ model: GROQ_MODEL, reasoning_effort: 'low', temperature: 0.7, max_tokens: 500, messages: [{ role: 'system', content: buildAiSystem(tone) }, { role: 'user', content: userMsg }] }),
+        body: JSON.stringify({ model: GROQ_MODEL, reasoning_effort: 'medium', temperature: 0.7, max_tokens: 800, messages: [{ role: 'system', content: buildAiSystem(tone) }, { role: 'user', content: userMsg }] }),
       });
     } catch (e) { console.error('[Waymark] groq fetch:', e.message); return res.status(502).json({ code: 'ai_error' }); }
     if (!gr.ok) { console.error('[Waymark] groq status ' + gr.status); return res.status(502).json({ code: 'ai_error' }); }

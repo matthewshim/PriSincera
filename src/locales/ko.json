@@ -591,7 +591,9 @@
       "byokTitle": "AI 키 (BYOK)",
       "byokFellBack": "내 키가 일시적으로 응답하지 않아 체험 AI로 답했어요.",
       "srcTrial": "체험 AI",
-      "srcByok": "내 키"
+      "srcByok": "내 키",
+      "msgPlaceholder": "마음을 적어요 — AI는 대신 결정하지 않고, 갈림길을 비출 뿐이에요",
+      "typing": "응답 작성 중"
     },
     "new": {
       "qTitle": "무슨 결정을 내렸어요? 편하게 말해주세요.",
@@ -605,7 +607,15 @@
       "phContext": "그때의 상황과 마음을 적어보세요.",
       "phOptions": "쉼표로 구분 (예: 남는다, 옮긴다)",
       "phChosen": "예: 옮긴다",
-      "save": "이대로 기록"
+      "save": "이대로 기록",
+      "remove": "삭제",
+      "optHint": "쉼표나 Enter로 하나씩 추가",
+      "missing": "아직 필요해요:",
+      "lTitle": "결정 내용",
+      "lContext": "맥락",
+      "lChosen": "선택",
+      "lEmotion": "마음",
+      "lDomain": "분류"
     },
     "companion": {
       "comfort": {

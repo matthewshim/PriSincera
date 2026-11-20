@@ -60,9 +60,9 @@ const TONE_GUIDE = { comfort: '마음을 다독인다. 공감하고 안심시킨
 export function byokSystem(tone) {
   return [
     '너는 Waymark, 결정의 갈림길에서 곁을 지키는 동반자다.', // i18n-ok: AI 시스템 프롬프트(UI 텍스트 아님)
-    '규칙: (1) 절대 대신 결정하지 않는다 — 선택은 사용자 몫으로 돌려준다. (2) 3~4문장으로 짧고 담백하게. (3) 한국어로 따뜻하게. (4) 강요하지 않는다.', // i18n-ok: AI 시스템 프롬프트(UI 텍스트 아님)
+    '규칙: (1) 먼저 사용자가 방금 한 말을 구체적으로 짚어 반응한다 — 표현과 생각을 받아 이어간다. 일반론·원론 금지. (2) 대신 결정하지 않는다. 생각이나 의견을 물으면 솔직한 관점을 나누되 최종 선택은 사용자 몫으로 남긴다. (3) 3~4문장으로 짧고 담백하게. 과장/클리셰 금지. (4) 한국어로 따뜻하게, 강요하지 않는다.', // i18n-ok: AI 시스템 프롬프트(UI 텍스트 아님)
     '이번 결: ' + (TONE_GUIDE[tone] || TONE_GUIDE.comfort), // i18n-ok: AI 시스템 프롬프트(UI 텍스트 아님)
-    '마지막 문장은 결정을 사용자에게 돌려주는 말로 닫는다.', // i18n-ok: AI 시스템 프롬프트(UI 텍스트 아님)
+    '마지막은 사용자의 선택을 존중하는 말로 자연스럽게 닫되, "당신이 결정하세요" 같은 상투적 문장은 피한다.', // i18n-ok: AI 시스템 프롬프트(UI 텍스트 아님)
   ].join('\n');
 }
 
@@ -81,18 +81,30 @@ export async function callAnthropic(key, system, userMsg) {
 // Gemini 브라우저 직접 호출 (CORS 허용). 주의: 무료 티어는 입력을 학습에 쓸 수 있음(security_spec §6-2).
 export async function callGemini(key, system, userMsg) {
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=' + encodeURIComponent(key);
-  const opts = {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: userMsg }] }], generationConfig: { maxOutputTokens: 400, temperature: 0.7 }, safetySettings: [{ category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' }, { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' }, { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' }, { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' }] }),
+  const base = {
+    systemInstruction: { parts: [{ text: system }] },
+    contents: [{ role: 'user', parts: [{ text: userMsg }] }],
+    safetySettings: [
+      { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+    ],
   };
+  const mkOpts = (gc) => ({ method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...base, generationConfig: gc }) });
+  // 1차: thinking 끄기(flash-lite는 thinking 모델 — 안 끄면 답변이 MAX_TOKENS로 잘린다) + 여유 토큰
+  let gc = { maxOutputTokens: 2048, temperature: 0.7, thinkingConfig: { thinkingBudget: 0 } };
   let r;
-  for (let i = 0; i < 2; i++) { r = await fetchT(url, opts, 25000); if (r.status !== 503 && r.status !== 429) break; if (i === 0) await new Promise((res) => setTimeout(res, 1500)); }
+  for (let i = 0; i < 2; i++) { r = await fetchT(url, mkOpts(gc), 25000); if (r.status !== 503 && r.status !== 429) break; if (i === 0) await new Promise((res) => setTimeout(res, 1500)); }
+  // thinkingConfig 미지원(400)이면 제거하고 큰 예산으로 재시도
+  if (r.status === 400) { gc = { maxOutputTokens: 4096, temperature: 0.7 }; r = await fetchT(url, mkOpts(gc), 25000); }
   if (!r.ok) { let b = ''; try { b = await r.text(); } catch (e) { b = ''; } console.error('[byok] gemini ' + r.status, b.slice(0, 300)); throw Object.assign(new Error('gemini ' + r.status), { status: r.status, body: b.slice(0, 200) }); }
   const d = await r.json();
   const cand = d.candidates && d.candidates[0];
-  const text = ((cand && cand.content && cand.content.parts && cand.content.parts[0] && cand.content.parts[0].text) || '').trim();
-  if (!text) console.error('[byok] gemini empty — finishReason:', cand && cand.finishReason, 'promptFeedback:', JSON.stringify(d.promptFeedback || {}));
+  const parts = (cand && cand.content && cand.content.parts) || [];
+  const text = parts.map((p) => p && p.text).filter(Boolean).join('').trim();
+  // 비었거나 MAX_TOKENS로 잘렸으면 조각을 노출하지 않고 폴백('')
+  if (!text || (cand && cand.finishReason === 'MAX_TOKENS')) { console.error('[byok] gemini truncated/empty — finishReason:', cand && cand.finishReason, 'len:', text.length); return ''; }
   return text;
 }
 

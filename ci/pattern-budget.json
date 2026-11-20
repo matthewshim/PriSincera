@@ -35,9 +35,9 @@
       "note": "떠 있는 레이어(GNB·드롭다운·모달·독·배경막·로더)와 **살아있는 콘텐츠 위**(홈 콘텐츠 컨테이너 4종은 sticky 히어로의 움직이는 별필드 위에 0.75 투명으로 얹혀 블러가 실제로 일한다)에만. 본문 카드·배지·버튼·목업 내부는 금지 — 배경이 거의 단색이라 효과는 없고 합성 레이어 비용만 든다"
     },
     "infinite-animation": {
-      "max": 42,
+      "max": 43,
       "target": 60,
-      "note": "infinite 키워드 총량 — **참고치**. 게이트된 것까지 세므로 병리 지표로는 infinite-ungated를 쓴다"
+      "note": "infinite 키워드 총량 — **참고치**. 게이트된 것까지 세므로 병리 지표로는 infinite-ungated를 쓴다 · 43: Waymark 응답중 타이핑(.loading 게이트, 유휴 미구동)"
     },
     "transition-all": {
       "max": 0,

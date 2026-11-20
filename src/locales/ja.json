@@ -591,7 +591,9 @@
       "byokTitle": "AIキー (BYOK)",
       "byokFellBack": "キーが一時的に応答しなかったため、体験AIが代わりに答えました。",
       "srcTrial": "体験AI",
-      "srcByok": "自分のキー"
+      "srcByok": "自分のキー",
+      "msgPlaceholder": "気持ちを書いて — AIは代わりに決めず、分かれ道を照らすだけ",
+      "typing": "返信を作成中"
     },
     "new": {
       "qTitle": "どんな決断をしましたか？ 気軽にどうぞ。",
@@ -605,7 +607,15 @@
       "phContext": "その時の状況と気持ちを書いてください。",
       "phOptions": "カンマ区切り（例：残る, 移る）",
       "phChosen": "例：移る",
-      "save": "このまま記録"
+      "save": "このまま記録",
+      "remove": "削除",
+      "optHint": "カンマかEnterで一つずつ追加",
+      "missing": "まだ必要です:",
+      "lTitle": "決断内容",
+      "lContext": "背景",
+      "lChosen": "選択",
+      "lEmotion": "気持ち",
+      "lDomain": "分類"
     },
     "companion": {
       "comfort": {

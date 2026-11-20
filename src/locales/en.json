@@ -591,7 +591,9 @@
       "byokTitle": "AI key (BYOK)",
       "byokFellBack": "Your key didn't respond just now, so the trial AI answered instead.",
       "srcTrial": "Trial AI",
-      "srcByok": "Your key"
+      "srcByok": "Your key",
+      "msgPlaceholder": "Write freely — the AI won’t decide for you, only light the fork",
+      "typing": "Writing a reply"
     },
     "new": {
       "qTitle": "What did you decide? Just tell me.",
@@ -605,7 +607,15 @@
       "phContext": "Describe the situation and how you felt.",
       "phOptions": "comma-separated (e.g. stay, switch)",
       "phChosen": "e.g. switch",
-      "save": "Record it"
+      "save": "Record it",
+      "remove": "Remove",
+      "optHint": "Add one by one with comma or Enter",
+      "missing": "Still needed:",
+      "lTitle": "Decision",
+      "lContext": "Context",
+      "lChosen": "Choice",
+      "lEmotion": "Feelings",
+      "lDomain": "Area"
     },
     "companion": {
       "comfort": {

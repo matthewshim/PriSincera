@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, createContext, useContext, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, createContext, useContext, useMemo } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation, Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../contexts/LanguageContext';
@@ -151,12 +151,22 @@ function NewDecision() {
   const navigate = useNavigate();
   const api = useWaymarkApi();
   const { bump } = useContext(RefreshContext);
-  const [f, setF] = useState({ title: '', context: '', optionsRaw: '', chosen: '', emotionTags: [], domain: '', importance: 2 });
+  const [f, setF] = useState({ title: '', context: '', options: [], chosen: '', emotionTags: [], domain: '', importance: 2 });
+  const [optDraft, setOptDraft] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const set = (k, v) => setF((s) => ({ ...s, [k]: v }));
   const toggleEmotion = (e) => setF((s) => ({ ...s, emotionTags: s.emotionTags.includes(e) ? s.emotionTags.filter((x) => x !== e) : [...s.emotionTags, e].slice(0, 6) }));
+  const removeOption = (i) => setF((s) => ({ ...s, options: s.options.filter((_, x) => x !== i) }));
+  const commitOpt = () => { const vals = optDraft.split(/[,\n]/).map((x) => x.trim()).filter(Boolean); if (vals.length) setF((s) => ({ ...s, options: [...s.options, ...vals].slice(0, 12) })); setOptDraft(''); };
+  const onOptKey = (e) => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); commitOpt(); } else if (e.key === 'Backspace' && !optDraft && f.options.length) { removeOption(f.options.length - 1); } };
   const valid = f.title.trim() && f.context.trim() && f.chosen.trim() && f.domain && f.emotionTags.length > 0;
+  const missing = [];
+  if (!f.title.trim()) missing.push(t('waymark.new.lTitle'));
+  if (!f.context.trim()) missing.push(t('waymark.new.lContext'));
+  if (!f.chosen.trim()) missing.push(t('waymark.new.lChosen'));
+  if (f.emotionTags.length === 0) missing.push(t('waymark.new.lEmotion'));
+  if (!f.domain) missing.push(t('waymark.new.lDomain'));
 
   const submit = async () => {
     if (!valid || busy) return;
@@ -164,37 +174,58 @@ function NewDecision() {
     try {
       const { id } = await api.createDecision({
         title: f.title, context: f.context, chosen: f.chosen,
-        options: f.optionsRaw.split(/[,\n]/).map((s) => s.trim()).filter(Boolean),
+        options: f.options,
         emotionTags: f.emotionTags, domain: f.domain, importance: f.importance,
       });
       bump();
       navigate(`/waymark/app/d/${id}`, { replace: true });
     } catch (err) { setError(err.message); setBusy(false); }
   };
-  const ask = (key) => <div className="wma-m them">{t(key)}</div>;
+  const Q = (key, req) => <label className="wma-q">{t(key)}{req ? <span className="wma-req">*</span> : null}</label>;
 
   return (
     <section className="wma-pane">
       <PaneHeader title={t('waymark.app.newTitle')} />
-      <div className="wma-pane-body">
-        <div className="wma-thread">
-          {ask('waymark.new.qTitle')}
-          <div className="wma-field"><input className="wma-input" value={f.title} maxLength={80} onChange={(e) => set('title', e.target.value)} placeholder={t('waymark.new.phTitle')} /></div>
-          {ask('waymark.new.qContext')}
-          <div className="wma-field"><textarea className="wma-textarea" value={f.context} maxLength={4000} onChange={(e) => set('context', e.target.value)} placeholder={t('waymark.new.phContext')} /></div>
-          {ask('waymark.new.qOptions')}
-          <div className="wma-field"><input className="wma-input" value={f.optionsRaw} onChange={(e) => set('optionsRaw', e.target.value)} placeholder={t('waymark.new.phOptions')} /></div>
-          {ask('waymark.new.qChosen')}
-          <div className="wma-field"><input className="wma-input" value={f.chosen} onChange={(e) => set('chosen', e.target.value)} placeholder={t('waymark.new.phChosen')} /></div>
-          {ask('waymark.new.qEmotion')}
-          <div className="wma-chips">{EMOTIONS.map((e) => <button type="button" key={e} className={`wma-chip${f.emotionTags.includes(e) ? ' on' : ''}`} onClick={() => toggleEmotion(e)}>{t(`waymark.enum.emotion.${e}`)}</button>)}</div>
-          {ask('waymark.new.qDomain')}
-          <div className="wma-chips">{DOMAINS.map((d) => <button type="button" key={d} className={`wma-chip${f.domain === d ? ' on' : ''}`} onClick={() => set('domain', d)}>{t(`waymark.enum.domain.${d}`)}</button>)}</div>
-          {ask('waymark.new.qImportance')}
-          <div className="wma-seg">{IMPORTANCE.map((n) => <button type="button" key={n} className={f.importance === n ? 'on' : ''} onClick={() => set('importance', n)}>{t(`waymark.enum.importance.${n}`)}</button>)}</div>
+      <div className="wma-pane-body wma-form">
+        <div className="wma-ff">
+          {Q('waymark.new.qTitle', true)}
+          <input className="wma-input" value={f.title} maxLength={80} onChange={(e) => set('title', e.target.value)} placeholder={t('waymark.new.phTitle')} />
+          <span className="wma-count">{f.title.length}/80</span>
+        </div>
+        <div className="wma-ff">
+          {Q('waymark.new.qContext', true)}
+          <textarea className="wma-textarea wma-ftext" value={f.context} maxLength={4000} onChange={(e) => set('context', e.target.value)} placeholder={t('waymark.new.phContext')} />
+          <span className="wma-count">{f.context.length}/4000</span>
+        </div>
+        <div className="wma-ff">
+          {Q('waymark.new.qOptions', false)}
+          <div className="wma-tagin">
+            {f.options.map((o, i) => (
+              <span className="wma-tag" key={i}>{o}<button type="button" className="wma-tag-x" aria-label={t('waymark.new.remove')} onClick={() => removeOption(i)}>×</button></span>
+            ))}
+            <input className="wma-tag-input" value={optDraft} onChange={(e) => setOptDraft(e.target.value)} onKeyDown={onOptKey} onBlur={commitOpt} placeholder={f.options.length ? '' : t('waymark.new.phOptions')} />
+          </div>
+          <span className="wma-count">{t('waymark.new.optHint')}</span>
+        </div>
+        <div className="wma-ff">
+          {Q('waymark.new.qChosen', true)}
+          <input className="wma-input" value={f.chosen} onChange={(e) => set('chosen', e.target.value)} placeholder={t('waymark.new.phChosen')} />
+        </div>
+        <div className="wma-ff">
+          {Q('waymark.new.qEmotion', true)}
+          <div className="wma-chips">{EMOTIONS.map((e) => <button type="button" key={e} className={'wma-chip' + (f.emotionTags.includes(e) ? ' on' : '')} onClick={() => toggleEmotion(e)}>{t('waymark.enum.emotion.' + e)}</button>)}</div>
+        </div>
+        <div className="wma-ff">
+          {Q('waymark.new.qDomain', true)}
+          <div className="wma-chips">{DOMAINS.map((d) => <button type="button" key={d} className={'wma-chip' + (f.domain === d ? ' on' : '')} onClick={() => set('domain', d)}>{t('waymark.enum.domain.' + d)}</button>)}</div>
+        </div>
+        <div className="wma-ff">
+          {Q('waymark.new.qImportance', false)}
+          <div className="wma-seg">{IMPORTANCE.map((n) => <button type="button" key={n} className={f.importance === n ? 'on' : ''} onClick={() => set('importance', n)}>{t('waymark.enum.importance.' + n)}</button>)}</div>
         </div>
         {error && <p className="wma-state wma-err">{error}</p>}
-        <button type="button" className="wma-btn" disabled={!valid || busy} onClick={submit}>{busy ? t('waymark.app.saving') : t('waymark.new.save')}</button>
+        {!valid && missing.length > 0 && <p className="wma-missing">{t('waymark.new.missing')} {missing.join(', ')}</p>}
+        <button type="button" className="wma-btn wma-form-save" disabled={!valid || busy} onClick={submit}>{busy ? t('waymark.app.saving') : t('waymark.new.save')}</button>
       </div>
     </section>
   );
@@ -268,7 +299,7 @@ function Detail() {
   const { id } = useParams();
   const api = useWaymarkApi();
   const [st, setSt] = useState({ loading: true, error: null, decision: null, messages: [] });
-  const [tone, setTone] = useState(null);
+  const [tone, setTone] = useState('comfort');
   const [note, setNote] = useState('');
   const [sending, setSending] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
@@ -283,13 +314,14 @@ function Detail() {
 
   const load = useCallback(() => {
     let alive = true;
-    setTone(null);
     api.getDecision(id)
       .then((r) => { if (alive) setSt({ loading: false, error: null, decision: r.decision, messages: r.messages || [] }); })
       .catch((err) => { if (alive) setSt((s) => ({ ...s, loading: false, error: err.message })); });
     return () => { alive = false; };
   }, [api, id]);
   useEffect(() => load(), [load]);
+  const bottomRef = useRef(null);
+  useEffect(() => { if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [st.messages, aiBusy]);
   useEffect(() => { byokProvider().then((p) => setByok(p)).catch(() => {}); }, []);
 
   const sendNote = async () => {
@@ -306,36 +338,47 @@ function Detail() {
   const d = st.decision;
   const companion = st.messages.filter((m) => m.type !== 'user_note');
   const last = companion.length ? companion[companion.length - 1] : null;
-  const askAi = async () => {
-    if (aiBusy) return;
+  const send = async () => {
+    const text = note.trim();
+    if (!text || aiBusy) return;
+    setNote('');
+    const tempId = 'temp-' + Date.now();
+    setSt((cur) => ({ ...cur, messages: [...cur.messages, { id: tempId, type: 'user_note', text }] }));
     setAiBusy(true); setAiError(null); setAiNote(null);
-    const useTone = tone || (last && last.tone) || 'comfort';
+    const useTone = tone || 'comfort';
     const ctx = String(d.context || '').slice(0, 1500);
-    const userMsg = '결정: ' + d.title + '\n상황: ' + ctx + '\n지금 감정: ' + (d.emotionTags || []).join(', '); // i18n-ok: AI 입력 메시지(UI 아님)
-    const runTrial = async () => {
-      const r = await api.aiCompanion(id, useTone);
-      setAiRemaining(r.remaining);
-      load();
-    };
+    const emoStr = (d.emotionTags || []).join(', '); // i18n-ok: AI 입력(UI 아님)
+    const pLines = ['아래 대화에서 너는 Waymark 동반자다. 맨 아래 "지금 한 말"에 직접, 구체적으로 응답하라. 일반론으로 빠지지 마라.', '', '[배경 — 참고만]', '결정: ' + d.title]; // i18n-ok: AI 프롬프트(UI 아님)
+    if (ctx) pLines.push('상황: ' + ctx); // i18n-ok: AI 프롬프트(UI 아님)
+    if (emoStr) pLines.push('처음 감정: ' + emoStr); // i18n-ok: AI 프롬프트(UI 아님)
+    const pRecent = (st.messages || []).filter((m) => m.text && String(m.text).trim()).slice(-8);
+    if (pRecent.length) { pLines.push('', '[지금까지의 대화]'); pRecent.forEach((m) => pLines.push((m.type === 'user_note' ? '사용자' : 'Waymark') + ': ' + m.text)); } // i18n-ok: AI 프롬프트(UI 아님)
+    pLines.push('', '[지금 한 말 — 여기에 답하라]', text); // i18n-ok: AI 프롬프트(UI 아님)
+    const userMsg = pLines.join('\n'); // i18n-ok: AI 입력(UI 아님)
     try {
+      await api.addMessage(id, text);
       if (byok) {
         try {
           const cred = await getByok();
           if (!cred) { setByok(null); throw Object.assign(new Error('nokey'), { status: 0 }); }
-          const text = await callByok(cred.provider, cred.key, byokSystem(useTone), userMsg);
-          if (!text) throw Object.assign(new Error('empty'), { status: 502 });
-          await api.aiByokMessage(id, useTone, text, cred.provider);
+          const aiText = await callByok(cred.provider, cred.key, byokSystem(useTone), userMsg);
+          if (!aiText) throw Object.assign(new Error('empty'), { status: 502 });
+          await api.aiByokMessage(id, useTone, aiText, cred.provider);
           load();
         } catch (byokErr) {
           console.error('[Waymark] BYOK 실패, 체험 AI 폴백', byokErr, byokErr && byokErr.body || '');
-          await runTrial();
+          const r = await api.aiCompanion(id, useTone, text);
+          setAiRemaining(r.remaining);
+          load();
           setAiNote(t('waymark.detail.byokFellBack'));
         }
       } else {
-        await runTrial();
+        const r = await api.aiCompanion(id, useTone, text);
+        setAiRemaining(r.remaining);
+        load();
       }
     } catch (e) {
-      console.error('[Waymark] askAi error', e, e && e.body || '');
+      console.error('[Waymark] send error', e, e && e.body || '');
       if (e.status === 402) setAiError(t('waymark.detail.aiCapReached'));
       else if (e.status === 503) setAiError(t('waymark.detail.aiUnavailable'));
       else if (e.status === 401 || e.status === 403) setAiError(t('waymark.detail.byokBadKey'));
@@ -357,7 +400,7 @@ function Detail() {
       const srcLabel = m.source === 'byok'
         ? t('waymark.detail.srcByok') + ' (' + (m.provider === 'gemini' ? 'Gemini' : 'Anthropic') + ')'
         : t('waymark.detail.srcTrial');
-      return (<div className="wma-m them" key={m.id}><span className="u-eyebrow wma-lead">{srcLabel}</span>{m.text}</div>);
+      return (<div className="wma-m them" key={m.id}><span className="u-eyebrow wma-lead">{srcLabel}{m.tone ? ' · ' + t('waymark.enum.tone.' + m.tone) : ''}</span>{m.text}</div>);
     }
     if (m.type !== 'nudge') {
       return (
@@ -367,7 +410,7 @@ function Detail() {
         </div>
       );
     }
-    const useToneVal = (m.id === last.id && tone) ? tone : m.tone;
+    const useToneVal = m.tone;
     return (
       <div className="wma-m them" key={m.id}>
         <span className="u-eyebrow wma-lead">{t(`waymark.enum.tone.${useToneVal}`)}</span>
@@ -404,52 +447,56 @@ function Detail() {
           {st.messages.map((m) => (m.type === 'user_note'
             ? <div className="wma-m me" key={m.id}>{m.text}</div>
             : renderCompanion(m)))}
-        </div>
-
-        <div className="wma-ai">
-          <div className="wma-ai-h"><span>{t('waymark.detail.aiTitle')}</span>{aiRemaining != null && <span className="wma-ai-soon">{t('waymark.detail.aiRemaining', { n: aiRemaining })}</span>}</div>
-          <span className="wma-ai-note">{t('waymark.detail.principle')}</span>
-          <div className="wma-ai-tonesrow">
-            <span className="wma-ai-tonelabel">{t('waymark.detail.aiToneLabel')}</span>
-            <div className="wma-tones">
-              {TONES.map((tn) => <button type="button" key={tn} className={'wma-tone' + ((tone || (last && last.tone) || 'comfort') === tn ? ' on' : '')} onClick={() => setTone(tn)}>{t('waymark.enum.tone.' + tn)}</button>)}
+          {aiBusy && (
+            <div className="wma-m them wma-typing loading" aria-label={t('waymark.detail.typing')}>
+              <span className="wma-typing-dot" /><span className="wma-typing-dot" /><span className="wma-typing-dot" />
             </div>
-          </div>
-          {aiError && <span className="wma-ai-note wma-err">{aiError}</span>}
-          {aiNote && <span className="wma-ai-note">{aiNote}</span>}
-          <button type="button" className="wma-review" disabled={aiBusy} onClick={askAi}>{aiBusy ? t('waymark.app.saving') : t('waymark.detail.aiAsk')}</button>
-        </div>
-        <div className="wma-ai wma-keycard">
-          <div className="wma-ai-h"><span>{t('waymark.detail.byokTitle')}</span></div>
-          <div className="wma-byok">
-            {byok ? (
-              <span className="wma-ai-note">{t('waymark.detail.byokConnected')} · {byok === 'gemini' ? 'Gemini' : 'Anthropic'} <button type="button" className="wma-linkbtn" onClick={disconnectByok}>{t('waymark.detail.byokDisconnect')}</button></span>
-            ) : byokOpen ? (
-              <div className="wma-byok-form">
-                <div className="wma-chips">
-                  <button type="button" className={'wma-chip' + (byokProv === 'anthropic' ? ' on' : '')} onClick={() => setByokProv('anthropic')}>Anthropic</button>
-                  <button type="button" className={'wma-chip' + (byokProv === 'gemini' ? ' on' : '')} onClick={() => setByokProv('gemini')}>Gemini</button>
-                </div>
-                <span className="wma-ai-note">{t('waymark.detail.byokIntro')}</span>
-                <input className="wma-input" type="password" value={byokKey} onChange={(e) => setByokKey(e.target.value)} placeholder={t(byokProv === 'gemini' ? 'waymark.detail.byokPhGemini' : 'waymark.detail.byokPlaceholder')} />
-                <div className="wma-byok-actions">
-                  <button type="button" className="wma-review" disabled={byokBusy || !byokKey.trim()} onClick={connectByok}>{t('waymark.detail.byokConnect')}</button>
-                  <button type="button" className="wma-linkbtn" onClick={() => setByokOpen(false)}>{t('waymark.detail.byokCancel')}</button>
-                </div>
-                <span className="wma-ai-note wma-byok-warn">{t(byokProv === 'gemini' ? 'waymark.detail.byokWarnGemini' : 'waymark.detail.byokWarn')}</span>
-              </div>
-            ) : (
-              <button type="button" className="wma-linkbtn" onClick={() => setByokOpen(true)}>{t('waymark.detail.byokOpen')}</button>
-            )}
-          </div>
+          )}
         </div>
 
         {st.error && <p className="wma-state wma-err">{st.error}</p>}
-        <div className="wma-composer">
-          <input className="wma-input" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('waymark.detail.notePlaceholder')} onKeyDown={(e) => { if (e.key === 'Enter') sendNote(); }} />
-          <button type="button" className="wma-send" disabled={!note.trim() || sending} onClick={sendNote} aria-label={t('waymark.detail.send')}><SendIcon /></button>
-        </div>
+        <div ref={bottomRef} aria-hidden="true" />
       </div>
+        <div className="wma-cinput">
+          <div className="wma-cinput-bar">
+            <div className="wma-tones">
+              {TONES.map((tn) => <button type="button" key={tn} className={'wma-tone' + (tone === tn ? ' on' : '')} onClick={() => setTone(tn)}>{t('waymark.enum.tone.' + tn)}</button>)}
+            </div>
+            <div className="wma-cinput-meta">
+            {byok
+              ? <button type="button" className="wma-linkbtn" onClick={() => setByokOpen((v) => !v)}>{t('waymark.detail.byokConnected')} · {byok === 'gemini' ? 'Gemini' : 'Anthropic'}</button>
+              : <button type="button" className="wma-byok-cta" onClick={() => setByokOpen((v) => !v)}>{t('waymark.detail.byokOpen')}</button>}
+            </div>
+          </div>
+          {byokOpen && (byok ? (
+            <div className="wma-byok-form"><span className="wma-ai-note">{t('waymark.detail.byokConnected')} · {byok === 'gemini' ? 'Gemini' : 'Anthropic'} <button type="button" className="wma-linkbtn" onClick={disconnectByok}>{t('waymark.detail.byokDisconnect')}</button></span></div>
+          ) : (
+            <div className="wma-byok-form">
+              <div className="wma-chips">
+                <button type="button" className={'wma-chip' + (byokProv === 'anthropic' ? ' on' : '')} onClick={() => setByokProv('anthropic')}>Anthropic</button>
+                <button type="button" className={'wma-chip' + (byokProv === 'gemini' ? ' on' : '')} onClick={() => setByokProv('gemini')}>Gemini</button>
+              </div>
+              <span className="wma-ai-note">{t('waymark.detail.byokIntro')}</span>
+              <input className="wma-input" type="password" value={byokKey} onChange={(e) => setByokKey(e.target.value)} placeholder={t(byokProv === 'gemini' ? 'waymark.detail.byokPhGemini' : 'waymark.detail.byokPlaceholder')} />
+              <div className="wma-byok-actions">
+                <button type="button" className="wma-review" disabled={byokBusy || !byokKey.trim()} onClick={connectByok}>{t('waymark.detail.byokConnect')}</button>
+                <button type="button" className="wma-linkbtn" onClick={() => setByokOpen(false)}>{t('waymark.detail.byokCancel')}</button>
+              </div>
+              <span className="wma-ai-note wma-byok-warn">{t(byokProv === 'gemini' ? 'waymark.detail.byokWarnGemini' : 'waymark.detail.byokWarn')}</span>
+            </div>
+          ))}
+          {aiError && <span className="wma-ai-note wma-err">{aiError}</span>}
+          {(aiNote || aiRemaining != null) && (
+            <div className="wma-trial">
+              {aiNote && <span className="wma-trial-note">{aiNote}</span>}
+              {aiRemaining != null && <span className="wma-trial-count">{t('waymark.detail.aiRemaining', { n: aiRemaining })}</span>}
+            </div>
+          )}
+          <div className="wma-composer">
+            <input className="wma-input" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('waymark.detail.msgPlaceholder')} onKeyDown={(e) => { if (e.key === 'Enter') send(); }} disabled={aiBusy} />
+            <button type="button" className="wma-send" disabled={!note.trim() || aiBusy} onClick={send} aria-label={t('waymark.detail.send')}><SendIcon /></button>
+          </div>
+        </div>
     </section>
   );
 }
