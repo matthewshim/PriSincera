@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
 import { useTranslation } from '../contexts/LanguageContext';
@@ -21,8 +21,7 @@ import Icon from '../components/common/Icon';
 // 전 언어 공통 고정 영문/숫자 라벨 (i18n 비대상)
 const STEP_NOS = ['01', '02', '03', '04'];
 const STEP_ICONS = ['pen', 'star', 'trail', 'cycle'];
-const TONE_IDX = [0, 1, 2, 3];
-const DEMO_TURNS = [0, 1];
+const TONE_IDX = [0, 1, 2, 3, 4];
 
 export default function WaymarkLanding() {
   const { t } = useTranslation();
@@ -101,24 +100,21 @@ export default function WaymarkLanding() {
             <p className="wm-demo-said">{t('waymark.modes.demo.entry')}</p>
           </div>
           <p className="wm-demo-gap">{t('waymark.modes.demo.gap')}</p>
-          {DEMO_TURNS.map((i) => (
-            <div className="wm-demo-turn" key={i}>
-              <span className="wm-demo-mode">{t(`waymark.modes.demo.turns.${i}.mode`)}</span>
-              <p className="wm-demo-said">{t(`waymark.modes.demo.turns.${i}.msg`)}</p>
-            </div>
-          ))}
+          <div className="wm-demo-turns">
+            {TONE_IDX.map((i) => (
+              <div className="wm-demo-turn" key={i}>
+                <span className="wm-demo-mode">{t(`waymark.modes.items.${i}.t`)}</span>
+                <div className="wm-demo-body">
+                  <p className="wm-demo-said">{t(`waymark.modes.items.${i}.ex`)}</p>
+                  <p className="wm-demo-desc">{t(`waymark.modes.items.${i}.d`)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-
-        {/* 네 가지 결 — 그리드가 아닌 정의 목록(이름 → 뜻) */}
-        <dl className="wm-tones">
-          {TONE_IDX.map((i) => (
-            <Fragment key={i}>
-              <dt>{t(`waymark.modes.items.${i}.t`)}</dt>
-              <dd>{t(`waymark.modes.items.${i}.d`)}</dd>
-            </Fragment>
-          ))}
-        </dl>
-        <div className="wm-reassure">{t('waymark.modes.reassure')}</div>
+        <p className="wm-reassure">
+          <span className="wm-reassure-lead">{t('waymark.modes.reassureLead')}</span>{' '}{t('waymark.modes.reassureTail')}
+        </p>
       </section>
 
       {/* CTA — 닫는 카드 */}

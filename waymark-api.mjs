@@ -348,6 +348,7 @@ const AI_TONE_GUIDE = {
   counsel: '갈래를 짚는 질문을 던진다. 놓친 관점을 함께 본다.',
   cheer: '밀고 갈 힘을 준다. 응원한다.',
   clarify: '생각을 선택지/기준/마음으로 구조화하도록 돕는다.',
+  verify: '이미 기운 결정을 눌러본다. 전제·가정·놓친 리스크를 짚되, 맞서지 않고 사용자 스스로 점검하게 돕는다.',
 };
 function buildAiSystem(tone) {
   return [

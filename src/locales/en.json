@@ -431,7 +431,7 @@
       ]
     },
     "modes": {
-      "title": "Four tones, one posture",
+      "title": "Five tones, one posture",
       "desc": "It comes to you in the tone the moment calls for — comfort when you need comfort, clarity when you need clarity.",
       "demo": {
         "entryLabel": "Logged",
@@ -452,22 +452,32 @@
       "items": [
         {
           "t": "Comfort",
-          "d": "On days a decision feels heavy, it steadies your heart first."
+          "d": "On days a decision feels heavy, it steadies your heart first.",
+          "ex": "You're not failing to decide. You're weighing what matters."
         },
         {
           "t": "Counsel",
-          "d": "It doesn't hand you an answer; it traces the branches of your thinking with you."
+          "d": "It doesn't hand you an answer; it traces the branches of your thinking with you.",
+          "ex": "In that higher-paying seat, what are you doing three years from now?"
         },
         {
           "t": "Cheer",
-          "d": "It adds the strength to carry the decision you've made forward."
+          "d": "It adds the strength to carry the decision you've made forward.",
+          "ex": "Whichever you choose, the care you've taken to weigh it isn't wrong."
         },
         {
           "t": "Clarify",
-          "d": "It distills tangled thoughts into a shape you can decide on."
+          "d": "It distills tangled thoughts into a shape you can decide on.",
+          "ex": "What you'd hate to give up—is it the 'work,' or 'what you've built'?"
+        },
+        {
+          "t": "Verify",
+          "d": "It presses on a decision you're leaning toward—testing its premises and risks so you can check it yourself.",
+          "ex": "The reason pulling you now—will it matter just as much six months from now?"
         }
       ],
-      "reassure": "The decision is always yours. Waymark never decides for you — it only lights the fork and keeps you company."
+      "reassureLead": "The decision is always yours.",
+      "reassureTail": "It never decides for you — it only lights the fork and keeps you company."
     },
     "cta": {
       "title": "A quiet, invite-only beta is open.",
@@ -534,7 +544,8 @@
         "comfort": "Comfort",
         "counsel": "Counsel",
         "cheer": "Cheer",
-        "clarify": "Clarify"
+        "clarify": "Clarify",
+        "verify": "Verify"
       },
       "importance": {
         "1": "Light",

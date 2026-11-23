@@ -123,7 +123,8 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
 /* ── 네 가지 결 — 대화 예시(.wm-demo) + 결 목록(.wm-tones) ──
    카드 그리드를 쓰지 않는다: 추상 모드명 4장보다 실제 주고받음 1건이 설득력이 높고,
    사이트 어디에도 없는 형식이라 섹션 리듬도 함께 깬다(P3-2). */
-.wm-demo { max-width: var(--measure); }
+/* .wm-demo: 섹션(컨테이너) 폭 — How it works(steps)·CTA와 가로 정합(2026-11-23 오너 지적) */
+.wm-demo { width: 100%; }
 .wm-demo-entry {
   padding: var(--space-lg); border-radius: var(--radius-md);
   background: var(--glass-bg); border: 1px solid var(--glass-border);
@@ -147,11 +148,11 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
 /* Waymark 발화 — 들여쓰기 + 액센트 보더로 기록과 구분 */
 .wm-demo-turn {
   display: grid; grid-template-columns: max-content 1fr; gap: var(--space-md);
-  align-items: baseline; margin-left: var(--space-lg);
+  align-items: start;
   padding: var(--space-md) var(--space-lg); border-radius: var(--radius-md);
   border: 1px solid color-mix(in srgb, var(--color-indigo) 22%, transparent); background: color-mix(in srgb, var(--color-indigo) 5%, transparent);
 }
-.wm-demo-turn + .wm-demo-turn { margin-top: var(--space-sm); }
+.wm-demo-turns { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); margin-left: var(--space-lg); }
 .wm-demo-mode {
   font-family: var(--font-mono); font-size: var(--fs-micro);
   letter-spacing: var(--tracking-widest); color: var(--color-indigo);
@@ -159,21 +160,17 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
   border: 1px solid color-mix(in srgb, var(--color-indigo) 28%, transparent); white-space: nowrap;
 }
 
-/* 결 목록 — 이름 → 뜻. 그리드 카드가 아니라 정의 목록 */
-/* 구분선은 컨테이너 폭, 읽기 폭은 뜻풀이(dd)에만 — 같은 요소에 얹으면 선이 끊긴다
-   (2026-11-03, Journey `.journey-maker-note`와 동일 결함) */
-.wm-tones {
-  display: grid; grid-template-columns: max-content 1fr;
-  gap: var(--space-md);
-  margin: var(--space-xl) 0 0; padding-top: var(--space-lg);
-  border-top: 1px solid var(--glass-border);
-}
-.wm-tones dt { font-size: var(--fs-base); font-weight: 600; color: var(--text-primary); }
-.wm-tones dd { margin: 0; max-width: var(--measure); font-size: var(--fs-base); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+/* 발화 본문 — 예시 메시지(said)에 그 결의 뜻(desc)을 녹여 한 행에 담는다.
+   별도 카드 목록을 두지 않는다: 같은 톤이 예시·카드에 중복되던 문제를 없앤다. */
+.wm-demo-body { display: flex; flex-direction: column; gap: var(--space-xs); min-width: 0; }
+.wm-demo-desc { margin: 0; font-size: var(--fs-sm); color: var(--text-muted); line-height: var(--leading-normal); }
 .wm-reassure {
-  margin-top: var(--space-lg); padding: var(--space-lg); border-radius: var(--radius-md);
-  border: 1px solid color-mix(in srgb, var(--color-indigo) 22%, transparent); background: color-mix(in srgb, var(--color-indigo) 4.5%, transparent);
-  font-size: var(--fs-base); color: var(--text-secondary);}
+  margin: var(--space-xl) auto 0; max-width: var(--measure);
+  font-size: var(--fs-lg); color: var(--text-secondary); line-height: var(--leading-relaxed);
+  text-align: center; text-wrap: balance;
+}
+/* 강조는 크기·색으로(§502 굵기 700+ 금지) — 핵심 구절만 골드 포인트 */
+.wm-reassure-lead { color: var(--color-gold); }
 
 /* ── CTA (닫는 카드) ── */
 .wm-cta {
@@ -210,9 +207,8 @@ font-size: var(--fs-micro);color: var(--text-muted); margin: 0 0 var(--space-sm)
   .wm-step { display: grid; grid-template-columns: 68px 1fr; gap: var(--space-md); text-align: left; align-items: center; }
   .wm-step-node { margin: 0; }
   .wm-stmt { font-size: var(--fs-2xl); padding-left: var(--space-md); }
-  .wm-demo-turn { grid-template-columns: 1fr; gap: var(--space-sm); margin-left: var(--space-md); padding: var(--space-md); }
+  .wm-demo-turns { grid-template-columns: 1fr; margin-left: var(--space-md); }
+  .wm-demo-turn { grid-template-columns: 1fr; gap: var(--space-sm); padding: var(--space-md); }
   .wm-demo-mode { justify-self: start; }
-  .wm-tones { grid-template-columns: 1fr; gap: var(--space-xs); }
-  .wm-tones dd { margin-bottom: var(--space-md); }
   .wm-cta { padding: var(--space-2xl) var(--space-md); }
 }

@@ -101,9 +101,9 @@
 .wma-badge.closed { color: var(--text-muted); background: rgba(255,255,255,0.035); }
 
 .wma-thread { display: flex; flex-direction: column; gap: var(--space-sm); }
-.wma-m { max-width: 88%; padding: var(--space-sm) var(--space-12); font-size: var(--fs-base); line-height: var(--leading-normal); border-radius: var(--radius-md); }
+.wma-m { max-width: 88%; padding: var(--space-sm) var(--space-12); font-size: var(--fs-base); line-height: var(--leading-normal); border-radius: var(--radius-md); overflow-wrap: anywhere; }
 .wma-m.them { align-self: flex-start; border-bottom-left-radius: var(--radius-xs); color: var(--text-primary); background: color-mix(in srgb, var(--color-indigo) 4.5%, transparent); border: 1px solid color-mix(in srgb, var(--color-indigo) 16%, transparent); }
-.wma-m.me { align-self: flex-end; border-bottom-right-radius: var(--radius-xs); color: var(--text-secondary); background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); }
+.wma-m.me { align-self: flex-end; border-bottom-right-radius: var(--radius-xs); color: var(--text-secondary); background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); white-space: pre-wrap; }
 .wma-lead { display: block; font-size: var(--fs-micro); color: var(--color-indigo); margin-bottom: var(--space-xs); }
 .wma-close { display: block; margin-top: var(--space-sm); color: var(--text-muted); font-size: var(--fs-sm); font-style: italic; }
 
@@ -124,8 +124,9 @@
 .wma-textarea { min-height: 72px; resize: vertical; line-height: var(--leading-normal); }
 .wma-input:focus, .wma-textarea:focus { outline: none; border-color: var(--color-indigo); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-indigo) 16%, transparent); }
 
-.wma-composer { display: flex; align-items: center; gap: var(--space-sm); }
+.wma-composer { display: flex; align-items: flex-end; gap: var(--space-sm); }
 .wma-composer .wma-input { background: var(--bg-void); border-radius: var(--radius-lg); padding: var(--space-12) var(--space-md); min-height: var(--btn-h-md); }
+.wma-composer-ta { resize: none; overflow-y: auto; max-height: 160px; line-height: var(--leading-normal); display: block; }
 .wma-send { width: var(--btn-h-sm); height: var(--btn-h-sm); border-radius: 50%; flex: none; border: none; background: linear-gradient(135deg, var(--color-indigo), var(--prism-lavender)); color: var(--bg-void); display: flex; align-items: center; justify-content: center; }
 .wma-send:disabled { background: rgba(255,255,255,0.05); color: var(--text-muted); }
 

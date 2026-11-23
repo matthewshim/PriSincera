@@ -322,6 +322,8 @@ function Detail() {
   useEffect(() => load(), [load]);
   const bottomRef = useRef(null);
   useEffect(() => { if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [st.messages, aiBusy]);
+  const taRef = useRef(null);
+  useEffect(() => { const el = taRef.current; if (!el) return; el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 160) + 'px'; }, [note]);
   useEffect(() => { byokProvider().then((p) => setByok(p)).catch(() => {}); }, []);
 
   const sendNote = async () => {
@@ -493,7 +495,7 @@ function Detail() {
             </div>
           )}
           <div className="wma-composer">
-            <input className="wma-input" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('waymark.detail.msgPlaceholder')} onKeyDown={(e) => { if (e.key === 'Enter') send(); }} disabled={aiBusy} />
+            <textarea ref={taRef} className="wma-input wma-composer-ta" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('waymark.detail.msgPlaceholder')} rows={1} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); send(); } }} disabled={aiBusy} />
             <button type="button" className="wma-send" disabled={!note.trim() || aiBusy} onClick={send} aria-label={t('waymark.detail.send')}><SendIcon /></button>
           </div>
         </div>

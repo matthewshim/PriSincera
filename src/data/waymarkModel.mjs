@@ -25,7 +25,7 @@ export const DECISION_STATUS = ['open', 'revisited', 'closed'];
 export const OUTCOMES = ['good', 'mixed', 'ongoing'];
 
 // ── 동반 톤 (functional_spec §5) · 먼저 찾아옴 이벤트/채널 (§6)
-export const TONES = ['comfort', 'counsel', 'cheer', 'clarify'];
+export const TONES = ['comfort', 'counsel', 'cheer', 'clarify', 'verify'];
 export const EVENT_TYPES = ['nudge', 'checkin', 'midterm', 'retro'];
 export const CHANNELS = ['email', 'push'];
 export const AI_SOURCES = ['template', 'trial_ai', 'byok'];
