@@ -463,6 +463,7 @@ function Detail() {
               {TONES.map((tn) => <button type="button" key={tn} className={'wma-tone' + (tone === tn ? ' on' : '')} onClick={() => setTone(tn)}>{t('waymark.enum.tone.' + tn)}</button>)}
             </div>
             <div className="wma-cinput-meta">
+            {aiRemaining != null && <span className="wma-meta-remain">{t('waymark.detail.aiRemaining', { n: aiRemaining })}</span>}
             {byok
               ? <button type="button" className="wma-linkbtn" onClick={() => setByokOpen((v) => !v)}>{t('waymark.detail.byokConnected')} · {byok === 'gemini' ? 'Gemini' : 'Anthropic'}</button>
               : <button type="button" className="wma-byok-cta" onClick={() => setByokOpen((v) => !v)}>{t('waymark.detail.byokOpen')}</button>}
@@ -486,10 +487,9 @@ function Detail() {
             </div>
           ))}
           {aiError && <span className="wma-ai-note wma-err">{aiError}</span>}
-          {(aiNote || aiRemaining != null) && (
+          {aiNote && (
             <div className="wma-trial">
-              {aiNote && <span className="wma-trial-note">{aiNote}</span>}
-              {aiRemaining != null && <span className="wma-trial-count">{t('waymark.detail.aiRemaining', { n: aiRemaining })}</span>}
+              <span className="wma-trial-note">{aiNote}</span>
             </div>
           )}
           <div className="wma-composer">
