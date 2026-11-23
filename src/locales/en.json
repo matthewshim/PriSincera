@@ -10,7 +10,8 @@
     "connect": "Connect",
     "tagline": "Sincerity, Prioritized.",
     "sloganKr": "발 아래 꽃, 먼 곳의 별",
-    "sloganEn": "Flowers underfoot, stars in the distance.\nTo follow the distant stars, I hope you don't miss the beautiful flowers that bloomed under my feet now."
+    "sloganEn": "Flowers underfoot, stars in the distance.\nTo follow the distant stars, I hope you don't miss the beautiful flowers that bloomed under my feet now.",
+    "guide": "API Key Guide"
   },
   "buildersLog": {
     "detail": {
@@ -604,7 +605,8 @@
       "srcTrial": "Trial AI",
       "srcByok": "Your key",
       "msgPlaceholder": "Write freely — the AI won’t decide for you, only light the fork",
-      "typing": "Writing a reply"
+      "typing": "Writing a reply",
+      "byokGuideLink": "How to get a key"
     },
     "new": {
       "qTitle": "What did you decide? Just tell me.",
@@ -670,7 +672,8 @@
       "saved": "Saved",
       "pushDenied": "Notifications are blocked in your browser. Please allow notification permission.",
       "pushUnsupported": "This browser/device does not support web push. (On iOS, install to the home screen first.)",
-      "pushFail": "Something went wrong enabling notifications. Please try again later."
+      "pushFail": "Something went wrong enabling notifications. Please try again later.",
+      "byok": "Connect API Key"
     },
     "onboard": {
       "lead": "At every fork, beside you. You won’t be alone.",
@@ -691,6 +694,29 @@
       "backHome": "Back",
       "requestedTitle": "Your request is in",
       "requestedDesc": "We'll email you once approved. Thanks for your patience."
+    },
+    "guide": {
+      "heroTitle": "Waymark",
+      "heroTagline": "Keep the conversation going with your own key.\nThe AI won't decide for you — it only lights the fork.",
+      "backToApp": "Open Waymark",
+      "byokTitle": "BYOK (Bring Your Own Key) — your key stays in your browser",
+      "byokDesc": "Once you've used up your trial, you can connect your own API key to keep the companion conversation going (BYOK). Your key is never sent to our servers — it's encrypted and stored only in your browser (IndexedDB + WebCrypto), and AI calls run directly between your browser and the AI provider, never through our servers.",
+      "chooseOne": "You only need one key — Google Gemini or Anthropic Claude. If this is your first time, we recommend Gemini, which has a free tier.",
+      "geminiUsage": "When your key is used: After your trial runs out, to generate companion replies (Comfort, Counsel, Cheer, Clarify, Verify).",
+      "anthropicUsage": "When your key is used: After your trial runs out, to generate companion replies. Waymark uses the Claude Haiku model.",
+      "connectTitle": "Connect Your API Key in Waymark",
+      "connectSteps": [
+        "In the input area at the bottom of a decision, open 'Connect your key'.",
+        "Choose the provider you created a key for — Anthropic or Gemini.",
+        "Paste your copied API key and click Connect. If the key is valid, the conversation continues on your key right away.",
+        "The key is stored only in this browser. You'll need to reconnect on other devices, and you can remove it anytime with Disconnect."
+      ],
+      "faqHeader": "Troubleshooting",
+      "faq1Q": "Q1. I connected my key but it says it's invalid.",
+      "faq1A": "Cause: Whitespace or a line break got into the key, or the key itself is invalid.\nFix: Clear the field, paste the key into a plain text editor to check for spaces, then copy and paste it again.\nNote: Depending on the provider, a missing billing credit can cause an over-limit failure.",
+      "faq2Q": "Q2. My key sometimes doesn't respond.",
+      "faq2A": "Cause: A temporary provider outage or an over-limit condition.\nFix: If your key fails, Waymark answers once with the trial AI (shown with a source badge) and can retry shortly. If it keeps happening, check your key status and balance in the provider console.",
+      "tocLabel": "On this page"
     }
   },
   "sylphio": {
@@ -801,7 +827,9 @@
       "tocLabel": "On this page",
       "verified": "Last verified {date} · Google and OpenAI screens and pricing may change.",
       "uiLangNotice": "The app interface is currently available in Korean only. Screen names below are shown in Korean as they appear in the app, with English in parentheses.",
-      "chooseOne": "You only need one key — Google Gemini or OpenAI. If this is your first time, we recommend Gemini, which has a free tier."
+      "chooseOne": "You only need one key — Google Gemini or OpenAI. If this is your first time, we recommend Gemini, which has a free tier.",
+      "geminiUsage": "When your key is used: Generating the meeting summary after a session, and running Enhanced Minutes (recording re-analysis). Live caption translation doesn’t use your API key; it runs on Apple on-device translation.\nIf you hit the cap: Enhanced Minutes uploads audio, a large call, so repeating it many times a day can reach the daily cap. Try Regenerate once your quota resets.",
+      "openaiUsage": "When your key is used: Generating the meeting text summary after a session. Live caption translation runs on Apple on-device translation, so it incurs no API cost.\nNote: Enhanced Minutes (audio re-analysis) is Google Gemini only."
     },
     "privacy": {
       "heroTitle": "Sylphio",
@@ -874,5 +902,60 @@
       ],
       "tocLabel": "On this page"
     }
+  },
+  "byokGuide": {
+    "verified": "Last verified {date} · Provider screens and pricing may change.",
+    "tocLabel": "On this page",
+    "providers": {
+      "gemini": {
+        "title": "Get a Google Gemini API Key",
+        "intro": "Google Gemini offers a Free Tier, so you can start without any API cost.",
+        "steps": [
+          "Click the Get API key button in the top left sidebar menu.",
+          "Click Create API key in the center, and choose Create API key in new project in the popup to generate your key.",
+          "Instantly copy the unique key string (starting with AIzaSy...) using the provided button and save it securely."
+        ],
+        "priceHeader": "Gemini Pricing & Free Tier",
+        "freeTitle": "Free Tier",
+        "freeDesc": "Cost: Free\nLimits: Per-model requests per minute (RPM) plus a daily request cap (roughly a few dozen requests per day).\nData use: On the free tier, Google may use submitted content to improve its products. For sensitive content, use a paid-tier key.",
+        "payTitle": "Pay-as-you-go Tier",
+        "payDesc": "To remove the daily cap, you can register billing. Input costs about $0.075 per 1M tokens."
+      },
+      "openai": {
+        "title": "Get an OpenAI API Key",
+        "intro": "OpenAI responds quickly with reliable summary quality. It does require prepaid billing credit before use.",
+        "warningTitle": "Before you start: add billing credit",
+        "warningDesc": "If your OpenAI balance is $0, even a correctly created key returns a Quota Exceeded error on the first call. Add at least $5 of credit before using the key.",
+        "steps": [
+          "Select the key-shaped API keys menu in the left navigation bar.",
+          "Click + Create new secret key in the top right, name the key, and generate it.",
+          "Copy the sk-proj-... secret key immediately. (It cannot be viewed again once you close the popup.)",
+          "Navigate to Settings > Billing on the left menu, click Add to balance, and pre-charge at least $5."
+        ],
+        "priceHeader": "OpenAI (GPT-4o-mini) Pricing",
+        "priceDesc": "Input: $0.150 / 1M tokens\nOutput: $0.600 / 1M tokens"
+      },
+      "anthropic": {
+        "title": "Get an Anthropic (Claude) API Key",
+        "intro": "Anthropic Claude is strong at natural language and reliable instruction-following. It does require prepaid billing credit before use.",
+        "warningTitle": "Before you start: add billing credit",
+        "warningDesc": "If your Anthropic account has no credit, even a correctly created key returns an over-limit error on the first call. Add at least $5 in Billing before using the key.",
+        "steps": [
+          "Go to API Keys (or Settings > API Keys) from the account menu in the top left.",
+          "Click Create Key, name the key, and generate it.",
+          "Copy the secret key (starting with sk-ant-...) immediately and store it securely. (It cannot be viewed again once closed.)",
+          "Go to Billing (Plans & Billing) in the left menu, add a payment method, and add at least $5 of credit."
+        ],
+        "priceHeader": "Anthropic (Claude Haiku) Pricing",
+        "priceDesc": "Input: $0.80 / 1M tokens\nOutput: $4.00 / 1M tokens\nNote: Based on Claude Haiku; higher-tier models cost more."
+      }
+    }
+  },
+  "apiKeyGuide": {
+    "pageTitle": "API Key Guide",
+    "heroTitle": "API Key Guide",
+    "subtitle": "How to issue your own API key and connect it via BYOK — your key stays on your device.",
+    "backSylphio": "Back to Sylphio",
+    "backWaymark": "Open Waymark"
   }
 }

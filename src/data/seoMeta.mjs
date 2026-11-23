@@ -61,6 +61,16 @@ export const PAGE_META = {
     description: '큰 결정일수록 답을 말해줄 사람보다 곁에 있어 줄 사람이 필요합니다. Waymark은 당신의 결정을 기억하고, 흔들리는 순간 먼저 찾아오는 AI 동반자입니다. 곧 찾아갑니다.',
     keywords: 'Waymark, 웨이마크, 의사결정, 결정 저널, AI 동반자, 리더, 기획자, PriSincera',
   },
+  '/waymark/guide': {
+    pageTitle: 'Waymark API Key 연동 가이드',
+    description: '내 API Key(Google Gemini·Anthropic Claude)를 Waymark에 연결해 체험 이후에도 동반자 대화를 이어가는 방법을 안내합니다. 키는 브라우저에만 저장됩니다(BYOK).',
+    keywords: 'Waymark API Key, Gemini API, Anthropic API, Claude, BYOK, 웨이마크 가이드',
+  },
+  '/guide/api-key': {
+    pageTitle: 'API Key 발급 가이드',
+    description: 'Google Gemini·OpenAI·Anthropic API Key를 발급해 Sylphio·Waymark에 BYOK로 연결하는 방법. 키는 사용자 기기에만 저장됩니다.',
+    keywords: 'API Key 발급, BYOK, Gemini API, OpenAI API, Anthropic API, Sylphio, Waymark',
+  },
 };
 
 /** 브랜드 접미어 적용: 홈(null)은 루트 타이틀, 그 외 `{pageTitle} | PriSincera` */

@@ -58,6 +58,7 @@ function Footer() {
               <Link to="/relearn" className="footer-link">ReLearn</Link>
               <Link to="/waymark" className="footer-link">Waymark</Link>
               <Link to="/sylphio" className="footer-link">{t('header.sylphio')}</Link>
+              <Link to="/guide/api-key" className="footer-link">{t('footer.guide')}</Link>
             </div>
             <div className="footer-col">
               <h4 className="footer-col-title">{t('footer.connect')}</h4>

@@ -15,7 +15,7 @@ const BuildersLogDetail = lazy(() => import('./pages/BuildersLogDetail'));
 
 /* ── Sylphio Pages ── */
 const SylphioLanding = lazy(() => import('./pages/SylphioLanding'));
-const SylphioApiKeyGuide = lazy(() => import('./pages/SylphioApiKeyGuide'));
+const ApiKeyGuide = lazy(() => import('./pages/ApiKeyGuide'));
 const SylphioPrivacy = lazy(() => import('./pages/SylphioPrivacy'));
 
 /* ── Waymark (의사결정 동반 서비스) ── */
@@ -65,13 +65,14 @@ function App() {
             
             {/* Sylphio Routes */}
             <Route path="sylphio" element={<SylphioLanding />} />
-            <Route path="sylphio/guide" element={<SylphioApiKeyGuide />} />
+            <Route path="sylphio/guide" element={<Navigate to="/guide/api-key?for=sylphio" replace />} />
             <Route path="sylphio/privacy" element={<SylphioPrivacy />} />
 
             {/* Waymark — 의사결정 동반 서비스 소개 랜딩 (Candela 슬롯 피벗) */}
             <Route path="waymark" element={<WaymarkLanding />} />
             {/* Waymark 앱(인증 게이트) — 통합·server REST. M0 스캐폴드 */}
             <Route path="waymark/app/*" element={<WaymarkApp />} />
+            <Route path="guide/api-key" element={<ApiKeyGuide />} />
             
             {/* Legacy Redirects */}
             <Route path="signal/*" element={<Navigate to="/relearn" replace />} />

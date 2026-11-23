@@ -1,0 +1,95 @@
+/* ==========================================================================
+   공용 API Key 발급 가이드 — 지면 셸·히어로·제품 토글
+   본문은 ByokGuide.css 공용. 액센트는 토글(제품)에 따라 전환.
+   ========================================================================== */
+.api-guide {
+  min-height: 100vh;
+  background: var(--bg-void);
+  color: var(--text-secondary);
+  padding: 0 0 var(--space-2xl);
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.api-guide.is-sylphio { --byokg-accent: var(--accent-sylphio); }
+.api-guide.is-waymark { --byokg-accent: var(--color-indigo); }
+
+.apig-hero {
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 150px var(--space-lg) var(--space-xl);
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+}
+.apig-hero h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--space-sm);
+  display: inline-block;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: var(--tracking-tight);
+}
+.apig-hero p.tagline {
+  font-size: var(--fs-md);
+  color: var(--text-secondary);
+  max-width: var(--measure);
+  line-height: var(--leading-relaxed);
+  margin: 0 0 var(--space-lg);
+  font-weight: 400;
+}
+
+/* 제품 토글 — provider·연결을 전환 */
+.apig-toggle {
+  display: inline-flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  margin: 0 0 var(--space-lg);
+}
+.apig-toggle button {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-muted);
+  transition: color var(--duration-fast), background var(--duration-fast);
+}
+.apig-toggle button.on {
+  background: color-mix(in srgb, var(--byokg-accent) 16%, transparent);
+  color: var(--text-primary);
+}
+
+.apig-hero-ctas {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.apig-back {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--glass-border);
+}
+.apig-back a {
+  color: var(--byokg-accent);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+}
+.apig-back a:hover { text-decoration: underline; }

@@ -2,7 +2,7 @@
   "$schema": "ci/pattern-budget.mjs가 읽는 장식 예산 정본",
   "doc": "래칫(단조 감소) 게이트. 현재값 > max → 빌드 차단. 현재값 < max → --update로 조이기. 상세: ci/pattern-budget.mjs 헤더",
   "baselineCommit": "e1524bf (감사 v1.0 기준선)",
-  "updatedAt": "2026-11-15",
+  "updatedAt": "2026-11-23",
   "zeroRules": {
     "keyframes-duplicate": "키프레임 이름 중복 선언 금지 — 전역 스코프라 마지막 선언이 전역을 덮는다(P0-6)",
     "maxwidth-band-violation": "대역[880,2000]px max-width 리터럴 금지 — --container/--measure 또는 스코프 토큰만(§3-3, P0-4)",
@@ -17,7 +17,7 @@
     "gradient-text": {
       "max": 21,
       "target": 21,
-      "note": "페이지당 h1 1곳. 강조가 보편화되면 강조가 아니다. **규칙 단위 집계**(접두사 중복 제거 — v1.0~1.2는 -webkit-background-clip과 background-clip을 각각 세어 2배로 과대 보고했다). 21개 파일 중 13개는 이미 h1 1곳뿐"
+      "note": "페이지당 h1 1곳. 강조가 보편화되면 강조가 아니다. **규칙 단위 집계**(접두사 중복 제거 — v1.0~1.2는 -webkit-background-clip과 background-clip을 각각 세어 2배로 과대 보고했다). 21개 파일 중 13개는 이미 h1 1곳뿐 · 22: Waymark API Key 가이드 히어로 h1(§9-1 히어로 표준 그라디언트, 2026-11-23)"
     },
     "gradient-text-max-per-file": {
       "max": 2,

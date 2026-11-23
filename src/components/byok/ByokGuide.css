@@ -1,0 +1,195 @@
+/* ==========================================================================
+   BYOK API Key 가이드 — 공용 본문 스타일 (Sylphio·Waymark 공용, 2026-11-23)
+   provider 발급 안내는 두 서비스가 같은 콘텐츠를 쓴다. 액센트만 서비스별로
+   `--byokg-accent`로 주입한다(Sylphio=accent-sylphio, Waymark=color-indigo).
+   2단 셸·목차는 SylphioDocShell.css가 담당. 히어로는 각 지면 CSS가 담당.
+   ========================================================================== */
+
+.byokg {
+  --byokg-accent: var(--color-indigo);
+}
+
+/* 최종 확인일 — 외부 서비스 화면·요금은 바뀌므로 독자가 시점을 알아야 한다 */
+.byokg-verified {
+  margin: 0 0 var(--space-md);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* --- 콜아웃 단일 규격 --- */
+.byokg-callout {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.byokg-callout.is-info {
+  background: color-mix(in srgb, var(--byokg-accent) 4.5%, transparent);
+  border-color: color-mix(in srgb, var(--byokg-accent) 16%, transparent);
+}
+.byokg-callout.is-warning {
+  background: color-mix(in srgb, var(--color-danger) 4.5%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger) 16%, transparent);
+}
+.byokg-callout-icon {
+  flex-shrink: 0;
+  font-size: var(--fs-xl);
+  line-height: var(--leading-none);
+}
+.is-info .byokg-callout-icon { color: var(--byokg-accent); }
+.is-warning .byokg-callout-icon { color: var(--color-danger); }
+
+.byokg-callout-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm);
+}
+.is-info .byokg-callout-title { color: var(--byokg-accent); }
+.is-warning .byokg-callout-title { color: var(--color-danger); }
+
+.byokg-callout p {
+  margin: 0;
+  font-size: var(--fs-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+/* provider는 순서가 아니라 선택지 */
+.byokg-choose {
+  margin: 0 0 var(--space-2xl);
+  font-size: var(--fs-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+/* --- 섹션 --- */
+.byokg-section {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.byokg-section:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.byokg-eyebrow {
+  font-size: var(--fs-micro);
+  color: var(--text-muted);
+  margin: 0 0 var(--space-sm);
+}
+.byokg-eyebrow.is-recommended { color: var(--color-gold); }
+
+.byokg-section > h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-lg);
+  word-break: keep-all;
+}
+
+.byokg-lead {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--fs-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+/* --- 단계 --- */
+.byokg-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-xl);
+}
+.byokg-step-item {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  line-height: var(--leading-relaxed);
+}
+.byokg-step-number {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+.byokg-step-text {
+  color: var(--text-secondary);
+  font-size: var(--fs-base);
+}
+.byokg-step-link {
+  color: var(--byokg-accent);
+  text-decoration: none;
+  border-bottom: 1px dashed color-mix(in srgb, var(--byokg-accent) 40%, transparent);
+  transition: color var(--duration-fast) ease, border-bottom-style var(--duration-fast) ease;
+}
+.byokg-step-link:hover {
+  color: color-mix(in srgb, var(--byokg-accent) 65%, white);
+  border-bottom-style: solid;
+}
+
+/* --- 요금 등급 --- */
+.byokg-tiers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+.byokg-tiers h4 {
+  font-family: var(--font-display);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm);
+}
+
+/* --- "라벨: 내용" 목록 --- */
+.byokg-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.byokg-facts li {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--fs-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+.byokg-facts li:last-child { margin-bottom: 0; }
+.byokg-fact-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: var(--space-xs);
+}
+
+/* --- FAQ --- */
+.byokg-faq-item { margin-bottom: var(--space-xl); }
+.byokg-faq-item h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-sm);
+}
+
+@media (max-width: 768px) {
+  .byokg-tiers { grid-template-columns: 1fr; }
+  .byokg-callout { padding: var(--space-md); gap: var(--space-12); }
+  .byokg-section > h2 { font-size: var(--fs-xl); }
+}

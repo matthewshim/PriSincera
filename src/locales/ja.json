@@ -10,7 +10,8 @@
     "connect": "Connect",
     "tagline": "Sincerity, Prioritized.",
     "sloganKr": "足元の花、遠くの星",
-    "sloganEn": "Flowers underfoot, stars in the distance.\nTo follow the distant stars, I hope you don't miss the beautiful flowers that bloomed under my feet now."
+    "sloganEn": "Flowers underfoot, stars in the distance.\nTo follow the distant stars, I hope you don't miss the beautiful flowers that bloomed under my feet now.",
+    "guide": "API Key Guide"
   },
   "buildersLog": {
     "detail": {
@@ -604,7 +605,8 @@
       "srcTrial": "体験AI",
       "srcByok": "自分のキー",
       "msgPlaceholder": "気持ちを書いて — AIは代わりに決めず、分かれ道を照らすだけ",
-      "typing": "返信を作成中"
+      "typing": "返信を作成中",
+      "byokGuideLink": "APIキー発行ガイド"
     },
     "new": {
       "qTitle": "どんな決断をしましたか？ 気軽にどうぞ。",
@@ -670,7 +672,8 @@
       "saved": "保存しました",
       "pushDenied": "ブラウザで通知がブロックされています。通知の許可をお願いします。",
       "pushUnsupported": "このブラウザ・端末はウェブプッシュに非対応です。（iOSはホーム画面に追加すると可能）",
-      "pushFail": "通知の設定中に問題が発生しました。しばらくして再度お試しください。"
+      "pushFail": "通知の設定中に問題が発生しました。しばらくして再度お試しください。",
+      "byok": "APIキー連携"
     },
     "onboard": {
       "lead": "決断の分かれ道で、そばに。ひとりにしません。",
@@ -691,6 +694,29 @@
       "backHome": "戻る",
       "requestedTitle": "お申し込みを受け付けました",
       "requestedDesc": "承認され次第メールでご案内します。少々お待ちください。"
+    },
+    "guide": {
+      "heroTitle": "Waymark",
+      "heroTagline": "自分のキーで対話を続ける。\nAIは代わりに決めず、分かれ道を照らすだけ。",
+      "backToApp": "Waymarkを開く",
+      "byokTitle": "BYOK (Bring Your Own Key) — キーはあなたのブラウザだけに",
+      "byokDesc": "体験回数を使い切ったら、ご自身のAPIキーを連携して同伴者との対話を続けられます（BYOK）。入力したキーはサーバーへ送信されず、ブラウザ内にのみ暗号化して保存され（IndexedDB + WebCrypto）、AI呼び出しは開発元のサーバーを経由せず、ブラウザとAIプロバイダの間で直接行われます。",
+      "chooseOne": "Google GeminiとAnthropic Claudeのどちらか一方を発行すれば十分です。初めての方には、無料枠のあるGeminiをおすすめします。",
+      "geminiUsage": "キーが使われるとき：体験回数を使い切った後、同伴者（なぐさめ・助言・応援・整理・検証）の返信を生成するときです。",
+      "anthropicUsage": "キーが使われるとき：体験回数を使い切った後、同伴者の返信を生成するときです。WaymarkはClaude Haikuモデルを使用します。",
+      "connectTitle": "WaymarkでのAPIキー連携",
+      "connectSteps": [
+        "決定の詳細画面下部の入力エリアで「マイキー連携」を開きます。",
+        "キーを発行したプロバイダ（AnthropicまたはGemini）を選択します。",
+        "コピーしたAPIキーを貼り付けて「連携」を押します。キーが有効なら、すぐにご自身のキーで対話が続きます。",
+        "キーはこのブラウザにのみ保存されます。他の端末では再連携が必要で、「連携解除」でいつでも削除できます。"
+      ],
+      "faqHeader": "トラブルシューティング",
+      "faq1Q": "Q1. キーを連携したのに「無効」と表示されます。",
+      "faq1A": "原因：キーに空白や改行が混入しているか、キー自体が無効な場合に発生します。\n解決策：入力欄を空にし、メモ帳に貼り付けてスペースがないか確認してから、もう一度コピー＆ペーストしてください。\n補足：プロバイダによっては、クレジット残高がないと上限超過で失敗することがあります。",
+      "faq2Q": "Q2. マイキーが時々応答しません。",
+      "faq2A": "原因：プロバイダの一時的な障害や上限超過の可能性があります。\n解決策：マイキーが失敗した場合、Waymarkは体験AIで一度回答し（出典バッジで表示）、しばらくして再試行できます。繰り返す場合は、プロバイダのコンソールでキーの状態と残高を確認してください。",
+      "tocLabel": "目次"
     }
   },
   "sylphio": {
@@ -801,7 +827,9 @@
       "tocLabel": "目次",
       "verified": "内容の最終確認 {date} ・ GoogleやOpenAIの画面・料金は変更される場合があります。",
       "uiLangNotice": "アプリの画面は現在、韓国語のみ対応しています。以下の画面名はアプリ内の韓国語表記のまま記載し、（）内に日本語の意味を添えています。",
-      "chooseOne": "Google GeminiとOpenAIのどちらか一方を発行すれば十分です。初めての方には、無料枠のあるGeminiをおすすめします。"
+      "chooseOne": "Google GeminiとOpenAIのどちらか一方を発行すれば十分です。初めての方には、無料枠のあるGeminiをおすすめします。",
+      "geminiUsage": "キーが使われるとき：セッション終了後の議事録要約の生成と、精密議事録（録音音声の再分析）の実行時です。リアルタイム字幕の翻訳はAPIキーを使わず、Appleのオンデバイス翻訳で動作します。\n上限に達したら：精密議事録は音声をアップロードする大きな呼び出しのため、1日に何度も繰り返すと日次上限に達することがあります。クォータ回復後に精密再生成で再試行してください。",
+      "openaiUsage": "キーが使われるとき：セッション終了後の議事録テキスト要約の生成時です。リアルタイム字幕の翻訳はAppleのオンデバイス翻訳で動作するため、API費用はかかりません。\n補足：録音音声を再分析する精密議事録はGoogle Gemini専用です。"
     },
     "privacy": {
       "heroTitle": "Sylphio",
@@ -874,5 +902,60 @@
       ],
       "tocLabel": "目次"
     }
+  },
+  "byokGuide": {
+    "verified": "内容の最終確認 {date} ・ 各プロバイダの画面・料金は変更される場合があります。",
+    "tocLabel": "目次",
+    "providers": {
+      "gemini": {
+        "title": "Google Gemini APIキーの発行",
+        "intro": "Google Geminiには無料枠（Free Tier）があるため、API費用をかけずに始められます。",
+        "steps": [
+          "左側のサイドバーメニューにある Get API key ボタンをクリックします。",
+          "画面中央の Create API key ボタンをクリックし、ポップアップで Create API key in new project を選択してキーを生成します。",
+          "生成された固有のキー文字列（AIzaSy...で始まる）をコピーし、安全に保管してください。"
+        ],
+        "priceHeader": "Geminiの料金と無料枠",
+        "freeTitle": "無料枠 (Free Tier)",
+        "freeDesc": "料金：無料\n制限：モデルごとの毎分リクエスト数（RPM）に加え、1日あたりのリクエスト上限（おおむね1日数十回）が適用されます。\nデータの利用：無料枠では、Googleが入力データを製品改善に使用する場合があります。機密性の高い内容には有料枠のキーをおすすめします。",
+        "payTitle": "従量課金プラン (Pay-as-you-go)",
+        "payDesc": "日次上限なしで使う場合は従量課金を登録できます。料金は入力100万トークンあたり約0.075ドルです。"
+      },
+      "openai": {
+        "title": "OpenAI APIキーの発行",
+        "intro": "OpenAIは応答が速く、要約品質も安定しています。ただし、利用前にクレジットのチャージが必要です。",
+        "warningTitle": "事前準備：クレジットのチャージ",
+        "warningDesc": "OpenAIはアカウント残高が$0の場合、キーを正しく発行していても最初の呼び出しからQuota Exceededエラーを返します。キーを使う前に最低5ドルをチャージしてください。",
+        "steps": [
+          "左メニューにある鍵アイコンの API keys を選択します。",
+          "右上の + Create new secret key ボタンをクリックし、キーに名前をつけて生成します。",
+          "生成された sk-proj-... キーを即座にコピーします。（ポップアップを閉じると二度と確認できません。）",
+          "左メニューの Settings > Billing に移動し、Add to balance をクリックして最低5ドルをチャージします。"
+        ],
+        "priceHeader": "OpenAI (GPT-4o-mini) の料金",
+        "priceDesc": "入力：$0.150 / 100万トークン\n出力：$0.600 / 100万トークン"
+      },
+      "anthropic": {
+        "title": "Anthropic (Claude) APIキーの発行",
+        "intro": "Anthropic Claudeは自然な文章と安定した指示追従が強みです。ただし、利用前にクレジットのチャージが必要です。",
+        "warningTitle": "事前準備：クレジットのチャージ",
+        "warningDesc": "Anthropicはアカウントにクレジットがないと、キーを正しく発行していても最初の呼び出しから上限超過エラーを返します。キーを使う前にBillingで最低5ドルをチャージしてください。",
+        "steps": [
+          "左上のアカウントメニューから API Keys（または Settings > API Keys）に移動します。",
+          "Create Key ボタンをクリックし、キーに名前をつけて生成します。",
+          "生成された sk-ant-... で始まるキーを即座にコピーし、安全に保管します。（閉じると再確認できません。）",
+          "左メニューの Billing（Plans & Billing）に移動し、支払い方法を登録して最低5ドルのクレジットをチャージします。"
+        ],
+        "priceHeader": "Anthropic (Claude Haiku) の料金",
+        "priceDesc": "入力：$0.80 / 100万トークン\n出力：$4.00 / 100万トークン\n補足：Claude Haiku基準で、上位モデルは料金が高くなります。"
+      }
+    }
+  },
+  "apiKeyGuide": {
+    "pageTitle": "APIキー発行ガイド",
+    "heroTitle": "API Key Guide",
+    "subtitle": "ご自身のAPIキーを発行してBYOKで連携する方法 — キーはお使いの端末にのみ保存されます。",
+    "backSylphio": "Sylphioに戻る",
+    "backWaymark": "Waymarkを開く"
   }
 }

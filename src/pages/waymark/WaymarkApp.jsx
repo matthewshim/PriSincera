@@ -6,6 +6,8 @@ import useSEO from '../../hooks/useSEO';
 import { useWaymarkApi } from './waymarkApi';
 import { DOMAINS, EMOTIONS, IMPORTANCE, TONES, OUTCOMES } from '../../data/waymarkModel.mjs';
 import { saveByok, getByok, byokProvider, clearByok, byokSystem, callByok } from './byok';
+import Icon from '../../components/common/Icon';
+import ByokConnect from './ByokConnect';
 import { enablePush, disablePush } from './push';
 import './WaymarkApp.css';
 
@@ -468,7 +470,7 @@ function Detail() {
             {aiRemaining != null && <span className="wma-meta-remain">{t('waymark.detail.aiRemaining', { n: aiRemaining })}</span>}
             {byok
               ? <button type="button" className="wma-linkbtn" onClick={() => setByokOpen((v) => !v)}>{t('waymark.detail.byokConnected')} · {byok === 'gemini' ? 'Gemini' : 'Anthropic'}</button>
-              : <button type="button" className="wma-byok-cta" onClick={() => setByokOpen((v) => !v)}>{t('waymark.detail.byokOpen')}</button>}
+              : <><a className="wma-linkbtn wma-byok-guide" href="/guide/api-key?for=waymark" target="_blank" rel="noreferrer">{t('waymark.detail.byokGuideLink')}<Icon name="external" size={12} /></a><button type="button" className="wma-byok-cta" onClick={() => setByokOpen((v) => !v)}>{t('waymark.detail.byokOpen')}</button></>}
             </div>
           </div>
           {byokOpen && (byok ? (
@@ -480,6 +482,7 @@ function Detail() {
                 <button type="button" className={'wma-chip' + (byokProv === 'gemini' ? ' on' : '')} onClick={() => setByokProv('gemini')}>Gemini</button>
               </div>
               <span className="wma-ai-note">{t('waymark.detail.byokIntro')}</span>
+              <a className="wma-linkbtn wma-byok-guide" href="/guide/api-key?for=waymark" target="_blank" rel="noreferrer">{t('waymark.detail.byokGuideLink')}<Icon name="external" size={12} /></a>
               <input className="wma-input" type="password" value={byokKey} onChange={(e) => setByokKey(e.target.value)} placeholder={t(byokProv === 'gemini' ? 'waymark.detail.byokPhGemini' : 'waymark.detail.byokPlaceholder')} />
               <div className="wma-byok-actions">
                 <button type="button" className="wma-review" disabled={byokBusy || !byokKey.trim()} onClick={connectByok}>{t('waymark.detail.byokConnect')}</button>
@@ -570,6 +573,9 @@ function Settings() {
 
         <div className="u-eyebrow wma-sect">{t('waymark.settings.language')}</div>
         <div className="wma-chips">{SUPPORTED_LANGUAGES.map((lng) => <button type="button" key={lng.code} className={'wma-chip' + (locale === lng.code ? ' on' : '')} onClick={() => setLang(lng.code)}>{lng.nativeLabel}</button>)}</div>
+
+        <div className="u-eyebrow wma-sect">{t('waymark.settings.byok')}</div>
+        <div className="wma-card wma-flat"><ByokConnect /></div>
 
         <div className="u-eyebrow wma-sect">{t('waymark.settings.account')}</div>
         <button type="button" className="wma-review" onClick={logout}>{t('waymark.settings.logout')}</button>
