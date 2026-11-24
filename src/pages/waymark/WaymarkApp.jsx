@@ -319,6 +319,8 @@ function Detail() {
   const [deleting, setDeleting] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const cinputRef = useRef(null);
+  const paneRef = useRef(null);
   useEffect(() => {
     if (!menuOpen) return undefined;
     const onDoc = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) { setMenuOpen(false); setDelConfirm(false); } };
@@ -327,6 +329,17 @@ function Detail() {
     document.addEventListener('keydown', onKey);
     return () => { document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onKey); };
   }, [menuOpen]);
+
+  // 모바일: 하단 고정 컴포저 높이만큼 본문 하단 여백 확보. --cin-h를 DOM에 직접 세팅(인라인 스타일 미사용)
+  useEffect(() => {
+    const el = cinputRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const apply = () => { if (paneRef.current) paneRef.current.style.setProperty('--cin-h', el.offsetHeight + 'px'); };
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    apply();
+    return () => ro.disconnect();
+  }, []);
 
   const load = useCallback(() => {
     let alive = true;
@@ -500,7 +513,7 @@ function Detail() {
   };
 
   return (
-    <section className="wma-pane">
+    <section className="wma-pane" ref={paneRef}>
       <PaneHeader action={decisionMenu} />
       <div className="wma-pane-body">
         <div className="wma-card wma-flat">
@@ -534,7 +547,7 @@ function Detail() {
         {st.error && <p className="wma-state wma-err">{st.error}</p>}
         <div ref={bottomRef} aria-hidden="true" />
       </div>
-        <div className="wma-cinput">
+        <div className="wma-cinput" ref={cinputRef}>
           <div className="wma-cinput-bar">
             <div className="wma-tones">
               {TONES.map((tn) => <button type="button" key={tn} className={'wma-tone' + (tone === tn ? ' on' : '')} onClick={() => setTone(tn)}>{t('waymark.enum.tone.' + tn)}</button>)}
