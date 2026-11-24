@@ -19,7 +19,7 @@ export const COLLECTIONS = {
 
 // ── 분류셋 (functional_spec §7-1) — 라벨은 i18n 키 waymark.enum.*
 export const DOMAINS = ['career', 'team', 'product', 'relationship', 'money', 'health', 'other'];
-export const EMOTIONS = ['anxiety', 'relief', 'excitement', 'fear', 'confidence', 'confusion'];
+export const EMOTIONS = ['anxiety', 'relief', 'excitement', 'fear', 'confidence', 'confusion', 'frustration', 'regret'];
 export const IMPORTANCE = [1, 2, 3];
 export const DECISION_STATUS = ['open', 'revisited', 'closed'];
 export const OUTCOMES = ['good', 'mixed', 'ongoing'];

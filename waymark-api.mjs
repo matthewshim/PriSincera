@@ -60,7 +60,7 @@ function validateDecision(body) {
 function defaultTone(emotionTags = [], importance = 2) {
   const s = new Set(emotionTags);
   // 불안·두려움이 섞이면 무게를 먼저 인정(상충 시 안전측)
-  if (s.has('anxiety') || s.has('fear')) return 'comfort';
+  if (s.has('anxiety') || s.has('fear') || s.has('frustration') || s.has('regret')) return 'comfort';
   if (s.has('confusion')) return 'clarify';
   // 자신감·설렘·홀가분함: 큰 결정(중요도 3)이면 '가볍게' 대신 차분히 점검(verify)
   if (s.has('confidence') || s.has('excitement') || s.has('relief')) {
@@ -216,6 +216,27 @@ router.patch('/decisions/:id', requireApproved, async (req, res) => {
   } catch (err) {
     console.error('[Waymark] patch decision:', err.message);
     res.status(500).json({ code: 'server_error', error: '저장 중 오류가 발생했습니다.' });
+  }
+});
+
+// ── DELETE /decisions/:id — 결정 + 연관(메시지·이벤트·알림) 하드 삭제
+router.delete('/decisions/:id', requireApproved, async (req, res) => {
+  try {
+    const owned = await ownDecision(req.uid, req.params.id);
+    if (!owned) return res.status(404).json({ code: 'not_found' });
+    const batch = db.batch();
+    const msgs = await owned.ref.collection(COLLECTIONS.decisionMessages).get();
+    msgs.forEach((m) => batch.delete(m.ref));
+    const evs = await db.collection(COLLECTIONS.events).where('decisionId', '==', req.params.id).get();
+    evs.forEach((e) => batch.delete(e.ref));
+    const nots = await db.collection(COLLECTIONS.notifications).where('decisionId', '==', req.params.id).get();
+    nots.forEach((n) => batch.delete(n.ref));
+    batch.delete(owned.ref);
+    await batch.commit();
+    res.status(204).end();
+  } catch (err) {
+    console.error('[Waymark] delete decision:', err.message);
+    res.status(500).json({ code: 'server_error' });
   }
 });
 

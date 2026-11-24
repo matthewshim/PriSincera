@@ -539,7 +539,9 @@
         "excitement": "わくわく",
         "fear": "こわさ",
         "confidence": "確信",
-        "confusion": "混乱"
+        "confusion": "混乱",
+        "frustration": "いら立ち",
+        "regret": "後悔"
       },
       "tone": {
         "comfort": "なぐさめ",
@@ -606,7 +608,11 @@
       "srcByok": "自分のキー",
       "msgPlaceholder": "気持ちを書いて — AIは代わりに決めず、分かれ道を照らすだけ",
       "typing": "返信を作成中",
-      "byokGuideLink": "APIキー発行ガイド"
+      "byokGuideLink": "APIキー発行ガイド",
+      "deleteBtn": "決定を削除",
+      "deleteConfirm": "この決定とすべての対話・通知が削除されます。元に戻せません。",
+      "deleteYes": "削除",
+      "deleteNo": "キャンセル"
     },
     "new": {
       "qTitle": "どんな決断をしましたか？ 気軽にどうぞ。",

@@ -539,7 +539,9 @@
         "excitement": "설렘",
         "fear": "두려움",
         "confidence": "확신",
-        "confusion": "혼란"
+        "confusion": "혼란",
+        "frustration": "짜증",
+        "regret": "후회"
       },
       "tone": {
         "comfort": "위로",
@@ -606,7 +608,11 @@
       "srcByok": "내 키",
       "msgPlaceholder": "마음을 적어요 — AI는 대신 결정하지 않고, 갈림길을 비출 뿐이에요",
       "typing": "응답 작성 중",
-      "byokGuideLink": "키 발급 가이드"
+      "byokGuideLink": "키 발급 가이드",
+      "deleteBtn": "결정 삭제",
+      "deleteConfirm": "이 결정과 모든 대화·알림이 삭제됩니다. 되돌릴 수 없어요.",
+      "deleteYes": "삭제",
+      "deleteNo": "취소"
     },
     "new": {
       "qTitle": "무슨 결정을 내렸어요? 편하게 말해주세요.",

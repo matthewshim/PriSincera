@@ -313,6 +313,9 @@ function Detail() {
   const [byokKey, setByokKey] = useState('');
   const [byokBusy, setByokBusy] = useState(false);
   const [byokProv, setByokProv] = useState('anthropic');
+  const { bump } = useContext(RefreshContext);
+  const [delConfirm, setDelConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const load = useCallback(() => {
     let alive = true;
@@ -362,6 +365,13 @@ function Detail() {
     try { await api.addMessage(id, note); setNote(''); load(); }
     catch (err) { setSt((s) => ({ ...s, error: err.message })); }
     finally { setSending(false); }
+  };
+
+  const removeDecision = async () => {
+    if (deleting) return;
+    setDeleting(true);
+    try { await api.deleteDecision(id); bump(); navigate('/waymark/app', { replace: true }); }
+    catch (err) { setSt((s) => ({ ...s, error: err.message })); setDeleting(false); setDelConfirm(false); }
   };
 
   if (st.loading) return <section className="wma-pane"><PaneHeader title="Waymark" /><div className="wma-pane-body"><p className="wma-state">{t('waymark.app.loading')}</p></div></section>;
@@ -489,6 +499,17 @@ function Detail() {
         </div>
 
         {st.error && <p className="wma-state wma-err">{st.error}</p>}
+        <div className="wma-danger">
+          {!delConfirm
+            ? <button type="button" className="wma-linkbtn wma-del" onClick={() => setDelConfirm(true)}>{t("waymark.detail.deleteBtn")}</button>
+            : (<div className="wma-del-confirm">
+                <span className="wma-ai-note">{t("waymark.detail.deleteConfirm")}</span>
+                <div className="wma-byok-actions">
+                  <button type="button" className="wma-review wma-del-yes" disabled={deleting} onClick={removeDecision}>{t("waymark.detail.deleteYes")}</button>
+                  <button type="button" className="wma-linkbtn" onClick={() => setDelConfirm(false)}>{t("waymark.detail.deleteNo")}</button>
+                </div>
+              </div>)}
+        </div>
         <div ref={bottomRef} aria-hidden="true" />
       </div>
         <div className="wma-cinput">
@@ -512,7 +533,6 @@ function Detail() {
                 <button type="button" className={'wma-chip' + (byokProv === 'gemini' ? ' on' : '')} onClick={() => setByokProv('gemini')}>Gemini</button>
               </div>
               <span className="wma-ai-note">{t('waymark.detail.byokIntro')}</span>
-              <a className="wma-linkbtn wma-byok-guide" href="/guide/api-key?for=waymark" target="_blank" rel="noreferrer">{t('waymark.detail.byokGuideLink')}<Icon name="external" size={12} /></a>
               <input className="wma-input" type="password" value={byokKey} onChange={(e) => setByokKey(e.target.value)} placeholder={t(byokProv === 'gemini' ? 'waymark.detail.byokPhGemini' : 'waymark.detail.byokPlaceholder')} />
               <div className="wma-byok-actions">
                 <button type="button" className="wma-review" disabled={byokBusy || !byokKey.trim()} onClick={connectByok}>{t('waymark.detail.byokConnect')}</button>

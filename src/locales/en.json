@@ -539,7 +539,9 @@
         "excitement": "Excited",
         "fear": "Afraid",
         "confidence": "Confident",
-        "confusion": "Confused"
+        "confusion": "Confused",
+        "frustration": "Frustrated",
+        "regret": "Regretful"
       },
       "tone": {
         "comfort": "Comfort",
@@ -606,7 +608,11 @@
       "srcByok": "Your key",
       "msgPlaceholder": "Write freely — the AI won’t decide for you, only light the fork",
       "typing": "Writing a reply",
-      "byokGuideLink": "How to get a key"
+      "byokGuideLink": "How to get a key",
+      "deleteBtn": "Delete decision",
+      "deleteConfirm": "This decision and all its messages and reminders will be deleted. This can’t be undone.",
+      "deleteYes": "Delete",
+      "deleteNo": "Cancel"
     },
     "new": {
       "qTitle": "What did you decide? Just tell me.",

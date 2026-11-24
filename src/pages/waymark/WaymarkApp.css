@@ -218,3 +218,9 @@
 
 /* 가이드 링크 — 새 탭 외부링크 아이콘 동반 */
 .wma-byok-guide { display: inline-flex; align-items: center; gap: var(--space-xs); white-space: nowrap; }
+
+/* 결정 삭제 — 되돌릴 수 없는 파괴적 동작(두 단계 확인). 버튼 스켈레톤은 .wma-review 재사용 */
+.wma-danger { margin-top: var(--space-xl); display: flex; justify-content: center; }
+.wma-del { color: var(--color-danger); font-size: var(--fs-sm); }
+.wma-del-confirm { display: flex; flex-direction: column; gap: var(--space-sm); align-items: center; text-align: center; }
+.wma-del-yes { color: var(--color-danger); border-color: var(--color-danger); }

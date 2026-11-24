@@ -35,6 +35,7 @@ export function useWaymarkApi() {
     createDecision: (body) => call('/decisions', { method: 'POST', body }),
     getDecision: (id) => call(`/decisions/${id}`),
     patchDecision: (id, body) => call(`/decisions/${id}`, { method: 'PATCH', body }),
+    deleteDecision: (id) => call(`/decisions/${id}`, { method: 'DELETE' }),
     addMessage: (id, text) => call(`/decisions/${id}/messages`, { method: 'POST', body: { text } }),
     upcomingEvents: () => call('/events/upcoming'),
     respondEvent: (id) => call(`/events/${id}/respond`, { method: 'POST' }),
