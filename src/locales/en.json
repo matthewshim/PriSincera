@@ -610,7 +610,8 @@
       "deleteBtn": "Delete decision",
       "deleteConfirm": "This decision and all its messages and reminders will be deleted. This can’t be undone.",
       "deleteYes": "Delete",
-      "deleteNo": "Cancel"
+      "deleteNo": "Cancel",
+      "menuLabel": "More"
     },
     "new": {
       "qTitle": "What did you decide? Just tell me.",

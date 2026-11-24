@@ -610,7 +610,8 @@
       "deleteBtn": "決定を削除",
       "deleteConfirm": "この決定とすべての対話・通知が削除されます。元に戻せません。",
       "deleteYes": "削除",
-      "deleteNo": "キャンセル"
+      "deleteNo": "キャンセル",
+      "menuLabel": "メニュー"
     },
     "new": {
       "qTitle": "どんな決断をしましたか？ 気軽にどうぞ。",
