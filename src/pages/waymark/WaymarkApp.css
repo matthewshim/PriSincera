@@ -62,7 +62,7 @@
 /* ───── M1-A 화면 (결정 코어) · 반응형 2-pane — 규범·패턴예산 준수 ─────
    데스크톱: 좌 사이드바(타임라인) + 우 패널(상세·대화). 모바일(≤768): 단일 컬럼 마스터-디테일.
    cursor:pointer 미선언(링크는 기본 포인터) · uppercase는 .u-eyebrow · 간격 전부 --space-* 토큰 */
-.wma-app { display: flex; max-width: var(--container); margin: 0 auto; height: 100vh; overflow: hidden; padding-top: 80px; } /* GNB(≈68) 보정 */
+.wma-app { display: flex; max-width: var(--container); margin: 0 auto; height: 100vh; height: 100dvh; overflow: hidden; padding-top: 80px; } /* GNB(≈68) 보정 */
 .wma-side { width: 340px; flex: none; border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: var(--space-md); gap: var(--space-12); }
 .wma-side-head { display: flex; align-items: center; justify-content: space-between; }
 .wma-iconlink { color: var(--text-muted); display: inline-flex; position: relative; }
@@ -126,7 +126,7 @@
 
 .wma-composer { display: flex; align-items: flex-end; gap: var(--space-sm); }
 .wma-composer .wma-input { background: var(--bg-void); border-radius: var(--radius-lg); padding: var(--space-12) var(--space-md); min-height: var(--btn-h-md); }
-.wma-composer-ta { resize: none; overflow-y: auto; max-height: 160px; line-height: var(--leading-normal); display: block; }
+.wma-composer-ta { resize: none; overflow-y: auto; max-height: 160px; line-height: var(--leading-normal); display: block; flex: 1; min-width: 0; }
 .wma-send { width: var(--btn-h-sm); height: var(--btn-h-sm); border-radius: 50%; flex: none; border: none; background: linear-gradient(135deg, var(--color-indigo), var(--prism-lavender)); color: var(--bg-void); display: flex; align-items: center; justify-content: center; }
 .wma-send:disabled { background: rgba(255,255,255,0.05); color: var(--text-muted); }
 
@@ -155,7 +155,7 @@
 .wma-review:hover { border-color: var(--glass-border-hover); }
 @media (max-width: 768px) {
   .wma-vs { grid-template-columns: 1fr; }
-  .wma-vs-arrow { transform: rotate(90deg); }
+  .wma-vs-arrow { transform: rotate(90deg); justify-self: center; }
 }
 
 /* M1-E 설정(S-9) */

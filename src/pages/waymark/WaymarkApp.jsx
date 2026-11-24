@@ -43,13 +43,14 @@ const timeAgo = (ts, t) => {
 };
 const emoList = (t, arr) => (arr && arr.length ? arr.map((e) => t(`waymark.enum.emotion.${e}`)).join('·') : '—');
 
-function PaneHeader({ title }) {
+function PaneHeader({ title, action }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <header className="wma-top">
       <button type="button" className="wma-back" onClick={() => navigate('/waymark/app')}><BackIcon /> {t('waymark.app.back')}</button>
-      <span className="wma-brand">{title}</span>
+      {title && <span className="wma-brand">{title}</span>}
+      {action}
     </header>
   );
 }
@@ -390,6 +391,30 @@ function Detail() {
   const d = st.decision;
   const companion = st.messages.filter((m) => m.type !== 'user_note');
   const hasOpening = st.messages.some((m) => m.type === 'ai' && m.kind === 'opening');
+
+  const decisionMenu = (
+    <div className="wma-menu-wrap" ref={menuRef}>
+      <button type="button" className="wma-menu-btn" aria-haspopup="menu" aria-expanded={menuOpen} aria-label={t('waymark.detail.menuLabel')} onClick={() => { setMenuOpen((v) => !v); setDelConfirm(false); }}><Icon name="more" size={18} /></button>
+      {menuOpen && (
+        <div className="wma-menu" role="menu">
+          {!delConfirm ? (
+            <>
+              <button type="button" role="menuitem" className="wma-menu-item" onClick={() => { setMenuOpen(false); navigate(`/waymark/app/retro/${d.id}`); }}><Icon name={d.outcome ? 'pen' : 'cycle'} size={14} />{t(d.outcome ? 'waymark.detail.reviewEdit' : 'waymark.detail.reviewBtn')}</button>
+              <button type="button" role="menuitem" className="wma-menu-item wma-menu-danger" onClick={() => setDelConfirm(true)}><Icon name="trash" size={14} />{t('waymark.detail.deleteBtn')}</button>
+            </>
+          ) : (
+            <div className="wma-menu-confirm">
+              <span className="wma-ai-note">{t('waymark.detail.deleteConfirm')}</span>
+              <div className="wma-byok-actions">
+                <button type="button" className="wma-linkbtn" onClick={() => setDelConfirm(false)}>{t('waymark.detail.deleteNo')}</button>
+                <button type="button" className="wma-review wma-del-yes" disabled={deleting} onClick={removeDecision}>{t('waymark.detail.deleteYes')}</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
   const last = companion.length ? companion[companion.length - 1] : null;
   const send = async () => {
     const text = note.trim();
@@ -476,34 +501,11 @@ function Detail() {
 
   return (
     <section className="wma-pane">
-      <PaneHeader title={t(`waymark.enum.domain.${d.domain}`)} />
+      <PaneHeader action={decisionMenu} />
       <div className="wma-pane-body">
         <div className="wma-card wma-flat">
-          <div className="wma-cardrow">
-            <span className="wma-dtitle">{d.title}</span>
-            <span className={`wma-badge ${d.status}`}>{t(`waymark.enum.status.${d.status}`)}</span>
-            <div className="wma-menu-wrap" ref={menuRef}>
-              <button type="button" className="wma-menu-btn" aria-haspopup="menu" aria-expanded={menuOpen} aria-label={t('waymark.detail.menuLabel')} onClick={() => { setMenuOpen((v) => !v); setDelConfirm(false); }}><Icon name="more" size={18} /></button>
-              {menuOpen && (
-                <div className="wma-menu" role="menu">
-                  {!delConfirm ? (
-                    <>
-                      <button type="button" role="menuitem" className="wma-menu-item" onClick={() => { setMenuOpen(false); navigate(`/waymark/app/retro/${d.id}`); }}><Icon name={d.outcome ? 'pen' : 'cycle'} size={14} />{t(d.outcome ? 'waymark.detail.reviewEdit' : 'waymark.detail.reviewBtn')}</button>
-                      <button type="button" role="menuitem" className="wma-menu-item wma-menu-danger" onClick={() => setDelConfirm(true)}><Icon name="trash" size={14} />{t('waymark.detail.deleteBtn')}</button>
-                    </>
-                  ) : (
-                    <div className="wma-menu-confirm">
-                      <span className="wma-ai-note">{t('waymark.detail.deleteConfirm')}</span>
-                      <div className="wma-byok-actions">
-                        <button type="button" className="wma-linkbtn" onClick={() => setDelConfirm(false)}>{t('waymark.detail.deleteNo')}</button>
-                        <button type="button" className="wma-review wma-del-yes" disabled={deleting} onClick={removeDecision}>{t('waymark.detail.deleteYes')}</button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+          <span className="u-eyebrow wma-lead">{t(`waymark.enum.domain.${d.domain}`)}</span>
+          <div className="wma-cardrow"><span className="wma-dtitle">{d.title}</span><span className={`wma-badge ${d.status}`}>{t(`waymark.enum.status.${d.status}`)}</span></div>
           <div className="wma-dmeta wma-mt">{emoList(t, d.emotionTags)}</div>
         </div>
 
