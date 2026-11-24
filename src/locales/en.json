@@ -604,7 +604,7 @@
       "byokFellBack": "Your key didn't respond just now, so the trial AI answered instead.",
       "srcTrial": "Trial AI",
       "srcByok": "Your key",
-      "msgPlaceholder": "Write freely — the AI won’t decide for you, only light the fork",
+      "msgPlaceholder": "Write what's on your mind…",
       "typing": "Writing a reply",
       "byokGuideLink": "How to get a key",
       "deleteBtn": "Delete decision",

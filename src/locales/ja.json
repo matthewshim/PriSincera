@@ -604,7 +604,7 @@
       "byokFellBack": "キーが一時的に応答しなかったため、体験AIが代わりに答えました。",
       "srcTrial": "体験AI",
       "srcByok": "自分のキー",
-      "msgPlaceholder": "気持ちを書いて — AIは代わりに決めず、分かれ道を照らすだけ",
+      "msgPlaceholder": "今の気持ちを書いて…",
       "typing": "返信を作成中",
       "byokGuideLink": "APIキー発行ガイド",
       "deleteBtn": "決定を削除",
