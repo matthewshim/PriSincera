@@ -1,5 +1,80 @@
 [
   {
+    "id": "ep16",
+    "slug": "building-a-companion-that-wont-decide",
+    "chapterNo": "16",
+    "title": {
+      "ko": "대신 결정하지 않기로 했는데, AI를 붙였습니다",
+      "en": "We promised not to decide for you — then we added AI",
+      "ja": "代わりに決めないと約束して、AIを載せました"
+    },
+    "subtitle": {
+      "ko": "선언 하나를 지키려고 템플릿·가드레일·톤 규칙을 다시 쓴 Waymark 체험판 구축기.",
+      "en": "Building the Waymark trial: how one promise rewrote the templates, the guardrails, and the tone rules.",
+      "ja": "一つの宣言を守るために、テンプレート・ガードレール・トーン規則を書き直したWaymark体験版の構築記。"
+    },
+    "tags": [
+      "Waymark",
+      "AI",
+      "Privacy",
+      "Product"
+    ],
+    "description": {
+      "ko": "ch.14에서 적은 \"대신 결정하지 않는다\"가 체험판에서 가장 많은 코드를 쓰게 한 조항이 됐습니다. LLM은 물으면 고르기 때문입니다. 템플릿 다섯 결·체험 AI·BYOK 세 경로에 같은 하드룰을 걸고, 큰 결정에 기분이 좋으면 응원 대신 점검으로 가게 톤 규칙을 바꿨습니다. 범위는 줄였지만 AI는 줄이지 않았고, 데이터 방침을 확인하기 전에는 코드를 쓰지 않았습니다.",
+      "en": "The one rule written in ch.14 — never decide for the user — became the clause that cost the most code in the trial, because an LLM picks a side when asked. Three paths (five template tones, trial AI, BYOK) pass the same hard rules, and the tone rules now verify instead of cheer when a big decision feels good. We cut scope but not the AI, and wrote no code until the data policy was confirmed.",
+      "ja": "ch.14で書いた「代わりに決めない」が、体験版でもっとも多くのコードを書かせた条項になりました。LLMは問われれば選ぶからです。テンプレート5つの結・体験AI・BYOKの三経路に同じハードルールをかけ、大きな決断で気分がいいときは応援ではなく点検へ向かうようトーン規則を変えました。範囲は削りましたがAIは削らず、データ方針を確認する前にコードは書きませんでした。"
+    },
+    "accent": "var(--color-indigo)",
+    "date": "2026-11-24",
+    "commits": [
+      {
+        "hash": "3c6a2ba",
+        "type": "feat",
+        "msg": {
+          "ko": "M1-A 결정 코어 — 서버 API·반응형 2-pane 앱(홈·기록·상세)",
+          "en": "M1-A decision core — server API and responsive 2-pane app",
+          "ja": "M1-A 決断コア — サーバーAPI・レスポンシブ2ペインアプリ"
+        }
+      },
+      {
+        "hash": "fd2754f",
+        "type": "feat",
+        "msg": {
+          "ko": "M1-C.1 체험 AI — 동반 응답 + per-user 캡 + 가드레일",
+          "en": "M1-C.1 trial AI — companion replies with per-user cap and guardrails",
+          "ja": "M1-C.1 体験AI — 伴走応答 + ユーザーごとの上限 + ガードレール"
+        }
+      },
+      {
+        "hash": "e5445dd",
+        "type": "feat",
+        "msg": {
+          "ko": "M1-B.2 웹푸시 — 먼저찾아옴 이중 채널 완성",
+          "en": "M1-B.2 web push — dual-channel delivery for reaching out first",
+          "ja": "M1-B.2 Webプッシュ — 先に訪ねる二重チャネルの完成"
+        }
+      },
+      {
+        "hash": "286722c",
+        "type": "feat",
+        "msg": {
+          "ko": "초대제 베타 게이트 — 신청·관리자 승인·랜딩 체험하기",
+          "en": "Invite-only beta gate — application, admin approval, landing CTA",
+          "ja": "招待制ベータのゲート — 申請・管理者承認・ランディング導線"
+        }
+      },
+      {
+        "hash": "a92e2f1",
+        "type": "feat",
+        "msg": {
+          "ko": "결정 기록 첫 안내 품질 개선 — 템플릿 정제 + BYOK 첫 한마디 AI",
+          "en": "Improve the first companion message — refined templates and a BYOK opening line",
+          "ja": "最初の案内の品質改善 — テンプレート精製 + BYOKの最初のひと言"
+        }
+      }
+    ]
+  },
+  {
     "id": "ep15",
     "slug": "design-gates-and-what-only-eyes-catch",
     "chapterNo": "15",
