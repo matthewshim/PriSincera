@@ -57,11 +57,15 @@ function validateDecision(body) {
 }
 
 // 감정 → 기본 동반 톤 (M1-A 규칙; 전체 4톤 라이브러리는 M1-C)
-function defaultTone(emotionTags = []) {
+function defaultTone(emotionTags = [], importance = 2) {
   const s = new Set(emotionTags);
+  // 불안·두려움이 섞이면 무게를 먼저 인정(상충 시 안전측)
   if (s.has('anxiety') || s.has('fear')) return 'comfort';
   if (s.has('confusion')) return 'clarify';
-  if (s.has('confidence') || s.has('excitement')) return 'cheer';
+  // 자신감·설렘·홀가분함: 큰 결정(중요도 3)이면 '가볍게' 대신 차분히 점검(verify)
+  if (s.has('confidence') || s.has('excitement') || s.has('relief')) {
+    return Number(importance) >= 3 ? 'verify' : 'cheer';
+  }
   return 'comfort';
 }
 
@@ -124,7 +128,7 @@ router.post('/decisions', requireApproved, async (req, res) => {
       updatedAt: FieldValue.serverTimestamp(),
     });
     // T+0 동반 메시지: 텍스트는 저장하지 않고 templateId+vars로 — 클라가 i18n 렌더(LLM 0)
-    const tone = defaultTone(clean.emotionTags);
+    const tone = defaultTone(clean.emotionTags, clean.importance);
     const msgRef = ref.collection(COLLECTIONS.decisionMessages).doc();
     batch.set(msgRef, {
       type: 'nudge', tone, templateId: `nudge.${tone}`, source: 'template',
@@ -444,7 +448,8 @@ router.post("/decisions/:id/ai-message", requireApproved, async (req, res) => {
     const owned = await ownDecision(req.uid, req.params.id);
     if (!owned) return res.status(404).json({ code: "not_found" });
     const provider = ["anthropic", "gemini"].includes(req.body && req.body.provider) ? req.body.provider : null;
-    const ref = await owned.ref.collection(COLLECTIONS.decisionMessages).add({ type: "ai", tone, source: "byok", provider, text, createdAt: FieldValue.serverTimestamp() });
+    const kind = (req.body && req.body.kind === "opening") ? "opening" : null;
+    const ref = await owned.ref.collection(COLLECTIONS.decisionMessages).add({ type: "ai", tone, source: "byok", provider, kind, text, createdAt: FieldValue.serverTimestamp() });
     res.status(201).json({ id: ref.id });
   } catch (err) {
     console.error("[Waymark] byok message:", err.message);

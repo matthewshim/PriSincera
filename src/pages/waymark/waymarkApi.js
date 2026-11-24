@@ -42,7 +42,7 @@ export function useWaymarkApi() {
     markNotification: (id) => call(`/notifications/${id}/read`, { method: 'POST' }),
     aiCompanion: (decisionId, tone, message) => call('/ai/companion', { method: 'POST', body: { decisionId, tone, message } }),
     aiUsage: () => call('/ai/usage'),
-    aiByokMessage: (id, tone, text, provider) => call(`/decisions/${id}/ai-message`, { method: 'POST', body: { tone, text, provider } }),
+    aiByokMessage: (id, tone, text, provider, kind) => call(`/decisions/${id}/ai-message`, { method: 'POST', body: { tone, text, provider, ...(kind ? { kind } : {}) } }),
     getMe: () => call('/me'),
     patchMe: (body) => call('/me', { method: 'PATCH', body }),
     requestAccess: (body) => call('/access/request', { method: 'POST', body }),

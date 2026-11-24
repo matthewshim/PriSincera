@@ -632,7 +632,7 @@
     },
     "companion": {
       "comfort": {
-        "msg": "{title} — that wasn't an easy call. It's okay if your mind feels tangled right now.",
+        "msg": "That wasn't an easy call. It's okay if your mind feels tangled right now.",
         "close": "For now, just acknowledging this feeling is enough."
       },
       "counsel": {
@@ -640,12 +640,16 @@
         "close": "Which way is right — in the end, you know best."
       },
       "cheer": {
-        "msg": "{title} — that's a decision only you could make. Just take the first light step.",
+        "msg": "That's a decision only you could make. Just take the first light step.",
         "close": "Go with it. I'm right beside you."
       },
       "clarify": {
         "msg": "Shall we split your thoughts into three: options / criteria / feelings?",
         "close": "I helped you sort it, but the decision stays yours."
+      },
+      "verify": {
+        "msg": "A decision this big is worth pressure-testing once — any assumptions or angles you might have missed?",
+        "close": "Not to push back — just helping your choice stand firmer, by your side."
       }
     },
     "retro": {

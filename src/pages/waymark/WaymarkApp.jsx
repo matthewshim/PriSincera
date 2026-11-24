@@ -5,7 +5,7 @@ import { useTranslation } from '../../contexts/LanguageContext';
 import useSEO from '../../hooks/useSEO';
 import { useWaymarkApi } from './waymarkApi';
 import { DOMAINS, EMOTIONS, IMPORTANCE, TONES, OUTCOMES } from '../../data/waymarkModel.mjs';
-import { saveByok, getByok, byokProvider, clearByok, byokSystem, callByok } from './byok';
+import { saveByok, getByok, byokProvider, clearByok, byokSystem, byokOpeningSystem, callByok } from './byok';
 import Icon from '../../components/common/Icon';
 import ByokConnect from './ByokConnect';
 import { enablePush, disablePush } from './push';
@@ -296,7 +296,7 @@ function Retro() {
 }
 
 function Detail() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
   const api = useWaymarkApi();
@@ -328,6 +328,34 @@ function Detail() {
   useEffect(() => { const el = taRef.current; if (!el) return; el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 160) + 'px'; }, [note]);
   useEffect(() => { byokProvider().then((p) => setByok(p)).catch(() => {}); }, []);
 
+  // C: BYOK 연결 사용자 한정 — 기록 직후 '첫 한마디'를 맥락 기반 AI로 1회 생성(실패 시 템플릿 유지)
+  const openingRef = useRef(false);
+  useEffect(() => {
+    if (openingRef.current || !byok || st.loading || !st.decision) return;
+    const msgs = st.messages || [];
+    const nudge = msgs.find((m) => m.type === 'nudge');
+    // 스레드가 템플릿 넛지 하나뿐일 때만(대화·AI·오프닝이 이미 있으면 생성 안 함)
+    if (!nudge || !(msgs.length > 0 && msgs.every((m) => m.type === 'nudge'))) return;
+    openingRef.current = true;
+    (async () => {
+      try {
+        const cred = await getByok();
+        if (!cred) { setByok(null); return; }
+        const oTone = nudge.tone || 'comfort';
+        const d0 = st.decision;
+        const parts = ['결정: ' + d0.title]; // i18n-ok: AI 입력(UI 아님)
+        if (d0.context) parts.push('상황: ' + String(d0.context).slice(0, 1500)); // i18n-ok: AI 입력(UI 아님)
+        if (d0.chosen) parts.push('선택: ' + d0.chosen); // i18n-ok: AI 입력(UI 아님)
+        if (d0.options && d0.options.length) parts.push('고려한 선택지: ' + d0.options.join(', ')); // i18n-ok: AI 입력(UI 아님)
+        if (d0.emotionTags && d0.emotionTags.length) parts.push('처음 감정: ' + d0.emotionTags.join(', ')); // i18n-ok: AI 입력(UI 아님)
+        setAiBusy(true);
+        const aiText = await callByok(cred.provider, cred.key, byokOpeningSystem(oTone, locale), parts.join('\n'));
+        if (aiText) { await api.aiByokMessage(id, oTone, aiText, cred.provider, 'opening'); load(); }
+      } catch (e) { console.error('[Waymark] opening 생성 실패(템플릿 유지)', e, e && e.body || ''); }
+      finally { setAiBusy(false); }
+    })();
+  }, [byok, st.loading, st.decision, st.messages, locale, api, id, load]);
+
   const sendNote = async () => {
     if (!note.trim() || sending) return;
     setSending(true);
@@ -341,6 +369,7 @@ function Detail() {
 
   const d = st.decision;
   const companion = st.messages.filter((m) => m.type !== 'user_note');
+  const hasOpening = st.messages.some((m) => m.type === 'ai' && m.kind === 'opening');
   const last = companion.length ? companion[companion.length - 1] : null;
   const send = async () => {
     const text = note.trim();
@@ -414,7 +443,8 @@ function Detail() {
         </div>
       );
     }
-    const useToneVal = m.tone;
+    const TONES_SAFE = ['comfort', 'counsel', 'cheer', 'clarify', 'verify'];
+    const useToneVal = TONES_SAFE.includes(m.tone) ? m.tone : 'comfort';
     return (
       <div className="wma-m them" key={m.id}>
         <span className="u-eyebrow wma-lead">{t(`waymark.enum.tone.${useToneVal}`)}</span>
@@ -448,7 +478,7 @@ function Detail() {
         )}
 
         <div className="wma-thread">
-          {st.messages.map((m) => (m.type === 'user_note'
+          {st.messages.filter((m) => !(hasOpening && m.type === 'nudge')).map((m) => (m.type === 'user_note'
             ? <div className="wma-m me" key={m.id}>{m.text}</div>
             : renderCompanion(m)))}
           {aiBusy && (
