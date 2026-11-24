@@ -1,8 +1,8 @@
 ---
 status: active
 domain: Core
-last_updated: 2026-11-04
-version: v2.9
+last_updated: 2026-11-24
+version: v3.0
 target_files:
   - index.html
   - server.mjs
@@ -1613,3 +1613,40 @@ vh 600→220px · 900→169px · 1400→84px · 1600→50px   (전 구간 양수
 같이 **1024px에서 세로로 접도록** 올렸다. 유닛 합이 603px이라 최소 간격을 더하면 731px이
 필요한데 1024px 미만에서는 콘텐츠 폭이 모자라 설명이 2줄로 접힌다. 1024px은 지면이 이미
 쓰는 값이라 `breakpoint-unique`(5/5, 여유 0)를 건드리지 않는다.
+
+---
+
+## 21. 최신 연재 CTA(HeroLatestNote) 철거 — 2026-11-24
+
+지면 하단에 상시로 떠 있던 알약형 CTA(히어로 하단 중앙 → 우하단 이동·고정)를 **전량 삭제**했다.
+오너 결정, PC·모바일 양쪽.
+
+**삭제 범위**
+
+| 대상 | 처리 |
+| --- | --- |
+| `src/components/hero/HeroLatestNote.jsx` (133줄) | 파일 삭제 |
+| `src/components/hero/HeroLatestNote.css` (223줄) | 파일 삭제 |
+| `HeroSection.jsx` import + 사용 | 2줄 제거 |
+| `home.latestNote` · `home.latestPart` | ko/en/ja 3종에서 제거 |
+
+**철거를 뒷받침한 실측 (헤드리스 1440×900 등 10개 뷰포트)**
+
+상시 CTA가 **히어로 CTA 버튼 위를 덮고 있었다.** 스트립은 `bottom: 92px` 고정인데 히어로
+CTA는 지면 높이에 따라 위치가 변해, 뷰포트 높이가 중간대일 때 두 요소가 겹쳤다:
+
+| 뷰포트 | 히어로 CTA | 스트립 | 겹침 |
+| ---: | ---: | ---: | ---: |
+| 1440×900 | 736~787 | 762~808 | **26px** |
+| 1440×820 | 696~747 | 682~728 | **32px** |
+| 1280×800 | 686~737 | 662~708 | **22px** |
+| 1024×768 | 667~719 | 630~676 | **9px** |
+| 1920×1080 | 826~877 | 942~988 | 0 |
+
+지면 끝에서는 푸터 `NAVIGATE` 열을 덮었다. 기능도 중복이었다 — 히어로 CTA에 이미
+`최신 글 읽기`가 있고, GNB와 Proof of Work의 Planner's View 카드가 같은 길을 갖고 있다.
+모바일은 2026-11-12에 이미 `display: none` 이었으므로 이번 삭제로 바뀌는 화면이 없다.
+
+**래칫 효과** — 전용 CSS가 사라지며 5개 지표가 내려가 기준선을 조였다:
+`backdrop-filter` 29→27 · `infinite-animation` 43→42 · `keyframes-total` 31→30 ·
+`radius-unique` 9→8 · `infinite-ungated` 8→7.

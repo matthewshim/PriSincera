@@ -4,7 +4,6 @@ import useMousePosition from '../../hooks/useMousePosition';
 import StarField from './StarField';
 import ConstellationAssembly from './ConstellationAssembly';
 import EnergyCirculation from './EnergyCirculation';
-import HeroLatestNote from './HeroLatestNote';
 import HeroContent from './HeroContent';
 import SvgDefs from '../common/SvgDefs';
 import './HeroSection.css';
@@ -142,9 +141,6 @@ export default function HeroSection({ forceShowAllConstellations = false, conten
         </div>,
         document.body
       )}
-
-      {/* 최신 연재 CTA — 스스로 fixed 로 떠서 스크롤에 따라 하단 중앙 → 우하단으로 이동한다 */}
-      <HeroLatestNote visible={assemblyDone} />
 
       {/* Scroll indicator — fades out as user scrolls */}
       <div
