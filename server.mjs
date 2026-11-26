@@ -504,8 +504,10 @@ app.get('/sitemap.xml', async (req, res) => {
     const staticPages = [
       { url: '/', changefreq: 'weekly', priority: 1.0 },
       { url: '/relearn', changefreq: 'daily', priority: 0.9 },
-      { url: '/planners-view', changefreq: 'weekly', priority: 0.8 },
-      { url: '/builders-log', changefreq: 'weekly', priority: 0.8 },
+      { url: '/planners-view', changefreq: 'weekly', priority: 0.8,
+        lastmod: plannersView.reduce((a, n) => { const d = n.updated || n.date; return d > a ? d : a; }, '') || undefined },
+      { url: '/builders-log', changefreq: 'weekly', priority: 0.8,
+        lastmod: buildersLog.reduce((a, c) => { const d = c.updated || c.date; return d > a ? d : a; }, '') || undefined },
       { url: '/sylphio', changefreq: 'weekly', priority: 0.9 },
       { url: '/sylphio/guide', changefreq: 'weekly', priority: 0.8 },
       { url: '/sylphio/privacy', changefreq: 'monthly', priority: 0.5 },
@@ -517,27 +519,34 @@ app.get('/sitemap.xml', async (req, res) => {
     
     // Add static pages
     for (const page of staticPages) {
-      xml += `  <url>\n    <loc>${baseUrl}${page.url}</loc>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
+      xml += `  <url>\n    <loc>${baseUrl}${page.url}</loc>\n${page.lastmod ? `    <lastmod>${page.lastmod}</lastmod>\n` : ''}    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
     }
 
     // Add daily digest issues
     for (const date of allDates) {
-      xml += `  <url>\n    <loc>${baseUrl}/relearn/daily/${date}</loc>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+      xml += `  <url>\n    <loc>${baseUrl}/relearn/daily/${date}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
     }
 
     // Add Planner's View notes
     // v2.0 IA: 루트는 목록, 슬러그는 글 — 서로 다른 콘텐츠이므로 양쪽 모두 자기참조 canonical이고
     // 사이트맵에도 함께 등재한다 (루트는 staticPages 에 있음).
+    /* lastmod 는 Google 이 실제로 참조하는 유일한 필드다(changefreq·priority 는 무시한다고
+       공개적으로 밝혔다). 이전에는 241개 URL 전부에 lastmod 가 없어서, 발행된 글을 고쳐도
+       재크롤링 신호가 나가지 않았다.
+       값은 `updated`(본문을 실제로 고친 날) 우선, 없으면 `date`(발행일)를 쓴다.
+       부정확한 lastmod 는 무시되므로 추측값을 넣지 않는다. */
     for (const note of plannersView) {
       if (note.slug) {
-        xml += `  <url>\n    <loc>${baseUrl}/planners-view/${note.slug}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        const lastmod = note.updated || note.date;
+        xml += `  <url>\n    <loc>${baseUrl}/planners-view/${note.slug}</loc>\n${lastmod ? `    <lastmod>${lastmod}</lastmod>\n` : ''}    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     }
 
     // Add builders log chapters
     for (const chapter of buildersLog) {
       if (chapter.slug) {
-        xml += `  <url>\n    <loc>${baseUrl}/builders-log/${chapter.slug}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        const lastmod = chapter.updated || chapter.date;
+        xml += `  <url>\n    <loc>${baseUrl}/builders-log/${chapter.slug}</loc>\n${lastmod ? `    <lastmod>${lastmod}</lastmod>\n` : ''}    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
       }
     }
     
@@ -593,6 +602,37 @@ app.use(async (req, res) => {
      사라졌다(2026-11-26 실측). LD 구조가 바뀌어도 메타가 깨지지 않게 분리한다. */
   let articleDate = null;
 
+  /* 목록(허브) 지면의 구조화 데이터 헬퍼 — 분기 전에 둔다.
+     처음에 if(dailyMatch) 블록 안에 선언해 다른 분기에서 ReferenceError 가 났다. */
+  const pickL = (obj) => (obj && typeof obj === 'object' ? (obj[req.locale] || obj.ko || '') : (obj || ''));
+  const listLd = (sectionUrl, name, items) => ({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${sectionUrl}#page`,
+        name,
+        url: sectionUrl,
+        inLanguage: req.locale,
+        isPartOf: { '@id': `${baseUrl}/#website` },
+        mainEntity: { '@id': `${sectionUrl}#list` },
+      },
+      {
+        '@type': 'ItemList',
+        '@id': `${sectionUrl}#list`,
+        name,
+        numberOfItems: items.length,
+        itemListOrder: 'https://schema.org/ItemListOrderDescending',
+        itemListElement: items.map((it, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: it.name,
+          url: it.url,
+        })),
+      },
+    ],
+  });
+
   try {
     const dailyMatch = req.originalUrl.match(/^\/relearn\/daily\/(\d{4}-\d{2}-\d{2})/);
     if (dailyMatch) {
@@ -632,6 +672,12 @@ app.use(async (req, res) => {
       // canonical 은 양쪽 모두 자기참조 — resolveMeta 의 기본 동작을 그대로 쓴다.
       const noteMatch = req.originalUrl.match(/^\/planners-view\/([a-zA-Z0-9-_]+)/);
       const note = noteMatch ? plannersView.find((n) => n.slug === noteMatch[1]) : null;
+      if (!noteMatch) {
+        const items = [...plannersView]
+          .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+          .map((n) => ({ name: pickL(n.title), url: `${baseUrl}/planners-view/${n.slug}` }));
+        if (items.length) articleLd = listLd(`${baseUrl}/planners-view`, "Planner's View", items);
+      }
       if (note) {
         const pick = (obj) => {
           if (!obj) return '';
@@ -671,6 +717,7 @@ app.use(async (req, res) => {
           description: noteDesc,
           url: noteUrl,
           datePublished: note.date,
+          dateModified: note.updated || undefined,
           inLanguage: req.locale,
           mainEntityOfPage: noteUrl,
           image: PAGE_META['/planners-view'].ogImage,
@@ -717,6 +764,12 @@ app.use(async (req, res) => {
       }
     } else if (req.originalUrl.startsWith('/builders-log')) {
       const logMatch = req.originalUrl.match(/^\/builders-log\/([a-zA-Z0-9-_]+)/);
+      if (!logMatch) {
+        const items = [...buildersLog]
+          .sort((a, b) => Number(b.chapterNo || 0) - Number(a.chapterNo || 0))
+          .map((c) => ({ name: pickL(c.title), url: `${baseUrl}/builders-log/${c.slug}` }));
+        if (items.length) articleLd = listLd(`${baseUrl}/builders-log`, "Builder's Log", items);
+      }
       if (logMatch) {
         const slug = logMatch[1];
         const article = buildersLog.find(a => a.slug === slug);
@@ -757,6 +810,7 @@ app.use(async (req, res) => {
                 description: logDesc,
                 url: logUrl,
                 datePublished: article.date,
+                dateModified: article.updated || undefined,
                 inLanguage: req.locale,
                 mainEntityOfPage: logUrl,
                 image: PAGE_META['/builders-log'].ogImage,
