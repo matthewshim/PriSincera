@@ -1,5 +1,50 @@
 [
   {
+    "id": "pv11",
+    "slug": "calendar-is-strategy",
+    "title": {
+      "ko": "운영 캘린더는 일정표가 아니라 전략입니다",
+      "en": "An Operating Calendar Is Not a Schedule but a Strategy",
+      "ja": "運用カレンダーは日程表ではなく戦略です"
+    },
+    "subtitle": {
+      "ko": "기간이 순서를 대신 정해주던 제약이 사라지면, 캘린더는 가능한 것의 목록이 아니라 선택의 기록이 된다",
+      "en": "Once duration no longer decides the order for you, a calendar stops being a list of what is possible and becomes a record of what you chose",
+      "ja": "期間が順序を代わりに決めてくれる制約がなくなれば、カレンダーは可能なことの一覧ではなく選択の記録になる"
+    },
+    "description": {
+      "ko": "예전에는 캘린더의 절반이 저절로 정해졌습니다. 이 기능은 반년이 걸린다는 사실이 순서와 간격을 결정했으니까요. 그 제약이 느슨해지면 모든 항목이 왜 다른 것보다 먼저인지에 답해야 합니다. 그리고 만들 수 있는 양이 늘었을 때 캘린더를 채우는 것은 가장 쉬운 선택이고 대개 틀린 선택입니다.",
+      "en": "Half the calendar used to fill itself in. The fact that a feature took six months decided both its order and the gap after it. Loosen that constraint and every item has to answer why it comes before the others. And when you can build more, filling the calendar is the easiest choice available — and usually the wrong one.",
+      "ja": "かつてはカレンダーの半分が自然に決まっていました。この機能に半年かかるという事実が、順序と間隔のほとんどを決めていたからです。その制約が緩めば、すべての項目が「なぜ他より先なのか」に答えなければなりません。そしてつくれる量が増えたとき、カレンダーを埋めるのは最も簡単な選択であり、たいてい誤った選択です。"
+    },
+    "pullQuote": {
+      "ko": "캘린더에 빈 칸이 없다면 그 조직은 배울 시간을 일정에서 지운 것입니다.",
+      "en": "A calendar with no empty space is an organization that deleted learning from its schedule.",
+      "ja": "カレンダーに空白がないなら、その組織は学ぶ時間を日程から消したのです。"
+    },
+    "author": {
+      "name": "Matthew Shim",
+      "role": {
+        "ko": "웹서비스 총괄 · 프로덕트 리더",
+        "en": "Head of Web Services · Product Leader",
+        "ja": "ウェブサービス統括・プロダクトリーダー"
+      }
+    },
+    "series": {
+      "id": "endless-launch",
+      "order": 5
+    },
+    "tags": [
+      "Live Service",
+      "Product Operations",
+      "Prioritization",
+      "Organization"
+    ],
+    "accent": "#C7D2FE",
+    "date": "2026-11-26",
+    "readMinutes": 7
+  },
+  {
     "id": "pv9",
     "slug": "notice-is-a-feature",
     "title": {
