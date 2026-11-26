@@ -38,6 +38,18 @@ if (existsSync(buildersLogMetaPath)) {
   }
 }
 
+// --- Load Planner's View Series Registry (구조화 데이터의 isPartOf·articleSection) ---
+const plannersViewSeriesPath = join(__dirname, 'src', 'data', 'plannersViewSeries.json');
+let plannersViewSeries = [];
+if (existsSync(plannersViewSeriesPath)) {
+  try {
+    plannersViewSeries = JSON.parse(readFileSync(plannersViewSeriesPath, 'utf-8'));
+    console.log(`[Server] Loaded ${plannersViewSeries.length} Planner's View series`);
+  } catch (err) {
+    console.error("[Server] Failed to load plannersViewSeries.json", err);
+  }
+}
+
 // --- Load Planner's View Metadata for Sitemap & SEO Proxy ---
 const plannersViewMetaPath = join(__dirname, 'src', 'data', 'plannersViewMeta.json');
 let plannersView = [];
@@ -625,17 +637,71 @@ app.use(async (req, res) => {
           ogImage: PAGE_META['/planners-view'].ogImage,
         };
         ogType = 'article';
-        articleLd = {
-          '@context': 'https://schema.org',
+
+        /* 구조화 데이터 — 단일 Article 노드에서 @graph 로 바꾼다.
+           ① author·publisher 를 홈의 Person(`#person`)에 @id 로 묶는다. 이전에는 이름만 든
+              별개 Person 노드라 사이트·LinkedIn·GitHub 와 같은 사람으로 연결되지 않았다.
+           ② isPartOf 로 연재를 CreativeWorkSeries 로 노출한다. 이 섹션의 핵심 자산이 연재인데
+              기계가 읽을 수 있는 형태가 없었다.
+           ③ BreadcrumbList 를 넣는다. FAQPage 리치 결과는 2026-05 에 제거됐지만
+              브레드크럼은 여전히 지원되고, 지면에 이미 브레드크럼이 있다.
+              **시각 구조와 일치시킨다** — 2뎁스(목록 → 시리즈명)이고 시리즈 전용 URL 이
+              없으므로 마지막 항목에는 item 을 붙이지 않는다(마지막 항목은 URL 생략 가능). */
+        const seriesDef = note.series
+          ? plannersViewSeries.find((s) => s.id === note.series.id)
+          : null;
+        const seriesName = seriesDef ? pick(seriesDef.title) : '';
+        const noteUrl = `${baseUrl}/planners-view/${note.slug}`;
+
+        const articleNode = {
           '@type': 'Article',
+          '@id': `${noteUrl}#article`,
           headline: noteTitle,
           description: noteDesc,
+          url: noteUrl,
           datePublished: note.date,
           inLanguage: req.locale,
-          mainEntityOfPage: `${baseUrl}/planners-view/${note.slug}`,
+          mainEntityOfPage: noteUrl,
           image: PAGE_META['/planners-view'].ogImage,
-          author: note.author ? { '@type': 'Person', name: note.author.name } : undefined,
-          publisher: { '@type': 'Organization', name: 'PriSincera' },
+          author: { '@id': `${baseUrl}/#person` },
+          publisher: { '@id': `${baseUrl}/#person` },
+          keywords: note.tags && note.tags.length ? note.tags.join(', ') : undefined,
+          articleSection: seriesName || undefined,
+          position: note.series ? note.series.order : undefined,
+          isPartOf: seriesDef
+            ? {
+                '@type': 'CreativeWorkSeries',
+                '@id': `${baseUrl}/planners-view#series-${seriesDef.id}`,
+                name: seriesName,
+                description: pick(seriesDef.description),
+                url: `${baseUrl}/planners-view`,
+              }
+            : undefined,
+        };
+
+        /* Person 은 @id 참조만 두면 이 페이지만으로는 불완전하다. 최소 노드를 함께 실어
+           페이지 자체가 자기완결이 되게 하고, @id 로 홈의 Person 과 동일 엔티티로 묶는다.
+           jobTitle·description 은 홈에만 둔다 — 두 곳에 쓰면 어긋날 자리가 생긴다. */
+        const personNode = {
+          '@type': 'Person',
+          '@id': `${baseUrl}/#person`,
+          name: note.author ? note.author.name : 'Matthew Shim',
+          url: `${baseUrl}/`,
+          sameAs: ['https://www.linkedin.com/in/shimks', 'https://github.com/matthewshim'],
+        };
+
+        const crumbNode = {
+          '@type': 'BreadcrumbList',
+          '@id': `${noteUrl}#breadcrumb`,
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: "Planner's View", item: `${baseUrl}/planners-view` },
+            { '@type': 'ListItem', position: 2, name: seriesName || noteTitle },
+          ],
+        };
+
+        articleLd = {
+          '@context': 'https://schema.org',
+          '@graph': [articleNode, personNode, crumbNode],
         };
       }
     } else if (req.originalUrl.startsWith('/builders-log')) {
