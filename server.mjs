@@ -38,6 +38,12 @@ if (existsSync(buildersLogMetaPath)) {
   }
 }
 
+/* Builder's Log 상세 브레드크럼의 두 번째 노드 — 지면의 `buildersLog.detail.crumbCurrent`
+   와 **같은 값을 유지해야 한다**(구조화 데이터는 보이는 것과 일치해야 한다).
+   언어팩(src/locales)은 클라이언트 번들 전용이라 서버에서 import 하지 않고 여기 둔다.
+   지면 문구를 바꾸면 이 상수도 함께 바꾼다. */
+const BL_CRUMB = { ko: '아티클', en: 'Article', ja: '記事' };
+
 // --- Load Planner's View Series Registry (구조화 데이터의 isPartOf·articleSection) ---
 const plannersViewSeriesPath = join(__dirname, 'src', 'data', 'plannersViewSeries.json');
 let plannersViewSeries = [];
@@ -582,6 +588,10 @@ app.use(async (req, res) => {
   let override = null;   // 동적 페이지(글 상세/날짜)용 메타
   let ogType = 'website';
   let articleLd = null;  // Article JSON-LD (구조화 데이터)
+  /* 발행일은 LD 와 **따로** 든다. 이전에는 메타 태그가 articleLd.datePublished 를
+     직접 읽어서, LD 를 @graph 로 감싸는 순간 article:published_time 이 조용히
+     사라졌다(2026-11-26 실측). LD 구조가 바뀌어도 메타가 깨지지 않게 분리한다. */
+  let articleDate = null;
 
   try {
     const dailyMatch = req.originalUrl.match(/^\/relearn\/daily\/(\d{4}-\d{2}-\d{2})/);
@@ -647,6 +657,7 @@ app.use(async (req, res) => {
               브레드크럼은 여전히 지원되고, 지면에 이미 브레드크럼이 있다.
               **시각 구조와 일치시킨다** — 2뎁스(목록 → 시리즈명)이고 시리즈 전용 URL 이
               없으므로 마지막 항목에는 item 을 붙이지 않는다(마지막 항목은 URL 생략 가능). */
+        articleDate = note.date;
         const seriesDef = note.series
           ? plannersViewSeries.find((s) => s.id === note.series.id)
           : null;
@@ -717,10 +728,68 @@ app.use(async (req, res) => {
             }
             return obj;
           };
+          const logTitle = getLocaleVal(article.title);
           override = {
-            pageTitle: `${getLocaleVal(article.title)} — Builder's Log`,
+            pageTitle: `${logTitle} — Builder's Log`,
             description: getLocaleVal(article.description).substring(0, 150) + '...',
             keywords: PAGE_META['/builders-log'].keywords,
+          };
+
+          /* 아티클 지면인데 아티클 신호가 없었다 — 메타 태그만 override 하고
+             og:type 은 website 로 남았으며 Article JSON-LD 도 만들지 않았다.
+             Planner's View 와 같은 @graph 형태로 맞춘다.
+
+             Builder's Log 는 chapterNo 로 이어지는 하나의 연대기이므로 전체를
+             CreativeWorkSeries 로 두고 position 에 챕터 번호를 넣는다.
+             author 필드는 메타에 없다 — 사이트 소유자 1인이므로 홈의 Person 을 쓴다. */
+          ogType = 'article';
+          articleDate = article.date;
+          const logUrl = `${baseUrl}/builders-log/${article.slug}`;
+          const logDesc = getLocaleVal(article.description);
+
+          articleLd = {
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'Article',
+                '@id': `${logUrl}#article`,
+                headline: logTitle,
+                description: logDesc,
+                url: logUrl,
+                datePublished: article.date,
+                inLanguage: req.locale,
+                mainEntityOfPage: logUrl,
+                image: PAGE_META['/builders-log'].ogImage,
+                author: { '@id': `${baseUrl}/#person` },
+                publisher: { '@id': `${baseUrl}/#person` },
+                keywords: article.tags && article.tags.length ? article.tags.join(', ') : undefined,
+                position: article.chapterNo ? Number(article.chapterNo) : undefined,
+                isPartOf: {
+                  '@type': 'CreativeWorkSeries',
+                  '@id': `${baseUrl}/builders-log#series`,
+                  name: "Builder's Log",
+                  url: `${baseUrl}/builders-log`,
+                },
+              },
+              {
+                '@type': 'Person',
+                '@id': `${baseUrl}/#person`,
+                name: 'Matthew Shim',
+                url: `${baseUrl}/`,
+                sameAs: ['https://www.linkedin.com/in/shimks', 'https://github.com/matthewshim'],
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': `${logUrl}#breadcrumb`,
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: "Builder's Log", item: `${baseUrl}/builders-log` },
+                  /* 지면의 두 번째 노드는 번역 라벨('아티클'·Article·記事)이다.
+                     마크업은 **보이는 것과 일치**해야 하므로 그대로 쓴다.
+                     라벨 자체가 정보량이 없다는 점은 지면 개선 과제로 따로 둔다. */
+                  { '@type': 'ListItem', position: 2, name: BL_CRUMB[req.locale] || BL_CRUMB.ko },
+                ],
+              },
+            ],
           };
         }
       }
@@ -757,7 +826,7 @@ app.use(async (req, res) => {
     <meta property="og:image" content="${image}">
     <meta property="og:url" content="${canonicalUrl}">
     <meta property="og:type" content="${ogType}">
-    ${ogType === 'article' && articleLd && articleLd.datePublished ? `<meta property="article:published_time" content="${articleLd.datePublished}">` : ''}
+    ${ogType === 'article' && articleDate ? `<meta property="article:published_time" content="${articleDate}">` : ''}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${safeDesc}">
