@@ -114,10 +114,18 @@ export const LOCALES = ['ko', 'en', 'ja'];
 export const DEFAULT_LOCALE = 'ko';
 export const OG_LOCALE = { ko: 'ko_KR', en: 'en_US', ja: 'ja_JP' };
 
-/** hreflang 대체 링크 태그(SSR용). canonical은 쿼리 없는 자기참조 URL. */
+/**
+ * hreflang 대체 링크 태그(SSR용).
+ * @param canonical **쿼리 없는** 자기참조 URL 을 넘긴다(여기서 ?lang= 을 붙이므로).
+ *
+ * 기본 로케일(ko)은 `?lang=ko` 가 아니라 쿼리 없는 URL 을 가리킨다. 구글은
+ * **hreflang 이 가리킨 URL 의 canonical 이 자기 자신일 때만** 주석을 인정하는데,
+ * `?lang=ko` 는 쿼리 없는 URL 로 canonical 을 보내므로(= x-default 와 동일 문서)
+ * 그 주석이 버려진다. ko 와 x-default 를 같은 URL 로 맞춰 자기참조를 성립시킨다.
+ */
 export function hreflangLinks(canonical) {
   const lines = LOCALES.map(
-    (loc) => `<link rel="alternate" hreflang="${loc}" href="${canonical}?lang=${loc}">`
+    (loc) => `<link rel="alternate" hreflang="${loc}" href="${loc === DEFAULT_LOCALE ? canonical : `${canonical}?lang=${loc}`}">`
   );
   lines.push(`<link rel="alternate" hreflang="x-default" href="${canonical}">`);
   return lines.join('\n    ');

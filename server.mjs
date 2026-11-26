@@ -554,6 +554,16 @@ app.use(async (req, res) => {
   }
   let html = cachedIndexHtml;
 
+  /* 로케일 주입 — 로케일 미들웨어는 ['/api','/admin'] 에만 마운트돼 있어서 SPA 폴백에는
+     req.locale 이 없었다. 그래서 글 메타가 항상 한국어로 나가고 Article JSON-LD 의
+     inLanguage 는 undefined 로 사라졌다(JSON.stringify 가 드롭).
+
+     **쿼리만 신뢰한다.** Accept-Language 로 같은 URL 의 내용을 바꾸면 쿼리 없는 URL
+     (= hreflang 의 x-default)이 요청자에 따라 달라져 크롤러가 받는 기준 문서가
+     불안정해진다. 로케일별 주소는 hreflang 이 이미 ?lang= 으로 키잉하고 있다. */
+  const SSR_LOCALES = ['ko', 'en', 'ja'];
+  req.locale = SSR_LOCALES.includes(req.query.lang) ? req.query.lang : 'ko';
+
   const baseUrl = 'https://www.prisincera.com';
   const currentUrl = baseUrl + req.originalUrl;
   
@@ -662,14 +672,19 @@ app.use(async (req, res) => {
   // Escape quotes
   const safeDesc = description.replace(/"/g, '&quot;');
   const safeKeywords = (keywords || '').replace(/"/g, '&quot;');
-  const canonicalUrl = meta.canonical;
-  
+  /* canonical 은 **로케일 자기참조**여야 한다. resolveMeta 는 쿼리를 버리므로
+     ?lang=en 페이지도 한국어 URL 을 지목했고, 그 결과 구글이 hreflang 주석을
+     중복으로 간주해 영문·일문이 색인되지 않았다. 기본 로케일은 쿼리 없는 URL 을
+     유지해 x-default 와 일치시킨다. hreflangLinks 에는 쿼리 없는 URL 을 넘긴다. */
+  const cleanCanonical = meta.canonical;
+  const canonicalUrl = req.locale === 'ko' ? cleanCanonical : `${cleanCanonical}?lang=${req.locale}`;
+
   const metaTags = `
     <title>${title}</title>
     <meta name="description" content="${safeDesc}">
     <meta name="keywords" content="${safeKeywords}">
     <link rel="canonical" href="${canonicalUrl}">
-    ${hreflangLinks(canonicalUrl)}
+    ${hreflangLinks(cleanCanonical)}
     ${ogLocaleTags(req.locale)}
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${safeDesc}">
@@ -684,6 +699,8 @@ app.use(async (req, res) => {
   `;
 
   // Inject meta tags by replacing the static ones
+  // <html lang> 동기화 — 정적 index.html 은 ko 고정이라 ?lang=en 응답도 ko 로 나갔다
+  html = html.replace(/(<html[^>]*\s)lang="[^"]*"/i, `$1lang="${req.locale}"`);
   html = html.replace(/<title>.*<\/title>/is, '');
   html = html.replace(/<meta name="description"[^>]*>/is, '');
   html = html.replace(/<meta name="keywords"[^>]*>/is, '');

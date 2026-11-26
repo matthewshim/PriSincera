@@ -14,18 +14,30 @@ export const SUPPORTED_LANGUAGES = [
 ];
 
 export function LanguageProvider({ children }) {
-  // 브라우저 캐시 스토리지 우선 복원 또는 navigator.language 기반 자동 감지 (Lazy Initializer)
+  /* 우선순위: ?lang= 쿼리 > 저장된 선택 > navigator.language > ko
+     쿼리를 최우선에 둔 이유는 SSR 과의 일치다. hreflang 이 ?lang=en 을 영문 주소로
+     선언하고 서버가 그 URL 에 영문 메타를 방출하는데, 클라이언트가 쿼리를 무시하면
+     같은 문서가 한국어로 렌더돼 메타와 본문이 어긋난다(공유된 영문 링크도 한국어로 열린다).
+
+     localStorage 접근은 프라이빗 창·차단 설정에서 throw 할 수 있다. 초기화 함수에서
+     터지면 앱 전체가 렌더되지 않으므로 감싼다. */
   const [locale, setLocale] = useState(() => {
-    const saved = localStorage.getItem('prs_locale');
-    if (saved) return saved;
-    
-    // navigator.language 검출 (ko, en, ja 외에는 한국어 fallback)
+    try {
+      const fromQuery = new URLSearchParams(window.location.search).get('lang');
+      if (dictionaries[fromQuery]) return fromQuery;
+    } catch { /* URL 파싱 실패는 무시하고 다음 신호로 */ }
+
+    try {
+      const saved = localStorage.getItem('prs_locale');
+      if (dictionaries[saved]) return saved;
+    } catch { /* 스토리지 차단 — 감지로 넘어간다 */ }
+
     const browserLang = navigator.language?.split('-')[0] || 'ko';
     return dictionaries[browserLang] ? browserLang : 'ko';
   });
 
   useEffect(() => {
-    localStorage.setItem('prs_locale', locale);
+    try { localStorage.setItem('prs_locale', locale); } catch { /* 스토리지 차단 시 무시 */ }
     document.documentElement.lang = locale; // HTML lang 속성 동기화
   }, [locale]);
 
