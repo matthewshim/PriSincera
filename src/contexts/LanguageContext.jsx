@@ -32,8 +32,14 @@ export function LanguageProvider({ children }) {
       if (dictionaries[saved]) return saved;
     } catch { /* 스토리지 차단 — 감지로 넘어간다 */ }
 
-    const browserLang = navigator.language?.split('-')[0] || 'ko';
-    return dictionaries[browserLang] ? browserLang : 'ko';
+    /* 지원 언어(ko·en·ja)면 그대로, 그 밖이면 **en** 으로 떨어진다.
+       이전에는 ko 로 떨어져서 독일어·프랑스어·중국어 사용자가 영문 본문이 있는데도
+       한국어를 받았다. 전 글이 3개 국어로 발행되므로 비한국어 사용자에게는
+       영문이 한국어보다 읽을 수 있는 선택이다.
+       쿼리·저장값이 없을 때만 오는 경로이므로 명시적 선택을 덮지 않는다. */
+    const browserLang = navigator.language?.split('-')[0];
+    if (dictionaries[browserLang]) return browserLang;
+    return 'en';
   });
 
   useEffect(() => {
