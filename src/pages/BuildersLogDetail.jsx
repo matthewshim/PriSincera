@@ -143,7 +143,10 @@ export default function BuildersLogDetail() {
         <nav className="detail-crumb" aria-label={t('buildersLog.detail.ariaPath')}>
           <Link to="/builders-log" className="detail-crumb-link">Builder's Log</Link>
           <span className="detail-crumb-sep" aria-hidden="true">›</span>
-          <span className="detail-crumb-cur" aria-current="page">{t('buildersLog.detail.crumbCurrent')}</span>
+          {/* 두 번째 노드는 지면의 챕터 배지와 같은 표기를 쓴다 — 범용 라벨('아티클')은
+              위치 정보를 주지 못하고 구조화 데이터에서도 값이 없었다(2026-11-26).
+              Planner's View 가 시리즈명을 쓰는 것과 같은 역할이다. */}
+          <span className="detail-crumb-cur" aria-current="page">Chapter {articleMeta.chapterNo}</span>
         </nav>
 
         {/* 상세 히어로 — §9-1 표준(아이콘 → h1 → 서브카피). 리런 아카이브 상세와 동일 규격.

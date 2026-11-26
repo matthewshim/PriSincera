@@ -38,12 +38,6 @@ if (existsSync(buildersLogMetaPath)) {
   }
 }
 
-/* Builder's Log 상세 브레드크럼의 두 번째 노드 — 지면의 `buildersLog.detail.crumbCurrent`
-   와 **같은 값을 유지해야 한다**(구조화 데이터는 보이는 것과 일치해야 한다).
-   언어팩(src/locales)은 클라이언트 번들 전용이라 서버에서 import 하지 않고 여기 둔다.
-   지면 문구를 바꾸면 이 상수도 함께 바꾼다. */
-const BL_CRUMB = { ko: '아티클', en: 'Article', ja: '記事' };
-
 // --- Load Planner's View Series Registry (구조화 데이터의 isPartOf·articleSection) ---
 const plannersViewSeriesPath = join(__dirname, 'src', 'data', 'plannersViewSeries.json');
 let plannersViewSeries = [];
@@ -837,10 +831,10 @@ app.use(async (req, res) => {
                 '@id': `${logUrl}#breadcrumb`,
                 itemListElement: [
                   { '@type': 'ListItem', position: 1, name: "Builder's Log", item: `${baseUrl}/builders-log` },
-                  /* 지면의 두 번째 노드는 번역 라벨('아티클'·Article·記事)이다.
-                     마크업은 **보이는 것과 일치**해야 하므로 그대로 쓴다.
-                     라벨 자체가 정보량이 없다는 점은 지면 개선 과제로 따로 둔다. */
-                  { '@type': 'ListItem', position: 2, name: BL_CRUMB[req.locale] || BL_CRUMB.ko },
+                  /* 지면의 두 번째 노드와 **같은 값**을 쓴다(구조화 데이터는 보이는 것과
+                     일치해야 한다). 'Chapter N'은 지면에서도 번역하지 않으므로 로케일
+                     분기가 없다 — 이전의 BL_CRUMB 로케일 상수는 그래서 걷어냈다. */
+                  { '@type': 'ListItem', position: 2, name: `Chapter ${article.chapterNo}` },
                 ],
               },
             ],
