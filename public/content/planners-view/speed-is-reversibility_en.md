@@ -30,7 +30,7 @@ The lesson I draw is not to take more backups. It is that undoing cannot be desi
 
 ## Reversibility is not equally hard at every layer
 
-And "we can undo it" is a looser phrase than it sounds, because the difficulty depends entirely on what you are undoing. I look at it in three layers.
+And "we can undo it" is a looser phrase than it sounds, because the difficulty depends entirely on what you are undoing. I call this **the three layers of reversibility** — code, data and memory.
 
 The code layer can be undone. Deploy the previous version. The data layer is different. If you changed a schema, deleted records, or paid out compensation, rolling back the deploy does not bring that data back. The layer of user memory is harder still. If you published an announcement and people read it, taking the announcement down does not unread it.
 
@@ -78,7 +78,7 @@ Words are the part prepared last. How do you tell users that you undid something
 
 If shipping is the submission of a hypothesis, then submitting hypotheses often means being able to discard wrong ones cheaply. Undoing is the machinery that lowers the cost of discarding. That is why I file reversibility under speed rather than stability.
 
-One thing to add. Building reversibility is itself a task AI helps with well. Drafting reverse migrations, tracing the blast radius of a change, assembling a postmortem. These need judgment but their results can be verified, so they fall squarely into the second tier from the previous piece. AI can make the undoing side cheaper, not only the building side faster.
+One thing to add. Building reversibility is itself a task AI helps with well. Drafting reverse migrations, tracing the blast radius of a change, assembling a postmortem. These need judgment but their results can be verified, so they fall squarely into the second of what another series called **the three task tiers** — tasks sorted by the cost of being wrong. AI can make the undoing side cheaper, not only the building side faster.
 
 That said, you cannot make everything reversible. Data and the user's memory never fully come back. So what you actually have to do is not make every change reversible but **know in advance which changes are irreversible.** Knowing that, you can reserve the heavy process for the irreversible side.
 

@@ -1,4 +1,4 @@
-In the third piece I split reversibility into three layers. Code can be rolled back, data does not come back, and the user's memory is harder still. And I wrote that I would look into that layer of memory in the next piece.
+In the third piece I split reversibility into **three layers** — code, data and memory. Code can be rolled back, data does not come back, and the user's memory is harder still. And I wrote that I would look into that layer of memory in the next piece.
 
 An announcement is how we write to that layer. No other product decision gets written directly into a user's head. Only an announcement does that. A user's understanding of what we did and what we intend to do is built almost entirely out of announcements.
 
@@ -38,7 +38,7 @@ The backlash was severe and the company withdrew the Qwikster split in under a m
 
 What I notice is that the CEO's apology was aimed at **how it was announced, not at the price.** He maintained the decision itself was necessary while saying the way it was explained had been wrong. The product decision could be withdrawn; the memory already created could not, and that memory showed up in the quarter's numbers.
 
-The layering from the third piece is visible here exactly. The code layer, Qwikster, was reversed; the data layer, the price, was kept; the memory layer had no way back.
+The three layers of reversibility from the third piece are visible here exactly. The code layer, Qwikster, was reversed; the data layer, the price, was kept; the memory layer had no way back.
 
 ## A chatbot's answer is also an announcement
 
@@ -70,7 +70,7 @@ Return to the premise of this series and one more problem appears. When AI colla
 
 But an announcement is one of the rare instruments that loses effect as you use it more. Announce every change and users stop reading announcements, and an announcement nobody reads does not work when a change finally matters. So in an organization that ships often, **what not to announce** has to be designed alongside. Without a threshold for announcing, the whole system defeats itself.
 
-Where to use AI splits along the third piece's layers too. Drafting the text, translating it, checking terminology against past announcements — these need judgment but their results can be verified, so fold them in. But **what to announce, what not to announce, and whether to apologize are decisions with accountability attached.** Hand those over and there is nobody clearly answerable when something goes wrong.
+Where to use AI splits along the three task tiers — tasks sorted by the cost of being wrong. Drafting the text, translating it, checking terminology against past announcements — these need judgment but their results can be verified, so fold them in. But **what to announce, what not to announce, and whether to apologize are decisions with accountability attached.** Hand those over and there is nobody clearly answerable when something goes wrong.
 
 Translation needs particular care. Covering every language has gotten cheap, but the right intensity of an apology and the acceptable level of indirection differ by market. Wording that is appropriate in one language reads as dodging responsibility in another. That judgment has to be a person's.
 

@@ -42,7 +42,7 @@ The most common mistake I see is starting from the tool. Look for where to put a
 
 The question itself has to change. Not "how many people can we cut from this team" but "which of this team's tasks get automated, and how does the difficulty of what remains change." In the first, the number is fixed first and the reasoning is attached later. In the second, the reasoning comes first and the number follows. The order changes the outcome.
 
-So I recommend the reverse sequence: break the job into tasks first, sort those tasks by character, then attach AI in the way that suits each character. The axis for sorting is not difficulty but **the cost of being wrong.**
+So I recommend the reverse sequence: break the job into tasks first, sort those tasks by character, then attach AI in the way that suits each character. The axis for sorting is not difficulty but **the cost of being wrong.** I call this classification the three task tiers.
 
 The first tier is **tasks where exhaustive coverage matters, that repeat, and that require almost no judgment.** Sorting inquiries and reviews by type, first-pass translation, summarizing long documents, drafting standard replies. Here I think you should fold it in aggressively. A person cannot read everything, and when the model is wrong it corrects in the next aggregation. This is where AI's weaknesses cost the least.
 
