@@ -18,6 +18,57 @@ import { useRef, useEffect } from 'react';
      1440·768       →  8개 표시, 전부 0
      430·390        →  4개 표시, 전부 0
      1280·1024·375  → 본문침범 2 — 본문(--container 1200)이 화면을 꽉 채우는 폭이라 불가피하다 */
+/* === RIBBON:START === */
+/**
+ * 은하수 리본 — 구 구조는 두 점을 잇는 **직선** 축 위에 원형 성운 덩어리를 올렸다.
+ * 직선이라 CG로 읽히고, 길이 방향 농담이 없어 끝에서 끝까지 균질한 '소시지'가 됐다.
+ *
+ * 세 가지를 바꾼다.
+ *  1) 축을 2차 베지에 **곡선**으로 — 자연에 직선은 없다
+ *  2) 길이 방향 **농담 곡선** — 양 끝이 가늘고 중간이 두껍다. 띠에 머리와 꼬리가 생긴다
+ *  3) 그라디언트 **초점 이동** — 한쪽 감쇠를 가파르게 해 형태를 잡는다
+ *
+ * 색은 덩어리별로 찍지 않고 축 위치에 따라 **연속 보간**한다. 겹침 구간이 탁해지지 않는다.
+ */
+const RIBBON = {
+  /* 곡선 축(화면 비율). 직선 중점(0.50, 0.50)보다 8% 위로 부푼 완만한 호 */
+  from: [-0.15, 0.95],
+  ctrl: [ 0.50, 0.34],
+  to:   [ 1.15, 0.05],
+
+  segments: 9,        // 띠를 이루는 발광 요소 수
+  alpha: 0.14,        // 세기 — 이 상수 하나로 약/강이 갈린다 (약 0.14 · 강 0.22)
+  thin: 0.19,         // 축 직각 방향 눌림 — 작을수록 가느다란 리본
+  focal: 0.32,        // 그라디언트 초점 이동량(가장자리 비대칭)
+  spread: 0.36,       // 요소 반경(화면 최소변 기준)
+
+  /* 축 위치 → 색. 시안에서 출발해 라벤더로 빠진다 */
+  ramp: [
+    { t: 0.00, c: [ 34, 211, 238] },  // --color-cyan
+    { t: 0.30, c: [ 90, 190, 245] },  // 시안 → 인디고 중간
+    { t: 0.62, c: [165, 180, 252] },  // --color-indigo
+    { t: 1.00, c: [199, 210, 254] },  // --prism-lavender (꼬리 끝에만)
+  ],
+
+  /* 암흑 먼지띠 — 원이 아니라 띠를 따라 패인다 */
+  lanes: [
+    { t: 0.16, opacity: 0.17, spread: 0.46, thin: 0.52 },
+    { t: 0.86, opacity: 0.19, spread: 0.48, thin: 0.55 },
+  ],
+
+  /* 카피 영역 감쇠 — 보이는 막이 아니라 곱하기 계수. 글자가 항상 이긴다 */
+  dimFrom: 0.52,
+  dimTo: 0.72,
+  dimTo2: 0.52,       // dimTo 지점에서의 잔존 비율
+
+  /* 스크롤 감쇠 — 캔버스가 fixed라 띠가 본문 섹션 뒤까지 따라온다.
+     히어로를 벗어나면 가라앉혀 본문과 경쟁하지 않게 한다. 0으로 지우지는 않는다 —
+     밤하늘은 이 지면의 바탕이고, 사라지면 아래 섹션들이 맨 검정 위에 뜬다. */
+  scrollSpan: 0.9,    // 몇 화면 높이에 걸쳐 가라앉힐지
+  scrollFloor: 0.34,  // 다 가라앉은 뒤 남는 비율
+};
+/* === RIBBON:END === */
+
 const ZODIACS = [
   {
     // ♈ Aries — γ→β→α→41Ari (Mesarthim→Sheratan→Hamal→41Ari)
@@ -207,6 +258,44 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
      * - Major Stars (stars): 200-400 major twinkling stellar classifications (O/B/A/F/G/K/M) with spikes
      * - Stardust (stardust): 1500-2200 background sub-pixel micro-stars clustered along diagonal Milky Way
      */
+    /** 2차 베지에 위의 점 — t: 0(좌하단) ~ 1(우상단) */
+    function beltPoint(t) {
+      const u = 1 - t;
+      const bx = u * u * RIBBON.from[0] + 2 * u * t * RIBBON.ctrl[0] + t * t * RIBBON.to[0];
+      const by = u * u * RIBBON.from[1] + 2 * u * t * RIBBON.ctrl[1] + t * t * RIBBON.to[1];
+      return [bx * w, by * h];
+    }
+
+    /** 그 점에서의 접선 각 — 요소를 띠 방향으로 눕히는 데 쓴다 */
+    function beltAngle(t) {
+      const dx = (2 * (1 - t) * (RIBBON.ctrl[0] - RIBBON.from[0]) + 2 * t * (RIBBON.to[0] - RIBBON.ctrl[0])) * w;
+      const dy = (2 * (1 - t) * (RIBBON.ctrl[1] - RIBBON.from[1]) + 2 * t * (RIBBON.to[1] - RIBBON.ctrl[1])) * h;
+      return Math.atan2(dy, dx);
+    }
+
+    /** 길이 방향 농담 — 양 끝 0, 중간 뒤쪽(≈0.58)에서 최대 */
+    function beltDensity(t) {
+      const u = Math.min(Math.max((t - 0.03) / 0.94, 0), 1);
+      return Math.pow(Math.sin(Math.PI * Math.pow(u, 0.82)), 1.2);
+    }
+
+    /** 축 위치 → 색 (연속 보간) */
+    function beltColor(t) {
+      const r = RIBBON.ramp;
+      for (let i = 1; i < r.length; i++) {
+        if (t <= r[i].t || i === r.length - 1) {
+          const a = r[i - 1], b = r[i];
+          const k = Math.min(Math.max((t - a.t) / (b.t - a.t || 1), 0), 1);
+          return {
+            r: Math.round(a.c[0] + (b.c[0] - a.c[0]) * k),
+            g: Math.round(a.c[1] + (b.c[1] - a.c[1]) * k),
+            b: Math.round(a.c[2] + (b.c[2] - a.c[2]) * k),
+          };
+        }
+      }
+      return { r: r[0].c[0], g: r[0].c[1], b: r[0].c[2] };
+    }
+
     function createStars() {
       stars = [];
       stardust = [];
@@ -261,13 +350,15 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
         let sX, sY;
         const isBelongToMilkyWay = Math.random() < 0.75; // 75%는 은하수 대각 벨트에 밀집
 
+        let dens = 1;
         if (isBelongToMilkyWay) {
+          /* 성운이 곡선인데 별이 직선이면 두 켜가 어긋나 보인다 — 같은 축을 탄다 */
           const t = Math.random();
-          const axisX = x1 + t * (x2 - x1);
-          const axisY = y1 + t * (y2 - y1);
-          
-          // 대각선 은하수 축 중심으로부터 가우시안 확률 분포
-          const spreadWidth = Math.min(w, h) * 0.14;
+          const [axisX, axisY] = beltPoint(t);
+          dens = beltDensity(t);
+
+          // 띠가 두꺼운 구간일수록 넓게 흩뿌린다
+          const spreadWidth = Math.min(w, h) * (0.07 + 0.11 * dens);
           sX = axisX + randomNormal() * spreadWidth;
           sY = axisY + randomNormal() * spreadWidth;
         } else {
@@ -284,82 +375,82 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           y: sY,
           r: 0.08 + Math.random() * 0.35,
           color: stardustColors[Math.floor(Math.random() * stardustColors.length)],
-          baseOpacity: 0.03 + Math.random() * 0.15,
+          // 띠의 밝음이 '별로 이루어진 것'으로 읽히도록 농담을 별에도 먹인다
+          baseOpacity: (0.03 + Math.random() * 0.15) * (0.5 + 0.8 * dens),
           parallaxFactor: Math.random() * 0.012, // 은하수 뒤편의 깊은 원경 묘사
         });
       }
     }
 
     /**
-     * Create organic gaseous nebulae aligned to the Milky Way diagonal axis:
-     * Aligns golden-amber, deep magenta-purple, and dark dust lanes to create realistic 3D textures.
+     * 은하수 리본 생성 — 곡선 축 위에 '눕고 눌린' 발광 요소를 농담에 따라 배치한다.
+     * 각 요소는 오프스크린 캔버스에 한 번만 그려 캐시한다(프레임마다 그라디언트를 만들지 않는다).
      */
     function createNebulae() {
       nebulae = [];
-      
-      // 몽골 밤하늘 감성의 성운 기하 구성: 황금갈색, 마젠타/딥퍼플, 차콜(암흑성운)
-      // 육안 식별 및 WOW 포인트를 확실히 체감하도록 투명도(opacity)를 기존보다 4~5배 대폭 상향
-      const nebulaConfigs = [
-        { t: 0.20, color: { r:14, g:10, b:20 }, opacity: 0.16, scaleR: 0.52, isDark: true },  // 암흑 먼지띠 (별빛 가림 효과용)
-        { t: 0.38, color: { r:215, g:140, b:75 }, opacity: 0.085, scaleR: 0.42, isDark: false }, // 황금빛 성운
-        { t: 0.52, color: { r:110, g:75, b:185 }, opacity: 0.075, scaleR: 0.48, isDark: false }, // 마젠타/보라빛 성운
-        { t: 0.68, color: { r:225, g:155, b:90 }, opacity: 0.085, scaleR: 0.40, isDark: false }, // 황금빛 성운
-        { t: 0.82, color: { r:12, g:8, b:18 }, opacity: 0.18, scaleR: 0.55, isDark: true },  // 암흑 먼지띠
-      ];
+      const minDim = Math.min(w, h);
 
-      const x1 = -w * 0.15, y1 = h * 0.95;
-      const x2 = w * 1.15, y2 = h * 0.05;
+      const make = (t, cfg) => {
+        const dens = beltDensity(t);
+        const [cx, cy] = beltPoint(t);
+        const ang = beltAngle(t);
+        const r = minDim * cfg.spread * (cfg.isDark ? 1 : 0.72 + 0.46 * dens);
+        const col = cfg.isDark ? { r: 13, g: 9, b: 19 } : beltColor(t);
 
-      nebulaConfigs.forEach((cfg, idx) => {
-        // 대각선 궤적 상의 좌표 계산
-        const baseCenterX = x1 + cfg.t * (x2 - x1);
-        const baseCenterY = y1 + cfg.t * (y2 - y1);
-        
-        // 성운 반경은 화면 최소 길이 기준 설정
-        const minDimension = Math.min(w, h);
-        const r = minDimension * cfg.scaleR;
-        
-        // 오프스크린 캔버스 더블 버퍼링 캐싱
-        const offCanvas = document.createElement('canvas');
-        offCanvas.width = r * 2;
-        offCanvas.height = r * 2;
-        const offCtx = offCanvas.getContext('2d');
-        
-        const grad = offCtx.createRadialGradient(r, r, 0, r, r, r);
-        const col = cfg.color;
-        
+        const off = document.createElement('canvas');
+        off.width = Math.max(2, Math.round(r * 2));
+        off.height = Math.max(2, Math.round(r * 2));
+        const oc = off.getContext('2d');
+
+        // 축 방향으로 눕히고 직각 방향으로 눌러 **띠**로 만든다
+        oc.translate(r, r);
+        oc.rotate(ang);
+        oc.scale(1, cfg.thin);
+        oc.translate(-r, -r);
+
+        /* 초점을 중심에서 밀어 한쪽 감쇠를 가파르게 — 대칭 그라디언트는 형태가 안 잡힌다 */
+        const fy = cfg.isDark ? r : r - r * RIBBON.focal;
+        const grad = oc.createRadialGradient(r, fy, 0, r, r, r);
         if (cfg.isDark) {
-          // 암흑 성운: 뽀얗게 뭉친 아기별 띠의 일부를 은은하게 지워내어 유기적 공간 깊이를 극대화
           grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},1)`);
-          grad.addColorStop(0.6, `rgba(${col.r},${col.g},${col.b},0.6)`);
+          grad.addColorStop(0.58, `rgba(${col.r},${col.g},${col.b},0.58)`);
           grad.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0)`);
         } else {
-          // 발광 성운
           grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},1)`);
-          grad.addColorStop(0.4, `rgba(${col.r},${col.g},${col.b},0.45)`);
+          grad.addColorStop(0.30, `rgba(${col.r},${col.g},${col.b},0.62)`);
+          grad.addColorStop(0.66, `rgba(${col.r},${col.g},${col.b},0.20)`);
           grad.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0)`);
         }
-        
-        offCtx.fillStyle = grad;
-        offCtx.beginPath();
-        offCtx.arc(r, r, r, 0, Math.PI * 2);
-        offCtx.fill();
+        oc.fillStyle = grad;
+        oc.beginPath();
+        oc.arc(r, r, r, 0, Math.PI * 2);
+        oc.fill();
 
         nebulae.push({
-          x: baseCenterX + (Math.random() - 0.5) * 60,
-          y: baseCenterY + (Math.random() - 0.5) * 60,
+          x: cx + (Math.random() - 0.5) * minDim * 0.045,
+          y: cy + (Math.random() - 0.5) * minDim * 0.045,
           r,
           color: col,
-          isDark: cfg.isDark,
-          speedX: (Math.random() - 0.5) * 0.05, // 은은한 흐름 드리프트
-          speedY: (Math.random() - 0.5) * 0.03,
-          opacity: cfg.opacity,
+          isDark: !!cfg.isDark,
+          speedX: (Math.random() - 0.5) * 0.045,
+          speedY: (Math.random() - 0.5) * 0.026,
+          opacity: cfg.isDark ? cfg.opacity : RIBBON.alpha * dens,
           phase: Math.random() * Math.PI * 2,
-          depth: 0.05 + idx * 0.02,
-          parallaxFactor: (0.05 + idx * 0.02) * 0.035,
-          offCanvas,
+          depth: 0.05 + t * 0.02,
+          parallaxFactor: (0.05 + t * 0.02) * 0.035,
+          offCanvas: off,
         });
-      });
+      };
+
+      // 발광 리본
+      for (let i = 0; i < RIBBON.segments; i++) {
+        const t = (i + 0.5) / RIBBON.segments;
+        make(t, { spread: RIBBON.spread, thin: RIBBON.thin, isDark: false });
+      }
+      // 암흑 먼지띠
+      for (const lane of RIBBON.lanes) {
+        make(lane.t, { spread: lane.spread, thin: lane.thin, opacity: lane.opacity, isDark: true });
+      }
     }
 
     function createConstellations() {
@@ -398,6 +489,12 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
       const parallaxBaseY = smoothMy - centerY;
 
       const LENS_RADIUS = 240;       // wider telescope field of view
+
+      /* 히어로 체류도 — 1이면 히어로 안, scrollFloor면 완전히 지나친 상태 */
+      const scrolled = window.scrollY || window.pageYOffset || 0;
+      const sRaw = 1 - scrolled / (h * RIBBON.scrollSpan);
+      const sK = sRaw <= 0 ? 0 : sRaw >= 1 ? 1 : sRaw * sRaw * (3 - 2 * sRaw);
+      const scrollK = RIBBON.scrollFloor + (1 - RIBBON.scrollFloor) * sK;
 
       // --- Background Celestial Grids & Telescope Lens (Only in active mode) ---
       if (!isAmbientMode) {
@@ -495,7 +592,12 @@ export default function StarField({ rawMouseRef, zodiacActive, zodiacShowAll }) 
           lensBoost = 1.0 + t * t * 1.2; 
         }
 
-        const alpha = (n.opacity + Math.sin(n.phase) * 0.004) * lensBoost;
+        /* 카피 영역으로 내려올수록 가라앉는다 — 보이는 막이 아니라 곱하기 계수 */
+        const yFrac = drawNy / h;
+        const dim = yFrac <= RIBBON.dimFrom
+          ? 1
+          : Math.max(RIBBON.dimTo2, 1 - (1 - RIBBON.dimTo2) * (yFrac - RIBBON.dimFrom) / (RIBBON.dimTo - RIBBON.dimFrom));
+        const alpha = (n.opacity + Math.sin(n.phase) * 0.004) * lensBoost * dim * scrollK;
         ctx.save();
         ctx.globalAlpha = Math.max(0.001, Math.min(0.9, alpha));
         ctx.globalCompositeOperation = 'screen';
